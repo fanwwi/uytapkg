@@ -10,19 +10,15 @@
   max-width: 1450px;
   margin: 0 auto;
 
-  padding: 42px;
+  padding: 28px;
 
-  border-radius: 40px;
+  border-radius: 32px;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.96);
 
   backdrop-filter: blur(25px);
 
-  border: 1px solid rgba(255, 255, 255, 0.8);
-
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.18);
-
-  animation: appear 0.6s ease;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes appear {
@@ -39,44 +35,106 @@
 
 /* переключатель */
 
-.switch {
-  display: flex;
+/* ==========================
+   SEARCH MODE SWITCH
+========================== */
 
-  width: max-content;
+.searchMode {
+  position: relative;
 
-  margin: auto;
+  width: 420px;
+  height: 52px;
 
-  padding: 6px;
+  margin: 0 auto 30px;
 
-  border-radius: 25px;
+  padding: 5px;
 
-  background: #f5f5f7;
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  background: #f3f3f5;
+
+  border-radius: 18px;
+
+  border: 1px solid #e8e8e8;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.04),
+    0 15px 40px rgba(0, 0, 0, 0.06);
 }
 
-.switch button {
-  height: 55px;
+.modeSlider {
+  position: absolute;
 
-  padding: 0 35px;
+  top: 5px;
+
+  left: 5px;
+
+  width: calc(50% - 5px);
+
+  height: calc(100% - 10px);
+
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #ff2990, #ff0066);
+
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+
+  box-shadow: 0 10px 25px rgba(255, 0, 120, 0.25);
+}
+
+.modeSlider.smartMode {
+  transform: translateX(100%);
+}
+
+.searchMode button {
+  position: relative;
+
+  z-index: 2;
 
   border: none;
 
   background: transparent;
 
-  border-radius: 20px;
+  cursor: pointer;
 
-  font-size: 17px;
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  font-size: 15px;
 
   font-weight: 700;
 
-  cursor: pointer;
+  color: #777;
 
   transition: 0.3s;
 }
 
-.switch button:hover {
-  color: #ff2990;
+.searchMode button svg {
+  width: 18px;
+
+  height: 18px;
 }
 
+.modeActive {
+  color: white !important;
+}
+
+.searchMode button:hover svg {
+  transform: scale(1.15);
+}
+
+.searchMode button svg {
+  transition: 0.3s;
+}
 .active {
   color: white !important;
 
@@ -87,52 +145,100 @@
 
 /* купить снять */
 
-.tabs {
+.dealSwitcher {
+  position: relative;
+
+  height: 52px;
+
+  padding: 4px;
+
+  margin: 20px 0;
+
+  border-radius: 18px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  background: #f6f6f6;
+
+  border: 1px solid #e8e8e8;
+
+  overflow: hidden;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.dealSlider {
+  position: absolute;
+
+  top: 5px;
+  left: 5px;
+
+  width: calc(50% - 5px);
+
+  height: calc(100% - 10px);
+
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #ff5aa8, #ff0066);
+
+  box-shadow: 0 8px 20px rgba(255, 0, 102, 0.25);
+
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  z-index: 1;
+}
+
+.rentActive {
+  transform: translateX(100%);
+}
+
+.dealSwitcher button {
+  position: relative;
+
+  z-index: 2;
+
+  border: none;
+
+  background: transparent;
+
   display: flex;
+
+  align-items: center;
 
   justify-content: center;
 
-  gap: 14px;
+  gap: 8px;
 
-  margin: 35px 0;
-}
-
-.tabs button {
-  height: 55px;
-
-  padding: 0 35px;
-
-  border-radius: 20px;
-
-  background: white;
-
-  border: 1px solid #eee;
-
-  font-size: 17px;
+  font-size: 16px;
 
   font-weight: 700;
+
+  color: #777;
 
   cursor: pointer;
 
   transition: 0.3s;
 }
 
-.tabs button:hover {
-  border-color: #ff2990;
+.dealSwitcher button svg {
+  width: 20px;
 
-  color: #ff2990;
+  height: 20px;
 
-  transform: translateY(-3px);
+  transition: 0.3s;
 }
 
-.selected {
-  background: #111 !important;
+.dealActive {
+  color: white !important;
+}
 
-  color: white;
+.dealSwitcher button:hover {
+  transform: translateY(-1px);
+}
 
-  border-color: #111 !important;
-
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+.dealSwitcher button:hover svg {
+  transform: scale(1.12);
 }
 
 /* категории */
@@ -142,22 +248,22 @@
 
   grid-template-columns: repeat(6, 1fr);
 
-  gap: 15px;
+  gap: 10px;
 }
 
 .categories button {
-  height: 65px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  border-radius: 22px;
+  gap: 7px;
+  border-radius: 18px;
 
   border: 1px solid #eee;
 
   background: white;
 
-  font-size: 16px;
+  font-size: 14px;
 
   font-weight: 700;
 
@@ -185,13 +291,13 @@
 /* основные фильтры */
 
 .mainFilters {
-  margin-top: 35px;
+  margin-top: 25px;
 
   display: grid;
 
   grid-template-columns: 1.4fr 1fr 1.4fr 1fr;
 
-  gap: 18px;
+  gap: 12px;
 }
 
 /* CUSTOM SELECT */
@@ -203,13 +309,13 @@
 }
 
 .select {
-  height: 72px;
+  height: 60px;
 
   width: 100%;
 
-  padding: 0 22px;
+  padding: 0 18px;
 
-  border-radius: 25px;
+  border-radius: 20px;
 
   background: linear-gradient(145deg, #ffffff, #fafafa);
 
@@ -241,9 +347,9 @@
 }
 
 .select svg {
-  width: 25px;
+  width: 21px;
 
-  height: 25px;
+  height: 21px;
 
   color: #ff2990;
 }
@@ -257,7 +363,7 @@
 }
 
 .select small {
-  font-size: 13px;
+  font-size: 11px;
 
   color: #999;
 
@@ -265,7 +371,7 @@
 }
 
 .select strong {
-  font-size: 16px;
+  font-size: 14px;
 
   color: #111;
 
@@ -349,9 +455,9 @@
 /* цена */
 
 .priceBox {
-  height: 72px;
+  height: 60px;
 
-  border-radius: 25px;
+  border-radius: 20px;
 
   background: white;
 
@@ -361,9 +467,9 @@
 
   align-items: center;
 
-  padding: 0 24px;
+  padding: 0 18px;
 
-  gap: 15px;
+  gap: 10px;
 
   transition: 0.3s;
 }
@@ -414,7 +520,7 @@
 
   outline: none;
 
-  font-size: 17px;
+  font-size: 15px;
 
   font-weight: 600;
 }
@@ -422,13 +528,13 @@
 /* все фильтры */
 
 .more {
-  margin-top: 30px;
+  margin-top: 20px;
 
-  height: 55px;
+  height: 48px;
 
-  padding: 0 30px;
+  padding: 0 22px;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
   border: 1px solid #eee;
 
@@ -440,7 +546,7 @@
 
   gap: 10px;
 
-  font-size: 17px;
+  font-size: 15px;
 
   font-weight: 700;
 
@@ -458,11 +564,11 @@
 }
 
 .extra {
-  margin-top: 25px;
+  margin-top: 18px;
 
-  padding: 25px;
+  padding: 18px;
 
-  border-radius: 30px;
+  border-radius: 24px;
 
   background: #fafafa;
 
@@ -470,7 +576,7 @@
 
   grid-template-columns: repeat(3, 1fr);
 
-  gap: 18px;
+  gap: 12px;
 
   animation: showExtra 0.35s ease;
 }
@@ -496,17 +602,17 @@
 
   justify-content: center;
 
-  gap: 18px;
+  gap: 12px;
 
-  margin-top: 35px;
+  margin-top: 25px;
 }
 
 .actions button {
-  height: 62px;
+  height: 52px;
 
-  padding: 0 35px;
+  padding: 0 28px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   display: flex;
 
@@ -514,7 +620,7 @@
 
   gap: 10px;
 
-  font-size: 17px;
+  font-size: 15px;
 
   font-weight: 700;
 
@@ -655,12 +761,12 @@
 }
 
 .bigIcon {
-  width: 25px;
-  height: 55px;
+  width: 21px;
+  height: 45px;
 
-  min-width: 55px;
+  min-width: 45px;
 
-  border-radius: 13px;
+  border-radius: 11px;
 
   display: flex;
 
@@ -696,9 +802,9 @@
 .specialFilters {
   display: flex;
 
-  gap: 18px;
+  gap: 12px;
 
-  margin-top: 25px;
+  margin-top: 18px;
 }
 
 /* =====================
@@ -706,11 +812,11 @@
 ===================== */
 
 .specialFilters button:first-child {
-  height: 58px;
+  height: 48px;
 
-  padding: 0 32px;
+  padding: 0 25px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   display: flex;
 
@@ -726,7 +832,7 @@
 
   color: #e60000;
 
-  font-size: 17px;
+  font-size: 15px;
 
   font-weight: 900;
 
@@ -736,9 +842,9 @@
 }
 
 .specialFilters button:first-child svg {
-  width: 26px;
+  width: 22px;
 
-  height: 26px;
+  height: 22px;
 
   color: #ff1a1a;
 }
@@ -790,11 +896,11 @@
 }
 
 .specialFilters button:last-child {
-  height: 58px;
+  height: 48px;
 
-  padding: 0 35px;
+  padding: 0 25px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   display: flex;
 
@@ -810,7 +916,7 @@
 
   color: #d99000;
 
-  font-size: 17px;
+  font-size: 15px;
 
   font-weight: 900;
 
@@ -820,9 +926,9 @@
 }
 
 .specialFilters button:last-child svg {
-  width: 28px;
+  width: 22px;
 
-  height: 28px;
+  height: 22px;
 
   color: #ffb300;
 }

@@ -25,6 +25,8 @@ import {
   Trees,
   Store,
   Car,
+  KeyRound,
+  Sparkles,
 } from "lucide-react";
 
 import CustomSelect from "../../components/ui/customSelect/CustomSelect";
@@ -132,35 +134,51 @@ export default function SearchFilter() {
   return (
     <section className={styles.wrapper}>
       <div className={styles.card}>
-        <div className={styles.switch}>
+        <div className={styles.searchMode}>
+          <div
+            className={`${styles.modeSlider} ${
+              mode === "smart" ? styles.smartMode : ""
+            }`}
+          />
+
           <button
-            className={mode === "normal" ? styles.active : ""}
+            className={mode === "normal" ? styles.modeActive : ""}
             onClick={() => setMode("normal")}
           >
+            <Search />
             Обычный поиск
           </button>
 
           <button
-            className={mode === "smart" ? styles.active : ""}
+            className={mode === "smart" ? styles.modeActive : ""}
             onClick={() => setMode("smart")}
           >
-            ✨ Умный поиск
+            <Sparkles />
+            Умный поиск
           </button>
         </div>
+        <div className={styles.dealSwitcher}>
+          <div
+            className={`${styles.dealSlider} ${
+              deal === "rent" ? styles.rentActive : ""
+            }`}
+          />
 
-        <div className={styles.tabs}>
-          {[
-            ["buy", "Купить"],
-            ["rent", "Снять"],
-          ].map(([key, text]) => (
-            <button
-              key={key}
-              className={deal === key ? styles.selected : ""}
-              onClick={() => setDeal(key)}
-            >
-              {text}
-            </button>
-          ))}
+          <button
+            className={deal === "buy" ? styles.dealActive : ""}
+            onClick={() => setDeal("buy")}
+          >
+            <Home />
+            Купить
+          </button>
+
+          <button
+            className={deal === "rent" ? styles.dealActive : ""}
+            onClick={() => setDeal("rent")}
+          >
+            <KeyRound />
+            Снять
+          </button>
         </div>
 
         <div className={styles.categories}>
