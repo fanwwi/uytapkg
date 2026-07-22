@@ -1,0 +1,588 @@
+.wrapper {
+  width: 100%;
+  padding: 0 40px;
+  margin-top: -90px;
+  position: relative;
+  z-index: 20;
+}
+
+.card {
+  max-width: 1450px;
+  margin: 0 auto;
+
+  padding: 42px;
+
+  border-radius: 40px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.18);
+
+  animation: appear 0.6s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* переключатель */
+
+.switch {
+  display: flex;
+
+  width: max-content;
+
+  margin: auto;
+
+  padding: 6px;
+
+  border-radius: 25px;
+
+  background: #f5f5f7;
+}
+
+.switch button {
+  height: 55px;
+
+  padding: 0 35px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 20px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.switch button:hover {
+  color: #ff2990;
+}
+
+.active {
+  color: white !important;
+
+  background: linear-gradient(135deg, #ff5aa8, #ff0066) !important;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 120, 0.35);
+}
+
+/* купить снять */
+
+.tabs {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  margin: 35px 0;
+}
+
+.tabs button {
+  height: 55px;
+
+  padding: 0 35px;
+
+  border-radius: 20px;
+
+  background: white;
+
+  border: 1px solid #eee;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.tabs button:hover {
+  border-color: #ff2990;
+
+  color: #ff2990;
+
+  transform: translateY(-3px);
+}
+
+.selected {
+  background: #111 !important;
+
+  color: white;
+
+  border-color: #111 !important;
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* категории */
+
+.categories {
+  display: grid;
+
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 15px;
+}
+
+.categories button {
+  height: 65px;
+
+  border-radius: 22px;
+
+  border: 1px solid #eee;
+
+  background: white;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.categories button:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.categoryActive {
+  background: linear-gradient(135deg, #ff5aa8, #ff0066);
+
+  color: rgb(255, 0, 149);
+
+  border: none !important;
+
+  box-shadow: 0 20px 40px rgba(255, 0, 120, 0.35);
+}
+
+/* основные фильтры */
+
+.mainFilters {
+  margin-top: 35px;
+
+  display: grid;
+
+  grid-template-columns: 1.4fr 1fr 1.4fr 1fr;
+
+  gap: 18px;
+}
+
+/* CUSTOM SELECT */
+
+.custom {
+  position: relative;
+
+  width: 100%;
+}
+
+.select {
+  height: 72px;
+
+  width: 100%;
+
+  padding: 0 22px;
+
+  border-radius: 25px;
+
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+
+  border: 1px solid #ededed;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  cursor: pointer;
+
+  transition: 0.35s;
+}
+
+.select:hover {
+  border-color: #ff9dcc;
+
+  box-shadow: 0 15px 35px rgba(255, 41, 144, 0.12);
+}
+
+.select > div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.select svg {
+  width: 25px;
+
+  height: 25px;
+
+  color: #ff2990;
+}
+
+.select section {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+.select small {
+  font-size: 13px;
+
+  color: #999;
+
+  font-weight: 600;
+}
+
+.select strong {
+  font-size: 16px;
+
+  color: #111;
+
+  margin-top: 3px;
+}
+
+.rotate {
+  transform: rotate(180deg);
+
+  transition: 0.3s;
+}
+
+.dropdown {
+  position: absolute;
+
+  top: 82px;
+
+  left: 0;
+
+  width: 100%;
+
+  z-index: 100;
+
+  background: white;
+
+  border-radius: 25px;
+
+  padding: 10px;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+
+  max-height: 300px;
+
+  overflow-y: auto;
+
+  animation: dropdown 0.25s ease;
+}
+
+.dropdown button {
+  width: 100%;
+
+  padding: 15px 18px;
+
+  border: none;
+
+  background: white;
+
+  border-radius: 16px;
+
+  text-align: left;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.dropdown button:hover {
+  background: linear-gradient(135deg, #fff0f7, #ffe1ef);
+
+  color: #ff2990;
+}
+
+@keyframes dropdown {
+  from {
+    opacity: 0;
+
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: none;
+  }
+}
+
+/* цена */
+
+.priceBox {
+  height: 72px;
+
+  border-radius: 25px;
+
+  background: white;
+
+  border: 1px solid #ededed;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 0 24px;
+
+  gap: 15px;
+
+  transition: 0.3s;
+}
+
+.priceIcon {
+  width:23px;
+  height: 23px;
+
+  min-width: 32px;
+
+  color: #ff2990;
+
+  stroke-width: 2.5;
+
+  filter: drop-shadow(0 5px 12px rgba(255, 41, 144, 0.35));
+
+  transition: 0.3s ease;
+}
+
+.priceBox:hover .priceIcon {
+  transform: scale(1.15) rotate(-5deg);
+
+  color: #ff0066;
+}
+
+.priceBox:hover {
+  border-color: #ff9dcc;
+
+  box-shadow: 0 15px 35px rgba(255, 41, 144, 0.12);
+}
+
+.priceBox svg {
+  color: #ff2990;
+
+  width: 24px;
+}
+
+.priceBox span {
+  color: #aaa;
+}
+
+.priceBox input {
+  width: 100%;
+
+  height: 45px;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 17px;
+
+  font-weight: 600;
+}
+
+/* все фильтры */
+
+.more {
+  margin-top: 30px;
+
+  height: 55px;
+
+  padding: 0 30px;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.more:hover {
+  color: #ff2990;
+
+  border-color: #ff2990;
+
+  transform: translateY(-3px);
+}
+
+.extra {
+  margin-top: 25px;
+
+  padding: 25px;
+
+  border-radius: 30px;
+
+  background: #fafafa;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+
+  animation: showExtra 0.35s ease;
+}
+
+@keyframes showExtra {
+  from {
+    opacity: 0;
+
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: none;
+  }
+}
+
+/* нижние кнопки */
+
+.actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  margin-top: 35px;
+}
+
+.actions button {
+  height: 62px;
+
+  padding: 0 35px;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.35s;
+}
+
+.searchBtn {
+  border: none;
+
+  color: white;
+
+  background: linear-gradient(135deg, #ff5aa8, #ff0066);
+
+  box-shadow: 0 20px 40px rgba(255, 0, 120, 0.35);
+}
+
+.searchBtn:hover {
+  transform: translateY(-5px);
+}
+
+.mapBtn,
+.resetBtn {
+  background: white;
+
+  border: 1px solid #eee;
+}
+
+.mapBtn:hover,
+.resetBtn:hover {
+  color: #ff2990;
+
+  border-color: #ff2990;
+
+  transform: translateY(-5px);
+}
+
+@media (max-width: 1200px) {
+  .categories {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mainFilters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .wrapper {
+    padding: 0 15px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .categories {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mainFilters,
+  .extra {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .switch button {
+    padding: 0 15px;
+  }
+}

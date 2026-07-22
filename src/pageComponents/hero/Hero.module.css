@@ -1,0 +1,209 @@
+.hero {
+  height: 100vh;
+
+  min-height: 700px;
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  background-image: url("../../../public/assets/bishkek-hero.jpg");
+
+  background-size: cover;
+
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+
+.content {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 900px;
+
+  margin-left: 80px;
+
+  color: white;
+}
+
+.location {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  width: max-content;
+
+  padding: 12px 20px;
+
+  border-radius: 40px;
+
+  font-size: 18px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(12px);
+
+  margin-bottom: 25px;
+}
+
+.location svg {
+  width: 22px;
+
+  height: 22px;
+
+  color: #ff4fa3;
+}
+
+.title {
+  font-size: 64px;
+
+  line-height: 1.1;
+
+  font-weight: 900;
+
+  letter-spacing: -2px;
+
+  margin: 0 0 30px;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ff79c6, #ff0066);
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  color: transparent;
+}
+
+.description {
+  font-size: 22px;
+
+  line-height: 1.5;
+
+  max-width: 720px;
+
+  color: #eeeeee;
+
+  margin-bottom: 40px;
+}
+
+.buttons {
+  display: flex;
+
+  gap: 20px;
+}
+
+.primary {
+  height: 62px;
+
+  padding: 0 35px;
+
+  border-radius: 22px;
+
+  border: none;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  color: white;
+
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff4fa3, #ff0066);
+
+  box-shadow: 0 15px 40px rgba(255, 0, 100, 0.45);
+
+  transition: 0.3s;
+}
+
+.primary:hover {
+  transform: translateY(-5px);
+}
+
+.secondary {
+  height: 62px;
+
+  padding: 0 35px;
+
+  border-radius: 22px;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  color: white;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  backdrop-filter: blur(15px);
+
+  transition: 0.3s;
+}
+
+.secondary:hover {
+  background: white;
+
+  color: #111;
+}
+
+@media (max-width: 1000px) {
+  .content {
+    margin: 0 30px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 36px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .primary,
+  .secondary {
+    width: 100%;
+
+    justify-content: center;
+  }
+}
