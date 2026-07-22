@@ -625,3 +625,210 @@
 
   filter: drop-shadow(0 5px 15px rgba(255, 41, 144, 0.35));
 }
+
+.categories button {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.categories button svg {
+  width: 26px;
+
+  height: 26px;
+
+  color: #ff2990;
+
+  transition: 0.3s;
+}
+
+.categoryActive svg {
+  color: white;
+}
+
+.categories button:hover svg {
+  transform: scale(1.15);
+}
+
+.bigIcon {
+  width: 25px;
+  height: 55px;
+
+  min-width: 55px;
+
+  border-radius: 13px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: linear-gradient(135deg, #ffe1f0, #ffd0e6);
+
+  box-shadow: 0 10px 25px rgba(255, 41, 144, 0.2);
+}
+
+.bigIcon svg {
+  width: 23px;
+
+  height: 23px;
+
+  stroke-width: 2;
+
+  color: #ff2990;
+}
+
+.priceBox:hover .bigIcon {
+  transform: scale(1.08) rotate(-5deg);
+
+  box-shadow: 0 15px 35px rgba(255, 41, 144, 0.35);
+}
+
+.bigIcon {
+  transition: 0.3s ease;
+}
+
+.specialFilters {
+  display: flex;
+
+  gap: 18px;
+
+  margin-top: 25px;
+}
+
+/* =====================
+   СРОЧНО
+===================== */
+
+.specialFilters button:first-child {
+  height: 58px;
+
+  padding: 0 32px;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  border: 1px solid #ffcccc;
+
+  background: white;
+
+  color: #e60000;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition: 0.35s;
+}
+
+.specialFilters button:first-child svg {
+  width: 26px;
+
+  height: 26px;
+
+  color: #ff1a1a;
+}
+
+/* активное срочно */
+
+.specialActive {
+  background: linear-gradient(135deg, #ff4b4b, #d60000) !important;
+
+  color: white !important;
+
+  border: none !important;
+
+  box-shadow: 0 15px 40px rgba(255, 0, 0, 0.35);
+
+  animation: pulseRed 2s infinite;
+}
+
+.specialActive svg {
+  color: white !important;
+}
+
+@keyframes pulseRed {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 35px rgba(255, 0, 0, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0.4);
+  }
+}
+
+/* =====================
+   VIP
+===================== */
+
+.vipActive {
+  background: linear-gradient(135deg, #ffe680, #ffb300) !important;
+
+  color: #111 !important;
+
+  border: none !important;
+
+  box-shadow: 0 15px 40px rgba(255, 179, 0, 0.45);
+}
+
+.specialFilters button:last-child {
+  height: 58px;
+
+  padding: 0 35px;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  border: 1px solid #ffe08a;
+
+  background: white;
+
+  color: #d99000;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition: 0.35s;
+}
+
+.specialFilters button:last-child svg {
+  width: 28px;
+
+  height: 28px;
+
+  color: #ffb300;
+}
+
+.vipActive svg {
+  color: #fff !important;
+
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.25));
+}

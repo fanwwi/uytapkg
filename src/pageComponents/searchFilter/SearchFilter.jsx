@@ -11,15 +11,20 @@ import {
   Building2,
   BedDouble,
   DollarSign,
+  Maximize,
   Sofa,
   ShieldCheck,
   CalendarDays,
   BadgeCheck,
+  Flame,
+  Crown,
+  Layers,
+  Thermometer,
+  FileCheck,
   Home,
-  DoorOpen,
+  Trees,
   Store,
   Car,
-  LandPlot,
 } from "lucide-react";
 
 import CustomSelect from "../../components/ui/customSelect/CustomSelect";
@@ -35,15 +40,23 @@ export default function SearchFilter() {
 
   const [advanced, setAdvanced] = useState(false);
 
-  const [location, setLocation] = useState("Любая");
+  const [urgent, setUrgent] = useState(false);
 
-  const [type, setType] = useState("Любая");
+  const [vip, setVip] = useState(false);
 
-  const [rooms, setRooms] = useState("Количество");
+  const [location, setLocation] = useState("Любой");
+
+  const [type, setType] = useState("Любой");
+
+  const [rooms, setRooms] = useState("Любой");
 
   const [priceFrom, setPriceFrom] = useState("");
 
   const [priceTo, setPriceTo] = useState("");
+
+  const [areaFrom, setAreaFrom] = useState("");
+
+  const [areaTo, setAreaTo] = useState("");
 
   const [floor, setFloor] = useState("Любой");
 
@@ -57,53 +70,49 @@ export default function SearchFilter() {
 
   const [furniture, setFurniture] = useState("Любая");
 
-  // аренда
-
   const [comfort, setComfort] = useState("Любые");
 
-  const [rentPeriod, setRentPeriod] = useState("Любой");
-
   const [offerType, setOfferType] = useState("Любой");
+
+  const [rentPeriod, setRentPeriod] = useState("Любой");
 
   const categories = [
     {
       name: "Квартиры",
       icon: Building2,
     },
-
     {
       name: "Дома",
       icon: Home,
     },
-
     {
       name: "Участки",
-      icon: LandPlot,
+      icon: Trees,
     },
-
     {
       name: "Комнаты",
-      icon: DoorOpen,
+      icon: BedDouble,
     },
-
     {
       name: "Коммерция",
       icon: Store,
     },
-
     {
       name: "Паркинг / Гараж",
       icon: Car,
     },
   ];
 
-  const resetFilters = () => {
-    setLocation("Любая");
-    setType("Любая");
-    setRooms("Количество");
+  const reset = () => {
+    setLocation("Любой");
+    setType("Любой");
+    setRooms("Любой");
 
     setPriceFrom("");
     setPriceTo("");
+
+    setAreaFrom("");
+    setAreaTo("");
 
     setFloor("Любой");
     setCondition("Любое");
@@ -113,15 +122,16 @@ export default function SearchFilter() {
     setFurniture("Любая");
 
     setComfort("Любые");
-    setRentPeriod("Любой");
     setOfferType("Любой");
+    setRentPeriod("Любой");
+
+    setUrgent(false);
+    setVip(false);
   };
 
   return (
     <section className={styles.wrapper}>
       <div className={styles.card}>
-        {/* режим */}
-
         <div className={styles.switch}>
           <button
             className={mode === "normal" ? styles.active : ""}
@@ -138,13 +148,10 @@ export default function SearchFilter() {
           </button>
         </div>
 
-        {/* купить снять */}
-
         <div className={styles.tabs}>
           {[
             ["buy", "Купить"],
             ["rent", "Снять"],
-            ["daily", "Посуточно"],
           ].map(([key, text]) => (
             <button
               key={key}
@@ -156,8 +163,6 @@ export default function SearchFilter() {
           ))}
         </div>
 
-        {/* категории */}
-
         <div className={styles.categories}>
           {categories.map((item) => {
             const Icon = item.icon;
@@ -168,7 +173,7 @@ export default function SearchFilter() {
                 className={category === item.name ? styles.categoryActive : ""}
                 onClick={() => setCategory(item.name)}
               >
-                <Icon className={styles.categoryIcon} />
+                <Icon />
 
                 <span>{item.name}</span>
               </button>
@@ -176,7 +181,23 @@ export default function SearchFilter() {
           })}
         </div>
 
-        {/* основные */}
+        <div className={styles.specialFilters}>
+          <button
+            className={urgent ? styles.specialActive : ""}
+            onClick={() => setUrgent(!urgent)}
+          >
+            <Flame />
+            Срочно
+          </button>
+
+          <button
+            className={vip ? styles.vipActive : ""}
+            onClick={() => setVip(!vip)}
+          >
+            <Crown />
+            VIP
+          </button>
+        </div>
 
         <div className={styles.mainFilters}>
           <CustomSelect
@@ -185,28 +206,22 @@ export default function SearchFilter() {
             value={location}
             setValue={setLocation}
             options={[
-              "Любая",
-
+              "Любой",
               "Бишкек",
-
               "Чуйская область",
-
               "Ошская область",
-
               "Джалал-Абадская область",
-
               "Нарынская область",
-
               "Таласская область",
-
               "Иссык-Кульская область",
-
               "Баткенская область",
             ]}
           />
 
           <div className={styles.priceBox}>
-            <DollarSign className={styles.priceIcon} />
+            <div className={styles.bigIcon}>
+              <DollarSign />
+            </div>
 
             <input
               placeholder="От $"
@@ -223,40 +238,45 @@ export default function SearchFilter() {
             />
           </div>
 
+          <div className={styles.priceBox}>
+            <div className={styles.bigIcon}>
+              <Maximize />
+            </div>
+
+            <input
+              placeholder="От м²"
+              value={areaFrom}
+              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
+            />
+
+            <span>-</span>
+
+            <input
+              placeholder="До м²"
+              value={areaTo}
+              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
+            />
+          </div>
+
           <CustomSelect
             icon={Building2}
             title="Серия / тип"
             value={type}
             setValue={setType}
             options={[
-              "Любая",
-
+              "Любой",
               "Новостройка",
-
               "102 тип",
-
               "104 тип",
-
-              "104 тип улучшенная",
-
+              "104 улучшенный",
               "105 тип",
-
               "106 тип",
-
               "107 тип",
-
               "108 тип",
-
               "Сталинка",
-
               "Хрущевка",
-
               "Индивидуальная",
-
               "Элитка",
-
-              "Малосемейка",
-
               "Пентхаус",
             ]}
           />
@@ -267,14 +287,10 @@ export default function SearchFilter() {
             value={rooms}
             setValue={setRooms}
             options={[
-              "Количество",
-
+              "Любой",
               "1 комната",
-
               "2 комнаты",
-
               "3 комнаты",
-
               "4+ комнаты",
             ]}
           />
@@ -288,6 +304,7 @@ export default function SearchFilter() {
         {advanced && (
           <div className={styles.extra}>
             <CustomSelect
+              icon={Layers}
               title="Этаж"
               value={floor}
               setValue={setFloor}
@@ -306,17 +323,11 @@ export default function SearchFilter() {
               setValue={setCondition}
               options={[
                 "Любое",
-
                 "Дизайнерский ремонт",
-
                 "Евроремонт",
-
                 "Косметический",
-
                 "Под самоотделку",
-
                 "Старый фонд",
-
                 "Недостроенный",
               ]}
             />
@@ -327,63 +338,42 @@ export default function SearchFilter() {
               setValue={setWalls}
               options={[
                 "Любые",
-
                 "Газоблок",
-
                 "Кирпич",
-
                 "Бетон",
-
                 "Газобетон",
-
-                "Монолитная",
-
-                "Монолитно-каркасная",
-
-                "Панельная",
-
+                "Монолит",
+                "Панель",
                 "Пеноблок",
-
                 "Саман",
-
-                "Другая",
               ]}
             />
 
             <CustomSelect
+              icon={Thermometer}
               title="Отопление"
               value={heating}
               setValue={setHeating}
               options={[
                 "Любое",
-
                 "Автономное",
-
                 "Газовое",
-
-                "Комбинированное",
-
                 "Центральное",
-
                 "Электрическое",
               ]}
             />
 
             <CustomSelect
+              icon={FileCheck}
               title="Документы"
               value={documents}
               setValue={setDocuments}
               options={[
                 "Любые",
-
                 "Красная книга",
-
                 "Тех паспорт",
-
                 "Договор купли-продажи",
-
                 "Долевое участие",
-
                 "Акт приема-передачи",
               ]}
             />
@@ -396,86 +386,58 @@ export default function SearchFilter() {
               options={["Любая", "Полная", "Частичная", "Без мебели"]}
             />
 
-            {deal === "rent" && category === "Квартиры" && (
-              <>
-                <CustomSelect
-                  icon={ShieldCheck}
-                  title="Удобства"
-                  value={comfort}
-                  setValue={setComfort}
-                  options={[
-                    "Любые",
+            <CustomSelect
+              icon={ShieldCheck}
+              title="Удобства"
+              value={comfort}
+              setValue={setComfort}
+              options={[
+                "Любые",
+                "Балкон / лоджия",
+                "Кондиционер",
+                "Лифт",
+                "Охрана",
+                "Парковка",
+                "Видео наблюдение",
+                "Вид на горы",
+                "Закрытая территория",
+                "Раздельный санузел",
+                "Совмещенный санузел",
+                "С мебелью",
+              ]}
+            />
 
-                    "Балкон / лоджия",
+            <CustomSelect
+              icon={BadgeCheck}
+              title="Тип предложения"
+              value={offerType}
+              setValue={setOfferType}
+              options={[
+                "Любой",
+                "Наличный расчет",
+                "Рассрочка",
+                "Возможен обмен",
+                "Ипотека",
+                "Срочное предложение",
+              ]}
+            />
 
-                    "Бытовая техника",
-
-                    "Кондиционер",
-
-                    "Лифт",
-
-                    "Охрана",
-
-                    "Парковка",
-
-                    "Видео наблюдение",
-
-                    "Вид на горы",
-
-                    "Животные не проживали",
-
-                    "Закрытая территория",
-
-                    "Раздельный санузел",
-
-                    "Совмещенный санузел",
-
-                    "С мебелью",
-                  ]}
-                />
-
-                <CustomSelect
-                  icon={CalendarDays}
-                  title="Период аренды"
-                  value={rentPeriod}
-                  setValue={setRentPeriod}
-                  options={[
-                    "Любой",
-
-                    "По часам",
-
-                    "Посуточно",
-
-                    "Понедельно",
-
-                    "На сезон",
-
-                    "Помесячно",
-
-                    "Долгосрочно",
-                  ]}
-                />
-
-                <CustomSelect
-                  icon={BadgeCheck}
-                  title="Тип предложения"
-                  value={offerType}
-                  setValue={setOfferType}
-                  options={[
-                    "Любой",
-
-                    "Наличный расчет",
-
-                    "В рассрочку",
-
-                    "Возможен обмен",
-
-                    "В ипотеку",
-
-                    "Срочное предложение",
-                  ]}
-                />
-              </>
+            {deal === "rent" && (
+              <CustomSelect
+                icon={CalendarDays}
+                title="Период аренды"
+                value={rentPeriod}
+                setValue={setRentPeriod}
+                options={[
+                  "Любой",
+                  "По часам",
+                  "Посуточно",
+                  "Понедельно",
+                  "На сезон",
+                  "Помесячно",
+                  "Долгосрочно",
+                ]}
+              />
             )}
           </div>
         )}
@@ -491,7 +453,7 @@ export default function SearchFilter() {
             На карте
           </button>
 
-          <button className={styles.resetBtn} onClick={resetFilters}>
+          <button className={styles.resetBtn} onClick={reset}>
             <RotateCcw />
             Сбросить
           </button>
