@@ -28,7 +28,7 @@ export default function CustomSelect({
           <section>
             <small>{title}</small>
 
-            <strong>{value || "Выбрать"}</strong>
+            <strong>{value || "Любой"}</strong>
           </section>
         </div>
 
