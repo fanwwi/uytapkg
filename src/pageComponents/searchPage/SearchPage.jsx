@@ -9,7 +9,7 @@ import styles from "./SearchPage.module.css";
 
 export default function SearchPage() {
   return (
-    <section className={styles.page}>
+    <section className={styles.page} id="search">
       <div className={styles.glowOne} />
       <div className={styles.glowTwo} />
       <div className={styles.grid} />

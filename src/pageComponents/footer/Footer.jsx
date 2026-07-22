@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import styles from "./Footer.module.css";
+import Link from "next/link";
 
 export default function Footer() {
   const categories = [
@@ -46,7 +47,7 @@ export default function Footer() {
         {/* Бренд */}
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <img src="/assets/logo.png" alt="UyTap" />
+            <img src="/assets/logo2.png" alt="UyTap" />
           </div>
 
           <p>
@@ -93,10 +94,10 @@ export default function Footer() {
         <div className={styles.column}>
           <h3>Сервис</h3>
 
-          <a>
+          <Link href="/#search">
             <Search />
             Поиск недвижимости
-          </a>
+          </Link>
 
           <a>
             <UserRound />
@@ -117,7 +118,9 @@ export default function Footer() {
             <Smartphone />
 
             <div>
-              <strong><span>UyTap</span> в вашем телефоне</strong>
+              <strong>
+                <span>UyTap</span> в вашем телефоне
+              </strong>
 
               <p>Ищите недвижимость где угодно</p>
             </div>

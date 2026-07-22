@@ -106,6 +106,7 @@
   cursor: pointer;
 
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .column a:hover {
@@ -247,7 +248,7 @@
 }
 
 .appBox span {
-    color: #f69ec9;
+  color: #f69ec9;
 }
 
 .appBox p {

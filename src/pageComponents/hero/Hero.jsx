@@ -41,7 +41,12 @@ export default function Hero() {
         </p>
 
         <div className={styles.buttons}>
-          <button className={styles.primary}>
+          <button
+            className={styles.primary}
+            onClick={() => {
+              window.location.href = "/#search";
+            }}
+          >
             <Search />
             Найти недвижимость
           </button>
