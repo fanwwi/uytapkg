@@ -1,0 +1,323 @@
+.footer {
+  background: #090909;
+  color: white;
+
+  padding-top: 80px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.container {
+  max-width: 1450px;
+
+  margin: auto;
+
+  padding: 0 40px;
+
+  display: grid;
+
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+
+  gap: 50px;
+}
+
+.logo {
+  display: flex;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.logo img {
+  width: 200px;
+
+  height: auto;
+
+  object-fit: contain;
+
+  transition: 0.3s ease;
+  margin-left: -20px;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+.brand p {
+  margin-top: -20px;
+
+  color: #999;
+
+  line-height: 1.6;
+
+  max-width: 350px;
+}
+
+.contacts {
+  margin-top: 30px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+
+  color: #bbb;
+}
+
+.contacts div {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+.contacts svg {
+  color: #ff2990;
+
+  width: 20px;
+}
+
+.column {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.column h3 {
+  font-size: 18px;
+
+  margin-bottom: 10px;
+}
+
+.column a {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #aaa;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.column a:hover {
+  color: #ff2990;
+
+  transform: translateX(5px);
+}
+
+.column svg {
+  width: 20px;
+
+  color: #ff2990;
+}
+
+.socials {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.socials button {
+  padding: 10px 18px;
+
+  border-radius: 14px;
+
+  background: #151515;
+
+  border: 1px solid #292929;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.socials button:hover {
+  border-color: #ff2990;
+
+  color: #ff2990;
+}
+
+.telegram {
+  margin-top: 15px;
+
+  height: 45px;
+
+  padding: 0 22px;
+
+  border-radius: 15px;
+
+  border: none;
+
+  background: #ff2990;
+
+  color: white;
+
+  font-weight: 700;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.telegram:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 15px 35px rgba(255, 41, 144, 0.35);
+}
+
+.bottom {
+  margin-top: 60px;
+
+  padding: 25px;
+
+  text-align: center;
+
+  color: #777;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 1000px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    grid-template-columns: 1fr;
+
+    padding: 0 20px;
+  }
+}
+
+.appBox {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 16px;
+
+  border-radius: 20px;
+
+  background: #141414;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  margin-top: 5px;
+}
+
+.appBox svg {
+  width: 38px;
+
+  height: 38px;
+
+  color: #ff2990;
+}
+
+.appBox strong {
+  display: block;
+
+  color: white;
+
+  font-size: 16px;
+}
+
+.appBox span {
+    color: #f69ec9;
+}
+
+.appBox p {
+  margin-top: 5px;
+
+  color: #888;
+
+  font-size: 13px;
+}
+
+.playStore {
+  margin-top: 15px;
+
+  height: 65px;
+
+  padding: 0 18px;
+
+  border-radius: 18px;
+
+  background: #000;
+
+  border: 1px solid #333;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  transition: 0.35s;
+}
+
+.playStore:hover {
+  border-color: #ff2990;
+
+  transform: translateY(-5px);
+
+  box-shadow: 0 20px 40px rgba(255, 41, 144, 0.25);
+}
+
+.playIcon {
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 50%;
+
+  background: #ff2990;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 15px;
+}
+
+.playStore span {
+  display: block;
+
+  color: #999;
+
+  font-size: 12px;
+}
+
+.playStore strong {
+  color: white;
+
+  font-size: 18px;
+}
