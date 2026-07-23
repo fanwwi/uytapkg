@@ -1,56 +1,74 @@
 .wrapper {
   position: relative;
 
-  width: 420px;
+  width: 100%;
+  height: 78px;
 
-  height: 55px;
+  margin-bottom: 35px;
 
-  margin: 0 auto 30px;
-
-  padding: 5px;
+  padding: 7px;
 
   display: grid;
-
   grid-template-columns: 1fr 1fr;
 
-  background: #f4f4f5;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(245, 245, 245, 0.8)
+  );
 
-  border-radius: 20px;
+  border-radius: 28px;
 
-  border: 1px solid #e8e8e8;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 
-  overflow: hidden;
+  backdrop-filter: blur(20px);
 
   box-shadow:
-    inset 0 2px 8px rgba(0, 0, 0, 0.04),
-    0 15px 40px rgba(0, 0, 0, 0.06);
+    0 20px 60px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  overflow: hidden;
 }
+
+/* активная подложка */
 
 .slider {
   position: absolute;
 
-  top: 5px;
+  top: 7px;
+  left: 7px;
 
-  left: 5px;
+  width: calc(50% - 7px);
+  height: calc(100% - 14px);
 
-  width: calc(50% - 5px);
+  border-radius: 22px;
 
-  height: calc(100% - 10px);
+  background: linear-gradient(135deg, #ff6bb5, #ff0077);
 
-  border-radius: 16px;
+  box-shadow:
+    0 15px 40px rgba(255, 0, 120, 0.35),
+    0 0 40px rgba(255, 0, 120, 0.25);
 
-  background: linear-gradient(135deg, #ff5aa8, #ff0066);
-
-  box-shadow: 0 10px 25px rgba(255, 0, 120, 0.3);
-
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.4s ease;
 
   z-index: 1;
 }
 
+/* AI режим */
+
 .smart {
   transform: translateX(100%);
+
+  background: linear-gradient(135deg, #ff5dc1, #ff0080);
+
+  box-shadow:
+    0 15px 45px rgba(139, 92, 246, 0.45),
+    0 0 50px rgba(236, 72, 153, 0.35);
 }
+
+/* кнопки */
 
 .wrapper button {
   position: relative;
@@ -67,45 +85,74 @@
 
   justify-content: center;
 
-  gap: 8px;
+  gap: 14px;
 
   cursor: pointer;
 
-  font-size: 15px;
+  font-size: 18px;
 
-  font-weight: 700;
+  font-weight: 800;
 
   color: #777;
 
-  transition: 0.3s;
+  transition: 0.35s ease;
 }
 
 .wrapper button svg {
-  width: 20px;
+  width: 26px;
 
-  height: 20px;
+  height: 26px;
 
-  transition: 0.3s;
+  stroke-width: 2.5;
+
+  transition: 0.35s ease;
 }
 
 .wrapper button:hover svg {
-  transform: scale(1.15);
+  transform: translateY(-3px) scale(1.15);
 }
+
+/* актив */
 
 .active {
   color: white !important;
 }
 
+.active svg {
+  color: white;
+
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+}
+
+/* эффект при наведении */
+
 .wrapper button:hover {
   transform: translateY(-2px);
 }
 
-@media (max-width: 500px) {
+/* маленький AI glow */
+
+.smart + button svg {
+  animation: none;
+}
+
+/* адаптив */
+
+@media (max-width: 700px) {
   .wrapper {
-    width: 100%;
+    height: 65px;
+
+    border-radius: 22px;
   }
 
   .wrapper button {
-    font-size: 13px;
+    font-size: 14px;
+
+    gap: 8px;
+  }
+
+  .wrapper button svg {
+    width: 20px;
+    height: 20px;
   }
 }

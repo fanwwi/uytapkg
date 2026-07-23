@@ -1,10 +1,28 @@
 "use client";
 
-import { Building2, Home, Trees, BedDouble, Store, Car } from "lucide-react";
+import {
+  Building2,
+  Home,
+  Trees,
+  BedDouble,
+  Store,
+  Car,
+  Flame,
+  Crown,
+} from "lucide-react";
 
 import styles from "./Categories.module.css";
 
-export default function Categories({ category, setCategory }) {
+export default function Categories({
+  category,
+  setCategory,
+
+  urgent,
+  setUrgent,
+
+  vip,
+  setVip,
+}) {
   const categories = [
     {
       name: "Квартиры",
@@ -49,6 +67,28 @@ export default function Categories({ category, setCategory }) {
           </button>
         );
       })}
+
+      {/* СРОЧНО */}
+
+      <button
+        className={urgent ? `${styles.tag} ${styles.urgentActive}` : styles.tag}
+        onClick={() => setUrgent(!urgent)}
+      >
+        <Flame />
+
+        <span>Срочно</span>
+      </button>
+
+      {/* VIP */}
+
+      <button
+        className={vip ? `${styles.tag} ${styles.vipActive}` : styles.tag}
+        onClick={() => setVip(!vip)}
+      >
+        <Crown />
+
+        <span>VIP</span>
+      </button>
     </div>
   );
 }

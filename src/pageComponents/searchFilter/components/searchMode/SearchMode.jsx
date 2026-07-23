@@ -8,10 +8,7 @@ export default function SearchMode({ mode, setMode }) {
   return (
     <div className={styles.wrapper}>
       <div
-        className={`
-          ${styles.slider}
-          ${mode === "smart" ? styles.smart : ""}
-        `}
+        className={`${styles.slider} ${mode === "smart" ? styles.smart : ""}`}
       />
 
       <button
@@ -19,7 +16,7 @@ export default function SearchMode({ mode, setMode }) {
         onClick={() => setMode("normal")}
       >
         <Search />
-        Обычный поиск
+        <span>Обычный поиск</span>
       </button>
 
       <button
@@ -27,7 +24,7 @@ export default function SearchMode({ mode, setMode }) {
         onClick={() => setMode("smart")}
       >
         <Sparkles />
-        Умный поиск
+        <span>Умный поиск</span>
       </button>
     </div>
   );

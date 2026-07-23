@@ -24,11 +24,97 @@ export default function AdvancedFilters({
   category,
   deal,
 
+  // common
+  documents,
+  setDocuments,
+
+  offerType,
+  setOfferType,
+
+  rentPeriod,
+  setRentPeriod,
+
+  // apartment / room / commercial
+  floor,
+  setFloor,
+
+  condition,
+  setCondition,
+
+  walls,
+  setWalls,
+
+  heating,
+  setHeating,
+
+  comfort,
+  setComfort,
+
+  // apartment
+  furniture,
+  setFurniture,
+
+  // house
+  houseType,
+  setHouseType,
+
+  sewage,
+  setSewage,
+
+  water,
+  setWater,
+
+  electricity,
+  setElectricity,
+
+  // land
+  landLocation,
+  setLandLocation,
+
+  relief,
+  setRelief,
+
+  communications,
+  setCommunications,
+
+  // rooms
   roomLocation,
   setRoomLocation,
 
+  totalRooms,
+  setTotalRooms,
+
+  privateBathroom,
+  setPrivateBathroom,
+
+  // commercial
+  commercialTypeAdvanced,
+  setCommercialTypeAdvanced,
+
+  technicalParams,
+  setTechnicalParams,
+
+  firstLine,
+  setFirstLine,
+
+  separateEntrance,
+  setSeparateEntrance,
+
+  rentalBusiness,
+  setRentalBusiness,
+
+  includedCost,
+  setIncludedCost,
+
+  paymentTerms,
+  setPaymentTerms,
+
+  // parking
   parkingAreaFrom,
+  setParkingAreaFrom,
+
   parkingAreaTo,
+  setParkingAreaTo,
 
   ceilingHeight,
   setCeilingHeight,
@@ -59,88 +145,7 @@ export default function AdvancedFilters({
 
   truckAccess,
   setTruckAccess,
-
-  totalRooms,
-  setTotalRooms,
-
-  privateBathroom,
-  setPrivateBathroom,
-
-  floor,
-  setFloor,
-
-  condition,
-  setCondition,
-
-  walls,
-  setWalls,
-
-  heating,
-  setHeating,
-
-  documents,
-  setDocuments,
-
-  furniture,
-  setFurniture,
-
-  comfort,
-  setComfort,
-
-  offerType,
-  setOfferType,
-
-  rentPeriod,
-  setRentPeriod,
-
-  houseType,
-  setHouseType,
-
-  sewage,
-  setSewage,
-
-  water,
-  setWater,
-
-  electricity,
-  setElectricity,
-
-  landLocation,
-  setLandLocation,
-
-  relief,
-  setRelief,
-
-  communications,
-  setCommunications,
-
-  commercialTypeAdvanced,
-  setCommercialTypeAdvanced,
-
-  technicalParams,
-  setTechnicalParams,
-
-  firstLine,
-  setFirstLine,
-
-  separateEntrance,
-  setSeparateEntrance,
-
-  rentalBusiness,
-  setRentalBusiness,
-
-  includedCost,
-  setIncludedCost,
-
-  paymentTerms,
-  setPaymentTerms,
 }) {
-  /*
-=========================
-УЧАСТКИ
-=========================
-*/
-
   if (category === "Участки") {
     return (
       <div className={styles.wrapper}>
@@ -152,7 +157,9 @@ export default function AdvancedFilters({
           options={[
             "Любые",
             "Красная книга",
-            "Тех паспорт",
+            "Синяя книга",
+            "Договор аренды",
+            "Акт на земельный участок",
             "Договор купли-продажи",
           ]}
         />
@@ -167,7 +174,8 @@ export default function AdvancedFilters({
             "Наличный расчет",
             "Ипотека",
             "Рассрочка",
-            "Обмен",
+            "Возможен обмен",
+            "Срочное предложение",
           ]}
         />
 
@@ -179,10 +187,11 @@ export default function AdvancedFilters({
           options={[
             "Любое",
             "В городе",
-            "Пригород",
-            "У трассы",
-            "У водоема",
-            "В горах",
+            "В пригороде",
+            "В предгорьях",
+            "Возле трассы",
+            "Возле водоема",
+            "В дачном массиве",
           ]}
         />
 
@@ -191,7 +200,7 @@ export default function AdvancedFilters({
           title="Рельеф"
           value={relief}
           setValue={setRelief}
-          options={["Любой", "Ровный", "С уклоном", "Холмистый", "Склон"]}
+          options={["Любой", "Ровный", "Небольшой уклон", "Крутой уклон"]}
         />
 
         <CustomSelect
@@ -206,6 +215,8 @@ export default function AdvancedFilters({
             "Газ",
             "Канализация",
             "Интернет",
+            "Отопление",
+            "Телефон",
           ]}
         />
 
@@ -217,11 +228,11 @@ export default function AdvancedFilters({
             setValue={setRentPeriod}
             options={[
               "Любой",
-              "По часам",
               "Посуточно",
-              "Понедельно",
-              "На сезон",
+              "По часам",
+              "По недельно",
               "Помесячно",
+              "На сезон",
               "Долгосрочно",
             ]}
           />
@@ -229,12 +240,6 @@ export default function AdvancedFilters({
       </div>
     );
   }
-
-  /*
-=========================
-ДОМА
-=========================
-*/
 
   if (category === "Дома") {
     return (
@@ -272,9 +277,9 @@ export default function AdvancedFilters({
             "Любое",
             "Газовое",
             "Центральное",
-            "Автономное",
+            "Твердое топливо",
             "Электрическое",
-            "Печное",
+            "Комбинированное",
           ]}
         />
 
@@ -285,8 +290,8 @@ export default function AdvancedFilters({
           setValue={setSewage}
           options={[
             "Любая",
-            "Центральная",
             "Возможно подведение",
+            "Центральная",
             "Септик",
             "Нет",
           ]}
@@ -324,6 +329,7 @@ export default function AdvancedFilters({
             "Красная книга",
             "Тех паспорт",
             "Договор купли-продажи",
+            "Акт на земельный участок",
           ]}
         />
 
@@ -337,7 +343,8 @@ export default function AdvancedFilters({
             "Наличный расчет",
             "Ипотека",
             "Рассрочка",
-            "Обмен",
+            "Возможен обмен",
+            "Срочное предложение",
           ]}
         />
 
@@ -349,11 +356,11 @@ export default function AdvancedFilters({
             setValue={setRentPeriod}
             options={[
               "Любой",
-              "По часам",
               "Посуточно",
-              "Понедельно",
-              "На сезон",
+              "По часам",
+              "По недельно",
               "Помесячно",
+              "На сезон",
               "Долгосрочно",
             ]}
           />
@@ -361,12 +368,6 @@ export default function AdvancedFilters({
       </div>
     );
   }
-
-  /*
-=========================
-КОМНАТЫ
-=========================
-*/
 
   if (category === "Комнаты") {
     return (
@@ -376,7 +377,14 @@ export default function AdvancedFilters({
           title="Расположение"
           value={roomLocation}
           setValue={setRoomLocation}
-          options={["Любое", "Центр", "Микрорайон", "Пригород"]}
+          options={[
+            "В квартире",
+            "В доме",
+            "В хостеле",
+            "В гостинице",
+            "В общежитии",
+            "В колливинге",
+          ]}
         />
 
         <CustomSelect
@@ -390,6 +398,7 @@ export default function AdvancedFilters({
             "2-комнатная",
             "3-комнатная",
             "4+ комнат",
+            "Свободная планировка",
           ]}
         />
 
@@ -398,21 +407,51 @@ export default function AdvancedFilters({
           title="Этаж"
           value={floor}
           setValue={setFloor}
-          options={["Любой", "1 этаж", "2-5 этаж", "6-10 этаж", "11+ этаж"]}
+          options={[
+            "Любой",
+            "1 этаж",
+            "2-3 этаж",
+            "4-5 этаж",
+            "6-7 этаж",
+            "8-9 этаж",
+            "10-11 этаж",
+            "11+ этаж",
+          ]}
         />
 
         <CustomSelect
           title="Состояние"
           value={condition}
           setValue={setCondition}
-          options={["Любое", "Евроремонт", "Косметический", "Без ремонта"]}
+          options={[
+            "Любое",
+            "Дизайнерский ремонт",
+            "Евроремонт",
+            "Косметический",
+            "Под самоотделку",
+            "Старый ремонт",
+            "Без ремонта",
+          ]}
         />
 
         <CustomSelect
           title="Стены"
           value={walls}
           setValue={setWalls}
-          options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
+          options={[
+            "Любые",
+            "Кирпич",
+            "Бетон",
+            "Газобетон",
+            "Панельные",
+            "Монолитные",
+            "Монолитно-кирпичные",
+            "Монолитно-каркасные",
+            "Газоблок",
+            "Пеноблок",
+            "Саман",
+            "Другие",
+          ]}
         />
 
         <CustomSelect
@@ -422,6 +461,7 @@ export default function AdvancedFilters({
           setValue={setHeating}
           options={[
             "Любое",
+            "Комбинированное",
             "Центральное",
             "Автономное",
             "Газовое",
@@ -431,16 +471,17 @@ export default function AdvancedFilters({
 
         <CustomSelect
           icon={ShieldCheck}
-          title="Удобства комнаты"
+          title="Удобства"
           value={comfort}
           setValue={setComfort}
           options={[
             "Любые",
-            "Интернет",
-            "Балкон",
-            "Кондиционер",
+            "Чистая",
+            "Уютная",
+            "Стиральная машина-автомат",
+            "Кабельное ТВ",
+            "Вся бытовая техника",
             "Холодильник",
-            "Стиральная машина",
           ]}
         />
 
@@ -449,7 +490,7 @@ export default function AdvancedFilters({
           title="Свой санузел"
           value={privateBathroom}
           setValue={setPrivateBathroom}
-          options={["Любой", "Да", "Нет"]}
+          options={["Да", "Нет"]}
         />
 
         <CustomSelect
@@ -457,7 +498,16 @@ export default function AdvancedFilters({
           title="Документы"
           value={documents}
           setValue={setDocuments}
-          options={["Любые", "Красная книга", "Тех паспорт", "Договор"]}
+          options={[
+            "Любые",
+            "Красная книга",
+            "Зеленая книга",
+            "Тех паспорт",
+            "ДДУ",
+            "Купля-продажа",
+            "Дарственная",
+            "Свидетельство о наследстве",
+          ]}
         />
 
         <CustomSelect
@@ -470,7 +520,8 @@ export default function AdvancedFilters({
             "Наличный расчет",
             "Ипотека",
             "Рассрочка",
-            "Обмен",
+            "Возможен обмен",
+            "Срочное предложение",
           ]}
         />
 
@@ -482,9 +533,11 @@ export default function AdvancedFilters({
             setValue={setRentPeriod}
             options={[
               "Любой",
-              "По часам",
               "Посуточно",
+              "По часам",
+              "По недельно",
               "Помесячно",
+              "На сезон",
               "Долгосрочно",
             ]}
           />
@@ -492,12 +545,6 @@ export default function AdvancedFilters({
       </div>
     );
   }
-
-  /*
-=========================
-КОММЕРЦИЯ
-=========================
-*/
 
   if (category === "Коммерция") {
     return (
@@ -516,10 +563,10 @@ export default function AdvancedFilters({
           setValue={setCondition}
           options={[
             "Любое",
-            "Новое",
-            "После ремонта",
+            "Без внутренней отделки",
+            "White box",
             "Требует ремонта",
-            "Чистовая отделка",
+            "С ремонтом",
           ]}
         />
 
@@ -527,7 +574,20 @@ export default function AdvancedFilters({
           title="Стены"
           value={walls}
           setValue={setWalls}
-          options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
+          options={[
+            "Любые",
+            "Кирпич",
+            "Бетон",
+            "Газобетон",
+            "Панельные",
+            "Монолитные",
+            "Монолитно-кирпичные",
+            "Монолитно-каркасные",
+            "Газоблок",
+            "Пеноблок",
+            "Саман",
+            "Другие",
+          ]}
         />
 
         <CustomSelect
@@ -541,20 +601,25 @@ export default function AdvancedFilters({
             "Автономное",
             "Газовое",
             "Электрическое",
+            "Комбинированное",
           ]}
         />
 
         <CustomSelect
           icon={Building2}
-          title="Тип"
+          title="Тип помещения"
           value={commercialTypeAdvanced}
           setValue={setCommercialTypeAdvanced}
           options={[
             "Любой",
-            "Торговое",
-            "Офисное",
-            "Производственное",
-            "Складское",
+            "Офис",
+            "Магазин",
+            "Склад",
+            "Производство",
+            "Общепит",
+            "Производство",
+            "Гостиница",
+            "Промбаза",
           ]}
         />
 
@@ -564,11 +629,11 @@ export default function AdvancedFilters({
           setValue={setTechnicalParams}
           options={[
             "Любые",
-            "Вентиляция",
+            "Центральная канализация",
+            "Трехфазное питание",
+            "Приточно-вытяжная вентиляция",
             "Кондиционирование",
-            "Грузовой лифт",
-            "Высокие потолки",
-            "Мощность электросети",
+            "Охранная/Пожарная сигнализация",
           ]}
         />
 
@@ -598,7 +663,14 @@ export default function AdvancedFilters({
           title="Тип предложения"
           value={offerType}
           setValue={setOfferType}
-          options={["Любой", "Наличный расчет", "Ипотека", "Рассрочка"]}
+          options={[
+            "Любой",
+            "Наличный расчет",
+            "Ипотека",
+            "Рассрочка",
+            "Возможен обмен",
+            "Срочное предложение",
+          ]}
         />
 
         {deal === "rent" && (
@@ -607,13 +679,7 @@ export default function AdvancedFilters({
               title="В стоимость включено"
               value={includedCost}
               setValue={setIncludedCost}
-              options={[
-                "Любое",
-                "Коммунальные услуги",
-                "Интернет",
-                "Охрана",
-                "Уборка",
-              ]}
+              options={["Коммунальные услуги", "НДС", "Охрана"]}
             />
 
             <CustomSelect
@@ -622,10 +688,9 @@ export default function AdvancedFilters({
               setValue={setPaymentTerms}
               options={[
                 "Любые",
-                "Предоплата",
-                "После месяца",
-                "Депозит",
-                "Без депозита",
+                "Предоплата 1 месяц",
+                "Предоплата от 3х месяцев",
+                "Требуется депозит/залог",
               ]}
             />
 
@@ -634,24 +699,21 @@ export default function AdvancedFilters({
               title="Период аренды"
               value={rentPeriod}
               setValue={setRentPeriod}
-              options={["Любой", "Посуточно", "Помесячно", "Долгосрочно"]}
+              options={[
+                "Любой",
+                "Посуточно",
+                "По часам",
+                "По недельно",
+                "Помесячно",
+                "На сезон",
+                "Долгосрочно",
+              ]}
             />
           </>
         )}
       </div>
     );
   }
-  /*
-=========================
-КВАРТИРЫ
-=========================
-*/
-
-  /*
-=========================
-ПАРКИНГ / ГАРАЖ
-=========================
-*/
 
   if (category === "Паркинг / Гараж") {
     return (
@@ -680,82 +742,45 @@ export default function AdvancedFilters({
           title="Высота потолков"
           value={ceilingHeight}
           setValue={setCeilingHeight}
-          options={["Любая", "до 2 м", "2-3 м", "3-4 м", "4+ м"]}
+          options={["Любая", "До 2 м", "2-3 м", "3-4 м", "4+ м"]}
         />
 
         <CustomSelect
           title="Тип парковки"
           value={parkingKind}
           setValue={setParkingKind}
-          options={[
-            "Любой",
-            "Открытая",
-            "Закрытая",
-            "Подземная",
-            "Многоуровневая",
-          ]}
+          options={["Любой", "Подземный", "Надземный", "Многоуровневый"]}
         />
 
         <CustomSelect
           title="Материал"
           value={material}
           setValue={setMaterial}
-          options={["Любой", "Кирпич", "Бетон", "Металл", "Сэндвич панели"]}
+          options={["Любой", "Металлический", "Кирпичный", "Железобетонный"]}
         />
+
+        {[
+          ["Ворота", hasGate, setHasGate],
+          ["Видеонаблюдение", camera, setCamera],
+          ["Смотровая яма", inspectionPit, setInspectionPit],
+          ["Электричество", electricityParking, setElectricityParking],
+          ["Погреб", cellar, setCellar],
+          ["Для грузового авто", truckAccess, setTruckAccess],
+        ].map(([title, value, setter]) => (
+          <CustomSelect
+            key={title}
+            title={title}
+            value={value}
+            setValue={setter}
+            options={["Любое", "Да", "Нет"]}
+          />
+        ))}
 
         <CustomSelect
           title="Тип ворот"
           value={gateType}
           setValue={setGateType}
-          options={[
-            "Любой",
-            "Распашные",
-            "Секционные",
-            "Рулонные",
-            "Автоматические",
-          ]}
-        />
-
-        <CustomSelect
-          title="Ворота"
-          value={hasGate}
-          setValue={hasGate}
-          options={["Любые", "Да", "Нет"]}
-        />
-
-        <CustomSelect
-          title="Видеонаблюдение"
-          value={camera}
-          setValue={setCamera}
-          options={["Любое", "Да", "Нет"]}
-        />
-
-        <CustomSelect
-          title="Смотровая яма"
-          value={inspectionPit}
-          setValue={setInspectionPit}
-          options={["Любая", "Да", "Нет"]}
-        />
-
-        <CustomSelect
-          title="Электричество"
-          value={electricityParking}
-          setValue={setElectricityParking}
-          options={["Любое", "Да", "Нет"]}
-        />
-
-        <CustomSelect
-          title="Погреб"
-          value={cellar}
-          setValue={setCellar}
-          options={["Любой", "Да", "Нет"]}
-        />
-
-        <CustomSelect
-          title="Для грузового авто"
-          value={truckAccess}
-          setValue={setTruckAccess}
-          options={["Любой", "Да", "Нет"]}
+          options={["Любой", "Распашные", "Подъемный", "Рулонные"]}
         />
 
         <CustomSelect
@@ -767,7 +792,11 @@ export default function AdvancedFilters({
             "Любые",
             "Красная книга",
             "Тех паспорт",
-            "Договор купли-продажи",
+            "ДДУ",
+            "Купля-продажа",
+            "Зеленая книга",
+            "Дарственная",
+            "Свидетельство о наследстве",
           ]}
         />
 
@@ -776,7 +805,14 @@ export default function AdvancedFilters({
           title="Тип предложения"
           value={offerType}
           setValue={setOfferType}
-          options={["Любой", "Наличный расчет", "Ипотека", "Рассрочка"]}
+          options={[
+            "Любой",
+            "Наличный расчет",
+            "Ипотека",
+            "Рассрочка",
+            "Возможен обмен",
+            "Срочное предложение",
+          ]}
         />
 
         {deal === "rent" && (
@@ -785,7 +821,15 @@ export default function AdvancedFilters({
             title="Период аренды"
             value={rentPeriod}
             setValue={setRentPeriod}
-            options={["Любой", "Посуточно", "Помесячно", "Долгосрочно"]}
+            options={[
+              "Любой",
+              "Посуточно",
+              "По часам",
+              "По недельно",
+              "Помесячно",
+              "На сезон",
+              "Долгосрочно",
+            ]}
           />
         )}
       </div>
@@ -799,7 +843,16 @@ export default function AdvancedFilters({
         title="Этаж"
         value={floor}
         setValue={setFloor}
-        options={["Любой", "1 этаж", "2-5 этаж", "6-10 этаж", "11+ этаж"]}
+        options={[
+          "Любой",
+          "1 этаж",
+          "2-3 этаж",
+          "4-5 этаж",
+          "6-7 этаж",
+          "8-9 этаж",
+          "10-11 этаж",
+          "11+ этаж",
+        ]}
       />
 
       <CustomSelect
@@ -811,6 +864,8 @@ export default function AdvancedFilters({
           "Дизайнерский ремонт",
           "Евроремонт",
           "Косметический",
+          "Под самоотделку",
+          "Старый ремонт",
           "Без ремонта",
         ]}
       />
@@ -819,7 +874,20 @@ export default function AdvancedFilters({
         title="Стены"
         value={walls}
         setValue={setWalls}
-        options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
+        options={[
+          "Любые",
+          "Кирпич",
+          "Бетон",
+          "Газобетон",
+          "Панельные",
+          "Монолитные",
+          "Монолитно-кирпичные",
+          "Монолитно-каркасные",
+          "Газоблок",
+          "Пеноблок",
+          "Саман",
+          "Другие",
+        ]}
       />
 
       <CustomSelect
@@ -833,6 +901,7 @@ export default function AdvancedFilters({
           "Газовое",
           "Центральное",
           "Электрическое",
+          "Комбинированное",
         ]}
       />
 
@@ -846,6 +915,8 @@ export default function AdvancedFilters({
           "Красная книга",
           "Тех паспорт",
           "Договор купли-продажи",
+          "Договор долевого участия",
+          "Акт приема-передачи",
         ]}
       />
 
@@ -864,7 +935,21 @@ export default function AdvancedFilters({
         setValue={setComfort}
         options={[
           "Любые",
-          "Балкон",
+          "Балкон/Лоджия",
+          "Нет балкона/лоджии",
+          "Бронированные двери",
+          "Бытовая техника",
+          "Видеонаблюдение",
+          "Вид на горы",
+          "Животные не проживали",
+          "Закрытая территория",
+          "Не затапливалась",
+          "Не сдавалась квартирантам",
+          "Не угловая",
+          "Раздельный санузел",
+          "Совместные санузел",
+          "Угловая квартира",
+          "Не угловая квартира",
           "Лифт",
           "Охрана",
           "Парковка",
@@ -877,7 +962,14 @@ export default function AdvancedFilters({
         title="Тип предложения"
         value={offerType}
         setValue={setOfferType}
-        options={["Любой", "Наличный расчет", "Ипотека", "Рассрочка", "Обмен"]}
+        options={[
+          "Любой",
+          "Наличный расчет",
+          "Ипотека",
+          "Рассрочка",
+          "Возможен обмен",
+          "Срочное предложение",
+        ]}
       />
 
       {deal === "rent" && (
@@ -888,9 +980,11 @@ export default function AdvancedFilters({
           setValue={setRentPeriod}
           options={[
             "Любой",
-            "По часам",
             "Посуточно",
+            "По часам",
+            "По недельно",
             "Помесячно",
+            "На сезон",
             "Долгосрочно",
           ]}
         />

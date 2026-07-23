@@ -18,23 +18,8 @@ import styles from "./MainFilters.module.css";
 export default function MainFilters({
   category,
 
-  commercialType,
-  setCommercialType,
-
-  parkingType,
-  setParkingType,
-
-  security,
-  setSecurity,
-
   location,
   setLocation,
-
-  type,
-  setType,
-
-  rooms,
-  setRooms,
 
   priceFrom,
   setPriceFrom,
@@ -48,22 +33,79 @@ export default function MainFilters({
   areaTo,
   setAreaTo,
 
-  landFrom,
-  setLandFrom,
+  landAreaFrom,
+  setLandAreaFrom,
 
-  landTo,
-  setLandTo,
+  landAreaTo,
+  setLandAreaTo,
+
+  type,
+  setType,
+
+  rooms,
+  setRooms,
 
   purpose,
   setPurpose,
 
   fence,
   setFence,
+
+  commercialType,
+  setCommercialType,
+
+  parkingType,
+  setParkingType,
+
+  security,
+  setSecurity,
 }) {
+  const renderArea = () => (
+    <div className={styles.inputBox}>
+      <div className={styles.icon}>
+        <Maximize />
+      </div>
+
+      <input
+        placeholder="От м²"
+        value={areaFrom}
+        onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
+      />
+
+      <span>-</span>
+
+      <input
+        placeholder="До м²"
+        value={areaTo}
+        onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
+      />
+    </div>
+  );
+
+  const renderPrice = () => (
+    <div className={styles.inputBox}>
+      <div className={styles.icon}>
+        <DollarSign />
+      </div>
+
+      <input
+        placeholder="От $"
+        value={priceFrom}
+        onChange={(e) => setPriceFrom(e.target.value.replace(/\D/g, ""))}
+      />
+
+      <span>-</span>
+
+      <input
+        placeholder="До $"
+        value={priceTo}
+        onChange={(e) => setPriceTo(e.target.value.replace(/\D/g, ""))}
+      />
+    </div>
+  );
+
   return (
     <div className={styles.wrapper}>
-      {/* Локация */}
-
       <CustomSelect
         icon={MapPin}
         title="Локация"
@@ -81,103 +123,13 @@ export default function MainFilters({
         ]}
       />
 
-      {/* Цена */}
+      {renderPrice()}
 
-      <div className={styles.inputBox}>
-        <div className={styles.icon}>
-          <DollarSign />
-        </div>
-
-        <input
-          placeholder="От $"
-          value={priceFrom}
-          onChange={(e) => setPriceFrom(e.target.value.replace(/\D/g, ""))}
-        />
-
-        <span>-</span>
-
-        <input
-          placeholder="До $"
-          value={priceTo}
-          onChange={(e) => setPriceTo(e.target.value.replace(/\D/g, ""))}
-        />
-      </div>
-
-      {category === "Комнаты" && (
-        <>
-          <div className={styles.inputBox}>
-            <div className={styles.icon}>
-              <Maximize />
-            </div>
-
-            <input
-              placeholder="От м²"
-              value={areaFrom}
-              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
-            />
-
-            <span>-</span>
-
-            <input
-              placeholder="До м²"
-              value={areaTo}
-              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
-            />
-          </div>
-        </>
-      )}
-
-      {category === "Паркинг / Гараж" && (
-        <>
-          <CustomSelect
-            icon={Building2}
-            title="Тип"
-            value={parkingType}
-            setValue={setParkingType}
-            options={[
-              "Любой",
-              "Гараж",
-              "Паркинг",
-              "Подземный паркинг",
-              "Наземный паркинг",
-            ]}
-          />
-
-          <CustomSelect
-            icon={ShieldCheck}
-            title="Охрана"
-            value={security}
-            setValue={setSecurity}
-            options={["Любая", "Есть", "Нет", "Круглосуточная"]}
-          />
-        </>
-      )}
-
-      {/* =====================
-          КВАРТИРЫ
-      ====================== */}
+      {/* КВАРТИРЫ */}
 
       {category === "Квартиры" && (
         <>
-          <div className={styles.inputBox}>
-            <div className={styles.icon}>
-              <Maximize />
-            </div>
-
-            <input
-              placeholder="От м²"
-              value={areaFrom}
-              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
-            />
-
-            <span>-</span>
-
-            <input
-              placeholder="До м²"
-              value={areaTo}
-              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
-            />
-          </div>
+          {renderArea()}
 
           <CustomSelect
             icon={Building2}
@@ -189,14 +141,10 @@ export default function MainFilters({
               "Новостройка",
               "102 серия",
               "104 серия",
-              "104 улучшенный",
               "105 серия",
               "106 серия",
-              "107 серия",
-              "108 серия",
               "Сталинка",
               "Хрущевка",
-              "Индивидуальная",
               "Элитка",
               "Пентхаус",
             ]}
@@ -218,53 +166,19 @@ export default function MainFilters({
         </>
       )}
 
-      {/* =====================
-          ДОМА
-      ====================== */}
+      {/* КОМНАТЫ */}
 
-      {category === "Дома" && (
-        <div className={styles.inputBox}>
-          <div className={styles.icon}>
-            <Maximize />
-          </div>
+      {category === "Комнаты" && <>{renderArea()}</>}
 
-          <input
-            placeholder="От м²"
-            value={areaFrom}
-            onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
-          />
+      {/* ДОМА */}
 
-          <span>-</span>
+      {category === "Дома" && <>{renderArea()}</>}
 
-          <input
-            placeholder="До м²"
-            value={areaTo}
-            onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
-          />
-        </div>
-      )}
+      {/* КОММЕРЦИЯ */}
 
       {category === "Коммерция" && (
         <>
-          <div className={styles.inputBox}>
-            <div className={styles.icon}>
-              <Maximize />
-            </div>
-
-            <input
-              placeholder="От м²"
-              value={areaFrom}
-              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
-            />
-
-            <span>-</span>
-
-            <input
-              placeholder="До м²"
-              value={areaTo}
-              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
-            />
-          </div>
+          {renderArea()}
 
           <CustomSelect
             icon={Building2}
@@ -286,9 +200,7 @@ export default function MainFilters({
         </>
       )}
 
-      {/* =====================
-          УЧАСТКИ
-      ====================== */}
+      {/* УЧАСТКИ */}
 
       {category === "Участки" && (
         <>
@@ -299,16 +211,18 @@ export default function MainFilters({
 
             <input
               placeholder="От соток"
-              value={landFrom}
-              onChange={(e) => setLandFrom(e.target.value.replace(/\D/g, ""))}
+              value={landAreaFrom}
+              onChange={(e) =>
+                setLandAreaFrom(e.target.value.replace(/\D/g, ""))
+              }
             />
 
             <span>-</span>
 
             <input
               placeholder="До соток"
-              value={landTo}
-              onChange={(e) => setLandTo(e.target.value.replace(/\D/g, ""))}
+              value={landAreaTo}
+              onChange={(e) => setLandAreaTo(e.target.value.replace(/\D/g, ""))}
             />
           </div>
 
@@ -326,6 +240,28 @@ export default function MainFilters({
             value={fence}
             setValue={setFence}
             options={["Есть", "Нет", "Частично"]}
+          />
+        </>
+      )}
+
+      {/* ПАРКИНГ */}
+
+      {category === "Паркинг / Гараж" && (
+        <>
+          <CustomSelect
+            icon={Building2}
+            title="Тип"
+            value={parkingType}
+            setValue={setParkingType}
+            options={["Любой", "Гараж", "Паркинг"]}
+          />
+
+          <CustomSelect
+            icon={ShieldCheck}
+            title="Охрана"
+            value={security}
+            setValue={setSecurity}
+            options={["Любая", "Есть", "Нет", "Круглосуточная"]}
           />
         </>
       )}
