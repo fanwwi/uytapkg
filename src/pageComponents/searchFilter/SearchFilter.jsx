@@ -20,7 +20,47 @@ export default function SearchFilter() {
 
   const [advanced, setAdvanced] = useState(false);
 
-  // квартира / дом фильтры
+  // =====================
+  // MAIN FILTERS
+  // =====================
+
+  const [location, setLocation] = useState("Любая");
+
+  const [type, setType] = useState("Любой");
+
+  const [rooms, setRooms] = useState("Любой");
+
+  const [priceFrom, setPriceFrom] = useState("");
+
+  const [priceTo, setPriceTo] = useState("");
+
+  // квартира площадь
+
+  const [areaFrom, setAreaFrom] = useState("");
+
+  const [areaTo, setAreaTo] = useState("");
+
+  // участок
+
+  const [landFrom, setLandFrom] = useState("");
+
+  const [landTo, setLandTo] = useState("");
+
+  const [purpose, setPurpose] = useState("Любое");
+
+  const [fence, setFence] = useState("Любой");
+
+  // =====================
+  // ADVANCED COMMON
+  // =====================
+
+  const [documents, setDocuments] = useState("Любые");
+
+  const [offerType, setOfferType] = useState("Любой");
+
+  // =====================
+  // APARTMENT
+  // =====================
 
   const [floor, setFloor] = useState("Любой");
 
@@ -30,19 +70,19 @@ export default function SearchFilter() {
 
   const [heating, setHeating] = useState("Любое");
 
-  const [documents, setDocuments] = useState("Любые");
-
   const [furniture, setFurniture] = useState("Любая");
 
   const [comfort, setComfort] = useState("Любые");
 
-  const [offerType, setOfferType] = useState("Любой");
-
-  // аренда
+  // =====================
+  // RENT
+  // =====================
 
   const [rentPeriod, setRentPeriod] = useState("Любой");
 
-  // дома
+  // =====================
+  // HOUSE
+  // =====================
 
   const [houseType, setHouseType] = useState("Любой");
 
@@ -52,11 +92,15 @@ export default function SearchFilter() {
 
   const [electricity, setElectricity] = useState("Любое");
 
-  // участок
+  // =====================
+  // LAND ADVANCED
+  // =====================
 
-  const [landFrom, setLandFrom] = useState("");
+  const [landLocation, setLandLocation] = useState("Любое");
 
-  const [landTo, setLandTo] = useState("");
+  const [relief, setRelief] = useState("Любой");
+
+  const [communications, setCommunications] = useState("Любые");
 
   return (
     <section className={styles.wrapper}>
@@ -67,13 +111,39 @@ export default function SearchFilter() {
 
         <Categories category={category} setCategory={setCategory} />
 
-        <MainFilters category={category} />
+        <MainFilters
+          category={category}
+          location={location}
+          setLocation={setLocation}
+          type={type}
+          setType={setType}
+          rooms={rooms}
+          setRooms={setRooms}
+          priceFrom={priceFrom}
+          setPriceFrom={setPriceFrom}
+          priceTo={priceTo}
+          setPriceTo={setPriceTo}
+          areaFrom={areaFrom}
+          setAreaFrom={setAreaFrom}
+          areaTo={areaTo}
+          setAreaTo={setAreaTo}
+          landFrom={landFrom}
+          setLandFrom={setLandFrom}
+          landTo={landTo}
+          setLandTo={setLandTo}
+          purpose={purpose}
+          setPurpose={setPurpose}
+          fence={fence}
+          setFence={setFence}
+        />
 
         <AdvancedFilters
           category={category}
           deal={deal}
           advanced={advanced}
           setAdvanced={setAdvanced}
+          /* apartment */
+
           floor={floor}
           setFloor={setFloor}
           condition={condition}
@@ -82,16 +152,22 @@ export default function SearchFilter() {
           setWalls={setWalls}
           heating={heating}
           setHeating={setHeating}
-          documents={documents}
-          setDocuments={setDocuments}
           furniture={furniture}
           setFurniture={setFurniture}
           comfort={comfort}
           setComfort={setComfort}
+          /* common */
+
+          documents={documents}
+          setDocuments={setDocuments}
           offerType={offerType}
           setOfferType={setOfferType}
+          /* rent */
+
           rentPeriod={rentPeriod}
           setRentPeriod={setRentPeriod}
+          /* house */
+
           houseType={houseType}
           setHouseType={setHouseType}
           sewage={sewage}
@@ -100,6 +176,16 @@ export default function SearchFilter() {
           setWater={setWater}
           electricity={electricity}
           setElectricity={setElectricity}
+          /* land */
+
+          landLocation={landLocation}
+          setLandLocation={setLandLocation}
+          relief={relief}
+          setRelief={setRelief}
+          communications={communications}
+          setCommunications={setCommunications}
+          /* land main */
+
           landFrom={landFrom}
           setLandFrom={setLandFrom}
           landTo={landTo}

@@ -1,174 +1,48 @@
 "use client";
 
 import {
-  Trees,
-  Ruler,
-  FileCheck,
+  Map,
+  Mountain,
   Droplets,
   Zap,
-  Flame,
-  Route,
-  Mountain,
+  FileCheck,
   BadgeCheck,
-  CalendarDays,
 } from "lucide-react";
 
-import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
+import CustomSelect from "../../../../../components/ui/customSelect/CustomSelect";
 
 import styles from "./LandFilters.module.css";
 
 export default function LandFilters({
-  deal,
-
-  purpose,
-  setPurpose,
-
-  landFrom,
-  setLandFrom,
-
-  landTo,
-  setLandTo,
-
-  documents,
-  setDocuments,
-
-  water,
-  setWater,
-
-  electricity,
-  setElectricity,
-
-  sewage,
-  setSewage,
-
-  gas,
-  setGas,
-
-  road,
-  setRoad,
+  locationType,
+  setLocationType,
 
   relief,
   setRelief,
 
+  communications,
+  setCommunications,
+
+  documents,
+  setDocuments,
+
   offerType,
   setOfferType,
-
-  rentPeriod,
-  setRentPeriod,
 }) {
   return (
     <div className={styles.wrapper}>
-      {/* назначение */}
-
       <CustomSelect
-        icon={Trees}
-        title="Назначение участка"
-        value={purpose}
-        setValue={setPurpose}
+        icon={Map}
+        title="Расположение"
+        value={locationType}
+        setValue={setLocationType}
         options={[
-          "Любое",
-
-          "ИЖС",
-
-          "Сельхозназначение",
-
-          "Коммерция",
-
-          "Под строительство",
-
-          "Дачное строительство",
-        ]}
-      />
-
-      {/* площадь */}
-
-      <div className={styles.area}>
-        <div className={styles.icon}>
-          <Ruler />
-        </div>
-
-        <input
-          placeholder="От м²"
-          value={landFrom}
-          onChange={(e) => setLandFrom(e.target.value.replace(/\D/g, ""))}
-        />
-
-        <span>-</span>
-
-        <input
-          placeholder="До м²"
-          value={landTo}
-          onChange={(e) => setLandTo(e.target.value.replace(/\D/g, ""))}
-        />
-      </div>
-
-      <CustomSelect
-        icon={Droplets}
-        title="Вода"
-        value={water}
-        setValue={setWater}
-        options={[
-          "Любая",
-
-          "Центральная",
-
-          "Скважина",
-
-          "Возможно подведение",
-
-          "Нет",
-        ]}
-      />
-
-      <CustomSelect
-        icon={Zap}
-        title="Электричество"
-        value={electricity}
-        setValue={setElectricity}
-        options={["Любое", "Есть", "Возможно подведение", "Нет"]}
-      />
-
-      <CustomSelect
-        icon={Droplets}
-        title="Канализация"
-        value={sewage}
-        setValue={setSewage}
-        options={[
-          "Любая",
-
-          "Центральная",
-
-          "Септик",
-
-          "Возможно подведение",
-
-          "Нет",
-        ]}
-      />
-
-      <CustomSelect
-        icon={Flame}
-        title="Газ"
-        value={gas}
-        setValue={setGas}
-        options={["Любой", "Есть", "Возможно подведение", "Нет"]}
-      />
-
-      <CustomSelect
-        icon={Route}
-        title="Подъезд"
-        value={road}
-        setValue={setRoad}
-        options={[
-          "Любой",
-
-          "Асфальт",
-
-          "Грунтовая дорога",
-
-          "Щебень",
-
-          "Нет дороги",
+          "У города",
+          "В черте города",
+          "Пригород",
+          "У трассы",
+          "Экологическая зона",
+          "С видом на горы",
         ]}
       />
 
@@ -177,7 +51,28 @@ export default function LandFilters({
         title="Рельеф"
         value={relief}
         setValue={setRelief}
-        options={["Любой", "Ровный", "Наклонный", "Холмистый"]}
+        options={[
+          "Ровный участок",
+          "С уклоном",
+          "Гористый",
+          "Низина",
+          "Возле воды",
+        ]}
+      />
+
+      <CustomSelect
+        icon={Droplets}
+        title="Коммуникации"
+        value={communications}
+        setValue={setCommunications}
+        options={[
+          "Все коммуникации",
+          "Вода",
+          "Газ",
+          "Электричество",
+          "Канализация",
+          "Нет коммуникаций",
+        ]}
       />
 
       <CustomSelect
@@ -186,14 +81,9 @@ export default function LandFilters({
         value={documents}
         setValue={setDocuments}
         options={[
-          "Любые",
-
           "Красная книга",
-
           "Тех паспорт",
-
           "Договор купли-продажи",
-
           "Нет документов",
         ]}
       />
@@ -203,18 +93,8 @@ export default function LandFilters({
         title="Тип предложения"
         value={offerType}
         setValue={setOfferType}
-        options={["Любой", "Наличный расчет", "Рассрочка", "Ипотека", "Обмен"]}
+        options={["Наличный расчет", "Ипотека", "Рассрочка", "Обмен"]}
       />
-
-      {deal === "rent" && (
-        <CustomSelect
-          icon={CalendarDays}
-          title="Период аренды"
-          value={rentPeriod}
-          setValue={setRentPeriod}
-          options={["Любой", "Помесячно", "Долгосрочно"]}
-        />
-      )}
     </div>
   );
 }

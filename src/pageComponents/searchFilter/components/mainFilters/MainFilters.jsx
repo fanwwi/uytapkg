@@ -13,6 +13,8 @@ import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
 import styles from "./MainFilters.module.css";
 
 export default function MainFilters({
+  category,
+
   location,
   setLocation,
 
@@ -36,8 +38,6 @@ export default function MainFilters({
 }) {
   return (
     <div className={styles.wrapper}>
-      {/* Локация */}
-
       <CustomSelect
         icon={MapPin}
         title="Локация"
@@ -55,8 +55,6 @@ export default function MainFilters({
           "Баткенская область",
         ]}
       />
-
-      {/* Цена */}
 
       <div className={styles.inputBox}>
         <div className={styles.icon}>
@@ -78,8 +76,6 @@ export default function MainFilters({
         />
       </div>
 
-      {/* Площадь */}
-
       <div className={styles.inputBox}>
         <div className={styles.icon}>
           <Maximize />
@@ -100,35 +96,30 @@ export default function MainFilters({
         />
       </div>
 
-      {/* Тип */}
-
-      <CustomSelect
-        icon={Building2}
-        title="Серия/Тип"
-        value={type}
-        setValue={setType}
-        options={[
-          "Любая",
-          "Новостройка",
-          "102",
-          "104",
-          "104 улучшенная",
-          "105",
-          "105 улучшенная",
-          "106",
-          "106 улучшенная",
-          "107",
-          "108",
-          "Сталинка",
-          "Хрущевка",
-          "Элитка",
-          "Малосемейка",
-          "Инд. планировка",
-          "Пентхаус"
-        ]}
-      />
-
-      {/* Комнаты */}
+      {category === "Квартиры" && (
+        <CustomSelect
+          icon={Building2}
+          title="Серия / тип"
+          value={type}
+          setValue={setType}
+          options={[
+            "Любой",
+            "Новостройка",
+            "102 серия",
+            "104 серия",
+            "104 улучшенный",
+            "105 серия",
+            "106 серия",
+            "107 серия",
+            "108 серия",
+            "Сталинка",
+            "Хрущевка",
+            "Индивидуальная",
+            "Элитка",
+            "Пентхаус",
+          ]}
+        />
+      )}
 
       <CustomSelect
         icon={BedDouble}
