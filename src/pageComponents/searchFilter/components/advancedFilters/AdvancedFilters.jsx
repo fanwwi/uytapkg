@@ -12,6 +12,8 @@ import {
   Droplets,
   Zap,
   Ruler,
+  MapPin,
+  Mountain,
 } from "lucide-react";
 
 import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
@@ -61,15 +63,97 @@ export default function AdvancedFilters({
   electricity,
   setElectricity,
 
-  landFrom,
-  setLandFrom,
+  landLocation,
+  setLandLocation,
 
-  landTo,
-  setLandTo,
+  relief,
+  setRelief,
+
+  communications,
+  setCommunications,
 }) {
-  // =========================
-  // ДОМА
-  // =========================
+  /*
+=========================
+УЧАСТКИ
+=========================
+*/
+
+  if (category === "Участки") {
+    return (
+      <div className={styles.wrapper}>
+        <CustomSelect
+          icon={FileCheck}
+          title="Документы"
+          value={documents}
+          setValue={setDocuments}
+          options={[
+            "Любые",
+            "Красная книга",
+            "Тех паспорт",
+            "Договор купли-продажи",
+          ]}
+        />
+
+        <CustomSelect
+          icon={BadgeCheck}
+          title="Тип предложения"
+          value={offerType}
+          setValue={setOfferType}
+          options={[
+            "Любой",
+            "Наличный расчет",
+            "Ипотека",
+            "Рассрочка",
+            "Обмен",
+          ]}
+        />
+
+        <CustomSelect
+          icon={MapPin}
+          title="Расположение"
+          value={landLocation}
+          setValue={setLandLocation}
+          options={[
+            "Любое",
+            "В городе",
+            "Пригород",
+            "У трассы",
+            "У водоема",
+            "В горах",
+          ]}
+        />
+
+        <CustomSelect
+          icon={Mountain}
+          title="Рельеф"
+          value={relief}
+          setValue={setRelief}
+          options={["Любой", "Ровный", "С уклоном", "Холмистый", "Склон"]}
+        />
+
+        <CustomSelect
+          icon={Zap}
+          title="Коммуникации"
+          value={communications}
+          setValue={setCommunications}
+          options={[
+            "Любые",
+            "Электричество",
+            "Вода",
+            "Газ",
+            "Канализация",
+            "Интернет",
+          ]}
+        />
+      </div>
+    );
+  }
+
+  /*
+=========================
+ДОМА
+=========================
+*/
 
   if (category === "Дома") {
     return (
@@ -149,26 +233,6 @@ export default function AdvancedFilters({
           options={["Любое", "Есть", "Возможно подведение", "Нет"]}
         />
 
-        <div className={styles.area}>
-          <div className={styles.icon}>
-            <Ruler />
-          </div>
-
-          <input
-            placeholder="Участок от соток"
-            value={landFrom}
-            onChange={(e) => setLandFrom(e.target.value.replace(/\D/g, ""))}
-          />
-
-          <span>-</span>
-
-          <input
-            placeholder="Участок до соток"
-            value={landTo}
-            onChange={(e) => setLandTo(e.target.value.replace(/\D/g, ""))}
-          />
-        </div>
-
         <CustomSelect
           icon={FileCheck}
           title="Документы"
@@ -180,14 +244,6 @@ export default function AdvancedFilters({
             "Тех паспорт",
             "Договор купли-продажи",
           ]}
-        />
-
-        <CustomSelect
-          icon={Sofa}
-          title="Мебель"
-          value={furniture}
-          setValue={setFurniture}
-          options={["Любая", "Полная", "Частичная", "Без мебели"]}
         />
 
         <CustomSelect
@@ -203,23 +259,15 @@ export default function AdvancedFilters({
             "Обмен",
           ]}
         />
-
-        {deal === "rent" && (
-          <CustomSelect
-            icon={CalendarDays}
-            title="Период аренды"
-            value={rentPeriod}
-            setValue={setRentPeriod}
-            options={["Любой", "Посуточно", "Помесячно", "Долгосрочно"]}
-          />
-        )}
       </div>
     );
   }
 
-  // =========================
-  // КВАРТИРЫ
-  // =========================
+  /*
+=========================
+КВАРТИРЫ
+=========================
+*/
 
   return (
     <div className={styles.wrapper}>
@@ -240,8 +288,6 @@ export default function AdvancedFilters({
           "Дизайнерский ремонт",
           "Евроремонт",
           "Косметический",
-          "Под самоотделку",
-          "Старый ремонт",
           "Без ремонта",
         ]}
       />
@@ -250,20 +296,7 @@ export default function AdvancedFilters({
         title="Стены"
         value={walls}
         setValue={setWalls}
-        options={[
-          "Любые",
-          "Кирпич",
-          "Панельные",
-          "Монолитные",
-          "Газоблок",
-          "Бетон",
-          "Газобетон",
-          "Монолитно-каркасные",
-          "Монолитно-кирпичные",
-          "Пеноблок",
-          "Саман",
-          "Другие",
-        ]}
+        options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
       />
 
       <CustomSelect
@@ -275,7 +308,6 @@ export default function AdvancedFilters({
           "Любое",
           "Автономное",
           "Газовое",
-          "Комбинированное",
           "Центральное",
           "Электрическое",
         ]}
@@ -291,8 +323,6 @@ export default function AdvancedFilters({
           "Красная книга",
           "Тех паспорт",
           "Договор купли-продажи",
-          "Договор долевого участия",
-          "Акт приема передачи",
         ]}
       />
 
@@ -311,22 +341,7 @@ export default function AdvancedFilters({
         setValue={setComfort}
         options={[
           "Любые",
-          "Балкон/Лоджия",
-          "Нет балкона/лоджии",
-          "Бронированные двери",
-          "Бытовая техника",
-          "Видеонаблюдение",
-          "Вид на горы",
-          "Животные не проживали",
-          "Закрытая территория",
-          "Не затапливалась",
-          "Не сдавалась квартирантам",
-          "Угловая",
-          "Не уголовая",
-          "Раздельный санузел",
-          "Совместный санузел",
-          "С мебелью",
-          "Без мебели",
+          "Балкон",
           "Лифт",
           "Охрана",
           "Парковка",
@@ -352,8 +367,6 @@ export default function AdvancedFilters({
             "Любой",
             "По часам",
             "Посуточно",
-            "По недельно",
-            "На сезон",
             "Помесячно",
             "Долгосрочно",
           ]}
