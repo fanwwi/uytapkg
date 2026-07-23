@@ -8,6 +8,7 @@ import {
   BedDouble,
   Ruler,
   Fence,
+  ShieldCheck,
 } from "lucide-react";
 
 import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
@@ -16,6 +17,15 @@ import styles from "./MainFilters.module.css";
 
 export default function MainFilters({
   category,
+
+  commercialType,
+  setCommercialType,
+
+  parkingType,
+  setParkingType,
+
+  security,
+  setSecurity,
 
   location,
   setLocation,
@@ -117,6 +127,32 @@ export default function MainFilters({
         </>
       )}
 
+      {category === "Паркинг / Гараж" && (
+        <>
+          <CustomSelect
+            icon={Building2}
+            title="Тип"
+            value={parkingType}
+            setValue={setParkingType}
+            options={[
+              "Любой",
+              "Гараж",
+              "Паркинг",
+              "Подземный паркинг",
+              "Наземный паркинг",
+            ]}
+          />
+
+          <CustomSelect
+            icon={ShieldCheck}
+            title="Охрана"
+            value={security}
+            setValue={setSecurity}
+            options={["Любая", "Есть", "Нет", "Круглосуточная"]}
+          />
+        </>
+      )}
+
       {/* =====================
           КВАРТИРЫ
       ====================== */}
@@ -206,6 +242,48 @@ export default function MainFilters({
             onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
           />
         </div>
+      )}
+
+      {category === "Коммерция" && (
+        <>
+          <div className={styles.inputBox}>
+            <div className={styles.icon}>
+              <Maximize />
+            </div>
+
+            <input
+              placeholder="От м²"
+              value={areaFrom}
+              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
+            />
+
+            <span>-</span>
+
+            <input
+              placeholder="До м²"
+              value={areaTo}
+              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
+            />
+          </div>
+
+          <CustomSelect
+            icon={Building2}
+            title="Тип помещения"
+            value={commercialType}
+            setValue={setCommercialType}
+            options={[
+              "Любой",
+              "Офис",
+              "Магазин",
+              "Склад",
+              "Производство",
+              "Кафе/ресторан",
+              "Салон красоты",
+              "Аптека",
+              "Свободное назначение",
+            ]}
+          />
+        </>
       )}
 
       {/* =====================

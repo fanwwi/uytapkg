@@ -21,6 +21,37 @@ export default function SearchFilter() {
   const [advanced, setAdvanced] = useState(false);
 
   // ======================
+  // PARKING / GARAGE
+  // ======================
+
+  const [parkingType, setParkingType] = useState("Любой");
+
+  const [security, setSecurity] = useState("Любая");
+
+  const [parkingAreaFrom, setParkingAreaFrom] = useState("");
+  const [parkingAreaTo, setParkingAreaTo] = useState("");
+
+  const [ceilingHeight, setCeilingHeight] = useState("");
+
+  const [parkingKind, setParkingKind] = useState("Любой");
+
+  const [material, setMaterial] = useState("Любой");
+
+  const [gateType, setGateType] = useState("Любой");
+
+  const [hasGate, setHasGate] = useState("Любые");
+
+  const [camera, setCamera] = useState("Любое");
+
+  const [inspectionPit, setInspectionPit] = useState("Любая");
+
+  const [electricityParking, setElectricityParking] = useState("Любое");
+
+  const [cellar, setCellar] = useState("Любой");
+
+  const [truckAccess, setTruckAccess] = useState("Любой");
+
+  // ======================
   // COMMON MAIN
   // ======================
 
@@ -28,6 +59,26 @@ export default function SearchFilter() {
 
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
+
+  // ======================
+  // COMMERCIAL
+  // ======================
+
+  const [commercialType, setCommercialType] = useState("Любой");
+
+  const [technicalParams, setTechnicalParams] = useState("Любые");
+
+  const [firstLine, setFirstLine] = useState("Любая");
+
+  const [separateEntrance, setSeparateEntrance] = useState("Любой");
+
+  const [rentalBusiness, setRentalBusiness] = useState("Любой");
+
+  const [includedCost, setIncludedCost] = useState("Любое");
+
+  const [paymentTerms, setPaymentTerms] = useState("Любые");
+
+  const [commercialTypeAdvanced, setCommercialTypeAdvanced] = useState("Любой");
 
   // ======================
   // APARTMENT
@@ -133,6 +184,30 @@ export default function SearchFilter() {
           setPurpose={setPurpose}
           fence={fence}
           setFence={setFence}
+          commercialType={commercialType}
+          setCommercialType={setCommercialType}
+          parkingAreaFrom={parkingAreaFrom}
+          parkingAreaTo={parkingAreaTo}
+          ceilingHeight={ceilingHeight}
+          setCeilingHeight={setCeilingHeight}
+          parkingKind={parkingKind}
+          setParkingKind={setParkingKind}
+          material={material}
+          setMaterial={setMaterial}
+          gateType={gateType}
+          setGateType={setGateType}
+          hasGate={hasGate}
+          setHasGate={setHasGate}
+          camera={camera}
+          setCamera={setCamera}
+          inspectionPit={inspectionPit}
+          setInspectionPit={setInspectionPit}
+          electricityParking={electricityParking}
+          setElectricityParking={setElectricityParking}
+          cellar={cellar}
+          setCellar={setCellar}
+          truckAccess={truckAccess}
+          setTruckAccess={setTruckAccess}
         />
 
         <AdvancedFilters

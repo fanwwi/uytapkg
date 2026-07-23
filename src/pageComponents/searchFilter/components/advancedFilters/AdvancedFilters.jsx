@@ -11,9 +11,9 @@ import {
   Home,
   Droplets,
   Zap,
-  Ruler,
   MapPin,
   Mountain,
+  Building2,
 } from "lucide-react";
 
 import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
@@ -26,6 +26,39 @@ export default function AdvancedFilters({
 
   roomLocation,
   setRoomLocation,
+
+  parkingAreaFrom,
+  parkingAreaTo,
+
+  ceilingHeight,
+  setCeilingHeight,
+
+  parkingKind,
+  setParkingKind,
+
+  material,
+  setMaterial,
+
+  gateType,
+  setGateType,
+
+  hasGate,
+  setHasGate,
+
+  camera,
+  setCamera,
+
+  inspectionPit,
+  setInspectionPit,
+
+  electricityParking,
+  setElectricityParking,
+
+  cellar,
+  setCellar,
+
+  truckAccess,
+  setTruckAccess,
 
   totalRooms,
   setTotalRooms,
@@ -80,6 +113,27 @@ export default function AdvancedFilters({
 
   communications,
   setCommunications,
+
+  commercialTypeAdvanced,
+  setCommercialTypeAdvanced,
+
+  technicalParams,
+  setTechnicalParams,
+
+  firstLine,
+  setFirstLine,
+
+  separateEntrance,
+  setSeparateEntrance,
+
+  rentalBusiness,
+  setRentalBusiness,
+
+  includedCost,
+  setIncludedCost,
+
+  paymentTerms,
+  setPaymentTerms,
 }) {
   /*
 =========================
@@ -438,11 +492,305 @@ export default function AdvancedFilters({
       </div>
     );
   }
+
+  /*
+=========================
+КОММЕРЦИЯ
+=========================
+*/
+
+  if (category === "Коммерция") {
+    return (
+      <div className={styles.wrapper}>
+        <CustomSelect
+          icon={Layers}
+          title="Этаж"
+          value={floor}
+          setValue={setFloor}
+          options={["Любой", "Цоколь", "1 этаж", "2-5 этаж", "6+ этаж"]}
+        />
+
+        <CustomSelect
+          title="Состояние"
+          value={condition}
+          setValue={setCondition}
+          options={[
+            "Любое",
+            "Новое",
+            "После ремонта",
+            "Требует ремонта",
+            "Чистовая отделка",
+          ]}
+        />
+
+        <CustomSelect
+          title="Стены"
+          value={walls}
+          setValue={setWalls}
+          options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
+        />
+
+        <CustomSelect
+          icon={Thermometer}
+          title="Отопление"
+          value={heating}
+          setValue={setHeating}
+          options={[
+            "Любое",
+            "Центральное",
+            "Автономное",
+            "Газовое",
+            "Электрическое",
+          ]}
+        />
+
+        <CustomSelect
+          icon={Building2}
+          title="Тип"
+          value={commercialTypeAdvanced}
+          setValue={setCommercialTypeAdvanced}
+          options={[
+            "Любой",
+            "Торговое",
+            "Офисное",
+            "Производственное",
+            "Складское",
+          ]}
+        />
+
+        <CustomSelect
+          title="Технические параметры"
+          value={technicalParams}
+          setValue={setTechnicalParams}
+          options={[
+            "Любые",
+            "Вентиляция",
+            "Кондиционирование",
+            "Грузовой лифт",
+            "Высокие потолки",
+            "Мощность электросети",
+          ]}
+        />
+
+        <CustomSelect
+          title="Первая линия"
+          value={firstLine}
+          setValue={setFirstLine}
+          options={["Любая", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Отдельный вход"
+          value={separateEntrance}
+          setValue={setSeparateEntrance}
+          options={["Любой", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Готовый арендный бизнес"
+          value={rentalBusiness}
+          setValue={setRentalBusiness}
+          options={["Любой", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          icon={BadgeCheck}
+          title="Тип предложения"
+          value={offerType}
+          setValue={setOfferType}
+          options={["Любой", "Наличный расчет", "Ипотека", "Рассрочка"]}
+        />
+
+        {deal === "rent" && (
+          <>
+            <CustomSelect
+              title="В стоимость включено"
+              value={includedCost}
+              setValue={setIncludedCost}
+              options={[
+                "Любое",
+                "Коммунальные услуги",
+                "Интернет",
+                "Охрана",
+                "Уборка",
+              ]}
+            />
+
+            <CustomSelect
+              title="Условия оплаты"
+              value={paymentTerms}
+              setValue={setPaymentTerms}
+              options={[
+                "Любые",
+                "Предоплата",
+                "После месяца",
+                "Депозит",
+                "Без депозита",
+              ]}
+            />
+
+            <CustomSelect
+              icon={CalendarDays}
+              title="Период аренды"
+              value={rentPeriod}
+              setValue={setRentPeriod}
+              options={["Любой", "Посуточно", "Помесячно", "Долгосрочно"]}
+            />
+          </>
+        )}
+      </div>
+    );
+  }
   /*
 =========================
 КВАРТИРЫ
 =========================
 */
+
+  /*
+=========================
+ПАРКИНГ / ГАРАЖ
+=========================
+*/
+
+  if (category === "Паркинг / Гараж") {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.area}>
+          <input
+            placeholder="Площадь от м²"
+            value={parkingAreaFrom}
+            onChange={(e) =>
+              setParkingAreaFrom(e.target.value.replace(/\D/g, ""))
+            }
+          />
+
+          <span>-</span>
+
+          <input
+            placeholder="Площадь до м²"
+            value={parkingAreaTo}
+            onChange={(e) =>
+              setParkingAreaTo(e.target.value.replace(/\D/g, ""))
+            }
+          />
+        </div>
+
+        <CustomSelect
+          title="Высота потолков"
+          value={ceilingHeight}
+          setValue={setCeilingHeight}
+          options={["Любая", "до 2 м", "2-3 м", "3-4 м", "4+ м"]}
+        />
+
+        <CustomSelect
+          title="Тип парковки"
+          value={parkingKind}
+          setValue={setParkingKind}
+          options={[
+            "Любой",
+            "Открытая",
+            "Закрытая",
+            "Подземная",
+            "Многоуровневая",
+          ]}
+        />
+
+        <CustomSelect
+          title="Материал"
+          value={material}
+          setValue={setMaterial}
+          options={["Любой", "Кирпич", "Бетон", "Металл", "Сэндвич панели"]}
+        />
+
+        <CustomSelect
+          title="Тип ворот"
+          value={gateType}
+          setValue={setGateType}
+          options={[
+            "Любой",
+            "Распашные",
+            "Секционные",
+            "Рулонные",
+            "Автоматические",
+          ]}
+        />
+
+        <CustomSelect
+          title="Ворота"
+          value={hasGate}
+          setValue={hasGate}
+          options={["Любые", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Видеонаблюдение"
+          value={camera}
+          setValue={setCamera}
+          options={["Любое", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Смотровая яма"
+          value={inspectionPit}
+          setValue={setInspectionPit}
+          options={["Любая", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Электричество"
+          value={electricityParking}
+          setValue={setElectricityParking}
+          options={["Любое", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Погреб"
+          value={cellar}
+          setValue={setCellar}
+          options={["Любой", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          title="Для грузового авто"
+          value={truckAccess}
+          setValue={setTruckAccess}
+          options={["Любой", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          icon={FileCheck}
+          title="Документы"
+          value={documents}
+          setValue={setDocuments}
+          options={[
+            "Любые",
+            "Красная книга",
+            "Тех паспорт",
+            "Договор купли-продажи",
+          ]}
+        />
+
+        <CustomSelect
+          icon={BadgeCheck}
+          title="Тип предложения"
+          value={offerType}
+          setValue={setOfferType}
+          options={["Любой", "Наличный расчет", "Ипотека", "Рассрочка"]}
+        />
+
+        {deal === "rent" && (
+          <CustomSelect
+            icon={CalendarDays}
+            title="Период аренды"
+            value={rentPeriod}
+            setValue={setRentPeriod}
+            options={["Любой", "Посуточно", "Помесячно", "Долгосрочно"]}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>
