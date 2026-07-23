@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, User, Lock, Check, Eye, EyeOff } from "lucide-react";
+import { Mail, Phone, Lock, Check, Eye, EyeOff } from "lucide-react";
 
 import Link from "next/link";
 
@@ -13,16 +13,45 @@ export default function Register() {
 
   const [remember, setRemember] = useState(true);
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [phone, setPhone] = useState("");
 
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+
+  const [smsCode, setSmsCode] = useState("");
 
   const [password, setPassword] = useState("");
 
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const passwordsMismatch =
     confirmPassword.length > 0 && password !== confirmPassword;
+
+  // Маска кыргызского номера
+  const formatPhone = (value) => {
+    let numbers = value.replace(/\D/g, "");
+
+    if (numbers.startsWith("996")) {
+      numbers = numbers.slice(3);
+    }
+
+    numbers = numbers.slice(0, 9);
+
+    let formatted = "+996 ";
+
+    if (numbers.length > 0) formatted += numbers.slice(0, 3);
+
+    if (numbers.length >= 4) formatted += " " + numbers.slice(3, 6);
+
+    if (numbers.length >= 7) formatted += " " + numbers.slice(6, 9);
+
+    return formatted;
+  };
+
+  const phoneValid = phone.replace(/\D/g, "").length === 12;
 
   return (
     <main className={styles.page}>
@@ -62,11 +91,8 @@ export default function Register() {
           y: 0,
           scale: 1,
         }}
-        transition={{
-          duration: 0.5,
-        }}
       >
-        <div className={styles.brand}>Welcome</div>
+        <div className={styles.brand}>UyTap</div>
 
         <h1 className={styles.title}>Регистрация</h1>
 
@@ -78,7 +104,10 @@ export default function Register() {
           <button
             type="button"
             className={method === "phone" ? styles.activeMethod : styles.method}
-            onClick={() => setMethod("phone")}
+            onClick={() => {
+              setMethod("phone");
+              setCodeSent(false);
+            }}
           >
             <Phone />
             Телефон
@@ -87,7 +116,9 @@ export default function Register() {
           <button
             type="button"
             className={method === "email" ? styles.activeMethod : styles.method}
-            onClick={() => setMethod("email")}
+            onClick={() => {
+              setMethod("email");
+            }}
           >
             <Mail />
             Почта
@@ -96,7 +127,6 @@ export default function Register() {
 
         <motion.form
           className={styles.form}
-          autoComplete="on"
           key={method}
           initial={{
             opacity: 0,
@@ -107,86 +137,103 @@ export default function Register() {
             x: 0,
           }}
         >
-          <div className={styles.inputBox}>
-            {method === "phone" ? <Phone /> : <Mail />}
+          {method === "phone" && (
+            <>
+              <div className={styles.inputBox}>
+                <Phone />
 
-            <input
-              type={method === "phone" ? "tel" : "email"}
-              name={method === "phone" ? "phone" : "email"}
-              autoComplete={method === "phone" ? "tel" : "email"}
-              placeholder={
-                method === "phone" ? "+996 555 555 555" : "example@gmail.com"
-              }
-            />
-          </div>
+                <input
+                  type="tel"
+                  value={phone}
+                  placeholder="+996 990 120 212"
+                  onChange={(e) => setPhone(formatPhone(e.target.value))}
+                />
+              </div>
 
-          <div className={styles.inputBox}>
-            <User />
+              {!codeSent ? (
+                <button
+                  type="button"
+                  disabled={!phoneValid}
+                  className={styles.submit}
+                  onClick={() => setCodeSent(true)}
+                >
+                  Получить SMS код
+                </button>
+              ) : (
+                <>
+                  <div className={styles.inputBox}>
+                    <Lock />
 
-            <input
-              type="text"
-              name="name"
-              autoComplete="name"
-              placeholder="ФИО"
-            />
-          </div>
+                    <input
+                      value={smsCode}
+                      maxLength={4}
+                      placeholder="4 значный код"
+                      onChange={(e) =>
+                        setSmsCode(e.target.value.replace(/\D/g, ""))
+                      }
+                    />
+                  </div>
 
-          <div className={styles.inputBox}>
-            <Lock />
+                  <button className={styles.submit}>Создать аккаунт</button>
+                </>
+              )}
+            </>
+          )}
 
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              autoComplete="new-password"
-              placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          {method === "email" && (
+            <>
+              <div className={styles.inputBox}>
+                <Mail />
 
-            <button
-              type="button"
-              className={styles.eye}
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </button>
-          </div>
+                <input type="email" placeholder="example@gmail.com" />
+              </div>
 
-          <div className={styles.inputBox}>
-            <Lock />
+              <div className={styles.inputBox}>
+                <Lock />
 
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              autoComplete="new-password"
-              placeholder="Подтвердите пароль"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Пароль"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
 
-            <button
-              type="button"
-              className={styles.eye}
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              {showConfirmPassword ? <EyeOff /> : <Eye />}
-            </button>
-          </div>
+                <button
+                  type="button"
+                  className={styles.eye}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
 
-          {passwordsMismatch && (
-            <motion.p
-              className={styles.error}
-              initial={{
-                opacity: 0,
-                y: -5,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-            >
-              Пароли не совпадают
-            </motion.p>
+              <div className={styles.inputBox}>
+                <Lock />
+
+                <input
+                  type={showConfirm ? "text" : "password"}
+                  placeholder="Подтвердите пароль"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+
+                <button
+                  type="button"
+                  className={styles.eye}
+                  onClick={() => setShowConfirm(!showConfirm)}
+                >
+                  {showConfirm ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+
+              {passwordsMismatch && (
+                <p className={styles.error}>Пароли не совпадают</p>
+              )}
+
+              <button disabled={passwordsMismatch} className={styles.submit}>
+                Создать аккаунт
+              </button>
+            </>
           )}
 
           <label className={styles.remember}>
@@ -198,14 +245,6 @@ export default function Register() {
             <span className={styles.check}>{remember && <Check />}</span>
             Запомнить меня
           </label>
-
-          <button
-            type="submit"
-            disabled={passwordsMismatch}
-            className={styles.submit}
-          >
-            Создать аккаунт
-          </button>
         </motion.form>
 
         <div className={styles.bottom}>
