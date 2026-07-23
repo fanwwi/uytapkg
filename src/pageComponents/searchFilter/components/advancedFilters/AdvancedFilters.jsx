@@ -24,6 +24,15 @@ export default function AdvancedFilters({
   category,
   deal,
 
+  roomLocation,
+  setRoomLocation,
+
+  totalRooms,
+  setTotalRooms,
+
+  privateBathroom,
+  setPrivateBathroom,
+
   floor,
   setFloor,
 
@@ -145,6 +154,24 @@ export default function AdvancedFilters({
             "Интернет",
           ]}
         />
+
+        {deal === "rent" && (
+          <CustomSelect
+            icon={CalendarDays}
+            title="Период аренды"
+            value={rentPeriod}
+            setValue={setRentPeriod}
+            options={[
+              "Любой",
+              "По часам",
+              "Посуточно",
+              "Понедельно",
+              "На сезон",
+              "Помесячно",
+              "Долгосрочно",
+            ]}
+          />
+        )}
       </div>
     );
   }
@@ -259,10 +286,158 @@ export default function AdvancedFilters({
             "Обмен",
           ]}
         />
+
+        {deal === "rent" && (
+          <CustomSelect
+            icon={CalendarDays}
+            title="Период аренды"
+            value={rentPeriod}
+            setValue={setRentPeriod}
+            options={[
+              "Любой",
+              "По часам",
+              "Посуточно",
+              "Понедельно",
+              "На сезон",
+              "Помесячно",
+              "Долгосрочно",
+            ]}
+          />
+        )}
       </div>
     );
   }
 
+  /*
+=========================
+КОМНАТЫ
+=========================
+*/
+
+  if (category === "Комнаты") {
+    return (
+      <div className={styles.wrapper}>
+        <CustomSelect
+          icon={MapPin}
+          title="Расположение"
+          value={roomLocation}
+          setValue={setRoomLocation}
+          options={["Любое", "Центр", "Микрорайон", "Пригород"]}
+        />
+
+        <CustomSelect
+          icon={Home}
+          title="Комнат в квартире"
+          value={totalRooms}
+          setValue={setTotalRooms}
+          options={[
+            "Любое",
+            "1-комнатная",
+            "2-комнатная",
+            "3-комнатная",
+            "4+ комнат",
+          ]}
+        />
+
+        <CustomSelect
+          icon={Layers}
+          title="Этаж"
+          value={floor}
+          setValue={setFloor}
+          options={["Любой", "1 этаж", "2-5 этаж", "6-10 этаж", "11+ этаж"]}
+        />
+
+        <CustomSelect
+          title="Состояние"
+          value={condition}
+          setValue={setCondition}
+          options={["Любое", "Евроремонт", "Косметический", "Без ремонта"]}
+        />
+
+        <CustomSelect
+          title="Стены"
+          value={walls}
+          setValue={setWalls}
+          options={["Любые", "Кирпич", "Панель", "Монолит", "Газоблок"]}
+        />
+
+        <CustomSelect
+          icon={Thermometer}
+          title="Отопление"
+          value={heating}
+          setValue={setHeating}
+          options={[
+            "Любое",
+            "Центральное",
+            "Автономное",
+            "Газовое",
+            "Электрическое",
+          ]}
+        />
+
+        <CustomSelect
+          icon={ShieldCheck}
+          title="Удобства комнаты"
+          value={comfort}
+          setValue={setComfort}
+          options={[
+            "Любые",
+            "Интернет",
+            "Балкон",
+            "Кондиционер",
+            "Холодильник",
+            "Стиральная машина",
+          ]}
+        />
+
+        <CustomSelect
+          icon={Home}
+          title="Свой санузел"
+          value={privateBathroom}
+          setValue={setPrivateBathroom}
+          options={["Любой", "Да", "Нет"]}
+        />
+
+        <CustomSelect
+          icon={FileCheck}
+          title="Документы"
+          value={documents}
+          setValue={setDocuments}
+          options={["Любые", "Красная книга", "Тех паспорт", "Договор"]}
+        />
+
+        <CustomSelect
+          icon={BadgeCheck}
+          title="Тип предложения"
+          value={offerType}
+          setValue={setOfferType}
+          options={[
+            "Любой",
+            "Наличный расчет",
+            "Ипотека",
+            "Рассрочка",
+            "Обмен",
+          ]}
+        />
+
+        {deal === "rent" && (
+          <CustomSelect
+            icon={CalendarDays}
+            title="Период аренды"
+            value={rentPeriod}
+            setValue={setRentPeriod}
+            options={[
+              "Любой",
+              "По часам",
+              "Посуточно",
+              "Помесячно",
+              "Долгосрочно",
+            ]}
+          />
+        )}
+      </div>
+    );
+  }
   /*
 =========================
 КВАРТИРЫ

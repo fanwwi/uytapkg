@@ -94,6 +94,12 @@ export default function SearchFilter() {
 
   const [rentPeriod, setRentPeriod] = useState("Любой");
 
+  const [roomLocation, setRoomLocation] = useState("Любое");
+
+  const [totalRooms, setTotalRooms] = useState("Любое");
+
+  const [privateBathroom, setPrivateBathroom] = useState("Любой");
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.card}>

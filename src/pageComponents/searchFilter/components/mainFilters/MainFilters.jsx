@@ -93,6 +93,30 @@ export default function MainFilters({
         />
       </div>
 
+      {category === "Комнаты" && (
+        <>
+          <div className={styles.inputBox}>
+            <div className={styles.icon}>
+              <Maximize />
+            </div>
+
+            <input
+              placeholder="От м²"
+              value={areaFrom}
+              onChange={(e) => setAreaFrom(e.target.value.replace(/\D/g, ""))}
+            />
+
+            <span>-</span>
+
+            <input
+              placeholder="До м²"
+              value={areaTo}
+              onChange={(e) => setAreaTo(e.target.value.replace(/\D/g, ""))}
+            />
+          </div>
+        </>
+      )}
+
       {/* =====================
           КВАРТИРЫ
       ====================== */}
