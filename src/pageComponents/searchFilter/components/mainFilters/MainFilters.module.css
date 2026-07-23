@@ -1,0 +1,87 @@
+.wrapper {
+  display: grid;
+
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr 1fr;
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.inputBox {
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 16px;
+
+  background: white;
+
+  border: 1px solid #eee;
+
+  border-radius: 20px;
+
+  transition: 0.3s;
+}
+
+.inputBox:hover {
+  border-color: #ff9dcc;
+
+  box-shadow: 0 15px 35px rgba(255, 41, 144, 0.12);
+}
+
+.icon {
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: linear-gradient(135deg, #ffe1f0, #ffd0e6);
+}
+
+.icon svg {
+  width: 22px;
+
+  height: 22px;
+
+  color: #ff2990;
+}
+
+.inputBox input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+.inputBox span {
+  color: #aaa;
+}
+
+@media (max-width: 1200px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+}

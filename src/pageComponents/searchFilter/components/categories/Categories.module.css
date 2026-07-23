@@ -1,0 +1,85 @@
+.categories {
+  display: grid;
+
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 12px;
+}
+
+.categories button {
+  height: 60px;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  transition: 0.3s;
+}
+
+.categories button svg {
+  width: 25px;
+
+  height: 25px;
+
+  color: #ff2990;
+
+  transition: 0.3s;
+}
+
+.categories button:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.active {
+  background: linear-gradient(135deg, #ff5aa8, #ff0066) !important;
+
+  color: white;
+
+  border: none !important;
+
+  box-shadow: 0 15px 40px rgba(255, 0, 120, 0.35);
+}
+
+.active svg {
+  color: white !important;
+}
+
+.categories button:hover svg {
+  transform: scale(1.15);
+}
+
+@media (max-width: 1200px) {
+  .categories {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .categories {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .categories button {
+    font-size: 13px;
+
+    height: 52px;
+  }
+}
