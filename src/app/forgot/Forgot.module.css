@@ -11,28 +11,44 @@
 
   padding: 20px;
 
-  background: #050505;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255, 0, 120, 0.25),
+      transparent 35%
+    ),
+    #050505;
 
   color: white;
 }
 
+/* CARD */
+
 .card {
   width: 460px;
 
-  padding: 50px;
-
+  padding: 45px;
+  padding-left: 40px;
   border-radius: 35px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
 
-  backdrop-filter: blur(25px);
+  backdrop-filter: blur(30px);
 
   border: 1px solid rgba(255, 255, 255, 0.15);
 
-  box-shadow: 0 30px 80px rgba(255, 0, 120, 0.35);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(255, 0, 120, 0.25);
 
   z-index: 2;
 }
+
+/* BACK */
 
 .back {
   display: flex;
@@ -41,19 +57,21 @@
 
   gap: 8px;
 
-  color: #aaa;
+  width: max-content;
+
+  color: #999;
 
   text-decoration: none;
 
-  font-size: 16px;
+  font-size: 15px;
 
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 
   transition: 0.3s;
 }
 
 .back svg {
-  width: 20px;
+  width: 18px;
 }
 
 .back:hover {
@@ -62,74 +80,88 @@
   transform: translateX(-5px);
 }
 
+/* BRAND */
+
 .brand {
   color: #ff4fa3;
 
-  font-size: 18px;
+  font-size: 17px;
 
-  font-weight: 800;
+  font-weight: 900;
 
-  letter-spacing: 3px;
+  letter-spacing: 4px;
 
   text-transform: uppercase;
 }
 
+/* TITLE */
+
 .title {
-  font-size: 42px;
+  margin: 15px 0 10px;
 
-  margin: 15px 0;
+  font-size: 40px;
 
-  font-weight: 800;
+  line-height: 1.1;
+
+  font-weight: 900;
 }
 
 .subtitle {
   color: #aaa;
 
-  font-size: 17px;
+  font-size: 16px;
 
   line-height: 1.5;
 
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
+
+/* FORM */
 
 .form {
   display: flex;
 
   flex-direction: column;
 
-  gap: 18px;
+  gap: 16px;
 }
 
+/* INPUT */
+
 .inputBox {
-  height: 60px;
+  height: 62px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 15px;
+  gap: 14px;
 
   padding: 0 20px;
 
-  background: #111;
+  background: rgba(0, 0, 0, 0.45);
 
   border-radius: 20px;
 
   border: 1px solid rgba(255, 255, 255, 0.1);
 
-  transition: 0.3s;
+  transition: 0.35s;
+}
+
+.inputBox:hover {
+  border-color: rgba(255, 79, 163, 0.4);
 }
 
 .inputBox:focus-within {
   border-color: #ff4fa3;
 
-  box-shadow: 0 0 25px rgba(255, 79, 163, 0.25);
+  box-shadow: 0 0 30px rgba(255, 79, 163, 0.3);
 }
 
 .inputBox svg {
-  width: 24px;
+  width: 23px;
 
-  height: 24px;
+  height: 23px;
 
   color: #ff4fa3;
 }
@@ -147,12 +179,14 @@
 
   color: white;
 
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .inputBox input::placeholder {
   color: #777;
 }
+
+/* EYE */
 
 .eye {
   border: none;
@@ -166,20 +200,16 @@
   display: flex;
 
   align-items: center;
-
-  justify-content: center;
 }
 
-.eye svg {
-  transition: 0.3s;
+.eye:hover {
+  transform: scale(1.1);
 }
 
-.eye:hover svg {
-  transform: scale(1.15);
-}
+/* BUTTON */
 
 .submit {
-  height: 60px;
+  height: 62px;
 
   border: none;
 
@@ -189,45 +219,51 @@
 
   color: white;
 
-  font-size: 18px;
+  font-size: 17px;
 
-  font-weight: 700;
+  font-weight: 900;
 
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: 0.35s;
+
+  box-shadow: 0 20px 45px rgba(255, 0, 120, 0.4);
 }
 
 .submit:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 
-  box-shadow: 0 15px 40px rgba(255, 0, 100, 0.4);
+  box-shadow: 0 30px 70px rgba(255, 0, 120, 0.65);
 }
 
 .submit:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
 
   cursor: not-allowed;
 }
 
+/* ERROR */
+
 .error {
-  color: #ff5252;
+  color: #ff5b75;
 
-  font-size: 15px;
+  font-size: 14px;
 
-  margin-top: -5px;
+  margin: -5px 0;
 
-  font-weight: 600;
+  font-weight: 700;
 }
 
+/* BOTTOM */
+
 .bottom {
-  margin-top: 30px;
+  margin-top: 28px;
 
   text-align: center;
 
   color: #888;
 
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .bottom a {
@@ -235,39 +271,43 @@
 
   color: #ff4fa3;
 
-  font-weight: 700;
+  font-weight: 800;
 
   text-decoration: none;
 }
+
+/* GLOWS */
 
 .glowOne,
 .glowTwo {
   position: absolute;
 
-  width: 400px;
+  width: 450px;
 
-  height: 400px;
+  height: 450px;
 
   border-radius: 50%;
 
-  filter: blur(140px);
+  filter: blur(150px);
 }
 
 .glowOne {
   background: #ff1493;
 
-  top: -200px;
+  top: -250px;
 
-  left: -200px;
+  left: -250px;
 }
 
 .glowTwo {
   background: #ff0066;
 
-  bottom: -200px;
+  bottom: -250px;
 
-  right: -200px;
+  right: -250px;
 }
+
+/* MOBILE */
 
 @media (max-width: 520px) {
   .card {

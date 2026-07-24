@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+/* =========================
+   CHANGE ACCOUNT TYPE
+========================= */
+
+.changeType {
+  align-self: flex-start;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  margin-bottom: 8px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 0, 128, 0.15);
+
+  background: rgba(255, 255, 255, 0.7);
+
+  color: #777;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+
+  backdrop-filter: blur(10px);
+}
+
+.changeType svg {
+  width: 18px;
+
+  height: 18px;
+
+  color: #ff0080;
+
+  transition: 0.3s;
+}
+
+.changeType:hover {
+  color: #ff0080;
+
+  background: rgba(255, 0, 128, 0.08);
+
+  border-color: rgba(255, 0, 128, 0.35);
+
+  transform: translateX(-3px);
+}
+
+.changeType:hover svg {
+  transform: translateX(-4px);
+}
+
+/* =========================
+   SUBMIT
+========================= */
+
+.submit {
+  height: 60px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background: linear-gradient(135deg, #ff0080, #ff4da6);
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 128, 0.35);
+
+  transition: 0.3s;
+}
+
+.submit:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 20px 45px rgba(255, 0, 128, 0.5);
+}

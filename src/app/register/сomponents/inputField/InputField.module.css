@@ -1,0 +1,71 @@
+.wrapper {
+  height: 58px;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 18px;
+
+  background: #fff;
+
+  border: 1px solid #e8e8e8;
+
+  border-radius: 18px;
+
+  transition: 0.3s;
+}
+
+.wrapper:focus-within {
+  border-color: #ff006f;
+
+  box-shadow: 0 0 0 4px rgba(255, 0, 111, 0.12);
+}
+
+.icon {
+  width: 21px;
+
+  height: 21px;
+
+  color: #ff006f;
+}
+
+.wrapper input {
+  flex: 1;
+
+  border: none;
+
+  outline: none;
+
+  background: none;
+
+  font-size: 14px;
+
+  color: #111;
+}
+
+.wrapper input::placeholder {
+  color: #999;
+}
+
+.eye {
+  border: none;
+
+  background: none;
+
+  cursor: pointer;
+
+  display: flex;
+
+  color: #777;
+}
+
+.eye svg {
+  width: 20px;
+
+  height: 20px;
+}

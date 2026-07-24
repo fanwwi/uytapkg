@@ -1,0 +1,283 @@
+.wrapper {
+  padding: 32px;
+
+  border-radius: 32px;
+
+  background: linear-gradient(145deg, #ffffff, #fff0f6);
+
+  border: 1px solid rgba(255, 0, 120, 0.15);
+
+  box-shadow: 0 30px 70px rgba(255, 0, 120, 0.15);
+}
+
+.header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 60px;
+
+  height: 60px;
+
+  border-radius: 22px;
+
+  background: linear-gradient(135deg, #ff006f, #ff66b3);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 120, 0.4);
+}
+
+.logo svg {
+  width: 32px;
+
+  height: 32px;
+}
+
+.header h2 {
+  margin: 0;
+
+  font-size: 22px;
+
+  font-weight: 900;
+
+  color: #111;
+}
+
+.header p {
+  margin: 6px 0 0;
+
+  color: #888;
+
+  font-size: 14px;
+}
+
+.form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.inputBox {
+  height: 62px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 0 20px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  transition:
+    border 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.inputBox:focus-within {
+  border-color: #ff006f;
+
+  box-shadow: 0 0 25px rgba(255, 0, 120, 0.18);
+}
+
+.inputBox svg {
+  color: #ff006f;
+
+  width: 22px;
+
+  height: 22px;
+}
+
+.inputBox input {
+  width: 100%;
+
+  height: 100%;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 16px;
+
+  color: #111;
+}
+
+.inputBox input::placeholder {
+  color: #aaa;
+}
+
+.textarea {
+  width: 100%;
+
+  height: 130px;
+
+  resize: none;
+
+  padding: 18px;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  outline: none;
+
+  font-size: 14px !important;
+
+  font-family: inherit;
+
+  transition:
+    border 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.textarea:focus {
+  border-color: #ff006f;
+
+  box-shadow: 0 0 25px rgba(255, 0, 120, 0.18);
+}
+
+.submit {
+  height: 60px;
+
+  border: none;
+
+  border-radius: 22px;
+
+  background: linear-gradient(135deg, #ff006f, #ff4da6);
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 20px 45px rgba(255, 0, 120, 0.35);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.submit:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 25px 60px rgba(255, 0, 120, 0.5);
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    padding: 22px;
+
+    border-radius: 24px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .logo {
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 18px;
+  }
+
+  .inputBox {
+    height: 56px;
+
+    padding: 0 16px;
+  }
+}
+
+.textarea {
+  width: 100%;
+
+  height: 130px;
+
+  resize: none;
+
+  padding: 18px;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  outline: none;
+
+  font-size: 16px;
+
+  font-family: inherit;
+
+  color: #111;
+
+  background: white;
+
+  transition:
+    border 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.textarea::placeholder {
+  color: #aaa;
+}
+
+.textarea:focus {
+  border-color: #ff006f;
+
+  box-shadow: 0 0 25px rgba(255, 0, 120, 0.18);
+}
+
+.submit {
+  height: 60px;
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 22px;
+
+  background: linear-gradient(135deg, #ff006f, #ff4da6);
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 20px 45px rgba(255, 0, 120, 0.35);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.submit:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 25px 60px rgba(255, 0, 120, 0.5);
+}

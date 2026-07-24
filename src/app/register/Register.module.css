@@ -48,12 +48,16 @@
   letter-spacing: 3px;
 
   text-transform: uppercase;
+  text-align: center;
 }
 
 .title {
   font-size: 44px;
 
   margin: 15px 0;
+
+  color: #ff0062;
+  text-align: center;
 }
 
 .subtitle {
@@ -64,6 +68,7 @@
   line-height: 1.5;
 
   margin-bottom: 35px;
+  text-align: center;
 }
 
 .methods {
@@ -248,7 +253,7 @@
 
   text-align: center;
 
-  font-size: 18px;
+  font-size: 15px;
 
   color: #888;
 }
@@ -332,4 +337,36 @@
 
 .eye:hover svg {
   transform: scale(1.15);
+}
+
+.changeType {
+  margin-bottom: 20px;
+
+  height: 45px;
+
+  padding: 0 20px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(255, 0, 120, 0.25);
+
+  background: rgba(255, 0, 120, 0.08);
+
+  color: #ff006f;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.changeType:hover {
+  background: #ff006f;
+
+  color: white;
+
+  transform: translateX(-3px);
+
+  box-shadow: 0 10px 25px rgba(255, 0, 120, 0.25);
 }
