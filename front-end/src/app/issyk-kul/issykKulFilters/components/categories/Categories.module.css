@@ -1,0 +1,142 @@
+.wrapper {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.items {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 15px;
+}
+
+.items button {
+  height: 50px;
+
+  border-radius: 25px;
+
+  border: 1px solid #eee;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.items svg {
+  width: 28px;
+
+  height: 28px;
+
+  color: #ff006f;
+}
+
+.items button:hover {
+  transform: translateY(-4px);
+}
+
+.active {
+  background: #ff006f !important;
+
+  color: white;
+
+  border-color: #ff006f !important;
+}
+
+.active svg {
+  color: white;
+}
+
+.badges {
+  display: flex;
+
+  gap: 15px;
+}
+
+.badges button {
+  height: 35px;
+
+  padding: 0 25px;
+
+  border-radius: 20px;
+
+  border: 1px solid #eee;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  margin-bottom: 30px;
+}
+
+.badges button:first-child {
+  background-color: #ffc1d8;
+  border: 1px solid #ff0073;
+}
+
+.badges button:last-child {
+  background-color: #fffcae;
+  border: 1px solid #ffea00;
+}
+
+.badges svg {
+  width: 18px;
+}
+
+.activeBadge {
+  background: #c80061 !important;
+  color: white;
+
+  border-color: #ff006f !important;
+
+  box-shadow:
+    0 0 15px rgba(255, 0, 111, 0.5),
+    0 10px 30px rgba(255, 0, 111, 0.35);
+
+  transform: translateY(-2px);
+
+  transition: 0.3s;
+}
+
+.vipActive {
+  background: #111 !important;
+
+  color: #ffd700;
+
+  box-shadow:
+    0 0 15px rgba(238, 255, 0, 0.5),
+    0 10px 30px rgba(255, 0, 111, 0.35);
+
+  transform: translateY(-2px);
+
+  transition: 0.3s;
+}
+
+@media (max-width: 900px) {
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

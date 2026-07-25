@@ -107,8 +107,6 @@
 .urgentActive {
   color: rgb(255, 0, 128);
 
-  background: linear-gradient(135deg, #ff0066, #ff0038);
-
   border-color: transparent;
 
   box-shadow:

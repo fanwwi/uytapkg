@@ -1,0 +1,59 @@
+.wrapper {
+  display: flex;
+
+  gap: 12px;
+
+  background: #f7f7f7;
+
+  padding: 6px;
+
+  border-radius: 22px;
+
+  margin-bottom: 30px;
+}
+
+.wrapper button {
+  flex: 1;
+
+  height: 55px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  background: transparent;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  font-size: 16px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  color: #777;
+
+  transition: 0.3s;
+}
+
+.wrapper svg {
+  width: 20px;
+}
+
+.wrapper button:hover {
+  color: #ff006f;
+}
+
+.active {
+  background: white !important;
+
+  color: #ff006f !important;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
