@@ -58,7 +58,7 @@ export default function SmartSearchVoice() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="
-          Например: хочу квартиру в Бишкеке до 70000$ с ремонтом
+          Например: хочу дом до 300 000$ с ремонтом
           "
         />
 
