@@ -14,6 +14,7 @@ import {
 import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
 
 import styles from "./MainFilters.module.css";
+import LocationSelector from "../locationSelector/LocationSelector";
 
 export default function MainFilters({
   category,
@@ -59,6 +60,13 @@ export default function MainFilters({
 
   security,
   setSecurity,
+
+  country,
+  setCountry,
+  region,
+  setRegion,
+  district,
+  setDistrict,
 }) {
   const renderArea = () => (
     <div className={styles.inputBox}>
@@ -106,21 +114,13 @@ export default function MainFilters({
 
   return (
     <div className={styles.wrapper}>
-      <CustomSelect
-        icon={MapPin}
-        title="Локация"
-        value={location}
-        setValue={setLocation}
-        options={[
-          "Любая",
-          "Бишкек",
-          "Чуйская область",
-          "Ошская область",
-          "Иссык-Кульская область",
-          "Нарынская область",
-          "Таласская область",
-          "Баткенская область",
-        ]}
+      <LocationSelector
+        country={country}
+        setCountry={setCountry}
+        region={region}
+        setRegion={setRegion}
+        district={district}
+        setDistrict={setDistrict}
       />
 
       {renderPrice()}
