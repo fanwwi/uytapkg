@@ -18,7 +18,6 @@ import styles from "./Agency.module.css";
 
 export default function Agency() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <div className={styles.wrapper}>
