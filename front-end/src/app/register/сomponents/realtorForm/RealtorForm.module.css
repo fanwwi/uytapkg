@@ -233,3 +233,29 @@
     font-size: 20px;
   }
 }
+
+.eye {
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  padding: 5px;
+}
+
+.eye svg {
+  width: 22px;
+  height: 22px;
+
+  color: #999;
+
+  transition: 0.25s;
+}
+
+.eye:hover svg {
+  color: #ff006f;
+}

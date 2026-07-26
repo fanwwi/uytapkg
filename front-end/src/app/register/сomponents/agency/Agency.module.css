@@ -281,3 +281,38 @@
 
   box-shadow: 0 25px 60px rgba(255, 0, 120, 0.5);
 }
+
+.eye {
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #999;
+
+  padding: 5px;
+
+  transition: 0.3s;
+}
+
+.eye:hover {
+  color: #ff006f;
+}
+
+.eye svg {
+  width: 22px;
+
+  height: 22px;
+}
+
+.inputBox input[type="password"],
+.inputBox input[type="text"] {
+  flex: 1;
+}

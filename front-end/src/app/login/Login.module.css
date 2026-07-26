@@ -379,3 +379,86 @@
 
   color: white;
 }
+
+.accountTabs {
+display:flex;
+gap:10px;
+margin-bottom:25px;
+}
+
+
+.accountTabs button {
+
+flex:1;
+height:55px;
+
+border-radius:16px;
+
+border:none;
+
+background:#111;
+
+color:#888;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+gap:8px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+
+.accountTabs svg {
+
+width:20px;
+
+}
+
+
+
+.activeTab {
+
+background:linear-gradient(135deg,#ff4fa3,#ff0066)!important;
+
+color:white!important;
+
+}
+
+
+
+.eye {
+
+background:none;
+
+border:none;
+
+cursor:pointer;
+
+color:#777;
+
+display:flex;
+
+align-items:center;
+
+}
+
+
+.eye:hover {
+
+color:#ff4fa3;
+
+}
+
+
+.eye svg {
+
+width:22px;
+
+height:22px;
+
+}

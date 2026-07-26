@@ -65,8 +65,6 @@ export default function Header() {
 
             {openMenu === "location" && (
               <div className={styles.menu}>
-                <Link href="/bishkek">Бишкек</Link>
-
                 <Link href="/issyk-kul">Иссык-Куль</Link>
               </div>
             )}

@@ -1,0 +1,295 @@
+.overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  backdrop-filter: blur(15px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 200;
+
+  padding: 20px;
+}
+
+.modal {
+  width: 460px;
+
+  max-height: 90vh;
+
+  background: linear-gradient(145deg, white, #fff3f8);
+
+  border-radius: 38px;
+
+  position: relative;
+
+  box-shadow: 0 40px 100px rgba(255, 0, 111, 0.25);
+
+  overflow: hidden;
+
+  animation: open 0.35s ease;
+}
+
+@keyframes open {
+  from {
+    opacity: 0;
+
+    transform: scale(0.95) translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: scale(1) translateY(0);
+  }
+}
+
+.scroll {
+  padding: 35px;
+
+  overflow-y: auto;
+
+  max-height: 90vh;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: #ff7ab5;
+
+  border-radius: 20px;
+}
+
+.close {
+  position: absolute;
+
+  right: 20px;
+
+  top: 20px;
+
+  z-index: 5;
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  background: #f5f5f5;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.close:hover {
+  background: #ffe0ed;
+
+  color: #ff006f;
+
+  transform: rotate(90deg);
+}
+
+.header {
+  text-align: center;
+
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-size: 27px;
+
+  font-weight: 900;
+
+  margin: 0;
+}
+
+.header p {
+  margin-top: 8px;
+
+  color: #888;
+}
+
+.avatarWrapper {
+  display: flex;
+
+  align-items: center;
+
+  flex-direction: column;
+
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 110px;
+
+  height: 110px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #ff006f, #ff72b5);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  box-shadow: 0 20px 45px rgba(255, 0, 111, 0.35);
+}
+
+.avatar svg {
+  width: 40px;
+
+  height: 40px;
+}
+
+.upload {
+  margin-top: 15px;
+
+  padding: 11px 22px;
+
+  border-radius: 999px;
+
+  border: none;
+
+  background: white;
+
+  color: #ff006f;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.fields {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.inputBox {
+  height: 64px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 0 20px;
+
+  background: white;
+
+  border-radius: 22px;
+
+  border: 1px solid rgba(255, 0, 111, 0.12);
+
+  transition: 0.3s;
+}
+
+.inputBox:focus-within {
+  border-color: #ff006f;
+
+  box-shadow: 0 0 25px rgba(255, 0, 111, 0.15);
+}
+
+.inputBox svg {
+  width: 23px;
+
+  color: #ff006f;
+}
+
+.inputBox input {
+  width: 100%;
+
+  height: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: none;
+
+  font-size: 16px;
+}
+
+.save {
+  margin-top: 25px;
+
+  height: 64px;
+
+  width: 100%;
+
+  border: none;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  background: linear-gradient(135deg, #ff006f, #ff4da6);
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.save:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 25px 50px rgba(255, 0, 111, 0.4);
+}
+
+.save svg {
+  width: 22px;
+}
+
+@media (max-width: 520px) {
+  .modal {
+    width: 100%;
+
+    max-height: 95vh;
+
+    border-radius: 28px;
+  }
+
+  .scroll {
+    padding: 25px;
+  }
+
+  .header h2 {
+    font-size: 22px;
+  }
+}

@@ -1,10 +1,14 @@
 "use client";
 
-import { Building, Phone, Mail, FileCheck, MapPin } from "lucide-react";
+import { Building, Phone, Mail, FileCheck, MapPin, Lock, EyeOff, Eye } from "lucide-react";
 
 import styles from "./DeveloperForm.module.css";
+import { useState } from "react";
 
 export default function DeveloperForm() {
+
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -36,6 +40,23 @@ export default function DeveloperForm() {
         <div className={styles.inputBox}>
           <Mail />
           <input placeholder="Email" />
+        </div>
+
+        <div className={styles.inputBox}>
+          <Lock />
+
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Пароль"
+          />
+
+          <button
+            type="button"
+            className={styles.eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
 
         <div className={styles.inputBox}>
