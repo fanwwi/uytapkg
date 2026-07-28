@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, User, Phone, Mail, MapPin, FileText, Lock, CheckCircle2 } from "lucide-react";
+import {
+  Building2,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  FileText,
+  Lock,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import styles from "./Agency.module.css";
 import { registerUser } from "@/utils/api";
@@ -17,6 +28,7 @@ export default function Agency() {
   const [about, setAbout] = useState("");
   const [password, setPassword] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -129,15 +141,23 @@ export default function Agency() {
           />
         </div>
 
+        {/* Пароль */}
         <div className={styles.inputBox}>
           <Lock />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <button
+            type="button"
+            className={styles.eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
 
         <textarea

@@ -1,0 +1,309 @@
+.page {
+  min-height: 100vh;
+
+  background: linear-gradient(135deg, #fff5fa, #ffffff);
+
+  padding: 50px;
+}
+
+.card {
+  max-width: 1150px;
+
+  margin: auto;
+
+  background: white;
+
+  padding: 45px;
+
+  border-radius: 45px;
+
+  box-shadow: 0 30px 90px rgba(255, 0, 120, 0.12);
+}
+
+.header {
+  display: flex;
+
+  gap: 30px;
+
+  position: relative;
+}
+
+.logo {
+  width: 140px;
+
+  height: 140px;
+
+  border-radius: 40px;
+
+  background: linear-gradient(135deg, #ff006f, #ff79bb);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  box-shadow: 0 25px 50px rgba(255, 0, 120, 0.3);
+}
+
+.logo svg {
+  width: 60px;
+
+  height: 60px;
+}
+
+.info {
+  flex: 1;
+}
+
+.badge {
+  display: inline-flex;
+
+  background: #ffe4f0;
+
+  color: #ff006f;
+
+  padding: 8px 18px;
+
+  border-radius: 50px;
+
+  font-weight: 800;
+}
+
+.info h1 {
+  font-size: 40px;
+
+  margin: 15px 0;
+
+  font-weight: 950;
+}
+
+.company {
+  display: flex;
+
+  gap: 10px;
+
+  align-items: center;
+
+  font-weight: 700;
+
+  color: #555;
+}
+
+.company svg {
+  color: #ff006f;
+}
+
+.description {
+  margin-top: 20px;
+
+  color: #777;
+
+  line-height: 1.7;
+
+  max-width: 700px;
+}
+
+.edit {
+  position: absolute;
+
+  right: 0;
+
+  top: 0;
+
+  width: 55px;
+
+  height: 55px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  background: #fff0f7;
+
+  color: #ff006f;
+
+  cursor: pointer;
+}
+
+.contacts {
+  margin-top: 40px;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 15px;
+}
+
+.contacts div {
+  padding: 20px;
+
+  background: #fafafa;
+
+  border-radius: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  font-weight: 700;
+}
+
+.contacts svg {
+  color: #ff006f;
+}
+
+.stats {
+  max-width: 1150px;
+
+  margin: 35px auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.stats div {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 30px;
+
+  text-align: center;
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.stats strong {
+  display: block;
+
+  font-size: 42px;
+
+  color: #ff006f;
+}
+
+.stats span {
+  color: #777;
+}
+
+.projects {
+  max-width: 1150px;
+
+  margin: 60px auto;
+}
+
+.projectGrid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 25px;
+}
+
+.projectCard {
+  background: white;
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.07);
+}
+
+.projectImage {
+  height: 200px;
+
+  background: linear-gradient(135deg, #ff006f, #222);
+}
+
+.projectCard h3,
+.projectCard p {
+  padding: 0 25px;
+}
+
+.projectCard h3 {
+  margin-top: 20px;
+}
+
+.projectCard p {
+  color: #777;
+
+  padding-bottom: 25px;
+}
+
+.menu {
+  max-width: 1150px;
+
+  margin: auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 20px;
+}
+
+.menu a,
+.menu button {
+  height: 80px;
+
+  border: none;
+
+  background: white;
+
+  border-radius: 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  text-decoration: none;
+
+  color: #111;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+
+  transition: 0.3s;
+}
+
+.menu svg {
+  color: #ff006f;
+}
+
+.menu a:hover,
+.menu button:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 20px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .contacts,
+  .stats,
+  .menu,
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+}

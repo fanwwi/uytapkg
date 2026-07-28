@@ -1,29 +1,28 @@
 "use client";
 
 import { useState } from "react";
-
 import { ChevronDown } from "lucide-react";
 
-import styles from "../../../pageComponents/searchFilter/SearchFilter.module.css";
+import styles from "./CustomSelect.module.css";
 
 export default function CustomSelect({
   icon: Icon,
-
   title,
-
   options = [],
-
   value,
-
   setValue,
 }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={styles.custom}>
-      <button className={styles.select} onClick={() => setOpen(!open)}>
-        <div>
-          {Icon && <Icon />}
+    <div className={styles.wrapper}>
+      <button
+        type="button"
+        className={styles.select}
+        onClick={() => setOpen(!open)}
+      >
+        <div className={styles.left}>
+          {Icon && <Icon className={styles.icon} />}
 
           <section>
             <small>{title}</small>
@@ -32,21 +31,24 @@ export default function CustomSelect({
           </section>
         </div>
 
-        <ChevronDown className={open ? styles.rotate : ""} />
+        <ChevronDown
+          className={`${styles.arrow} ${open ? styles.rotate : ""}`}
+        />
       </button>
 
       {open && (
         <div className={styles.dropdown}>
-          {options.map((option) => (
+          {options.map((item) => (
             <button
-              key={option}
+              type="button"
+              key={item}
+              className={styles.option}
               onClick={() => {
-                setValue?.(option);
-
+                setValue(item);
                 setOpen(false);
               }}
             >
-              {option}
+              {item}
             </button>
           ))}
         </div>

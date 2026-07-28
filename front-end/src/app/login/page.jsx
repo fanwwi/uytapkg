@@ -1,15 +1,29 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Phone, Lock, Check, ArrowRight, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import {
+  Mail,
+  Phone,
+  Lock,
+  Check,
+  ArrowRight,
+  Eye,
+  EyeOff,
+  User,
+  Building2,
+  CheckCircle2,
+} from "lucide-react";
+
 import styles from "./Login.module.css";
 import { loginUser } from "@/utils/api";
 
 export default function Login() {
   const router = useRouter();
+  const [accountType, setAccountType] = useState("personal");
   const [method, setMethod] = useState("phone");
   const [phoneStep, setPhoneStep] = useState(1);
   const [phone, setPhone] = useState("");
@@ -17,6 +31,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,15 +48,9 @@ export default function Login() {
     numbers = numbers.slice(0, 9);
     let result = "+996";
 
-    if (numbers.length) {
-      result += " " + numbers.slice(0, 3);
-    }
-    if (numbers.length >= 4) {
-      result += " " + numbers.slice(3, 6);
-    }
-    if (numbers.length >= 7) {
-      result += " " + numbers.slice(6, 9);
-    }
+    if (numbers.length) result += " " + numbers.slice(0, 3);
+    if (numbers.length >= 4) result += " " + numbers.slice(3, 6);
+    if (numbers.length >= 7) result += " " + numbers.slice(6, 9);
 
     return result;
   };
@@ -62,9 +71,9 @@ export default function Login() {
 
   const changeCode = (value, index) => {
     if (!/^\d*$/.test(value)) return;
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
+    const arr = [...code];
+    arr[index] = value;
+    setCode(arr);
 
     if (value && index < 3) {
       document.getElementById(`code-${index + 1}`)?.focus();
@@ -72,7 +81,7 @@ export default function Login() {
   };
 
   const handleEmailLogin = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -99,7 +108,7 @@ export default function Login() {
   };
 
   const handlePhoneLogin = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -109,7 +118,6 @@ export default function Login() {
         throw new Error("Введите полный 4-значный код");
       }
 
-      // Отправляем код подтверждения
       setSuccess(true);
       setTimeout(() => {
         router.push("/main");
@@ -123,44 +131,19 @@ export default function Login() {
 
   return (
     <main className={styles.page}>
-      <motion.div
-        className={styles.glowOne}
-        animate={{
-          x: [0, 40, 0],
-          y: [0, 30, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-        }}
-      />
-
-      <motion.div
-        className={styles.glowTwo}
-        animate={{
-          x: [0, -40, 0],
-          y: [0, -30, 0],
-        }}
-        transition={{
-          duration: 9,
-          repeat: Infinity,
-        }}
-      />
-
       <motion.section
         className={styles.card}
+        layout
         initial={{
           opacity: 0,
-          y: 50,
-          scale: 0.95,
+          y: 40,
         }}
         animate={{
           opacity: 1,
           y: 0,
-          scale: 1,
         }}
         transition={{
-          duration: 0.5,
+          duration: 0.45,
         }}
       >
         <div className={styles.brand}>UyTap</div>
@@ -169,167 +152,204 @@ export default function Login() {
 
         <p className={styles.subtitle}>Войдите в аккаунт для продолжения</p>
 
-        <div className={styles.methods}>
+        {/* Тип аккаунта */}
+        <div className={styles.accountTabs}>
           <button
-            className={method === "phone" ? styles.activeMethod : styles.method}
+            className={accountType === "personal" ? styles.activeTab : ""}
             onClick={() => {
+              setAccountType("personal");
               setMethod("phone");
               setPhoneStep(1);
               setError("");
             }}
           >
-            <Phone />
-            Телефон
+            <User />
+            Частное лицо
           </button>
 
           <button
-            className={method === "email" ? styles.activeMethod : styles.method}
+            className={accountType === "business" ? styles.activeTab : ""}
             onClick={() => {
+              setAccountType("business");
               setMethod("email");
               setError("");
             }}
           >
-            <Mail />
-            Почта
+            <Building2 />
+            Бизнес
           </button>
         </div>
 
-        {method === "phone" && (
-          <motion.form
-            className={styles.form}
-            onSubmit={handlePhoneLogin}
-            initial={{
-              opacity: 0,
-              x: 20,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-          >
-            {phoneStep === 1 && (
-              <>
-                <div className={styles.inputBox}>
+        <AnimatePresence mode="wait">
+          {accountType === "personal" && (
+            <motion.div
+              key="personal"
+              initial={{
+                opacity: 0,
+                x: -30,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              exit={{
+                opacity: 0,
+                x: -30,
+              }}
+              transition={{
+                duration: 0.3,
+              }}
+            >
+              <div className={styles.methods}>
+                <button
+                  className={
+                    method === "phone" ? styles.activeMethod : styles.method
+                  }
+                  onClick={() => {
+                    setMethod("phone");
+                    setPhoneStep(1);
+                    setError("");
+                  }}
+                >
                   <Phone />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={handlePhone}
-                    placeholder="+996 555 555 555"
-                  />
-                </div>
-
-                {error && <div style={{ color: "#ef4444", fontSize: "14px" }}>⚠️ {error}</div>}
+                  Телефон
+                </button>
 
                 <button
-                  type="button"
-                  className={styles.submit}
-                  onClick={sendCode}
+                  className={
+                    method === "email" ? styles.activeMethod : styles.method
+                  }
+                  onClick={() => {
+                    setMethod("email");
+                    setError("");
+                  }}
                 >
-                  Получить код
-                  <ArrowRight />
+                  <Mail />
+                  Email
                 </button>
-              </>
-            )}
+              </div>
 
-            {phoneStep === 2 && (
-              <>
-                <p className={styles.smsInfo}>Код отправлен на ваш номер {phone}</p>
-
-                <div className={styles.codeInputs}>
-                  {code.map((item, index) => (
-                    <input
-                      key={index}
-                      id={`code-${index}`}
-                      value={item}
-                      maxLength={1}
-                      onChange={(e) => changeCode(e.target.value, index)}
-                    />
-                  ))}
+              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {success && (
+                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
+                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
                 </div>
+              )}
 
-                {error && <div style={{ color: "#ef4444", fontSize: "14px" }}>⚠️ {error}</div>}
+              <AnimatePresence mode="wait">
+                {method === "phone" && (
+                  <motion.div
+                    key="phone"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    {phoneStep === 1 && (
+                      <div className={styles.form}>
+                        <div className={styles.inputBox}>
+                          <Phone />
+                          <input
+                            type="tel"
+                            value={phone}
+                            onChange={handlePhone}
+                            placeholder="+996 555 555 555"
+                          />
+                        </div>
 
-                {success && (
-                  <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
-                    <CheckCircle2 size={18} /> Авторизация успешна!
-                  </div>
+                        <button className={styles.submit} onClick={sendCode}>
+                          Получить код
+                          <ArrowRight />
+                        </button>
+                      </div>
+                    )}
+
+                    {phoneStep === 2 && (
+                      <form className={styles.form} onSubmit={handlePhoneLogin}>
+                        <p className={styles.smsInfo}>Введите код из SMS ({phone})</p>
+
+                        <div className={styles.codeInputs}>
+                          {code.map((item, index) => (
+                            <input
+                              key={index}
+                              id={`code-${index}`}
+                              value={item}
+                              maxLength={1}
+                              onChange={(e) =>
+                                changeCode(e.target.value, index)
+                              }
+                            />
+                          ))}
+                        </div>
+
+                        <button className={styles.submit} type="submit" disabled={loading}>
+                          {loading ? "Проверка..." : "Войти"}
+                        </button>
+
+                        <button type="button" className={styles.resend} onClick={sendCode}>
+                          Отправить код повторно
+                        </button>
+                      </form>
+                    )}
+                  </motion.div>
                 )}
 
-                <button className={styles.submit} type="submit" disabled={loading}>
-                  {loading ? "Проверка..." : "Войти"}
-                </button>
+                {method === "email" && (
+                  <motion.div
+                    key="email"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <EmailForm
+                      email={email}
+                      setEmail={setEmail}
+                      password={password}
+                      setPassword={setPassword}
+                      showPassword={showPassword}
+                      setShowPassword={setShowPassword}
+                      remember={remember}
+                      setRemember={setRemember}
+                      handleEmailLogin={handleEmailLogin}
+                      loading={loading}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
 
-                <button type="button" className={styles.resend} onClick={sendCode}>
-                  Отправить код повторно
-                </button>
-              </>
-            )}
-          </motion.form>
-        )}
-
-        {method === "email" && (
-          <motion.form
-            className={styles.form}
-            onSubmit={handleEmailLogin}
-            initial={{
-              opacity: 0,
-              x: 20,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-          >
-            <div className={styles.inputBox}>
-              <Mail />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@gmail.com"
-                required
+          {accountType === "business" && (
+            <motion.div
+              key="business"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
+            >
+              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {success && (
+                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
+                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
+                </div>
+              )}
+              <EmailForm
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+                remember={remember}
+                setRemember={setRemember}
+                handleEmailLogin={handleEmailLogin}
+                loading={loading}
+                business
               />
-            </div>
-
-            <div className={styles.inputBox}>
-              <Lock />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Пароль"
-                required
-              />
-            </div>
-
-            <div className={styles.options}>
-              <label className={styles.remember}>
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <span className={styles.check}>{remember && <Check />}</span>
-                Запомнить меня
-              </label>
-
-              <Link href="/forgot">Забыли пароль?</Link>
-            </div>
-
-            {error && <div style={{ color: "#ef4444", fontSize: "14px" }}>⚠️ {error}</div>}
-
-            {success && (
-              <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
-                <CheckCircle2 size={18} /> Успешный вход! Вход в систему...
-              </div>
-            )}
-
-            <button className={styles.submit} type="submit" disabled={loading}>
-              {loading ? "Вход..." : "Войти"}
-            </button>
-          </motion.form>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className={styles.bottom}>
           Нет аккаунта?
@@ -337,5 +357,70 @@ export default function Login() {
         </div>
       </motion.section>
     </main>
+  );
+}
+
+function EmailForm({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  showPassword,
+  setShowPassword,
+  remember,
+  setRemember,
+  handleEmailLogin,
+  loading,
+  business,
+}) {
+  return (
+    <form className={styles.form} onSubmit={handleEmailLogin}>
+      <div className={styles.inputBox}>
+        <Mail />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="example@gmail.com"
+          required
+        />
+      </div>
+
+      <div className={styles.inputBox}>
+        <Lock />
+        <input
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Пароль"
+          required
+        />
+        <button
+          type="button"
+          className={styles.eye}
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff /> : <Eye />}
+        </button>
+      </div>
+
+      <div className={styles.options}>
+        <label className={styles.remember}>
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+          />
+          <span className={styles.check}>{remember && <Check />}</span>
+          Запомнить меня
+        </label>
+
+        <Link href="/forgot">Забыли пароль?</Link>
+      </div>
+
+      <button className={styles.submit} type="submit" disabled={loading}>
+        {loading ? "Вход..." : "Войти"}
+      </button>
+    </form>
   );
 }

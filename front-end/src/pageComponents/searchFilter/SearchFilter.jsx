@@ -78,6 +78,14 @@ export default function SearchFilter() {
 
   const [rentPeriod, setRentPeriod] = useState("Любой");
 
+  // LOCATION
+
+  const [country, setCountry] = useState("Кыргызстан");
+
+  const [region, setRegion] = useState("");
+
+  const [district, setDistrict] = useState("");
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.card}>
@@ -128,6 +136,12 @@ export default function SearchFilter() {
               setPurpose={setPurpose}
               fence={fence}
               setFence={setFence}
+              country={country}
+              setCountry={setCountry}
+              region={region}
+              setRegion={setRegion}
+              district={district}
+              setDistrict={setDistrict}
             />
 
             <AdvancedFilters

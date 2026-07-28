@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building, Phone, Mail, FileCheck, MapPin, Lock, CheckCircle2 } from "lucide-react";
+import { Building, Phone, Mail, FileCheck, MapPin, Lock, EyeOff, Eye, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import styles from "./DeveloperForm.module.css";
 import { registerUser } from "@/utils/api";
@@ -15,6 +15,7 @@ export default function DeveloperForm() {
   const [officeAddress, setOfficeAddress] = useState("");
   const [about, setAbout] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -117,12 +118,19 @@ export default function DeveloperForm() {
         <div className={styles.inputBox}>
           <Lock />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Пароль"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <button
+            type="button"
+            className={styles.eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
       </div>
 

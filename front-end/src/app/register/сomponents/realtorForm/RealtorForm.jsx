@@ -1,7 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Phone, Mail, FileText, Lock, CheckCircle2 } from "lucide-react";
+import {
+  Building2,
+  Phone,
+  Mail,
+  FileText,
+  Lock,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import styles from "./RealtorForm.module.css";
 import { registerUser } from "@/utils/api";
@@ -14,6 +23,7 @@ export default function RealtorForm() {
   const [agencyName, setAgencyName] = useState("");
   const [about, setAbout] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -55,6 +65,7 @@ export default function RealtorForm() {
     <form className={styles.wrapper} onSubmit={handleSubmit}>
       <div className={styles.header}>
         <Building2 />
+
         <div>
           <h2>Профиль риэлтора</h2>
           <p>Расскажите о вашей деятельности</p>
@@ -76,6 +87,7 @@ export default function RealtorForm() {
           <Phone />
           <input
             placeholder="Номер телефона"
+            type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
@@ -102,15 +114,23 @@ export default function RealtorForm() {
           />
         </div>
 
+        {/* Пароль */}
         <div className={styles.inputBox}>
           <Lock />
           <input
-            type="password"
             placeholder="Пароль"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <button
+            type="button"
+            className={styles.eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </button>
         </div>
       </div>
 
