@@ -11,7 +11,7 @@
 
   overflow: hidden;
 
-  background-image: url("../../../public/assets/bishkek-hero.jpg");
+  background-image: url("/assets/bishkek-hero.jpg");
 
   background-size: cover;
 
