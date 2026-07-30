@@ -1,7 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-
 import styles from "./InputField.module.css";
 
 export default function InputField({
@@ -11,9 +11,14 @@ export default function InputField({
   value,
   setValue,
   password,
-  showPassword,
-  setShowPassword,
+  showPassword: externalShowPassword,
+  setShowPassword: externalSetShowPassword,
 }) {
+  const [internalShowPassword, setInternalShowPassword] = useState(false);
+
+  const showPassword = externalShowPassword !== undefined ? externalShowPassword : internalShowPassword;
+  const setShowPassword = externalSetShowPassword !== undefined ? externalSetShowPassword : setInternalShowPassword;
+
   return (
     <div className={styles.wrapper}>
       {Icon && <Icon className={styles.icon} />}
@@ -21,8 +26,8 @@ export default function InputField({
       <input
         type={password ? (showPassword ? "text" : "password") : type}
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={value || ""}
+        onChange={(e) => setValue && setValue(e.target.value)}
       />
 
       {password && (

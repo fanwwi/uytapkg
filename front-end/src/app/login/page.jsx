@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import {
   Mail,
@@ -14,27 +15,29 @@ import {
   EyeOff,
   User,
   Building2,
+  CheckCircle2,
 } from "lucide-react";
 
 import styles from "./Login.module.css";
+import { loginUser } from "@/utils/api";
 
 export default function Login() {
+  const router = useRouter();
   const [accountType, setAccountType] = useState("personal");
-
   const [method, setMethod] = useState("phone");
-
   const [phoneStep, setPhoneStep] = useState(1);
-
   const [phone, setPhone] = useState("");
-
   const [code, setCode] = useState(["", "", "", ""]);
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
+  const [remember, setRemember] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  // формат номера Кыргызстана
   const formatPhone = (value) => {
     let numbers = value.replace(/\D/g, "");
 
@@ -43,13 +46,10 @@ export default function Login() {
     }
 
     numbers = numbers.slice(0, 9);
-
     let result = "+996";
 
     if (numbers.length) result += " " + numbers.slice(0, 3);
-
     if (numbers.length >= 4) result += " " + numbers.slice(3, 6);
-
     if (numbers.length >= 7) result += " " + numbers.slice(6, 9);
 
     return result;
@@ -61,27 +61,71 @@ export default function Login() {
 
   const sendCode = () => {
     const clean = phone.replace(/\D/g, "");
-
     if (clean.length !== 12) {
-      alert("Введите корректный номер");
-
+      setError("Введите корректный номер Кыргызстана (+996...)");
       return;
     }
-
+    setError("");
     setPhoneStep(2);
   };
 
   const changeCode = (value, index) => {
     if (!/^\d*$/.test(value)) return;
-
     const arr = [...code];
-
     arr[index] = value;
-
     setCode(arr);
 
     if (value && index < 3) {
       document.getElementById(`code-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleEmailLogin = async (e) => {
+    if (e) e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const data = await loginUser({
+        identifier: email,
+        password: password,
+      });
+
+      if (data.token) {
+        localStorage.setItem("uytap_token", data.token);
+        localStorage.setItem("uytap_user", JSON.stringify(data.user));
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/main");
+      }, 1200);
+    } catch (err) {
+      setError(err.message || "Неверный Email или пароль");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePhoneLogin = async (e) => {
+    if (e) e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const fullCode = code.join("");
+      if (fullCode.length < 4) {
+        throw new Error("Введите полный 4-значный код");
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/main");
+      }, 1200);
+    } catch (err) {
+      setError(err.message || "Ошибка входа по номеру телефона");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,16 +153,14 @@ export default function Login() {
         <p className={styles.subtitle}>Войдите в аккаунт для продолжения</p>
 
         {/* Тип аккаунта */}
-
         <div className={styles.accountTabs}>
           <button
             className={accountType === "personal" ? styles.activeTab : ""}
             onClick={() => {
               setAccountType("personal");
-
               setMethod("phone");
-
               setPhoneStep(1);
+              setError("");
             }}
           >
             <User />
@@ -129,8 +171,8 @@ export default function Login() {
             className={accountType === "business" ? styles.activeTab : ""}
             onClick={() => {
               setAccountType("business");
-
               setMethod("email");
+              setError("");
             }}
           >
             <Building2 />
@@ -165,8 +207,8 @@ export default function Login() {
                   }
                   onClick={() => {
                     setMethod("phone");
-
                     setPhoneStep(1);
+                    setError("");
                   }}
                 >
                   <Phone />
@@ -177,38 +219,36 @@ export default function Login() {
                   className={
                     method === "email" ? styles.activeMethod : styles.method
                   }
-                  onClick={() => setMethod("email")}
+                  onClick={() => {
+                    setMethod("email");
+                    setError("");
+                  }}
                 >
                   <Mail />
                   Email
                 </button>
               </div>
 
+              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {success && (
+                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
+                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
+                </div>
+              )}
+
               <AnimatePresence mode="wait">
                 {method === "phone" && (
                   <motion.div
                     key="phone"
-                    initial={{
-                      opacity: 0,
-                      x: -20,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      x: -20,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                    }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25 }}
                   >
                     {phoneStep === 1 && (
                       <div className={styles.form}>
                         <div className={styles.inputBox}>
                           <Phone />
-
                           <input
                             type="tel"
                             value={phone}
@@ -225,8 +265,8 @@ export default function Login() {
                     )}
 
                     {phoneStep === 2 && (
-                      <div className={styles.form}>
-                        <p className={styles.smsInfo}>Введите код из SMS</p>
+                      <form className={styles.form} onSubmit={handlePhoneLogin}>
+                        <p className={styles.smsInfo}>Введите код из SMS ({phone})</p>
 
                         <div className={styles.codeInputs}>
                           {code.map((item, index) => (
@@ -242,12 +282,14 @@ export default function Login() {
                           ))}
                         </div>
 
-                        <button className={styles.submit}>Войти</button>
+                        <button className={styles.submit} type="submit" disabled={loading}>
+                          {loading ? "Проверка..." : "Войти"}
+                        </button>
 
-                        <button className={styles.resend}>
+                        <button type="button" className={styles.resend} onClick={sendCode}>
                           Отправить код повторно
                         </button>
-                      </div>
+                      </form>
                     )}
                   </motion.div>
                 )}
@@ -255,21 +297,10 @@ export default function Login() {
                 {method === "email" && (
                   <motion.div
                     key="email"
-                    initial={{
-                      opacity: 0,
-                      x: 20,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      x: 20,
-                    }}
-                    transition={{
-                      duration: 0.25,
-                    }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.25 }}
                   >
                     <EmailForm
                       email={email}
@@ -278,6 +309,10 @@ export default function Login() {
                       setPassword={setPassword}
                       showPassword={showPassword}
                       setShowPassword={setShowPassword}
+                      remember={remember}
+                      setRemember={setRemember}
+                      handleEmailLogin={handleEmailLogin}
+                      loading={loading}
                     />
                   </motion.div>
                 )}
@@ -288,22 +323,17 @@ export default function Login() {
           {accountType === "business" && (
             <motion.div
               key="business"
-              initial={{
-                opacity: 0,
-                x: 30,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-              }}
-              exit={{
-                opacity: 0,
-                x: 30,
-              }}
-              transition={{
-                duration: 0.3,
-              }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 30 }}
+              transition={{ duration: 0.3 }}
             >
+              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {success && (
+                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
+                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
+                </div>
+              )}
               <EmailForm
                 email={email}
                 setEmail={setEmail}
@@ -311,6 +341,10 @@ export default function Login() {
                 setPassword={setPassword}
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
+                remember={remember}
+                setRemember={setRemember}
+                handleEmailLogin={handleEmailLogin}
+                loading={loading}
                 business
               />
             </motion.div>
@@ -328,44 +362,39 @@ export default function Login() {
 
 function EmailForm({
   email,
-
   setEmail,
-
   password,
-
   setPassword,
-
   showPassword,
-
   setShowPassword,
-
+  remember,
+  setRemember,
+  handleEmailLogin,
+  loading,
   business,
 }) {
-  const [remember, setRemember] = useState(true);
-
   return (
-    <div className={styles.form}>
+    <form className={styles.form} onSubmit={handleEmailLogin}>
       <div className={styles.inputBox}>
         <Mail />
-
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
+          required
         />
       </div>
 
       <div className={styles.inputBox}>
         <Lock />
-
         <input
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Пароль"
+          required
         />
-
         <button
           type="button"
           className={styles.eye}
@@ -389,7 +418,9 @@ function EmailForm({
         <Link href="/forgot">Забыли пароль?</Link>
       </div>
 
-      <button className={styles.submit}>Войти</button>
-    </div>
+      <button className={styles.submit} type="submit" disabled={loading}>
+        {loading ? "Вход..." : "Войти"}
+      </button>
+    </form>
   );
 }
