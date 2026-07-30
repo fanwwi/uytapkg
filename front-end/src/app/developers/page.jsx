@@ -7,7 +7,7 @@ import { Search, Building2, Home, ArrowRight } from "lucide-react";
 
 import styles from "./Developers.module.css";
 
-import Footer from "@/pageComponents/footer/Footer";
+import Footer from "@/components/pageComponents/footer/Footer";
 
 const developers = [
   {

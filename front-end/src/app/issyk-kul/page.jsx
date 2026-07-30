@@ -19,7 +19,7 @@ import {
 import styles from "./IssykKul.module.css";
 
 import IssykKulFilter from "./issykKulFilters/IssykKulFilter";
-import Footer from "@/pageComponents/footer/Footer";
+import Footer from "@/components/pageComponents/footer/Footer";
 
 const zones = [
   {

@@ -16,7 +16,7 @@ import {
   Building2,
 } from "lucide-react";
 
-import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
+import CustomSelect from "../../../../ui/customSelect/CustomSelect";
 
 import styles from "./AdvancedFilters.module.css";
 

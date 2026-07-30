@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import CustomSelect from "../../../../components/ui/customSelect/CustomSelect";
+import CustomSelect from "../../../../ui/customSelect/CustomSelect";
 
 import styles from "./MainFilters.module.css";
 import LocationSelector from "../locationSelector/LocationSelector";

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Search, MapPin, Wallet, ArrowRight, Building2 } from "lucide-react";
 
 import styles from "./Complexes.module.css";
-import Footer from "@/pageComponents/footer/Footer";
+import Footer from "@/components/pageComponents/footer/Footer";
 
 const complexes = [
   {
