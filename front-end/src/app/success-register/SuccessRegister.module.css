@@ -1,0 +1,167 @@
+.page {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 0, 111, 0.15), transparent 40%),
+    linear-gradient(180deg, #fff5fa, #ffffff);
+}
+
+.card {
+  width: 100%;
+
+  max-width: 520px;
+
+  padding: 55px 45px;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 40px;
+
+  box-shadow: 0 30px 80px rgba(255, 0, 111, 0.12);
+
+  border: 1px solid rgba(255, 0, 111, 0.08);
+
+  animation: show 0.4s ease;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.icon {
+  width: 90px;
+
+  height: 90px;
+
+  margin: 0 auto 25px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: linear-gradient(135deg, #ff2990, #ff006f);
+
+  color: white;
+
+  box-shadow: 0 20px 45px rgba(255, 0, 111, 0.35);
+}
+
+.icon svg {
+  width: 45px;
+
+  height: 45px;
+}
+
+.card h1 {
+  margin: 0 0 18px;
+
+  font-size: 32px;
+
+  font-weight: 950;
+
+  color: #111;
+
+  letter-spacing: -1px;
+}
+
+.card p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+}
+
+.actions {
+  margin-top: 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.actions a {
+  height: 55px;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  text-decoration: none;
+
+  font-weight: 850;
+
+  transition: 0.3s;
+}
+
+.actions svg {
+  width: 20px;
+}
+
+.login {
+  background: linear-gradient(135deg, #ff2990, #ff006f);
+
+  color: white;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
+}
+
+.login:hover {
+  transform: translateY(-3px);
+}
+
+.home {
+  background: #f7f7f7;
+
+  color: #222;
+}
+
+.home:hover {
+  background: #ffe5f1;
+
+  color: #ff006f;
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 40px 25px;
+
+    border-radius: 30px;
+  }
+
+  .card h1 {
+    font-size: 25px;
+  }
+}
