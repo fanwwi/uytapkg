@@ -1,0 +1,127 @@
+.page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 0, 111, 0.15), transparent 40%),
+    linear-gradient(180deg, #fff5fa, #ffffff);
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+
+  padding: 45px 40px;
+
+  border-radius: 35px;
+
+  background: white;
+
+  text-align: center;
+
+  box-shadow: 0 30px 80px rgba(255, 0, 111, 0.15);
+
+  border: 1px solid rgba(255, 0, 111, 0.08);
+}
+
+.icon {
+  width: 90px;
+  height: 90px;
+
+  margin: 0 auto 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 30px;
+
+  background: linear-gradient(135deg, #ff2990, #ff006f);
+
+  color: white;
+
+  box-shadow: 0 20px 40px rgba(255, 0, 111, 0.35);
+}
+
+.icon svg {
+  width: 42px;
+  height: 42px;
+}
+
+.card h1 {
+  margin: 0;
+
+  font-size: 32px;
+
+  font-weight: 950;
+
+  color: #111;
+}
+
+.card p {
+  margin: 18px 0 35px;
+
+  color: #777;
+
+  line-height: 1.6;
+
+  font-size: 16px;
+}
+
+.buttons {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.login,
+.home {
+  height: 58px;
+
+  border-radius: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  text-decoration: none;
+
+  font-weight: 850;
+
+  transition: 0.3s;
+}
+
+.login {
+  color: white;
+
+  background: linear-gradient(135deg, #ff2990, #ff006f);
+
+  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
+}
+
+.home {
+  color: #111;
+
+  background: #f5f5f5;
+}
+
+.login:hover,
+.home:hover {
+  transform: translateY(-4px);
+}
+
+.login svg,
+.home svg {
+  width: 20px;
+}

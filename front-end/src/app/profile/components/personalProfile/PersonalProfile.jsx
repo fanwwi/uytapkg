@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 import {
   User,
@@ -12,7 +13,7 @@ import {
   Home,
   CreditCard,
   LogOut,
-  ExternalLink,
+  ArrowLeft,
 } from "lucide-react";
 
 import styles from "./PersonalProfile.module.css";
@@ -22,9 +23,7 @@ import ProfileEditModal from "./profileEdit/ProfileEditModal";
 export default function PersonalProfile({ user }) {
   const [openEdit, setOpenEdit] = useState(false);
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   const profile = user.profile || {};
 
@@ -43,6 +42,13 @@ export default function PersonalProfile({ user }) {
 
   return (
     <main className={styles.page}>
+      <div className={styles.topBar}>
+        <Link href="/" className={styles.homeButton}>
+          <ArrowLeft />
+          На главную
+        </Link>
+      </div>
+
       <motion.section
         className={styles.profileCard}
         initial={{
@@ -52,9 +58,6 @@ export default function PersonalProfile({ user }) {
         animate={{
           opacity: 1,
           y: 0,
-        }}
-        transition={{
-          duration: 0.4,
         }}
       >
         <div className={styles.topGlow} />
@@ -70,14 +73,12 @@ export default function PersonalProfile({ user }) {
         </div>
 
         <div className={styles.info}>
-          <div className={styles.nameRow}>
-            <h1>{fullName || "Пользователь"}</h1>
-          </div>
+          <h1>{fullName || "Пользователь"}</h1>
 
           <span className={styles.type}>Частное лицо</span>
 
           <div className={styles.contacts}>
-            <div className={styles.phoneContact}>
+            <div className={styles.phone}>
               <Phone />
 
               <span>{user.phone || "Нет телефона"}</span>
@@ -85,28 +86,18 @@ export default function PersonalProfile({ user }) {
 
             {whatsappNumber && (
               <a
-                className={styles.whatsapp}
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
-                rel="noopener noreferrer"
+                className={styles.whatsapp}
               >
                 <MessageCircle />
-
-                <span>WhatsApp</span>
-
-                <ExternalLink />
+                WhatsApp
               </a>
             )}
           </div>
         </div>
 
-        <button
-          type="button"
-          className={styles.edit}
-          onClick={() => {
-            setOpenEdit(true);
-          }}
-        >
+        <button className={styles.edit} onClick={() => setOpenEdit(true)}>
           <Pencil />
         </button>
       </motion.section>
@@ -118,7 +109,7 @@ export default function PersonalProfile({ user }) {
       </section>
 
       <section className={styles.actions}>
-        <a href="/profile/ads">
+        <Link href="/profile/ads">
           <div className={styles.icon}>
             <Home />
           </div>
@@ -128,9 +119,9 @@ export default function PersonalProfile({ user }) {
 
             <p>Управление объектами</p>
           </div>
-        </a>
+        </Link>
 
-        <a href="/profile/favorites">
+        <Link href="/profile/favorites">
           <div className={styles.icon}>
             <Heart />
           </div>
@@ -140,9 +131,9 @@ export default function PersonalProfile({ user }) {
 
             <p>Сохраненные объекты</p>
           </div>
-        </a>
+        </Link>
 
-        <a href="/profile/tariff">
+        <Link href="/profile/tariff">
           <div className={styles.icon}>
             <CreditCard />
           </div>
@@ -152,9 +143,9 @@ export default function PersonalProfile({ user }) {
 
             <p>Управление подпиской</p>
           </div>
-        </a>
+        </Link>
 
-        <button type="button" className={styles.logout} onClick={logout}>
+        <button className={styles.logout} onClick={logout}>
           <div className={styles.icon}>
             <LogOut />
           </div>

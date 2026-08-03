@@ -1,9 +1,15 @@
 .page {
   min-height: 100vh;
 
-  padding: 70px 20px;
+  padding: 110px 20px 80px;
 
-  background: linear-gradient(180deg, #fff7fb 0%, #fafafa 40%, #ffffff 100%);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255, 0, 111, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(180deg, #fff5fa, #fff);
 
   display: flex;
 
@@ -11,35 +17,79 @@
 
   align-items: center;
 
-  gap: 30px;
+  gap: 25px;
 }
 
-/* PROFILE CARD */
+/* HOME */
+
+.topBar {
+  width: 100%;
+
+  max-width: 1050px;
+}
+
+.homeButton {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 14px 22px;
+
+  background: white;
+
+  border-radius: 18px;
+
+  border: 1px solid #ffd5e6;
+
+  text-decoration: none;
+
+  color: #111;
+
+  font-weight: 800;
+
+  box-shadow: 0 10px 35px rgba(255, 0, 111, 0.08);
+
+  transition: 0.3s;
+}
+
+.homeButton svg {
+  color: #ff006f;
+}
+
+.homeButton:hover {
+  transform: translateX(-5px);
+
+  color: #ff006f;
+}
+
+/* PROFILE */
 
 .profileCard {
   width: 100%;
 
-  max-width: 950px;
+  max-width: 1050px;
 
   padding: 45px;
 
-  border-radius: 42px;
+  border-radius: 38px;
 
-  background: linear-gradient(145deg, #ffffff, #fff8fc);
+  background: white;
 
   display: flex;
 
   align-items: center;
 
-  gap: 35px;
+  gap: 40px;
 
   position: relative;
 
   overflow: hidden;
 
-  border: 1px solid rgba(255, 0, 111, 0.08);
+  border: 1px solid #ffe0ed;
 
-  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.08);
 }
 
 .topGlow {
@@ -49,33 +99,25 @@
 
   height: 350px;
 
-  border-radius: 50%;
-
   background: #ff006f;
 
   opacity: 0.12;
 
   filter: blur(100px);
 
-  right: -130px;
+  right: -120px;
 
-  top: -130px;
-}
-
-/* AVATAR */
-
-.avatarWrapper {
-  position: relative;
-
-  z-index: 2;
+  top: -120px;
 }
 
 .avatar {
-  width: 150px;
+  width: 160px;
 
-  height: 150px;
+  height: 160px;
 
   border-radius: 50%;
+
+  overflow: hidden;
 
   display: flex;
 
@@ -83,21 +125,13 @@
 
   justify-content: center;
 
-  overflow: hidden;
-
-  background: linear-gradient(135deg, #ff006f, #ff7abd);
+  background: linear-gradient(135deg, #ff006f, #ff72b5);
 
   color: white;
 
-  border: 6px solid white;
+  border: 7px solid white;
 
-  box-shadow: 0 25px 60px rgba(255, 0, 111, 0.35);
-}
-
-.avatar svg {
-  width: 60px;
-
-  height: 60px;
+  box-shadow: 0 20px 60px rgba(255, 0, 111, 0.3);
 }
 
 .avatar img {
@@ -108,128 +142,82 @@
   object-fit: cover;
 }
 
-/* INFO */
+.avatar svg {
+  width: 60px;
+
+  height: 60px;
+}
 
 .info {
   flex: 1;
-
-  z-index: 2;
 }
 
-.nameRow {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-}
-
-.nameRow h1 {
+.info h1 {
   margin: 0;
 
-  font-size: 36px;
+  font-size: 38px;
 
   font-weight: 950;
-
-  color: #111;
-
-  letter-spacing: -1px;
 }
 
 .type {
   display: inline-flex;
 
-  margin-top: 14px;
+  margin-top: 15px;
 
-  padding: 9px 20px;
+  padding: 8px 18px;
 
   border-radius: 999px;
 
-  background: #ffe5f1;
+  background: #ffe6f1;
 
   color: #ff006f;
-
-  font-size: 14px;
-
-  font-weight: 900;
-}
-
-/* CONTACTS */
-
-.contacts {
-  display: flex;
-
-  align-items: center;
-
-  gap: 14px;
-
-  flex-wrap: wrap;
-
-  margin-top: 28px;
-}
-
-.phoneContact,
-.whatsapp {
-  height: 54px;
-
-  padding: 0 22px;
-
-  border-radius: 20px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  font-size: 15px;
 
   font-weight: 800;
 }
 
-.phoneContact {
-  background: #f6f6f6;
+.contacts {
+  display: flex;
 
-  border: 1px solid #ededed;
+  gap: 15px;
 
-  color: #222;
+  margin-top: 25px;
+
+  flex-wrap: wrap;
 }
 
-.phoneContact svg {
-  color: #ff006f;
+.phone,
+.whatsapp {
+  height: 55px;
 
-  width: 22px;
+  padding: 0 22px;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-weight: 800;
+}
+
+.phone {
+  background: #f7f7f7;
+}
+
+.phone svg {
+  color: #ff006f;
 }
 
 .whatsapp {
-  background: linear-gradient(135deg, #25d366, #128c7e);
+  background: #25d366;
 
   color: white;
 
   text-decoration: none;
-
-  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.25);
-
-  transition: 0.3s;
 }
-
-.whatsapp:hover {
-  transform: translateY(-5px);
-
-  box-shadow: 0 25px 50px rgba(37, 211, 102, 0.4);
-}
-
-.whatsapp svg:first-child {
-  width: 23px;
-}
-
-.whatsapp svg:last-child {
-  width: 15px;
-
-  opacity: 0.8;
-}
-
-/* EDIT BUTTON */
 
 .edit {
   position: absolute;
@@ -244,7 +232,7 @@
 
   border: none;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
   background: #ff006f;
 
@@ -258,57 +246,37 @@
 
   cursor: pointer;
 
-  transition: 0.35s;
-
-  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
+  box-shadow: 0 15px 40px rgba(255, 0, 111, 0.35);
 }
-
-.edit:hover {
-  transform: rotate(-8deg) scale(1.08);
-}
-
-.edit svg {
-  width: 25px;
-}
-
-/* ABOUT */
 
 .about {
   width: 100%;
 
-  max-width: 950px;
+  max-width: 1050px;
 
-  padding: 28px 35px;
+  padding: 30px 35px;
 
   background: white;
 
   border-radius: 30px;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
 }
 
 .about h3 {
   margin: 0 0 10px;
-
-  font-size: 20px;
-
-  font-weight: 900;
 }
 
 .about p {
-  margin: 0;
-
   color: #777;
 
-  line-height: 1.6;
+  line-height: 1.7;
 }
-
-/* ACTIONS */
 
 .actions {
   width: 100%;
 
-  max-width: 950px;
+  max-width: 1050px;
 
   display: grid;
 
@@ -319,13 +287,15 @@
 
 .actions a,
 .logout {
-  min-height: 100px;
+  min-height: 110px;
 
   padding: 25px;
 
+  border-radius: 28px;
+
   background: white;
 
-  border-radius: 30px;
+  border: 1px solid #eee;
 
   display: flex;
 
@@ -333,56 +303,61 @@
 
   gap: 20px;
 
-  border: 1px solid #f1f1f1;
-
   text-decoration: none;
 
   color: #111;
 
-  transition: 0.35s;
-
   cursor: pointer;
 
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  transition: 0.3s;
 }
 
 .actions a:hover,
 .logout:hover {
-  transform: translateY(-7px);
+  transform: translateY(-6px);
 
-  box-shadow: 0 30px 70px rgba(255, 0, 111, 0.15);
+  border-color: #ffb1d1;
+
+  box-shadow: 0 25px 60px rgba(255, 0, 111, 0.15);
 }
 
-.actions svg,
-.logout svg {
-  width: 28px;
+.icon {
+  width: 60px;
 
-  height: 28px;
+  height: 60px;
 
+  border-radius: 20px;
+
+  background: #ffe7f1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.icon svg {
   color: #ff006f;
+
+  width: 28px;
 }
 
 .actions h3 {
   margin: 0;
 
   font-size: 18px;
-
-  font-weight: 900;
 }
 
 .actions p {
   margin: 5px 0 0;
 
   color: #888;
-
-  font-size: 14px;
 }
 
 .logout {
   color: #ff006f;
 }
-
-/* MOBILE */
 
 @media (max-width: 750px) {
   .profileCard {
@@ -390,39 +365,31 @@
 
     text-align: center;
 
-    padding: 35px 25px;
+    padding: 35px 20px;
   }
 
-  .nameRow {
-    justify-content: center;
-  }
-
-  .nameRow h1 {
-    font-size: 27px;
+  .info h1 {
+    font-size: 28px;
   }
 
   .contacts {
     flex-direction: column;
   }
 
-  .phoneContact,
+  .phone,
   .whatsapp {
     width: 100%;
 
     justify-content: center;
   }
 
-  .edit {
-    right: 20px;
-
-    top: 20px;
-  }
-
   .actions {
     grid-template-columns: 1fr;
   }
 
-  .about {
-    padding: 25px;
+  .edit {
+    right: 20px;
+
+    top: 20px;
   }
 }

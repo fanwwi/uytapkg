@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
   ChevronDown,
@@ -19,9 +20,10 @@ import {
 import styles from "./Header.module.css";
 
 export default function Header() {
+  const router = useRouter();
+
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
-
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export default function Header() {
 
     checkAuth();
 
+    window.addEventListener("storage", checkAuth);
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       setOpenMenu(null);
@@ -43,30 +47,26 @@ export default function Header() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("storage", checkAuth);
     };
   }, []);
 
-  const toggleMenu = (menu) => {
+  function toggleMenu(menu) {
     setOpenMenu(openMenu === menu ? null : menu);
-  };
+  }
 
-  const protectedAction = (e, path) => {
+  function protectedRoute(path) {
     if (!isAuth) {
-      e.preventDefault();
-
-      alert("Для продолжения необходимо войти в аккаунт");
-
+      router.push("/auth-required");
       return;
     }
 
-    window.location.href = path;
-  };
+    router.push(path);
+  }
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.container}>
-        {/* LOGO */}
-
         <Link href="/" className={styles.logo}>
           <Image
             src={scrolled ? "/assets/logo.png" : "/assets/logo2.png"}
@@ -77,18 +77,12 @@ export default function Header() {
           />
         </Link>
 
-        {/* NAVIGATION */}
-
         <nav className={styles.nav}>
-          {/* Локации */}
-
           <div className={styles.dropdown}>
-            <button type="button" onClick={() => toggleMenu("location")}>
+            <button onClick={() => toggleMenu("location")}>
               <MapPin />
               Локации
-              <ChevronDown
-                className={openMenu === "location" ? styles.rotate : ""}
-              />
+              <ChevronDown />
             </button>
 
             {openMenu === "location" && (
@@ -98,15 +92,11 @@ export default function Header() {
             )}
           </div>
 
-          {/* Новостройки */}
-
           <div className={styles.dropdown}>
-            <button type="button" onClick={() => toggleMenu("new")}>
+            <button onClick={() => toggleMenu("new")}>
               <Building2 />
               Новостройки
-              <ChevronDown
-                className={openMenu === "new" ? styles.rotate : ""}
-              />
+              <ChevronDown />
             </button>
 
             {openMenu === "new" && (
@@ -118,15 +108,11 @@ export default function Header() {
             )}
           </div>
 
-          {/* Еще */}
-
           <div className={styles.dropdown}>
-            <button type="button" onClick={() => toggleMenu("more")}>
+            <button onClick={() => toggleMenu("more")}>
               <Users />
               Еще
-              <ChevronDown
-                className={openMenu === "more" ? styles.rotate : ""}
-              />
+              <ChevronDown />
             </button>
 
             {openMenu === "more" && (
@@ -138,48 +124,41 @@ export default function Header() {
             )}
           </div>
 
-          {/* FAVORITES */}
-
-          <Link
-            href="/profile/favorites"
+          <button
             className={styles.favorite}
-            onClick={(e) => protectedAction(e, "/profile/favorites")}
+            onClick={() => protectedRoute("/profile/favorites")}
           >
             <Heart />
             Избранное
-          </Link>
+          </button>
         </nav>
 
-        {/* ACTION BUTTONS */}
-
         <div className={styles.actions}>
-          <Link
-            href="/create"
+          <button
             className={styles.add}
-            onClick={(e) => protectedAction(e, "/create")}
+            onClick={() => protectedRoute("/create")}
           >
             <PlusCircle />
-            Добавить объявление
-          </Link>
+            <span>Добавить объявление</span>
+          </button>
 
-          <Link
-            href="/create"
+          <button
             className={styles.free}
-            onClick={(e) => protectedAction(e, "/create")}
+            onClick={() => protectedRoute("/create")}
           >
             <Flame />
-            Разместить за 0 сом
-          </Link>
+            <span>Разместить за 0 сом</span>
+          </button>
 
           {isAuth ? (
             <Link href="/profile" className={styles.login}>
               <User />
-              Профиль
+              <span>Профиль</span>
             </Link>
           ) : (
             <Link href="/login" className={styles.login}>
               <LogIn />
-              Войти
+              <span>Войти</span>
             </Link>
           )}
         </div>
