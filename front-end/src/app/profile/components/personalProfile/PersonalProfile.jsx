@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import {
   User,
@@ -11,54 +12,109 @@ import {
   Home,
   CreditCard,
   LogOut,
-  BadgeCheck,
+  ExternalLink,
 } from "lucide-react";
 
 import styles from "./PersonalProfile.module.css";
+
 import ProfileEditModal from "./profileEdit/ProfileEditModal";
 
-export default function PersonalProfile() {
+export default function PersonalProfile({ user }) {
   const [openEdit, setOpenEdit] = useState(false);
+
+  if (!user) {
+    return null;
+  }
+
+  const profile = user.profile || {};
+
+  const fullName =
+    `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
+
+  const whatsappNumber = user.phone?.replace(/\D/g, "") || "";
+
+  function logout() {
+    localStorage.removeItem("uytap_user");
+
+    document.cookie = "uytap_token=; path=/; max-age=0";
+
+    window.location.href = "/login";
+  }
 
   return (
     <main className={styles.page}>
-      <section className={styles.profileCard}>
-        <div className={styles.topGlow}></div>
+      <motion.section
+        className={styles.profileCard}
+        initial={{
+          opacity: 0,
+          y: 30,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.4,
+        }}
+      >
+        <div className={styles.topGlow} />
 
         <div className={styles.avatarWrapper}>
           <div className={styles.avatar}>
-            <User />
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt="avatar" />
+            ) : (
+              <User />
+            )}
           </div>
-
-          <button className={styles.editAvatar}>Изменить фото</button>
         </div>
 
         <div className={styles.info}>
           <div className={styles.nameRow}>
-            <h1>Фарангиз Анваржанова</h1>
-
+            <h1>{fullName || "Пользователь"}</h1>
           </div>
 
           <span className={styles.type}>Частное лицо</span>
 
           <div className={styles.contacts}>
-            <div>
+            <div className={styles.phoneContact}>
               <Phone />
 
-              <span>+996 555 555 555</span>
+              <span>{user.phone || "Нет телефона"}</span>
             </div>
 
-            <div>
-              <MessageCircle />
+            {whatsappNumber && (
+              <a
+                className={styles.whatsapp}
+                href={`https://wa.me/${whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle />
 
-              <span>WhatsApp</span>
-            </div>
+                <span>WhatsApp</span>
+
+                <ExternalLink />
+              </a>
+            )}
           </div>
         </div>
 
-        <button className={styles.edit} onClick={() => setOpenEdit(true)}>
+        <button
+          type="button"
+          className={styles.edit}
+          onClick={() => {
+            setOpenEdit(true);
+          }}
+        >
           <Pencil />
         </button>
+      </motion.section>
+
+      <section className={styles.about}>
+        <h3>О себе</h3>
+
+        <p>{profile.about || "Пользователь пока не добавил описание"}</p>
       </section>
 
       <section className={styles.actions}>
@@ -67,11 +123,11 @@ export default function PersonalProfile() {
             <Home />
           </div>
 
-          <section>
+          <div>
             <h3>Мои объявления</h3>
 
             <p>Управление объектами</p>
-          </section>
+          </div>
         </a>
 
         <a href="/profile/favorites">
@@ -79,11 +135,11 @@ export default function PersonalProfile() {
             <Heart />
           </div>
 
-          <section>
+          <div>
             <h3>Избранное</h3>
 
             <p>Сохраненные объекты</p>
-          </section>
+          </div>
         </a>
 
         <a href="/profile/tariff">
@@ -91,27 +147,29 @@ export default function PersonalProfile() {
             <CreditCard />
           </div>
 
-          <section>
+          <div>
             <h3>Мой тариф</h3>
 
             <p>Управление подпиской</p>
-          </section>
+          </div>
         </a>
 
-        <button className={styles.logout}>
+        <button type="button" className={styles.logout} onClick={logout}>
           <div className={styles.icon}>
             <LogOut />
           </div>
 
-          <section>
+          <div>
             <h3>Выйти</h3>
 
             <p>Завершить сессию</p>
-          </section>
+          </div>
         </button>
       </section>
 
-      {openEdit && <ProfileEditModal close={() => setOpenEdit(false)} />}
+      {openEdit && (
+        <ProfileEditModal user={user} close={() => setOpenEdit(false)} />
+      )}
     </main>
   );
 }

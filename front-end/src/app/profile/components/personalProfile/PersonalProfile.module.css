@@ -1,9 +1,9 @@
 .page {
   min-height: 100vh;
 
-  padding: 60px 20px;
+  padding: 70px 20px;
 
-  background: #fafafa;
+  background: linear-gradient(180deg, #fff7fb 0%, #fafafa 40%, #ffffff 100%);
 
   display: flex;
 
@@ -11,19 +11,21 @@
 
   align-items: center;
 
-  gap: 35px;
+  gap: 30px;
 }
+
+/* PROFILE CARD */
 
 .profileCard {
   width: 100%;
 
-  max-width: 900px;
+  max-width: 950px;
 
   padding: 45px;
 
-  border-radius: 40px;
+  border-radius: 42px;
 
-  background: white;
+  background: linear-gradient(145deg, #ffffff, #fff8fc);
 
   display: flex;
 
@@ -35,41 +37,43 @@
 
   overflow: hidden;
 
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 0, 111, 0.08);
+
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.08);
 }
 
 .topGlow {
   position: absolute;
 
-  width: 300px;
+  width: 350px;
 
-  height: 300px;
+  height: 350px;
+
+  border-radius: 50%;
 
   background: #ff006f;
 
   opacity: 0.12;
 
-  filter: blur(90px);
+  filter: blur(100px);
 
-  right: -100px;
+  right: -130px;
 
-  top: -100px;
+  top: -130px;
 }
 
+/* AVATAR */
+
 .avatarWrapper {
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
+  position: relative;
 
   z-index: 2;
 }
 
 .avatar {
-  width: 140px;
+  width: 150px;
 
-  height: 140px;
+  height: 150px;
 
   border-radius: 50%;
 
@@ -79,36 +83,32 @@
 
   justify-content: center;
 
-  background: linear-gradient(135deg, #ff006f, #ff72b5);
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #ff006f, #ff7abd);
 
   color: white;
+
+  border: 6px solid white;
 
   box-shadow: 0 25px 60px rgba(255, 0, 111, 0.35);
 }
 
 .avatar svg {
-  width: 55px;
+  width: 60px;
 
-  height: 55px;
+  height: 60px;
 }
 
-.editAvatar {
-  margin-top: 15px;
+.avatar img {
+  width: 100%;
 
-  border: none;
+  height: 100%;
 
-  background: #fff0f6;
-
-  color: #ff006f;
-
-  padding: 10px 18px;
-
-  border-radius: 999px;
-
-  font-weight: 700;
-
-  cursor: pointer;
+  object-fit: cover;
 }
+
+/* INFO */
 
 .info {
   flex: 1;
@@ -121,70 +121,115 @@
 
   align-items: center;
 
-  gap: 10px;
+  gap: 12px;
 }
 
 .nameRow h1 {
-  font-size: 34px;
+  margin: 0;
+
+  font-size: 36px;
 
   font-weight: 950;
 
-  margin: 0;
-
   color: #111;
-}
 
-.verify {
-  color: #ff006f;
-
-  width: 25px;
+  letter-spacing: -1px;
 }
 
 .type {
-  display: inline-block;
+  display: inline-flex;
 
-  margin-top: 12px;
+  margin-top: 14px;
 
-  padding: 8px 18px;
+  padding: 9px 20px;
 
   border-radius: 999px;
 
-  background: #ffe4f0;
+  background: #ffe5f1;
 
   color: #ff006f;
 
-  font-weight: 800;
+  font-size: 14px;
+
+  font-weight: 900;
 }
+
+/* CONTACTS */
 
 .contacts {
   display: flex;
 
-  gap: 20px;
+  align-items: center;
 
-  margin-top: 25px;
+  gap: 14px;
+
+  flex-wrap: wrap;
+
+  margin-top: 28px;
 }
 
-.contacts div {
+.phoneContact,
+.whatsapp {
+  height: 54px;
+
+  padding: 0 22px;
+
+  border-radius: 20px;
+
   display: flex;
 
   align-items: center;
 
-  gap: 10px;
+  gap: 12px;
 
-  padding: 12px 18px;
+  font-size: 15px;
 
-  background: #fafafa;
-
-  border-radius: 18px;
-
-  font-weight: 700;
+  font-weight: 800;
 }
 
-.contacts svg {
+.phoneContact {
+  background: #f6f6f6;
+
+  border: 1px solid #ededed;
+
+  color: #222;
+}
+
+.phoneContact svg {
   color: #ff006f;
 
-  width: 20px;
+  width: 22px;
 }
+
+.whatsapp {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+
+  color: white;
+
+  text-decoration: none;
+
+  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.25);
+
+  transition: 0.3s;
+}
+
+.whatsapp:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 25px 50px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp svg:first-child {
+  width: 23px;
+}
+
+.whatsapp svg:last-child {
+  width: 15px;
+
+  opacity: 0.8;
+}
+
+/* EDIT BUTTON */
 
 .edit {
   position: absolute;
@@ -193,13 +238,13 @@
 
   top: 30px;
 
-  width: 55px;
+  width: 58px;
 
-  height: 55px;
+  height: 58px;
 
   border: none;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
   background: #ff006f;
 
@@ -213,23 +258,57 @@
 
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: 0.35s;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
 }
 
 .edit:hover {
-  transform: rotate(-10deg) scale(1.1);
-
-  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.4);
+  transform: rotate(-8deg) scale(1.08);
 }
 
 .edit svg {
   width: 25px;
 }
 
+/* ABOUT */
+
+.about {
+  width: 100%;
+
+  max-width: 950px;
+
+  padding: 28px 35px;
+
+  background: white;
+
+  border-radius: 30px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+}
+
+.about h3 {
+  margin: 0 0 10px;
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+.about p {
+  margin: 0;
+
+  color: #777;
+
+  line-height: 1.6;
+}
+
+/* ACTIONS */
+
 .actions {
   width: 100%;
 
-  max-width: 900px;
+  max-width: 950px;
 
   display: grid;
 
@@ -240,11 +319,11 @@
 
 .actions a,
 .logout {
-  background: white;
-
-  border: none;
+  min-height: 100px;
 
   padding: 25px;
+
+  background: white;
 
   border-radius: 30px;
 
@@ -254,44 +333,33 @@
 
   gap: 20px;
 
-  cursor: pointer;
+  border: 1px solid #f1f1f1;
 
   text-decoration: none;
 
   color: #111;
 
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  transition: 0.35s;
 
-  transition: 0.3s;
+  cursor: pointer;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
 }
 
 .actions a:hover,
 .logout:hover {
-  transform: translateY(-6px);
+  transform: translateY(-7px);
 
   box-shadow: 0 30px 70px rgba(255, 0, 111, 0.15);
 }
 
-.icon {
-  width: 55px;
+.actions svg,
+.logout svg {
+  width: 28px;
 
-  height: 55px;
-
-  border-radius: 18px;
-
-  background: #ffe4f0;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
+  height: 28px;
 
   color: #ff006f;
-}
-
-.icon svg {
-  width: 26px;
 }
 
 .actions h3 {
@@ -303,7 +371,7 @@
 }
 
 .actions p {
-  margin: 6px 0 0;
+  margin: 5px 0 0;
 
   color: #888;
 
@@ -314,13 +382,15 @@
   color: #ff006f;
 }
 
-@media (max-width: 700px) {
+/* MOBILE */
+
+@media (max-width: 750px) {
   .profileCard {
     flex-direction: column;
 
     text-align: center;
 
-    padding: 30px;
+    padding: 35px 25px;
   }
 
   .nameRow {
@@ -328,20 +398,31 @@
   }
 
   .nameRow h1 {
-    font-size: 25px;
+    font-size: 27px;
   }
 
   .contacts {
     flex-direction: column;
   }
 
-  .actions {
-    grid-template-columns: 1fr;
+  .phoneContact,
+  .whatsapp {
+    width: 100%;
+
+    justify-content: center;
   }
 
   .edit {
     right: 20px;
 
     top: 20px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .about {
+    padding: 25px;
   }
 }

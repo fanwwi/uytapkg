@@ -81,49 +81,57 @@ export default function Login() {
   };
 
   const handleEmailLogin = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
       const data = await loginUser({
         identifier: email,
-        password: password,
+        password,
       });
 
-      if (data.token) {
-        localStorage.setItem("uytap_token", data.token);
-        localStorage.setItem("uytap_user", JSON.stringify(data.user));
-      }
+      // cookie
+      document.cookie = `uytap_token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+
+      // localStorage
+      localStorage.setItem("uytap_user", JSON.stringify(data.user));
 
       setSuccess(true);
+
       setTimeout(() => {
-        router.push("/main");
-      }, 1200);
+        router.push("/profile");
+      }, 1000);
     } catch (err) {
-      setError(err.message || "Неверный Email или пароль");
+      setError(err.message || "Ошибка входа");
     } finally {
       setLoading(false);
     }
   };
 
   const handlePhoneLogin = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
       const fullCode = code.join("");
-      if (fullCode.length < 4) {
-        throw new Error("Введите полный 4-значный код");
-      }
+
+      const result = await verifyOtpCode(phone.replace(/\D/g, ""), fullCode);
+
+      document.cookie = `uytap_token=${result.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+
+      localStorage.setItem("uytap_user", JSON.stringify(result.user));
 
       setSuccess(true);
+
       setTimeout(() => {
-        router.push("/main");
-      }, 1200);
+        router.push("/profile");
+      }, 1000);
     } catch (err) {
-      setError(err.message || "Ошибка входа по номеру телефона");
+      setError(err.message || "Неверный код");
     } finally {
       setLoading(false);
     }
@@ -229,10 +237,30 @@ export default function Login() {
                 </button>
               </div>
 
-              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {error && (
+                <div
+                  style={{
+                    color: "#ef4444",
+                    fontSize: "14px",
+                    margin: "10px 0",
+                  }}
+                >
+                  ⚠️ {error}
+                </div>
+              )}
               {success && (
-                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
-                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
+                <div
+                  style={{
+                    color: "#10b981",
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    margin: "10px 0",
+                  }}
+                >
+                  <CheckCircle2 size={18} /> Авторизация успешна!
+                  Перенаправление...
                 </div>
               )}
 
@@ -266,7 +294,9 @@ export default function Login() {
 
                     {phoneStep === 2 && (
                       <form className={styles.form} onSubmit={handlePhoneLogin}>
-                        <p className={styles.smsInfo}>Введите код из SMS ({phone})</p>
+                        <p className={styles.smsInfo}>
+                          Введите код из SMS ({phone})
+                        </p>
 
                         <div className={styles.codeInputs}>
                           {code.map((item, index) => (
@@ -282,11 +312,19 @@ export default function Login() {
                           ))}
                         </div>
 
-                        <button className={styles.submit} type="submit" disabled={loading}>
+                        <button
+                          className={styles.submit}
+                          type="submit"
+                          disabled={loading}
+                        >
                           {loading ? "Проверка..." : "Войти"}
                         </button>
 
-                        <button type="button" className={styles.resend} onClick={sendCode}>
+                        <button
+                          type="button"
+                          className={styles.resend}
+                          onClick={sendCode}
+                        >
                           Отправить код повторно
                         </button>
                       </form>
@@ -328,10 +366,30 @@ export default function Login() {
               exit={{ opacity: 0, x: 30 }}
               transition={{ duration: 0.3 }}
             >
-              {error && <div style={{ color: "#ef4444", fontSize: "14px", margin: "10px 0" }}>⚠️ {error}</div>}
+              {error && (
+                <div
+                  style={{
+                    color: "#ef4444",
+                    fontSize: "14px",
+                    margin: "10px 0",
+                  }}
+                >
+                  ⚠️ {error}
+                </div>
+              )}
               {success && (
-                <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px", margin: "10px 0" }}>
-                  <CheckCircle2 size={18} /> Авторизация успешна! Перенаправление...
+                <div
+                  style={{
+                    color: "#10b981",
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    margin: "10px 0",
+                  }}
+                >
+                  <CheckCircle2 size={18} /> Авторизация успешна!
+                  Перенаправление...
                 </div>
               )}
               <EmailForm

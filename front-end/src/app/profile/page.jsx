@@ -1,35 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import PersonalProfile from "./components/personalProfile/PersonalProfile";
 import RealtorProfile from "./components/realtorProfile/RealtorProfile";
 import AgencyProfile from "./components/agencyProfile/AgencyProfile";
 import DeveloperProfile from "./components/developerProfile/DeveloperProfile";
 
-import styles from "./Profile.module.css";
-
-const user = {
-  accountType: "PERSONAL",
-};
-
 export default function ProfilePage() {
-  const renderProfile = () => {
-    switch (user.accountType) {
-      case "PERSONAL":
-        return <PersonalProfile />;
+  const [user, setUser] = useState(null);
 
-      case "REALTOR":
-        return <RealtorProfile />;
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("uytap_user") || "null");
 
-      case "AGENCY":
-        return <AgencyProfile />;
+    console.log("PROFILE USER:", savedUser);
 
-      case "DEVELOPER":
-        return <DeveloperProfile />;
+    setUser(savedUser);
+  }, []);
 
-      default:
-        return null;
-    }
-  };
+  if (!user) {
+    return <div>Загрузка...</div>;
+  }
 
-  return <main className={styles.page}>{renderProfile()}</main>;
+  switch (user.accountType) {
+    case "realtor":
+      return <RealtorProfile user={user} />;
+
+    case "agency":
+      return <AgencyProfile user={user} />;
+
+    case "developer":
+      return <DeveloperProfile user={user} />;
+
+    case "personal":
+
+    default:
+      return <PersonalProfile user={user} />;
+  }
 }

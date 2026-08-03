@@ -80,3 +80,20 @@ export async function aiSearchQuery(prompt) {
   });
   return response.json();
 }
+
+// 7. Профиль
+export async function getMe(token) {
+  const response = await fetch(`${API_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Ошибка получения пользователя");
+  }
+
+  return data.user;
+}
