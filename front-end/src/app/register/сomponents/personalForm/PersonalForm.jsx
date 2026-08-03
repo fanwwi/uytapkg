@@ -41,8 +41,8 @@ export default function PersonalForm() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push("/main");
-      }, 1500);
+        router.push("/success-register");
+      }, 1200);
     } catch (err) {
       setError(err.message || "Ошибка при регистрации");
     } finally {
