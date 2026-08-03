@@ -13,6 +13,7 @@ import {
   Users,
   PlusCircle,
   LogIn,
+  User,
 } from "lucide-react";
 
 import styles from "./Header.module.css";
@@ -21,7 +22,18 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
 
+  const [isAuth, setIsAuth] = useState(false);
+
   useEffect(() => {
+    const checkAuth = () => {
+      const token = document.cookie.includes("uytap_token");
+      const user = localStorage.getItem("uytap_user");
+
+      setIsAuth(Boolean(token && user));
+    };
+
+    checkAuth();
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       setOpenMenu(null);
@@ -38,9 +50,23 @@ export default function Header() {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
+  const protectedAction = (e, path) => {
+    if (!isAuth) {
+      e.preventDefault();
+
+      alert("Для продолжения необходимо войти в аккаунт");
+
+      return;
+    }
+
+    window.location.href = path;
+  };
+
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.container}>
+        {/* LOGO */}
+
         <Link href="/" className={styles.logo}>
           <Image
             src={scrolled ? "/assets/logo.png" : "/assets/logo2.png"}
@@ -50,6 +76,8 @@ export default function Header() {
             priority
           />
         </Link>
+
+        {/* NAVIGATION */}
 
         <nav className={styles.nav}>
           {/* Локации */}
@@ -110,27 +138,50 @@ export default function Header() {
             )}
           </div>
 
-          <Link href="/favorites" className={styles.favorite}>
+          {/* FAVORITES */}
+
+          <Link
+            href="/profile/favorites"
+            className={styles.favorite}
+            onClick={(e) => protectedAction(e, "/profile/favorites")}
+          >
             <Heart />
             Избранное
           </Link>
         </nav>
 
+        {/* ACTION BUTTONS */}
+
         <div className={styles.actions}>
-          <Link href="/create" className={styles.add}>
+          <Link
+            href="/create"
+            className={styles.add}
+            onClick={(e) => protectedAction(e, "/create")}
+          >
             <PlusCircle />
             Добавить объявление
           </Link>
 
-          <Link href="/create" className={styles.free}>
+          <Link
+            href="/create"
+            className={styles.free}
+            onClick={(e) => protectedAction(e, "/create")}
+          >
             <Flame />
             Разместить за 0 сом
           </Link>
 
-          <Link href="/login" className={styles.login}>
-            <LogIn />
-            Войти
-          </Link>
+          {isAuth ? (
+            <Link href="/profile" className={styles.login}>
+              <User />
+              Профиль
+            </Link>
+          ) : (
+            <Link href="/login" className={styles.login}>
+              <LogIn />
+              Войти
+            </Link>
+          )}
         </div>
       </div>
     </header>
