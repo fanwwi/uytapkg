@@ -2,13 +2,16 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import listingsRoutes from "./routes/listingsRoutes.js";
+import complexesRoutes from "./routes/complexesRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Разрешенные CORS ИСТОЧНИКИ (Next.js на порту 3000 и любые локальные разработки)
+// Разрешенные CORS источники
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
@@ -21,7 +24,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, true); // Разрешаем запросы в режиме разработки
+        callback(null, true);
       }
     },
     credentials: true,
@@ -30,7 +33,7 @@ app.use(
 
 app.use(express.json());
 
-// Проверка работы API (Health check)
+// Health Check
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
@@ -39,8 +42,11 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Роуты аутентификации
+// Регистрация всех роутов API UyTap
 app.use("/api/auth", authRoutes);
+app.use("/api/listings", listingsRoutes);
+app.use("/api/complexes", complexesRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Глобальный обработчик ошибок
 app.use((err, req, res, next) => {
@@ -52,6 +58,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 UyTap Backend API запущен и доступен по адресу: http://localhost:${PORT}`);
-  console.log(`📡 Ожидание запросов от Frontend (Next.js)...`);
+  console.log(`🚀 UyTap Backend API запущен на порту ${PORT}: http://localhost:${PORT}`);
+  console.log(`📡 Готов к приему запросов от Frontend`);
 });
