@@ -8,42 +8,74 @@ import {
   MessageCircle,
   Globe,
   MapPin,
+  Mail,
   Heart,
   Home,
   CreditCard,
   LogOut,
   Building2,
   User,
+  CheckCircle,
 } from "lucide-react";
 
 import styles from "./RealtorProfile.module.css";
 
 import RealtorEditModal from "./realtorEdit/RealtorEditModal";
 
-export default function RealtorProfile() {
+export default function RealtorProfile({ user }) {
   const [edit, setEdit] = useState(false);
+
+  if (!user) return null;
+
+  const profile = user.profile || {};
+
+  const name =
+    `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
+    "Риэлтор";
+
+  const company = profile.company_name || "Агентство недвижимости";
+
+  const whatsapp = user.phone?.replace(/\D/g, "");
+
+  function logout() {
+    localStorage.removeItem("uytap_user");
+
+    document.cookie = "uytap_token=; path=/; max-age=0";
+
+    window.location.href = "/login";
+  }
 
   return (
     <main className={styles.page}>
       <section className={styles.profileCard}>
+        <div className={styles.glow} />
+
         <div className={styles.top}>
-          <div className={styles.logo}>
-            <User />
+          <div className={styles.avatar}>
+            {profile.avatar_url ? (
+              <img src={profile.avatar_url} alt={name} />
+            ) : (
+              <User />
+            )}
           </div>
 
           <div className={styles.info}>
             <div className={styles.badge}>Риэлтор</div>
 
-            <h1>Айбек Нурбеков</h1>
+            <div className={styles.nameRow}>
+              <h1>{name}</h1>
 
-            <p className={styles.company}>
+              {user.isVerified && <CheckCircle className={styles.verify} />}
+            </div>
+
+            <div className={styles.company}>
               <Building2 />
-              Elite House Realty
-            </p>
+
+              {company}
+            </div>
 
             <p className={styles.description}>
-              Помогаю найти недвижимость в Бишкеке и Иссык-Куле. Более 5 лет
-              опыта работы.
+              {profile.about || "Риэлтор пока не добавил описание"}
             </p>
           </div>
 
@@ -53,45 +85,80 @@ export default function RealtorProfile() {
         </div>
 
         <div className={styles.contacts}>
-          <div>
-            <Phone />
-            <span>+996 555 555 555</span>
-          </div>
+          {user.phone && (
+            <div className={styles.contactCard}>
+              <Phone />
 
-          <div>
-            <MessageCircle />
-            <span>WhatsApp</span>
-          </div>
+              <div>
+                <small>Телефон</small>
+                <strong>{user.phone}</strong>
+              </div>
+            </div>
+          )}
 
-          <div>
-            <Globe />
-            <span>elitehouse.kg</span>
-          </div>
+          {user.email && (
+            <div className={styles.contactCard}>
+              <Mail />
 
-          <div>
-            <MapPin />
-            <span>Бишкек</span>
-          </div>
+              <div>
+                <small>Email</small>
+                <strong>{user.email}</strong>
+              </div>
+            </div>
+          )}
+
+          {profile.office_address && (
+            <div className={styles.contactCard}>
+              <MapPin />
+
+              <div>
+                <small>Адрес компании</small>
+                <strong>{profile.office_address}</strong>
+              </div>
+            </div>
+          )}
+
+          {profile.website && (
+            <a
+              href={profile.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.contactCard}
+            >
+              <Globe />
+
+              <div>
+                <small>Сайт</small>
+                <strong>{profile.website}</strong>
+              </div>
+            </a>
+          )}
         </div>
+
+        {whatsapp && (
+          <a
+            href={`https://wa.me/${whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.whatsapp}
+          >
+            <MessageCircle />
+            Написать в WhatsApp
+          </a>
+        )}
       </section>
 
       <section className={styles.stats}>
         <div>
-          <strong>120</strong>
+          <strong>{profile.ads_count || 0}</strong>
 
           <span>объявлений</span>
         </div>
 
         <div>
-          <strong>540</strong>
+          <strong>{profile.clients_count || 0}</strong>
 
           <span>клиентов</span>
-        </div>
-
-        <div>
-          <strong>5 лет</strong>
-
-          <span>опыта</span>
         </div>
       </section>
 
@@ -106,18 +173,18 @@ export default function RealtorProfile() {
           Избранное
         </a>
 
-        <a>
+        <a href="/profile/tariff">
           <CreditCard />
           Мой тариф
         </a>
 
-        <button>
+        <button onClick={logout}>
           <LogOut />
           Выйти
         </button>
       </section>
 
-      {edit && <RealtorEditModal close={() => setEdit(false)} />}
+      {edit && <RealtorEditModal user={user} close={() => setEdit(false)} />}
     </main>
   );
 }

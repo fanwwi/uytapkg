@@ -11,7 +11,6 @@ import {
   MapPin,
   Globe,
   Camera,
-  CreditCard,
   Hash,
 } from "lucide-react";
 
@@ -29,7 +28,7 @@ export default function AgencyEditModal({ close, user }) {
   const [form, setForm] = useState({
     company_name: profile.company_name || "",
 
-    director_name: profile.first_name || "",
+    director_name: profile.director_name || profile.first_name || "",
 
     inn: profile.inn || "",
 
@@ -52,38 +51,40 @@ export default function AgencyEditModal({ close, user }) {
   }
 
   function chooseLogo() {
-    fileRef.current.click();
+    fileRef.current?.click();
   }
 
   function handleLogo(e) {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const image = URL.createObjectURL(file);
+    const preview = URL.createObjectURL(file);
 
-    setLogoPreview(image);
+    setLogoPreview(preview);
   }
 
   async function save() {
-    const data = {
+    const payload = {
       ...form,
       logo: logoPreview,
     };
 
-    console.log("SAVE:", data);
+    console.log(payload);
 
-    // API PUT /profile/update
+    // PUT /profile/update
   }
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <button className={styles.close} onClick={close}>
-          <X />
-        </button>
+      <button className={styles.close} onClick={close}>
+        <X />
+      </button>
 
-        <h2>Редактирование агентства</h2>
+      <div className={styles.modal}>
+        <div className={styles.header}>
+          <h2>Редактирование агентства</h2>
+        </div>
 
         <label className={styles.logoUpload} onClick={chooseLogo}>
           {logoPreview ? (
@@ -123,7 +124,7 @@ export default function AgencyEditModal({ close, user }) {
             name="director_name"
             value={form.director_name}
             onChange={handleChange}
-            placeholder="Имя руководителя"
+            placeholder="Руководитель"
           />
         </div>
 
@@ -187,6 +188,7 @@ export default function AgencyEditModal({ close, user }) {
           value={form.about}
           onChange={handleChange}
           placeholder="Описание агентства"
+          className={styles.textarea}
         />
 
         <button className={styles.save} onClick={save}>

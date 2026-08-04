@@ -1,43 +1,69 @@
 .page {
   min-height: 100vh;
 
-  background: linear-gradient(135deg, #fff5fa, #ffffff);
+  padding: 100px 20px;
 
-  padding: 50px;
+  background: linear-gradient(180deg, #fff6fb, #fff);
 }
 
 .profileCard {
-  max-width: 1100px;
+  max-width: 1200px;
 
   margin: auto;
 
-  background: white;
+  position: relative;
 
-  border-radius: 40px;
+  padding: 45px;
 
-  padding: 40px;
+  border-radius: 45px;
 
-  box-shadow: 0 30px 80px rgba(255, 0, 120, 0.12);
+  background: linear-gradient(135deg, white, #fff1f7);
+
+  overflow: hidden;
+
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
+}
+
+.glow {
+  position: absolute;
+
+  width: 400px;
+  height: 400px;
+
+  right: -150px;
+  top: -150px;
+
+  background: #ff006f;
+
+  opacity: 0.12;
+
+  filter: blur(120px);
+
+  border-radius: 50%;
 }
 
 .top {
+  position: relative;
+
+  z-index: 2;
+
   display: flex;
 
-  align-items: flex-start;
+  gap: 35px;
 
-  gap: 30px;
-
-  position: relative;
+  align-items: center;
 }
 
-.logo {
-  width: 130px;
+.avatar {
+  width: 170px;
 
-  height: 130px;
+  height: 170px;
 
-  border-radius: 35px;
+  flex-shrink: 0;
 
-  background: linear-gradient(135deg, #ff006f, #ff70b7);
+  border-radius: 45px;
+
+  overflow: hidden;
 
   display: flex;
 
@@ -45,15 +71,18 @@
 
   justify-content: center;
 
+  background: linear-gradient(135deg, #ff006f, #ff70ba);
+
   color: white;
 
-  box-shadow: 0 20px 40px rgba(255, 0, 120, 0.3);
+  box-shadow: 0 25px 60px rgba(255, 0, 111, 0.35);
 }
 
-.logo svg {
-  width: 55px;
+.avatar img {
+  width: 100%;
+  height: 100%;
 
-  height: 55px;
+  object-fit: cover;
 }
 
 .info {
@@ -65,23 +94,39 @@
 
   padding: 8px 18px;
 
-  border-radius: 50px;
+  border-radius: 999px;
 
-  background: #ffe2ef;
+  background: #ffe1ef;
 
   color: #ff006f;
 
-  font-weight: 800;
+  font-weight: 900;
 
-  font-size: 14px;
+  margin-bottom: 15px;
 }
 
-.info h1 {
-  font-size: 38px;
+.nameRow {
+  display: flex;
 
-  margin: 15px 0;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.nameRow h1 {
+  margin: 0;
+
+  font-size: 42px;
 
   font-weight: 950;
+}
+
+.verify {
+  color: #22c55e;
+
+  width: 25px;
+
+  height: 25px;
 }
 
 .company {
@@ -91,51 +136,43 @@
 
   gap: 10px;
 
-  color: #555;
+  margin-top: 15px;
 
-  font-weight: 700;
-}
-
-.company svg {
   color: #ff006f;
+
+  font-weight: 850;
 }
 
 .description {
-  margin-top: 15px;
+  margin-top: 20px;
+
+  max-width: 700px;
 
   color: #777;
 
-  line-height: 1.6;
-
-  max-width: 600px;
+  line-height: 1.7;
 }
 
 .edit {
   position: absolute;
 
-  right: 0;
+  right: 30px;
 
-  top: 0;
+  top: 30px;
 
-  width: 55px;
+  width: 58px;
 
-  height: 55px;
+  height: 58px;
 
   border: none;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
-  background: #fff0f7;
+  background: #ff006f;
 
-  color: #ff006f;
+  color: white;
 
   cursor: pointer;
-
-  transition: 0.3s;
-}
-
-.edit:hover {
-  transform: rotate(10deg) scale(1.05);
 }
 
 .contacts {
@@ -143,49 +180,122 @@
 
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-  gap: 15px;
+  gap: 18px;
 }
 
-.contacts div {
-  background: #fafafa;
+.contactCard {
+  min-height: 80px;
 
-  border-radius: 20px;
+  padding: 18px;
 
-  padding: 20px;
+  border-radius: 25px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 15px;
 
-  font-weight: 700;
+  background: white;
+
+  text-decoration: none;
+
+  color: #111;
+
+  border: 1px solid #eee;
+
+  transition: 0.3s;
 }
 
-.contacts svg {
+.contactCard:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 25px 60px rgba(255, 0, 111, 0.15);
+}
+
+.contactCard svg {
   color: #ff006f;
 }
 
-.stats {
-  max-width: 1100px;
+.contactCard small {
+  display: block;
 
-  margin: 35px auto;
+  color: #999;
+}
+
+.contactCard strong {
+  font-size: 15px;
+}
+
+.whatsapp {
+  margin-top: 25px;
+
+  width: fit-content;
+
+  height: 46px;
+
+  padding: 0 28px;
+
+  border-radius: 999px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  background: linear-gradient(135deg, #25d366, #16a34a);
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 15px;
+
+  font-weight: 850;
+
+  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.35);
+
+  transition: 0.3s;
+
+  position: relative;
+
+  z-index: 3;
+}
+
+.whatsapp svg {
+  width: 20px;
+  height: 20px;
+}
+
+.whatsapp:hover {
+  transform: translateY(-4px) scale(1.03);
+
+  box-shadow: 0 20px 45px rgba(37, 211, 102, 0.45);
+}
+
+.stats {
+  max-width: 1200px;
+
+  margin: 35px auto 0;
 
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 
-  gap: 20px;
+  gap: 25px;
 }
 
 .stats div {
   background: white;
 
-  border-radius: 30px;
+  padding: 35px;
 
-  padding: 30px;
+  border-radius: 35px;
 
   text-align: center;
 
@@ -193,21 +303,25 @@
 }
 
 .stats strong {
-  display: block;
-
-  font-size: 40px;
+  font-size: 45px;
 
   color: #ff006f;
+
+  font-weight: 950;
+
+  display: block;
 }
 
 .stats span {
-  color: #777;
+  color: #888;
+
+  font-weight: 700;
 }
 
 .menu {
-  max-width: 1100px;
+  max-width: 1200px;
 
-  margin: auto;
+  margin: 35px auto;
 
   display: grid;
 
@@ -218,11 +332,11 @@
 
 .menu a,
 .menu button {
-  height: 80px;
+  height: 85px;
+
+  border-radius: 28px;
 
   border: none;
-
-  border-radius: 25px;
 
   background: white;
 
@@ -234,42 +348,43 @@
 
   gap: 12px;
 
-  font-size: 16px;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  color: #111;
+  font-weight: 850;
 
   text-decoration: none;
 
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  color: #111;
 
-  transition: 0.3s;
+  cursor: pointer;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
 }
 
 .menu svg {
   color: #ff006f;
 }
 
-.menu a:hover,
-.menu button:hover {
-  transform: translateY(-5px);
-}
-
 @media (max-width: 900px) {
-  .page {
-    padding: 20px;
-  }
-
   .top {
     flex-direction: column;
+
+    text-align: center;
   }
 
-  .contacts,
+  .nameRow {
+    justify-content: center;
+  }
+
   .stats,
   .menu {
     grid-template-columns: 1fr;
+  }
+
+  .avatar {
+    width: 140px;
+    height: 140px;
+  }
+
+  .nameRow h1 {
+    font-size: 30px;
   }
 }
