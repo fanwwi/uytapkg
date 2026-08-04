@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import {
   X,
   Building2,
@@ -13,7 +15,42 @@ import {
 
 import styles from "./AgencyEditModal.module.css";
 
-export default function AgencyEditModal({ close }) {
+export default function AgencyEditModal({ close, user }) {
+  const profile = user?.profile || {};
+
+  const [form, setForm] = useState({
+    company_name: profile.company_name || profile.agency_name || "",
+
+    director_name: profile.director_name || "",
+
+    phone: user?.phone || "",
+
+    email: profile.email || "",
+
+    address: profile.address || "",
+
+    city: profile.city || "",
+
+    website: profile.website || "",
+
+    about: profile.about || "",
+  });
+
+  const logo = profile.logo_url || profile.avatar_url || "";
+
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  async function save() {
+    console.log(form);
+
+    // тут API
+  }
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
@@ -24,44 +61,92 @@ export default function AgencyEditModal({ close }) {
         <h2>Редактирование агентства</h2>
 
         <div className={styles.logoUpload}>
-          <Camera />
-
-          <span>Загрузить логотип</span>
+          {logo ? (
+            <img src={logo} alt="" />
+          ) : (
+            <>
+              <Camera />
+              <span>Загрузить логотип</span>
+            </>
+          )}
         </div>
 
         <div className={styles.input}>
           <Building2 />
-          <input placeholder="Название агентства" />
+
+          <input
+            name="company_name"
+            value={form.company_name}
+            onChange={handleChange}
+            placeholder="Название агентства"
+          />
         </div>
 
         <div className={styles.input}>
           <User />
-          <input placeholder="Имя руководителя" />
+
+          <input
+            name="director_name"
+            value={form.director_name}
+            onChange={handleChange}
+            placeholder="Имя руководителя"
+          />
         </div>
 
         <div className={styles.input}>
           <Phone />
-          <input placeholder="Телефон" />
+
+          <input
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="Телефон"
+          />
         </div>
 
         <div className={styles.input}>
           <Mail />
-          <input placeholder="Email" />
+
+          <input
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Email"
+          />
         </div>
 
         <div className={styles.input}>
           <MapPin />
-          <input placeholder="Адрес" />
+
+          <input
+            name="address"
+            value={form.address}
+            onChange={handleChange}
+            placeholder="Адрес"
+          />
         </div>
 
         <div className={styles.input}>
           <Globe />
-          <input placeholder="Сайт" />
+
+          <input
+            name="website"
+            value={form.website}
+            onChange={handleChange}
+            placeholder="Сайт"
+          />
         </div>
 
-        <textarea placeholder="Описание агентства" />
+        <textarea
+          name="about"
+          value={form.about}
+          onChange={handleChange}
+          placeholder="Описание агентства"
+        />
 
-        <button className={styles.save}>Сохранить изменения</button>
+        <button className={styles.save} onClick={save}>
+          Сохранить изменения
+        </button>
       </div>
     </div>
   );
