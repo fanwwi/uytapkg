@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import {
   X,
@@ -11,32 +11,38 @@ import {
   MapPin,
   Globe,
   Camera,
+  CreditCard,
+  Hash,
 } from "lucide-react";
 
 import styles from "./AgencyEditModal.module.css";
 
 export default function AgencyEditModal({ close, user }) {
+  const fileRef = useRef(null);
+
   const profile = user?.profile || {};
 
-  const [form, setForm] = useState({
-    company_name: profile.company_name || profile.agency_name || "",
+  const [logoPreview, setLogoPreview] = useState(
+    profile.logo_url || profile.avatar_url || null,
+  );
 
-    director_name: profile.director_name || "",
+  const [form, setForm] = useState({
+    company_name: profile.company_name || "",
+
+    director_name: profile.first_name || "",
+
+    inn: profile.inn || "",
 
     phone: user?.phone || "",
 
-    email: profile.email || "",
+    email: user?.email || "",
 
-    address: profile.address || "",
-
-    city: profile.city || "",
+    address: profile.office_address || "",
 
     website: profile.website || "",
 
     about: profile.about || "",
   });
-
-  const logo = profile.logo_url || profile.avatar_url || "";
 
   function handleChange(e) {
     setForm({
@@ -45,10 +51,29 @@ export default function AgencyEditModal({ close, user }) {
     });
   }
 
-  async function save() {
-    console.log(form);
+  function chooseLogo() {
+    fileRef.current.click();
+  }
 
-    // тут API
+  function handleLogo(e) {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const image = URL.createObjectURL(file);
+
+    setLogoPreview(image);
+  }
+
+  async function save() {
+    const data = {
+      ...form,
+      logo: logoPreview,
+    };
+
+    console.log("SAVE:", data);
+
+    // API PUT /profile/update
   }
 
   return (
@@ -60,16 +85,25 @@ export default function AgencyEditModal({ close, user }) {
 
         <h2>Редактирование агентства</h2>
 
-        <div className={styles.logoUpload}>
-          {logo ? (
-            <img src={logo} alt="" />
+        <label className={styles.logoUpload} onClick={chooseLogo}>
+          {logoPreview ? (
+            <img src={logoPreview} className={styles.preview} alt="logo" />
           ) : (
             <>
               <Camera />
+
               <span>Загрузить логотип</span>
             </>
           )}
-        </div>
+        </label>
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={handleLogo}
+        />
 
         <div className={styles.input}>
           <Building2 />
@@ -90,6 +124,17 @@ export default function AgencyEditModal({ close, user }) {
             value={form.director_name}
             onChange={handleChange}
             placeholder="Имя руководителя"
+          />
+        </div>
+
+        <div className={styles.input}>
+          <Hash />
+
+          <input
+            name="inn"
+            value={form.inn}
+            onChange={handleChange}
+            placeholder="ИНН"
           />
         </div>
 
@@ -122,7 +167,7 @@ export default function AgencyEditModal({ close, user }) {
             name="address"
             value={form.address}
             onChange={handleChange}
-            placeholder="Адрес"
+            placeholder="Адрес офиса"
           />
         </div>
 
