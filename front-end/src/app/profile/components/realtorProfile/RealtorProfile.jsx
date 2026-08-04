@@ -16,6 +16,7 @@ import {
   Building2,
   User,
   CheckCircle,
+  House
 } from "lucide-react";
 
 import styles from "./RealtorProfile.module.css";
@@ -163,6 +164,11 @@ export default function RealtorProfile({ user }) {
       </section>
 
       <section className={styles.menu}>
+        <a href="/">
+          <House />
+          Главная
+        </a>
+
         <a href="/profile/ads">
           <Home />
           Мои объявления

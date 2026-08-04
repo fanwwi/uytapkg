@@ -16,6 +16,7 @@ import {
   LogOut,
   Check,
   User,
+  House
 } from "lucide-react";
 
 import styles from "./AgencyProfile.module.css";
@@ -155,6 +156,11 @@ export default function AgencyProfile({ user }) {
       </section>
 
       <section className={styles.menu}>
+        <a href="/">
+          <House />
+          Главная
+        </a>
+
         <a href="/profile/ads">
           <Home />
           Мои объявления

@@ -321,11 +321,11 @@
 .menu {
   max-width: 1200px;
 
-  margin: 35px auto;
+  margin: 40px auto;
 
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 
   gap: 20px;
 }
