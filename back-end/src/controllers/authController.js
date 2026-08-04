@@ -32,6 +32,7 @@ export const register = async (req, res) => {
       officeAddress,
       agencyName,
       about,
+      avatarUrl, // фото профиля (для personal/realtor) или логотип (для agency/developer)
     } = validationResult.data;
 
     const normalizedEmail = email.toLowerCase().trim();
@@ -92,9 +93,12 @@ export const register = async (req, res) => {
     }
 
     // 4. Подготовка данных профиля
+    // avatar_url кладём для ЛЮБОГО типа аккаунта — это единое поле:
+    // у personal/realtor это фото профиля, у agency/developer — логотип компании.
     let profileData = {
       user_id: newUser.id,
       about: about || null,
+      avatar_url: avatarUrl || null,
     };
 
     if (accountType === "personal") {
@@ -194,7 +198,7 @@ export const login = async (req, res) => {
       });
     }
 
-    // Загрузка профиля пользователя
+    // Загрузка профиля пользователя (включая avatar_url — фото/логотип)
     const { data: profile } = await supabase
       .from("user_profiles")
       .select("*")

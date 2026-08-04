@@ -21,7 +21,7 @@ export const registerSchema = z.object({
   email: z.string().email("Укажите корректный Email адрес"),
   phone: z.string().min(9, "Номер телефона должен содержать минимум 9 цифр"),
   password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
-  
+
   // Дополнительные поля по ролям
   firstName: z.string().optional(),
   lastName: z.string().optional(),
@@ -32,6 +32,10 @@ export const registerSchema = z.object({
   officeAddress: z.string().optional(),
   agencyName: z.string().optional(),
   about: z.string().optional(),
+
+  // Фото/лого профиля — общее поле для всех типов аккаунта
+  // (для personal/realtor это аватар, для agency/developer — логотип компании)
+  avatarUrl: z.string().url("Некорректная ссылка на фото").optional().nullable(),
 });
 
 // Схема авторизации
