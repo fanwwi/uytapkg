@@ -5,7 +5,7 @@
 
   background: rgba(0, 0, 0, 0.55);
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
 
   display: flex;
 
@@ -18,6 +18,46 @@
   z-index: 1000;
 }
 
+.close {
+  position: fixed;
+
+  right: 35px;
+
+  top: 35px;
+
+  width: 48px;
+
+  height: 48px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: white;
+
+  color: #111;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+
+  transition: 0.3s;
+}
+
+.close:hover {
+  transform: rotate(90deg);
+
+  background: #ff006f;
+
+  color: white;
+}
+
 .modal {
   width: 520px;
 
@@ -25,67 +65,88 @@
 
   overflow-y: auto;
 
-  background: white;
-
-  border-radius: 40px;
-
   padding: 40px;
 
-  position: relative;
+  border-radius: 45px;
+
+  background: white;
+
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.2);
+
+  animation: show 0.3s ease;
 }
 
-.close {
-  position: absolute;
+@keyframes show {
+  from {
+    opacity: 0;
 
-  right: 20px;
+    transform: scale(0.9);
+  }
 
-  top: 20px;
+  to {
+    opacity: 1;
 
-  width: 42px;
-
-  height: 42px;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: #f5f5f5;
-
-  cursor: pointer;
+    transform: scale(1);
+  }
 }
 
 .modal h2 {
-  font-size: 28px;
+  font-size: 27px;
 
   font-weight: 950;
 
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .logo {
-  width: 120px;
+  width: 150px;
 
-  height: 120px;
+  height: 150px;
 
-  margin: auto;
+  margin: 0 auto 30px;
 
-  margin-bottom: 30px;
+  border-radius: 40px;
 
-  border-radius: 35px;
-
-  background: #ffe4f0;
-
-  color: #ff006f;
+  background: linear-gradient(135deg, #fff0f7, #ffe0ed);
 
   display: flex;
+
+  flex-direction: column;
 
   align-items: center;
 
   justify-content: center;
+
+  gap: 8px;
+
+  color: #ff006f;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  border: 2px dashed rgba(255, 0, 111, 0.25);
+}
+
+.logo img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
 }
 
 .logo svg {
   width: 45px;
+
+  height: 45px;
+}
+
+.logo span {
+  font-weight: 800;
+
+  font-size: 14px;
 }
 
 .form {
@@ -97,7 +158,7 @@
 }
 
 .input {
-  height: 60px;
+  height: 62px;
 
   display: flex;
 
@@ -107,11 +168,21 @@
 
   padding: 0 18px;
 
+  border-radius: 22px;
+
   background: #fafafa;
 
-  border-radius: 20px;
-
   border: 1px solid #eee;
+
+  transition: 0.3s;
+}
+
+.input:focus-within {
+  border-color: #ff006f;
+
+  background: white;
+
+  box-shadow: 0 10px 30px rgba(255, 0, 111, 0.08);
 }
 
 .input svg {
@@ -130,28 +201,42 @@
   font-size: 16px;
 }
 
-.form textarea {
-  height: 130px;
+.textarea {
+  width: 100%;
+
+  height: 140px;
 
   resize: none;
 
-  border-radius: 22px;
+  padding: 18px;
+
+  border-radius: 25px;
 
   border: 1px solid #eee;
 
-  padding: 18px;
-
   font-size: 16px;
+
+  outline: none;
+
+  font-family: inherit;
+
+  transition: 0.3s;
+}
+
+.textarea:focus {
+  border-color: #ff006f;
+
+  box-shadow: 0 10px 30px rgba(255, 0, 111, 0.08);
 }
 
 .save {
-  height: 60px;
+  height: 62px;
 
   border: none;
 
-  border-radius: 22px;
+  border-radius: 25px;
 
-  background: linear-gradient(135deg, #ff006f, #ff70b7);
+  background: linear-gradient(135deg, #ff006f, #ff72b7);
 
   color: white;
 
@@ -160,4 +245,12 @@
   font-weight: 900;
 
   cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.save:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 20px 40px rgba(255, 0, 111, 0.3);
 }
