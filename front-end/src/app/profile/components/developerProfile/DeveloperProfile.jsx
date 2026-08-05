@@ -14,28 +14,56 @@ import {
   CreditCard,
   LogOut,
   Landmark,
-  Users,
+  CheckCircle,
+  Mail,
+  House,
 } from "lucide-react";
 
 import styles from "./DeveloperProfile.module.css";
 
 import DeveloperEditModal from "./developerEdit/DeveloperEditModal";
 
-export default function DeveloperProfile() {
+export default function DeveloperProfile({ user }) {
   const [edit, setEdit] = useState(false);
+
+  if (!user) return null;
+
+  const profile = user.profile || {};
+
+  const company = profile.company_name || "Строительная компания";
+
+  const whatsapp = user.phone?.replace(/\D/g, "") || "";
+
+  function logout() {
+    localStorage.removeItem("uytap_user");
+
+    document.cookie = "uytap_token=; path=/; max-age=0";
+
+    window.location.href = "/login";
+  }
 
   return (
     <main className={styles.page}>
       <section className={styles.card}>
+        <div className={styles.glow} />
+
         <div className={styles.header}>
           <div className={styles.logo}>
-            <Building2 />
+            {profile.logo_url ? (
+              <img src={profile.logo_url} alt={company} />
+            ) : (
+              <Building2 />
+            )}
           </div>
 
           <div className={styles.info}>
             <div className={styles.badge}>Застройщик</div>
 
-            <h1>Nova Build Group</h1>
+            <div className={styles.titleRow}>
+              <h1>{company}</h1>
+
+              {user.isVerified && <CheckCircle className={styles.verify} />}
+            </div>
 
             <p className={styles.company}>
               <Landmark />
@@ -43,8 +71,7 @@ export default function DeveloperProfile() {
             </p>
 
             <p className={styles.description}>
-              Строим современные жилые комплексы в Бишкеке. Более 10 лет создаем
-              комфортное жилье для семей.
+              {profile.about || "Компания пока не добавила описание"}
             </p>
           </div>
 
@@ -54,49 +81,101 @@ export default function DeveloperProfile() {
         </div>
 
         <div className={styles.contacts}>
-          <div>
-            <Phone />
-            +996 555 555 555
-          </div>
+          {user.phone && (
+            <div className={styles.contactCard}>
+              <Phone />
 
-          <div>
-            <MessageCircle />
-            WhatsApp
-          </div>
+              <div>
+                <small>Телефон</small>
 
-          <div>
-            <Globe />
-            novabuild.kg
-          </div>
+                <strong>{user.phone}</strong>
+              </div>
+            </div>
+          )}
 
-          <div>
-            <MapPin />
-            Бишкек
-          </div>
+          {user.email && (
+            <div className={styles.contactCard}>
+              <Mail />
+
+              <div>
+                <small>Email</small>
+
+                <strong>{user.email}</strong>
+              </div>
+            </div>
+          )}
+
+          {profile.office_address && (
+            <div className={styles.contactCard}>
+              <MapPin />
+
+              <div>
+                <small>Адрес офиса</small>
+
+                <strong>{profile.office_address}</strong>
+              </div>
+            </div>
+          )}
+
+          {profile.website && (
+            <a
+              className={styles.contactCard}
+              href={profile.website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Globe />
+
+              <div>
+                <small>Сайт</small>
+
+                <strong>{profile.website}</strong>
+              </div>
+            </a>
+          )}
         </div>
+
+        {whatsapp && (
+          <div className={styles.whatsappWrapper}>
+            <a
+              className={styles.whatsapp}
+              href={`https://wa.me/${whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle />
+              Написать в WhatsApp
+            </a>
+          </div>
+        )}
       </section>
 
       <section className={styles.stats}>
         <div>
-          <strong>15</strong>
+          <strong>{profile.projects_count || 0}</strong>
 
           <span>ЖК построено</span>
         </div>
 
         <div>
-          <strong>3200+</strong>
+          <strong>{profile.apartments_count || 0}</strong>
 
-          <span>квартир продано</span>
+          <span>квартир</span>
         </div>
 
         <div>
-          <strong>10 лет</strong>
+          <strong>{profile.ads_count || 0}</strong>
 
-          <span>опыта</span>
+          <span>объявлений</span>
         </div>
       </section>
 
       <section className={styles.menu}>
+        <a href="/">
+          <House />
+          Главная
+        </a>
+
         <a href="/profile/ads">
           <Home />
           Мои объявления
@@ -107,18 +186,18 @@ export default function DeveloperProfile() {
           Избранное
         </a>
 
-        <a>
+        <a href="/profile/tariff">
           <CreditCard />
           Мой тариф
         </a>
 
-        <button>
+        <button onClick={logout}>
           <LogOut />
           Выйти
         </button>
       </section>
 
-      {edit && <DeveloperEditModal close={() => setEdit(false)} />}
+      {edit && <DeveloperEditModal user={user} close={() => setEdit(false)} />}
     </main>
   );
 }

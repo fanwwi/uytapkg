@@ -14,6 +14,9 @@ import {
   Heart,
   CreditCard,
   LogOut,
+  Check,
+  User,
+  House
 } from "lucide-react";
 
 import styles from "./AgencyProfile.module.css";
@@ -26,99 +29,104 @@ export default function AgencyProfile({ user }) {
 
   const profile = user.profile || {};
 
-  const companyName =
-    profile.company_name || profile.agency_name || "Агентство недвижимости";
+  const companyName = profile.company_name || "Агентство недвижимости";
 
-  const whatsappNumber = user.phone?.replace(/\D/g, "") || "";
+  const director = profile.first_name || "Руководитель";
+
+  const phone = user.phone || "";
+
+  const whatsapp = phone.replace(/\D/g, "");
 
   function logout() {
     localStorage.removeItem("uytap_user");
+
     document.cookie = "uytap_token=; path=/; max-age=0";
+
     window.location.href = "/login";
   }
 
   return (
     <main className={styles.wrapper}>
       <section className={styles.profileCard}>
-        <div className={styles.logoBlock}>
-          <div className={styles.logo}>
-            {profile.logo_url ? (
-              <img src={profile.logo_url} alt={companyName} />
-            ) : (
-              <Building2 size={70} />
-            )}
-          </div>
+        <div className={styles.logoBox}>
+          {profile.logo_url ? (
+            <img src={profile.logo_url} alt={companyName} />
+          ) : (
+            <Building2 />
+          )}
         </div>
 
         <div className={styles.info}>
-          <div className={styles.titleRow}>
+          <div className={styles.title}>
             <h1>{companyName}</h1>
 
-            <span className={styles.badge}>{user.tariff || "FREE"}</span>
+            {user.isVerified && (
+              <span className={styles.verify}>
+                <Check />
+              </span>
+            )}
+
+            <span className={styles.type}>Агентство</span>
           </div>
 
-          <p className={styles.description}>
-            {profile.about || "Агентство пока не добавило описание."}
+          <div className={styles.director}>
+            <User /> Руководитель: {director}
+          </div>
+
+          <p className={styles.about}>
+            {profile.about || "Описание агентства отсутствует"}
           </p>
 
           <div className={styles.contacts}>
-            {user.phone && (
-              <div className={styles.contactCard}>
+            {phone && (
+              <div className={styles.card}>
                 <Phone />
                 <div>
                   <small>Телефон</small>
-                  <strong>{user.phone}</strong>
+                  <b>{phone}</b>
                 </div>
               </div>
             )}
 
-            {profile.email && (
-              <div className={styles.contactCard}>
+            {user.email && (
+              <div className={styles.card}>
                 <Mail />
                 <div>
                   <small>Email</small>
-                  <strong>{profile.email}</strong>
+                  <b>{user.email}</b>
                 </div>
               </div>
             )}
 
-            {profile.address && (
-              <div className={styles.contactCard}>
+            {profile.office_address && (
+              <div className={styles.card}>
                 <MapPin />
                 <div>
                   <small>Адрес</small>
-                  <strong>{profile.address}</strong>
+                  <b>{profile.office_address}</b>
                 </div>
               </div>
             )}
 
             {profile.website && (
-              <a
-                href={profile.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.contactCard}
-              >
+              <a href={profile.website} target="_blank" className={styles.card}>
                 <Globe />
+
                 <div>
                   <small>Сайт</small>
-                  <strong>{profile.website}</strong>
+                  <b>{profile.website}</b>
                 </div>
               </a>
             )}
 
-            {whatsappNumber && (
+            {whatsapp && (
               <a
-                href={`https://wa.me/${whatsappNumber}`}
+                href={`https://wa.me/${whatsapp}`}
                 target="_blank"
-                rel="noopener noreferrer"
-                className={styles.contactCard}
+                className={styles.whatsapp}
               >
                 <MessageCircle />
-                <div>
-                  <small>WhatsApp</small>
-                  <strong>Написать</strong>
-                </div>
+                WhatsApp
               </a>
             )}
           </div>
@@ -130,23 +138,29 @@ export default function AgencyProfile({ user }) {
       </section>
 
       <section className={styles.stats}>
-        <div className={styles.statCard}>
+        <div>
           <strong>{profile.ads_count || 0}</strong>
           <span>Объявлений</span>
         </div>
 
-        <div className={styles.statCard}>
+        <div>
           <strong>{profile.favorites_count || 0}</strong>
           <span>Избранных</span>
         </div>
 
-        <div className={styles.statCard}>
+        <div>
           <strong>{user.tariff || "FREE"}</strong>
+
           <span>Тариф</span>
         </div>
       </section>
 
       <section className={styles.menu}>
+        <a href="/">
+          <House />
+          Главная
+        </a>
+
         <a href="/profile/ads">
           <Home />
           Мои объявления
@@ -159,7 +173,7 @@ export default function AgencyProfile({ user }) {
 
         <a href="/profile/tariff">
           <CreditCard />
-          Мой тариф
+          Тариф
         </a>
 
         <button onClick={logout}>

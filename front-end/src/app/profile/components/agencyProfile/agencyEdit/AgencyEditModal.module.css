@@ -1,107 +1,135 @@
 .overlay {
   position: fixed;
-
   inset: 0;
 
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(10, 10, 10, 0.55);
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
 
   display: flex;
-
   justify-content: center;
-
   align-items: center;
 
-  z-index: 200;
+  z-index: 1000;
 
   padding: 20px;
 }
 
+.close {
+  position: fixed;
+
+  right: 35px;
+  top: 30px;
+
+  width: 52px;
+  height: 52px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: white;
+
+  color: #111;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+
+  transition: 0.25s;
+
+  z-index: 2000;
+}
+
+.close:hover {
+  transform: rotate(90deg) scale(1.08);
+
+  color: #ff006f;
+}
+
 .modal {
-  width: 500px;
+  width: 520px;
 
   max-height: 90vh;
 
   overflow-y: auto;
 
-  background: white;
+  padding: 40px;
+
+  background: rgba(255, 255, 255, 0.96);
 
   border-radius: 40px;
 
-  padding: 35px;
+  box-shadow: 0 50px 120px rgba(0, 0, 0, 0.25);
 
-  position: relative;
-
-  animation: show 0.3s ease;
+  animation: show 0.35s ease;
 }
 
 @keyframes show {
   from {
     opacity: 0;
 
-    transform: scale(0.9);
+    transform: translateY(30px) scale(0.95);
   }
 
   to {
     opacity: 1;
 
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
-.close {
-  position: absolute;
+.header h2 {
+  margin: 0;
 
-  right: 20px;
-
-  top: 20px;
-
-  width: 42px;
-
-  height: 42px;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: #f5f5f5;
-
-  cursor: pointer;
-}
-
-.modal h2 {
   font-size: 28px;
 
   font-weight: 950;
+  margin-bottom: 20px;
+}
+
+.header p {
+  color: #888;
+
+  margin-top: 8px;
 
   margin-bottom: 30px;
 }
 
 .logoUpload {
-  height: 140px;
+  height: 160px;
 
-  border-radius: 30px;
+  width: 220px;
 
-  background: #fff0f7;
+  margin: 0 auto;
+
+  border-radius: 32px;
+
+  cursor: pointer;
 
   display: flex;
-
-  flex-direction: column;
 
   align-items: center;
 
   justify-content: center;
 
-  gap: 10px;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #fff0f7, #ffe0ee);
+
+  border: 2px dashed rgba(255, 0, 111, 0.25);
 
   color: #ff006f;
 
-  font-weight: 800;
+  font-weight: 900;
 
   margin-bottom: 25px;
-
-  cursor: pointer;
 }
 
 .logoUpload svg {
@@ -110,28 +138,50 @@
   height: 45px;
 }
 
+.preview {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
 .input {
-  height: 60px;
+  height: 62px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 14px;
 
-  padding: 0 18px;
-
-  border-radius: 20px;
+  padding: 0 20px;
 
   background: #fafafa;
 
   border: 1px solid #eee;
 
+  border-radius: 22px;
+
   margin-bottom: 15px;
+
+  transition: 0.25s;
+}
+
+.input:focus-within {
+  background: white;
+
+  border-color: #ff006f;
+
+  box-shadow: 0 10px 30px rgba(255, 0, 111, 0.12);
 }
 
 .input svg {
   color: #ff006f;
+
+  width: 22px;
 }
 
 .input input {
@@ -146,34 +196,48 @@
   font-size: 16px;
 }
 
-.modal textarea {
+.textarea {
   width: 100%;
 
-  height: 130px;
+  height: 140px;
 
   resize: none;
 
-  border-radius: 22px;
+  padding: 20px;
+
+  border-radius: 25px;
 
   border: 1px solid #eee;
 
-  padding: 18px;
-
-  font-size: 16px;
+  background: #fafafa;
 
   outline: none;
 
+  font-size: 16px;
+
+  font-family: inherit;
+
   margin-bottom: 20px;
+
+  transition: 0.25s;
+}
+
+.textarea:focus {
+  background: white;
+
+  border-color: #ff006f;
+
+  box-shadow: 0 10px 30px rgba(255, 0, 111, 0.12);
 }
 
 .save {
-  height: 62px;
+  height: 64px;
 
   width: 100%;
 
   border: none;
 
-  border-radius: 22px;
+  border-radius: 25px;
 
   background: linear-gradient(135deg, #ff006f, #ff65ad);
 
@@ -184,6 +248,14 @@
   font-weight: 900;
 
   cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.save:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 20px 40px rgba(255, 0, 111, 0.3);
 }
 
 @media (max-width: 600px) {
@@ -191,5 +263,11 @@
     padding: 25px;
 
     border-radius: 30px;
+  }
+
+  .close {
+    right: 20px;
+
+    top: 20px;
   }
 }
