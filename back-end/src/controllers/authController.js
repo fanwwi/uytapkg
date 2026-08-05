@@ -1,7 +1,11 @@
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/db.js";
-import { registerSchema, loginSchema, normalizePhone } from "../utils/validation.js";
+import { registerSchema, loginSchema, updateMeSchema, normalizePhone } from "../utils/validation.js";
 import { generateToken } from "../middleware/auth.js";
+import {
+  uploadAvatarToStorage,
+  removeImageFromStorage,
+} from "../utils/storage.js";
 
 // =======================================================
 // 1. Регистрация нового пользователя
@@ -281,7 +285,335 @@ export const getMe = async (req, res) => {
 };
 
 // =======================================================
-// 4. Отправка и проверка WhatsApp / SMS OTP кодов (Заготовка)
+// 3b. Обновление профиля авторизованного пользователя
+// =======================================================
+export const updateMe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const validationResult = updateMeSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных",
+        errors: validationResult.error.errors.map((e) => e.message),
+      });
+    }
+
+    const data = validationResult.data;
+    const hasUserUpdates = data.phone !== undefined || data.accountType !== undefined;
+    const profileFieldKeys = [
+      "firstName",
+      "lastName",
+      "about",
+      "avatarUrl",
+      "fullName",
+      "companyName",
+      "directorName",
+      "inn",
+      "officeAddress",
+      "agencyName",
+    ];
+    const hasProfileUpdates =
+      profileFieldKeys.some((key) => data[key] !== undefined) || data.accountType !== undefined;
+
+    if (!hasUserUpdates && !hasProfileUpdates) {
+      return res.status(400).json({
+        success: false,
+        message: "Не переданы поля для обновления",
+      });
+    }
+
+    const { data: currentUser, error: currentUserError } = await supabase
+      .from("users")
+      .select("id, account_type, email, phone, is_verified, created_at")
+      .eq("id", userId)
+      .single();
+
+    if (currentUserError || !currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Пользователь не найден",
+      });
+    }
+
+    const { data: currentProfile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const userUpdates = {};
+    if (data.phone !== undefined) {
+      const formattedPhone = normalizePhone(data.phone);
+      const { data: phoneConflict } = await supabase
+        .from("users")
+        .select("id")
+        .eq("phone", formattedPhone)
+        .neq("id", userId)
+        .maybeSingle();
+
+      if (phoneConflict) {
+        return res.status(400).json({
+          success: false,
+          message: "Пользователь с таким номером телефона уже существует",
+        });
+      }
+      userUpdates.phone = formattedPhone;
+    }
+
+    if (data.accountType !== undefined) {
+      userUpdates.account_type = data.accountType;
+    }
+
+    if (Object.keys(userUpdates).length > 0) {
+      userUpdates.updated_at = new Date().toISOString();
+      const { error: userUpdateError } = await supabase
+        .from("users")
+        .update(userUpdates)
+        .eq("id", userId);
+
+      if (userUpdateError) {
+        console.error("UpdateMe user error:", userUpdateError);
+        return res.status(500).json({
+          success: false,
+          message: "Не удалось обновить данные пользователя",
+          details: userUpdateError.message,
+        });
+      }
+    }
+
+    const profileUpdates = {};
+
+    if (data.about !== undefined) profileUpdates.about = data.about;
+    if (data.inn !== undefined) profileUpdates.inn = data.inn;
+    if (data.officeAddress !== undefined) profileUpdates.office_address = data.officeAddress;
+    if (data.lastName !== undefined) profileUpdates.last_name = data.lastName;
+
+    if (data.firstName !== undefined) profileUpdates.first_name = data.firstName;
+    if (data.fullName !== undefined) profileUpdates.first_name = data.fullName;
+    if (data.directorName !== undefined) profileUpdates.first_name = data.directorName;
+
+    if (data.companyName !== undefined) profileUpdates.company_name = data.companyName;
+    if (data.agencyName !== undefined) profileUpdates.company_name = data.agencyName;
+
+    if (data.avatarUrl !== undefined) {
+      const oldAvatarUrl = currentProfile?.avatar_url;
+      profileUpdates.avatar_url = data.avatarUrl;
+
+      if (oldAvatarUrl && oldAvatarUrl !== data.avatarUrl) {
+        await removeImageFromStorage(oldAvatarUrl);
+      }
+    }
+
+    let profile = currentProfile;
+
+    if (Object.keys(profileUpdates).length > 0) {
+      profileUpdates.updated_at = new Date().toISOString();
+
+      if (currentProfile) {
+        const { data: updatedProfile, error: profileError } = await supabase
+          .from("user_profiles")
+          .update(profileUpdates)
+          .eq("user_id", userId)
+          .select()
+          .single();
+
+        if (profileError) {
+          console.error("UpdateMe profile error:", profileError);
+          return res.status(500).json({
+            success: false,
+            message: "Не удалось обновить профиль",
+            details: profileError.message,
+          });
+        }
+        profile = updatedProfile;
+      } else {
+        const { data: insertedProfile, error: profileError } = await supabase
+          .from("user_profiles")
+          .insert([{ user_id: userId, ...profileUpdates }])
+          .select()
+          .single();
+
+        if (profileError) {
+          console.error("UpdateMe profile insert error:", profileError);
+          return res.status(500).json({
+            success: false,
+            message: "Не удалось создать профиль",
+            details: profileError.message,
+          });
+        }
+        profile = insertedProfile;
+      }
+    }
+
+    const { data: updatedUser, error: fetchUserError } = await supabase
+      .from("users")
+      .select("id, account_type, email, phone, is_verified, created_at")
+      .eq("id", userId)
+      .single();
+
+    if (fetchUserError || !updatedUser) {
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось получить обновлённые данные пользователя",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Профиль успешно обновлён",
+      user: {
+        id: updatedUser.id,
+        accountType: updatedUser.account_type,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        isVerified: updatedUser.is_verified,
+        profile: profile || {},
+      },
+    });
+  } catch (error) {
+    console.error("UpdateMe Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при обновлении профиля",
+    });
+  }
+};
+
+// =======================================================
+// 4. Загрузка аватара / логотипа (multipart, поле `avatar`)
+// =======================================================
+export const uploadUserAvatar = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Файл аватара не передан. Ожидается поле формы `avatar`.",
+      });
+    }
+
+    const { data: existingProfile } = await supabase
+      .from("user_profiles")
+      .select("id, avatar_url")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const { publicUrl } = await uploadAvatarToStorage(userId, req.file);
+
+    let profile;
+    if (existingProfile) {
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Avatar profile update error:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Файл загружен, но не удалось обновить профиль",
+          details: error.message,
+        });
+      }
+      profile = data;
+
+      // Старый файл из нашего бакета — удаляем после успешного update
+      if (existingProfile.avatar_url && existingProfile.avatar_url !== publicUrl) {
+        await removeImageFromStorage(existingProfile.avatar_url);
+      }
+    } else {
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .insert([{ user_id: userId, avatar_url: publicUrl }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Avatar profile insert error:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Файл загружен, но не удалось создать профиль",
+          details: error.message,
+        });
+      }
+      profile = data;
+    }
+
+    return res.json({
+      success: true,
+      message: "Аватар успешно загружен",
+      avatar_url: publicUrl,
+      profile,
+    });
+  } catch (error) {
+    console.error("Upload Avatar Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Ошибка сервера при загрузке аватара",
+    });
+  }
+};
+
+// =======================================================
+// 5. Удаление аватара
+// =======================================================
+export const deleteUserAvatar = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { data: existingProfile } = await supabase
+      .from("user_profiles")
+      .select("avatar_url")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (!existingProfile?.avatar_url) {
+      return res.status(404).json({
+        success: false,
+        message: "Аватар не установлен",
+      });
+    }
+
+    const oldUrl = existingProfile.avatar_url;
+
+    const { data: profile, error } = await supabase
+      .from("user_profiles")
+      .update({ avatar_url: null, updated_at: new Date().toISOString() })
+      .eq("user_id", userId)
+      .select()
+      .single();
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось удалить аватар из профиля",
+        details: error.message,
+      });
+    }
+
+    await removeImageFromStorage(oldUrl);
+
+    return res.json({
+      success: true,
+      message: "Аватар удалён",
+      profile,
+    });
+  } catch (error) {
+    console.error("Delete Avatar Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при удалении аватара",
+    });
+  }
+};
+
+// =======================================================
+// 6. Отправка и проверка WhatsApp / SMS OTP кодов (Заготовка)
 // =======================================================
 export const sendOtp = async (req, res) => {
   const { phone } = req.body;

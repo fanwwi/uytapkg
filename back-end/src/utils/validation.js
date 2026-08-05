@@ -43,3 +43,21 @@ export const loginSchema = z.object({
   identifier: z.string().min(1, "Укажите Email или Номер телефона"),
   password: z.string().min(1, "Введите пароль"),
 });
+
+// Схема обновления профиля (PUT /api/auth/me)
+export const updateMeSchema = z.object({
+  firstName: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
+  phone: z.string().min(9, "Номер телефона должен содержать минимум 9 цифр").optional(),
+  about: z.string().optional().nullable(),
+  avatarUrl: z
+    .union([z.string().url("Некорректная ссылка на фото"), z.null()])
+    .optional(),
+  accountType: z.enum(["personal", "realtor", "agency", "developer"]).optional(),
+  fullName: z.string().optional().nullable(),
+  companyName: z.string().optional().nullable(),
+  directorName: z.string().optional().nullable(),
+  inn: z.string().optional().nullable(),
+  officeAddress: z.string().optional().nullable(),
+  agencyName: z.string().optional().nullable(),
+});

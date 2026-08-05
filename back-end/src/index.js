@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 import listingsRoutes from "./routes/listingsRoutes.js";
 import complexesRoutes from "./routes/complexesRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
@@ -44,13 +45,36 @@ app.get("/api/health", (req, res) => {
 
 // Регистрация всех роутов API UyTap
 app.use("/api/auth", authRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api/listings", listingsRoutes);
 app.use("/api/complexes", complexesRoutes);
 app.use("/api/ai", aiRoutes);
 
-// Глобальный обработчик ошибок
+// Глобальный обработчик ошибок (включая Multer)
 app.use((err, req, res, next) => {
   console.error("Unhandled Server Error:", err);
+
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({
+      success: false,
+      message: "Превышен допустимый размер файла",
+    });
+  }
+
+  if (err instanceof Error && err.message?.includes("HEIC")) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+
+  if (err instanceof Error && err.message?.includes("Допустимы только изображения")) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+
   res.status(500).json({
     success: false,
     message: "Внутренняя ошибка сервера",

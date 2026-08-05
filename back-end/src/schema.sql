@@ -169,3 +169,10 @@ CREATE INDEX IF NOT EXISTS idx_listings_region ON listings(region);
 CREATE INDEX IF NOT EXISTS idx_listings_property_type ON listings(property_type);
 CREATE INDEX IF NOT EXISTS idx_listings_promotion ON listings(promotion_status);
 CREATE INDEX IF NOT EXISTS idx_listings_created_at ON listings(created_at DESC);
+
+-- ============================================================
+-- Storage (аватарки): создать вручную в Supabase Dashboard
+-- Storage → New bucket → имя: avatars → Public bucket: ON
+-- Путь файлов: avatars/{userId}/{timestamp}.{ext}
+-- URL пишется в user_profiles.avatar_url
+-- ============================================================
