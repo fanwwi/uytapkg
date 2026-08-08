@@ -495,53 +495,44 @@ export const uploadUserAvatar = async (req, res) => {
       });
     }
 
-    const { data: existingProfile } = await supabase
+    const { data: existingProfile, error: profileSelectError } = await supabase
       .from("user_profiles")
       .select("id, avatar_url")
       .eq("user_id", userId)
       .maybeSingle();
 
+    if (profileSelectError) {
+      console.warn("Upload Avatar profile select warning:", profileSelectError);
+    }
+
     const { publicUrl } = await uploadAvatarToStorage(userId, req.file);
 
-    let profile;
-    if (existingProfile) {
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .update({ avatar_url: publicUrl, updated_at: new Date().toISOString() })
-        .eq("user_id", userId)
-        .select()
-        .single();
+    const { data, error } = await supabase
+      .from("user_profiles")
+      .upsert(
+        {
+          user_id: userId,
+          avatar_url: publicUrl,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" },
+      )
+      .select()
+      .single();
 
-      if (error) {
-        console.error("Avatar profile update error:", error);
-        return res.status(500).json({
-          success: false,
-          message: "Файл загружен, но не удалось обновить профиль",
-          details: error.message,
-        });
-      }
-      profile = data;
+    if (error) {
+      console.error("Avatar profile upsert error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Файл загружен, но не удалось сохранить профиль",
+        details: error.message,
+      });
+    }
 
-      // Старый файл из нашего бакета — удаляем после успешного update
-      if (existingProfile.avatar_url && existingProfile.avatar_url !== publicUrl) {
-        await removeImageFromStorage(existingProfile.avatar_url);
-      }
-    } else {
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .insert([{ user_id: userId, avatar_url: publicUrl }])
-        .select()
-        .single();
+    const profile = data;
 
-      if (error) {
-        console.error("Avatar profile insert error:", error);
-        return res.status(500).json({
-          success: false,
-          message: "Файл загружен, но не удалось создать профиль",
-          details: error.message,
-        });
-      }
-      profile = data;
+    if (existingProfile?.avatar_url && existingProfile.avatar_url !== publicUrl) {
+      await removeImageFromStorage(existingProfile.avatar_url);
     }
 
     return res.json({

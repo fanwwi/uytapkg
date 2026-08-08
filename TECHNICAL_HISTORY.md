@@ -69,6 +69,14 @@
    * Обновлен модуль запросов [`front-end/src/utils/api.js`](file:///C:/Users/User/Desktop/%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82/uytapkg/front-end/src/utils/api.js).
    * Компонент Умного поиска [`SmartSearch.jsx`](file:///C:/Users/User/Desktop/%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82/uytapkg/front-end/src/components/pageComponents/smartSearch/SmartSearch.jsx) соединен с AI API.
 
+### 📅 Сессия: 5 августа 2026 г.
+* **Цель:** Загрузка аватарок на бэкенде (фронт не трогали).
+* **Выполнено:**
+  * `POST /api/auth/avatar` — multipart, поле `avatar` → Supabase Storage (`avatars`) → `user_profiles.avatar_url`.
+  * `DELETE /api/auth/avatar` — сброс URL и удаление файла из Storage.
+  * Модули: `middleware/upload.js` (multer), `utils/storage.js`.
+* **Ручная настройка:** в Supabase создать публичный бакет `avatars`. В `.env` ключ `SUPABASE_KEY` должен быть **service_role** (иначе upload в Storage запрещён).
+
 ---
 
 ## 🛠 4. Статус Подключения Сервисов и Настройка Конфигурации
@@ -90,6 +98,7 @@ GEMINI_API_KEY=ваш_ключ_из_google_ai_studio
 ## 🚀 5. План Дальнейшего Продвижения Разработки
 
 1. **Развертывание БД в Supabase:** Выполнить скрипт [`schema.sql`](file:///C:/Users/User/Desktop/%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82/uytapkg/back-end/src/schema.sql) в вашем Supabase SQL Editor.
-2. **Разработка Админ-панели:** Подготовка роутов `/api/admin` для модерации объявлений и заявок на верификацию.
-3. **Раздел Подачи объявлений на Фронтенде:** Верстка мульти-шаговой формы с кнопкой AI-автогенерации текста.
-4. **Тестирование и деплой:** Локальное тестирование взаимодействия всех компонентов с последующим деплоем на Vercel (Front-end) и Render/DigitalOcean (Back-end).
+2. **Бакет аватаров:** Storage → New bucket → `avatars` (Public).
+3. **Разработка Админ-панели:** Подготовка роутов `/api/admin` для модерации объявлений и заявок на верификацию.
+4. **Раздел Подачи объявлений на Фронтенде:** Верстка мульти-шаговой формы с кнопкой AI-автогенерации текста.
+5. **Тестирование и деплой:** Локальное тестирование взаимодействия всех компонентов с последующим деплоем на Vercel (Front-end) и Render/DigitalOcean (Back-end).
