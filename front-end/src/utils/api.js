@@ -81,6 +81,19 @@ export async function aiSearchQuery(prompt) {
   return response.json();
 }
 
+export async function generateDescription(details) {
+  const response = await fetch(`${API_URL}/ai/generate-description`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ details }),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка генерации описания");
+  }
+  return data.generatedText;
+}
+
 // 7. Профиль
 export async function getMe(token) {
   const response = await fetch(`${API_URL}/auth/me`, {
