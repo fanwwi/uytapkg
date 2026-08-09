@@ -14,9 +14,8 @@ import {
   CreditCard,
   LogOut,
   Building2,
-  User,
   CheckCircle,
-  House
+  House,
 } from "lucide-react";
 
 import styles from "./RealtorProfile.module.css";
@@ -53,11 +52,7 @@ export default function RealtorProfile({ user }) {
 
         <div className={styles.top}>
           <div className={styles.avatar}>
-            {profile.avatar_url ? (
-              <img src={profile.avatar_url} alt={name} />
-            ) : (
-              <User />
-            )}
+            <img src="/assets/realtorImage.png" alt={name} />
           </div>
 
           <div className={styles.info}>
@@ -71,7 +66,6 @@ export default function RealtorProfile({ user }) {
 
             <div className={styles.company}>
               <Building2 />
-
               {company}
             </div>
 
@@ -152,13 +146,11 @@ export default function RealtorProfile({ user }) {
       <section className={styles.stats}>
         <div>
           <strong>{profile.ads_count || 0}</strong>
-
           <span>объявлений</span>
         </div>
 
         <div>
           <strong>{profile.clients_count || 0}</strong>
-
           <span>клиентов</span>
         </div>
       </section>

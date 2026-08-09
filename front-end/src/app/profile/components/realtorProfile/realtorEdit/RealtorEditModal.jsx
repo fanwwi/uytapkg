@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 import {
-  Camera,
   User,
   Building2,
   Phone,
@@ -11,20 +10,17 @@ import {
   Globe,
   MapPin,
   X,
-  FileText,
   Hash,
 } from "lucide-react";
 
 import styles from "./RealtorEditModal.module.css";
 
-export default function RealtorEditModal({ close, user }) {
-  const fileRef = useRef(null);
+import { updateMe, getMe } from "@/utils/api";
 
+export default function RealtorEditModal({ close, user }) {
   const profile = user?.profile || {};
 
-  const [preview, setPreview] = useState(
-    profile.avatar_url || profile.logo_url || "",
-  );
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     first_name: profile.first_name || "",
@@ -33,8 +29,6 @@ export default function RealtorEditModal({ close, user }) {
     company_name: profile.company_name || "",
 
     phone: user?.phone || "",
-
-    whatsapp: profile.whatsapp || user?.phone || "",
 
     email: user?.email || profile.email || "",
 
@@ -48,51 +42,93 @@ export default function RealtorEditModal({ close, user }) {
   });
 
   function change(e) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
-  function uploadLogo(e) {
-    const file = e.target.files[0];
+  function getTokenFromCookie() {
+    const cookies = document.cookie.split("; ");
 
-    if (!file) return;
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.startsWith("uytap_token="),
+    );
 
-    const url = URL.createObjectURL(file);
+    if (!tokenCookie) return null;
 
-    setPreview(url);
+    return decodeURIComponent(tokenCookie.substring("uytap_token=".length));
   }
 
   async function save() {
-    console.log({
-      ...form,
-      logo: preview,
-    });
+    if (loading) return;
 
-    // API PUT /profile/update
+    try {
+      setLoading(true);
+
+      const token = getTokenFromCookie();
+
+      if (!token) {
+        throw new Error(
+          "Сессия не найдена. Пожалуйста, войдите в аккаунт заново.",
+        );
+      }
+
+      const payload = {
+        firstName: form.first_name,
+        lastName: form.last_name,
+        companyName: form.company_name,
+        officeAddress: form.office_address,
+        about: form.about,
+        website: form.website,
+        inn: form.inn,
+      };
+
+      // Отправляем телефон только если он реально изменился
+      if (form.phone !== user?.phone) {
+        payload.phone = form.phone;
+      }
+
+      console.log("PROFILE UPDATE PAYLOAD:", payload);
+
+      // Обновляем профиль на backend
+      await updateMe(token, payload);
+
+      // Получаем свежие данные
+      const freshUser = await getMe(token);
+
+      console.log("UPDATED USER:", freshUser);
+
+      // Обновляем локального пользователя
+      localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+
+      close();
+
+      // Обновляем страницу профиля
+      window.location.reload();
+    } catch (error) {
+      console.error("PROFILE UPDATE ERROR:", error);
+
+      alert(error?.message || "Не удалось сохранить изменения");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className={styles.overlay}>
-      <button className={styles.overlayClose} onClick={close}>
+      <button
+        className={styles.overlayClose}
+        onClick={close}
+        disabled={loading}
+      >
         <X />
       </button>
 
       <div className={styles.modal}>
         <h2>Редактирование профиля</h2>
-
-        <div className={styles.avatar} onClick={() => fileRef.current.click()}>
-          {preview ? <img src={preview} alt="avatar" /> : <Camera />}
-
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={uploadLogo}
-          />
-        </div>
 
         <div className={styles.form}>
           <div className={styles.row}>
@@ -104,6 +140,7 @@ export default function RealtorEditModal({ close, user }) {
                 value={form.first_name}
                 onChange={change}
                 placeholder="Имя"
+                disabled={loading}
               />
             </div>
 
@@ -115,6 +152,7 @@ export default function RealtorEditModal({ close, user }) {
                 value={form.last_name}
                 onChange={change}
                 placeholder="Фамилия"
+                disabled={loading}
               />
             </div>
           </div>
@@ -127,6 +165,7 @@ export default function RealtorEditModal({ close, user }) {
               value={form.company_name}
               onChange={change}
               placeholder="Название агентства"
+              disabled={loading}
             />
           </div>
 
@@ -138,17 +177,7 @@ export default function RealtorEditModal({ close, user }) {
               value={form.phone}
               onChange={change}
               placeholder="Телефон"
-            />
-          </div>
-
-          <div className={styles.input}>
-            <MessageCircle />
-
-            <input
-              name="whatsapp"
-              value={form.whatsapp}
-              onChange={change}
-              placeholder="WhatsApp"
+              disabled={loading}
             />
           </div>
 
@@ -160,6 +189,7 @@ export default function RealtorEditModal({ close, user }) {
               value={form.inn}
               onChange={change}
               placeholder="ИНН"
+              disabled={loading}
             />
           </div>
 
@@ -171,6 +201,7 @@ export default function RealtorEditModal({ close, user }) {
               value={form.website}
               onChange={change}
               placeholder="Сайт"
+              disabled={loading}
             />
           </div>
 
@@ -182,6 +213,7 @@ export default function RealtorEditModal({ close, user }) {
               value={form.office_address}
               onChange={change}
               placeholder="Адрес компании"
+              disabled={loading}
             />
           </div>
 
@@ -191,10 +223,11 @@ export default function RealtorEditModal({ close, user }) {
             value={form.about}
             onChange={change}
             placeholder="Описание"
+            disabled={loading}
           />
 
-          <button className={styles.save} onClick={save}>
-            Сохранить изменения
+          <button className={styles.save} onClick={save} disabled={loading}>
+            {loading ? "Сохранение..." : "Сохранить изменения"}
           </button>
         </div>
       </div>
