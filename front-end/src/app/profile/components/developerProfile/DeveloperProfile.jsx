@@ -52,7 +52,10 @@ export default function DeveloperProfile({ user }) {
             {profile.logo_url ? (
               <img src={profile.logo_url} alt={company} />
             ) : (
-              <Building2 />
+              <img
+                src={profile.logo_url || "/assets/DeveloperImage.png"}
+                alt={company}
+              />
             )}
           </div>
 

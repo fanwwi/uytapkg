@@ -16,7 +16,7 @@ import {
   LogOut,
   Check,
   User,
-  House
+  House,
 } from "lucide-react";
 
 import styles from "./AgencyProfile.module.css";
@@ -52,7 +52,10 @@ export default function AgencyProfile({ user }) {
           {profile.logo_url ? (
             <img src={profile.logo_url} alt={companyName} />
           ) : (
-            <Building2 />
+            <img
+              src={profile.logo_url || "/assets/AgencyImage.png"}
+              alt={companyName}
+            />
           )}
         </div>
 
