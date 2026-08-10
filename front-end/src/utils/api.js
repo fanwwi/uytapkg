@@ -115,15 +115,20 @@ export async function generateDescription(details) {
   return data.generatedText;
 }
 
-// 8. Получить текущего пользователя
-export async function getMe() {
+// Получить текущего пользователя
+export async function getMe(token) {
+  const headers = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_URL}/auth/me`, {
     method: "GET",
+    headers,
     credentials: "include",
   });
 
   const text = await response.text();
-
   let data;
 
   try {
@@ -140,19 +145,18 @@ export async function getMe() {
   return data.user;
 }
 
-// 9. Обновить профиль
-export async function updateMe(payload) {
+export async function updateMe(token, payload) {
   const response = await fetch(`${API_URL}/auth/me`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
     credentials: "include",
     body: JSON.stringify(payload),
   });
 
   const text = await response.text();
-
   let data;
 
   try {

@@ -1,65 +1,75 @@
 "use client";
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import {
   User,
   Building2,
   Phone,
-  MessageCircle,
   Globe,
   MapPin,
   X,
   Hash,
+  Camera,
 } from "lucide-react";
-
 import styles from "./RealtorEditModal.module.css";
-
 import { updateMe, getMe } from "@/utils/api";
 
 export default function RealtorEditModal({ close, user }) {
-  const profile = user?.profile || {};
-
   const [loading, setLoading] = useState(false);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(
+    "/assets/realtorImage.png",
+  );
 
   const [form, setForm] = useState({
-    first_name: profile.first_name || "",
-    last_name: profile.last_name || "",
-
-    company_name: profile.company_name || "",
-
-    phone: user?.phone || "",
-
-    email: user?.email || profile.email || "",
-
-    website: profile.website || "",
-
-    office_address: profile.office_address || "",
-
-    inn: profile.inn || "",
-
-    about: profile.about || "",
+    first_name: "",
+    last_name: "",
+    company_name: "",
+    phone: "",
+    email: "",
+    website: "",
+    office_address: "",
+    inn: "",
+    about: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      const profile = user.profile || {};
+      setForm({
+        first_name: profile.first_name || "",
+        last_name: profile.last_name || "",
+        company_name: profile.company_name || "",
+        phone: user.phone || "",
+        email: user.email || "",
+        website: profile.website || "",
+        office_address: profile.office_address || "",
+        inn: profile.inn || "",
+        about: profile.about || "",
+      });
+      setAvatarPreview(profile.avatar || "/assets/realtorImage.png");
+    }
+  }, [user]);
 
   function change(e) {
     const { name, value } = e.target;
-
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   }
 
+  function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  }
+
   function getTokenFromCookie() {
-    const cookies = document.cookie.split("; ");
-
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.startsWith("uytap_token="),
-    );
-
-    if (!tokenCookie) return null;
-
-    return decodeURIComponent(tokenCookie.substring("uytap_token=".length));
+    const match = document.cookie.match(/(^|;)\s*uytap_token=([^;]*)/);
+    return match ? decodeURIComponent(match[2]) : null;
   }
 
   async function save() {
@@ -69,7 +79,6 @@ export default function RealtorEditModal({ close, user }) {
       setLoading(true);
 
       const token = getTokenFromCookie();
-
       if (!token) {
         throw new Error(
           "Сессия не найдена. Пожалуйста, войдите в аккаунт заново.",
@@ -77,40 +86,26 @@ export default function RealtorEditModal({ close, user }) {
       }
 
       const payload = {
-        firstName: form.first_name,
-        lastName: form.last_name,
-        companyName: form.company_name,
-        officeAddress: form.office_address,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        company_name: form.company_name,
+        office_address: form.office_address,
         about: form.about,
         website: form.website,
         inn: form.inn,
       };
 
-      // Отправляем телефон только если он реально изменился
       if (form.phone !== user?.phone) {
         payload.phone = form.phone;
       }
 
-      console.log("PROFILE UPDATE PAYLOAD:", payload);
-
-      // Обновляем профиль на backend
       await updateMe(token, payload);
 
-      // Получаем свежие данные
       const freshUser = await getMe(token);
-
-      console.log("UPDATED USER:", freshUser);
-
-      // Обновляем локального пользователя
       localStorage.setItem("uytap_user", JSON.stringify(freshUser));
-
       close();
-
-      // Обновляем страницу профиля
-      window.location.reload();
     } catch (error) {
       console.error("PROFILE UPDATE ERROR:", error);
-
       alert(error?.message || "Не удалось сохранить изменения");
     } finally {
       setLoading(false);
@@ -131,10 +126,24 @@ export default function RealtorEditModal({ close, user }) {
         <h2>Редактирование профиля</h2>
 
         <div className={styles.form}>
+          {/* Выбор аватара */}
+          <label className={styles.avatar}>
+            <img src={avatarPreview} alt="Avatar preview" />
+            <div className={styles.camera}>
+              <Camera size={18} />
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: "none" }}
+              disabled={loading}
+            />
+          </label>
+
           <div className={styles.row}>
             <div className={styles.input}>
               <User />
-
               <input
                 name="first_name"
                 value={form.first_name}
@@ -146,7 +155,6 @@ export default function RealtorEditModal({ close, user }) {
 
             <div className={styles.input}>
               <User />
-
               <input
                 name="last_name"
                 value={form.last_name}
@@ -159,7 +167,6 @@ export default function RealtorEditModal({ close, user }) {
 
           <div className={styles.input}>
             <Building2 />
-
             <input
               name="company_name"
               value={form.company_name}
@@ -171,7 +178,6 @@ export default function RealtorEditModal({ close, user }) {
 
           <div className={styles.input}>
             <Phone />
-
             <input
               name="phone"
               value={form.phone}
@@ -183,7 +189,6 @@ export default function RealtorEditModal({ close, user }) {
 
           <div className={styles.input}>
             <Hash />
-
             <input
               name="inn"
               value={form.inn}
@@ -195,7 +200,6 @@ export default function RealtorEditModal({ close, user }) {
 
           <div className={styles.input}>
             <Globe />
-
             <input
               name="website"
               value={form.website}
@@ -207,7 +211,6 @@ export default function RealtorEditModal({ close, user }) {
 
           <div className={styles.input}>
             <MapPin />
-
             <input
               name="office_address"
               value={form.office_address}
