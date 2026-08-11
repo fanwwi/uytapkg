@@ -1,9 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Home, Search, Building2, MapPin } from "lucide-react";
-
-import SearchFilter from "../searchFilter/SearchFilter";
+import { Sparkles, Home, Building2, MapPin } from "lucide-react";
 
 import styles from "./SearchPage.module.css";
 
@@ -44,50 +42,6 @@ export default function SearchPage() {
           Тысячи квартир, домов и коммерческих объектов. Используйте умные
           фильтры UyTap и найдите недвижимость мечты быстрее.
         </p>
-
-        <div className={styles.stats}>
-          <div className={styles.stat}>
-            <Home />
-            <div>
-              <strong>10 000+</strong>
-              <span>объектов</span>
-            </div>
-          </div>
-
-          <div className={styles.stat}>
-            <Building2 />
-            <div>
-              <strong>500+</strong>
-              <span>застройщиков</span>
-            </div>
-          </div>
-
-          <div className={styles.stat}>
-            <MapPin />
-            <div>
-              <strong>8 регионов</strong>
-              <span>Кыргызстана</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className={styles.filterWrapper}
-        initial={{
-          opacity: 0,
-          y: 80,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          delay: 0.2,
-          duration: 0.7,
-        }}
-      >
-        <SearchFilter />
       </motion.div>
     </section>
   );
