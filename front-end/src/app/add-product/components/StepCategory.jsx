@@ -1,5 +1,6 @@
 "use client";
 
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./steps.module.css";
 
 const categories = {
@@ -99,43 +100,195 @@ const categories = {
 
 const options = {
   series: [
-    "Сталинка",
-    "Хрущёвка",
-    "Брежневка",
+    "Любой",
     "Новостройка",
-    "Элитная",
-    "Другое",
+    "102 серия",
+    "104 серия",
+    "105 серия",
+    "106 серия",
+    "Сталинка",
+    "Хрущевка",
+    "Элитка",
+    "Пентхаус",
   ],
 
-  rooms: ["1", "2", "3", "4", "5+"],
+  rooms: ["1", "2", "3", "4+"],
 
   floor: ["Цоколь", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"],
 
-  condition: ["Новое", "Евроремонт", "Хорошее", "Среднее", "Требует ремонта"],
-
-  walls: ["Кирпич", "Монолит", "Панель", "Саман", "Другое"],
-
-  heating: [
-    "Центральное",
-    "Газовое",
-    "Электрическое",
-    "Твердотопливное",
-    "Автономное",
+  condition: [
+    "Любое",
+    "Дизайнерский ремонт",
+    "Евроремонт",
+    "Косметический",
+    "Под самоотделку",
+    "Старый ремонт",
+    "Без ремонта",
   ],
 
-  documents: ["Есть", "Нет", "В процессе оформления"],
+  walls: [
+    "Любые",
+    "Кирпич",
+    "Бетон",
+    "Газобетон",
+    "Панельные",
+    "Монолитные",
+    "Монолитно-кирпичные",
+    "Монолитно-каркасные",
+  ],
+
+  heating: [
+    "Любое",
+    "Автономное",
+    "Газовое",
+    "Центральное",
+    "Электрическое",
+    "Комбинированное",
+  ],
+
+  documents: [
+    "Любые",
+    "Красная книга",
+    "Тех паспорт",
+    "Договор купли-продажи",
+    "Договор долевого участия",
+    "Акт приема-передачи",
+  ],
 
   furniture: ["Полностью меблирована", "Частично меблирована", "Без мебели"],
 
   yesNo: ["Да", "Нет"],
+
+  offerType: [
+    "Любой",
+    "Наличный расчет",
+    "Ипотека",
+    "Рассрочка",
+    "Возможен обмен",
+  ],
+
+  houseType: [
+    "Любой",
+    "Частный дом",
+    "Особняк",
+    "Коттедж",
+    "Таунхаус",
+    "Дача",
+    "Времянка",
+  ],
+
+  floors: ["1", "2", "3", "4+"],
+
+  sewerage: ["Любая", "Возможно подведение", "Центральная", "Септик", "Нет"],
+
+  water: ["Любая", "Центральная", "Скважина", "Возможно подведение", "Нет"],
+
+  electricity: ["Любое", "Есть", "Возможно подведение", "Нет"],
+
+  amenities: [
+    "Любые",
+    "Балкон/Лоджия",
+    "Нет балкона/лоджии",
+    "Бронированные двери",
+    "Бытовая техника",
+    "Видеонаблюдение",
+    "Вид на горы",
+    "Животные не проживали",
+    "Закрытая территория",
+    "Не затапливалась",
+    "Не сдавалась квартирантам",
+    "Не угловая",
+    "Раздельный санузел",
+    "Совместные санузел",
+    "Угловая квартира",
+    "Не угловая квартира",
+    "Лифт",
+    "Охрана",
+    "Парковка",
+  ],
+
+  purpose: [
+    "ИЖС",
+    "ЛПХ",
+    "Коммерческое",
+    "Сельхозназначение",
+    "Многоэтажное строительство",
+    "Другое",
+  ],
+
+  fence: ["Есть", "Нет", "Частично"],
+
+  location: ["В городе", "В пригороде", "За городом", "У трассы", "В центре"],
+
+  terrain: ["Ровный", "С уклоном", "Горный", "Холмистый"],
+
+  communications: [
+    "Все коммуникации",
+    "Электричество",
+    "Газ",
+    "Вода",
+    "Канализация",
+    "Интернет",
+    "Отопление",
+    "Нет коммуникаций",
+  ],
+
+  roomsInApartment: ["1", "2", "3", "4", "5+"],
+
+  privateBathroom: ["Есть", "Нет"],
+
+  premisesType: [
+    "Любой",
+    "Офис",
+    "Магазин",
+    "Склад",
+    "Производство",
+    "Общепит",
+    "Гостиница",
+    "Промбаза",
+  ],
+
+  technicalParameters: [
+    "Центральная канализация",
+    "Трехфазное питание",
+    "Приточно-вытяжная вентиляция",
+    "Кондиционирование",
+    "Охранная/Пожарная сигнализация",
+  ],
+
+  firstLine: ["Да", "Нет", "Не важно"],
+
+  separateEntrance: ["Да", "Нет", "Любой"],
+
+  rentalBusiness: ["Да", "Нет", "Любой"],
+
+  ceilingHeight: ["До 2.5 м", "2.5–3 м", "3–4 м", "4+ м"],
+
+  parkingType: ["Подземный", "Наземный", "Многоуровневый", "Гараж", "Паркинг"],
+
+  material: ["Кирпич", "Бетон", "Металл", "Панель", "Другое"],
+
+  security: ["Есть", "Нет"],
+
+  gates: ["Есть", "Нет"],
+
+  inspectionPit: ["Есть", "Нет"],
+
+  basement: ["Есть", "Нет"],
+
+  truckAccess: ["Да", "Нет"],
+
+  gateType: [
+    "Распашные",
+    "Секционные",
+    "Откатные",
+    "Роллетные",
+    "Автоматические",
+  ],
 };
 
-function getFieldType(field) {
-  if (options[field]) {
-    return "select";
-  }
-
-  return "text";
+function getFieldOptions(field) {
+  return options[field] || [];
 }
 
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
@@ -187,6 +340,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
           <div className={styles.selectedCategory}>
             <div>
               <span>Категория</span>
+
               <strong>{category.title}</strong>
             </div>
 
@@ -210,7 +364,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 type="number"
                 min="0"
                 placeholder="Например 50 000"
-                value={form.priceFrom}
+                value={form.priceFrom || ""}
                 onChange={(e) =>
                   updateForm({
                     priceFrom: e.target.value,
@@ -226,7 +380,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 type="number"
                 min="0"
                 placeholder="Например 100 000"
-                value={form.priceTo}
+                value={form.priceTo || ""}
                 onChange={(e) =>
                   updateForm({
                     priceTo: e.target.value,
@@ -244,7 +398,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 type="number"
                 min="0"
                 placeholder="От"
-                value={form.areaFrom}
+                value={form.areaFrom || ""}
                 onChange={(e) =>
                   updateForm({
                     areaFrom: e.target.value,
@@ -260,7 +414,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 type="number"
                 min="0"
                 placeholder="До"
-                value={form.areaTo}
+                value={form.areaTo || ""}
                 onChange={(e) =>
                   updateForm({
                     areaTo: e.target.value,
@@ -272,32 +426,29 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
           <div className={styles.fieldsGrid}>
             {category.fields.map(([name, label]) => {
-              const type = getFieldType(name);
+              const fieldOptions = getFieldOptions(name);
+
+              if (fieldOptions.length > 0) {
+                return (
+                  <CustomSelect
+                    key={name}
+                    title={label}
+                    value={form[name] || ""}
+                    setValue={(value) => updateField(name, value)}
+                    options={fieldOptions}
+                  />
+                );
+              }
 
               return (
                 <div className={styles.field} key={name}>
                   <label>{label}</label>
 
-                  {type === "select" ? (
-                    <select
-                      value={form[name] || ""}
-                      onChange={(e) => updateField(name, e.target.value)}
-                    >
-                      <option value="">Выберите</option>
-
-                      {options[name].map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      value={form[name] || ""}
-                      onChange={(e) => updateField(name, e.target.value)}
-                      placeholder="Укажите значение"
-                    />
-                  )}
+                  <input
+                    value={form[name] || ""}
+                    onChange={(e) => updateField(name, e.target.value)}
+                    placeholder="Укажите значение"
+                  />
                 </div>
               );
             })}
