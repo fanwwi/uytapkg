@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { getMe, updateMe } from "@/utils/api";
+
 import {
   X,
   Camera,
@@ -19,6 +21,7 @@ import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 export default function ProfileEditModal({ user, close }) {
   const profile = user?.profile || {};
+  const [loading, setLoading] = useState(false);
 
   const [firstName, setFirstName] = useState(profile.first_name || "");
 
@@ -61,24 +64,69 @@ export default function ProfileEditModal({ user, close }) {
     setAvatarFile(null);
   }
 
-  function save() {
-    const form = new FormData();
+  async function save() {
+    if (loading) return;
 
-    form.append("first_name", firstName);
+    try {
+      setLoading(true);
 
-    form.append("last_name", lastName);
+      const token = localStorage.getItem("uytap_token");
+      if (!token) {
+        throw new Error("Сначала войдите в аккаунт");
+      }
 
-    form.append("phone", phone);
+      const form = new FormData();
+      form.append("first_name", firstName);
+      form.append("last_name", lastName);
+      form.append("phone", phone);
+      form.append("about", about);
 
-    form.append("about", about);
+      if (avatarFile) {
+        form.append("avatar", avatarFile);
+      }
 
-    if (avatarFile) {
-      form.append("avatar", avatarFile);
+      const response = await fetch("/api/auth/avatar", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: form,
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Не удалось сохранить аватар");
+      }
+
+      const refreshedProfile = result.profile || {};
+      const updatedUser = {
+        ...user,
+        profile: {
+          ...(user?.profile || {}),
+          ...refreshedProfile,
+          avatar_url: refreshedProfile.avatar_url || refreshedProfile.avatar || user?.profile?.avatar_url || user?.profile?.avatar || null,
+          avatar: refreshedProfile.avatar_url || refreshedProfile.avatar || user?.profile?.avatar_url || user?.profile?.avatar || null,
+        },
+      };
+      localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
+
+      const payload = {
+        firstName,
+        lastName,
+        phone,
+        about,
+      };
+
+      await updateMe(token, payload);
+      const freshUser = await getMe(token);
+      localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+      close();
+    } catch (error) {
+      console.error("PROFILE SAVE ERROR:", error);
+      alert(error.message || "Не удалось сохранить профиль");
+    } finally {
+      setLoading(false);
     }
-
-    console.log(Object.fromEntries(form));
-
-    close();
   }
 
   return (
@@ -173,9 +221,9 @@ export default function ProfileEditModal({ user, close }) {
             )}
           </div>
 
-          <button className={styles.save} onClick={save}>
+          <button className={styles.save} onClick={save} disabled={loading}>
             <Check />
-            Сохранить изменения
+            {loading ? "Сохраняем..." : "Сохранить изменения"}
           </button>
         </div>
       </div>

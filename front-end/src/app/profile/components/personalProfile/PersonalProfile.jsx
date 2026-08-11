@@ -26,6 +26,7 @@ export default function PersonalProfile({ user }) {
   if (!user) return null;
 
   const profile = user.profile || {};
+  const avatarUrl = profile.avatar_url || profile.avatar || user.avatar_url || user.avatar || null;
 
   const fullName =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
@@ -64,8 +65,8 @@ export default function PersonalProfile({ user }) {
 
         <div className={styles.avatarWrapper}>
           <div className={styles.avatar}>
-            {profile.avatar_url ? (
-              <img src={profile.avatar_url} alt="avatar" />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="avatar" />
             ) : (
               <User />
             )}

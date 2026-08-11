@@ -69,6 +69,7 @@ export default function StepListingType({
   updateForm,
   onBack,
   onSubmit,
+  isSubmitting,
 }) {
   return (
     <div className={styles.step}>
@@ -199,10 +200,10 @@ export default function StepListingType({
         <button
           type="button"
           className={styles.primary}
-          disabled={!form.listingType}
+          disabled={!form.listingType || isSubmitting}
           onClick={onSubmit}
         >
-          Опубликовать
+          {isSubmitting ? "Публикация..." : "Опубликовать"}
           <ArrowRight size={17} />
         </button>
       </div>

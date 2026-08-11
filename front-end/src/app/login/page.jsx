@@ -92,11 +92,11 @@ export default function Login() {
         password,
       });
 
-      // cookie
-      document.cookie = `uytap_token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
-
-      // localStorage
-      localStorage.setItem("uytap_user", JSON.stringify(data.user));
+      if (data.token) {
+        document.cookie = `uytap_token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+        localStorage.setItem("uytap_token", data.token);
+        localStorage.setItem("uytap_user", JSON.stringify(data.user));
+      }
 
       setSuccess(true);
 
@@ -121,9 +121,11 @@ export default function Login() {
 
       const result = await verifyOtpCode(phone.replace(/\D/g, ""), fullCode);
 
-      document.cookie = `uytap_token=${result.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
-
-      localStorage.setItem("uytap_user", JSON.stringify(result.user));
+      if (result.token) {
+        document.cookie = `uytap_token=${result.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+        localStorage.setItem("uytap_token", result.token);
+        localStorage.setItem("uytap_user", JSON.stringify(result.user));
+      }
 
       setSuccess(true);
 

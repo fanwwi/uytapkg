@@ -1,13 +1,4 @@
-const API_URL = (() => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_API_URL;
-  if (envUrl) {
-    return envUrl.replace(/\/$/, "");
-  }
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return "http://localhost:5000/api";
-  }
-  return "http://localhost:5000/api";
-})();
+const API_URL = "/api";
 
 // 1. Регистрация
 export async function registerUser(formData) {
@@ -79,6 +70,30 @@ export async function getListings(params = {}) {
   const query = new URLSearchParams(params).toString();
   const response = await fetch(`${API_URL}/listings?${query}`);
   return response.json();
+}
+
+export async function createListing(token, payload) {
+  const response = await fetch(`${API_URL}/listings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка создания объявления");
+  }
+
+  return data;
 }
 
 // 5. Жилые комплексы
