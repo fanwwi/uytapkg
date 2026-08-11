@@ -7,19 +7,20 @@ const types = [
     id: "standard",
     title: "Обычное",
     description: "Стандартное размещение объявления.",
+    icon: "✦",
   },
-
   {
     id: "vip",
     title: "VIP",
-    description: "Объявление получает более заметное размещение.",
+    description: "Объявление получает самое заметное размещение.",
+    icon: "♛",
   },
-
   {
     id: "urgent",
     title: "Срочное",
     description:
       "Показывает покупателям, что объект нужно продать или сдать быстрее.",
+    icon: "⚡",
   },
 ];
 
@@ -40,24 +41,32 @@ export default function StepListingType({
       </div>
 
       <div className={styles.typeGrid}>
-        {types.map((item) => (
-          <button
-            type="button"
-            key={item.id}
-            className={`${styles.typeCard} ${
-              form.listingType === item.id ? styles.selected : ""
-            }`}
-            onClick={() =>
-              updateForm({
-                listingType: item.id,
-              })
-            }
-          >
-            <strong>{item.title}</strong>
+        {types.map((item) => {
+          const isSelected = form.listingType === item.id;
 
-            <span>{item.description}</span>
-          </button>
-        ))}
+          return (
+            <button
+              type="button"
+              key={item.id}
+              className={`${styles.typeCard} ${
+                styles[`type-${item.id}`]
+              } ${isSelected ? styles.selected : ""}`}
+              onClick={() =>
+                updateForm({
+                  listingType: item.id,
+                })
+              }
+            >
+              <div className={styles.typeIcon}>{item.icon}</div>
+
+              <strong>{item.title}</strong>
+
+              <span>{item.description}</span>
+
+              <div className={styles.typeCheck}>{isSelected ? "✓" : ""}</div>
+            </button>
+          );
+        })}
       </div>
 
       <div className={styles.summary}>

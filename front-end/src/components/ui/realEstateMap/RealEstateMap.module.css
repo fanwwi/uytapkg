@@ -1,0 +1,118 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+
+  border: 1px solid #f0d7e3;
+  border-radius: 24px;
+
+  background: #fff;
+
+  box-shadow:
+    0 20px 60px rgba(255, 41, 144, 0.08),
+    0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Наш кастомный розовый маркер */
+
+.customMarker {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.marker {
+  position: relative;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50% 50% 50% 0;
+
+  background: linear-gradient(135deg, #ff2990, #ff006f);
+
+  transform: rotate(-45deg);
+
+  box-shadow: 0 8px 20px rgba(255, 0, 111, 0.35);
+}
+
+.markerDot {
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  transform: rotate(45deg);
+}
+
+/* Подсказка */
+
+.hint {
+  position: absolute;
+
+  left: 50%;
+  bottom: 18px;
+
+  z-index: 500;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border: 1px solid rgba(255, 41, 144, 0.12);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+  color: #555;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  backdrop-filter: blur(10px);
+
+  white-space: nowrap;
+}
+
+.hintDot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #ff2990;
+
+  box-shadow: 0 0 0 4px rgba(255, 41, 144, 0.12);
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 350px;
+    border-radius: 20px;
+  }
+
+  .hint {
+    bottom: 12px;
+
+    max-width: calc(100% - 24px);
+
+    font-size: 12px;
+  }
+}

@@ -727,3 +727,846 @@
     transition: none;
   }
 }
+
+.addressSearch {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.addressSearch > label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.searchInput {
+  position: relative;
+
+  width: 100%;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+
+  background: #fff;
+
+  border: 1px solid #ededed;
+  border-radius: 20px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.searchInput:focus-within {
+  border-color: #ff2990;
+
+  box-shadow: 0 10px 30px rgba(255, 41, 144, 0.12);
+}
+
+.searchInput input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 52px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #111;
+  font-size: 15px;
+}
+
+.searchInput input::placeholder {
+  color: #aaa;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 18px;
+
+  width: 22px;
+  height: 22px;
+
+  color: #ff2990;
+
+  pointer-events: none;
+}
+
+.searchRightIcon,
+.loader {
+  position: absolute;
+  right: 18px;
+
+  width: 20px;
+  height: 20px;
+
+  color: #999;
+
+  pointer-events: none;
+}
+
+.loader {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Подсказки */
+
+.suggestions {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+
+  z-index: 2000;
+
+  max-height: 320px;
+
+  overflow-y: auto;
+
+  padding: 8px;
+
+  background: #fff;
+
+  border: 1px solid #eee;
+  border-radius: 20px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.12),
+    0 5px 20px rgba(255, 41, 144, 0.06);
+
+  animation: suggestionsShow 0.2s ease;
+}
+
+/* Красивый тонкий scrollbar */
+
+.suggestions::-webkit-scrollbar {
+  width: 5px;
+}
+
+.suggestions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+  background: #ffc2dc;
+  border-radius: 999px;
+}
+
+.suggestions::-webkit-scrollbar-thumb:hover {
+  background: #ff2990;
+}
+
+.suggestion {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+
+  padding: 13px 12px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.suggestion:hover {
+  background: #fff0f7;
+
+  transform: translateX(2px);
+}
+
+.suggestion > svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
+  color: #ff2990;
+}
+
+.suggestion div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.suggestion strong {
+  color: #222;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.suggestion span {
+  overflow: hidden;
+
+  color: #999;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Координаты */
+
+.coordinatesPreview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 12px;
+  padding: 13px 16px;
+
+  border-radius: 14px;
+
+  background: #fff0f7;
+}
+
+.coordinatesPreview span {
+  color: #888;
+  font-size: 12px;
+}
+
+.coordinatesPreview strong {
+  color: #ff2990;
+  font-size: 13px;
+}
+
+.mapAttribution {
+  margin-top: 8px;
+
+  color: #aaa;
+
+  font-size: 11px;
+
+  text-align: right;
+}
+
+@keyframes suggestionsShow {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   PREMIUM LOCATION UI
+========================= */
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sectionTitle label {
+  margin: 0;
+  color: #111;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.sectionTitle span {
+  color: #8b8588;
+  font-size: 12px;
+}
+
+.sectionIcon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 20, 112, 0.18);
+  border-radius: 14px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 20, 112, 0.13),
+    rgba(255, 20, 112, 0.04)
+  );
+
+  color: #ff1478;
+
+  box-shadow:
+    0 8px 25px rgba(255, 20, 112, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.7);
+}
+
+.sectionIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* =========================
+   COUNTRY CARDS
+========================= */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.choiceCard {
+  position: relative;
+
+  min-height: 105px;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 18px;
+
+  border: 1px solid #e8e3e5;
+  border-radius: 20px;
+
+  background: linear-gradient(145deg, #ffffff, #faf9fa);
+
+  color: #111;
+
+  cursor: pointer;
+  text-align: left;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.035);
+
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.choiceCard:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(255, 20, 112, 0.35);
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.07),
+    0 8px 30px rgba(255, 20, 112, 0.08);
+}
+
+.choiceCard:active {
+  transform: translateY(-1px);
+}
+
+/* Иконка страны */
+
+.choiceIcon {
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  background: #151515;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.choiceIcon span {
+  font-size: 27px;
+  line-height: 1;
+}
+
+/* Контент */
+
+.choiceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  min-width: 0;
+}
+
+.choiceContent strong {
+  color: #111;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.choiceContent span {
+  color: #8a8587;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Check */
+
+.check {
+  position: absolute;
+
+  top: 13px;
+  right: 13px;
+
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+  color: #fff;
+
+  box-shadow: 0 5px 15px rgba(255, 20, 120, 0.35);
+
+  animation: checkPop 0.25s ease;
+}
+
+.check svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+
+@keyframes checkPop {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Selected */
+
+.choiceCard.selected {
+  border-color: #ff1478;
+
+  background: linear-gradient(145deg, #fff4f8 0%, #ffffff 75%);
+
+  box-shadow:
+    0 0 0 2px rgba(255, 20, 120, 0.08),
+    0 18px 45px rgba(255, 20, 120, 0.13);
+}
+
+.choiceCard.selected .choiceIcon {
+  background: linear-gradient(145deg, #171717, #050505);
+
+  transform: scale(1.04);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    0 0 0 3px rgba(255, 20, 120, 0.1);
+}
+
+.choiceCard.selected .choiceContent strong {
+  color: #ff1478;
+}
+
+/* =========================
+   SELECT WRAPPERS
+========================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* =========================
+   DARK PREMIUM SELECT
+========================= */
+
+.grid :global(button.select) {
+  border-color: #e5e1e3;
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.035);
+}
+
+.grid :global(button.select:hover) {
+  border-color: #ff1478;
+
+  box-shadow: 0 12px 35px rgba(255, 20, 120, 0.1);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .cards,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .choiceCard {
+    min-height: 92px;
+  }
+}
+
+@media (max-width: 480px) {
+  .choiceIcon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .choiceIcon span {
+    font-size: 23px;
+  }
+
+  .choiceContent strong {
+    font-size: 15px;
+  }
+}
+
+/* =========================
+   LISTING TYPES
+========================= */
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Общая карточка */
+
+.typeCard {
+  position: relative;
+
+  min-height: 175px;
+  padding: 24px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+
+  background: #fff;
+
+  text-align: left;
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.typeCard:hover {
+  transform: translateY(-4px);
+}
+
+/* =========================
+   ICON
+========================= */
+
+.typeIcon {
+  display: flex;
+
+  width: 42px;
+  height: 42px;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border-radius: 13px;
+
+  font-size: 21px;
+  font-weight: 800;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.typeCard:hover .typeIcon {
+  transform: scale(1.08);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.typeCard strong {
+  display: block;
+
+  font-size: 18px;
+  font-weight: 800;
+
+  margin-bottom: 7px;
+}
+
+.typeCard span {
+  display: block;
+
+  max-width: 220px;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #777;
+}
+
+/* =========================
+   STANDARD — LIGHT PINK
+========================= */
+
+.type-standard {
+  border-color: #f3d5e2;
+}
+
+.type-standard .typeIcon {
+  background: #ffe4ef;
+  color: #ff2990;
+
+  box-shadow: 0 8px 20px rgba(255, 41, 144, 0.12);
+}
+
+.type-standard strong {
+  color: #d91c79;
+}
+
+.type-standard:hover {
+  border-color: #ff9ac4;
+
+  box-shadow:
+    0 15px 35px rgba(255, 41, 144, 0.13),
+    0 0 0 1px rgba(255, 41, 144, 0.08);
+}
+
+/* =========================
+   VIP — GOLD
+========================= */
+
+.type-vip {
+  border-color: #ead9a4;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 204, 70, 0.12),
+      transparent 45%
+    ),
+    #fff;
+}
+
+.type-vip .typeIcon {
+  background: linear-gradient(135deg, #fff1a8, #f6c945);
+
+  color: #8a6500;
+
+  box-shadow: 0 8px 22px rgba(218, 168, 35, 0.2);
+}
+
+.type-vip strong {
+  color: #b17d00;
+}
+
+.type-vip:hover {
+  border-color: #e5b52e;
+
+  box-shadow:
+    0 15px 40px rgba(220, 170, 30, 0.18),
+    0 0 0 1px rgba(220, 170, 30, 0.08);
+}
+
+/* =========================
+   URGENT — RED
+========================= */
+
+.type-urgent {
+  border-color: #f0cccc;
+
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 60, 60, 0.1), transparent 45%),
+    #fff;
+}
+
+.type-urgent .typeIcon {
+  background: linear-gradient(135deg, #ffe1e1, #ffb2b2);
+
+  color: #d92323;
+
+  box-shadow: 0 8px 22px rgba(220, 35, 35, 0.16);
+}
+
+.type-urgent strong {
+  color: #d92323;
+}
+
+.type-urgent:hover {
+  border-color: #ed7777;
+
+  box-shadow:
+    0 15px 40px rgba(220, 35, 35, 0.15),
+    0 0 0 1px rgba(220, 35, 35, 0.07);
+}
+
+/* =========================
+   SELECTED
+========================= */
+
+.typeCard.selected {
+  transform: translateY(-4px);
+}
+
+/* обычное */
+
+.type-standard.selected {
+  border-color: #ff2990;
+
+  background: linear-gradient(145deg, #fff0f7, #fff);
+
+  box-shadow:
+    0 15px 40px rgba(255, 41, 144, 0.2),
+    0 0 0 2px rgba(255, 41, 144, 0.08);
+}
+
+/* VIP */
+
+.type-vip.selected {
+  border-color: #e4b52e;
+
+  background: linear-gradient(145deg, #fff8d9, #fff);
+
+  box-shadow:
+    0 15px 40px rgba(220, 170, 30, 0.24),
+    0 0 0 2px rgba(220, 170, 30, 0.1);
+}
+
+/* срочное */
+
+.type-urgent.selected {
+  border-color: #e22d2d;
+
+  background: linear-gradient(145deg, #fff0f0, #fff);
+
+  box-shadow:
+    0 15px 40px rgba(220, 35, 35, 0.2),
+    0 0 0 2px rgba(220, 35, 35, 0.09);
+}
+
+/* =========================
+   CHECK
+========================= */
+
+.typeCheck {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  display: flex;
+
+  width: 25px;
+  height: 25px;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  background: #f3f3f3;
+  color: transparent;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.type-standard.selected .typeCheck {
+  background: #ff2990;
+  color: #fff;
+}
+
+.type-vip.selected .typeCheck {
+  background: #e1ae1c;
+  color: #fff;
+}
+
+.type-urgent.selected .typeCheck {
+  background: #df2929;
+  color: #fff;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+  .typeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .typeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .typeCard {
+    min-height: 150px;
+  }
+}

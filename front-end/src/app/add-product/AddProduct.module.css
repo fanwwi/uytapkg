@@ -1,20 +1,83 @@
 .page {
+  position: relative;
   min-height: 100vh;
   padding: 50px 20px 80px;
-  background: #f7f8f7;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(255, 0, 123, 0.22) 0%,
+      rgba(255, 0, 123, 0.08) 22%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(180, 0, 80, 0.2) 0%,
+      rgba(120, 0, 60, 0.08) 25%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 41, 144, 0.08) 0%,
+      transparent 35%
+    ),
+    linear-gradient(135deg, #050505 0%, #0b080a 35%, #10080d 65%, #050505 100%);
+}
+
+/* Маленький декоративный glow на фоне */
+
+.page::before {
+  position: absolute;
+  top: -180px;
+  left: -180px;
+
+  width: 450px;
+  height: 450px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 0, 123, 0.08);
+
+  filter: blur(100px);
+
+  pointer-events: none;
+}
+
+.page::after {
+  position: absolute;
+  right: -200px;
+  bottom: -200px;
+
+  width: 500px;
+  height: 500px;
+
+  border-radius: 50%;
+
+  background: rgba(190, 0, 90, 0.08);
+
+  filter: blur(120px);
+
+  pointer-events: none;
 }
 
 .container {
+  position: relative;
+  z-index: 1;
+
   width: min(100%, 900px);
   margin: 0 auto;
 }
 
 .card {
   background: #fff;
-  border: 1px solid #e8e8e8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 36px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 0 80px rgba(255, 0, 123, 0.04);
 }
 
 @media (max-width: 768px) {

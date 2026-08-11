@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { MapPin, Heart, Edit, Eye, Trash2 } from "lucide-react";
+import { MapPin, Heart, Edit, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import styles from "./Ads.module.css";
 
@@ -16,7 +17,6 @@ const listings = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
     status: "Активно",
   },
-
   {
     id: 2,
     title: "Современный коттедж с бассейном",
@@ -27,7 +27,6 @@ const listings = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
     status: "Активно",
   },
-
   {
     id: 3,
     title: "Участок 10 соток возле пляжа",
@@ -41,23 +40,35 @@ const listings = [
 ];
 
 export default function Ads() {
+  const router = useRouter();
+
   return (
     <main className={styles.page}>
       <div className={styles.header}>
         <div>
           <h1>Мои объявления</h1>
-
           <p>Управляйте своими объектами недвижимости</p>
         </div>
 
-        <button className={styles.add}>+ Добавить объявление</button>
+        <button
+          type="button"
+          className={styles.add}
+          onClick={() => router.push("/add-product")}
+        >
+          + Добавить объявление
+        </button>
       </div>
 
       <section className={styles.grid}>
         {listings.map((item) => (
           <div key={item.id} className={styles.card}>
             <div className={styles.image}>
-              <Image src={item.image} fill alt={item.title} />
+              <Image
+                src={item.image}
+                fill
+                alt={item.title}
+                sizes="(max-width: 768px) 100vw, 400px"
+              />
 
               <span
                 className={
@@ -73,13 +84,11 @@ export default function Ads() {
 
               <div className={styles.location}>
                 <MapPin />
-
                 {item.location}
               </div>
 
               <div className={styles.info}>
                 <span>{item.type}</span>
-
                 <strong>{item.price}</strong>
               </div>
 
@@ -91,12 +100,12 @@ export default function Ads() {
               </div>
 
               <div className={styles.actions}>
-                <button>
+                <button type="button">
                   <Edit />
                   Изменить
                 </button>
 
-                <button className={styles.delete}>
+                <button type="button" className={styles.delete}>
                   <Trash2 />
                   Удалить
                 </button>

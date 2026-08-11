@@ -136,7 +136,7 @@ export default function Header() {
         <div className={styles.actions}>
           <button
             className={styles.add}
-            onClick={() => protectedRoute("/create")}
+            onClick={() => protectedRoute("/add-product")}
           >
             <PlusCircle />
             <span>Добавить объявление</span>
@@ -144,7 +144,7 @@ export default function Header() {
 
           <button
             className={styles.free}
-            onClick={() => protectedRoute("/create")}
+            onClick={() => protectedRoute("/add-product")}
           >
             <Flame />
             <span>Разместить за 0 сом</span>

@@ -581,7 +581,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
             }`}
             onClick={() => selectCountry("kyrgyzstan")}
           >
-            <strong>🇰🇬 Кыргызстан</strong>
+            <strong>Кыргызстан</strong>
 
             <span>Область или Бишкек</span>
           </button>
@@ -593,7 +593,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
             }`}
             onClick={() => selectCountry("turkey")}
           >
-            <strong>🇹🇷 Турция</strong>
+            <strong>Турция</strong>
 
             <span>Город и район</span>
           </button>
