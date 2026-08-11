@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Home, Building2, MapPin } from "lucide-react";
 
 import styles from "./SearchPage.module.css";
+import SearchFilter from "./SearchFilter/SerachFilter";
 
 export default function SearchPage() {
   return (
@@ -42,6 +43,12 @@ export default function SearchPage() {
           Тысячи квартир, домов и коммерческих объектов. Используйте умные
           фильтры UyTap и найдите недвижимость мечты быстрее.
         </p>
+
+        <SearchFilter
+          onSearch={(filters) => {
+            console.log("Отправляем на backend:", filters);
+          }}
+        />
       </motion.div>
     </section>
   );

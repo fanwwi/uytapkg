@@ -1,0 +1,704 @@
+.step {
+  width: 100%;
+  animation: stepEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  text-align: left;
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  margin-bottom: 38px;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 14px;
+  padding: 7px 12px;
+
+  border: 1px solid rgba(255, 20, 120, 0.12);
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 20, 120, 0.1),
+    rgba(255, 20, 120, 0.04)
+  );
+
+  color: #e5006d;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.stepDot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+
+  box-shadow: 0 0 0 4px rgba(255, 20, 120, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+
+  color: #111;
+
+  font-size: 36px;
+  line-height: 1.12;
+
+  letter-spacing: -0.035em;
+
+  color: #ff1478;
+}
+
+.header p {
+  max-width: 650px;
+
+  margin: 12px 0 0;
+
+  color: #777;
+
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.sectionIcon {
+  display: flex;
+
+  width: 42px;
+  height: 42px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 20, 120, 0.15);
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.9),
+      transparent 40%
+    ),
+    linear-gradient(145deg, rgba(255, 20, 120, 0.14), rgba(255, 20, 120, 0.04));
+
+  color: #ff1478;
+
+  box-shadow:
+    0 8px 25px rgba(255, 20, 120, 0.08),
+    inset 0 0 20px rgba(255, 255, 255, 0.7);
+}
+
+.sectionTitle > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.sectionTitle label {
+  margin: 0;
+
+  color: #181818;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.sectionTitle span {
+  color: #999;
+
+  font-size: 12px;
+}
+
+/* =========================
+   COUNTRY CARDS
+========================= */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.choiceCard {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 112px;
+
+  padding: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid #e9e5e7;
+  border-radius: 21px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 20, 120, 0.035),
+      transparent 40%
+    ),
+    linear-gradient(145deg, #ffffff, #faf9fa);
+
+  color: #111;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.choiceCard::before {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 3px;
+  height: 100%;
+
+  background: linear-gradient(180deg, #ff1478, #ff63aa);
+
+  opacity: 0;
+
+  content: "";
+
+  transition: opacity 0.25s ease;
+}
+
+.choiceCard:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(255, 20, 120, 0.28);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.07),
+    0 10px 35px rgba(255, 20, 120, 0.09);
+}
+
+.choiceCard:hover::before {
+  opacity: 1;
+}
+
+.choiceCard:active {
+  transform: translateY(-1px);
+}
+
+/* =========================
+   COUNTRY ICON
+========================= */
+
+.choiceIcon {
+  display: flex;
+
+  width: 54px;
+  height: 54px;
+
+  flex-shrink: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 17px;
+
+  background: #171717;
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.choiceIcon span {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.choiceCard:hover .choiceIcon {
+  transform: scale(1.05);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.choiceContent {
+  display: flex;
+
+  min-width: 0;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-left: 14px;
+}
+
+.choiceContent strong {
+  color: #161616;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+.choiceContent span {
+  color: #8c8789;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* =========================
+   ARROW
+========================= */
+
+.cardArrow {
+  position: absolute;
+
+  right: 17px;
+  bottom: 17px;
+
+  color: #c6c1c3;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.choiceCard:hover .cardArrow {
+  color: #ff1478;
+
+  transform: translateX(2px);
+}
+
+/* =========================
+   CHECK
+========================= */
+
+.check {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  display: flex;
+
+  width: 27px;
+  height: 27px;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #ff1478, #ff4a9c);
+
+  color: #fff;
+
+  box-shadow:
+    0 6px 16px rgba(255, 20, 120, 0.3),
+    0 0 0 4px rgba(255, 20, 120, 0.08);
+
+  animation: checkPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes checkPop {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   SELECTED COUNTRY
+========================= */
+
+.choiceCard.selected {
+  border-color: #ff1478;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgb(255, 20, 122),
+      transparent 42%
+    ),
+    linear-gradient(145deg, #fff0f7, #ffffff 75%);
+
+  box-shadow:
+    0 0 0 2px rgba(255, 20, 120, 0.07),
+    0 18px 45px rgba(255, 20, 120, 0.13);
+}
+
+.choiceCard.selected::before {
+  opacity: 1;
+}
+
+.choiceCard.selected .choiceIcon {
+  transform: scale(1.04);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    0 0 0 4px rgba(255, 20, 120, 0.09);
+}
+
+.choiceCard.selected .choiceContent strong {
+  color: #e5006d;
+}
+
+.choiceCard.selected .cardArrow {
+  color: #ff1478;
+}
+
+/* =========================
+   SELECTS
+========================= */
+
+.locationFields {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+
+  margin-top: 18px;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+/* CustomSelect */
+
+.grid :global(button.select) {
+  min-height: 54px;
+
+  border: 1px solid #e5e1e3;
+  border-radius: 15px;
+
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+
+  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.grid :global(button.select:hover) {
+  border-color: rgba(255, 20, 120, 0.45);
+
+  box-shadow: 0 10px 30px rgba(255, 20, 120, 0.09);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   LOCATION READY
+========================= */
+
+.locationReady {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 26px;
+  padding: 14px 16px;
+
+  border: 1px solid rgba(255, 20, 120, 0.12);
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 20, 120, 0.08),
+    rgba(255, 20, 120, 0.025)
+  );
+
+  animation: readyEnter 0.3s ease;
+}
+
+.readyIcon {
+  display: flex;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #ff1478;
+
+  color: #fff;
+
+  box-shadow: 0 7px 18px rgba(255, 20, 120, 0.22);
+}
+
+.locationReady > div:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.locationReady strong {
+  color: #222;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.locationReady span {
+  color: #a0788a;
+
+  font-size: 12px;
+}
+
+@keyframes readyEnter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 34px;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 52px;
+
+  gap: 8px;
+
+  padding: 0 23px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #ff007b 0%, #ff1478 50%, #ff3d99 100%);
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(255, 20, 120, 0.23),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.primary:hover:not(:disabled) {
+  filter: brightness(1.04);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 32px rgba(255, 20, 120, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.42;
+
+  box-shadow: none;
+
+  filter: grayscale(0.15);
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.choiceCard:focus-visible,
+.primary:focus-visible {
+  outline: 3px solid rgba(255, 20, 120, 0.18);
+  outline-offset: 3px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .cards,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .choiceCard {
+    min-height: 96px;
+  }
+
+  .header h1 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .choiceCard {
+    min-height: 92px;
+
+    padding: 16px;
+  }
+
+  .choiceIcon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .choiceIcon span {
+    font-size: 23px;
+  }
+
+  .choiceContent {
+    margin-left: 11px;
+  }
+
+  .choiceContent strong {
+    font-size: 15px;
+  }
+
+  .locationReady {
+    align-items: flex-start;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    margin-top: 28px;
+  }
+
+  .primary {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .choiceCard,
+  .primary,
+  .check,
+  .locationReady {
+    animation: none;
+    transition: none;
+  }
+}

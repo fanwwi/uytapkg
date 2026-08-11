@@ -1,0 +1,743 @@
+.step {
+  width: 100%;
+  animation: stepEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  text-align: left;
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  margin-bottom: 38px;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 14px;
+  padding: 8px 13px;
+
+  border: 1px solid rgba(255, 20, 120, 0.12);
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #fff0f7, #ffe2ef);
+
+  color: #ff1478;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+
+  box-shadow: 0 5px 18px rgba(255, 20, 120, 0.08);
+}
+
+.stepDot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+
+  box-shadow:
+    0 0 0 4px rgba(255, 20, 120, 0.1),
+    0 0 12px rgba(255, 20, 120, 0.4);
+}
+
+.header h1 {
+  margin: 0;
+
+  color: #ff007b;
+
+  font-size: 36px;
+  line-height: 1.1;
+
+  letter-spacing: -0.035em;
+}
+
+.header p {
+  max-width: 650px;
+
+  margin: 12px 0 0;
+
+  color: #686164;
+
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section {
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  margin-bottom: 13px;
+}
+
+.sectionTitle span {
+  color: #181517;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.sectionTitle small {
+  color: #a19a9d;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* =========================
+   DEAL CARDS
+========================= */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 17px;
+}
+
+.choiceCard {
+  position: relative;
+
+  min-height: 185px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid #e8e2e5;
+  border-radius: 23px;
+
+  background: linear-gradient(145deg, #ffffff 0%, #fdfbfc 100%);
+
+  color: #111;
+
+  cursor: pointer;
+  text-align: left;
+
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.035);
+
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.28s ease,
+    background 0.28s ease;
+}
+
+.choiceCard:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(255, 20, 120, 0.35);
+
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.07),
+    0 10px 30px rgba(255, 20, 120, 0.1);
+}
+
+.choiceCard:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* subtle decorative pink glow */
+
+.cardGlow {
+  position: absolute;
+
+  right: -55px;
+  bottom: -70px;
+
+  width: 170px;
+  height: 170px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 20, 120, 0.05);
+
+  filter: blur(10px);
+
+  transition:
+    transform 0.4s ease,
+    background 0.3s ease;
+}
+
+.choiceCard:hover .cardGlow {
+  transform: scale(1.25);
+
+  background: rgba(255, 20, 120, 0.08);
+}
+
+/* =========================
+   CARD TOP
+========================= */
+
+.cardTop {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  z-index: 2;
+}
+
+.iconBox {
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: linear-gradient(145deg, #fff0f7, #ffe0ec);
+
+  color: #ff1478;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 20, 120, 0.08),
+    0 8px 20px rgba(255, 20, 120, 0.08);
+
+  transition:
+    transform 0.28s ease,
+    background 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.iconBox svg {
+  width: 26px;
+  height: 26px;
+
+  stroke-width: 2.2;
+}
+
+.choiceCard:hover .iconBox {
+  transform: scale(1.06) rotate(-3deg);
+
+  background: linear-gradient(145deg, #ffedf6, #ffd8e8);
+
+  box-shadow: 0 10px 25px rgba(255, 20, 120, 0.14);
+}
+
+/* =========================
+   CHECK
+========================= */
+
+.check {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  box-shadow: 0 6px 18px rgba(255, 20, 120, 0.3);
+
+  animation: checkPop 0.25s ease;
+}
+
+@keyframes checkPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   CARD CONTENT
+========================= */
+
+.cardContent {
+  position: relative;
+
+  z-index: 2;
+}
+
+.choiceCard strong {
+  display: block;
+
+  color: #ff1478;
+
+  font-size: 19px;
+  font-weight: 850;
+
+  letter-spacing: -0.02em;
+}
+
+.choiceCard span {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #858084;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================
+   SELECTED CARD
+========================= */
+
+.choiceCard.selected {
+  border-color: #ff1478;
+
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 20, 120, 0.08),
+      transparent 34%
+    ),
+    linear-gradient(145deg, #fff0f7 0%, #ffffff 78%);
+
+  box-shadow:
+    0 0 0 2px rgba(255, 20, 120, 0.07),
+    0 18px 45px rgba(255, 20, 120, 0.14);
+}
+
+.choiceCard.selected .iconBox {
+  background: linear-gradient(145deg, #ff1478, #ff4a9b);
+
+  color: #fff;
+
+  box-shadow:
+    0 10px 25px rgba(255, 20, 120, 0.28),
+    0 0 0 4px rgba(255, 20, 120, 0.08);
+}
+
+.choiceCard.selected .cardGlow {
+  background: rgba(255, 20, 120, 0.12);
+}
+
+/* =========================
+   RENTAL PERIOD
+========================= */
+
+.field {
+  margin-top: 32px;
+
+  animation: periodEnter 0.3s ease;
+}
+
+@keyframes periodEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.periodHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 13px;
+}
+
+.periodHeader > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.periodHeader strong {
+  color: #181517;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.periodHeader span {
+  color: #9b9497;
+
+  font-size: 15px;
+}
+
+.periodIcon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #fff0f7;
+  color: #ff1478;
+
+  box-shadow: inset 0 0 0 1px rgba(255, 20, 120, 0.08);
+}
+
+.periodIcon svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* =========================
+   PERIOD GRID
+========================= */
+
+.periodGrid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.smallChoice {
+  position: relative;
+
+  min-height: 76px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 10px;
+
+  border: 1px solid #e8e2e5;
+  border-radius: 16px;
+
+  background: #fff;
+
+  color: #5f595c;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.22s ease,
+    color 0.22s ease;
+}
+
+.smallChoice:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(255, 20, 120, 0.35);
+
+  background: #fff8fb;
+
+  color: #ff1478;
+
+  box-shadow: 0 8px 22px rgba(255, 20, 120, 0.08);
+}
+
+.smallChoice:active {
+  transform: translateY(0);
+}
+
+.smallIcon {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #fff2f7;
+  color: #ff4a96;
+
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease;
+}
+
+.smallIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.smallLabel {
+  margin: 0 !important;
+
+  color: inherit !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+.smallChoice.selected {
+  border-color: #ff1478;
+
+  background: linear-gradient(145deg, #fff0f7, #ffffff);
+
+  color: #ff1478;
+
+  box-shadow:
+    0 0 0 2px rgba(255, 20, 120, 0.06),
+    0 9px 24px rgba(255, 20, 120, 0.1);
+}
+
+.smallChoice.selected .smallIcon {
+  background: #ff1478;
+  color: #fff;
+
+  transform: scale(1.05);
+
+  box-shadow: 0 6px 15px rgba(255, 20, 120, 0.25);
+}
+
+.smallCheck {
+  position: absolute;
+
+  top: 7px;
+  right: 7px;
+
+  width: 17px;
+  height: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+  color: #fff;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 38px;
+}
+
+.primary,
+.secondary {
+  min-height: 52px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.primary {
+  min-width: 155px;
+
+  gap: 12px;
+
+  border: 0;
+
+  background: linear-gradient(135deg, #ff007b, #ff3b98);
+
+  color: #fff;
+
+  box-shadow: 0 10px 25px rgba(255, 0, 123, 0.23);
+}
+
+.primaryArrow {
+  font-size: 19px;
+  line-height: 1;
+
+  transition: transform 0.22s ease;
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow: 0 14px 32px rgba(255, 0, 123, 0.3);
+}
+
+.primary:hover:not(:disabled) .primaryArrow {
+  transform: translateX(3px);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.4;
+
+  box-shadow: none;
+}
+
+.secondary {
+  padding: 0 24px;
+
+  border: 1px solid #e1dadd;
+
+  background: #fff;
+
+  color: #575154;
+}
+
+.secondary:hover {
+  transform: translateY(-1px);
+
+  border-color: #ff9fc5;
+
+  background: #fff8fb;
+
+  color: #ff1478;
+
+  box-shadow: 0 8px 20px rgba(255, 20, 120, 0.07);
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.choiceCard:focus-visible,
+.smallChoice:focus-visible,
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid rgba(255, 20, 120, 0.18);
+  outline-offset: 3px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .periodGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .choiceCard {
+    min-height: 165px;
+  }
+
+  .sectionTitle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .primary,
+  .secondary {
+    width: 100%;
+  }
+
+  .primary {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .choiceCard,
+  .smallChoice,
+  .primary,
+  .secondary,
+  .iconBox,
+  .smallIcon,
+  .cardGlow {
+    animation: none;
+    transition: none;
+  }
+}

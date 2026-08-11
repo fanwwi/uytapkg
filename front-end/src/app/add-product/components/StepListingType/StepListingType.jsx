@@ -34,6 +34,27 @@ const types = [
   },
 ];
 
+const regionNames = {
+  bishkek: "Бишкек",
+  chui: "Чуйская область",
+  osh: "Ошская область",
+  jalalAbad: "Джалал-Абадская область",
+  issykKul: "Иссык-Кульская область",
+  naryn: "Нарынская область",
+  talas: "Таласская область",
+  batken: "Баткенская область",
+  oshCity: "Ош",
+
+  istanbul: "Стамбул",
+  ankara: "Анкара",
+  izmir: "Измир",
+  antalya: "Анталья",
+  bursa: "Бурса",
+  adana: "Адана",
+  gaziantep: "Газиантеп",
+  konya: "Конья",
+};
+
 const categoryLabels = {
   apartment: "Квартира",
   house: "Дом",
@@ -149,7 +170,7 @@ export default function StepListingType({
 
           <div className={styles.summaryItem}>
             <span>Регион</span>
-            <strong>{form.region || "Не указан"}</strong>
+            <strong>{regionNames[form.region] || "Не указан"}</strong>
           </div>
 
           <div className={styles.summaryItem}>
