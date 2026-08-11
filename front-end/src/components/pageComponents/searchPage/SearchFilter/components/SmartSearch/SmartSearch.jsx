@@ -5,6 +5,8 @@ import { Mic, MicOff, Sparkles, Search, Loader2 } from "lucide-react";
 
 import styles from "./SmartSearch.module.css";
 
+const SAFE_MAX_TEXT_LENGTH = 2000;
+
 export default function SmartSearch({ form, updateForm, onNext }) {
   const [text, setText] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -84,8 +86,15 @@ export default function SmartSearch({ form, updateForm, onNext }) {
   }
 
   async function handleSearch() {
-    if (!text.trim()) {
+    const trimmedText = text.trim();
+
+    if (!trimmedText) {
       setError("Опишите, какую недвижимость вы ищете.");
+      return;
+    }
+
+    if (trimmedText.length > SAFE_MAX_TEXT_LENGTH) {
+      setError("Запрос слишком длинный. Сократите его до 2000 символов.");
       return;
     }
 
@@ -99,53 +108,30 @@ export default function SmartSearch({ form, updateForm, onNext }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          query: text,
+          query: trimmedText,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Smart search failed");
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data?.success) {
+        throw new Error(data?.message || "Smart search failed");
       }
 
-      const data = await response.json();
+      if (data.filters && typeof data.filters === "object") {
+        const safeFilters = Object.fromEntries(
+          Object.entries(data.filters).filter(([, value]) => value !== null && value !== undefined && value !== "")
+        );
 
-      console.log("🤖 AI RESPONSE:", data);
-
-      /*
-        AI должен вернуть примерно:
-
-        {
-          "filters": {
-            "country": "kyrgyzstan",
-            "region": "bishkek",
-            "dealType": "sale",
-            "category": "apartment",
-            "priceFrom": "50000",
-            "priceTo": "80000",
-            "areaFrom": "50",
-            "areaTo": "80",
-            "rooms": "2",
-            "condition": "Евроремонт"
-          }
-        }
-      */
-
-      if (data.filters) {
-        updateForm(data.filters);
-      }
-
-      /*
-        Здесь можно сразу отправить фильтры
-        в поиск объявлений.
-      */
-
-      if (data.filters) {
+        updateForm(safeFilters);
+        setError("");
         onNext?.();
+      } else {
+        setError("AI не вернул подходящие параметры поиска.");
       }
     } catch (err) {
-      console.error(err);
-
-      setError("Не удалось выполнить умный поиск. Попробуйте ещё раз.");
+      console.error("Smart search error:", err);
+      setError(err instanceof Error ? err.message : "Не удалось выполнить умный поиск. Попробуйте ещё раз.");
     } finally {
       setIsSearching(false);
     }

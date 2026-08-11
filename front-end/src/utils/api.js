@@ -1,4 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = (() => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_API_URL;
+  if (envUrl) {
+    return envUrl.replace(/\/$/, "");
+  }
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+    return "http://localhost:5000/api";
+  }
+  return "http://localhost:5000/api";
+})();
 
 // 1. Регистрация
 export async function registerUser(formData) {
@@ -10,20 +19,24 @@ export async function registerUser(formData) {
     body: JSON.stringify(formData),
   });
 
-  const data = await response.json();
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
   if (!response.ok || !data.success) {
-    const errorMsg = data.errors
+    const errorMsg = Array.isArray(data.errors)
       ? data.errors.join(", ")
       : data.message || "Ошибка при регистрации";
-
     throw new Error(errorMsg);
   }
 
   return data;
 }
 
-// 2. Вход
+// 2. Вход по Email / Телефону
 export async function loginUser(credentials) {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -42,103 +55,72 @@ export async function loginUser(credentials) {
   return data;
 }
 
-// 3. OTP
+// 3. Отправка и проверка WhatsApp / SMS кода
 export async function sendOtpCode(phone) {
   const response = await fetch(`${API_URL}/auth/send-otp`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ phone }),
   });
-
   return response.json();
 }
 
 export async function verifyOtpCode(phone, code) {
   const response = await fetch(`${API_URL}/auth/verify-otp`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ phone, code }),
   });
-
   return response.json();
 }
 
-// 4. Объявления
+// 4. Поиск и получение объявлений
 export async function getListings(params = {}) {
   const query = new URLSearchParams(params).toString();
-
   const response = await fetch(`${API_URL}/listings?${query}`);
-
   return response.json();
 }
 
-// 5. ЖК
+// 5. Жилые комплексы
 export async function getComplexes() {
   const response = await fetch(`${API_URL}/complexes`);
-
   return response.json();
 }
 
-// 6. AI поиск
+// 6. Умный AI поиск
 export async function aiSearchQuery(prompt) {
   const response = await fetch(`${API_URL}/ai/search`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
   });
-
   return response.json();
 }
 
-// 7. Генерация описания
 export async function generateDescription(details) {
   const response = await fetch(`${API_URL}/ai/generate-description`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ details }),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка генерации описания");
+  }
+  return data.generatedText;
+}
+
+// 7. Профиль
+export async function getMe(token) {
+  const response = await fetch(`${API_URL}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const data = await response.json();
 
-  if (!response.ok || !data.success) {
-    throw new Error(data.message || "Ошибка генерации описания");
-  }
-
-  return data.generatedText;
-}
-
-// Получить текущего пользователя
-export async function getMe(token) {
-  const headers = {};
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${API_URL}/auth/me`, {
-    method: "GET",
-    headers,
-    credentials: "include",
-  });
-
-  const text = await response.text();
-  let data;
-
-  try {
-    data = JSON.parse(text);
-  } catch {
-    console.error("GET ME RESPONSE:", text);
-    throw new Error(`Сервер вернул не JSON. HTTP ${response.status}`);
-  }
-
-  if (!response.ok || !data.success) {
+  if (!response.ok) {
     throw new Error(data.message || "Ошибка получения пользователя");
   }
 
@@ -150,26 +132,20 @@ export async function updateMe(token, payload) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
+      Authorization: `Bearer ${token}`,
     },
-    credentials: "include",
     body: JSON.stringify(payload),
   });
 
-  const text = await response.text();
-  let data;
-
+  let data = {};
   try {
-    data = JSON.parse(text);
+    data = await response.json();
   } catch {
-    console.error("UPDATE ME RESPONSE:", text);
-    throw new Error(`Сервер вернул не JSON. HTTP ${response.status}`);
+    data = {};
   }
 
   if (!response.ok || !data.success) {
-    throw new Error(
-      data.errors?.join(", ") || data.message || "Ошибка обновления профиля",
-    );
+    throw new Error(data.message || "Ошибка обновления профиля");
   }
 
   return data.user;
