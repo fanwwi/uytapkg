@@ -15,10 +15,46 @@ import { useRouter } from "next/navigation";
 import styles from "./RealtorForm.module.css";
 import { registerUser } from "@/utils/api";
 
+function formatPhone(value) {
+  // Оставляем только цифры
+  let digits = value.replace(/\D/g, "");
+
+  // Если пользователь вставил номер вместе с кодом 996
+  if (digits.startsWith("996")) {
+    digits = digits.slice(3);
+  }
+
+  // Максимум 9 цифр после +996
+  digits = digits.slice(0, 9);
+
+  let formatted = "+996";
+
+  if (digits.length > 0) {
+    formatted += ` ${digits.slice(0, 3)}`;
+  }
+
+  if (digits.length > 3) {
+    formatted += ` ${digits.slice(3, 6)}`;
+  }
+
+  if (digits.length > 6) {
+    formatted += ` ${digits.slice(6, 9)}`;
+  }
+
+  return formatted;
+}
+
+function normalizePhone(phone) {
+  const digits = phone.replace(/\D/g, "");
+
+  return `+996${digits.slice(-9)}`;
+}
+
 export default function RealtorForm() {
   const router = useRouter();
+
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+996 ");
   const [email, setEmail] = useState("");
   const [agencyName, setAgencyName] = useState("");
   const [about, setAbout] = useState("");
@@ -29,16 +65,31 @@ export default function RealtorForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
+  const handlePhoneChange = (value) => {
+    setPhone(formatPhone(value));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
+
+    const normalizedPhone = normalizePhone(phone);
+    const phoneDigits = normalizedPhone.replace(/\D/g, "");
+
+    // +996 + 9 цифр = 12 цифр
+    if (phoneDigits.length !== 12) {
+      setError("Введите полный номер телефона в формате +996 XXX XXX XXX");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const data = await registerUser({
         accountType: "realtor",
         fullName,
-        phone,
+        phone: normalizedPhone,
         email,
         agencyName,
         about,
@@ -51,6 +102,7 @@ export default function RealtorForm() {
       }
 
       setSuccess(true);
+
       setTimeout(() => {
         router.push("/success-register");
       }, 1200);
@@ -75,6 +127,7 @@ export default function RealtorForm() {
       <div className={styles.grid}>
         <div className={styles.inputBox}>
           <FileText />
+
           <input
             placeholder="ФИО"
             value={fullName}
@@ -85,17 +138,20 @@ export default function RealtorForm() {
 
         <div className={styles.inputBox}>
           <Phone />
+
           <input
-            placeholder="Номер телефона"
+            placeholder="+996 000 000 000"
             type="tel"
+            inputMode="numeric"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => handlePhoneChange(e.target.value)}
             required
           />
         </div>
 
         <div className={styles.inputBox}>
           <Mail />
+
           <input
             type="email"
             placeholder="Email"
@@ -107,6 +163,7 @@ export default function RealtorForm() {
 
         <div className={styles.inputBox}>
           <Building2 />
+
           <input
             placeholder="Название агентства (опционально)"
             value={agencyName}
@@ -114,9 +171,9 @@ export default function RealtorForm() {
           />
         </div>
 
-        {/* Пароль */}
         <div className={styles.inputBox}>
           <Lock />
+
           <input
             placeholder="Пароль"
             type={showPassword ? "text" : "password"}
@@ -124,6 +181,7 @@ export default function RealtorForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
           <button
             type="button"
             className={styles.eye}
@@ -142,14 +200,28 @@ export default function RealtorForm() {
       />
 
       {error && (
-        <div style={{ color: "#ef4444", fontSize: "14px" }}>
+        <div
+          style={{
+            color: "#ef4444",
+            fontSize: "14px",
+          }}
+        >
           ⚠️ {error}
         </div>
       )}
 
       {success && (
-        <div style={{ color: "#10b981", fontSize: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
-          <CheckCircle2 size={18} /> Профиль риэлтора создан! Перенаправление...
+        <div
+          style={{
+            color: "#10b981",
+            fontSize: "14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+          }}
+        >
+          <CheckCircle2 size={18} />
+          Профиль риэлтора создан! Перенаправление...
         </div>
       )}
 

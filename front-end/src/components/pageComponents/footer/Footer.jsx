@@ -63,7 +63,7 @@ export default function Footer() {
 
             <div>
               <Mail />
-              support@uytap.kg
+              uytap.official@gmail.com
             </div>
 
             <div>
