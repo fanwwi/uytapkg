@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 
-import StepProgress from "./components/StepProgress";
-import StepLocation from "./components/StepLocation";
-import StepDeal from "./components/StepDeal";
-import StepCategory from "./components/StepCategory";
-import StepAddress from "./components/StepAddress";
-import StepListingType from "./components/StepListingType";
+import StepProgress from "./components/StepProgress/StepProgress";
+import StepLocation from "./components/StepLocation/StepLocation";
+import StepDeal from "./components/StepDeal/StepDeal";
+import StepCategory from "./components/StepCategory/StepCategory";
+import StepAddress from "./components/StepAddress/StepAddress";
+import StepListingType from "./components/StepListingType/StepListingType";
 
 import styles from "./AddProduct.module.css";
 

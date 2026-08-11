@@ -1,7 +1,9 @@
 "use client";
 
+import { MapPin, Globe2, Building2, Check, ChevronRight } from "lucide-react";
+
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
-import styles from "./steps.module.css";
+import styles from "./StepLocation.module.css";
 
 const locations = {
   kyrgyzstan: {
@@ -535,16 +537,31 @@ export default function StepLocation({ form, updateForm, onNext }) {
   return (
     <div className={styles.step}>
       <div className={styles.header}>
-        <span>Шаг 1 из 5</span>
+        <div className={styles.stepBadge}>
+          <span className={styles.stepDot} />
+          Шаг 1 из 5
+        </div>
 
         <h1>Где находится объект?</h1>
 
-        <p>Укажите страну и точное местоположение недвижимости.</p>
+        <p>
+          Укажите страну и точное местоположение недвижимости. Это поможет
+          покупателям быстрее найти ваше объявление.
+        </p>
       </div>
 
       {/* COUNTRY */}
       <div className={styles.section}>
-        <label>Страна</label>
+        <div className={styles.sectionTitle}>
+          <div className={styles.sectionIcon}>
+            <Globe2 size={19} />
+          </div>
+
+          <div>
+            <label>Страна</label>
+            <span>Выберите страну размещения</span>
+          </div>
+        </div>
 
         <div className={styles.cards}>
           <button
@@ -554,9 +571,22 @@ export default function StepLocation({ form, updateForm, onNext }) {
             }`}
             onClick={() => selectCountry("kyrgyzstan")}
           >
-            <strong>Кыргызстан</strong>
+            <div className={styles.choiceIcon}>
+              <span style={{ color: "#ff3d99", marginTop: "-5px" }}>🇰🇬</span>
+            </div>
 
-            <span>Область или Бишкек</span>
+            <div className={styles.choiceContent}>
+              <strong>Кыргызстан</strong>
+              <span>Область, город и район</span>
+            </div>
+
+            {form.country === "kyrgyzstan" && (
+              <div className={styles.check}>
+                <Check size={14} />
+              </div>
+            )}
+
+            <ChevronRight className={styles.cardArrow} size={18} />
           </button>
 
           <button
@@ -566,17 +596,29 @@ export default function StepLocation({ form, updateForm, onNext }) {
             }`}
             onClick={() => selectCountry("turkey")}
           >
-            <strong>Турция</strong>
+            <div className={styles.choiceIcon}>
+              <span style={{ color: "#ff3d99", marginTop: "-5px" }}>🇹🇷</span>
+            </div>
 
-            <span>Город и район</span>
+            <div className={styles.choiceContent}>
+              <strong>Турция</strong>
+              <span>Город и район</span>
+            </div>
+
+            {form.country === "turkey" && (
+              <div className={styles.check}>
+                <Check size={14} />
+              </div>
+            )}
+
+            <ChevronRight className={styles.cardArrow} size={18} />
           </button>
         </div>
       </div>
 
       {/* KYRGYZSTAN */}
       {isKyrgyzstan && (
-        <>
-          {/* ОБЛАСТЬ / БИШКЕК */}
+        <div className={styles.locationFields}>
           <div className={styles.grid}>
             <CustomSelect
               title="Область / город"
@@ -586,9 +628,8 @@ export default function StepLocation({ form, updateForm, onNext }) {
             />
           </div>
 
-          {/* БИШКЕК → РАЙОН */}
           {isBishkek && (
-            <div className={styles.grid} style={{ marginTop: "18px" }}>
+            <div className={styles.grid}>
               <CustomSelect
                 title="Район Бишкека"
                 value={form.district || ""}
@@ -598,9 +639,8 @@ export default function StepLocation({ form, updateForm, onNext }) {
             </div>
           )}
 
-          {/* ОБЛАСТЬ → ГОРОД / СЕЛО */}
           {!isBishkek && selectedRegion && (
-            <div className={styles.grid} style={{ marginTop: "18px" }}>
+            <div className={styles.grid}>
               <CustomSelect
                 title="Город / село"
                 value={form.settlement || ""}
@@ -609,13 +649,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
               />
             </div>
           )}
-        </>
+        </div>
       )}
 
       {/* TURKEY */}
       {isTurkey && (
-        <>
-          {/* ГОРОД */}
+        <div className={styles.locationFields}>
           <div className={styles.grid}>
             <CustomSelect
               title="Город"
@@ -625,9 +664,8 @@ export default function StepLocation({ form, updateForm, onNext }) {
             />
           </div>
 
-          {/* РАЙОН */}
           {selectedCity && (
-            <div className={styles.grid} style={{ marginTop: "18px" }}>
+            <div className={styles.grid}>
               <CustomSelect
                 title="Район"
                 value={form.district || ""}
@@ -636,7 +674,28 @@ export default function StepLocation({ form, updateForm, onNext }) {
               />
             </div>
           )}
-        </>
+        </div>
+      )}
+
+      {/* LOCATION STATUS */}
+      {canContinue && (
+        <div className={styles.locationReady}>
+          <div className={styles.readyIcon}>
+            <MapPin size={18} />
+          </div>
+
+          <div>
+            <strong>Местоположение выбрано</strong>
+
+            <span>
+              {isBishkek
+                ? `Бишкек · ${form.district}`
+                : isKyrgyzstan
+                  ? `${selectedRegionName} · ${form.settlement}`
+                  : `${selectedCityName} · ${form.district}`}
+            </span>
+          </div>
+        </div>
       )}
 
       {/* ACTIONS */}
@@ -648,6 +707,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
           onClick={onNext}
         >
           Продолжить
+          <ChevronRight size={18} />
         </button>
       </div>
     </div>

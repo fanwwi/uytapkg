@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./steps.module.css";
+import styles from ".//StepProgress.module.css";
 
 export default function StepProgress({ currentStep, totalSteps }) {
   const steps = ["Локация", "Тип сделки", "Параметры", "Адрес", "Публикация"];

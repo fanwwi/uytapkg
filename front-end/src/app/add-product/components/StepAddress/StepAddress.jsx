@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, MapPin, Search } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Loader2,
+  MapPin,
+  Search,
+} from "lucide-react";
 
+import styles from "./StepAddress.module.css";
 import RealEstateMap from "@/components/ui/realEstateMap/RealEstateMap";
-import styles from "./steps.module.css";
 
 export default function StepAddress({ form, updateForm, onNext, onBack }) {
   const [suggestions, setSuggestions] = useState([]);
@@ -219,6 +225,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
           onClick={onNext}
         >
           Продолжить
+          <ChevronRight size={18} />
         </button>
       </div>
 

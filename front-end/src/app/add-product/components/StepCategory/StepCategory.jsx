@@ -1,98 +1,225 @@
 "use client";
 
+import {
+  Building2,
+  House,
+  Map,
+  DoorOpen,
+  Store,
+  CarFront,
+  Tag,
+  Ruler,
+  ArrowLeft,
+  ArrowRight,
+  Pencil,
+  DollarSign,
+  Maximize,
+  ChevronRight,
+} from "lucide-react";
+
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
-import styles from "./steps.module.css";
+import styles from "./StepCategory.module.css";
+
+const fieldIcons = {
+  series: Tag,
+  rooms: Building2,
+  floor: Building2,
+  condition: Pencil,
+  walls: Building2,
+  heating: Tag,
+  documents: Tag,
+  furniture: House,
+  amenities: Tag,
+  offerType: Tag,
+
+  houseType: House,
+  floors: Building2,
+  sewerage: Tag,
+  water: Tag,
+  electricity: Tag,
+
+  purpose: Map,
+  fence: Tag,
+  location: Map,
+  terrain: Map,
+  communications: Tag,
+
+  roomsInApartment: Building2,
+  privateBathroom: DoorOpen,
+
+  premisesType: Store,
+  technicalParameters: Tag,
+  firstLine: Store,
+  separateEntrance: DoorOpen,
+  rentalBusiness: Store,
+
+  ceilingHeight: Ruler,
+  parkingType: CarFront,
+  material: Building2,
+  security: Tag,
+  gates: DoorOpen,
+  inspectionPit: Tag,
+  basement: Building2,
+  truckAccess: CarFront,
+  gateType: DoorOpen,
+};
+
+const categoryIcons = {
+  apartment: Building2,
+  house: House,
+  land: Map,
+  room: DoorOpen,
+  commercial: Store,
+  parking: CarFront,
+};
 
 const categories = {
   apartment: {
     title: "Квартира",
+
     fields: [
       ["series", "Серия / тип"],
+
       ["rooms", "Количество комнат"],
+
       ["floor", "Этаж"],
+
       ["condition", "Состояние"],
+
       ["walls", "Стены"],
+
       ["heating", "Отопление"],
+
       ["documents", "Документы"],
+
       ["furniture", "Мебель"],
+
       ["amenities", "Удобства"],
+
       ["offerType", "Тип предложения"],
     ],
   },
 
   house: {
     title: "Дом",
+
     fields: [
       ["houseType", "Тип дома"],
+
       ["floors", "Этажность"],
+
       ["heating", "Отопление"],
+
       ["sewerage", "Канализация"],
+
       ["water", "Питьевая вода"],
+
       ["electricity", "Электричество"],
+
       ["documents", "Документы"],
+
       ["offerType", "Тип предложения"],
     ],
   },
 
   land: {
     title: "Участок",
+
     fields: [
       ["purpose", "Назначение"],
+
       ["fence", "Забор"],
+
       ["documents", "Документы"],
+
       ["offerType", "Тип предложения"],
+
       ["location", "Расположение"],
+
       ["terrain", "Рельеф"],
+
       ["communications", "Коммуникации"],
     ],
   },
 
   room: {
     title: "Комната",
+
     fields: [
       ["location", "Расположение"],
+
       ["roomsInApartment", "Комнат в квартире"],
+
       ["floor", "Этаж"],
+
       ["condition", "Состояние"],
+
       ["walls", "Стены"],
+
       ["heating", "Отопление"],
+
       ["amenities", "Удобства"],
+
       ["privateBathroom", "Свой санузел"],
+
       ["documents", "Документы"],
+
       ["offerType", "Тип предложения"],
     ],
   },
 
   commercial: {
     title: "Коммерция",
+
     fields: [
       ["floor", "Этаж"],
+
       ["condition", "Состояние"],
+
       ["walls", "Стены"],
+
       ["heating", "Отопление"],
+
       ["premisesType", "Тип помещения"],
+
       ["technicalParameters", "Технические параметры"],
+
       ["firstLine", "Первая линия"],
+
       ["separateEntrance", "Отдельный вход"],
+
       ["rentalBusiness", "Готовый арендный бизнес"],
+
       ["offerType", "Тип предложения"],
     ],
   },
 
   parking: {
     title: "Паркинг / гараж",
+
     fields: [
       ["ceilingHeight", "Высота потолков"],
+
       ["parkingType", "Тип парковки"],
+
       ["material", "Материал"],
+
       ["security", "Видеонаблюдение"],
+
       ["gates", "Ворота"],
+
       ["inspectionPit", "Смотровая яма"],
+
       ["basement", "Погреб"],
+
       ["electricity", "Электричество"],
+
       ["truckAccess", "Для грузового авто"],
+
       ["gateType", "Тип ворот"],
+
       ["documents", "Документы"],
+
       ["offerType", "Тип предложения"],
     ],
   },
@@ -101,14 +228,23 @@ const categories = {
 const options = {
   series: [
     "Любой",
+
     "Новостройка",
+
     "102 серия",
+
     "104 серия",
+
     "105 серия",
+
     "106 серия",
+
     "Сталинка",
+
     "Хрущевка",
+
     "Элитка",
+
     "Пентхаус",
   ],
 
@@ -118,40 +254,63 @@ const options = {
 
   condition: [
     "Любое",
+
     "Дизайнерский ремонт",
+
     "Евроремонт",
+
     "Косметический",
+
     "Под самоотделку",
+
     "Старый ремонт",
+
     "Без ремонта",
   ],
 
   walls: [
     "Любые",
+
     "Кирпич",
+
     "Бетон",
+
     "Газобетон",
+
     "Панельные",
+
     "Монолитные",
+
     "Монолитно-кирпичные",
+
     "Монолитно-каркасные",
   ],
 
   heating: [
     "Любое",
+
     "Автономное",
+
     "Газовое",
+
     "Центральное",
+
     "Электрическое",
+
     "Комбинированное",
   ],
 
   documents: [
     "Любые",
+
     "Красная книга",
+
     "Тех паспорт",
+
     "Договор купли-продажи",
+
     "Договор долевого участия",
+
     "Акт приема-передачи",
   ],
 
@@ -161,19 +320,29 @@ const options = {
 
   offerType: [
     "Любой",
+
     "Наличный расчет",
+
     "Ипотека",
+
     "Рассрочка",
+
     "Возможен обмен",
   ],
 
   houseType: [
     "Любой",
+
     "Частный дом",
+
     "Особняк",
+
     "Коттедж",
+
     "Таунхаус",
+
     "Дача",
+
     "Времянка",
   ],
 
@@ -187,32 +356,55 @@ const options = {
 
   amenities: [
     "Любые",
+
     "Балкон/Лоджия",
+
     "Нет балкона/лоджии",
+
     "Бронированные двери",
+
     "Бытовая техника",
+
     "Видеонаблюдение",
+
     "Вид на горы",
+
     "Животные не проживали",
+
     "Закрытая территория",
+
     "Не затапливалась",
+
     "Не сдавалась квартирантам",
+
     "Не угловая",
+
     "Раздельный санузел",
+
     "Совместные санузел",
+
     "Угловая квартира",
+
     "Не угловая квартира",
+
     "Лифт",
+
     "Охрана",
+
     "Парковка",
   ],
 
   purpose: [
     "ИЖС",
+
     "ЛПХ",
+
     "Коммерческое",
+
     "Сельхозназначение",
+
     "Многоэтажное строительство",
+
     "Другое",
   ],
 
@@ -224,12 +416,19 @@ const options = {
 
   communications: [
     "Все коммуникации",
+
     "Электричество",
+
     "Газ",
+
     "Вода",
+
     "Канализация",
+
     "Интернет",
+
     "Отопление",
+
     "Нет коммуникаций",
   ],
 
@@ -239,20 +438,31 @@ const options = {
 
   premisesType: [
     "Любой",
+
     "Офис",
+
     "Магазин",
+
     "Склад",
+
     "Производство",
+
     "Общепит",
+
     "Гостиница",
+
     "Промбаза",
   ],
 
   technicalParameters: [
     "Центральная канализация",
+
     "Трехфазное питание",
+
     "Приточно-вытяжная вентиляция",
+
     "Кондиционирование",
+
     "Охранная/Пожарная сигнализация",
   ],
 
@@ -280,9 +490,13 @@ const options = {
 
   gateType: [
     "Распашные",
+
     "Секционные",
+
     "Откатные",
+
     "Роллетные",
+
     "Автоматические",
   ],
 };
@@ -291,8 +505,20 @@ function getFieldOptions(field) {
   return options[field] || [];
 }
 
+const categoryDescriptions = {
+  apartment: "Квартиры и апартаменты",
+  house: "Частные дома, коттеджи и дачи",
+  land: "Земельные участки",
+  room: "Отдельные комнаты",
+  commercial: "Офисы, магазины и другие помещения",
+  parking: "Гаражи и парковочные места",
+};
+
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
   const category = categories[form.category];
+  const CategoryIcon = categoryIcons[form.category];
+
+  const isLand = form.category === "land";
 
   function updateField(name, value) {
     updateForm({
@@ -303,45 +529,78 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   return (
     <div className={styles.step}>
       <div className={styles.header}>
-        <span>Шаг 3 из 5</span>
+        <div className={styles.stepBadge}>
+          <span className={styles.stepDot} />
+          Шаг 3 из 5
+        </div>
 
         <h1>Параметры объекта</h1>
 
-        <p>Укажите основные характеристики недвижимости.</p>
+        <p>
+          Укажите основные характеристики недвижимости — остальное можно будет
+          добавить позже.
+        </p>
       </div>
 
       {!category && (
-        <>
-          <label className={styles.label}>Категория</label>
+        <div className={styles.categorySection}>
+          <div className={styles.sectionTitle}>
+            <div>
+              <span>01</span>
+              <h2>Выберите категорию</h2>
+            </div>
+
+            <p>Это поможет подобрать нужные параметры.</p>
+          </div>
 
           <div className={styles.categoryGrid}>
-            {Object.entries(categories).map(([key, item]) => (
-              <button
-                type="button"
-                key={key}
-                className={styles.categoryCard}
-                onClick={() =>
-                  updateForm({
-                    category: key,
-                  })
-                }
-              >
-                <strong>{item.title}</strong>
+            {Object.entries(categories).map(([key, item]) => {
+              const Icon = categoryIcons[key];
 
-                <span>Заполнить параметры</span>
-              </button>
-            ))}
+              return (
+                <button
+                  type="button"
+                  key={key}
+                  className={styles.categoryCard}
+                  onClick={() =>
+                    updateForm({
+                      category: key,
+                    })
+                  }
+                >
+                  <div className={styles.categoryIcon}>
+                    <Icon size={25} strokeWidth={2.1} />
+                  </div>
+
+                  <div className={styles.categoryContent}>
+                    <strong>{item.title}</strong>
+
+                    <span>
+                      {categoryDescriptions[key] ||
+                        "Заполнить параметры объекта"}
+                    </span>
+                  </div>
+
+                  <ArrowRight className={styles.categoryArrow} size={19} />
+                </button>
+              );
+            })}
           </div>
-        </>
+        </div>
       )}
 
       {category && (
         <>
           <div className={styles.selectedCategory}>
-            <div>
-              <span>Категория</span>
+            <div className={styles.selectedCategoryMain}>
+              <div className={styles.selectedCategoryIcon}>
+                {CategoryIcon && <CategoryIcon size={23} strokeWidth={2.1} />}
+              </div>
 
-              <strong>{category.title}</strong>
+              <div className={styles.selectedCategoryInfo}>
+                <span>Вы выбрали</span>
+                <strong>{category.title}</strong>
+              </div>
             </div>
 
             <button
@@ -352,115 +611,130 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 })
               }
             >
+              <Pencil size={14} />
               Изменить
             </button>
           </div>
 
-          <div className={styles.priceGrid}>
-            <div className={styles.field}>
-              <label>Цена от, $</label>
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionTitle}>
+              <div>
+                <span>02</span>
+                <h2>Цена и площадь</h2>
+              </div>
 
-              <input
-                type="number"
-                min="0"
-                placeholder="Например 50 000"
-                value={form.priceFrom || ""}
-                onChange={(e) =>
-                  updateForm({
-                    priceFrom: e.target.value,
-                  })
-                }
-              />
+              <p>Основные параметры объекта</p>
             </div>
 
-            <div className={styles.field}>
-              <label>Цена до, $</label>
+            <div className={styles.priceGrid}>
+              {/* Фиксированная цена */}
+              <div className={styles.inputCard}>
+                <div className={styles.inputIcon}>
+                  <DollarSign size={19} />
+                </div>
 
-              <input
-                type="number"
-                min="0"
-                placeholder="Например 100 000"
-                value={form.priceTo || ""}
-                onChange={(e) =>
-                  updateForm({
-                    priceTo: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className={styles.priceGrid}>
-            <div className={styles.field}>
-              <label>Площадь от, м²</label>
-
-              <input
-                type="number"
-                min="0"
-                placeholder="От"
-                value={form.areaFrom || ""}
-                onChange={(e) =>
-                  updateForm({
-                    areaFrom: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label>Площадь до, м²</label>
-
-              <input
-                type="number"
-                min="0"
-                placeholder="До"
-                value={form.areaTo || ""}
-                onChange={(e) =>
-                  updateForm({
-                    areaTo: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className={styles.fieldsGrid}>
-            {category.fields.map(([name, label]) => {
-              const fieldOptions = getFieldOptions(name);
-
-              if (fieldOptions.length > 0) {
-                return (
-                  <CustomSelect
-                    key={name}
-                    title={label}
-                    value={form[name] || ""}
-                    setValue={(value) => updateField(name, value)}
-                    options={fieldOptions}
-                  />
-                );
-              }
-
-              return (
-                <div className={styles.field} key={name}>
-                  <label>{label}</label>
+                <div className={styles.field}>
+                  <label>Цена, $</label>
 
                   <input
-                    value={form[name] || ""}
-                    onChange={(e) => updateField(name, e.target.value)}
-                    placeholder="Укажите значение"
+                    type="number"
+                    min="0"
+                    placeholder="Например 75 000"
+                    value={form.price || ""}
+                    onChange={(e) =>
+                      updateForm({
+                        price: e.target.value,
+                      })
+                    }
                   />
                 </div>
-              );
-            })}
+              </div>
+
+              {/* Фиксированная площадь */}
+              <div className={styles.inputCard}>
+                <div className={styles.inputIcon}>
+                  <Maximize size={18} />
+                </div>
+
+                <div className={styles.field}>
+                  <label>Площадь, {isLand ? "соток" : "м²"}</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder={isLand ? "Например 6 соток" : "Например 85 м²"}
+                    value={form.area || ""}
+                    onChange={(e) =>
+                      updateForm({
+                        area: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionTitle}>
+              <div>
+                <span>03</span>
+                <h2>Характеристики</h2>
+              </div>
+
+              <p>Выберите подходящие значения</p>
+            </div>
+
+            <div className={styles.fieldsGrid}>
+              {category.fields.map(([name, label]) => {
+                const fieldOptions = getFieldOptions(name);
+                const Icon = fieldIcons[name] || Tag;
+
+                if (fieldOptions.length > 0) {
+                  return (
+                    <div className={styles.selectWrapper} key={name}>
+                      <CustomSelect
+                        icon={Icon}
+                        title={label}
+                        value={form[name] || ""}
+                        setValue={(value) => updateField(name, value)}
+                        options={fieldOptions}
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className={styles.inputCard} key={name}>
+                    <div className={styles.inputIcon}>
+                      <Icon size={18} />
+                    </div>
+
+                    <div className={styles.field}>
+                      <label>{label}</label>
+
+                      <input
+                        value={form[name] || ""}
+                        onChange={(e) => updateField(name, e.target.value)}
+                        placeholder="Укажите значение"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondary} onClick={onBack}>
+              <ArrowLeft size={17} />
               Назад
             </button>
 
             <button type="button" className={styles.primary} onClick={onNext}>
               Продолжить
+              <ChevronRight size={18} />
             </button>
           </div>
         </>
