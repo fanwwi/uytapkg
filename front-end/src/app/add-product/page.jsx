@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import StepProgress from "./components/StepProgress/StepProgress";
 import StepLocation from "./components/StepLocation/StepLocation";
 import StepDeal from "./components/StepDeal/StepDeal";
@@ -69,6 +71,10 @@ export default function AddProductPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
+        <Link href="/" className={styles.homeButton}>
+          <ArrowLeft size={17} />
+          <span>На главную</span>
+        </Link>
         <StepProgress currentStep={step} totalSteps={totalSteps} />
 
         <div className={styles.card}>

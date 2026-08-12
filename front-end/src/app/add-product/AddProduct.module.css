@@ -90,3 +90,74 @@
     border-radius: 16px;
   }
 }
+
+.homeButton {
+  position: relative;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 22px;
+  padding: 10px 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.homeButton:hover {
+  color: #fff;
+
+  background: rgba(255, 0, 123, 0.12);
+  border-color: rgba(255, 0, 123, 0.4);
+
+  box-shadow:
+    0 6px 20px rgba(255, 0, 123, 0.12),
+    inset 0 0 12px rgba(255, 0, 123, 0.04);
+
+  transform: translateX(-2px);
+}
+
+.homeButton:active {
+  transform: translateX(-2px) scale(0.97);
+}
+
+.homeButton svg {
+  color: #ff007b;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.homeButton:hover svg {
+  transform: translateX(-3px);
+  color: #ff2b91;
+}
+
+@media (max-width: 768px) {
+  .homeButton {
+    margin-bottom: 16px;
+    padding: 9px 12px;
+
+    font-size: 12px;
+    border-radius: 10px;
+  }
+}
