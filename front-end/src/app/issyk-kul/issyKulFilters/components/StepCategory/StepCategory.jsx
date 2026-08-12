@@ -15,6 +15,7 @@ import {
   DollarSign,
   Maximize,
   ChevronRight,
+  Waves,
   Zap,
   Crown,
   Search,
@@ -81,43 +82,67 @@ const categories = {
     title: "Квартира",
 
     fields: [
-      ["series", "Серия / тип"],
-
       ["rooms", "Количество комнат"],
 
       ["floor", "Этаж"],
 
-      ["condition", "Состояние"],
+      ["level", "Класс"],
 
-      ["walls", "Стены"],
-
-      ["heating", "Отопление"],
+      ["rooms", "Колличество комнат"],
 
       ["documents", "Документы"],
 
       ["furniture", "Мебель"],
 
-      ["amenities", "Удобства"],
+      ["wifi", "Wi-Fi"],
 
-      ["offerType", "Тип предложения"],
+      ["pool", "Бассейн"],
+
+      ["bath", "Баня/Сауна"],
+
+      ["view", "Вид на озеро"],
+
+      ["alcove", "Мангал/Беседка"],
+
+      ["parking", "Паркинг"],
+
+      ["beach", "Выход к пляжу"],
+
+      ["pets", "Питомцы"],
+
+      ["children", "Дети"],
+
+      [("offerType", "Тип предложения")],
     ],
   },
 
   house: {
-    title: "Дом",
+    title: "Дом/Дача",
 
     fields: [
       ["houseType", "Тип дома"],
 
       ["floors", "Этажность"],
 
-      ["heating", "Отопление"],
+      ["level", "Класс"],
 
-      ["sewerage", "Канализация"],
+      ["wifi", "Wi-Fi"],
 
-      ["water", "Питьевая вода"],
+      ["pool", "Бассейн"],
 
-      ["electricity", "Электричество"],
+      ["bath", "Баня/Сауна"],
+
+      ["view", "Вид на озеро"],
+
+      ["alcove", "Мангал/Беседка"],
+
+      ["parking", "Паркинг"],
+
+      ["beach", "Выход к пляжу"],
+
+      ["pets", "Питомцы"],
+
+      ["children", "Дети"],
 
       ["documents", "Документы"],
 
@@ -131,39 +156,43 @@ const categories = {
     fields: [
       ["purpose", "Назначение"],
 
-      ["fence", "Забор"],
-
       ["documents", "Документы"],
 
       ["offerType", "Тип предложения"],
 
       ["location", "Расположение"],
 
-      ["terrain", "Рельеф"],
-
       ["communications", "Коммуникации"],
     ],
   },
 
   room: {
-    title: "Комната",
+    title: "Коттедж",
 
     fields: [
-      ["location", "Расположение"],
+      ["houseType", "Тип дома"],
 
-      ["roomsInApartment", "Комнат в квартире"],
+      ["floors", "Этажность"],
 
-      ["floor", "Этаж"],
+      ["level", "Класс"],
 
-      ["condition", "Состояние"],
+      ["wifi", "Wi-Fi"],
 
-      ["walls", "Стены"],
+      ["pool", "Бассейн"],
 
-      ["heating", "Отопление"],
+      ["bath", "Баня/Сауна"],
 
-      ["amenities", "Удобства"],
+      ["view", "Вид на озеро"],
 
-      ["privateBathroom", "Свой санузел"],
+      ["alcove", "Мангал/Беседка"],
+
+      ["parking", "Паркинг"],
+
+      ["beach", "Выход к пляжу"],
+
+      ["pets", "Питомцы"],
+
+      ["children", "Дети"],
 
       ["documents", "Документы"],
 
@@ -175,53 +204,31 @@ const categories = {
     title: "Коммерция",
 
     fields: [
-      ["floor", "Этаж"],
-
-      ["condition", "Состояние"],
-
-      ["walls", "Стены"],
-
-      ["heating", "Отопление"],
+      ["level", "Класс"],
 
       ["premisesType", "Тип помещения"],
 
       ["technicalParameters", "Технические параметры"],
 
-      ["firstLine", "Первая линия"],
+      ["wifi", "Wi-Fi"],
 
-      ["separateEntrance", "Отдельный вход"],
+      ["pool", "Бассейн"],
+
+      ["bath", "Баня/Сауна"],
+
+      ["view", "Вид на озеро"],
+
+      ["alcove", "Мангал/Беседка"],
+
+      ["parking", "Паркинг"],
+
+      ["beach", "Выход к пляжу"],
+
+      ["pets", "Питомцы"],
+
+      ["children", "Дети"],
 
       ["rentalBusiness", "Готовый арендный бизнес"],
-
-      ["offerType", "Тип предложения"],
-    ],
-  },
-
-  parking: {
-    title: "Паркинг / гараж",
-
-    fields: [
-      ["ceilingHeight", "Высота потолков"],
-
-      ["parkingType", "Тип парковки"],
-
-      ["material", "Материал"],
-
-      ["security", "Видеонаблюдение"],
-
-      ["gates", "Ворота"],
-
-      ["inspectionPit", "Смотровая яма"],
-
-      ["basement", "Погреб"],
-
-      ["electricity", "Электричество"],
-
-      ["truckAccess", "Для грузового авто"],
-
-      ["gateType", "Тип ворот"],
-
-      ["documents", "Документы"],
 
       ["offerType", "Тип предложения"],
     ],
@@ -229,79 +236,29 @@ const categories = {
 };
 
 const options = {
-  series: [
-    "Любой",
-
-    "Новостройка",
-
-    "102 серия",
-
-    "104 серия",
-
-    "105 серия",
-
-    "106 серия",
-
-    "Сталинка",
-
-    "Хрущевка",
-
-    "Элитка",
-
-    "Пентхаус",
-  ],
-
   rooms: ["1", "2", "3", "4+"],
 
   floor: ["Цоколь", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"],
 
-  condition: [
-    "Любое",
+  level: ["Любой класс", "Эконом", "Комфорт", "Бизнес", "Премиум"],
 
-    "Дизайнерский ремонт",
+  wifi: ["Есть", "Нет"],
 
-    "Евроремонт",
+  pool: ["Есть", "Нет"],
 
-    "Косметический",
+  bath: ["Есть", "Нет"],
 
-    "Под самоотделку",
+  view: ["Есть", "Нет"],
 
-    "Старый ремонт",
+  alcove: ["Есть", "Нет"],
 
-    "Без ремонта",
-  ],
+  parking: ["Есть", "Нет"],
 
-  walls: [
-    "Любые",
+  beach: ["Есть", "Нет"],
 
-    "Кирпич",
+  pets: ["Есть", "Нет"],
 
-    "Бетон",
-
-    "Газобетон",
-
-    "Панельные",
-
-    "Монолитные",
-
-    "Монолитно-кирпичные",
-
-    "Монолитно-каркасные",
-  ],
-
-  heating: [
-    "Любое",
-
-    "Автономное",
-
-    "Газовое",
-
-    "Центральное",
-
-    "Электрическое",
-
-    "Комбинированное",
-  ],
+  children: ["Есть", "Нет"],
 
   documents: [
     "Любые",
@@ -369,46 +326,6 @@ const options = {
 
   electricity: ["Любое", "Есть", "Возможно подведение", "Нет"],
 
-  amenities: [
-    "Любые",
-
-    "Балкон/Лоджия",
-
-    "Нет балкона/лоджии",
-
-    "Бронированные двери",
-
-    "Бытовая техника",
-
-    "Видеонаблюдение",
-
-    "Вид на горы",
-
-    "Животные не проживали",
-
-    "Закрытая территория",
-
-    "Не затапливалась",
-
-    "Не сдавалась квартирантам",
-
-    "Не угловая",
-
-    "Раздельный санузел",
-
-    "Совместные санузел",
-
-    "Угловая квартира",
-
-    "Не угловая квартира",
-
-    "Лифт",
-
-    "Охрана",
-
-    "Парковка",
-  ],
-
   purpose: [
     "ИЖС",
 
@@ -422,12 +339,6 @@ const options = {
 
     "Другое",
   ],
-
-  fence: ["Есть", "Нет", "Частично"],
-
-  location: ["В городе", "В пригороде", "За городом", "У трассы", "В центре"],
-
-  terrain: ["Ровный", "С уклоном", "Горный", "Холмистый"],
 
   communications: [
     "Все коммуникации",
@@ -449,7 +360,7 @@ const options = {
 
   roomsInApartment: ["1", "2", "3", "4", "5+"],
 
-  privateBathroom: ["Есть", "Нет"],
+  wifi: ["Есть", "Нет"],
 
   premisesType: [
     "Любой",
@@ -483,37 +394,7 @@ const options = {
 
   firstLine: ["Да", "Нет", "Не важно"],
 
-  separateEntrance: ["Да", "Нет", "Любой"],
-
   rentalBusiness: ["Да", "Нет", "Любой"],
-
-  ceilingHeight: ["До 2.5 м", "2.5–3 м", "3–4 м", "4+ м"],
-
-  parkingType: ["Подземный", "Наземный", "Многоуровневый", "Гараж", "Паркинг"],
-
-  material: ["Кирпич", "Бетон", "Металл", "Панель", "Другое"],
-
-  security: ["Есть", "Нет"],
-
-  gates: ["Есть", "Нет"],
-
-  inspectionPit: ["Есть", "Нет"],
-
-  basement: ["Есть", "Нет"],
-
-  truckAccess: ["Да", "Нет"],
-
-  gateType: [
-    "Распашные",
-
-    "Секционные",
-
-    "Откатные",
-
-    "Роллетные",
-
-    "Автоматические",
-  ],
 };
 
 function getFieldOptions(field) {
@@ -522,20 +403,13 @@ function getFieldOptions(field) {
 
 const categoryDescriptions = {
   apartment: "Квартиры и апартаменты",
-  house: "Частные дома, коттеджи и дачи",
+  house: "Частные дома и дачи",
   land: "Земельные участки",
-  room: "Отдельные комнаты",
+  room: "Коттеджи и другие места для отдыха",
   commercial: "Офисы, магазины и другие помещения",
-  parking: "Гаражи и парковочные места",
 };
 
-export default function StepCategory({
-  form,
-  updateForm,
-  onNext,
-  onBack,
-  onSubmit,
-}) {
+export default function StepCategory({ form, updateForm, onBack, onSubmit }) {
   const category = categories[form.category];
   const CategoryIcon = categoryIcons[form.category];
 
@@ -672,29 +546,26 @@ export default function StepCategory({
           </div>
 
           <div className={styles.sectionBlock}>
-            {" "}
             <div className={styles.sectionTitle}>
-              {" "}
               <div>
-                {" "}
-                <span>02</span> <h2>Цена и площадь</h2>{" "}
-              </div>{" "}
-              <p>Укажите желаемый диапазон</p>{" "}
-            </div>{" "}
+                <span>02</span>
+                <h2>Цена, площадь и дополнительные параметры</h2>
+              </div>
+
+              <p>Укажите желаемый диапазон и характеристики объекта</p>
+            </div>
+
             <div className={styles.priceGrid}>
-              {" "}
-              {/* Цена */}{" "}
+              {/* Цена */}
               <div className={styles.inputCard}>
-                {" "}
                 <div className={styles.inputIcon}>
-                  {" "}
-                  <DollarSign size={19} />{" "}
-                </div>{" "}
+                  <DollarSign size={19} />
+                </div>
+
                 <div className={styles.field}>
-                  {" "}
-                  <label>Цена, $</label>{" "}
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    {" "}
+                  <label>Цена, $</label>
+
+                  <div className={styles.rangeInputs}>
                     <input
                       type="number"
                       min="0"
@@ -703,29 +574,29 @@ export default function StepCategory({
                       onChange={(e) =>
                         updateForm({ priceFrom: e.target.value })
                       }
-                    />{" "}
+                    />
+
                     <input
                       type="number"
                       min="0"
                       placeholder="До"
                       value={form.priceTo || ""}
                       onChange={(e) => updateForm({ priceTo: e.target.value })}
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
-              </div>{" "}
-              {/* Площадь */}{" "}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Площадь */}
               <div className={styles.inputCard}>
-                {" "}
                 <div className={styles.inputIcon}>
-                  {" "}
-                  <Maximize size={18} />{" "}
-                </div>{" "}
+                  <Maximize size={18} />
+                </div>
+
                 <div className={styles.field}>
-                  {" "}
-                  <label> Площадь, {isLand ? "соток" : "м²"} </label>{" "}
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    {" "}
+                  <label>Площадь, {isLand ? "соток" : "м²"}</label>
+
+                  <div className={styles.rangeInputs}>
                     <input
                       type="number"
                       min="0"
@@ -733,7 +604,8 @@ export default function StepCategory({
                       placeholder="От"
                       value={form.areaFrom || ""}
                       onChange={(e) => updateForm({ areaFrom: e.target.value })}
-                    />{" "}
+                    />
+
                     <input
                       type="number"
                       min="0"
@@ -741,11 +613,70 @@ export default function StepCategory({
                       placeholder="До"
                       value={form.areaTo || ""}
                       onChange={(e) => updateForm({ areaTo: e.target.value })}
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
-              </div>{" "}
-            </div>{" "}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Расстояние до пляжа */}
+              <div className={styles.inputCard}>
+                <div className={styles.inputIcon}>
+                  <Waves size={19} />
+                </div>
+
+                <div className={styles.field}>
+                  <label>До пляжа, м</label>
+
+                  <div className={styles.rangeInputs}>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="От"
+                      value={form.beachDistanceFrom || ""}
+                      onChange={(e) =>
+                        updateForm({
+                          beachDistanceFrom: e.target.value,
+                        })
+                      }
+                    />
+
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="До"
+                      value={form.beachDistanceTo || ""}
+                      onChange={(e) =>
+                        updateForm({
+                          beachDistanceTo: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Застройщик / ЖК */}
+              <div className={styles.inputCard}>
+                <div className={styles.inputIcon}>
+                  <Building2 size={19} />
+                </div>
+
+                <div className={styles.field}>
+                  <label>Застройщик / ЖК</label>
+
+                  <input
+                    type="text"
+                    placeholder="Название застройщика или ЖК"
+                    value={form.developerOrComplex || ""}
+                    onChange={(e) =>
+                      updateForm({
+                        developerOrComplex: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className={styles.sectionBlock}>
@@ -919,24 +850,6 @@ export default function StepCategory({
                     </div>
                   );
                 }
-
-                return (
-                  <div className={styles.inputCard} key={name}>
-                    <div className={styles.inputIcon}>
-                      <Icon size={18} />
-                    </div>
-
-                    <div className={styles.field}>
-                      <label>{label}</label>
-
-                      <input
-                        value={form[name] || ""}
-                        onChange={(e) => updateField(name, e.target.value)}
-                        placeholder="Укажите значение"
-                      />
-                    </div>
-                  </div>
-                );
               })}
             </div>
           </div>

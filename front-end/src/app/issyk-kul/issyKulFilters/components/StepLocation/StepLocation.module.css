@@ -1,0 +1,520 @@
+.step {
+  width: 100%;
+
+  text-align: left;
+
+  animation: stepEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  margin-bottom: 38px;
+}
+
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 14px;
+  padding: 7px 12px;
+
+  border: 1px solid rgba(255, 20, 120, 0.12);
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 20, 120, 0.1),
+    rgba(255, 20, 120, 0.035)
+  );
+
+  color: #e5006d;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.stepDot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+
+  box-shadow:
+    0 0 0 4px rgba(255, 20, 120, 0.1),
+    0 0 12px rgba(255, 20, 120, 0.35);
+}
+
+.header h1 {
+  margin: 0;
+
+  color: #ff1478;
+
+  font-size: 36px;
+  line-height: 1.12;
+
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+
+.header p {
+  max-width: 650px;
+
+  margin: 12px 0 0;
+
+  color: #777;
+
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.sectionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(255, 20, 120, 0.15);
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.95),
+      transparent 40%
+    ),
+    linear-gradient(145deg, rgba(255, 20, 120, 0.15), rgba(255, 20, 120, 0.04));
+
+  color: #ff1478;
+
+  box-shadow:
+    0 8px 25px rgba(255, 20, 120, 0.08),
+    inset 0 1px 20px rgba(255, 255, 255, 0.7);
+}
+
+.sectionTitle > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sectionTitle label {
+  margin: 0;
+
+  color: #181818;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.sectionTitle span {
+  color: #999;
+
+  font-size: 12px;
+}
+
+/* =========================
+   LOCATION SELECT
+========================= */
+
+.locationSelect {
+  width: 100%;
+}
+
+.locationSelect :global(button.select) {
+  min-height: 58px;
+
+  border: 1px solid #e5e1e3;
+  border-radius: 16px;
+
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+
+  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.locationSelect :global(button.select:hover) {
+  border-color: rgba(255, 20, 120, 0.4);
+
+  box-shadow: 0 10px 30px rgba(255, 20, 120, 0.09);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ADDITIONAL FIELDS
+========================= */
+
+.locationFields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  margin-top: 18px;
+
+  animation: fieldEnter 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fieldEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 18px;
+}
+
+.grid :global(button.select) {
+  min-height: 54px;
+
+  border: 1px solid #e5e1e3;
+  border-radius: 15px;
+
+  background: linear-gradient(145deg, #ffffff, #fafafa);
+
+  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.grid :global(button.select:hover) {
+  border-color: rgba(255, 20, 120, 0.45);
+
+  box-shadow: 0 10px 30px rgba(255, 20, 120, 0.09);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   LOCATION READY
+========================= */
+
+.locationReady {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 26px;
+  padding: 14px 16px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 20, 120, 0.14);
+
+  border-radius: 16px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 20, 120, 0.09),
+      transparent 45%
+    ),
+    linear-gradient(135deg, rgba(255, 20, 120, 0.08), rgba(255, 20, 120, 0.025));
+
+  box-shadow: 0 8px 25px rgba(255, 20, 120, 0.05);
+
+  animation: readyEnter 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes readyEnter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.readyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #ff007b, #ff3d99);
+
+  color: #fff;
+
+  box-shadow: 0 7px 18px rgba(255, 20, 120, 0.22);
+}
+
+.readyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.locationReady strong {
+  color: #222;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.locationReady span {
+  color: #a0788a;
+
+  font-size: 12px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readyCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+
+  margin-left: auto;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #ff1478;
+
+  color: #fff;
+
+  box-shadow: 0 5px 14px rgba(255, 20, 120, 0.22);
+
+  animation: checkPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes checkPop {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 34px;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 52px;
+
+  padding: 0 23px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #ff007b 0%, #ff1478 50%, #ff3d99 100%);
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(255, 20, 120, 0.23),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.primary:hover:not(:disabled) {
+  filter: brightness(1.04);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 32px rgba(255, 20, 120, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.primary:hover:not(:disabled) svg {
+  transform: translateX(3px);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.primary svg {
+  transition: transform 0.2s ease;
+}
+
+.primary:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.42;
+
+  box-shadow: none;
+
+  filter: grayscale(0.15);
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.primary:focus-visible,
+.locationSelect :global(button.select:focus-visible),
+.grid :global(button.select:focus-visible) {
+  outline: 3px solid rgba(255, 20, 120, 0.18);
+
+  outline-offset: 3px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 29px;
+  }
+
+  .locationReady {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .sectionIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .locationReady {
+    padding: 13px;
+  }
+
+  .readyCheck {
+    display: none;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    margin-top: 28px;
+  }
+
+  .primary {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .locationFields,
+  .primary,
+  .locationReady,
+  .readyCheck {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,11 +1,11 @@
+/* =========================
+   WRAPPER
+========================= */
+
 .wrapper {
   position: relative;
   width: 100%;
   z-index: 30;
-}
-
-.wrapper:has(.dropdown) {
-  z-index: 1000;
 }
 
 /* =========================
@@ -93,14 +93,14 @@
 }
 
 .left strong {
+  max-width: 100%;
+
   margin-top: 5px;
 
   color: #111;
 
   font-size: 15px;
   font-weight: 700;
-
-  max-width: 100%;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -126,6 +126,7 @@
 
 .rotate {
   transform: rotate(180deg);
+
   color: #ff2990;
 }
 
@@ -133,17 +134,26 @@
    DROPDOWN
 ========================= */
 
+/*
+   ВАЖНО:
+
+   Dropdown теперь position: fixed
+   и рендерится через React Portal
+   непосредственно в document.body.
+
+   Поэтому он НЕ зависит от:
+   - overflow: hidden;
+   - overflow: auto;
+   - z-index родителя;
+   - stacking context;
+   - transform родителя;
+   - grid/flex контейнера.
+*/
+
 .dropdown {
-  position: absolute;
-
-  left: 0;
-  width: 100%;
-
-  z-index: 9999;
-
   box-sizing: border-box;
 
-  max-height: min(300px, 40vh);
+  z-index: 2147483647;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -153,49 +163,30 @@
   border: 1px solid #f0dce5;
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.99);
 
   box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.12),
-    0 8px 25px rgba(255, 41, 144, 0.08);
+    0 24px 60px rgba(0, 0, 0, 0.16),
+    0 10px 30px rgba(255, 41, 144, 0.08);
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
   scroll-behavior: smooth;
 
-  /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: #ffb3d5 transparent;
-}
 
-/* =========================
-   OPEN DIRECTION
-========================= */
+  /*
+    Небольшая анимация появления.
+  */
 
-.dropdownDown {
-  top: calc(100% + 10px);
-
-  transform-origin: top center;
-
-  animation: dropdownDown 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.dropdownUp {
-  bottom: calc(100% + 10px);
-
-  transform-origin: bottom center;
-
-  animation: dropdownUp 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: dropdownAppear 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* =========================
    SCROLLBAR
 ========================= */
-
-/*
-  Оставляем только саму полоску.
-  Кнопки вверх/вниз полностью убраны.
-*/
 
 .dropdown::-webkit-scrollbar {
   width: 5px;
@@ -203,11 +194,13 @@
 
 .dropdown::-webkit-scrollbar-track {
   background: transparent;
+
   margin: 8px 0;
 }
 
 .dropdown::-webkit-scrollbar-thumb {
   background: #ffb3d5;
+
   border-radius: 999px;
 }
 
@@ -215,16 +208,9 @@
   background: #ff2990;
 }
 
-/* Убираем стрелки / кнопки скроллбара */
-
 .dropdown::-webkit-scrollbar-button {
   display: none;
-  width: 0;
-  height: 0;
-}
 
-.dropdown::-webkit-scrollbar-button:single-button {
-  display: none;
   width: 0;
   height: 0;
 }
@@ -266,6 +252,7 @@
 
 .option:hover {
   background: #fff0f7;
+
   color: #ff2990;
 }
 
@@ -275,30 +262,34 @@
 
 .optionSelected {
   background: #fff0f7;
+
   color: #ff2990;
+
   font-weight: 700;
 }
 
 /* =========================
-   ANIMATIONS
+   EMPTY
 ========================= */
 
-@keyframes dropdownDown {
-  from {
-    opacity: 0;
-    transform: translateY(-7px) scale(0.98);
-  }
+.empty {
+  padding: 18px 15px;
 
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  color: #999;
+
+  font-size: 13px;
+
+  text-align: center;
 }
 
-@keyframes dropdownUp {
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes dropdownAppear {
   from {
     opacity: 0;
-    transform: translateY(7px) scale(0.98);
+    transform: translateY(-6px) scale(0.985);
   }
 
   to {
@@ -314,8 +305,13 @@
 .select:focus-visible,
 .option:focus-visible {
   outline: 3px solid rgba(255, 41, 144, 0.18);
+
   outline-offset: 2px;
 }
+
+/* =========================
+   REDUCED MOTION
+========================= */
 
 @media (prefers-reduced-motion: reduce) {
   .select,

@@ -18,8 +18,8 @@ import {
 
 import styles from "./IssykKul.module.css";
 
-import IssykKulFilter from "./issykKulFilters/IssykKulFilter";
 import Footer from "@/components/pageComponents/footer/Footer";
+import IssykKulSearchFilter from "./issyKulFilters/IssykKulFilters";
 
 const zones = [
   {
@@ -135,7 +135,7 @@ export default function IssykKul() {
       </section>
 
       <section className={styles.filter} id="searchIssykKul">
-        <IssykKulFilter />
+        <IssykKulSearchFilter />
       </section>
 
       <Footer />
