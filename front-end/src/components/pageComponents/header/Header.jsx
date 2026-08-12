@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getMe } from "@/utils/api";
 
 import {
   ChevronDown,
@@ -27,11 +28,25 @@ export default function Header() {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const checkAuth = () => {
-      const token = document.cookie.includes("uytap_token");
-      const user = localStorage.getItem("uytap_user");
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem("uytap_token");
+        const storedUser = localStorage.getItem("uytap_user");
 
-      setIsAuth(Boolean(token && user));
+        if (!token || !storedUser) {
+          setIsAuth(false);
+          return;
+        }
+
+        try {
+          const user = await getMe(token);
+          setIsAuth(Boolean(user));
+        } catch {
+          setIsAuth(true);
+        }
+      } catch {
+        setIsAuth(false);
+      }
     };
 
     checkAuth();

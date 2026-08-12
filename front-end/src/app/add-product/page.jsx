@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { createListing } from "@/utils/api";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import StepProgress from "./components/StepProgress/StepProgress";
@@ -39,6 +41,8 @@ const initialForm = {
 export default function AddProductPage() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const totalSteps = 5;
 
@@ -57,15 +61,52 @@ export default function AddProductPage() {
     setStep((prev) => Math.max(prev - 1, 1));
   }
 
-  function submitProduct() {
-    console.log("READY TO SEND TO BACKEND:", form);
+  async function submitProduct() {
+    setIsSubmitting(true);
+    setSubmitMessage("");
 
-    // Пока backend не готов.
-    // Потом здесь будет:
-    //
-    // await createListing(form);
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) {
+        throw new Error("Сначала войдите в аккаунт");
+      }
 
-    alert("Объявление готово к отправке!");
+      const derivedPrice = Number(form.priceFrom || form.priceTo || 100000);
+      const derivedTitle = `${form.dealType === "sale" ? "Продажа" : "Аренда"} ${form.category || "недвижимости"}`.trim();
+      const derivedDescription = `Объявление для ${form.city || form.region || "региона"}. Адрес: ${form.address || "не указан"}`;
+
+      const payload = {
+        title: derivedTitle,
+        description: derivedDescription,
+        propertyType: form.category || "apartment",
+        dealType: form.dealType || "sale",
+        rentPeriod: form.rentalPeriod || null,
+        region: form.region || "bishkek",
+        city: form.city || "Бишкек",
+        district: form.region || null,
+        microdistrict: null,
+        address: form.address || null,
+        price: derivedPrice,
+        currency: "KGS",
+        area: Number(form.areaFrom || form.areaTo || 0) || null,
+        rooms: null,
+        floor: null,
+        totalFloors: null,
+        isResort: false,
+        resortFilters: {},
+        features: {},
+        photos: [],
+      };
+
+      const result = await createListing(token, payload);
+      setSubmitMessage(result.message || "Объявление успешно опубликовано");
+      setForm(initialForm);
+      setStep(1);
+    } catch (error) {
+      setSubmitMessage(error.message || "Не удалось опубликовать объявление");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -119,8 +160,15 @@ export default function AddProductPage() {
               updateForm={updateForm}
               onBack={prevStep}
               onSubmit={submitProduct}
+              isSubmitting={isSubmitting}
             />
           )}
+
+          {submitMessage ? (
+            <p style={{ marginTop: 16, color: submitMessage.includes("успешно") ? "#1f9d5b" : "#c0392b" }}>
+              {submitMessage}
+            </p>
+          ) : null}
         </div>
       </div>
     </main>

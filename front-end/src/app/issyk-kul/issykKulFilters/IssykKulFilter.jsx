@@ -17,7 +17,7 @@ import LandFilters from "./filters/LandFilters";
 import CommercialFilters from "./filters/CommercialFilters";
 
 import CustomSelect from "../../../components/ui/customSelect/CustomSelect";
-import SmartSearchVoice from "@/components/pageComponents/searchPage/smartSearch/SmartSearch";
+import SmartSearchVoice from "@/components/pageComponents/searchPage/SearchFilter/components/SmartSearch/SmartSearch";
 
 export default function IssykKulFilter() {
   const [mode, setMode] = useState("normal");

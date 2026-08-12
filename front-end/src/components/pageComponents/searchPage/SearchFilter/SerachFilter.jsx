@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search, Sparkles } from "lucide-react";
 
 import styles from "./SearchFilter.module.css";
@@ -39,6 +40,7 @@ const initialForm = {
 };
 
 export default function SearchFilter() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
 
@@ -66,15 +68,28 @@ export default function SearchFilter() {
   }
 
   function handleSmartSearch(values) {
-    updateForm(values);
+    const merged = { ...form, ...values };
+    updateForm(merged);
 
-    console.log("🤖 Smart search filters:", {
-      ...form,
-      ...values,
+    const params = new URLSearchParams();
+    Object.entries(merged).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        params.set(key, String(value));
+      }
     });
 
-    // Здесь потом можно сразу отправлять поиск:
-    // searchListings({ ...form, ...values });
+    router.push(`/search?${params.toString()}`);
+  }
+
+  function submitSearch() {
+    const params = new URLSearchParams();
+    Object.entries(form).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        params.set(key, String(value));
+      }
+    });
+
+    router.push(`/search?${params.toString()}`);
   }
 
   return (
@@ -149,6 +164,14 @@ export default function SearchFilter() {
                   onNext={nextStep}
                   onBack={prevStep}
                 />
+              )}
+
+              {step === 4 && (
+                <div style={{ padding: 24 }}>
+                  <button type="button" onClick={submitSearch} style={{ padding: "12px 20px", borderRadius: 10, cursor: "pointer" }}>
+                    Показать результаты
+                  </button>
+                </div>
               )}
             </div>
           </>

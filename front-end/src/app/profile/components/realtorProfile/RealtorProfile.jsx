@@ -28,6 +28,7 @@ export default function RealtorProfile({ user }) {
   if (!user) return null;
 
   const profile = user.profile || {};
+  const avatarUrl = profile.avatar_url || profile.avatar || user.avatar_url || user.avatar || "/assets/realtorImage.png";
 
   const name =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
@@ -52,7 +53,7 @@ export default function RealtorProfile({ user }) {
 
         <div className={styles.top}>
           <div className={styles.avatar}>
-            <img src="/assets/realtorImage.png" alt={name} />
+            <img src={avatarUrl} alt={name} />
           </div>
 
           <div className={styles.info}>
