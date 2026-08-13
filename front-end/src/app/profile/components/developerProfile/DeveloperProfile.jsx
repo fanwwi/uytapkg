@@ -49,11 +49,11 @@ export default function DeveloperProfile({ user }) {
 
         <div className={styles.header}>
           <div className={styles.logo}>
-            {profile.logo_url ? (
-              <img src={profile.logo_url} alt={company} />
+            {(profile.avatar_url || profile.logo_url) ? (
+              <img src={profile.avatar_url || profile.logo_url} alt={company} />
             ) : (
               <img
-                src={profile.logo_url || "/assets/DeveloperImage.png"}
+                src="/assets/DeveloperImage.png"
                 alt={company}
               />
             )}

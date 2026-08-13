@@ -16,12 +16,17 @@ import {
 
 import styles from "./DeveloperEditModal.module.css";
 
+import { updateMe, getMe, uploadAvatar } from "@/utils/api";
+
 export default function DeveloperEditModal({ close, user }) {
   const fileRef = useRef(null);
-
   const profile = user?.profile || {};
+  const [loading, setLoading] = useState(false);
+  const [logoFile, setLogoFile] = useState(null);
 
-  const [logoPreview, setLogoPreview] = useState(profile.logo_url || null);
+  const [logoPreview, setLogoPreview] = useState(
+    profile.avatar_url || profile.logo_url || null,
+  );
 
   const [form, setForm] = useState({
     company_name: profile.company_name || "",
@@ -55,19 +60,57 @@ export default function DeveloperEditModal({ close, user }) {
 
     if (!file) return;
 
+    setLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
   }
 
-  function save() {
-    const data = {
-      ...form,
+  function getTokenFromCookie() {
+    const match = document.cookie.match(/(^|;)\s*uytap_token=([^;]*)/);
+    return match ? decodeURIComponent(match[2]) : null;
+  }
 
-      logo: logoPreview,
-    };
+  async function save() {
+    if (loading) return;
 
-    console.log(data);
+    try {
+      setLoading(true);
 
-    // PUT API
+      const token = getTokenFromCookie() || localStorage.getItem("uytap_token");
+      if (!token) {
+        throw new Error("Сессия не найдена. Пожалуйста, войдите в аккаунт заново.");
+      }
+
+      if (logoFile) {
+        await uploadAvatar(token, logoFile);
+      }
+
+      const payload = {
+        companyName: form.company_name,
+        inn: form.inn,
+        officeAddress: form.office_address,
+        about: form.about,
+      };
+
+      if (form.phone !== user?.phone) {
+        payload.phone = form.phone;
+      }
+
+      await updateMe(token, payload);
+
+      const freshUser = await getMe(token);
+      localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+      try {
+        window.dispatchEvent(new CustomEvent("uytap:user-updated", { detail: freshUser }));
+      } catch (e) {
+        console.warn("Could not dispatch user-updated event", e);
+      }
+      close();
+    } catch (error) {
+      console.error("DEVELOPER PROFILE SAVE ERROR:", error);
+      alert(error.message || "Не удалось сохранить профиль");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

@@ -11,11 +11,18 @@ export default function ProfilePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("uytap_user") || "null");
+    const loadUser = () => {
+      const savedUser = JSON.parse(localStorage.getItem("uytap_user") || "null");
+      console.log("PROFILE USER:", savedUser);
+      setUser(savedUser);
+    };
 
-    console.log("PROFILE USER:", savedUser);
+    loadUser();
 
-    setUser(savedUser);
+    window.addEventListener("uytap:user-updated", loadUser);
+    return () => {
+      window.removeEventListener("uytap:user-updated", loadUser);
+    };
   }, []);
 
   if (!user) {

@@ -49,11 +49,11 @@ export default function AgencyProfile({ user }) {
     <main className={styles.wrapper}>
       <section className={styles.profileCard}>
         <div className={styles.logoBox}>
-          {profile.logo_url ? (
-            <img src={profile.logo_url} alt={companyName} />
+          {(profile.avatar_url || profile.logo_url) ? (
+            <img src={profile.avatar_url || profile.logo_url} alt={companyName} />
           ) : (
             <img
-              src={profile.logo_url || "/assets/AgencyImage.png"}
+              src="/assets/AgencyImage.png"
               alt={companyName}
             />
           )}

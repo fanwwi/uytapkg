@@ -20,7 +20,8 @@ async function proxyRequest(request, context) {
     };
 
     if (!["GET", "HEAD"].includes(request.method)) {
-      init.body = await request.text();
+      init.body = request.body;
+      init.duplex = "half";
     }
 
     const upstream = await fetch(targetUrl, init);

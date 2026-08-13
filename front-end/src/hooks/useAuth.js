@@ -37,6 +37,25 @@ export default function useAuth() {
     };
 
     loadUser();
+
+    // Listen for manual user updates dispatched from the app
+    const handleUserUpdated = async (e) => {
+      try {
+        const token = localStorage.getItem("uytap_token");
+        if (!token) return;
+        const fresh = await getMe(token);
+        setUser(fresh);
+        localStorage.setItem("uytap_user", JSON.stringify(fresh));
+      } catch (err) {
+        console.error("Failed to refresh user after event:", err);
+      }
+    };
+
+    window.addEventListener("uytap:user-updated", handleUserUpdated);
+
+    return () => {
+      window.removeEventListener("uytap:user-updated", handleUserUpdated);
+    };
   }, []);
 
   return {

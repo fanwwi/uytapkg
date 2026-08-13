@@ -13,7 +13,8 @@ async function proxyRequest(request) {
     };
 
     if (!["GET", "HEAD"].includes(request.method)) {
-      init.body = await request.text();
+      init.body = request.body;
+      init.duplex = "half";
     }
 
     const upstream = await fetch(`${BACKEND_API_URL}/listings`, init);
