@@ -138,8 +138,6 @@ export default function Header() {
 
             {openMenu === "more" && (
               <div className={styles.menu}>
-                <Link href="/agents">Риэлторы</Link>
-
                 <Link href="/pricing">Тарифы</Link>
 
                 <Link href="/all-products">Все объявления</Link>
