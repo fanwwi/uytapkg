@@ -55,13 +55,13 @@ export const register = async (req, res) => {
 
     if (existingUser) {
       if (existingUser.email === normalizedEmail) {
-        return res.status(400).json({
+        return res.status(409).json({
           success: false,
           message: "Пользователь с таким Email уже зарегистрирован",
         });
       }
       if (existingUser.phone === formattedPhone) {
-        return res.status(400).json({
+        return res.status(409).json({
           success: false,
           message: "Пользователь с таким номером телефона уже существует",
         });
@@ -102,8 +102,11 @@ export const register = async (req, res) => {
     let profileData = {
       user_id: newUser.id,
       about: about || null,
-      avatar_url: avatarUrl || null,
     };
+
+    if (avatarUrl) {
+      profileData.avatar_url = avatarUrl;
+    }
 
     if (accountType === "personal") {
       profileData.first_name = firstName || null;
@@ -123,13 +126,19 @@ export const register = async (req, res) => {
     }
 
     // 5. Сохранение профиля в `user_profiles`
-    const { data: userProfile, error: profileError } = await supabase
-      .from("user_profiles")
-      .insert([profileData])
-      .select()
-      .single();
+    let userProfile = null;
+    try {
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .insert([profileData])
+        .select()
+        .single();
 
-    if (profileError) {
+      userProfile = data;
+      if (error) {
+        console.warn("Warning: Could not create user profile details:", error);
+      }
+    } catch (profileError) {
       console.warn("Warning: Could not create user profile details:", profileError);
     }
 

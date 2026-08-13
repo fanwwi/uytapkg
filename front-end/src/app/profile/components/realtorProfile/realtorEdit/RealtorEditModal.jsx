@@ -12,7 +12,7 @@ import {
   Camera,
 } from "lucide-react";
 import styles from "./RealtorEditModal.module.css";
-import { updateMe, getMe } from "@/utils/api";
+import { updateMe, getMe, uploadAvatar } from "@/utils/api";
 
 export default function RealtorEditModal({ close, user }) {
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ export default function RealtorEditModal({ close, user }) {
         inn: profile.inn || "",
         about: profile.about || "",
       });
-      setAvatarPreview(profile.avatar || "/assets/realtorImage.png");
+      setAvatarPreview(profile.avatar_url || profile.avatar || "/assets/realtorImage.png");
     }
   }, [user]);
 
@@ -78,20 +78,23 @@ export default function RealtorEditModal({ close, user }) {
     try {
       setLoading(true);
 
-      const token = getTokenFromCookie();
+      const token = getTokenFromCookie() || localStorage.getItem("uytap_token");
       if (!token) {
         throw new Error(
           "Сессия не найдена. Пожалуйста, войдите в аккаунт заново.",
         );
       }
 
+      if (avatarFile) {
+        await uploadAvatar(token, avatarFile);
+      }
+
       const payload = {
-        first_name: form.first_name,
-        last_name: form.last_name,
-        company_name: form.company_name,
-        office_address: form.office_address,
+        firstName: form.first_name,
+        lastName: form.last_name,
+        companyName: form.company_name,
+        officeAddress: form.office_address,
         about: form.about,
-        website: form.website,
         inn: form.inn,
       };
 
@@ -103,6 +106,11 @@ export default function RealtorEditModal({ close, user }) {
 
       const freshUser = await getMe(token);
       localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+      try {
+        window.dispatchEvent(new CustomEvent("uytap:user-updated", { detail: freshUser }));
+      } catch (e) {
+        console.warn("Could not dispatch user-updated event", e);
+      }
       close();
     } catch (error) {
       console.error("PROFILE UPDATE ERROR:", error);

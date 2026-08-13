@@ -16,19 +16,22 @@ import {
 
 import styles from "./AgencyEditModal.module.css";
 
+import { updateMe, getMe, uploadAvatar } from "@/utils/api";
+
 export default function AgencyEditModal({ close, user }) {
   const fileRef = useRef(null);
-
   const profile = user?.profile || {};
+  const [loading, setLoading] = useState(false);
+  const [logoFile, setLogoFile] = useState(null);
 
   const [logoPreview, setLogoPreview] = useState(
-    profile.logo_url || profile.avatar_url || null,
+    profile.avatar_url || profile.logo_url || null,
   );
 
   const [form, setForm] = useState({
     company_name: profile.company_name || "",
 
-    director_name: profile.director_name || profile.first_name || "",
+    director_name: profile.first_name || profile.director_name || "",
 
     inn: profile.inn || "",
 
@@ -59,20 +62,60 @@ export default function AgencyEditModal({ close, user }) {
 
     if (!file) return;
 
+    setLogoFile(file);
     const preview = URL.createObjectURL(file);
 
     setLogoPreview(preview);
   }
 
+  function getTokenFromCookie() {
+    const match = document.cookie.match(/(^|;)\s*uytap_token=([^;]*)/);
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+
   async function save() {
-    const payload = {
-      ...form,
-      logo: logoPreview,
-    };
+    if (loading) return;
 
-    console.log(payload);
+    try {
+      setLoading(true);
 
-    // PUT /profile/update
+      const token = getTokenFromCookie() || localStorage.getItem("uytap_token");
+      if (!token) {
+        throw new Error("Сессия не найдена. Пожалуйста, войдите в аккаунт заново.");
+      }
+
+      if (logoFile) {
+        await uploadAvatar(token, logoFile);
+      }
+
+      const payload = {
+        companyName: form.company_name,
+        directorName: form.director_name,
+        inn: form.inn,
+        officeAddress: form.address,
+        about: form.about,
+      };
+
+      if (form.phone !== user?.phone) {
+        payload.phone = form.phone;
+      }
+
+      await updateMe(token, payload);
+
+      const freshUser = await getMe(token);
+      localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+      try {
+        window.dispatchEvent(new CustomEvent("uytap:user-updated", { detail: freshUser }));
+      } catch (e) {
+        console.warn("Could not dispatch user-updated event", e);
+      }
+      close();
+    } catch (error) {
+      console.error("AGENCY PROFILE SAVE ERROR:", error);
+      alert(error.message || "Не удалось сохранить профиль");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

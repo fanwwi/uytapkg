@@ -67,7 +67,25 @@ export async function verifyOtpCode(phone, code) {
 
 // 4. Поиск и получение объявлений
 export async function getListings(params = {}) {
-  const query = new URLSearchParams(params).toString();
+  const mappedParams = { ...params };
+  if (params.category) {
+    mappedParams.propertyType = params.category;
+    delete mappedParams.category;
+  }
+  if (params.priceFrom) {
+    mappedParams.minPrice = params.priceFrom;
+    delete mappedParams.priceFrom;
+  }
+  if (params.priceTo) {
+    mappedParams.maxPrice = params.priceTo;
+    delete mappedParams.priceTo;
+  }
+  if (params.rentalPeriod) {
+    mappedParams.rentPeriod = params.rentalPeriod;
+    delete mappedParams.rentalPeriod;
+  }
+
+  const query = new URLSearchParams(mappedParams).toString();
   const response = await fetch(`${API_URL}/listings?${query}`);
   return response.json();
 }
@@ -104,7 +122,7 @@ export async function getComplexes() {
 
 // 6. Умный AI поиск
 export async function aiSearchQuery(prompt) {
-  const response = await fetch(`${API_URL}/ai/search`, {
+  const response = await fetch(`${API_URL}/smart-search`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
@@ -164,4 +182,55 @@ export async function updateMe(token, payload) {
   }
 
   return data.user;
+}
+
+// 8. Загрузка картинок и аватаров
+export async function uploadImage(file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  const response = await fetch(`${API_URL}/upload`, {
+    method: "POST",
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке изображения");
+  }
+  return data.url;
+}
+
+export async function uploadAvatar(token, file) {
+  const form = new FormData();
+  form.append("avatar", file);
+
+  const response = await fetch(`${API_URL}/auth/avatar`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке аватара");
+  }
+  return data;
+}
+
+export async function deleteAvatar(token) {
+  const response = await fetch(`${API_URL}/auth/avatar`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при удалении аватара");
+  }
+  return data;
 }

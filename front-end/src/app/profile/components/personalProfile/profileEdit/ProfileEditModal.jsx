@@ -109,6 +109,12 @@ export default function ProfileEditModal({ user, close }) {
         },
       };
       localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
+      // Notify other parts of the app (same window) that the user was updated
+      try {
+        window.dispatchEvent(new CustomEvent("uytap:user-updated", { detail: updatedUser }));
+      } catch (e) {
+        console.warn("Could not dispatch user-updated event", e);
+      }
 
       const payload = {
         firstName,
@@ -117,8 +123,14 @@ export default function ProfileEditModal({ user, close }) {
         about,
       };
 
-      await updateMe(token, payload);
+      console.log("UpdateMe payload:", payload);
+      const updateResult = await updateMe(token, payload).catch((e) => {
+        console.error("updateMe error:", e);
+        throw e;
+      });
+      console.log("updateMe result:", updateResult);
       const freshUser = await getMe(token);
+      console.log("getMe after update:", freshUser);
       localStorage.setItem("uytap_user", JSON.stringify(freshUser));
       close();
     } catch (error) {

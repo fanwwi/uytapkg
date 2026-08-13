@@ -52,6 +52,11 @@ export default function Header() {
     checkAuth();
 
     window.addEventListener("storage", checkAuth);
+    const handleUserUpdated = () => {
+      // Re-run auth check when profile updates in the same window
+      checkAuth();
+    };
+    window.addEventListener("uytap:user-updated", handleUserUpdated);
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -63,6 +68,7 @@ export default function Header() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("uytap:user-updated", handleUserUpdated);
     };
   }, []);
 

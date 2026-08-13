@@ -1,2 +1,4 @@
 .env
 schema.sql
+index.js
+back-end.env

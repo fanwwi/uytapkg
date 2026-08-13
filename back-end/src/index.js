@@ -10,6 +10,10 @@ import aiRoutes from "./routes/aiRoutes.js";
 dotenv.config();
 
 const app = express();
+// When running behind a proxy (e.g., local dev proxies or hosting), allow
+// express to trust the X-Forwarded-* headers so express-rate-limit can
+// correctly determine the remote IP. See express-rate-limit docs.
+app.set("trust proxy", true);
 const PORT = process.env.PORT || 5000;
 
 // Разрешенные CORS источники
