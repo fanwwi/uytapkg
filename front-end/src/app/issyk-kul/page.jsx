@@ -1,104 +1,20 @@
 "use client";
 
-import {
-  MapPin,
-  Home,
-  Building2,
-  Hotel,
-  Trees,
-  Search,
-  Plus,
-  Waves,
-  Sun,
-  Mountain,
-  TrendingUp,
-  Umbrella,
-  ArrowRight,
-} from "lucide-react";
+import { Search, Plus, Waves } from "lucide-react";
 
 import styles from "./IssykKul.module.css";
 
 import Footer from "@/components/pageComponents/footer/Footer";
 import IssykKulSearchFilter from "./issyKulFilters/IssykKulFilters";
-
-const zones = [
-  {
-    name: "Чолпон-Ата",
-    count: "325 объектов",
-    image: "/images/issyk/cholpon.jpg",
-    text: "Центр отдыха, инфраструктура, пляжи",
-  },
-  {
-    name: "Бостери",
-    count: "214 объектов",
-    image: "/images/issyk/bosteri.jpg",
-    text: "Популярная курортная зона",
-  },
-  {
-    name: "Кара-Ой",
-    count: "187 объектов",
-    image: "/images/issyk/karaoy.jpg",
-    text: "Тихое место рядом с озером",
-  },
-  {
-    name: "Тамчы",
-    count: "132 объекта",
-    image: "/images/issyk/tamchy.jpg",
-    text: "Близость к аэропорту",
-  },
-];
-
-const categories = [
-  {
-    icon: Home,
-    title: "Дома и дачи",
-    count: "450+ объектов",
-  },
-  {
-    icon: Building2,
-    title: "Коттеджи",
-    count: "280+ объектов",
-  },
-  {
-    icon: Hotel,
-    title: "Гостевые дома",
-    count: "170+ объектов",
-  },
-  {
-    icon: Trees,
-    title: "Участки",
-    count: "320+ объектов",
-  },
-];
-
-const benefits = [
-  {
-    icon: Sun,
-    title: "300 солнечных дней",
-    text: "Комфортный климат для жизни и отдыха",
-  },
-  {
-    icon: Mountain,
-    title: "Горы + озеро",
-    text: "Уникальная природа региона",
-  },
-  {
-    icon: TrendingUp,
-    title: "Рост цены",
-    text: "Перспективный рынок недвижимости",
-  },
-  {
-    icon: Umbrella,
-    title: "Туризм",
-    text: "Высокий спрос на аренду",
-  },
-];
+import { useRouter } from "next/navigation";
 
 export default function IssykKul() {
+  const router = useRouter();
+
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <div className={styles.heroOverlay}></div>
+        <div className={styles.heroOverlay} />
 
         <div className={styles.heroContent}>
           <div className={styles.badge}>
@@ -117,14 +33,19 @@ export default function IssykKul() {
           </p>
 
           <div className={styles.buttons}>
-            <a className={styles.mainButton} href="#searchIssykKul">
-              <span>
-                <Search />
-              </span>
-              Найти объект
+            <a
+              type="button"
+              className={styles.mainButton}
+              onClick={() => router.push("/all-issykkul-products")}
+            >
+              Смотреть объекты Иссык-Куля
             </a>
 
-            <button className={styles.whiteButton}>
+            <button
+              type="button"
+              className={styles.whiteButton}
+              onClick={() => router.push("/add-product")}
+            >
               <span>
                 <Plus />
               </span>
