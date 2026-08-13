@@ -539,7 +539,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 1 из 5
+          Шаг 2 из 5
         </div>
 
         <h1>Где находится объект?</h1>

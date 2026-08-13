@@ -3,7 +3,7 @@
 import styles from ".//StepProgress.module.css";
 
 export default function StepProgress({ currentStep, totalSteps }) {
-  const steps = ["Локация", "Тип сделки", "Параметры", "Адрес", "Публикация"];
+  const steps = ["Добавить изображения", "Локация", "Тип сделки", "Параметры", "Адрес", "Публикация"];
 
   return (
     <div className={styles.progress}>

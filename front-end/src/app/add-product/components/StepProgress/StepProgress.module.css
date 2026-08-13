@@ -1,7 +1,6 @@
 .progress {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 30px;
 }
 
@@ -16,8 +15,7 @@
   color: #aaa;
 
   font-size: 12px;
-  font-weight: 650;
-}
+  font-weight: 650;}
 
 .progressCircle {
   display: flex;
