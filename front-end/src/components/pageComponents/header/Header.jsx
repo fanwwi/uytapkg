@@ -135,6 +135,8 @@ export default function Header() {
                 <Link href="/agents">Риэлторы</Link>
 
                 <Link href="/pricing">Тарифы</Link>
+
+                <Link href="/all-products">Все объявления</Link>
               </div>
             )}
           </div>
