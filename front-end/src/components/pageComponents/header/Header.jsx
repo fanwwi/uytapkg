@@ -149,7 +149,7 @@ export default function Header() {
 
           <button
             className={styles.favorite}
-            onClick={() => protectedRoute("/profile/favorites")}
+            onClick={() => protectedRoute("/favorites")}
           >
             <Heart />
             Избранное
