@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { Search, MapPin } from "lucide-react";
 
 import styles from "./Hero.module.css";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
   return (
     <section className={styles.hero}>
       <div className={styles.overlay}></div>
@@ -51,7 +53,13 @@ export default function Hero() {
             Найти недвижимость
           </button>
 
-          <button className={styles.secondary}>Разместить объявление</button>
+          <button
+            type="button"
+            className={styles.secondary}
+            onClick={() => router.push("/all-products")}
+          >
+            Смотреть все объявления
+          </button>
         </div>
       </motion.div>
     </section>
