@@ -230,7 +230,7 @@ export default function IssykKulProducts() {
         <button
           type="button"
           className={styles.filter}
-          onClick={() => router.push("/#searchIssykKul")}
+          onClick={() => router.push("/issyk-kul/#searchIssykKul")}
         >
           <SlidersHorizontal size={19} />
           Фильтры

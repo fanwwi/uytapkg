@@ -455,7 +455,7 @@ export default function DeveloperProfile({ user }) {
           Мои объявления
         </a>
 
-        <a href="/profile/favorites">
+        <a href="/favorites">
           <Heart />
           Избранное
         </a>

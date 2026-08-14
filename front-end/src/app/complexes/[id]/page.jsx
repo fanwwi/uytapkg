@@ -606,24 +606,9 @@ export default function ComplexesDetails() {
             </div>
           </div>
 
-          <div className={styles.locationCard}>
-            <div className={styles.locationVisual}>
-              <MapPin size={30} />
-            </div>
-
-            <div className={styles.locationContent}>
-              <span>БИШКЕК</span>
-
+          <div className={styles.address}>
+            <div>
               <strong>{residentialComplex.address}</strong>
-
-              <p>
-                Престижный район с удобным доступом к городской инфраструктуре.
-              </p>
-
-              <button type="button">
-                Открыть на карте
-                <ArrowRight size={16} />
-              </button>
             </div>
           </div>
         </section>

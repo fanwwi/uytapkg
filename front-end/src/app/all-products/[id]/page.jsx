@@ -133,7 +133,7 @@ const product = {
   ],
 
   owner: {
-    id: "USR-48291",
+    id: "4",
     name: "Александр Иванов",
     role: "Владелец объявления",
     avatar: "https://i.pravatar.cc/150?img=12",
@@ -485,7 +485,7 @@ export default function ProductDetails() {
 
               <button
                 type="button"
-                onClick={() => router.push(`/profile/${product.owner.id}`)}
+                onClick={() => router.push(`/public-profile/${product.owner.id}`)}
               >
                 Связаться с владельцем
                 <ArrowRight size={17} />
