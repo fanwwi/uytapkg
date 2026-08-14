@@ -15,13 +15,21 @@
   --pink: #ff005f;
   --pink-2: #d90050;
   --pink-soft: #ff347e;
+}
 
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto;
+.page {
+  min-height: 100vh;
+  color: #fff;
 
-  padding: 42px 0 80px;
-
-  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 0, 111, 0.08), transparent 35%),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 0, 111, 0.05),
+      transparent 30%
+    ),
+    #0b0b0d;
+  padding: 100px;
 }
 
 /* =========================================================
@@ -261,7 +269,7 @@
 
   color: var(--pink-soft);
 
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 900;
 
   text-transform: uppercase;
@@ -316,7 +324,7 @@
 
   color: var(--text-muted);
 
-  font-size: 15px;
+  font-size: 17px;
 
   font-weight: 650;
 }
@@ -335,7 +343,7 @@
 
   color: var(--text-soft);
 
-  font-size: 15px;
+  font-size: 17px;
 
   line-height: 1.75;
 }
@@ -461,7 +469,7 @@
 .contactCard small {
   color: #55555d;
 
-  font-size: 12px;
+  font-size: 15px;
 
   font-weight: 900;
 
@@ -475,7 +483,7 @@
 
   color: #c9c9ce;
 
-  font-size: 15px;
+  font-size: 17px;
 
   font-weight: 750;
 
@@ -522,7 +530,7 @@
 
   border-radius: 13px;
 
-  font-size: 13px;
+  font-size: 15px;
 
   font-weight: 850;
 
@@ -667,7 +675,7 @@
 
   color: #595960;
 
-  font-size: 13px;
+  font-size: 15px;
 
   font-weight: 800;
 
@@ -911,7 +919,7 @@
 
   backdrop-filter: blur(10px);
 
-  font-size: 11px;
+  font-size: 13px;
 
   font-weight: 900;
 
@@ -970,7 +978,7 @@
 
   color: #5d5d65;
 
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .projectMeta span {
@@ -1111,7 +1119,7 @@
 
   color: #fff;
 
-  font-size: 12px;
+  font-size: 15px;
 
   font-weight: 850;
 
@@ -1161,7 +1169,7 @@
 
   font-family: inherit;
 
-  font-size: 12px;
+  font-size: 15px;
 
   font-weight: 800;
 

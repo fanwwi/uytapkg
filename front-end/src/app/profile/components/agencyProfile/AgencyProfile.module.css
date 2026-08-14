@@ -1,23 +1,16 @@
 .page {
   min-height: 100vh;
-  padding: 110px 20px 80px;
-
-  background:
-    radial-gradient(circle at 10% 0%, rgba(255, 0, 111, 0.1), transparent 30%),
-    radial-gradient(
-      circle at 90% 15%,
-      rgba(255, 0, 111, 0.06),
-      transparent 30%
-    ),
-    #080809;
-
   color: #fff;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 22px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 0, 111, 0.08), transparent 35%),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 0, 111, 0.05),
+      transparent 30%
+    ),
+    #0b0b0d;
+    padding: 100px;
 }
 
 /* =========================================================
@@ -25,115 +18,127 @@
 ========================================================= */
 
 .topBar {
-  width: 100%;
-  max-width: 1050px;
-}
-
-.homeButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 13px 18px;
-
-  background: rgba(255, 255, 255, 0.035);
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  border-radius: 14px;
-
-  color: #aaaab0;
-
-  text-decoration: none;
-
-  font-size: 13px;
-  font-weight: 750;
-
-  backdrop-filter: blur(15px);
-
-  transition:
-    transform 0.25s ease,
-    color 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.homeButton svg {
-  width: 18px;
-  color: #ff1479;
-}
-
-.homeButton:hover {
-  transform: translateX(-4px);
-
-  color: #fff;
-
-  background: rgba(255, 0, 111, 0.07);
-
-  border-color: rgba(255, 0, 111, 0.3);
-}
-
-/* =========================================================
-   PROFILE CARD
-========================================================= */
-
-.profileCard {
-  width: 100%;
-  max-width: 1050px;
-
-  min-height: 260px;
-
-  padding: 42px;
-
-  position: relative;
-  overflow: hidden;
-
   display: flex;
   align-items: center;
 
-  gap: 34px;
-
-  background: linear-gradient(
-    145deg,
-    rgba(29, 29, 32, 0.98),
-    rgba(14, 14, 16, 0.98)
-  );
-
-  border: 1px solid rgba(255, 255, 255, 0.075);
-
-  border-radius: 30px;
-
-  box-shadow:
-    0 35px 90px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease;
+  margin-bottom: 18px;
 }
 
-.profileCard:hover {
-  border-color: rgba(255, 0, 111, 0.17);
+.homeButton {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0 14px;
+
+  border-radius: 12px;
+
+  background: #121214;
+  border: 1px solid #27272c;
+
+  color: #85858d;
+
+  font-size: 15px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.homeButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.homeButton:hover {
+  transform: translateX(-2px);
+
+  color: #fff;
+
+  background: #18181b;
+  border-color: rgba(255, 0, 111, 0.35);
 }
 
 /* =========================================================
-   GLOW
+   MAIN PROFILE
 ========================================================= */
+
+.profileCard {
+  position: relative;
+  overflow: hidden;
+
+  display: grid;
+
+  grid-template-columns: 180px minmax(0, 1fr) 48px;
+
+  gap: 30px;
+
+  align-items: center;
+
+  padding: 34px;
+
+  border-radius: 30px;
+
+  background:
+    radial-gradient(circle at 90% 0%, rgba(255, 0, 111, 0.14), transparent 28%),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(255, 0, 111, 0.045),
+      transparent 30%
+    ),
+    linear-gradient(145deg, #19191c 0%, #111113 52%, #0b0b0d 100%);
+
+  border: 1px solid #29292e;
+
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.profileCard::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+  right: 12%;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 0, 111, 0.9),
+    transparent
+  );
+
+  box-shadow: 0 0 25px rgba(255, 0, 111, 0.45);
+}
 
 .topGlow {
   position: absolute;
 
-  width: 430px;
-  height: 430px;
+  width: 320px;
+  height: 320px;
 
-  right: -190px;
-  top: -230px;
+  top: -190px;
+  right: -100px;
+
+  border-radius: 50%;
 
   background: #ff006f;
 
-  opacity: 0.09;
+  opacity: 0.07;
 
-  filter: blur(120px);
+  filter: blur(90px);
 
   pointer-events: none;
 }
@@ -144,16 +149,17 @@
 
 .logoWrapper {
   position: relative;
-  z-index: 1;
 
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo {
-  width: 145px;
-  height: 145px;
+  position: relative;
 
-  border-radius: 30px;
+  width: 165px;
+  height: 165px;
 
   overflow: hidden;
 
@@ -161,15 +167,21 @@
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(145deg, #ff006f, #720035);
+  border-radius: 26px;
 
-  border: 4px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(
+    circle at 30% 20%,
+    #ff3c91,
+    #ff006f 45%,
+    #68002f 100%
+  );
+
+  border: 1px solid rgba(255, 0, 111, 0.4);
 
   box-shadow:
-    0 0 0 1px rgba(255, 0, 111, 0.22),
-    0 20px 60px rgba(255, 0, 111, 0.2);
-
-  position: relative;
+    0 0 0 5px rgba(255, 0, 111, 0.045),
+    0 20px 55px rgba(255, 0, 111, 0.16),
+    inset 0 0 35px rgba(0, 0, 0, 0.3);
 }
 
 .logo::after {
@@ -178,9 +190,12 @@
   position: absolute;
   inset: 0;
 
-  border-radius: 26px;
-
-  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    transparent 35%,
+    rgba(0, 0, 0, 0.22)
+  );
 
   pointer-events: none;
 }
@@ -188,6 +203,8 @@
 .logo img {
   width: 100%;
   height: 100%;
+
+  display: block;
 
   object-fit: cover;
 }
@@ -197,20 +214,14 @@
 ========================================================= */
 
 .info {
-  flex: 1;
-
   min-width: 0;
-
-  position: relative;
-  z-index: 1;
 }
 
 .heading {
   display: flex;
   align-items: center;
-  gap: 10px;
 
-  padding-right: 55px;
+  gap: 10px;
 }
 
 .heading h1 {
@@ -218,18 +229,17 @@
 
   color: #fff;
 
-  font-size: 36px;
+  font-size: clamp(28px, 4vw, 43px);
+  line-height: 1.05;
 
-  line-height: 1.1;
+  font-weight: 950;
 
-  letter-spacing: -1.1px;
-
-  font-weight: 900;
+  letter-spacing: -1.6px;
 }
 
 .verified {
-  width: 23px;
-  height: 23px;
+  width: 25px;
+  height: 25px;
 
   flex-shrink: 0;
 
@@ -239,23 +249,19 @@
 
   border-radius: 50%;
 
-  background: #ff1479;
+  color: #ff1479;
 
-  color: #fff;
+  background: rgba(255, 0, 111, 0.09);
 
-  box-shadow: 0 6px 20px rgba(255, 0, 111, 0.25);
+  border: 1px solid rgba(255, 0, 111, 0.3);
+
+  box-shadow: 0 0 18px rgba(255, 0, 111, 0.12);
 }
 
 .verified svg {
-  width: 14px;
-  height: 14px;
-
-  stroke-width: 3;
+  width: 15px;
+  height: 15px;
 }
-
-/* =========================================================
-   TYPE
-========================================================= */
 
 .type {
   width: fit-content;
@@ -265,54 +271,51 @@
 
   gap: 7px;
 
-  margin-top: 13px;
-
-  padding: 8px 13px;
+  margin-top: 12px;
+  padding: 7px 10px;
 
   border-radius: 9px;
 
-  background: rgba(255, 0, 111, 0.09);
+  color: #ff4a9b;
 
-  border: 1px solid rgba(255, 0, 111, 0.18);
+  background: rgba(255, 0, 111, 0.065);
 
-  color: #ff3b91;
+  border: 1px solid rgba(255, 0, 111, 0.16);
 
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: 900;
 
-  font-weight: 850;
-
-  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
 }
 
 .type svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
 }
 
-/* =========================================================
-   DIRECTOR
-========================================================= */
-
 .director {
-  margin-top: 17px;
-
   display: flex;
   align-items: center;
 
   gap: 8px;
 
-  color: #85858c;
+  margin-top: 13px;
 
-  font-size: 13px;
+  color: #77777f;
+
+  font-size: 15px;
 }
 
 .director svg {
-  width: 17px;
+  width: 16px;
+  height: 16px;
+
   color: #ff1479;
 }
 
 .director strong {
-  color: #cfcfd3;
+  color: #bdbdc3;
 
   font-weight: 750;
 }
@@ -325,78 +328,61 @@
   display: flex;
   flex-wrap: wrap;
 
-  gap: 10px;
+  gap: 8px;
 
-  margin-top: 20px;
+  margin-top: 19px;
 }
 
 .contact {
-  min-height: 47px;
-
-  padding: 0 15px;
+  min-height: 38px;
 
   display: inline-flex;
   align-items: center;
 
-  gap: 9px;
+  gap: 7px;
 
-  border-radius: 12px;
+  padding: 0 11px;
 
-  background: rgba(255, 255, 255, 0.045);
+  border-radius: 10px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.025);
 
-  color: #aaaab0;
+  border: 1px solid #27272c;
 
-  font-size: 12px;
+  color: #88888f;
 
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 700;
 
   text-decoration: none;
 
   transition:
-    transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .contact svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
 
   color: #ff1479;
 }
 
 .contact:hover {
-  transform: translateY(-2px);
+  color: #e8e8ec;
 
-  background: rgba(255, 0, 111, 0.07);
+  background: rgba(255, 0, 111, 0.055);
 
-  border-color: rgba(255, 0, 111, 0.2);
-
-  color: #fff;
+  border-color: rgba(255, 0, 111, 0.22);
 }
-
-/* =========================================================
-   WHATSAPP
-========================================================= */
 
 .whatsapp {
-  color: #5de58b;
+  color: #ff4a9b;
 
-  background: rgba(37, 211, 102, 0.07);
+  border-color: rgba(255, 0, 111, 0.17);
 
-  border-color: rgba(37, 211, 102, 0.16);
-}
-
-.whatsapp svg {
-  color: #5de58b;
-}
-
-.whatsapp:hover {
-  background: rgba(37, 211, 102, 0.13);
-
-  border-color: rgba(37, 211, 102, 0.28);
+  background: rgba(255, 0, 111, 0.045);
 }
 
 /* =========================================================
@@ -404,11 +390,6 @@
 ========================================================= */
 
 .edit {
-  position: absolute;
-
-  top: 25px;
-  right: 25px;
-
   width: 48px;
   height: 48px;
 
@@ -416,37 +397,36 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 13px;
+  border-radius: 14px;
 
-  border: 1px solid rgba(255, 0, 111, 0.25);
+  background: #171719;
 
-  background: rgba(255, 0, 111, 0.08);
+  border: 1px solid #2a2a2f;
 
-  color: #ff2b8a;
+  color: #77777f;
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
+    color 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color 0.2s ease;
 }
 
 .edit svg {
   width: 18px;
+  height: 18px;
 }
 
 .edit:hover {
   transform: translateY(-2px);
 
-  background: #ff006f;
-
-  border-color: #ff006f;
-
   color: #fff;
 
-  box-shadow: 0 12px 30px rgba(255, 0, 111, 0.28);
+  background: rgba(255, 0, 111, 0.09);
+
+  border-color: rgba(255, 0, 111, 0.3);
 }
 
 /* =========================================================
@@ -454,24 +434,23 @@
 ========================================================= */
 
 .about {
-  width: 100%;
-  max-width: 1050px;
+  position: relative;
 
-  padding: 28px 32px;
+  margin-top: 16px;
 
-  background: #111113;
+  padding: 25px 28px;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 22px;
 
-  border-radius: 23px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255, 0, 111, 0.055),
+      transparent 35%
+    ),
+    #111113;
 
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
-
-  transition: border-color 0.25s ease;
-}
-
-.about:hover {
-  border-color: rgba(255, 0, 111, 0.14);
+  border: 1px solid #25252a;
 }
 
 .sectionTitle {
@@ -480,32 +459,33 @@
 
   gap: 9px;
 
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .sectionTitle svg {
   width: 18px;
+  height: 18px;
 
   color: #ff1479;
 }
 
-.about h3 {
+.sectionTitle h3 {
   margin: 0;
 
   color: #fff;
 
-  font-size: 16px;
-
-  font-weight: 850;
+  font-size: 18px;
+  font-weight: 900;
 }
 
 .about p {
+  max-width: 850px;
+
   margin: 0;
 
-  color: #85858c;
+  color: #85858d;
 
-  font-size: 14px;
-
+  font-size: 15px;
   line-height: 1.75;
 }
 
@@ -514,50 +494,52 @@
 ========================================================= */
 
 .details {
-  width: 100%;
-  max-width: 1050px;
-
   display: grid;
 
   grid-template-columns: repeat(2, 1fr);
 
-  gap: 13px;
+  gap: 10px;
+
+  margin-top: 12px;
 }
 
 .detail {
-  min-height: 82px;
-
-  padding: 18px;
+  min-width: 0;
 
   display: flex;
   align-items: center;
 
-  gap: 14px;
+  gap: 13px;
 
-  background: #111113;
+  padding: 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 16px;
 
-  border-radius: 19px;
+  background: #121214;
 
-  color: #fff;
+  border: 1px solid #25252a;
+
+  color: inherit;
 
   text-decoration: none;
 
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .detail:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+
+  background: #171719;
 
   border-color: rgba(255, 0, 111, 0.2);
 }
 
 .detailIcon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
 
   flex-shrink: 0;
 
@@ -565,39 +547,47 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 14px;
+  border-radius: 11px;
 
-  background: rgba(255, 0, 111, 0.08);
-
-  border: 1px solid rgba(255, 0, 111, 0.12);
-}
-
-.detailIcon svg {
-  width: 21px;
+  background: rgba(255, 0, 111, 0.07);
 
   color: #ff1479;
 }
 
+.detailIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.detail > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
 .detail span {
-  display: block;
+  color: #5f5f66;
 
-  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 850;
 
-  color: #696970;
-
-  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .detail strong {
-  display: block;
+  overflow: hidden;
 
-  color: #d7d7da;
+  color: #c7c7cc;
 
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 700;
 
-  font-weight: 750;
-
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* =========================================================
@@ -605,67 +595,79 @@
 ========================================================= */
 
 .stats {
-  width: 100%;
-  max-width: 1050px;
-
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 
-  background: #111113;
+  gap: 12px;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
-
-  border-radius: 23px;
-
-  overflow: hidden;
+  margin-top: 16px;
 }
 
 .stat {
-  min-height: 100px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
   position: relative;
+  overflow: hidden;
+
+  padding: 20px 22px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.012)
+    ),
+    #121214;
+
+  border: 1px solid #25252a;
 }
 
-.stat:not(:last-child)::after {
+.stat::after {
   content: "";
 
   position: absolute;
 
-  right: 0;
+  width: 80px;
+  height: 80px;
 
-  top: 22px;
+  right: -30px;
+  bottom: -35px;
 
-  bottom: 22px;
+  border-radius: 50%;
 
-  width: 1px;
+  background: #ff006f;
 
-  background: rgba(255, 255, 255, 0.07);
+  opacity: 0.035;
+
+  filter: blur(20px);
 }
 
 .stat strong {
+  display: block;
+
   color: #fff;
 
-  font-size: 25px;
+  font-size: 27px;
+  line-height: 1;
 
-  font-weight: 900;
+  font-weight: 950;
+
+  letter-spacing: -0.8px;
 }
 
 .stat span {
+  display: block;
+
+  margin-top: 7px;
+
   color: #696970;
 
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: 800;
 
-  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* =========================================================
@@ -673,171 +675,226 @@
 ========================================================= */
 
 .actions {
-  width: 100%;
-  max-width: 1050px;
-
   display: grid;
 
   grid-template-columns: repeat(2, 1fr);
 
-  gap: 13px;
+  gap: 10px;
+
+  margin-top: 16px;
 }
 
-.actions a,
+.actions > a,
 .logout {
-  min-height: 100px;
-
-  padding: 22px;
+  min-height: 76px;
 
   display: flex;
   align-items: center;
 
-  gap: 17px;
+  gap: 13px;
 
-  background: linear-gradient(145deg, #151517, #0f0f11);
+  padding: 14px 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 17px;
 
-  border-radius: 20px;
+  background: #121214;
 
-  color: #fff;
+  border: 1px solid #25252a;
+
+  color: inherit;
 
   text-decoration: none;
+
+  text-align: left;
 
   cursor: pointer;
 
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
-.actions a:hover,
+.actions > a:hover,
 .logout:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 
-  border-color: rgba(255, 0, 111, 0.28);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(255, 0, 111, 0.08), transparent 45%),
+    #171719;
 
-  background: linear-gradient(145deg, #1b171a, #111012);
+  border-color: rgba(255, 0, 111, 0.2);
 
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(255, 0, 111, 0.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
-
-/* =========================================================
-   ACTION ICON
-========================================================= */
 
 .icon {
-  width: 54px;
-  height: 54px;
+  width: 43px;
+  height: 43px;
 
   flex-shrink: 0;
-
-  border-radius: 15px;
-
-  background: rgba(255, 0, 111, 0.08);
-
-  border: 1px solid rgba(255, 0, 111, 0.13);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
-}
+  border-radius: 12px;
 
-.icon svg {
-  width: 23px;
+  background: rgba(255, 0, 111, 0.07);
 
   color: #ff1479;
 }
 
-.actions a:hover .icon,
-.logout:hover .icon {
-  background: rgba(255, 0, 111, 0.15);
-
-  transform: scale(1.04);
+.icon svg {
+  width: 18px;
+  height: 18px;
 }
-
-/* =========================================================
-   ACTION TEXT
-========================================================= */
 
 .actions h3 {
   margin: 0;
 
-  color: #f5f5f6;
+  color: #e7e7ea;
 
   font-size: 15px;
-
   font-weight: 850;
 }
 
 .actions p {
-  margin: 5px 0 0;
+  margin: 4px 0 0;
 
-  color: #696970;
+  color: #626269;
 
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.logout {
+  font-family: inherit;
+}
+
+/* =========================================================
+   TARIF — АКЦЕНТ
+========================================================= */
+
+.actions > a[href="/profile/tariff"] {
+  background:
+    linear-gradient(135deg, rgba(255, 0, 111, 0.1), rgba(255, 0, 111, 0.025)),
+    #121214;
+
+  border-color: rgba(255, 0, 111, 0.22);
+}
+
+.actions > a[href="/profile/tariff"] .icon {
+  background: rgba(255, 0, 111, 0.12);
+
+  box-shadow: 0 0 25px rgba(255, 0, 111, 0.08);
+}
+
+.actions > a[href="/profile/tariff"] h3 {
+  color: #ff4a9b;
 }
 
 /* =========================================================
    LOGOUT
 ========================================================= */
 
-.logout {
-  width: 100%;
+.logout .icon {
+  background: rgba(255, 255, 255, 0.035);
 
-  font-family: inherit;
-
-  text-align: left;
+  color: #72727a;
 }
 
-.logout h3 {
-  color: #ff4a96;
+.logout:hover .icon {
+  color: #ff527f;
+
+  background: rgba(255, 45, 100, 0.08);
 }
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
-@media (max-width: 750px) {
-  .page {
-    padding: 85px 14px 50px;
-
-    gap: 15px;
-  }
-
+@media (max-width: 900px) {
   .profileCard {
-    flex-direction: column;
+    grid-template-columns: 135px minmax(0, 1fr) 45px;
 
-    text-align: center;
+    gap: 22px;
 
-    padding: 32px 20px;
-
-    border-radius: 25px;
+    padding: 27px;
   }
 
   .logo {
     width: 125px;
     height: 125px;
 
-    border-radius: 25px;
+    border-radius: 22px;
+  }
+
+  .heading h1 {
+    font-size: 32px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+  .page {
+    width: calc(100% - 20px);
+
+    padding: 20px 0 45px;
+  }
+
+  .topBar {
+    margin-bottom: 12px;
+  }
+
+  .homeButton {
+    height: 39px;
+
+    padding: 0 11px;
+
+    font-size: 14px;
+  }
+
+  .profileCard {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+
+    padding: 22px 18px;
+
+    border-radius: 24px;
+
+    text-align: center;
+  }
+
+  .logoWrapper {
+    margin-bottom: 19px;
+  }
+
+  .logo {
+    width: 125px;
+    height: 125px;
+
+    border-radius: 23px;
   }
 
   .heading {
     justify-content: center;
-
-    padding-right: 20px;
   }
 
   .heading h1 {
     font-size: 27px;
+
+    letter-spacing: -1px;
+  }
+
+  .verified {
+    width: 22px;
+    height: 22px;
   }
 
   .type {
@@ -850,9 +907,74 @@
   }
 
   .contacts {
-    flex-direction: column;
+    justify-content: center;
+  }
 
-    width: 100%;
+  .edit {
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    width: 42px;
+    height: 42px;
+  }
+
+  .about {
+    padding: 21px 18px;
+
+    border-radius: 20px;
+  }
+
+  .sectionTitle {
+    justify-content: center;
+  }
+
+  .about p {
+    font-size: 15px;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat {
+    padding: 17px;
+  }
+
+  .stat strong {
+    font-size: 24px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .actions > a,
+  .logout {
+    min-height: 70px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    width: calc(100% - 12px);
+  }
+
+  .profileCard {
+    padding: 20px 14px;
+  }
+
+  .heading h1 {
+    font-size: 25px;
   }
 
   .contact {
@@ -861,97 +983,19 @@
     justify-content: center;
   }
 
-  .edit {
-    right: 16px;
-    top: 16px;
-
-    width: 43px;
-    height: 43px;
-  }
-
-  .about {
-    padding: 23px;
-
-    border-radius: 20px;
-  }
-
-  .details {
-    grid-template-columns: 1fr;
-  }
-
   .stats {
-    border-radius: 20px;
+    gap: 8px;
   }
 
   .stat {
-    min-height: 85px;
+    padding: 15px 12px;
   }
 
   .stat strong {
-    font-size: 20px;
+    font-size: 23px;
   }
 
-  .stat span {
-    font-size: 10px;
-  }
-
-  .actions {
-    grid-template-columns: 1fr;
-
-    gap: 10px;
-  }
-
-  .actions a,
-  .logout {
-    min-height: 88px;
-
-    padding: 18px;
-
-    border-radius: 17px;
-  }
-
-  .icon {
-    width: 48px;
-    height: 48px;
-
-    border-radius: 13px;
-  }
-}
-
-/* =========================================================
-   VERY SMALL
-========================================================= */
-
-@media (max-width: 420px) {
-  .page {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .profileCard {
-    padding: 28px 15px;
-  }
-
-  .heading h1 {
-    font-size: 24px;
-  }
-
-  .homeButton {
-    padding: 11px 14px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-  }
-
-  .stat:not(:last-child)::after {
-    right: 20px;
-    left: 20px;
-
-    top: auto;
-    bottom: 0;
-
-    width: auto;
-    height: 1px;
+  .actions h3 {
+    font-size: 15px;
   }
 }

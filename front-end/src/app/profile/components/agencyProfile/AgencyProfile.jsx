@@ -227,13 +227,7 @@ export default function AgencyProfile({ user }) {
           <strong>{profile.favorites_count || 0}</strong>
           <span>Избранных</span>
         </div>
-
-        <div className={styles.stat}>
-          <strong>{user.tariff || "FREE"}</strong>
-          <span>Тариф</span>
-        </div>
       </section>
-
       {/* ACTIONS */}
 
       <section className={styles.actions}>
