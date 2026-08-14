@@ -1,0 +1,1275 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+  --bg: #09090b;
+  --card: #111114;
+  --card-2: #151519;
+  --card-hover: #19191e;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 0, 95, 0.32);
+
+  --text: #f4f4f6;
+  --text-secondary: #b0b0b8;
+  --text-muted: #777780;
+
+  --raspberry: #e60058;
+  --raspberry-light: #ff176d;
+  --raspberry-dark: #b90048;
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 105px 40px 90px;
+
+  color: var(--text);
+
+  background:
+    radial-gradient(circle at 85% 5%, rgba(230, 0, 88, 0.08), transparent 30%),
+    radial-gradient(
+      circle at 10% 45%,
+      rgba(230, 0, 88, 0.035),
+      transparent 30%
+    ),
+    var(--bg);
+
+  box-sizing: border-box;
+}
+
+.page * {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PROFILE CARD
+========================================================= */
+
+.profileCard {
+  width: min(100%, 1250px);
+
+  margin: 0 auto;
+
+  padding: 44px 48px;
+
+  position: relative;
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 28px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 24, 0.98),
+    rgba(14, 14, 17, 0.98)
+  );
+
+  box-shadow:
+    0 25px 75px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.profileCard::after {
+  content: "";
+
+  position: absolute;
+
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(230, 0, 88, 0.4),
+    transparent
+  );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   PROFILE HEADER
+========================================================= */
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+
+  gap: 36px;
+}
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.avatarWrapper {
+  position: relative;
+
+  width: 150px;
+  height: 150px;
+
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #1a1a1f;
+
+  border: 4px solid #202025;
+
+  box-shadow:
+    0 0 0 1px rgba(230, 0, 88, 0.25),
+    0 18px 45px rgba(0, 0, 0, 0.4);
+}
+
+.avatar img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.avatarVerified {
+  position: absolute;
+
+  right: -1px;
+  bottom: 2px;
+
+  width: 35px;
+  height: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--raspberry);
+
+  color: #fff;
+
+  border: 3px solid var(--card);
+}
+
+.avatarVerified svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================================================
+   PROFILE INFO
+========================================================= */
+
+.profileInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.profileNameRow {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.profileNameRow h1 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: clamp(34px, 4vw, 48px);
+  line-height: 1.08;
+
+  font-weight: 850;
+
+  letter-spacing: -1.4px;
+
+  word-break: break-word;
+}
+
+.verified {
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(230, 0, 88, 0.12);
+
+  color: var(--raspberry-light);
+}
+
+.verified svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================================================
+   ROLE / PERSON
+========================================================= */
+
+.role,
+.person {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 14px;
+
+  color: var(--text-secondary);
+
+  font-size: 16px;
+  line-height: 1.3;
+
+  font-weight: 600;
+}
+
+.role svg,
+.person svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
+  color: var(--raspberry-light);
+}
+
+.person {
+  margin-top: 8px;
+
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.description {
+  max-width: 850px;
+
+  margin: 18px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 36px 0 27px;
+
+  background: var(--border);
+}
+
+/* =========================================================
+   CONTACTS
+========================================================= */
+
+.contacts {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 13px;
+}
+
+.contact {
+  min-width: 0;
+  min-height: 78px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  background: var(--card-2);
+
+  color: inherit;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact:hover {
+  background: var(--card-hover);
+
+  border-color: var(--border-hover);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   CONTACT ICON
+========================================================= */
+
+.contactIcon {
+  width: 45px;
+  height: 45px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(230, 0, 88, 0.08);
+
+  color: var(--raspberry-light);
+}
+
+.contactIcon svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* =========================================================
+   CONTACT TEXT
+========================================================= */
+
+.contact > div:nth-child(2) {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.contact span {
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1;
+
+  font-weight: 650;
+}
+
+.contact strong {
+  overflow: hidden;
+
+  color: var(--text-secondary);
+
+  font-size: 15px;
+  line-height: 1.35;
+
+  font-weight: 650;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.external {
+  width: 16px !important;
+  height: 16px !important;
+
+  margin-left: auto;
+
+  flex-shrink: 0;
+
+  color: var(--text-muted) !important;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+  display: flex;
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 11px;
+
+  margin-top: 19px;
+}
+
+.whatsapp,
+.website {
+  min-height: 49px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 20px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.whatsapp {
+  background: var(--raspberry);
+
+  color: #fff;
+
+  border: 1px solid var(--raspberry);
+
+  box-shadow: 0 9px 25px rgba(230, 0, 88, 0.16);
+}
+
+.whatsapp:hover {
+  background: var(--raspberry-light);
+
+  border-color: var(--raspberry-light);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 13px 32px rgba(230, 0, 88, 0.23);
+}
+
+.website {
+  background: rgba(255, 255, 255, 0.015);
+
+  color: var(--text-secondary);
+
+  border: 1px solid var(--border);
+}
+
+.website:hover {
+  background: rgba(230, 0, 88, 0.07);
+
+  border-color: var(--border-hover);
+
+  color: #fff;
+
+  transform: translateY(-2px);
+}
+
+.whatsapp svg,
+.website svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+  width: min(100%, 1250px);
+
+  margin: 18px auto 0;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 13px;
+}
+
+.stat {
+  min-height: 108px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 20px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 24, 0.98),
+    rgba(14, 14, 17, 0.98)
+  );
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.stat:hover {
+  background: var(--card-2);
+
+  border-color: rgba(230, 0, 88, 0.22);
+
+  transform: translateY(-2px);
+}
+
+.statIcon {
+  width: 49px;
+  height: 49px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: rgba(230, 0, 88, 0.08);
+
+  color: var(--raspberry-light);
+}
+
+.statIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.stat strong {
+  display: block;
+
+  color: var(--text);
+
+  font-size: 27px;
+  line-height: 1;
+
+  font-weight: 850;
+}
+
+.stat span {
+  display: block;
+
+  margin-top: 7px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   PROJECTS SECTION
+========================================================= */
+
+.projectsSection {
+  width: min(100%, 1250px);
+
+  margin: 18px auto 0;
+
+  padding: 32px;
+
+  border: 1px solid var(--border);
+  border-radius: 23px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 24, 0.98),
+    rgba(14, 14, 17, 0.98)
+  );
+
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   PROJECT HEADER
+========================================================= */
+
+.sectionHeader {
+  margin-bottom: 25px;
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: var(--raspberry-light);
+
+  font-size: 12px;
+  font-weight: 750;
+
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.sectionLabel svg {
+  width: 15px;
+  height: 15px;
+}
+
+.sectionHeader h2 {
+  margin: 8px 0 0;
+
+  color: var(--text);
+
+  font-size: 29px;
+  line-height: 1.2;
+
+  font-weight: 850;
+
+  letter-spacing: -0.6px;
+}
+
+.sectionHeader p {
+  margin: 8px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   PROJECT GRID
+========================================================= */
+
+.projectsGrid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+/* =========================================================
+   PROJECT CARD
+========================================================= */
+
+.projectCard {
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: var(--card-2);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.projectCard:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(230, 0, 88, 0.25);
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================================
+   PROJECT IMAGE
+========================================================= */
+
+.projectImage {
+  position: relative;
+
+  width: 100%;
+  height: 215px;
+
+  overflow: hidden;
+
+  background: #19191d;
+}
+
+.projectImage::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.05) 70%
+  );
+
+  pointer-events: none;
+}
+
+.projectImage img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.45s ease;
+}
+
+.projectCard:hover .projectImage img {
+  transform: scale(1.04);
+}
+
+/* =========================================================
+   PROJECT STATUS
+========================================================= */
+
+.projectStatus {
+  position: absolute;
+
+  z-index: 2;
+
+  top: 12px;
+  left: 12px;
+
+  padding: 6px 9px;
+
+  border-radius: 8px;
+
+  background: rgba(9, 9, 11, 0.86);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  color: #ff4b91;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+/* =========================================================
+   PROJECT CONTENT
+========================================================= */
+
+.projectContent {
+  padding: 20px;
+}
+
+.projectContent h3 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 18px;
+  line-height: 1.3;
+
+  font-weight: 750;
+}
+
+.projectAddress {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 7px;
+
+  margin: 10px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.projectAddress svg {
+  width: 15px;
+  height: 15px;
+
+  margin-top: 2px;
+
+  flex-shrink: 0;
+
+  color: var(--raspberry-light);
+}
+
+.projectMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 11px;
+
+  margin-top: 15px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+}
+
+.projectMeta span {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.projectMeta svg {
+  width: 14px;
+  height: 14px;
+
+  color: #92929a;
+}
+
+/* =========================================================
+   PROJECT LINK
+========================================================= */
+
+.projectLink {
+  height: 44px;
+
+  margin-top: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: var(--text-secondary);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.projectLink:hover {
+  background: rgba(230, 0, 88, 0.08);
+
+  border-color: rgba(230, 0, 88, 0.22);
+
+  color: #ff4b91;
+}
+
+.projectLink svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* =========================================================
+   EMPTY PROJECTS
+========================================================= */
+
+.emptyProjects {
+  padding: 60px 25px;
+
+  text-align: center;
+
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 17px;
+
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: rgba(230, 0, 88, 0.08);
+
+  color: var(--raspberry-light);
+}
+
+.emptyIcon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.emptyProjects h3 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.emptyProjects p {
+  max-width: 460px;
+
+  margin: 8px auto 0;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.menu {
+  width: min(100%, 1250px);
+
+  margin: 18px auto 0;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 11px;
+}
+
+.menu a {
+  min-height: 53px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 15px;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  background: var(--card);
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.menu a:hover {
+  color: #fff;
+
+  background: var(--card-2);
+
+  border-color: rgba(230, 0, 88, 0.25);
+
+  transform: translateY(-2px);
+}
+
+.menu svg {
+  width: 16px;
+  height: 16px;
+
+  color: var(--raspberry-light);
+}
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .page {
+    padding: 80px 25px 70px;
+  }
+
+  .profileCard,
+  .stats,
+  .projectsSection,
+  .menu {
+    width: 100%;
+  }
+
+  .profileCard {
+    padding: 36px;
+  }
+
+  .avatarWrapper,
+  .avatar {
+    width: 135px;
+    height: 135px;
+  }
+
+  .profileHeader {
+    gap: 28px;
+  }
+
+  .projectsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 750px) {
+  .page {
+    padding: 60px 18px 60px;
+  }
+
+  .profileCard {
+    padding: 30px;
+  }
+
+  .profileHeader {
+    align-items: flex-start;
+
+    gap: 25px;
+  }
+
+  .avatarWrapper,
+  .avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profileNameRow h1 {
+    font-size: 34px;
+  }
+
+  .contacts {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .projectsSection {
+    padding: 25px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 30px 12px 45px;
+  }
+
+  .profileCard {
+    padding: 25px 19px;
+
+    border-radius: 21px;
+  }
+
+  .profileHeader {
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    gap: 20px;
+  }
+
+  .avatarWrapper,
+  .avatar {
+    width: 125px;
+    height: 125px;
+  }
+
+  .profileInfo {
+    width: 100%;
+  }
+
+  .profileNameRow {
+    justify-content: center;
+  }
+
+  .profileNameRow h1 {
+    font-size: 29px;
+
+    letter-spacing: -0.7px;
+  }
+
+  .verified {
+    width: 23px;
+    height: 23px;
+  }
+
+  .role,
+  .person {
+    justify-content: center;
+
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 14px;
+
+    line-height: 1.65;
+  }
+
+  .divider {
+    margin: 27px 0 21px;
+  }
+
+  .contacts {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+  }
+
+  .contact {
+    min-height: 68px;
+
+    padding: 13px 14px;
+  }
+
+  .contactIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .contact strong {
+    font-size: 13px;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .whatsapp,
+  .website {
+    width: 100%;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+  }
+
+  .stat {
+    min-height: 88px;
+  }
+
+  .projectsSection {
+    padding: 22px 16px;
+
+    border-radius: 19px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 24px;
+  }
+
+  .projectsGrid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .projectImage {
+    height: 210px;
+  }
+
+  .projectContent {
+    padding: 17px;
+  }
+
+  .menu {
+    grid-template-columns: 1fr;
+
+    gap: 9px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .profileCard {
+    padding: 22px 15px;
+
+    border-radius: 18px;
+  }
+
+  .avatarWrapper,
+  .avatar {
+    width: 110px;
+    height: 110px;
+  }
+
+  .avatarVerified {
+    width: 31px;
+    height: 31px;
+  }
+
+  .profileNameRow h1 {
+    font-size: 25px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .projectsSection {
+    padding: 19px 13px;
+  }
+
+  .projectImage {
+    height: 190px;
+  }
+
+  .projectContent h3 {
+    font-size: 17px;
+  }
+}
