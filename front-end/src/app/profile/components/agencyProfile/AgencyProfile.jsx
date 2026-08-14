@@ -1,22 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 import {
   Building2,
   Pencil,
   Phone,
   MessageCircle,
-  Globe,
-  MapPin,
-  Mail,
-  Home,
   Heart,
+  Home,
   CreditCard,
   LogOut,
-  Check,
+  ArrowLeft,
+  Mail,
+  MapPin,
+  Globe,
   User,
-  House,
+  Check,
 } from "lucide-react";
 
 import styles from "./AgencyProfile.module.css";
@@ -29,13 +31,26 @@ export default function AgencyProfile({ user }) {
 
   const profile = user.profile || {};
 
+  const logoUrl =
+    profile.avatar_url ||
+    profile.logo_url ||
+    profile.avatar ||
+    user.avatar_url ||
+    user.avatar ||
+    "/assets/AgencyImage.png";
+
   const companyName = profile.company_name || "Агентство недвижимости";
 
-  const director = profile.first_name || "Руководитель";
+  const director =
+    `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
+    "Руководитель";
 
   const phone = user.phone || "";
+  const whatsappNumber = phone.replace(/\D/g, "");
 
-  const whatsapp = phone.replace(/\D/g, "");
+  const website = profile.website || "";
+  const officeAddress = profile.office_address || "";
+  const email = user.email || "";
 
   function logout() {
     localStorage.removeItem("uytap_user");
@@ -46,87 +61,92 @@ export default function AgencyProfile({ user }) {
   }
 
   return (
-    <main className={styles.wrapper}>
-      <section className={styles.profileCard}>
-        <div className={styles.logoBox}>
-          {(profile.avatar_url || profile.logo_url) ? (
-            <img src={profile.avatar_url || profile.logo_url} alt={companyName} />
-          ) : (
-            <img
-              src="/assets/AgencyImage.png"
-              alt={companyName}
-            />
-          )}
+    <main className={styles.page}>
+      {/* TOP BAR */}
+
+      <div className={styles.topBar}>
+        <Link href="/" className={styles.homeButton}>
+          <ArrowLeft />
+          На главную
+        </Link>
+      </div>
+
+      {/* MAIN PROFILE */}
+
+      <motion.section
+        className={styles.profileCard}
+        initial={{
+          opacity: 0,
+          y: 30,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.45,
+          ease: "easeOut",
+        }}
+      >
+        <div className={styles.topGlow} />
+
+        {/* LOGO */}
+
+        <div className={styles.logoWrapper}>
+          <div className={styles.logo}>
+            <img src={logoUrl} alt={companyName} />
+          </div>
         </div>
 
+        {/* INFO */}
+
         <div className={styles.info}>
-          <div className={styles.title}>
+          <div className={styles.heading}>
             <h1>{companyName}</h1>
 
             {user.isVerified && (
-              <span className={styles.verify}>
+              <span className={styles.verified} title="Подтверждено">
                 <Check />
               </span>
             )}
-
-            <span className={styles.type}>Агентство</span>
           </div>
+
+          <span className={styles.type}>
+            <Building2 />
+            Агентство недвижимости
+          </span>
 
           <div className={styles.director}>
-            <User /> Руководитель: {director}
-          </div>
+            <User />
 
-          <p className={styles.about}>
-            {profile.about || "Описание агентства отсутствует"}
-          </p>
+            <span>
+              Руководитель: <strong>{director}</strong>
+            </span>
+          </div>
 
           <div className={styles.contacts}>
             {phone && (
-              <div className={styles.card}>
+              <div className={styles.contact}>
                 <Phone />
-                <div>
-                  <small>Телефон</small>
-                  <b>{phone}</b>
-                </div>
+
+                <span>{phone}</span>
               </div>
             )}
 
-            {user.email && (
-              <div className={styles.card}>
+            {email && (
+              <div className={styles.contact}>
                 <Mail />
-                <div>
-                  <small>Email</small>
-                  <b>{user.email}</b>
-                </div>
+
+                <span>{email}</span>
               </div>
             )}
 
-            {profile.office_address && (
-              <div className={styles.card}>
-                <MapPin />
-                <div>
-                  <small>Адрес</small>
-                  <b>{profile.office_address}</b>
-                </div>
-              </div>
-            )}
-
-            {profile.website && (
-              <a href={profile.website} target="_blank" className={styles.card}>
-                <Globe />
-
-                <div>
-                  <small>Сайт</small>
-                  <b>{profile.website}</b>
-                </div>
-              </a>
-            )}
-
-            {whatsapp && (
+            {whatsappNumber && (
               <a
-                href={`https://wa.me/${whatsapp}`}
+                href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
-                className={styles.whatsapp}
+                rel="noopener noreferrer"
+                className={`${styles.contact} ${styles.whatsapp}`}
               >
                 <MessageCircle />
                 WhatsApp
@@ -135,55 +155,134 @@ export default function AgencyProfile({ user }) {
           </div>
         </div>
 
-        <button className={styles.edit} onClick={() => setOpenEdit(true)}>
+        {/* EDIT */}
+
+        <button
+          type="button"
+          className={styles.edit}
+          onClick={() => setOpenEdit(true)}
+          aria-label="Редактировать профиль"
+        >
           <Pencil />
         </button>
+      </motion.section>
+
+      {/* ABOUT */}
+
+      <section className={styles.about}>
+        <div className={styles.sectionTitle}>
+          <Building2 />
+          <h3>Об агентстве</h3>
+        </div>
+
+        <p>{profile.about || "Агентство пока не добавило описание."}</p>
       </section>
 
+      {/* COMPANY DETAILS */}
+
+      {(officeAddress || website) && (
+        <section className={styles.details}>
+          {officeAddress && (
+            <div className={styles.detail}>
+              <div className={styles.detailIcon}>
+                <MapPin />
+              </div>
+
+              <div>
+                <span>Офис</span>
+                <strong>{officeAddress}</strong>
+              </div>
+            </div>
+          )}
+
+          {website && (
+            <a
+              href={website.startsWith("http") ? website : `https://${website}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.detail}
+            >
+              <div className={styles.detailIcon}>
+                <Globe />
+              </div>
+
+              <div>
+                <span>Веб-сайт</span>
+                <strong>{website}</strong>
+              </div>
+            </a>
+          )}
+        </section>
+      )}
+
+      {/* STATS */}
+
       <section className={styles.stats}>
-        <div>
+        <div className={styles.stat}>
           <strong>{profile.ads_count || 0}</strong>
           <span>Объявлений</span>
         </div>
 
-        <div>
+        <div className={styles.stat}>
           <strong>{profile.favorites_count || 0}</strong>
           <span>Избранных</span>
         </div>
 
-        <div>
+        <div className={styles.stat}>
           <strong>{user.tariff || "FREE"}</strong>
-
           <span>Тариф</span>
         </div>
       </section>
 
-      <section className={styles.menu}>
-        <a href="/">
-          <House />
-          Главная
-        </a>
+      {/* ACTIONS */}
 
-        <a href="/profile/ads">
-          <Home />
-          Мои объявления
-        </a>
+      <section className={styles.actions}>
+        <Link href="/profile/ads">
+          <div className={styles.icon}>
+            <Home />
+          </div>
 
-        <a href="/profile/favorites">
-          <Heart />
-          Избранное
-        </a>
+          <div>
+            <h3>Мои объявления</h3>
+            <p>Управление объектами</p>
+          </div>
+        </Link>
 
-        <a href="/profile/tariff">
-          <CreditCard />
-          Тариф
-        </a>
+        <Link href="/profile/favorites">
+          <div className={styles.icon}>
+            <Heart />
+          </div>
 
-        <button onClick={logout}>
-          <LogOut />
-          Выйти
+          <div>
+            <h3>Избранное</h3>
+            <p>Сохраненные объекты</p>
+          </div>
+        </Link>
+
+        <Link href="/profile/tariff">
+          <div className={styles.icon}>
+            <CreditCard />
+          </div>
+
+          <div>
+            <h3>Мой тариф</h3>
+            <p>Управление подпиской</p>
+          </div>
+        </Link>
+
+        <button type="button" className={styles.logout} onClick={logout}>
+          <div className={styles.icon}>
+            <LogOut />
+          </div>
+
+          <div>
+            <h3>Выйти</h3>
+            <p>Завершить сессию</p>
+          </div>
         </button>
       </section>
+
+      {/* EDIT MODAL */}
 
       {openEdit && (
         <AgencyEditModal user={user} close={() => setOpenEdit(false)} />
