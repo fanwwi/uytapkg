@@ -21,6 +21,14 @@ import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 export default function ProfileEditModal({ user, close }) {
   const profile = user?.profile || {};
+
+  const initialAvatar =
+    profile.avatar_url ||
+    profile.avatar ||
+    user?.avatar_url ||
+    user?.avatar ||
+    null;
+
   const [loading, setLoading] = useState(false);
 
   const [firstName, setFirstName] = useState(profile.first_name || "");
@@ -31,9 +39,16 @@ export default function ProfileEditModal({ user, close }) {
 
   const [about, setAbout] = useState(profile.about || "");
 
-  const [avatar, setAvatar] = useState(profile.avatar_url || null);
+  const DEFAULT_AVATAR = "/personalImage.png";
+
+  const [avatar, setAvatar] = useState(
+    profile.avatar_url || profile.avatar || DEFAULT_AVATAR,
+  );
 
   const [avatarFile, setAvatarFile] = useState(null);
+
+  // true только если пользователь специально удалил аватар
+  const [avatarRemoved, setAvatarRemoved] = useState(false);
 
   const accountMap = {
     personal: "Частное лицо",
@@ -48,21 +63,125 @@ export default function ProfileEditModal({ user, close }) {
 
   const accountTypes = ["Частное лицо", "Риэлтор", "Агентство", "Застройщик"];
 
+  /*
+   * =========================================================
+   * ВЫБРАТЬ НОВЫЙ АВАТАР
+   * =========================================================
+   */
+
   function uploadAvatar(e) {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Размер изображения не должен превышать 5 МБ");
+      return;
+    }
+
     setAvatarFile(file);
+
+    // Если выбрали новое фото после удаления —
+    // отменяем состояние удаления
+    setAvatarRemoved(false);
 
     setAvatar(URL.createObjectURL(file));
   }
 
+  /*
+   * =========================================================
+   * УДАЛИТЬ АВАТАР
+   * =========================================================
+   */
+
   function removeAvatar() {
     setAvatar(null);
-
     setAvatarFile(null);
+
+    // ВАЖНО:
+    // save() теперь отправит personalImage.png
+    setAvatarRemoved(true);
   }
+
+  /*
+   * =========================================================
+   * URL -> FILE
+   * =========================================================
+   */
+
+  async function fileFromUrl(url, fileName) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Не удалось получить изображение");
+    }
+
+    const blob = await response.blob();
+
+    return new File([blob], fileName, {
+      type: blob.type || "image/png",
+    });
+  }
+
+  /*
+   * =========================================================
+   * ПОЛУЧИТЬ АВАТАР ДЛЯ ОТПРАВКИ
+   * =========================================================
+   */
+
+  async function getAvatarFile() {
+    /*
+     * -------------------------------------------------------
+     * 1. ПОЛЬЗОВАТЕЛЬ УДАЛИЛ АВАТАР
+     *
+     * Всегда отправляем дефолтную картинку.
+     * -------------------------------------------------------
+     */
+
+    if (avatarRemoved) {
+      return await fileFromUrl(
+        "/assets/personalImage.png",
+        "personalImage.png",
+      );
+    }
+
+    /*
+     * -------------------------------------------------------
+     * 2. ПОЛЬЗОВАТЕЛЬ ВЫБРАЛ НОВЫЙ АВАТАР
+     * -------------------------------------------------------
+     */
+
+    if (avatarFile) {
+      return avatarFile;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * 3. АВАТАР НЕ МЕНЯЛИ
+     *
+     * Берём существующую картинку
+     * и отправляем её заново.
+     * -------------------------------------------------------
+     */
+
+    if (initialAvatar) {
+      return await fileFromUrl(initialAvatar, "current-avatar.jpg");
+    }
+
+    /*
+     * -------------------------------------------------------
+     * 4. АВАТАРА ИЗНАЧАЛЬНО НЕ БЫЛО
+     * -------------------------------------------------------
+     */
+
+    return await fileFromUrl("/personalImage.png", "personalImage.png");
+  }
+
+  /*
+   * =========================================================
+   * SAVE
+   * =========================================================
+   */
 
   async function save() {
     if (loading) return;
@@ -71,71 +190,197 @@ export default function ProfileEditModal({ user, close }) {
       setLoading(true);
 
       const token = localStorage.getItem("uytap_token");
+
       if (!token) {
         throw new Error("Сначала войдите в аккаунт");
       }
 
-      const form = new FormData();
-      form.append("first_name", firstName);
-      form.append("last_name", lastName);
-      form.append("phone", phone);
-      form.append("about", about);
+      /*
+       * -----------------------------------------------------
+       * Получаем файл аватара
+       * -----------------------------------------------------
+       */
 
-      if (avatarFile) {
-        form.append("avatar", avatarFile);
-      }
+      const finalAvatarFile = await getAvatarFile();
+
+      /*
+       * -----------------------------------------------------
+       * FormData
+       * -----------------------------------------------------
+       */
+
+      const form = new FormData();
+
+      form.append("first_name", firstName.trim());
+
+      form.append("last_name", lastName.trim());
+
+      form.append("phone", phone.trim());
+
+      form.append("about", about.trim());
+
+      /*
+       * Аватар ВСЕГДА отправляем.
+       *
+       * Если удалили:
+       * personalImage.png
+       *
+       * Если заменили:
+       * новый файл
+       *
+       * Если не меняли:
+       * старый файл
+       */
+
+      form.append("avatar", finalAvatarFile);
+
+      /*
+       * -----------------------------------------------------
+       * Отправляем профиль + аватар
+       * -----------------------------------------------------
+       */
 
       const response = await fetch("/api/auth/avatar", {
         method: "POST",
+
         headers: {
           Authorization: `Bearer ${token}`,
         },
+
         body: form,
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
+
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Не удалось сохранить аватар");
+        throw new Error(result.message || "Не удалось сохранить профиль");
       }
+
+      /*
+       * -----------------------------------------------------
+       * Аватар после сохранения
+       * -----------------------------------------------------
+       */
 
       const refreshedProfile = result.profile || {};
-      const updatedUser = {
-        ...user,
-        profile: {
-          ...(user?.profile || {}),
-          ...refreshedProfile,
-          avatar_url: refreshedProfile.avatar_url || refreshedProfile.avatar || user?.profile?.avatar_url || user?.profile?.avatar || null,
-          avatar: refreshedProfile.avatar_url || refreshedProfile.avatar || user?.profile?.avatar_url || user?.profile?.avatar || null,
-        },
-      };
-      localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
-      // Notify other parts of the app (same window) that the user was updated
-      try {
-        window.dispatchEvent(new CustomEvent("uytap:user-updated", { detail: updatedUser }));
-      } catch (e) {
-        console.warn("Could not dispatch user-updated event", e);
+
+      let savedAvatar;
+
+      /*
+       * Если пользователь удалил аватар,
+       * показываем именно дефолтную картинку.
+       */
+
+      if (avatarRemoved) {
+        savedAvatar =
+          refreshedProfile.avatar_url ||
+          refreshedProfile.avatar ||
+          "/personalImage.png";
+      } else {
+        savedAvatar =
+          refreshedProfile.avatar_url ||
+          refreshedProfile.avatar ||
+          avatar ||
+          initialAvatar ||
+          "/personalImage.png";
       }
 
-      const payload = {
+      /*
+       * -----------------------------------------------------
+       * Обновляем локального пользователя
+       * -----------------------------------------------------
+       */
+
+      const updatedUser = {
+        ...user,
+
+        phone,
+
+        profile: {
+          ...(user?.profile || {}),
+
+          ...refreshedProfile,
+
+          first_name: firstName,
+          last_name: lastName,
+          about,
+
+          avatar_url: savedAvatar,
+          avatar: savedAvatar,
+        },
+      };
+
+      localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
+
+      /*
+       * -----------------------------------------------------
+       * Notify app
+       * -----------------------------------------------------
+       */
+
+      try {
+        window.dispatchEvent(
+          new CustomEvent("uytap:user-updated", {
+            detail: updatedUser,
+          }),
+        );
+      } catch (error) {
+        console.warn("Could not dispatch user-updated event", error);
+      }
+
+      /*
+       * -----------------------------------------------------
+       * Обновляем остальные данные пользователя
+       * -----------------------------------------------------
+       */
+
+      await updateMe(token, {
         firstName,
         lastName,
         phone,
         about,
-      };
-
-      console.log("UpdateMe payload:", payload);
-      const updateResult = await updateMe(token, payload).catch((e) => {
-        console.error("updateMe error:", e);
-        throw e;
       });
-      console.log("updateMe result:", updateResult);
+
+      /*
+       * -----------------------------------------------------
+       * Получаем полностью свежего пользователя
+       * -----------------------------------------------------
+       */
+
       const freshUser = await getMe(token);
-      console.log("getMe after update:", freshUser);
+
+      /*
+       * Если backend почему-то не вернул
+       * дефолтный avatar после удаления,
+       * сохраняем его на фронте.
+       */
+
+      if (avatarRemoved) {
+        freshUser.profile = {
+          ...(freshUser.profile || {}),
+
+          avatar_url: freshUser?.profile?.avatar_url || "/personalImage.png",
+
+          avatar: freshUser?.profile?.avatar || "/personalImage.png",
+        };
+      }
+
       localStorage.setItem("uytap_user", JSON.stringify(freshUser));
+
+      /*
+       * -----------------------------------------------------
+       * Успешно
+       * -----------------------------------------------------
+       */
+
       close();
+
+      // reload ТОЛЬКО если всё успешно
+      window.location.reload();
     } catch (error) {
       console.error("PROFILE SAVE ERROR:", error);
-      alert(error.message || "Не удалось сохранить профиль");
+
+      alert(error?.message || "Не удалось сохранить изменения");
     } finally {
       setLoading(false);
     }
@@ -144,7 +389,12 @@ export default function ProfileEditModal({ user, close }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <button className={styles.close} onClick={close}>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={close}
+          disabled={loading}
+        >
           <X />
         </button>
 
@@ -155,29 +405,54 @@ export default function ProfileEditModal({ user, close }) {
             <p>Обновите личные данные</p>
           </header>
 
+          {/* =================================================
+              AVATAR
+          ================================================= */}
+
           <div className={styles.avatarBlock}>
-            <div className={styles.avatar}>
-              {avatar ? <img src={avatar} alt="avatar" /> : <User />}
+            <div className={styles.avatarWrapper}>
+              <div className={styles.avatar}>
+                {avatar ? (
+                  <img src={avatar} alt="Аватар пользователя" />
+                ) : (
+                  <User />
+                )}
+              </div>
             </div>
 
-            <label className={styles.upload}>
-              <Camera />
-              Изменить фото
-              <input
-                hidden
-                type="file"
-                accept="image/*"
-                onChange={uploadAvatar}
-              />
-            </label>
+            <div className={styles.avatarActions}>
+              <label className={styles.upload}>
+                <Camera size={17} />
 
-            {avatar && (
-              <button className={styles.remove} onClick={removeAvatar}>
-                <Trash2 />
-                Удалить
-              </button>
-            )}
+                <span>{avatar ? "Изменить фото" : "Добавить фото"}</span>
+
+                <input
+                  hidden
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={uploadAvatar}
+                  disabled={loading}
+                />
+              </label>
+
+              {avatar && (
+                <button
+                  type="button"
+                  className={styles.remove}
+                  onClick={removeAvatar}
+                  disabled={loading}
+                >
+                  <Trash2 size={17} />
+
+                  <span>Удалить фото</span>
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* =================================================
+              FIELDS
+          ================================================= */}
 
           <div className={styles.fields}>
             <div className={styles.row}>
@@ -188,6 +463,7 @@ export default function ProfileEditModal({ user, close }) {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Имя"
+                  disabled={loading}
                 />
               </div>
 
@@ -198,6 +474,7 @@ export default function ProfileEditModal({ user, close }) {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Фамилия"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -209,6 +486,7 @@ export default function ProfileEditModal({ user, close }) {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Телефон"
+                disabled={loading}
               />
             </div>
 
@@ -219,6 +497,7 @@ export default function ProfileEditModal({ user, close }) {
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
                 placeholder="Расскажите о себе"
+                disabled={loading}
               />
             </div>
 
@@ -233,8 +512,18 @@ export default function ProfileEditModal({ user, close }) {
             )}
           </div>
 
-          <button className={styles.save} onClick={save} disabled={loading}>
-            <Check />
+          {/* =================================================
+              SAVE
+          ================================================= */}
+
+          <button
+            type="button"
+            className={styles.save}
+            onClick={save}
+            disabled={loading}
+          >
+            <Check size={18} />
+
             {loading ? "Сохраняем..." : "Сохранить изменения"}
           </button>
         </div>
