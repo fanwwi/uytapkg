@@ -16,8 +16,8 @@ import {
 } from "lucide-react";
 
 import styles from "./ProfileEditModal.module.css";
+import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 export default function ProfileEditModal({ user, close }) {
   const profile = user?.profile || {};
@@ -502,7 +502,7 @@ export default function ProfileEditModal({ user, close }) {
             </div>
 
             {user?.accountType === "personal" && (
-              <CustomSelect
+              <CustomSelectBlack
                 icon={UserRoundCog}
                 title="Тип аккаунта"
                 options={accountTypes}

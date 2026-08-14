@@ -349,7 +349,7 @@ export default function DeveloperProfile({ user }) {
             </p>
           </div>
 
-          <a href="/profile/projects/create" className={styles.addProject}>
+          <a href="/add-residential-complex" className={styles.addProject}>
             <Plus />
             Добавить ЖК
           </a>
@@ -427,7 +427,7 @@ export default function DeveloperProfile({ user }) {
               ваши проекты прямо в профиле.
             </p>
 
-            <a href="/profile/projects/create" className={styles.emptyButton}>
+            <a href="/add-residential-complex" className={styles.emptyButton}>
               <Plus />
               Добавить первый ЖК
             </a>
