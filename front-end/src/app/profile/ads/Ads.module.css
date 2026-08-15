@@ -1,11 +1,22 @@
 .page {
   min-height: 100vh;
-  padding: 50px;
-  background: #fafafa;
+  padding: 45px 40px 80px;
+
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 0, 111, 0.09), transparent 27%),
+    radial-gradient(
+      circle at 95% 35%,
+      rgba(255, 0, 111, 0.055),
+      transparent 24%
+    ),
+    #0b0b0e;
+
+  color: #fff;
 }
 
 .container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
@@ -17,75 +28,82 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 35px;
+
+  gap: 35px;
+  margin-bottom: 32px;
+}
+
+.headerText {
+  max-width: 720px;
 }
 
 .eyebrow {
   display: block;
-  margin-bottom: 8px;
 
-  color: #ff006f;
+  margin-bottom: 9px;
 
-  font-size: 13px;
-  font-weight: 800;
+  color: #ff1479;
+
+  font-size: 12px;
+  font-weight: 900;
+
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 1.8px;
 }
 
 .header h1 {
   margin: 0;
 
-  color: #111;
+  color: #fff;
 
-  font-size: 42px;
-  line-height: 1.1;
+  font-size: 43px;
+  line-height: 1.05;
   font-weight: 900;
 
-  letter-spacing: -1px;
+  letter-spacing: -1.5px;
 }
 
 .header p {
-  max-width: 650px;
+  margin: 13px 0 0;
 
-  margin: 11px 0 0;
+  color: #85858d;
 
-  color: #888;
-
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 /* =========================
-   ADD
+   ADD BUTTON
 ========================= */
 
-.add {
-  height: 55px;
+.addButton {
+  height: 53px;
 
-  padding: 0 22px;
+  padding: 0 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 9px;
 
   flex-shrink: 0;
 
-  border: none;
-  border-radius: 18px;
+  border: 1px solid rgba(255, 0, 111, 0.5);
+  border-radius: 15px;
 
   background: #ff006f;
 
-  color: white;
+  color: #fff;
 
   font-family: inherit;
-  font-size: 15px;
-  font-weight: 800;
+
+  font-size: 14px;
+  font-weight: 850;
 
   cursor: pointer;
 
-  box-shadow: 0 10px 25px rgba(255, 0, 111, 0.2);
+  box-shadow: 0 12px 35px rgba(255, 0, 111, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -93,57 +111,57 @@
     box-shadow 0.2s ease;
 }
 
-.add:hover {
-  background: #e60063;
+.addButton:hover {
+  background: #e90066;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 15px 32px rgba(255, 0, 111, 0.28);
+  box-shadow: 0 17px 40px rgba(255, 0, 111, 0.3);
 }
 
-.add:active {
+.addButton:active {
   transform: translateY(0);
 }
 
-.add svg {
-  width: 19px;
-  height: 19px;
-}
-
 /* =========================
-   OVERVIEW STATS
+   STATS
 ========================= */
 
-.statsOverview {
+.stats {
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
 
-  gap: 15px;
+  gap: 14px;
 
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
 
-.overviewCard {
-  min-height: 100px;
+.statCard {
+  min-height: 92px;
 
-  padding: 20px;
+  padding: 18px;
 
   display: flex;
   align-items: center;
 
-  gap: 14px;
+  gap: 13px;
 
-  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 19px;
 
-  border-radius: 22px;
+  background: linear-gradient(
+    145deg,
+    rgba(27, 27, 31, 0.98),
+    rgba(18, 18, 21, 0.98)
+  );
 
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.045);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
-.overviewIcon {
-  width: 48px;
-  height: 48px;
+.statIcon {
+  width: 45px;
+  height: 45px;
 
   flex-shrink: 0;
 
@@ -151,51 +169,49 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 15px;
+  border-radius: 13px;
 }
 
-.overviewIcon svg {
-  width: 22px;
-  height: 22px;
+.statIcon.pink {
+  background: rgba(255, 0, 111, 0.11);
+  color: #ff1479;
 }
 
-.pink {
-  background: #fff0f7;
-  color: #ff006f;
+.statIcon.green {
+  background: rgba(41, 190, 104, 0.1);
+  color: #45d982;
 }
 
-.orange {
-  background: #fff4e8;
-  color: #f28b22;
+.statIcon.orange {
+  background: rgba(255, 157, 48, 0.1);
+  color: #ffae4c;
 }
 
-.purple {
-  background: #f3efff;
-  color: #7955d8;
+.statIcon.red {
+  background: rgba(239, 75, 88, 0.1);
+  color: #ff6470;
 }
 
-.red {
-  background: #fff0f1;
-  color: #ef4b58;
-}
+.statCard > div:last-child {
+  min-width: 0;
 
-.overviewCard div:last-child {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+
+  gap: 5px;
 }
 
-.overviewCard span {
-  color: #999;
+.statCard span {
+  color: #73737b;
 
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.overviewCard strong {
-  color: #171717;
+.statCard strong {
+  color: #fff;
 
-  font-size: 25px;
+  font-size: 24px;
   line-height: 1;
 
   font-weight: 900;
@@ -205,21 +221,21 @@
    RESULT
 ========================= */
 
-.result {
+.resultBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
-  color: #888;
+  color: #777780;
 
-  font-size: 15px;
+  font-size: 13px;
 }
 
-.result strong {
-  color: #222;
-  font-size: 17px;
+.resultBar strong {
+  color: #fff;
+
+  font-size: 16px;
 }
 
 /* =========================
@@ -229,9 +245,9 @@
 .grid {
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  gap: 25px;
+  gap: 20px;
 }
 
 /* =========================
@@ -241,45 +257,73 @@
 .card {
   overflow: hidden;
 
-  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 24px;
 
-  border-radius: 28px;
+  background: linear-gradient(145deg, #17171a, #101012);
 
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
   transition:
     transform 0.25s ease,
+    border-color 0.25s ease,
     box-shadow 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-7px);
+  transform: translateY(-5px);
 
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.11);
+  border-color: rgba(255, 0, 111, 0.22);
+
+  box-shadow:
+    0 25px 65px rgba(0, 0, 0, 0.48),
+    0 0 35px rgba(255, 0, 111, 0.055);
 }
 
 /* =========================
    IMAGE
 ========================= */
 
-.image {
+.imageWrapper {
   position: relative;
 
   height: 245px;
 
   overflow: hidden;
 
+  background: #151518;
+
   cursor: pointer;
 }
 
-.image img {
+.imageWrapper img {
   object-fit: cover;
 
-  transition: transform 0.4s ease;
+  transition:
+    transform 0.45s ease,
+    filter 0.35s ease;
 }
 
-.card:hover .image img {
-  transform: scale(1.04);
+.card:hover .imageWrapper img {
+  transform: scale(1.045);
+
+  filter: brightness(1.04);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.42),
+    transparent 40%,
+    rgba(0, 0, 0, 0.5)
+  );
+
+  pointer-events: none;
 }
 
 /* =========================
@@ -289,22 +333,25 @@
 .badges {
   position: absolute;
 
-  top: 17px;
-  left: 17px;
-  right: 17px;
+  top: 15px;
+  left: 15px;
+  right: 15px;
 
-  z-index: 3;
+  z-index: 2;
 
   display: flex;
   align-items: center;
+
   gap: 7px;
+
+  flex-wrap: wrap;
 }
 
-.status,
-.type {
-  height: 34px;
+.typeBadge,
+.statusBadge {
+  height: 32px;
 
-  padding: 0 12px;
+  padding: 0 10px;
 
   display: flex;
   align-items: center;
@@ -312,55 +359,79 @@
 
   gap: 5px;
 
-  border-radius: 12px;
+  border-radius: 10px;
 
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 850;
 
-  white-space: nowrap;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
-
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
 }
 
-.status svg {
-  width: 14px;
-  height: 14px;
+.typeBadge {
+  background: rgba(15, 15, 18, 0.82);
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+
+  color: #fff;
 }
 
-.type {
-  background: rgba(255, 255, 255, 0.95);
-  color: #ff006f;
+.statusActive {
+  background: rgba(24, 151, 77, 0.9);
+
+  color: #fff;
 }
 
-.active {
-  background: #eafff2;
-  color: #159447;
+.statusPending {
+  background: rgba(207, 128, 0, 0.92);
+
+  color: #fff;
 }
 
-.pending {
-  background: #fff4df;
-  color: #c87900;
+.imageDeal {
+  position: absolute;
+
+  right: 15px;
+  bottom: 14px;
+
+  z-index: 2;
+
+  padding: 7px 11px;
+
+  border-radius: 9px;
+
+  background: rgba(0, 0, 0, 0.62);
+
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 850;
+
+  text-transform: uppercase;
+
+  backdrop-filter: blur(10px);
 }
 
 /* =========================
    CONTENT
 ========================= */
 
-.content {
-  padding: 23px;
+.cardContent {
+  padding: 21px;
 }
 
-.content h2 {
+.cardContent h2 {
+  min-height: 54px;
+
   margin: 0;
 
-  color: #111;
+  color: #fff;
 
-  font-size: 21px;
-  line-height: 1.3;
+  font-size: 19px;
+  line-height: 1.4;
 
   font-weight: 800;
+
+  letter-spacing: -0.25px;
 }
 
 /* =========================
@@ -368,78 +439,101 @@
 ========================= */
 
 .location {
-  margin-top: 13px;
-
   display: flex;
   align-items: center;
 
   gap: 7px;
 
-  color: #777;
+  margin-top: 11px;
 
-  font-size: 15px;
+  color: #8a8a92;
+
+  font-size: 13px;
 }
 
 .location svg {
-  width: 18px;
-  height: 18px;
-
   flex-shrink: 0;
 
-  color: #ff006f;
+  color: #ff1479;
 }
 
 /* =========================
-   METRICS
+   INFO
 ========================= */
 
-.metrics {
+.infoRow {
   display: flex;
   align-items: center;
 
-  gap: 16px;
+  gap: 12px;
 
-  margin-top: 17px;
+  margin-top: 16px;
 }
 
-.metrics span {
+.infoRow span {
   display: flex;
   align-items: center;
 
-  gap: 6px;
+  gap: 5px;
 
-  color: #888;
+  padding-right: 12px;
 
-  font-size: 13px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #777780;
+
+  font-size: 11px;
   font-weight: 700;
 }
 
-.metrics svg {
-  width: 17px;
-  height: 17px;
+.infoRow span:last-child {
+  border-right: none;
+
+  color: #b0b0b7;
 }
 
-.metrics span:last-child svg {
-  color: #ff006f;
+.infoRow span:last-child svg {
+  color: #ff1479;
 }
 
 /* =========================
    PRICE
 ========================= */
 
-.bottom {
-  margin-top: 18px;
+.priceRow {
+  margin-top: 17px;
 
-  padding-top: 17px;
+  padding-top: 16px;
 
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(255, 255, 255, 0.065);
 }
 
-.bottom strong {
-  color: #111;
+.priceRow > div {
+  display: flex;
+  flex-direction: column;
 
-  font-size: 22px;
-  font-weight: 900;
+  gap: 4px;
+}
+
+.priceRow span {
+  color: #66666f;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.priceRow strong {
+  color: #ff1479;
+
+  font-size: 24px;
+  line-height: 1;
+
+  font-weight: 950;
+
+  letter-spacing: -0.5px;
 }
 
 /* =========================
@@ -447,19 +541,19 @@
 ========================= */
 
 .actions {
-  display: flex;
+  display: grid;
 
-  gap: 9px;
+  grid-template-columns: minmax(0, 1fr) 44px 44px;
+
+  gap: 8px;
 
   margin-top: 18px;
 }
 
 .actions button {
-  height: 43px;
+  height: 44px;
 
-  border: none;
-
-  border-radius: 13px;
+  border-radius: 12px;
 
   font-family: inherit;
 
@@ -468,59 +562,71 @@
   transition:
     background 0.2s ease,
     color 0.2s ease,
+    border-color 0.2s ease,
     transform 0.2s ease;
 }
 
-.actions svg {
-  width: 17px;
-  height: 17px;
+/* DETAILS */
+
+.detailsButton {
+  border: 1px solid #ff006f;
+
+  background: #ff006f;
+
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 850;
 }
 
-/* EDIT */
+.detailsButton:hover {
+  background: #e60063;
 
-.edit {
-  flex: 1;
+  border-color: #e60063;
 
+  transform: translateY(-2px);
+}
+
+/* ICON BUTTON */
+
+.iconButton {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
-  background: #f5f5f5;
+  background: #222226;
 
-  color: #333;
-
-  font-size: 14px;
-  font-weight: 800;
+  color: #aaaab2;
 }
 
-.edit:hover {
-  background: #ffe4f0;
-  color: #ff006f;
+.iconButton:hover {
+  border-color: rgba(255, 0, 111, 0.35);
 
-  transform: translateY(-1px);
+  background: rgba(255, 0, 111, 0.1);
+
+  color: #ff1479;
+
+  transform: translateY(-2px);
 }
 
 /* DELETE */
 
-.delete {
-  width: 43px;
+.deleteButton {
+  background: rgba(239, 75, 88, 0.08);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-color: rgba(239, 75, 88, 0.12);
 
-  background: #fff1f2;
-
-  color: #e54855;
+  color: #ed5964;
 }
 
-.delete:hover {
+.deleteButton:hover {
   background: #e54855;
-  color: white;
 
-  transform: translateY(-1px);
+  border-color: #e54855;
+
+  color: #fff;
 }
 
 /* =========================
@@ -528,7 +634,7 @@
 ========================= */
 
 .empty {
-  min-height: 360px;
+  min-height: 390px;
 
   padding: 60px 25px;
 
@@ -539,74 +645,74 @@
 
   text-align: center;
 
-  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 25px;
 
-  border-radius: 28px;
+  background: #141416;
 
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.3);
 }
 
 .emptyIcon {
-  width: 64px;
-  height: 64px;
+  width: 66px;
+  height: 66px;
+
+  margin-bottom: 18px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 18px;
+  border-radius: 19px;
 
-  border-radius: 20px;
+  background: rgba(255, 0, 111, 0.1);
 
-  background: #fff0f7;
+  border: 1px solid rgba(255, 0, 111, 0.16);
 
-  color: #ff006f;
-}
-
-.emptyIcon svg {
-  width: 28px;
-  height: 28px;
+  color: #ff1479;
 }
 
 .empty h2 {
   margin: 0;
 
-  color: #111;
+  color: #fff;
 
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 900;
 }
 
 .empty p {
-  max-width: 450px;
+  max-width: 440px;
 
-  margin: 10px 0 22px;
+  margin: 10px 0 23px;
 
-  color: #888;
+  color: #777780;
 
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .empty button {
   height: 45px;
 
-  padding: 0 20px;
+  padding: 0 19px;
 
   display: flex;
   align-items: center;
+
   gap: 8px;
 
   border: none;
-  border-radius: 14px;
+  border-radius: 13px;
 
   background: #ff006f;
 
-  color: white;
+  color: #fff;
 
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 800;
+
+  font-size: 13px;
+  font-weight: 850;
 
   cursor: pointer;
 
@@ -619,26 +725,21 @@
   transform: translateY(-2px);
 }
 
-.empty button svg {
-  width: 17px;
-  height: 17px;
-}
-
 /* =========================
    TABLET
 ========================= */
 
-@media (max-width: 1050px) {
+@media (max-width: 1100px) {
   .page {
-    padding: 40px;
+    padding: 35px 25px 65px;
   }
 
-  .statsOverview {
+  .stats {
     grid-template-columns: repeat(2, 1fr);
   }
 
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -648,17 +749,16 @@
 
 @media (max-width: 700px) {
   .page {
-    padding: 25px 18px;
+    padding: 25px 16px 50px;
   }
 
   .header {
-    align-items: stretch;
-
     flex-direction: column;
+    align-items: stretch;
 
     gap: 20px;
 
-    margin-bottom: 28px;
+    margin-bottom: 25px;
   }
 
   .header h1 {
@@ -666,76 +766,92 @@
   }
 
   .header p {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 14px;
   }
 
-  .add {
+  .addButton {
     width: 100%;
   }
 
-  .statsOverview {
+  .stats {
     grid-template-columns: 1fr 1fr;
 
-    gap: 10px;
+    gap: 9px;
 
-    margin-bottom: 28px;
+    margin-bottom: 25px;
   }
 
-  .overviewCard {
-    min-height: 90px;
+  .statCard {
+    min-height: 82px;
 
-    padding: 15px;
+    padding: 13px;
 
-    border-radius: 18px;
+    gap: 9px;
 
-    gap: 10px;
+    border-radius: 16px;
   }
 
-  .overviewIcon {
-    width: 40px;
-    height: 40px;
+  .statIcon {
+    width: 38px;
+    height: 38px;
 
-    border-radius: 12px;
+    border-radius: 11px;
   }
 
-  .overviewIcon svg {
+  .statIcon svg {
     width: 18px;
     height: 18px;
   }
 
-  .overviewCard strong {
-    font-size: 21px;
+  .statCard span {
+    font-size: 10px;
   }
 
-  .overviewCard span {
-    font-size: 11px;
+  .statCard strong {
+    font-size: 20px;
   }
 
   .grid {
     grid-template-columns: 1fr;
 
-    gap: 18px;
+    gap: 17px;
   }
 
-  .image {
-    height: 230px;
+  .imageWrapper {
+    height: 225px;
   }
 
-  .content {
-    padding: 20px;
+  .cardContent {
+    padding: 19px;
   }
 
-  .content h2 {
-    font-size: 20px;
+  .cardContent h2 {
+    min-height: auto;
+
+    font-size: 19px;
   }
 
-  .status,
-  .type {
-    height: 32px;
+  .infoRow {
+    gap: 9px;
+  }
 
-    padding: 0 10px;
+  .infoRow span {
+    padding-right: 9px;
 
-    font-size: 11px;
+    font-size: 10px;
+  }
+
+  .priceRow strong {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 400px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard {
+    min-height: 72px;
   }
 }
