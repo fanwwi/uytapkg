@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   Building2,
   CalendarDays,
-  ChevronRight,
   Edit,
   Eye,
   Home,
@@ -14,22 +13,25 @@ import {
   Plus,
   Trash2,
   TrendingUp,
+  X,
+  Save,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./ResidentialComplexes.module.css";
 import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
+import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 
-const complexes = [
+const initialComplexes = [
   {
     id: 1,
     name: "ЖК Ала-Тоо",
     address: "ул. Токтогула, 125, Бишкек",
     status: "Строительство",
     class: "Бизнес",
-    completionDate: "2027-09-01",
     completionLabel: "Сентябрь 2027",
+    completionDate: "2027-09-01",
     progress: 68,
     floors: 16,
     apartments: 384,
@@ -46,8 +48,8 @@ const complexes = [
     address: "мкр. Джал, Бишкек",
     status: "Строительство",
     class: "Премиум",
-    completionDate: "2028-05-01",
     completionLabel: "Май 2028",
+    completionDate: "2028-05-01",
     progress: 34,
     floors: 20,
     apartments: 520,
@@ -64,8 +66,8 @@ const complexes = [
     address: "ул. Байтик Баатыра, 72, Бишкек",
     status: "Сдан",
     class: "Комфорт",
-    completionDate: "2025-11-01",
     completionLabel: "Ноябрь 2025",
+    completionDate: "2025-11-01",
     progress: 100,
     floors: 12,
     apartments: 288,
@@ -82,8 +84,8 @@ const complexes = [
     address: "ул. Масалиева, 44, Бишкек",
     status: "Проект",
     class: "Комфорт",
-    completionDate: "2029-03-01",
     completionLabel: "Март 2029",
+    completionDate: "2029-03-01",
     progress: 8,
     floors: 14,
     apartments: 420,
@@ -98,6 +100,10 @@ const complexes = [
 
 const statusOptions = ["Все статусы", "Проект", "Строительство", "Сдан"];
 
+const editStatusOptions = ["Проект", "Строительство", "Сдан"];
+
+const classOptions = ["Эконом", "Комфорт", "Бизнес", "Премиум"];
+
 const statusClass = {
   Проект: "project",
   Строительство: "construction",
@@ -107,8 +113,29 @@ const statusClass = {
 export default function ResidentialComplexes() {
   const router = useRouter();
 
+  const [complexes, setComplexes] = useState(initialComplexes);
+
   const [status, setStatus] = useState("Все статусы");
   const [search, setSearch] = useState("");
+
+  // ЖК для удаления
+  const [deleteComplex, setDeleteComplex] = useState(null);
+
+  // ЖК для редактирования
+  const [editComplex, setEditComplex] = useState(null);
+
+  // Данные формы редактирования
+  const [editForm, setEditForm] = useState({
+    name: "",
+    address: "",
+    status: "Строительство",
+    class: "Комфорт",
+    completionDate: "",
+    floors: "",
+    apartments: "",
+    parking: "",
+    area: "",
+  });
 
   const filteredComplexes = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -123,40 +150,157 @@ export default function ResidentialComplexes() {
 
       return matchesStatus && matchesSearch;
     });
-  }, [status, search]);
+  }, [complexes, status, search]);
 
   const totalApartments = complexes.reduce(
     (sum, item) => sum + item.apartments,
     0,
   );
 
-  const totalSold = complexes.reduce((sum, item) => sum + item.sold, 0);
-
   const constructionCount = complexes.filter(
     (item) => item.status === "Строительство",
   ).length;
 
-  function handleDelete(id) {
-    const item = complexes.find((complex) => complex.id === id);
+  /* =========================================================
+     DELETE
+  ========================================================= */
 
-    if (!item) return;
+  const handleDeleteClick = (item) => {
+    setDeleteComplex(item);
+  };
 
-    const confirmed = window.confirm(
-      `Удалить «${item.name}»?\n\nЭто действие нельзя будет отменить.`,
+  const closeDeleteModal = () => {
+    setDeleteComplex(null);
+  };
+
+  const confirmDelete = () => {
+    if (!deleteComplex) return;
+
+    setComplexes((prev) => prev.filter((item) => item.id !== deleteComplex.id));
+
+    console.log("Удаление ЖК:", deleteComplex.id);
+
+    // TODO:
+    // await api.delete(`/residential-complexes/${deleteComplex.id}`);
+
+    setDeleteComplex(null);
+  };
+
+  /* =========================================================
+     EDIT
+  ========================================================= */
+
+  const handleEditClick = (item) => {
+    setEditComplex(item);
+
+    setEditForm({
+      name: item.name || "",
+      address: item.address || "",
+      status: item.status || "Строительство",
+      class: item.class || "Комфорт",
+      completionDate: item.completionDate || "",
+      floors: item.floors ?? "",
+      apartments: item.apartments ?? "",
+      parking: item.parking ?? "",
+      area: item.area
+        ? String(item.area).replace(/\s?м²/g, "").replace(/\s/g, "")
+        : "",
+    });
+  };
+
+  const closeEditModal = () => {
+    setEditComplex(null);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+
+    setEditForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const setEditField = (name, value) => {
+    setEditForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const getCompletionLabel = (date) => {
+    if (!date) return "";
+
+    const [year, month] = date.split("-");
+
+    const months = [
+      "Январь",
+      "Февраль",
+      "Март",
+      "Апрель",
+      "Май",
+      "Июнь",
+      "Июль",
+      "Август",
+      "Сентябрь",
+      "Октябрь",
+      "Ноябрь",
+      "Декабрь",
+    ];
+
+    const monthIndex = Number(month) - 1;
+
+    if (!months[monthIndex]) return "";
+
+    return `${months[monthIndex]} ${year}`;
+  };
+
+  const saveEdit = () => {
+    if (!editComplex) return;
+
+    const updatedComplex = {
+      ...editComplex,
+
+      name: editForm.name,
+      address: editForm.address,
+      status: editForm.status,
+      class: editForm.class,
+
+      completionDate: editForm.completionDate,
+
+      completionLabel: getCompletionLabel(editForm.completionDate),
+
+      floors: Number(editForm.floors) || 0,
+      apartments: Number(editForm.apartments) || 0,
+      parking: Number(editForm.parking) || 0,
+
+      area: editForm.area
+        ? `${Number(editForm.area).toLocaleString("ru-RU")} м²`
+        : "0 м²",
+    };
+
+    setComplexes((prev) =>
+      prev.map((item) => (item.id === editComplex.id ? updatedComplex : item)),
     );
 
-    if (!confirmed) return;
+    console.log("Обновление ЖК:", updatedComplex);
 
-    console.log("Удаление ЖК:", id);
+    // Здесь потом подключишь backend:
+    //
+    // await api.patch(
+    //   `/residential-complexes/${editComplex.id}`,
+    //   updatedComplex
+    // );
 
-    // Здесь потом:
-    // await api.delete(`/residential-complexes/${id}`);
-  }
+    setEditComplex(null);
+  };
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* HEADER */}
+        {/* =========================================================
+            HEADER
+        ========================================================= */}
 
         <header className={styles.header}>
           <div className={styles.headerText}>
@@ -183,7 +327,9 @@ export default function ResidentialComplexes() {
           </button>
         </header>
 
-        {/* OVERVIEW */}
+        {/* =========================================================
+            OVERVIEW
+        ========================================================= */}
 
         <section className={styles.overview}>
           <div className={styles.overviewCard}>
@@ -220,7 +366,9 @@ export default function ResidentialComplexes() {
           </div>
         </section>
 
-        {/* FILTERS */}
+        {/* =========================================================
+            FILTERS
+        ========================================================= */}
 
         <section className={styles.filters}>
           <div className={styles.search}>
@@ -245,7 +393,9 @@ export default function ResidentialComplexes() {
           </div>
         </section>
 
-        {/* RESULT */}
+        {/* =========================================================
+            RESULT
+        ========================================================= */}
 
         <div className={styles.resultRow}>
           <div>
@@ -258,147 +408,146 @@ export default function ResidentialComplexes() {
           </span>
         </div>
 
-        {/* GRID */}
+        {/* =========================================================
+            GRID
+        ========================================================= */}
 
         {filteredComplexes.length > 0 ? (
           <section className={styles.grid}>
-            {filteredComplexes.map((item) => {
-              const soldPercent =
-                item.apartments > 0
-                  ? Math.round((item.sold / item.apartments) * 100)
-                  : 0;
+            {filteredComplexes.map((item) => (
+              <article key={item.id} className={styles.card}>
+                {/* IMAGE */}
 
-              return (
-                <article key={item.id} className={styles.card}>
-                  {/* IMAGE */}
+                <div className={styles.image}>
+                  <Image
+                    src={item.image}
+                    fill
+                    alt={item.name}
+                    sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px"
+                  />
 
-                  <div className={styles.image}>
-                    <Image
-                      src={item.image}
-                      fill
-                      alt={item.name}
-                      sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px"
-                    />
+                  <div className={styles.imageOverlay} />
 
-                    <div className={styles.imageOverlay} />
+                  <div className={styles.topBadges}>
+                    <span
+                      className={`${styles.status} ${
+                        styles[statusClass[item.status]]
+                      }`}
+                    >
+                      <i />
+                      {item.status}
+                    </span>
 
-                    <div className={styles.topBadges}>
-                      <span
-                        className={`${styles.status} ${
-                          styles[statusClass[item.status]]
-                        }`}
-                      >
-                        <i />
-                        {item.status}
-                      </span>
+                    <span className={styles.classBadge}>{item.class}</span>
+                  </div>
 
-                      <span className={styles.classBadge}>{item.class}</span>
+                  <button
+                    type="button"
+                    className={styles.moreButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <MoreVertical />
+                  </button>
+                </div>
+
+                {/* CONTENT */}
+
+                <div className={styles.content}>
+                  <div className={styles.titleRow}>
+                    <div>
+                      <h2>{item.name}</h2>
+
+                      <div className={styles.location}>
+                        <MapPin />
+                        <span>{item.address}</span>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* SPECS */}
+
+                  <div className={styles.specs}>
+                    <div>
+                      <Layers3 />
+
+                      <span>
+                        <b>{item.floors}</b>
+                        этажей
+                      </span>
+                    </div>
+
+                    <div>
+                      <Home />
+
+                      <span>
+                        <b>{item.apartments}</b>
+                        квартир
+                      </span>
+                    </div>
+
+                    <div>
+                      <CalendarDays />
+
+                      <span>
+                        <b>{item.completionLabel}</b>
+                        сдача
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* AMENITIES */}
+
+                  <div className={styles.amenities}>
+                    {item.amenities.slice(0, 3).map((amenity) => (
+                      <span key={amenity}>{amenity}</span>
+                    ))}
+
+                    {item.amenities.length > 3 && (
+                      <span>+{item.amenities.length - 3}</span>
+                    )}
+                  </div>
+
+                  {/* ACTIONS */}
+
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.primaryAction}
+                      onClick={() =>
+                        router.push(`/profile/projects/${item.id}`)
+                      }
+                    >
+                      <Eye />
+                      Подробнее
+                    </button>
+
+                    {/* EDIT */}
 
                     <button
                       type="button"
-                      className={styles.moreButton}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Меню ЖК:", item.id);
-                      }}
+                      className={styles.editAction}
+                      onClick={() => handleEditClick(item)}
+                      aria-label={`Редактировать ${item.name}`}
                     >
-                      <MoreVertical />
+                      <Edit />
+                    </button>
+
+                    {/* DELETE */}
+
+                    <button
+                      type="button"
+                      className={styles.deleteAction}
+                      onClick={() => handleDeleteClick(item)}
+                      aria-label={`Удалить ${item.name}`}
+                    >
+                      <Trash2 />
                     </button>
                   </div>
-
-                  {/* CONTENT */}
-
-                  <div className={styles.content}>
-                    <div className={styles.titleRow}>
-                      <div>
-                        <h2>{item.name}</h2>
-
-                        <div className={styles.location}>
-                          <MapPin />
-                          <span>{item.address}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* SPECS */}
-
-                    <div className={styles.specs}>
-                      <div>
-                        <Layers3 />
-                        <span>
-                          <b>{item.floors}</b>
-                          этажей
-                        </span>
-                      </div>
-
-                      <div>
-                        <Home />
-                        <span>
-                          <b>{item.apartments}</b>
-                          квартир
-                        </span>
-                      </div>
-
-                      <div>
-                        <CalendarDays />
-                        <span>
-                          <b>{item.completionLabel}</b>
-                          сдача
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* SALES */}
-
-                    {/* AMENITIES */}
-
-                    <div className={styles.amenities}>
-                      {item.amenities.slice(0, 3).map((amenity) => (
-                        <span key={amenity}>{amenity}</span>
-                      ))}
-
-                      {item.amenities.length > 3 && (
-                        <span>+{item.amenities.length - 3}</span>
-                      )}
-                    </div>
-
-                    {/* ACTIONS */}
-
-                    <div className={styles.actions}>
-                      <button
-                        type="button"
-                        className={styles.primaryAction}
-                        onClick={() =>
-                          router.push(`/residential-complexes/${item.id}`)
-                        }
-                      >
-                        <Eye />
-                        Подробнее
-                      </button>
-
-                      <button
-                        type="button"
-                        className={styles.editAction}
-                        onClick={() =>
-                          router.push(`/residential-complexes/${item.id}/edit`)
-                        }
-                      >
-                        <Edit />
-                      </button>
-
-                      <button
-                        type="button"
-                        className={styles.deleteAction}
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <Trash2 />
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+                </div>
+              </article>
+            ))}
           </section>
         ) : (
           <div className={styles.empty}>
@@ -412,6 +561,245 @@ export default function ResidentialComplexes() {
               По вашему запросу ничего не найдено. Попробуйте изменить параметры
               поиска.
             </p>
+          </div>
+        )}
+
+        {/* =========================================================
+            DELETE MODAL
+        ========================================================= */}
+
+        <DeleteModal
+          isOpen={Boolean(deleteComplex)}
+          title="Удалить жилой комплекс?"
+          description={
+            deleteComplex
+              ? `Вы действительно хотите удалить «${deleteComplex.name}»? Это действие нельзя будет отменить.`
+              : ""
+          }
+          onClose={closeDeleteModal}
+          onConfirm={confirmDelete}
+        />
+
+        {/* =========================================================
+            EDIT MODAL
+        ========================================================= */}
+
+        {editComplex && (
+          <div className={styles.editModalOverlay} onMouseDown={closeEditModal}>
+            <div
+              className={styles.editModal}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
+              {/* MODAL HEADER */}
+
+              <div className={styles.editModalHeader}>
+                <div>
+                  <span className={styles.editModalEyebrow}>
+                    <Edit />
+                    Редактирование
+                  </span>
+
+                  <h2>Изменить жилой комплекс</h2>
+
+                  <p>Обновите информацию о «{editComplex.name}».</p>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.editModalClose}
+                  onClick={closeEditModal}
+                  aria-label="Закрыть"
+                >
+                  <X />
+                </button>
+              </div>
+
+              {/* MODAL BODY */}
+
+              <div className={styles.editModalBody}>
+                <div className={styles.editGrid}>
+                  {/* NAME */}
+
+                  <div
+                    className={`${styles.editField} ${styles.editFieldFull}`}
+                  >
+                    <label>
+                      Название ЖК <span>*</span>
+                    </label>
+
+                    <div className={styles.editInput}>
+                      <Building2 />
+
+                      <input
+                        name="name"
+                        value={editForm.name}
+                        onChange={handleEditChange}
+                        placeholder="Название ЖК"
+                      />
+                    </div>
+                  </div>
+
+                  {/* ADDRESS */}
+
+                  <div
+                    className={`${styles.editField} ${styles.editFieldFull}`}
+                  >
+                    <label>
+                      Адрес <span>*</span>
+                    </label>
+
+                    <div className={styles.editInput}>
+                      <MapPin />
+
+                      <input
+                        name="address"
+                        value={editForm.address}
+                        onChange={handleEditChange}
+                        placeholder="Адрес"
+                      />
+                    </div>
+                  </div>
+
+                  {/* STATUS */}
+
+                  <div className={styles.editField}>
+                    <label>Статус</label>
+
+                    <CustomSelectBlack
+                      icon={TrendingUp}
+                      title="Статус"
+                      options={editStatusOptions}
+                      value={editForm.status}
+                      setValue={(value) => setEditField("status", value)}
+                    />
+                  </div>
+
+                  {/* CLASS */}
+
+                  <div className={styles.editField}>
+                    <label>Класс жилья</label>
+
+                    <CustomSelectBlack
+                      icon={Building2}
+                      title="Класс"
+                      options={classOptions}
+                      value={editForm.class}
+                      setValue={(value) => setEditField("class", value)}
+                    />
+                  </div>
+
+                  {/* DATE */}
+
+                  <div className={styles.editField}>
+                    <label>Дата сдачи</label>
+
+                    <div className={styles.editInput}>
+                      <CalendarDays />
+
+                      <input
+                        type="date"
+                        name="completionDate"
+                        value={editForm.completionDate}
+                        onChange={handleEditChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* FLOORS */}
+
+                  <div className={styles.editField}>
+                    <label>Количество этажей</label>
+
+                    <div className={styles.editInput}>
+                      <Layers3 />
+
+                      <input
+                        type="number"
+                        name="floors"
+                        min="1"
+                        value={editForm.floors}
+                        onChange={handleEditChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* APARTMENTS */}
+
+                  <div className={styles.editField}>
+                    <label>Количество квартир</label>
+
+                    <div className={styles.editInput}>
+                      <Home />
+
+                      <input
+                        type="number"
+                        name="apartments"
+                        min="0"
+                        value={editForm.apartments}
+                        onChange={handleEditChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* PARKING */}
+
+                  <div className={styles.editField}>
+                    <label>Парковочных мест</label>
+
+                    <div className={styles.editInput}>
+                      <span className={styles.editInputSimpleIcon}>P</span>
+
+                      <input
+                        type="number"
+                        name="parking"
+                        min="0"
+                        value={editForm.parking}
+                        onChange={handleEditChange}
+                      />
+                    </div>
+                  </div>
+
+                  {/* AREA */}
+
+                  <div className={styles.editField}>
+                    <label>Площадь территории, м²</label>
+
+                    <div className={styles.editInput}>
+                      <Layers3 />
+
+                      <input
+                        type="number"
+                        name="area"
+                        min="0"
+                        value={editForm.area}
+                        onChange={handleEditChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* MODAL FOOTER */}
+
+              <div className={styles.editModalFooter}>
+                <button
+                  type="button"
+                  className={styles.editCancel}
+                  onClick={closeEditModal}
+                >
+                  Отмена
+                </button>
+
+                <button
+                  type="button"
+                  className={styles.editSave}
+                  onClick={saveEdit}
+                >
+                  <Save />
+                  Сохранить изменения
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
