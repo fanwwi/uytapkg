@@ -564,9 +564,10 @@ export default function StepLocation({ form, updateForm, onNext }) {
 
   useEffect(() => {
     getConstants()
-      .then((data) => {
-        if (data && data.locationsByRegion) {
-          const apiLocations = data.locationsByRegion;
+      .then((res) => {
+        const locations = res?.data?.locationsByRegion || res?.locationsByRegion;
+        if (locations) {
+          const apiLocations = locations;
           setLocationsData({
             kyrgyzstan: {
               name: "Кыргызстан",

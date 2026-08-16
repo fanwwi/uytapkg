@@ -32,10 +32,10 @@ export const authenticateToken = (req, res, next) => {
     }
 
     try {
-      // Подтягиваем роль пользователя из базы данных
+      // Подтягиваем роль и тип аккаунта пользователя из базы данных
       const { data: dbUser, error: dbError } = await supabase
         .from("users")
-        .select("role")
+        .select("role, account_type")
         .eq("id", decodedUser.id)
         .single();
 
@@ -69,6 +69,8 @@ export const authenticateToken = (req, res, next) => {
       req.user = {
         ...decodedUser,
         role: userRole,
+        account_type: dbUser?.account_type || decodedUser.accountType || decodedUser.account_type,
+        accountType: dbUser?.account_type || decodedUser.accountType || decodedUser.account_type,
       };
       next();
     } catch (dbQueryError) {

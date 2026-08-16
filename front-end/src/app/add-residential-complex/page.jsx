@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createComplex, uploadImage } from "@/utils/api";
 import {
   ArrowLeft,
   Building2,
@@ -41,6 +43,9 @@ const amenities = [
 const MAX_IMAGES = 20;
 
 export default function AddResidentialComplex() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "",
     address: "",
@@ -116,18 +121,50 @@ export default function AddResidentialComplex() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const payload = {
-      ...form,
-      amenities: selectedAmenities,
-      images: images.map((item) => item.file),
-    };
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) {
+        throw new Error("Вы не авторизованы. Пожалуйста, войдите в аккаунт.");
+      }
 
-    console.log("ЖК:", payload);
+      // 1. Загружаем все изображения
+      const uploadedUrls = [];
+      for (const img of images) {
+        try {
+          const url = await uploadImage(img.file);
+          if (url) {
+            uploadedUrls.push(url);
+          }
+        } catch (uploadErr) {
+          console.error("Ошибка загрузки изображения:", img.file.name, uploadErr);
+        }
+      }
 
-    // await api.post("/residential-complexes", payload);
+      // 2. Создаем ЖК
+      const payload = {
+        ...form,
+        amenities: selectedAmenities,
+        images: uploadedUrls,
+      };
+
+      const res = await createComplex(token, payload);
+      if (!res.success) {
+        throw new Error(res.message || "Не удалось добавить жилой комплекс");
+      }
+
+      // Перенаправляем в личный кабинет
+      router.push("/profile");
+    } catch (err) {
+      console.error("Error adding complex:", err);
+      setError(err.message || "Произошла ошибка при сохранении ЖК");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -158,6 +195,12 @@ export default function AddResidentialComplex() {
             </p>
           </div>
         </header>
+
+        {error && (
+          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "12px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px", border: "1px solid #feb2b2" }}>
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {/* MAIN INFORMATION */}
@@ -494,9 +537,9 @@ export default function AddResidentialComplex() {
               Отмена
             </a>
 
-            <button type="submit" className={styles.submit}>
+            <button type="submit" className={styles.submit} disabled={loading}>
               <Building2 />
-              Добавить ЖК
+              {loading ? "Добавление..." : "Добавить ЖК"}
             </button>
           </div>
         </form>

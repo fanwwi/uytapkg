@@ -7,6 +7,40 @@ import {
   removeImageFromStorage,
 } from "../utils/storage.js";
 
+async function syncDeveloperRecord(userId, accountType, profile, phone, email) {
+  if (accountType !== "developer") return;
+
+  try {
+    const { data: dev } = await supabase
+      .from("developers")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const devData = {
+      user_id: userId,
+      company_name: profile?.company_name || "Застройщик",
+      logo_url: profile?.avatar_url || null,
+      description: profile?.about || null,
+      phone: phone || null,
+      email: email || null,
+    };
+
+    if (dev) {
+      await supabase
+        .from("developers")
+        .update(devData)
+        .eq("id", dev.id);
+    } else {
+      await supabase
+        .from("developers")
+        .insert([devData]);
+    }
+  } catch (err) {
+    console.error("Error syncing developer record:", err);
+  }
+}
+
 // =======================================================
 // 1. Регистрация нового пользователя
 // =======================================================
@@ -141,6 +175,9 @@ export const register = async (req, res) => {
     } catch (profileError) {
       console.warn("Warning: Could not create user profile details:", profileError);
     }
+
+    // Синхронизируем запись в таблице застройщиков
+    await syncDeveloperRecord(newUser.id, newUser.account_type, userProfile || profileData, newUser.phone, newUser.email);
 
     // 6. Генерация JWT токена
     const token = generateToken({
@@ -461,6 +498,10 @@ export const updateMe = async (req, res) => {
       .select("id, account_type, email, phone, is_verified, created_at")
       .eq("id", userId)
       .single();
+
+    if (!fetchUserError && updatedUser) {
+      await syncDeveloperRecord(userId, updatedUser.account_type, profile, updatedUser.phone, updatedUser.email);
+    }
 
     if (fetchUserError || !updatedUser) {
       return res.status(500).json({

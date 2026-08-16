@@ -16,8 +16,9 @@ import {
   X,
   Save,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getMyComplexes, updateComplex as updateComplexApi, deleteComplex as deleteComplexApi } from "@/utils/api";
 
 import styles from "./ResidentialComplexes.module.css";
 import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
@@ -113,7 +114,55 @@ const statusClass = {
 export default function ResidentialComplexes() {
   const router = useRouter();
 
-  const [complexes, setComplexes] = useState(initialComplexes);
+  const [complexes, setComplexes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    getMyComplexes(token)
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = res.data.map((item) => {
+            const compl = item;
+            let completion_status = "Строительство";
+            if (compl.completion_status === "planning") completion_status = "Проект";
+            if (compl.completion_status === "completed") completion_status = "Сдан";
+
+            return {
+              id: compl.id,
+              name: compl.name,
+              address: compl.address,
+              status: completion_status,
+              class: compl.housing_class || "Комфорт",
+              completionLabel: getCompletionLabel(compl.completion_date),
+              completionDate: compl.completion_date,
+              floors: compl.features?.floors || 0,
+              apartments: compl.features?.apartments || 0,
+              parking: compl.features?.parking || 0,
+              area: compl.features?.area ? `${compl.features.area} м²` : "0 м²",
+              image: compl.cover_photo || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
+              amenities: compl.features?.amenities || [],
+            };
+          });
+          setComplexes(mapped);
+        } else {
+          setError(res.message || "Ошибка загрузки жилых комплексов");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("Не удалось загрузить жилые комплексы с сервера");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [router]);
 
   const [status, setStatus] = useState("Все статусы");
   const [search, setSearch] = useState("");
@@ -173,17 +222,22 @@ export default function ResidentialComplexes() {
     setDeleteComplex(null);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteComplex) return;
 
-    setComplexes((prev) => prev.filter((item) => item.id !== deleteComplex.id));
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) throw new Error("Вы не авторизованы");
 
-    console.log("Удаление ЖК:", deleteComplex.id);
+      const res = await deleteComplexApi(token, deleteComplex.id);
+      if (!res.success) throw new Error(res.message || "Ошибка удаления");
 
-    // TODO:
-    // await api.delete(`/residential-complexes/${deleteComplex.id}`);
-
-    setDeleteComplex(null);
+      setComplexes((prev) => prev.filter((item) => item.id !== deleteComplex.id));
+    } catch (err) {
+      alert(err.message || "Не удалось удалить жилой комплекс");
+    } finally {
+      setDeleteComplex(null);
+    }
   };
 
   /* =========================================================
@@ -255,44 +309,56 @@ export default function ResidentialComplexes() {
     return `${months[monthIndex]} ${year}`;
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (!editComplex) return;
 
-    const updatedComplex = {
-      ...editComplex,
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) throw new Error("Вы не авторизованы");
 
-      name: editForm.name,
-      address: editForm.address,
-      status: editForm.status,
-      class: editForm.class,
+      const payload = {
+        name: editForm.name,
+        address: editForm.address,
+        status: editForm.status,
+        class: editForm.class,
+        completionDate: editForm.completionDate,
+        floors: Number(editForm.floors) || 0,
+        apartments: Number(editForm.apartments) || 0,
+        parking: Number(editForm.parking) || 0,
+        area: Number(editForm.area) || 0,
+      };
 
-      completionDate: editForm.completionDate,
+      const res = await updateComplexApi(token, editComplex.id, payload);
+      if (!res.success) throw new Error(res.message || "Ошибка обновления");
 
-      completionLabel: getCompletionLabel(editForm.completionDate),
+      const compl = res.data;
+      let completion_status = "Строительство";
+      if (compl.completion_status === "planning") completion_status = "Проект";
+      if (compl.completion_status === "completed") completion_status = "Сдан";
 
-      floors: Number(editForm.floors) || 0,
-      apartments: Number(editForm.apartments) || 0,
-      parking: Number(editForm.parking) || 0,
+      const updated = {
+        id: compl.id,
+        name: compl.name,
+        address: compl.address,
+        status: completion_status,
+        class: compl.housing_class || "Комфорт",
+        completionLabel: getCompletionLabel(compl.completion_date),
+        completionDate: compl.completion_date,
+        floors: compl.features?.floors || 0,
+        apartments: compl.features?.apartments || 0,
+        parking: compl.features?.parking || 0,
+        area: compl.features?.area ? `${compl.features.area} м²` : "0 м²",
+        image: compl.cover_photo || editComplex.image,
+        amenities: compl.features?.amenities || editComplex.amenities,
+      };
 
-      area: editForm.area
-        ? `${Number(editForm.area).toLocaleString("ru-RU")} м²`
-        : "0 м²",
-    };
-
-    setComplexes((prev) =>
-      prev.map((item) => (item.id === editComplex.id ? updatedComplex : item)),
-    );
-
-    console.log("Обновление ЖК:", updatedComplex);
-
-    // Здесь потом подключишь backend:
-    //
-    // await api.patch(
-    //   `/residential-complexes/${editComplex.id}`,
-    //   updatedComplex
-    // );
-
-    setEditComplex(null);
+      setComplexes((prev) =>
+        prev.map((item) => (item.id === editComplex.id ? updated : item))
+      );
+      setEditComplex(null);
+    } catch (err) {
+      alert(err.message || "Не удалось обновить жилой комплекс");
+    }
   };
 
   return (
@@ -412,7 +478,17 @@ export default function ResidentialComplexes() {
             GRID
         ========================================================= */}
 
-        {filteredComplexes.length > 0 ? (
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "60px 0", color: "#888", fontSize: "16px" }}>
+            <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+            <div>Загрузка ваших жилых комплексов...</div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : error ? (
+          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "20px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+            {error}
+          </div>
+        ) : filteredComplexes.length > 0 ? (
           <section className={styles.grid}>
             {filteredComplexes.map((item) => (
               <article key={item.id} className={styles.card}>

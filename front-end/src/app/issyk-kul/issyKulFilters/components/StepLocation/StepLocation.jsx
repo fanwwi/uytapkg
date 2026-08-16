@@ -338,9 +338,10 @@ export default function StepLocation({ form, updateForm, onNext }) {
 
   useEffect(() => {
     getConstants()
-      .then((data) => {
-        if (data && data.locationsByRegion && data.locationsByRegion.ISSYK_KUL) {
-          const apiIssykKul = data.locationsByRegion.ISSYK_KUL;
+      .then((res) => {
+        const locations = res?.data?.locationsByRegion || res?.locationsByRegion;
+        if (locations && locations.ISSYK_KUL) {
+          const apiIssykKul = locations.ISSYK_KUL;
           const merged = {};
 
           apiIssykKul.forEach((name) => {

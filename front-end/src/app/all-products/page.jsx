@@ -240,7 +240,9 @@ export default function AllProducts() {
     const normalizedSearch = search.trim().toLowerCase();
 
     const filtered = mappedListings.filter((item) => {
-      const matchesSearch = item.title.toLowerCase().includes(normalizedSearch);
+      const matchesSearch =
+        item.title.toLowerCase().includes(normalizedSearch) ||
+        (item.location && item.location.toLowerCase().includes(normalizedSearch));
 
       const matchesCategory =
         activeCategory === "Все" || item.type === activeCategory;
@@ -328,10 +330,10 @@ export default function AllProducts() {
 
         <button
           type="button"
-          className={dealType === "Куплю" ? styles.dealActive : ""}
-          onClick={() => setDealType("Куплю")}
+          className={dealType === "Продажа" ? styles.dealActive : ""}
+          onClick={() => setDealType("Продажа")}
         >
-          Куплю
+          Продажа
         </button>
 
         <button

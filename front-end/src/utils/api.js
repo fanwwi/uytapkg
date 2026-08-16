@@ -238,3 +238,71 @@ export async function deleteAvatar(token) {
   }
   return data;
 }
+
+export async function getListingById(id) {
+  const response = await fetch(`${API_URL}/listings/${id}`);
+  return response.json();
+}
+
+export async function getComplexById(id) {
+  const response = await fetch(`${API_URL}/complexes/${id}`);
+  return response.json();
+}
+
+export async function getDevelopers() {
+  const response = await fetch(`${API_URL}/developers`);
+  return response.json();
+}
+
+export async function getDeveloperById(id) {
+  const response = await fetch(`${API_URL}/developers/${id}`);
+  return response.json();
+}
+
+export async function getConstants() {
+  const response = await fetch(`${API_URL}/constants`);
+  return response.json();
+}
+
+export async function createComplex(token, payload) {
+  const response = await fetch(`${API_URL}/complexes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+}
+
+export async function updateComplex(token, id, payload) {
+  const response = await fetch(`${API_URL}/complexes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+}
+
+export async function deleteComplex(token, id) {
+  const response = await fetch(`${API_URL}/complexes/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+export async function getMyComplexes(token) {
+  const response = await fetch(`${API_URL}/complexes/my`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}

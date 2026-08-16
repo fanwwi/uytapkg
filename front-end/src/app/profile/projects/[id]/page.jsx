@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getComplexById, updateComplex as updateComplexApi, deleteComplex as deleteComplexApi } from "@/utils/api";
+import { mapComplexData } from "@/utils/mapComplexData";
 
 import {
   ArrowLeft,
@@ -183,17 +185,60 @@ const initialResidentialComplex = {
 
 export default function MyComplexDetail() {
   const router = useRouter();
+  const params = useParams();
+  const complexId = params?.id;
 
   const [residentialComplex, setResidentialComplex] = useState(
     initialResidentialComplex,
   );
 
   const [currentImage, setCurrentImage] = useState(0);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  // НОВОЕ
   const [showEditModal, setShowEditModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadComplex = async () => {
+    if (!complexId) return;
+    try {
+      setLoading(true);
+      setError("");
+      const res = await getComplexById(complexId);
+      if (res && res.success && res.data) {
+        const mapped = mapComplexData(res.data);
+        setResidentialComplex({
+          ...initialResidentialComplex,
+          id: res.data.id,
+          name: mapped.name,
+          subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
+          class: mapped.housingClass,
+          status: mapped.completionStatus,
+          location: res.data.city || res.data.region || "Кыргызстан",
+          address: mapped.address,
+          developer: mapped.developer,
+          completion: res.data.completion_date || "Уточняйте у застройщика",
+          description: mapped.description,
+          concept: res.data.description || initialResidentialComplex.concept,
+          floors: res.data.features?.floors || initialResidentialComplex.floors,
+          apartments: res.data.features?.apartments ? `${res.data.features.apartments} квартир` : initialResidentialComplex.apartments,
+          parking: res.data.features?.parking ? `${res.data.features.parking} мест` : initialResidentialComplex.parking,
+          landArea: res.data.features?.area ? `${res.data.features.area} м²` : initialResidentialComplex.landArea,
+          images: (res.data.features?.images && res.data.features.images.length > 0)
+            ? res.data.features.images
+            : (res.data.cover_photo ? [res.data.cover_photo] : initialResidentialComplex.images),
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load complex detail:", err);
+      setError(err.message || "Ошибка загрузки жилого комплекса");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadComplex();
+  }, [complexId]);
 
   const nextImage = () => {
     setCurrentImage((prev) =>
@@ -207,53 +252,51 @@ export default function MyComplexDetail() {
     );
   };
 
-  // НОВОЕ
   const handleEdit = () => {
     setShowEditModal(true);
   };
 
-  // НОВОЕ
-  const handleSave = (updatedComplex) => {
-    setResidentialComplex((prev) => ({
-      ...prev,
-      ...updatedComplex,
+  const handleSave = async (updatedComplex) => {
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) throw new Error("Вы не авторизованы");
 
-      // Сохраняем старые значения, которые
-      // используются только для отображения
-      subtitle: prev.subtitle,
-      developer: prev.developer,
-      completion: prev.completion,
-      blocks: prev.blocks,
-      landArea: prev.landArea,
-      ceilingHeight: prev.ceilingHeight,
-      constructionType: prev.constructionType,
-      heating: prev.heating,
-      concept: prev.concept,
-      advantages: prev.advantages,
-      architecture: prev.architecture,
-      engineering: prev.engineering,
-      infrastructure: updatedComplex.amenities || prev.infrastructure,
-    }));
+      const payload = {
+        name: updatedComplex.name,
+        address: updatedComplex.address,
+        status: updatedComplex.status,
+        class: updatedComplex.class,
+        completionDate: updatedComplex.completionDate,
+        floors: Number(updatedComplex.floors) || 0,
+        apartments: Number(updatedComplex.apartments) || 0,
+        parking: Number(updatedComplex.parking) || 0,
+        area: Number(updatedComplex.area) || 0,
+      };
 
-    setCurrentImage(0);
-    setShowEditModal(false);
+      const res = await updateComplexApi(token, residentialComplex.id, payload);
+      if (!res.success) throw new Error(res.message || "Ошибка сохранения");
+
+      await loadComplex();
+      setCurrentImage(0);
+      setShowEditModal(false);
+    } catch (err) {
+      alert(err.message || "Не удалось сохранить изменения");
+    }
   };
 
   const handleDelete = async () => {
     try {
-      // Здесь потом будет DELETE запрос:
-      //
-      // await api.delete(
-      //   `/residential-complexes/${residentialComplex.id}`,
-      // );
+      const token = localStorage.getItem("uytap_token");
+      if (!token) throw new Error("Вы не авторизованы");
 
-      console.log("Удаление ЖК:", residentialComplex.id);
+      const res = await deleteComplexApi(token, residentialComplex.id);
+      if (!res.success) throw new Error(res.message || "Ошибка удаления");
 
       setShowDeleteModal(false);
-
       router.push("/profile/projects");
     } catch (error) {
       console.error("Ошибка при удалении ЖК:", error);
+      alert(error.message || "Не удалось удалить ЖК");
     }
   };
 
@@ -278,9 +321,21 @@ export default function MyComplexDetail() {
           </div>
         </div>
 
-        {/* HERO */}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "100px 0", color: "#888", fontSize: "16px" }}>
+            <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+            <div>Загрузка информации о жилом комплексе...</div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : error ? (
+          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "40px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+            {error}
+          </div>
+        ) : (
+          <>
+            {/* HERO */}
 
-        <section className={styles.hero}>
+            <section className={styles.hero}>
           <div className={styles.heroGallery}>
             <div className={styles.mainImage}>
               <Image
@@ -699,6 +754,8 @@ export default function MyComplexDetail() {
             <strong>{residentialComplex.address}</strong>
           </div>
         </section>
+          </>
+        )}
       </div>
 
       {/* DELETE MODAL */}

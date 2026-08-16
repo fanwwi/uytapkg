@@ -300,9 +300,14 @@ export default function ComplexesDetails() {
             developer: mapped.developer,
             completion: res.data.completion_date || "Уточняйте у застройщика",
             description: mapped.description,
-            images: res.data.cover_photo
-              ? [res.data.cover_photo, ...defaultResidentialComplex.images.slice(1)]
-              : defaultResidentialComplex.images,
+            concept: res.data.description || defaultResidentialComplex.concept,
+            floors: res.data.features?.floors || defaultResidentialComplex.floors,
+            apartments: res.data.features?.apartments ? `${res.data.features.apartments} квартир` : defaultResidentialComplex.apartments,
+            parking: res.data.features?.parking ? `${res.data.features.parking} мест` : defaultResidentialComplex.parking,
+            landArea: res.data.features?.area ? `${res.data.features.area} м²` : defaultResidentialComplex.landArea,
+            images: (res.data.features?.images && res.data.features.images.length > 0)
+              ? res.data.features.images
+              : (res.data.cover_photo ? [res.data.cover_photo] : defaultResidentialComplex.images),
           });
         }
       } catch (err) {
