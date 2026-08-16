@@ -1,13 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Building2, MapPin, Search, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import styles from "./Complexes.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
+import { getComplexes } from "@/utils/api";
+import { mapComplexData } from "@/utils/mapComplexData";
 
+/*
 const complexes = [
   {
     id: 1,
@@ -22,7 +25,6 @@ const complexes = [
       "https://storage.googleapis.com/bd-kg-02/buildings-v2/800x630/2336.jpg",
     logo: "https://yt3.googleusercontent.com/dd6jiK-pM4c-OpIys_CbeZAnr1CgKBWOx9cUgHMx5yNTOKcfmnx_Cgmi53ucme32vcNm3MuETA=s900-c-k-c0x00ffffff-no-rj",
   },
-
   {
     id: 2,
     name: "Royal Park",
@@ -36,7 +38,6 @@ const complexes = [
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3bLPug9XO4Cc_IQLfIZqk6TW2SyltDnPMWbp5Lc7_S-FhvDYWeIkfRQ8&s=10",
     logo: "https://media.licdn.com/dms/image/v2/D4D0BAQED2Dra3BJ-Dw/company-logo_200_200/company-logo_200_200/0/1667350407993/elitemd_logo?e=2147483647&v=beta&t=BzMu9fKnwHvGTL-Rgy1aoIzEXJUGWOyivkYbbH3cmT4",
   },
-
   {
     id: 3,
     name: "Issyk Lake Villas",
@@ -51,11 +52,38 @@ const complexes = [
     logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGesScTZwcv1HweHeROAtnssGSDz8gzFxYJxF7AJd_vWSaZT_QABekZ-c&s=10",
   },
 ];
+*/
 
 export default function Complexes() {
   const router = useRouter();
 
+  const [complexes, setComplexes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    async function loadComplexes() {
+      try {
+        setLoading(true);
+        setError("");
+        const res = await getComplexes();
+        if (res && res.success && Array.isArray(res.data)) {
+          const mapped = res.data.map(mapComplexData);
+          setComplexes(mapped);
+        } else {
+          setComplexes([]);
+        }
+      } catch (err) {
+        console.error("Failed to load complexes:", err);
+        setError(err.message || "Ошибка при загрузке жилых комплексов");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadComplexes();
+  }, []);
 
   const filteredComplexes = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -77,7 +105,7 @@ export default function Complexes() {
         .toLowerCase()
         .includes(query),
     );
-  }, [search]);
+  }, [complexes, search]);
 
   return (
     <main className={styles.page}>
@@ -181,9 +209,22 @@ export default function Complexes() {
           </div>
         )}
 
+        {/* LOADING & ERROR */}
+        {loading && (
+          <div className={styles.empty}>
+            <p>Загрузка жилых комплексов...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className={styles.empty}>
+            <p style={{ color: "#e53e3e" }}>{error}</p>
+          </div>
+        )}
+
         {/* GRID */}
 
-        {filteredComplexes.length > 0 ? (
+        {!loading && !error && filteredComplexes.length > 0 ? (
           <div className={styles.grid}>
             {filteredComplexes.map((item, index) => (
               <article

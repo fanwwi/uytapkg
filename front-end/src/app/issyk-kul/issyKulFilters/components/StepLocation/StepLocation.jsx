@@ -1,6 +1,6 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { MapPin, Waves, Check, ChevronRight } from "lucide-react";
+import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepLocation.module.css";
@@ -14,7 +14,167 @@ import styles from "./StepLocation.module.css";
   Пользователь сразу выбирает нужный населённый пункт.
 */
 
+/*
 const issykKulLocations = {
+  karakol: {
+    name: "Каракол",
+    type: "city",
+    districts: [
+      "Центр",
+      "Восточная часть",
+      "Западная часть",
+      "Юго-Восток",
+      "Пристань-Пржевальск",
+    ],
+  },
+
+  cholponAta: {
+    name: "Чолпон-Ата",
+    type: "city",
+    districts: ["Центр", "Прибрежная зона", "Северная часть", "Южная часть"],
+  },
+
+  balykchy: {
+    name: "Балыкчы",
+    type: "city",
+    districts: ["Центр", "Восточная часть", "Западная часть"],
+  },
+
+  // Северный берег
+  bosterI: {
+    name: "Бостери",
+    type: "village",
+  },
+
+  baktyuDolonotu: {
+    name: "Бактуу-Долоноту",
+    type: "village",
+  },
+
+  tamchy: {
+    name: "Тамчы",
+    type: "village",
+  },
+
+  chokTal: {
+    name: "Чок-Тал",
+    type: "village",
+  },
+
+  koshKol: {
+    name: "Кош-Көл",
+    type: "village",
+  },
+
+  chonSaryOy: {
+    name: "Чон-Сары-Ой",
+    type: "village",
+  },
+
+  saryOy: {
+    name: "Сары-Ой",
+    type: "village",
+  },
+
+  grigorievka: {
+    name: "Григорьевка",
+    type: "village",
+  },
+
+  semenovka: {
+    name: "Семёновка",
+    type: "village",
+  },
+
+  ananyevo: {
+    name: "Ананьево",
+    type: "village",
+  },
+
+  tyup: {
+    name: "Тюп",
+    type: "village",
+  },
+
+  akSuu: {
+    name: "Ак-Суу",
+    type: "village",
+  },
+
+  teploklyuchenka: {
+    name: "Теплоключенка",
+    type: "village",
+  },
+
+  // Южный берег
+  kyzylSuu: {
+    name: "Кызыл-Суу",
+    type: "village",
+  },
+
+  jetiOguz: {
+    name: "Джети-Огуз",
+    type: "village",
+  },
+
+  barksoon: {
+    name: "Барскоон",
+    type: "village",
+  },
+
+  tamga: {
+    name: "Тамга",
+    type: "village",
+  },
+
+  tosor: {
+    name: "Тосор",
+    type: "village",
+  },
+
+  bokonbaevo: {
+    name: "Боконбаево",
+    type: "village",
+  },
+
+  kadjiSai: {
+    name: "Каджи-Сай",
+    type: "village",
+  },
+
+  sasanovka: {
+    name: "Сазановка",
+    type: "village",
+  },
+
+  chychkan: {
+    name: "Чычкан",
+    type: "village",
+  },
+
+  orgochoR: {
+    name: "Оргочор",
+    type: "village",
+  },
+
+  keregeTash: {
+    name: "Кереге-Таш",
+    type: "village",
+  },
+
+  korumdu: {
+    name: "Корумду",
+    type: "village",
+  },
+
+  bulanSogottu: {
+    name: "Булан-Сөгөттү",
+    type: "village",
+  },
+};
+*/
+
+const fallbackIssykKulLocations = {
   karakol: {
     name: "Каракол",
     type: "city",
@@ -173,18 +333,63 @@ const issykKulLocations = {
 };
 
 export default function StepLocation({ form, updateForm, onNext }) {
-  const selectedLocation = issykKulLocations[form.location];
+  const [locationsData, setLocationsData] = useState(null);
+  const [apiError, setApiError] = useState(false);
 
-  const locationOptions = Object.values(issykKulLocations).map(
-    (item) => item.name,
+  useEffect(() => {
+    getConstants()
+      .then((data) => {
+        if (data && data.locationsByRegion && data.locationsByRegion.ISSYK_KUL) {
+          const apiIssykKul = data.locationsByRegion.ISSYK_KUL;
+          const merged = {};
+
+          apiIssykKul.forEach((name) => {
+            const foundKeyEntry = Object.entries(fallbackIssykKulLocations).find(
+              ([, item]) => item.name === name || item.name.toLowerCase() === name.toLowerCase()
+            );
+
+            if (foundKeyEntry) {
+              merged[foundKeyEntry[0]] = foundKeyEntry[1];
+            } else {
+              const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+              merged[key || name] = { name, type: "village" };
+            }
+          });
+
+          Object.entries(fallbackIssykKulLocations).forEach(([key, item]) => {
+            if (!merged[key]) {
+              merged[key] = item;
+            }
+          });
+
+          setLocationsData(merged);
+        } else {
+          throw new Error("No ISSYK_KUL locations returned");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch constants for Issyk-Kul", err);
+        setApiError(true);
+        setLocationsData(fallbackIssykKulLocations);
+      });
+  }, []);
+
+  const currentLocations = locationsData || fallbackIssykKulLocations;
+
+  const selectedLocation = currentLocations[form.location] || 
+    Object.values(currentLocations).find((item) => item.name === form.location);
+
+  const locationOptions = Object.values(currentLocations).map(
+    (item) => item.name
   );
 
   const districtOptions = selectedLocation?.districts || [];
 
   function selectLocation(value) {
-    const location = Object.entries(issykKulLocations).find(
-      ([, item]) => item.name === value,
-    )?.[0];
+    const locationEntry = Object.entries(currentLocations).find(
+      ([, item]) => item.name === value
+    );
+    const location = locationEntry ? locationEntry[0] : value;
 
     if (!location) return;
 
@@ -226,6 +431,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
           доступен район, укажите его дополнительно.
         </p>
       </div>
+
+      {apiError && (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "14px" }}>
+          Не удалось загрузить актуальный справочник локаций. Попробуйте обновить страницу.
+        </div>
+      )}
 
       {/* =========================
           LOCATION

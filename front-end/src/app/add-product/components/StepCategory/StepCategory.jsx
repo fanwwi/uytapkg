@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Building2,
   House,
@@ -16,6 +17,7 @@ import {
   Maximize,
   ChevronRight,
 } from "lucide-react";
+import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepCategory.module.css";
@@ -356,41 +358,23 @@ const options = {
 
   amenities: [
     "Любые",
-
     "Балкон/Лоджия",
-
     "Нет балкона/лоджии",
-
     "Бронированные двери",
-
     "Бытовая техника",
-
     "Видеонаблюдение",
-
     "Вид на горы",
-
     "Животные не проживали",
-
     "Закрытая территория",
-
     "Не затапливалась",
-
     "Не сдавалась квартирантам",
-
     "Не угловая",
-
     "Раздельный санузел",
-
     "Совместные санузел",
-
     "Угловая квартира",
-
     "Не угловая квартира",
-
     "Лифт",
-
     "Охрана",
-
     "Парковка",
   ],
 
@@ -501,8 +485,8 @@ const options = {
   ],
 };
 
-function getFieldOptions(field) {
-  return options[field] || [];
+function getFieldOptions(field, dynamicOptions) {
+  return dynamicOptions[field] || options[field] || [];
 }
 
 const categoryDescriptions = {
@@ -515,6 +499,35 @@ const categoryDescriptions = {
 };
 
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
+  const [dynamicOptions, setDynamicOptions] = useState({});
+  const [apiError, setApiError] = useState(false);
+
+  useEffect(() => {
+    getConstants()
+      .then((data) => {
+        if (data && data.amenities) {
+          const combinedAmenities = [
+            "Любые",
+            ...new Set([...(data.amenities.general || []), ...(data.amenities.resort || [])])
+          ];
+          setDynamicOptions((prev) => ({
+            ...prev,
+            amenities: combinedAmenities,
+          }));
+        } else {
+          throw new Error("No data returned");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch constants", err);
+        setApiError(true);
+        setDynamicOptions((prev) => ({
+          ...prev,
+          amenities: options.amenities,
+        }));
+      });
+  }, []);
+
   const category = categories[form.category];
   const CategoryIcon = categoryIcons[form.category];
 
@@ -541,6 +554,12 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
           добавить позже.
         </p>
       </div>
+
+      {apiError && (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "14px" }}>
+          Не удалось загрузить актуальный список удобств. Попробуйте обновить страницу.
+        </div>
+      )}
 
       {!category && (
         <div className={styles.categorySection}>
@@ -688,7 +707,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
             <div className={styles.fieldsGrid}>
               {category.fields.map(([name, label]) => {
-                const fieldOptions = getFieldOptions(name);
+                const fieldOptions = getFieldOptions(name, dynamicOptions);
                 const Icon = fieldIcons[name] || Tag;
 
                 if (fieldOptions.length > 0) {

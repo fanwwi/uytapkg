@@ -3,131 +3,18 @@
 import Image from "next/image";
 import {
   MapPin,
-  Heart,
   SlidersHorizontal,
   Search,
-  Crown,
-  Zap,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { getListings } from "@/utils/api";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
 
-const listings = [
-  {
-    id: 1,
-    title: "Уютный дом у озера Иссык-Куль",
-    type: "Дом",
-    dealType: "Куплю",
-    status: "vip",
-    region: "Иссык-Куль",
-    location: "Чолпон-Ата",
-    price: "120 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 24,
-    rooms: 5,
-    area: "180 м²",
-  },
 
-  {
-    id: 2,
-    title: "Современный коттедж с бассейном",
-    type: "Коттедж",
-    dealType: "Сниму в аренду",
-    status: "urgent",
-    region: "Иссык-Куль",
-    location: "Бостери",
-    price: "250 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 41,
-    rooms: 7,
-    area: "320 м²",
-  },
-
-  {
-    id: 3,
-    title: "Участок 10 соток возле пляжа",
-    type: "Участок",
-    dealType: "Куплю",
-    status: null,
-    region: "Иссык-Куль",
-    location: "Кара-Ой",
-    price: "45 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 18,
-    rooms: null,
-    area: "10 соток",
-  },
-
-  {
-    id: 4,
-    title: "Большой семейный дом",
-    type: "Дом",
-    dealType: "Сниму в аренду",
-    status: "vip",
-    region: "Иссык-Куль",
-    location: "Боконбаево",
-    price: "95 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 31,
-    rooms: 6,
-    area: "210 м²",
-  },
-
-  {
-    id: 5,
-    title: "Гостевой дом рядом с пляжем",
-    type: "Гостевой дом",
-    dealType: "Сниму в аренду",
-    status: "urgent",
-    region: "Иссык-Куль",
-    location: "Тамчы",
-    price: "65 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 37,
-    rooms: 8,
-    area: "280 м²",
-  },
-
-  {
-    id: 6,
-    title: "Земельный участок под строительство",
-    type: "Участок",
-    dealType: "Куплю",
-    status: null,
-    region: "Иссык-Куль",
-    location: "Чолпон-Ата",
-    price: "32 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 12,
-    rooms: null,
-    area: "8 соток",
-  },
-
-  // Не Иссык-Куль — специально оставляем для проверки фильтра.
-  {
-    id: 7,
-    title: "Квартира с видом на горы",
-    type: "Квартира",
-    dealType: "Куплю",
-    status: "vip",
-    region: "Бишкек",
-    location: "Бишкек",
-    price: "85 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtBgjTX3QLD8mlKzUOBsNBrqI9INeEgfksIYtAfvgGbA&s=10",
-    likes: 56,
-    rooms: 3,
-    area: "95 м²",
-  },
-];
 
 const categories = [
   "Все",
@@ -146,6 +33,34 @@ export default function IssykKulProducts() {
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
 
+  const [listingsList, setListingsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    getListings({ page: 1, limit: 20 })
+      .then((res) => {
+        if (res && res.success) {
+          setListingsList(res.data || []);
+        } else {
+          throw new Error(res?.message || "Не удалось загрузить объявления");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load listings", err);
+        setError(err.message || "Ошибка соединения с сервером");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const mappedListings = useMemo(() => {
+    return listingsList.map((item) => mapListingData(item));
+  }, [listingsList]);
+
   const filteredListings = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
@@ -153,8 +68,8 @@ export default function IssykKulProducts() {
      * ГЛАВНЫЙ ФИЛЬТР:
      * показываем ТОЛЬКО Иссык-Куль.
      */
-    const filtered = listings.filter((item) => {
-      const isIssykKul = item.region === "Иссык-Куль";
+    const filtered = mappedListings.filter((item) => {
+      const isIssykKul = item.region === "ISSYK_KUL";
 
       const matchesSearch =
         item.title.toLowerCase().includes(normalizedSearch) ||
@@ -179,7 +94,9 @@ export default function IssykKulProducts() {
         null: 2,
       };
 
-      return priority[a.status] - priority[b.status];
+      const aStatus = a.status === null ? "null" : a.status;
+      const bStatus = b.status === null ? "null" : b.status;
+      return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
     });
   }, [search, activeCategory, dealType]);
 
@@ -280,137 +197,69 @@ export default function IssykKulProducts() {
         </button>
       </div>
 
+      {/* LOADING */}
+      {loading && (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "300px", fontSize: "16px", color: "#666" }}>
+          Загрузка объявлений...
+        </div>
+      )}
+
+      {/* ERROR */}
+      {error && !loading && (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "8px", margin: "20px 0", textAlign: "center" }}>
+          {error}
+        </div>
+      )}
+
       {/* RESULT */}
 
-      <div className={styles.result}>
-        <div>
-          <span>Объявления Иссык-Куля</span>
-          <strong>{filteredListings.length}</strong>
-        </div>
+      {!loading && !error && (
+        <>
+          <div className={styles.result}>
+            <div>
+              <span>Объявления Иссык-Куля</span>
+              <strong>{filteredListings.length}</strong>
+            </div>
 
-        <span className={styles.resultHint}>
-          VIP и срочные объявления показываются первыми
-        </span>
-      </div>
+            <span className={styles.resultHint}>
+              VIP и срочные объявления показываются первыми
+            </span>
+          </div>
 
       {/* PRODUCTS */}
 
-      {filteredListings.length > 0 ? (
-        <section className={styles.grid}>
-          {filteredListings.map((item) => (
-            <article
-              key={item.id}
-              className={styles.card}
-              onClick={() => router.push(`/ads/${item.id}`)}
-            >
-              {/* IMAGE */}
-
-              <div className={styles.image}>
-                <Image
-                  src={item.image}
-                  fill
-                  alt={item.title}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                />
-
-                <div className={styles.imageGradient} />
-
-                {/* BADGES */}
-
-                <div className={styles.badges}>
-                  {item.status === "vip" && (
-                    <span className={`${styles.status} ${styles.vip}`}>
-                      <Crown size={14} />
-                      VIP
-                    </span>
-                  )}
-
-                  {item.status === "urgent" && (
-                    <span className={`${styles.status} ${styles.urgent}`}>
-                      <Zap size={14} />
-                      Срочно
-                    </span>
-                  )}
-
-                  <span className={styles.type}>{item.type}</span>
-                </div>
-
-                {/* FAVORITE */}
-
-                <button
-                  type="button"
-                  className={styles.favorite}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}
-                  aria-label="Добавить в избранное"
-                >
-                  <Heart size={19} />
-                </button>
+          {filteredListings.length > 0 ? (
+            <section className={styles.grid}>
+              {filteredListings.map((item) => (
+                <ListingCard key={item.id} item={item} />
+              ))}
+            </section>
+          ) : (
+            <div className={styles.empty}>
+              <div className={styles.emptyIcon}>
+                <Search size={25} />
               </div>
 
-              {/* CONTENT */}
+              <h2>Ничего не найдено</h2>
 
-              <div className={styles.content}>
-                <h2>{item.title}</h2>
+              <p>
+                В Иссык-Кульской области пока нет объявлений, соответствующих
+                выбранным параметрам.
+              </p>
 
-                <div className={styles.location}>
-                  <MapPin size={16} />
-                  <span>{item.location}</span>
-                </div>
-
-                <div className={styles.details}>
-                  {item.rooms && (
-                    <span>
-                      {item.rooms} {item.rooms === 1 ? "комната" : "комнат"}
-                    </span>
-                  )}
-
-                  <span>{item.area}</span>
-                </div>
-
-                <div className={styles.bottom}>
-                  <strong>{item.price}</strong>
-
-                  <button
-                    type="button"
-                    className={styles.more}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      router.push(`/all-products/${item.id}`);
-                    }}
-                  >
-                    Подробнее
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </section>
-      ) : (
-        <div className={styles.empty}>
-          <div className={styles.emptyIcon}>
-            <Search size={25} />
-          </div>
-
-          <h2>Ничего не найдено</h2>
-
-          <p>
-            В Иссык-Кульской области пока нет объявлений, соответствующих
-            выбранным параметрам.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => {
-              setSearch("");
-              setActiveCategory("Все");
-              setDealType("Все");
-            }}
-          >
-            Сбросить фильтры
-          </button>
-        </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  setActiveCategory("Все");
+                  setDealType("Все");
+                }}
+              >
+                Сбросить фильтры
+              </button>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

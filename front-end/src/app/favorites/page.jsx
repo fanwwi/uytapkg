@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { MapPin, Heart, Search, Crown, Zap, Trash2 } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 import styles from "./Favorites.module.css";
 
@@ -207,97 +208,12 @@ export default function Favorites() {
       {filteredFavorites.length > 0 ? (
         <section className={styles.grid}>
           {filteredFavorites.map((item) => (
-            <article
+            <ListingCard
               key={item.id}
-              className={styles.card}
-              onClick={() => router.push(`/ads/${item.id}`)}
-            >
-              {/* IMAGE */}
-
-              <div className={styles.image}>
-                <Image
-                  src={item.image}
-                  fill
-                  alt={item.title}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                />
-
-                <div className={styles.imageGradient} />
-
-                {/* BADGES */}
-
-                <div className={styles.badges}>
-                  {item.status === "vip" && (
-                    <span className={`${styles.status} ${styles.vip}`}>
-                      <Crown />
-                      VIP
-                    </span>
-                  )}
-
-                  {item.status === "urgent" && (
-                    <span className={`${styles.status} ${styles.urgent}`}>
-                      <Zap />
-                      Срочно
-                    </span>
-                  )}
-
-                  <span className={styles.type}>{item.type}</span>
-                </div>
-
-                {/* FAVORITE */}
-
-                <button
-                  type="button"
-                  className={styles.favorite}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFavorite(item.id);
-                  }}
-                  aria-label="Удалить из избранного"
-                >
-                  <Heart fill="currentColor" />
-                </button>
-
-                <span className={styles.saved}>Сохранено</span>
-              </div>
-
-              {/* CONTENT */}
-
-              <div className={styles.content}>
-                <h2>{item.title}</h2>
-
-                <div className={styles.location}>
-                  <MapPin />
-
-                  <span>{item.location}</span>
-                </div>
-
-                <div className={styles.details}>
-                  {item.rooms && (
-                    <span>
-                      {item.rooms} {item.rooms === 1 ? "комната" : "комнат"}
-                    </span>
-                  )}
-
-                  <span>{item.area}</span>
-                </div>
-
-                <div className={styles.bottom}>
-                  <strong>{item.price}</strong>
-
-                  <button
-                    type="button"
-                    className={styles.more}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(`/all-products/${item.id}`);
-                    }}
-                  >
-                    Подробнее
-                  </button>
-                </div>
-              </div>
-            </article>
+              item={item}
+              isFavorite={true}
+              onFavoriteClick={(clickedItem) => removeFavorite(clickedItem.id)}
+            />
           ))}
         </section>
       ) : favorites.length > 0 ? (

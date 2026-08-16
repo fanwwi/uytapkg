@@ -72,6 +72,10 @@ export async function getListings(params = {}) {
     mappedParams.propertyType = params.category;
     delete mappedParams.category;
   }
+  if (params.settlement) {
+    mappedParams.city = params.settlement;
+    delete mappedParams.settlement;
+  }
   if (params.priceFrom) {
     mappedParams.minPrice = params.priceFrom;
     delete mappedParams.priceFrom;

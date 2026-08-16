@@ -1,4 +1,6 @@
 import { supabase } from "../config/db.js";
+import { createListingSchema, updateListingSchema } from "../utils/validation.js";
+import { removeImageFromStorage } from "../utils/storage.js";
 
 // =======================================================
 // 1. Получение списка объявлений с фильтрами
@@ -123,6 +125,16 @@ export const getListingById = async (req, res) => {
 // =======================================================
 export const createListing = async (req, res) => {
   try {
+    // Валидация входящих данных через Zod
+    const validationResult = createListingSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных",
+        errors: validationResult.error.errors.map((e) => e.message),
+      });
+    }
+
     const userId = req.user.id;
     const {
       title,
@@ -145,11 +157,7 @@ export const createListing = async (req, res) => {
       resortFilters,
       features,
       photos = [],
-    } = req.body;
-
-    if (!title || !propertyType || !dealType || !region || !price) {
-      return res.status(400).json({ success: false, message: "Заполните все обязательные поля" });
-    }
+    } = validationResult.data;
 
     const { data: newListing, error: createError } = await supabase
       .from("listings")
@@ -207,3 +215,239 @@ export const createListing = async (req, res) => {
     return res.status(500).json({ success: false, message: "Ошибка сервера при создании объявления" });
   }
 };
+
+// =======================================================
+// 4. Получение объявлений текущего пользователя ("Мои объявления")
+// =======================================================
+export const getMyListings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {
+      status,
+      page = 1,
+      limit = 20,
+    } = req.query;
+
+    let query = supabase
+      .from("listings")
+      .select(
+        `
+        *,
+        listing_photos (id, url, is_main, display_order)
+      `,
+        { count: "exact" }
+      )
+      .eq("user_id", userId);
+
+    if (status) {
+      query = query.eq("status", status);
+    }
+
+    const from = (Number(page) - 1) * Number(limit);
+    const to = from + Number(limit) - 1;
+
+    query = query
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    const { data: listings, count, error } = await query;
+
+    if (error) {
+      console.error("Error fetching my listings:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Ошибка загрузки ваших объявлений" });
+    }
+
+    return res.json({
+      success: true,
+      data: listings || [],
+      pagination: {
+        total: count || (listings ? listings.length : 0),
+        page: Number(page),
+        limit: Number(limit),
+      },
+    });
+  } catch (error) {
+    console.error("Get My Listings Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Ошибка сервера при получении ваших объявлений" });
+  }
+};
+
+// =======================================================
+// 5. Редактирование объявления (PUT /api/listings/:id)
+// =======================================================
+export const updateListing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    // 1. Поиск существующего объявления
+    const { data: existingListing, error: fetchError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !existingListing) {
+      return res.status(404).json({ success: false, message: "Объявление не найдено" });
+    }
+
+    // 2. Проверка прав: только владелец или admin
+    if (existingListing.user_id !== userId && userRole !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Вы не являетесь владельцем этого объявления" });
+    }
+
+    // 3. Валидация входящих данных через Zod
+    const validationResult = updateListingSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных",
+        errors: validationResult.error.errors.map((e) => e.message),
+      });
+    }
+
+    const data = validationResult.data;
+
+    // Игнорируем/запрещаем изменение user_id — владелец остаётся неизменным
+    delete data.userId;
+    delete data.user_id;
+
+    // Формируем объект обновлений для базы данных (маппинг полей)
+    const updates = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (data.title !== undefined) updates.title = data.title;
+    if (data.description !== undefined) updates.description = data.description;
+    if (data.propertyType !== undefined) updates.property_type = data.propertyType;
+    if (data.dealType !== undefined) updates.deal_type = data.dealType;
+    if (data.rentPeriod !== undefined) updates.rent_period = data.rentPeriod;
+    if (data.region !== undefined) updates.region = data.region;
+    if (data.city !== undefined) updates.city = data.city;
+    if (data.district !== undefined) updates.district = data.district;
+    if (data.microdistrict !== undefined) updates.microdistrict = data.microdistrict;
+    if (data.address !== undefined) updates.address = data.address;
+    if (data.latitude !== undefined) updates.latitude = data.latitude;
+    if (data.longitude !== undefined) updates.longitude = data.longitude;
+    if (data.price !== undefined) updates.price = data.price;
+    if (data.currency !== undefined) updates.currency = data.currency;
+    if (data.area !== undefined) updates.area = data.area;
+    if (data.rooms !== undefined) updates.rooms = data.rooms;
+    if (data.floor !== undefined) updates.floor = data.floor;
+    if (data.totalFloors !== undefined) updates.total_floors = data.totalFloors;
+    if (data.isResort !== undefined) updates.is_resort = data.isResort;
+    if (data.resortFilters !== undefined) updates.resort_filters = data.resortFilters;
+    if (data.features !== undefined) updates.features = data.features;
+    if (data.status !== undefined) updates.status = data.status;
+    if (data.promotionStatus !== undefined) updates.promotion_status = data.promotionStatus;
+    if (data.isUrgent !== undefined) updates.is_urgent = data.isUrgent;
+
+    // 4. Обновление записи в таблице listings
+    const { data: updatedListing, error: updateError } = await supabase
+      .from("listings")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (updateError || !updatedListing) {
+      console.error("Listing Update Error:", updateError);
+      return res.status(500).json({ success: false, message: "Ошибка обновления объявления" });
+    }
+
+    // 5. Если переданы фотографии — обновим в таблице listing_photos
+    if (data.photos && Array.isArray(data.photos)) {
+      await supabase.from("listing_photos").delete().eq("listing_id", id);
+
+      if (data.photos.length > 0) {
+        const photosData = data.photos.map((url, idx) => ({
+          listing_id: id,
+          url,
+          is_main: idx === 0,
+          display_order: idx,
+        }));
+        await supabase.from("listing_photos").insert(photosData);
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: "Объявление успешно обновлено",
+      data: updatedListing,
+    });
+  } catch (error) {
+    console.error("Update Listing Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Ошибка сервера при обновлении объявления" });
+  }
+};
+
+// =======================================================
+// 6. Удаление объявления (DELETE /api/listings/:id)
+// =======================================================
+export const deleteListing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    // 1. Поиск существующего объявления с вложенными фото
+    const { data: existingListing, error: fetchError } = await supabase
+      .from("listings")
+      .select("*, listing_photos(*)")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !existingListing) {
+      return res.status(404).json({ success: false, message: "Объявление не найдено" });
+    }
+
+    // 2. Проверка прав: только владелец или admin
+    if (existingListing.user_id !== userId && userRole !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Вы не являетесь владельцем этого объявления" });
+    }
+
+    // 3. Удаление ассоциированных фотографий из Supabase Storage
+    if (existingListing.listing_photos && existingListing.listing_photos.length > 0) {
+      for (const photo of existingListing.listing_photos) {
+        if (photo.url) {
+          await removeImageFromStorage(photo.url);
+        }
+      }
+    }
+
+    // 4. Удаление объявления из базы данных (каскадно удалит строки в listing_photos)
+    const { error: deleteError } = await supabase
+      .from("listings")
+      .delete()
+      .eq("id", id);
+
+    if (deleteError) {
+      console.error("Listing Delete Error:", deleteError);
+      return res.status(500).json({ success: false, message: "Ошибка удаления объявления" });
+    }
+
+    return res.json({
+      success: true,
+      message: "Объявление успешно удалено",
+    });
+  } catch (error) {
+    console.error("Delete Listing Error:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Ошибка сервера при удалении объявления" });
+  }
+};
+
+
+

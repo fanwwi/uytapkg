@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getComplexById } from "@/utils/api";
+import { mapComplexData } from "@/utils/mapComplexData";
 
 import {
   ArrowLeft,
@@ -33,54 +35,35 @@ import {
 
 import styles from "./ComplexDetail.module.css";
 
+/*
 const residentialComplex = {
   id: 1,
-
   name: "ЖК MALINA",
-
   subtitle: "Премиальный жилой комплекс в Бишкеке",
-
   class: "Премиум-класс",
-
   status: "В продаже",
-
   location: "Бишкек",
-
   address: "Юго-восточная часть города",
-
   developer: "MALINA Development",
-
   completion: "III квартал 2027",
-
   floors: 10,
-
   blocks: 3,
-
   landArea: "1 га",
-
   apartments: "120 квартир",
-
   ceilingHeight: "до 3,6 м",
-
   constructionType: "Монолитно-каркасная",
-
   heating: "Автономная газовая котельная",
-
   parking: "Подземный паркинг",
-
   description:
     "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
-
   concept:
     "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
-
   images: [
     "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
   ],
-
   advantages: [
     {
       icon: Trees,
@@ -114,7 +97,6 @@ const residentialComplex = {
       description: "Современная входная группа с качественными материалами.",
     },
   ],
-
   infrastructure: [
     "Закрытая территория",
     "Двор без машин",
@@ -129,7 +111,6 @@ const residentialComplex = {
     "Фитнес-инфраструктура",
     "Коммерческие помещения",
   ],
-
   architecture: [
     {
       title: "Современная архитектура",
@@ -144,7 +125,6 @@ const residentialComplex = {
       text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
     },
   ],
-
   engineering: [
     {
       icon: Flame,
@@ -167,17 +147,174 @@ const residentialComplex = {
       value: "24/7",
     },
   ],
-
   galleryLabel: "Галерея комплекса",
+  createdAt: "12 августа 2026",
+};
+*/
 
+const defaultResidentialComplex = {
+  id: 1,
+  name: "ЖК MALINA",
+  subtitle: "Премиальный жилой комплекс в Бишкеке",
+  class: "Премиум-класс",
+  status: "В продаже",
+  location: "Бишкек",
+  address: "Юго-восточная часть города",
+  developer: "MALINA Development",
+  completion: "III квартал 2027",
+  floors: 10,
+  blocks: 3,
+  landArea: "1 га",
+  apartments: "120 квартир",
+  ceilingHeight: "до 3,6 м",
+  constructionType: "Монолитно-каркасная",
+  heating: "Автономная газовая котельная",
+  parking: "Подземный паркинг",
+  description:
+    "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
+  concept:
+    "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
+  images: [
+    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
+  ],
+  advantages: [
+    {
+      icon: Trees,
+      title: "Просторная территория",
+      description: "Озеленённый двор с ландшафтным дизайном и зонами отдыха.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Безопасность 24/7",
+      description:
+        "Закрытая территория, видеонаблюдение и контролируемый доступ.",
+    },
+    {
+      icon: CarFront,
+      title: "Подземный паркинг",
+      description: "Безопасное парковочное пространство для жителей комплекса.",
+    },
+    {
+      icon: Waves,
+      title: "Зоны отдыха",
+      description: "Продуманные пространства для отдыха жителей и гостей.",
+    },
+    {
+      icon: Dumbbell,
+      title: "Фитнес",
+      description: "Спортивная инфраструктура для активного образа жизни.",
+    },
+    {
+      icon: DoorOpen,
+      title: "Премиальное лобби",
+      description: "Современная входная группа с качественными материалами.",
+    },
+  ],
+  infrastructure: [
+    "Закрытая территория",
+    "Двор без машин",
+    "Детская площадка",
+    "Взрослая зона отдыха",
+    "Ландшафтный дизайн",
+    "Подземный паркинг",
+    "Видеонаблюдение",
+    "Охрана 24/7",
+    "Современное лобби",
+    "Зоны отдыха",
+    "Фитнес-инфраструктура",
+    "Коммерческие помещения",
+  ],
+  architecture: [
+    {
+      title: "Современная архитектура",
+      text: "Чистые линии, панорамное остекление и выразительные фасады формируют узнаваемый облик комплекса.",
+    },
+    {
+      title: "Продуманные пространства",
+      text: "Архитектура комплекса создаёт баланс между приватностью жителей и комфортными общественными пространствами.",
+    },
+    {
+      title: "Панорамное остекление",
+      text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
+    },
+  ],
+  engineering: [
+    {
+      icon: Flame,
+      title: "Отопление",
+      value: "Автономная газовая котельная",
+    },
+    {
+      icon: Zap,
+      title: "Электроснабжение",
+      value: "Современная инженерная система",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Безопасность",
+      value: "Контролируемый доступ",
+    },
+    {
+      icon: Camera,
+      title: "Видеонаблюдение",
+      value: "24/7",
+    },
+  ],
+  galleryLabel: "Галерея комплекса",
   createdAt: "12 августа 2026",
 };
 
 export default function ComplexesDetails() {
   const router = useRouter();
+  const params = useParams();
+  const complexId = params?.id;
 
+  const [residentialComplex, setResidentialComplex] = useState(defaultResidentialComplex);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    if (!complexId) return;
+
+    async function loadComplex() {
+      try {
+        setLoading(true);
+        setError("");
+        const res = await getComplexById(complexId);
+        if (res && res.success && res.data) {
+          const mapped = mapComplexData(res.data);
+          setResidentialComplex({
+            ...defaultResidentialComplex,
+            id: res.data.id,
+            name: mapped.name,
+            subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
+            class: mapped.housingClass,
+            status: mapped.completionStatus,
+            location: res.data.city || res.data.region || "Кыргызстан",
+            address: mapped.address,
+            developer: mapped.developer,
+            completion: res.data.completion_date || "Уточняйте у застройщика",
+            description: mapped.description,
+            images: res.data.cover_photo
+              ? [res.data.cover_photo, ...defaultResidentialComplex.images.slice(1)]
+              : defaultResidentialComplex.images,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load complex detail:", err);
+        setError(err.message || "Ошибка загрузки жилого комплекса");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadComplex();
+  }, [complexId]);
 
   const nextImage = () => {
     setCurrentImage((prev) =>

@@ -6,6 +6,9 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import listingsRoutes from "./routes/listingsRoutes.js";
 import complexesRoutes from "./routes/complexesRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
+import constantsRoutes from "./routes/constantsRoutes.js";
+import favoritesRoutes from "./routes/favoritesRoutes.js";
+import developersRoutes from "./routes/developersRoutes.js";
 
 dotenv.config();
 
@@ -13,7 +16,7 @@ const app = express();
 // When running behind a proxy (e.g., local dev proxies or hosting), allow
 // express to trust the X-Forwarded-* headers so express-rate-limit can
 // correctly determine the remote IP. See express-rate-limit docs.
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
 // Разрешенные CORS источники
@@ -53,6 +56,9 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/listings", listingsRoutes);
 app.use("/api/complexes", complexesRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/constants", constantsRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/developers", developersRoutes);
 
 // Глобальный обработчик ошибок (включая Multer)
 app.use((err, req, res, next) => {

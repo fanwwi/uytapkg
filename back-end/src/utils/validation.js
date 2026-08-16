@@ -61,3 +61,192 @@ export const updateMeSchema = z.object({
   officeAddress: z.string().optional().nullable(),
   agencyName: z.string().optional().nullable(),
 });
+
+// Схема создания объявления (POST /api/listings)
+export const createListingSchema = z
+  .object({
+    title: z
+      .string({ required_error: "Укажите заголовок" })
+      .min(5, "Заголовок должен содержать не менее 5 символов")
+      .max(255, "Заголовок не должен превышать 255 символов"),
+    description: z.string().optional().nullable(),
+    propertyType: z.enum(
+      ["apartment", "house", "land", "commercial", "room", "garage"],
+      {
+        errorMap: () => ({ message: "Укажите корректный тип недвижимости" }),
+      }
+    ),
+    dealType: z.enum(["sale", "rent"], {
+      errorMap: () => ({ message: "Укажите тип сделки (sale или rent)" }),
+    }),
+    rentPeriod: z
+      .enum(["hourly", "daily", "weekly", "monthly", "long_term"], {
+        errorMap: () => ({ message: "Некорректный период аренды" }),
+      })
+      .optional()
+      .nullable(),
+    country: z.string().optional().nullable(),
+    region: z.string({ required_error: "Укажите регион" }).min(1, "Укажите регион"),
+    city: z.string().optional().nullable(),
+    district: z.string().optional().nullable(),
+    microdistrict: z.string().optional().nullable(),
+    address: z.string().optional().nullable(),
+    latitude: z.number().optional().nullable(),
+    longitude: z.number().optional().nullable(),
+    price: z
+      .number({ required_error: "Укажите цену", invalid_type_error: "Цена должна быть числом" })
+      .positive("Цена должна быть положительным числом"),
+    priceFrom: z.number().optional().nullable(),
+    priceTo: z.number().optional().nullable(),
+    currency: z
+      .enum(["KGS", "USD"], {
+        errorMap: () => ({ message: "Валюта должна быть KGS или USD" }),
+      })
+      .default("KGS")
+      .optional()
+      .nullable(),
+    area: z
+      .number({ invalid_type_error: "Площадь должна быть числом" })
+      .positive("Площадь должна быть положительным числом")
+      .optional()
+      .nullable(),
+    areaFrom: z.number().optional().nullable(),
+    areaTo: z.number().optional().nullable(),
+    rooms: z
+      .number({ invalid_type_error: "Количество комнат должно быть числом" })
+      .int("Количество комнат должно быть целым числом")
+      .positive("Количество комнат должно быть положительным числом")
+      .optional()
+      .nullable(),
+    floor: z
+      .number({ invalid_type_error: "Этаж должен быть числом" })
+      .int("Этаж должен быть целым числом")
+      .optional()
+      .nullable(),
+    totalFloors: z
+      .number({ invalid_type_error: "Этажность должна быть числом" })
+      .int("Этажность должна быть целым числом")
+      .optional()
+      .nullable(),
+    beachDistanceFrom: z.number().optional().nullable(),
+    beachDistanceTo: z.number().optional().nullable(),
+    developerOrComplex: z.string().optional().nullable(),
+    listingType: z.string().optional().nullable(),
+    isResort: z.boolean().optional(),
+    resortFilters: z.record(z.any()).optional(),
+    features: z.record(z.any()).optional(),
+    photos: z.array(z.string()).optional(),
+  })
+  .strict({ message: "Обнаружены неизвестные/запрещённые поля" })
+  .superRefine((data, ctx) => {
+    if (data.dealType === "rent" && !data.rentPeriod) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Для аренды необходимо указать период аренды (rentPeriod)",
+        path: ["rentPeriod"],
+      });
+    }
+  });
+
+// Схема обновления объявления (PUT /api/listings/:id)
+export const updateListingSchema = z
+  .object({
+    title: z
+      .string()
+      .min(5, "Заголовок должен содержать не менее 5 символов")
+      .max(255, "Заголовок не должен превышать 255 символов")
+      .optional(),
+    description: z.string().optional().nullable(),
+    propertyType: z
+      .enum(["apartment", "house", "land", "commercial", "room", "garage"], {
+        errorMap: () => ({ message: "Укажите корректный тип недвижимости" }),
+      })
+      .optional(),
+    dealType: z
+      .enum(["sale", "rent"], {
+        errorMap: () => ({ message: "Укажите тип сделки (sale или rent)" }),
+      })
+      .optional(),
+    rentPeriod: z
+      .enum(["hourly", "daily", "weekly", "monthly", "long_term"], {
+        errorMap: () => ({ message: "Некорректный период аренды" }),
+      })
+      .optional()
+      .nullable(),
+    country: z.string().optional().nullable(),
+    region: z.string().min(1, "Укажите регион").optional(),
+    city: z.string().optional().nullable(),
+    district: z.string().optional().nullable(),
+    microdistrict: z.string().optional().nullable(),
+    address: z.string().optional().nullable(),
+    latitude: z.number().optional().nullable(),
+    longitude: z.number().optional().nullable(),
+    price: z
+      .number({ invalid_type_error: "Цена должна быть числом" })
+      .positive("Цена должна быть положительным числом")
+      .optional(),
+    priceFrom: z.number().optional().nullable(),
+    priceTo: z.number().optional().nullable(),
+    currency: z
+      .enum(["KGS", "USD"], {
+        errorMap: () => ({ message: "Валюта должна быть KGS или USD" }),
+      })
+      .optional()
+      .nullable(),
+    area: z
+      .number({ invalid_type_error: "Площадь должна быть числом" })
+      .positive("Площадь должна быть положительным числом")
+      .optional()
+      .nullable(),
+    areaFrom: z.number().optional().nullable(),
+    areaTo: z.number().optional().nullable(),
+    rooms: z
+      .number({ invalid_type_error: "Количество комнат должно быть числом" })
+      .int("Количество комнат должно быть целым числом")
+      .positive("Количество комнат должно быть положительным числом")
+      .optional()
+      .nullable(),
+    floor: z
+      .number({ invalid_type_error: "Этаж должен быть числом" })
+      .int("Этаж должен быть целым числом")
+      .optional()
+      .nullable(),
+    totalFloors: z
+      .number({ invalid_type_error: "Этажность должна быть числом" })
+      .int("Этажность должна быть целым числом")
+      .optional()
+      .nullable(),
+    status: z
+      .enum(["active", "hidden", "draft", "moderation"], {
+        errorMap: () => ({ message: "Некорректный статус объявления" }),
+      })
+      .optional(),
+    promotionStatus: z
+      .enum(["regular", "vip", "top"], {
+        errorMap: () => ({ message: "Некорректный статус продвижения" }),
+      })
+      .optional(),
+    isUrgent: z.boolean().optional(),
+    beachDistanceFrom: z.number().optional().nullable(),
+    beachDistanceTo: z.number().optional().nullable(),
+    developerOrComplex: z.string().optional().nullable(),
+    listingType: z.string().optional().nullable(),
+    isResort: z.boolean().optional(),
+    resortFilters: z.record(z.any()).optional(),
+    features: z.record(z.any()).optional(),
+    photos: z.array(z.string()).optional(),
+    userId: z.any().optional(),
+    user_id: z.any().optional(),
+  })
+  .strict({ message: "Обнаружены неизвестные/запрещённые поля" })
+  .superRefine((data, ctx) => {
+    if (data.dealType === "rent" && data.rentPeriod === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Для аренды необходимо указать период аренды (rentPeriod)",
+        path: ["rentPeriod"],
+      });
+    }
+  });
+
+

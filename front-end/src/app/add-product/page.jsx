@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { createListing } from "@/utils/api";
+import { createListing, getConstants, uploadImage } from "@/utils/api";
 
 import StepProgress from "./components/StepProgress/StepProgress";
 import StepImage from "./components/StepImage/StepImage";
@@ -137,15 +137,11 @@ export default function AddProductPage() {
       // ЦЕНА
       // =========================
 
-      const priceFrom = Number(form.priceFrom);
-      const priceTo = Number(form.priceTo);
-
+      const price = Number(form.price);
       let derivedPrice = 100000;
 
-      if (priceFrom > 0) {
-        derivedPrice = priceFrom;
-      } else if (priceTo > 0) {
-        derivedPrice = priceTo;
+      if (price > 0) {
+        derivedPrice = price;
       }
 
       // =========================
@@ -198,17 +194,37 @@ export default function AddProductPage() {
       // =========================
       // ФОТО
       // =========================
-      //
-      // Пока передаём URL локальных blob-файлов.
-      // В production здесь лучше сделать отдельный upload
-      // на backend/storage и передавать уже реальные URL.
-      //
-
-      const photos = (form.images || []).map((image) => image.url);
+      
+      const photos = [];
+      for (const img of (form.images || [])) {
+        if (img.file) {
+          try {
+            const uploadedUrl = await uploadImage(img.file);
+            photos.push(uploadedUrl);
+          } catch (e) {
+            console.error("Failed to upload image:", img.file.name, e);
+            throw new Error(`Не удалось загрузить фотографию ${img.file.name}: ${e.message}`);
+          }
+        } else if (img.url && !img.url.startsWith("blob:")) {
+          photos.push(img.url);
+        }
+      }
 
       // =========================
       // PAYLOAD
       // =========================
+
+      // Разделение amenities на resort и general
+      let isResortAmenity = false;
+      if (form.amenities && form.amenities !== "Любые") {
+        try {
+          const constants = await getConstants();
+          const resortList = constants?.amenities?.resort || [];
+          isResortAmenity = resortList.includes(form.amenities);
+        } catch (e) {
+          console.error("Failed to fetch constants for amenities split", e);
+        }
+      }
 
       const payload = {
         title: derivedTitle,
@@ -224,8 +240,12 @@ export default function AddProductPage() {
         // Местоположение
         country: form.country || "Кыргызстан",
         region: form.region || null,
-        city: form.city || null,
-        settlement: form.settlement || form.location || null,
+        city:
+          (form.country === "turkey"
+            ? form.city
+            : form.region === "BISHKEK" || form.region === "bishkek"
+              ? "Бишкек"
+              : form.settlement || form.city || form.location) || null,
         district: form.district || null,
 
         // Адрес
@@ -235,19 +255,14 @@ export default function AddProductPage() {
 
         // Цена
         price: derivedPrice,
-        priceFrom: priceFrom > 0 ? priceFrom : null,
-        priceTo: priceTo > 0 ? priceTo : null,
+        priceFrom: price > 0 ? price : null,
+        priceTo: price > 0 ? price : null,
         currency: "USD",
 
         // Площадь
-        area:
-          Number(form.areaFrom || form.areaTo || 0) > 0
-            ? Number(form.areaFrom || form.areaTo)
-            : null,
-
-        areaFrom: Number(form.areaFrom) > 0 ? Number(form.areaFrom) : null,
-
-        areaTo: Number(form.areaTo) > 0 ? Number(form.areaTo) : null,
+        area: form.area ? Number(form.area) : null,
+        areaFrom: form.area ? Number(form.area) : null,
+        areaTo: form.area ? Number(form.area) : null,
 
         // Расстояние до пляжа
         beachDistanceFrom:
@@ -270,9 +285,9 @@ export default function AddProductPage() {
         photos,
 
         // Дополнительные параметры
-        rooms: form.rooms || null,
-        floor: form.floor || null,
-        totalFloors: form.floors || null,
+        rooms: form.rooms ? Number(form.rooms) : null,
+        floor: form.floor ? Number(form.floor) : null,
+        totalFloors: form.floors ? Number(form.floors) : null,
 
         // Resort
         isResort: true,
@@ -289,6 +304,8 @@ export default function AddProductPage() {
               : null,
 
           developerOrComplex: form.developerOrComplex || null,
+          
+          amenities: isResortAmenity ? [form.amenities] : [],
         },
 
         // Остальные характеристики
@@ -304,6 +321,8 @@ export default function AddProductPage() {
           furniture: form.furniture || null,
           documents: form.documents || null,
           offerType: form.offerType || null,
+          
+          amenities: (!isResortAmenity && form.amenities && form.amenities !== "Любые") ? [form.amenities] : [],
         },
       };
 

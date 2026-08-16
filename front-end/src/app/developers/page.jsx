@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight, Building2, Home, Search } from "lucide-react";
+import { getDevelopers } from "@/utils/api";
 
 import styles from "./Developers.module.css";
 
 import Footer from "@/components/pageComponents/footer/Footer";
 
+/*
 const developers = [
   {
     id: 1,
@@ -79,24 +81,74 @@ const developers = [
     objects: 13,
     logo: "https://static.tildacdn.one/tild3836-3833-4765-a236-346133626330/image.png",
   },
-
-  // остальные твои developers оставляешь здесь без изменений
 ];
+*/
 
 export default function Developers() {
+  const [developersList, setDevelopersList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    getDevelopers()
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = res.data.map((dev) => ({
+            id: dev.id,
+            nameRu: dev.company_name,
+            nameEn: dev.company_name,
+            objects: dev.residential_complexes?.length || 0,
+            logo: dev.logo_url || null,
+          }));
+          setDevelopersList(mapped);
+        } else {
+          setError(res.message || "Ошибка загрузки застройщиков");
+        }
+      })
+      .catch((err) => {
+        console.error("Fetch developers error:", err);
+        setError("Ошибка при получении списка застройщиков");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    if (!query) return developers;
+    if (!query) return developersList;
 
-    return developers.filter(
+    return developersList.filter(
       (item) =>
-        item.nameRu.toLowerCase().includes(query) ||
-        item.nameEn.toLowerCase().includes(query),
+        item.nameRu?.toLowerCase().includes(query) ||
+        item.nameEn?.toLowerCase().includes(query),
     );
-  }, [search]);
+  }, [search, developersList]);
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Загрузка списка застройщиков...</h2>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Ошибка загрузки застройщиков</h2>
+          <p style={{ marginTop: "10px", color: "#666" }}>{error}</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className={styles.page}>
@@ -117,7 +169,7 @@ export default function Developers() {
           </div>
 
           <div className={styles.headerStat}>
-            <strong>{developers.length}</strong>
+            <strong>{developersList.length}</strong>
             <span>застройщиков</span>
           </div>
         </div>

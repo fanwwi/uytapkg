@@ -535,6 +535,7 @@ export default function StepCategory({
   onNext,
   onBack,
   onSubmit,
+  isLoading,
 }) {
   const category = categories[form.category];
   const CategoryIcon = categoryIcons[form.category];
@@ -949,11 +950,11 @@ export default function StepCategory({
             <button
               type="button"
               className={styles.primary}
-              disabled={!form.dealType}
+              disabled={!form.dealType || isLoading}
               onClick={handleSubmit}
             >
-              Найти подходящие объявления
-              <ChevronRight size={18} />
+              {isLoading ? "Поиск..." : "Найти подходящие объявления"}
+              {!isLoading && <ChevronRight size={18} />}
             </button>
           </div>
         </>

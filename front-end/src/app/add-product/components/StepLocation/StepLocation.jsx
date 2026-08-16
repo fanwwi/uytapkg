@@ -1,16 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { MapPin, Globe2, Building2, Check, ChevronRight } from "lucide-react";
+import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepLocation.module.css";
 
-const locations = {
+const fallbackLocations = {
   kyrgyzstan: {
     name: "Кыргызстан",
 
     regions: {
-      bishkek: {
+      BISHKEK: {
         name: "Бишкек",
         type: "bishkek",
 
@@ -57,7 +59,7 @@ const locations = {
         ],
       },
 
-      chui: {
+      CHUY: {
         name: "Чуйская область",
         type: "region",
 
@@ -81,7 +83,7 @@ const locations = {
         ],
       },
 
-      osh: {
+      OSH_REGION: {
         name: "Ошская область",
         type: "region",
 
@@ -102,7 +104,7 @@ const locations = {
         ],
       },
 
-      issykKul: {
+      ISSYK_KUL: {
         name: "Иссык-Кульская область",
         type: "region",
 
@@ -123,7 +125,7 @@ const locations = {
         ],
       },
 
-      jalalAbad: {
+      JALAL_ABAD: {
         name: "Джалал-Абадская область",
         type: "region",
 
@@ -142,7 +144,7 @@ const locations = {
         ],
       },
 
-      naryn: {
+      NARYN: {
         name: "Нарынская область",
         type: "region",
 
@@ -158,7 +160,7 @@ const locations = {
         ],
       },
 
-      talas: {
+      TALAS: {
         name: "Таласская область",
         type: "region",
 
@@ -172,7 +174,7 @@ const locations = {
         ],
       },
 
-      batken: {
+      BATKEN: {
         name: "Баткенская область",
         type: "region",
 
@@ -440,8 +442,101 @@ const locations = {
   },
 };
 
+// Keep the original turkey object as fallback because backend doesn't provide Turkey districts
+const originalTurkey = {
+  name: "Турция",
+  cities: {
+    istanbul: {
+      name: "Стамбул",
+      districts: [
+        "Авджилар", "Адалар", "Арнавуткёй", "Аташехир", "Багджилар", "Байрампаша", "Бакыркёй", "Башакшехир", "Бейкоз", "Бейликдюзю", "Бейоглу", "Бешикташ", "Бююкчекмедже", "Газиосманпаша", "Гюнгёрен", "Зейтинбурну", "Кадыкёй", "Картал", "Кючюкчекмедже", "Кягытхане", "Малтепе", "Пендик", "Санджактепе", "Сарыер", "Силиври", "Султанбейли", "Султангази", "Тузла", "Умрание", "Ускюдар", "Фатих", "Чаталджа", "Чекмекёй", "Шиле", "Шишли", "Эсенлер", "Эсеньюрт", "Эюпсултан",
+      ],
+    },
+    ankara: {
+      name: "Анкара",
+      districts: [
+        "Акюрт", "Алтындаг", "Аяш", "Бала", "Бейпазары", "Гёльбаши", "Гюдюл", "Енимахалле", "Каледжик", "Кахраманказан", "Кечиорен", "Кызылджахамам", "Мамак", "Наллыхан", "Полатлы", "Пурсаклар", "Синджан", "Хаймана", "Чамлыдере", "Чанкая", "Чубук", "Шерефликочхисар", "Эврен", "Эльмадаг", "Эриаман",
+      ],
+    },
+    antalya: {
+      name: "Анталья",
+      districts: [
+        "Аксеки", "Аксу", "Аланья", "Демре", "Дёшемеалты", "Ибрады", "Каш", "Кемер", "Кепез", "Коньяалты", "Коркутели", "Кумлуджа", "Манавгат", "Муратпаша", "Серик", "Финике", "Газипаша", "Гюндогмуш", "Эльмалы",
+      ],
+    },
+    izmir: {
+      name: "Измир",
+      districts: [
+        "Алиага", "Балчова", "Байындыр", "Байраклы", "Бергама", "Бейдаг", "Борнова", "Буджа", "Чешме", "Чигли", "Дикили", "Фоча", "Газиэмир", "Гюзелбахче", "Карабаглар", "Карабурун", "Каршияка", "Кемальпаша", "Кынык", "Кираз", "Конак", "Мендерес", "Менемен", "Нарлыдере", "Одемиш", "Сеферихисар", "Селчук", "Тире", "Торбалы", "Урла",
+      ],
+    },
+    bursa: {
+      name: "Бурса",
+      districts: [
+        "Бююк Орхан", "Гемлик", "Гюрсу", "Изник", "Караджабей", "Келес", "Кестель", "Муданья", "Мустафакемальпаша", "Нилюфер", "Орхангази", "Орханели", "Османгази", "Енишехир", "Инегёль", "Харманджик", "Йылдырым",
+      ],
+    },
+    mersin: {
+      name: "Аланья", // NOTE: This was exactly like this in the original file
+      districts: [
+        "Авсаллар", "Бекташ", "Гюллер Пынары", "Демирташ", "Джикджилли", "Инджекум", "Кадипаша", "Каргыджак", "Кестель", "Кизлар Пынары", "Конаклы", "Махмутлар", "Оба", "Окурджалар", "Паяллар", "Сарай", "Сугёзю", "Тосмур", "Тюрклер", "Хаджэт", "Хисаричи", "Чиплаклы", "Шекерхане",
+      ],
+    },
+    mugla: {
+      name: "Бодрум",
+      districts: [
+        "Акьярлар", "Битез", "Гёльтюркбюкю", "Гюмюшлюк", "Гюндоган", "Гюмбет", "Давутлар", "Ичмелер", "Кадикалеси", "Караова", "Конаджик", "Кумбахче", "Мумджулар", "Ортакент", "Торба", "Тургутреис", "Тюркбюкю", "Умюрча", "Чарши", "Чеч", "Ялыкавак",
+      ],
+    },
+    adana: {
+      name: "Мармарис",
+      districts: [
+        "Армуталан", "Бельдиби", "Бозбурун", "Ичмелер", "Кемерсереф", "Орхание", "Селимие", "Сителер", "Согут", "Тепе", "Тургют", "Турунч", "Хатирими", "Чамлы", "Чилдыр",
+      ],
+    },
+  },
+};
+
 export default function StepLocation({ form, updateForm, onNext }) {
-  const countryData = locations[form.country];
+  const [locationsData, setLocationsData] = useState(null);
+  const [apiError, setApiError] = useState(false);
+
+  useEffect(() => {
+    getConstants()
+      .then((data) => {
+        if (data && data.locationsByRegion) {
+          const apiLocations = data.locationsByRegion;
+          setLocationsData({
+            kyrgyzstan: {
+              name: "Кыргызстан",
+              regions: {
+                BISHKEK: { name: "Бишкек", type: "bishkek", districts: apiLocations.BISHKEK || [] },
+                CHUY: { name: "Чуйская область", type: "region", settlements: apiLocations.CHUY || [] },
+                OSH_REGION: { name: "Ошская область", type: "region", settlements: [...(apiLocations.OSH_CITY || []), ...(apiLocations.OSH_REGION || [])] },
+                ISSYK_KUL: { name: "Иссык-Кульская область", type: "region", settlements: apiLocations.ISSYK_KUL || [] },
+                JALAL_ABAD: { name: "Джалал-Абадская область", type: "region", settlements: apiLocations.JALAL_ABAD || [] },
+                NARYN: { name: "Нарынская область", type: "region", settlements: apiLocations.NARYN || [] },
+                TALAS: { name: "Таласская область", type: "region", settlements: apiLocations.TALAS || [] },
+                BATKEN: { name: "Баткенская область", type: "region", settlements: apiLocations.BATKEN || [] },
+              },
+            },
+            turkey: originalTurkey,
+          });
+        } else {
+          throw new Error("No data returned");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch constants", err);
+        setApiError(true);
+        setLocationsData({
+          kyrgyzstan: fallbackLocations.kyrgyzstan,
+          turkey: originalTurkey,
+        });
+      });
+  }, []);
+
+  const countryData = locationsData ? locationsData[form.country] : null;
 
   const isKyrgyzstan = form.country === "kyrgyzstan";
   const isTurkey = form.country === "turkey";
@@ -452,7 +547,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
 
   const selectedCity = isTurkey ? countryData?.cities?.[form.city] : null;
 
-  const isBishkek = isKyrgyzstan && form.region === "bishkek";
+  const isBishkek = isKyrgyzstan && (form.region === "BISHKEK" || form.region === "bishkek");
 
   const regionOptions = isKyrgyzstan
     ? Object.values(countryData?.regions || {}).map((item) => item.name)
@@ -549,6 +644,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
           покупателям быстрее найти ваше объявление.
         </p>
       </div>
+
+      {apiError && (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "14px" }}>
+          Не удалось загрузить актуальный справочник локаций. Попробуйте обновить страницу.
+        </div>
+      )}
 
       {/* COUNTRY */}
       <div className={styles.section}>

@@ -2,18 +2,18 @@
 
 import Image from "next/image";
 import {
-  MapPin,
-  Heart,
   SlidersHorizontal,
   Search,
-  Crown,
-  Zap,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useState, useEffect } from "react";
+import { getListings } from "@/utils/api";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AllProducts.module.css";
 
+/*
 const listings = [
   {
     id: 1,
@@ -150,6 +150,7 @@ const listings = [
     area: "22 м²",
   },
 ];
+*/
 
 const categories = [
   "Все",
@@ -169,10 +170,76 @@ export default function AllProducts() {
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
 
+  const [listingsList, setListingsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+
+    // Sync URL parameters with UI tabs
+    const urlCategory = searchParams.get("category");
+    if (urlCategory) {
+      const categoryMapping = {
+        house: "Дом",
+        apartment: "Квартира",
+        cottage: "Коттедж",
+        land: "Участок",
+        commercial: "Коммерция",
+        garage: "Паркинг/гараж",
+        room: "Комнаты",
+      };
+      setActiveCategory(categoryMapping[urlCategory] || "Все");
+    } else {
+      setActiveCategory("Все");
+    }
+
+    const urlDealType = searchParams.get("dealType");
+    if (urlDealType) {
+      const dealTypeMapping = {
+        sale: "Продажа",
+        rent: "Сниму в аренду",
+      };
+      setDealType(dealTypeMapping[urlDealType] || "Все");
+    } else {
+      setDealType("Все");
+    }
+
+    const queryParams = { page: 1, limit: 20 };
+    searchParams.forEach((value, key) => {
+      if (value !== "" && value !== "null" && value !== "undefined") {
+        queryParams[key] = value;
+      }
+    });
+
+    getListings(queryParams)
+      .then((res) => {
+        if (res && res.success) {
+          setListingsList(res.data || []);
+        } else {
+          throw new Error(res?.message || "Не удалось загрузить объявления");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load listings", err);
+        setError(err.message || "Ошибка соединения с сервером");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [searchParams]);
+
+  const mappedListings = useMemo(() => {
+    return listingsList.map(item => mapListingData(item));
+  }, [listingsList]);
+
   const filteredListings = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    const filtered = listings.filter((item) => {
+    const filtered = mappedListings.filter((item) => {
       const matchesSearch = item.title.toLowerCase().includes(normalizedSearch);
 
       const matchesCategory =
@@ -183,14 +250,6 @@ export default function AllProducts() {
       return matchesSearch && matchesCategory && matchesDealType;
     });
 
-    /*
-      Приоритет:
-
-      0 — VIP
-      1 — Срочно
-      2 — Обычное
-    */
-
     return [...filtered].sort((a, b) => {
       const priority = {
         vip: 0,
@@ -198,9 +257,12 @@ export default function AllProducts() {
         null: 2,
       };
 
-      return priority[a.status] - priority[b.status];
+      const aStatus = a.status === null ? "null" : a.status;
+      const bStatus = b.status === null ? "null" : b.status;
+
+      return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
     });
-  }, [search, activeCategory, dealType]);
+  }, [search, activeCategory, dealType, mappedListings]);
 
   return (
     <main className={styles.page}>
@@ -281,119 +343,49 @@ export default function AllProducts() {
         </button>
       </div>
 
-      {/* RESULT */}
-
-      <div className={styles.result}>
-        <span>Найдено объявлений: </span>
-
-        <strong>{filteredListings.length}</strong>
-      </div>
-
-      {/* PRODUCTS */}
-
-      {filteredListings.length > 0 ? (
-        <section className={styles.grid}>
-          {filteredListings.map((item) => (
-            <article
-              key={item.id}
-              className={styles.card}
-              onClick={() => router.push(`/ads/${item.id}`)}
-            >
-              {/* IMAGE */}
-
-              <div className={styles.image}>
-                <Image
-                  src={item.image}
-                  fill
-                  alt={item.title}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                />
-
-                {/* BADGES */}
-
-                <div className={styles.badges}>
-                  {item.status === "vip" && (
-                    <span className={`${styles.status} ${styles.vip}`}>
-                      <Crown />
-                      VIP
-                    </span>
-                  )}
-
-                  {item.status === "urgent" && (
-                    <span className={`${styles.status} ${styles.urgent}`}>
-                      <Zap />
-                      Срочно
-                    </span>
-                  )}
-
-                  <span className={styles.type}>{item.type}</span>
-                </div>
-
-                {/* FAVORITE */}
-
-                <button
-                  type="button"
-                  className={styles.favorite}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Heart />
-                </button>
-              </div>
-
-              {/* CONTENT */}
-
-              <div className={styles.content}>
-                <h2>{item.title}</h2>
-
-                <div className={styles.location}>
-                  <MapPin />
-
-                  <span>{item.location}</span>
-                </div>
-
-                <div className={styles.details}>
-                  {item.rooms && (
-                    <span>
-                      {item.rooms} {item.rooms === 1 ? "комната" : "комнат"}
-                    </span>
-                  )}
-
-                  <span>{item.area}</span>
-                </div>
-
-                {/* BOTTOM */}
-
-                <div className={styles.bottom}>
-                  <strong>{item.price}</strong>
-
-                  <button
-                    type="button"
-                    className={styles.more}
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      router.push(`/all-products/${item.id}`);
-                    }}
-                  >
-                    Подробнее
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </section>
-      ) : (
-        /* EMPTY */
-
-        <div className={styles.empty}>
-          <Search />
-
-          <h2>Ничего не найдено</h2>
-
-          <p>
-            Попробуйте изменить поисковый запрос или выбрать другую категорию.
-          </p>
+      {/* LOADING */}
+      {loading && (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "300px", fontSize: "16px", color: "#666" }}>
+          Загрузка объявлений...
         </div>
+      )}
+
+      {/* ERROR */}
+      {error && !loading && (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "8px", margin: "20px 0", textAlign: "center" }}>
+          {error}
+        </div>
+      )}
+
+      {/* RESULT & PRODUCTS */}
+      {!loading && !error && (
+        <>
+          <div className={styles.result}>
+            <span>Найдено объявлений: </span>
+
+            <strong>{filteredListings.length}</strong>
+          </div>
+
+          {filteredListings.length > 0 ? (
+            <section className={styles.grid}>
+              {filteredListings.map((item) => (
+                <ListingCard key={item.id} item={item} />
+              ))}
+            </section>
+          ) : (
+            /* EMPTY */
+
+            <div className={styles.empty}>
+              <Search />
+
+              <h2>Ничего не найдено</h2>
+
+              <p>
+                Попробуйте изменить поисковый запрос или выбрать другую категорию.
+              </p>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

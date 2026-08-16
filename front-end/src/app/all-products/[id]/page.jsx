@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getListingById } from "@/utils/api";
+import { mapListingDetail } from "@/utils/mapListingData";
 
 import {
   ArrowLeft,
@@ -34,6 +36,7 @@ import {
 
 import styles from "./ProductDetails.module.css";
 
+/*
 const product = {
   id: 1,
 
@@ -141,24 +144,159 @@ const product = {
 
   createdAt: "12 августа 2026",
 };
+*/
 
 export default function ProductDetails() {
   const router = useRouter();
+  const { id } = useParams();
+
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  useEffect(() => {
+    if (!id) return;
+    
+    setLoading(true);
+    setError(null);
+    
+    getListingById(id)
+      .then((res) => {
+        if (res.success && res.data) {
+          setProduct(mapListingDetail(res.data));
+        } else {
+          setError(res.message || "Объявление не найдено");
+        }
+      })
+      .catch((err) => {
+        console.error("Fetch listing details error:", err);
+        setError("Ошибка при загрузке данных объявления");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
+
   const nextImage = () => {
+    if (!product || !product.images) return;
     setCurrentImage((prev) =>
       prev === product.images.length - 1 ? 0 : prev + 1,
     );
   };
 
   const previousImage = () => {
+    if (!product || !product.images) return;
     setCurrentImage((prev) =>
       prev === 0 ? product.images.length - 1 : prev - 1,
     );
   };
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Загрузка объявления...</h2>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Объявление не найдено</h2>
+          <p style={{ marginTop: "10px", color: "#666" }}>{error || "Не удалось загрузить данные."}</p>
+          <button
+            type="button"
+            className={styles.back}
+            style={{ margin: "20px auto 0" }}
+            onClick={() => router.push("/all-products")}
+          >
+            <ArrowLeft size={18} />
+            Вернуться к объявлениям
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // Динамически строим характеристики
+  const characteristics = [
+    {
+      icon: BedDouble,
+      label: "Комнаты",
+      value: `${product.rooms} комнат`,
+    },
+    {
+      icon: Ruler,
+      label: "Площадь",
+      value: product.area || "Не указана",
+    },
+    {
+      icon: Layers3,
+      label: "Этажность / Этаж",
+      value: `${product.floors} этаж(а)`,
+    },
+    {
+      icon: Home,
+      label: "Тип",
+      value: product.type,
+    },
+  ];
+
+  if (product.rawFeatures?.heating) {
+    characteristics.push({
+      icon: Flame,
+      label: "Отопление",
+      value: product.rawFeatures.heating,
+    });
+  }
+  if (product.rawFeatures?.sewerage) {
+    characteristics.push({
+      icon: Droplets,
+      label: "Канализация",
+      value: product.rawFeatures.sewerage,
+    });
+  }
+  if (product.rawFeatures?.electricity) {
+    characteristics.push({
+      icon: Zap,
+      label: "Электричество",
+      value: product.rawFeatures.electricity === true ? "Есть" : product.rawFeatures.electricity,
+    });
+  }
+  if (product.rawFeatures?.documents) {
+    characteristics.push({
+      icon: FileCheck,
+      label: "Документы",
+      value: product.rawFeatures.documents,
+    });
+  }
+  if (product.rawFeatures?.parking) {
+    characteristics.push({
+      icon: CarFront,
+      label: "Парковка",
+      value: product.rawFeatures.parking,
+    });
+  }
+  if (product.rawFeatures?.view) {
+    characteristics.push({
+      icon: Waves,
+      label: "Вид",
+      value: product.rawFeatures.view,
+    });
+  }
+
+  // Удобства
+  const amenities = Array.isArray(product.rawFeatures?.amenities)
+    ? product.rawFeatures.amenities
+    : product.rawFeatures?.amenities
+      ? [product.rawFeatures.amenities]
+      : ["Парковка", "Закрытая территория", "Видеонаблюдение"]; // fallback-удобства по умолчанию, если нет в БД
 
   return (
     <main className={styles.page}>
@@ -168,7 +306,7 @@ export default function ProductDetails() {
         <button
           type="button"
           className={styles.back}
-          onClick={() => router.back()}
+          onClick={() => router.push("/all-products")}
         >
           <ArrowLeft size={18} />
           Вернуться к объявлениям
@@ -304,28 +442,34 @@ export default function ProductDetails() {
             <div className={styles.price}>{product.price}</div>
 
             <div className={styles.quickInfo}>
-              <div>
-                <BedDouble />
-                <span>
-                  <b>{product.rooms}</b>
-                  комнат
-                </span>
-              </div>
+              {product.rooms > 0 && (
+                <div>
+                  <BedDouble />
+                  <span>
+                    <b>{product.rooms}</b>
+                    комнат
+                  </span>
+                </div>
+              )}
 
-              <div>
-                <Ruler />
-                <span>
-                  <b>{product.area}</b>
-                </span>
-              </div>
+              {product.area && (
+                <div>
+                  <Ruler />
+                  <span>
+                    <b>{product.area}</b>
+                  </span>
+                </div>
+              )}
 
-              <div>
-                <Layers3 />
-                <span>
-                  <b>{product.floors}</b>
-                  этажа
-                </span>
-              </div>
+              {product.floors > 0 && (
+                <div>
+                  <Layers3 />
+                  <span>
+                    <b>{product.floors}</b>
+                    этаж(а)
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -366,7 +510,7 @@ export default function ProductDetails() {
               </div>
 
               <div className={styles.characteristics}>
-                {product.characteristics.map((item, index) => {
+                {characteristics.map((item, index) => {
                   const Icon = item.icon;
 
                   return (
@@ -400,7 +544,7 @@ export default function ProductDetails() {
               </div>
 
               <div className={styles.amenities}>
-                {product.amenities.map((item, index) => (
+                {amenities.map((item, index) => (
                   <div className={styles.amenity} key={index}>
                     <ShieldCheck size={17} />
                     {item}
@@ -482,6 +626,30 @@ export default function ProductDetails() {
                   <span>{product.owner.role}</span>
                 </div>
               </div>
+
+              {product.owner.phone && (
+                <div style={{ marginTop: "15px", display: "flex", gap: "10px", flexDirection: "column" }}>
+                  <a
+                    href={`tel:${product.owner.phone}`}
+                    className={styles.projects}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      background: "var(--color-primary-light, #f0fdf4)",
+                      color: "var(--color-primary, #16a34a)",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      textDecoration: "none",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    <Phone size={16} />
+                    {product.owner.phone}
+                  </a>
+                </div>
+              )}
 
               <button
                 type="button"

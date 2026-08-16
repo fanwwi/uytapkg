@@ -39,10 +39,11 @@ const initialForm = {
   searchMode: "normal",
 };
 
-export default function SearchFilter() {
+export default function SearchFilter({ onSearch }) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
+  const [isSearching, setIsSearching] = useState(false);
 
   const totalSteps = 5;
 
@@ -59,13 +60,13 @@ export default function SearchFilter() {
     });
   }
 
-  function nextStep() {
+  const nextStep = () => {
     setStep((prev) => Math.min(prev + 1, totalSteps));
-  }
+  };
 
-  function prevStep() {
+  const prevStep = () => {
     setStep((prev) => Math.max(prev - 1, 1));
-  }
+  };
 
   function handleSmartSearch(values) {
     const merged = { ...form, ...values };
@@ -81,15 +82,22 @@ export default function SearchFilter() {
     router.push(`/search?${params.toString()}`);
   }
 
-  function submitSearch() {
+  function submitSearch(searchData) {
+    const finalForm = searchData || form;
+    setIsSearching(true);
+
+    if (onSearch) {
+      onSearch(finalForm);
+    }
+
     const params = new URLSearchParams();
-    Object.entries(form).forEach(([key, value]) => {
+    Object.entries(finalForm).forEach(([key, value]) => {
       if (value !== "" && value !== null && value !== undefined) {
         params.set(key, String(value));
       }
     });
 
-    router.push(`/search?${params.toString()}`);
+    router.push(`/all-products?${params.toString()}`);
   }
 
   return (
@@ -163,6 +171,8 @@ export default function SearchFilter() {
                   updateForm={updateForm}
                   onNext={nextStep}
                   onBack={prevStep}
+                  onSubmit={submitSearch}
+                  isLoading={isSearching}
                 />
               )}
 

@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getListingById } from "@/utils/api";
+import { mapListingDetail } from "@/utils/mapListingData";
 
 import {
   ArrowLeft,
@@ -32,6 +34,7 @@ import styles from "./MyAdsDetails.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 import AdsEditModal from "../AdsEditModal/AdsEditModal";
 
+/*
 const initialProduct = {
   id: 1,
 
@@ -132,19 +135,118 @@ const initialProduct = {
 
   createdAt: "12 августа 2026",
 };
+*/
 
 export default function MyProductDetails() {
   const router = useRouter();
+  const { id } = useParams();
 
-  const [product, setProduct] = useState(initialProduct);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [currentImage, setCurrentImage] = useState(0);
-
   const [isFavorite, setIsFavorite] = useState(false);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
   const [showEditModal, setShowEditModal] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    setError(null);
+    getListingById(id)
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = mapListingDetail(res.data);
+          
+          // Build characteristics dynamically and attach to mapped object
+          const dynamicCharacteristics = [
+            {
+              icon: BedDouble,
+              label: "Комнаты",
+              value: `${mapped.rooms} комнат`,
+            },
+            {
+              icon: Ruler,
+              label: "Площадь",
+              value: mapped.area || "Не указана",
+            },
+            {
+              icon: Layers3,
+              label: "Этажность / Этаж",
+              value: `${mapped.floors} этаж(а)`,
+            },
+            {
+              icon: Home,
+              label: "Тип",
+              value: mapped.type,
+            },
+          ];
+
+          if (mapped.rawFeatures?.heating) {
+            dynamicCharacteristics.push({
+              icon: Flame,
+              label: "Отопление",
+              value: mapped.rawFeatures.heating,
+            });
+          }
+          if (mapped.rawFeatures?.sewerage) {
+            dynamicCharacteristics.push({
+              icon: Droplets,
+              label: "Канализация",
+              value: mapped.rawFeatures.sewerage,
+            });
+          }
+          if (mapped.rawFeatures?.electricity) {
+            dynamicCharacteristics.push({
+              icon: Zap,
+              label: "Электричество",
+              value: mapped.rawFeatures.electricity === true ? "Есть" : mapped.rawFeatures.electricity,
+            });
+          }
+          if (mapped.rawFeatures?.documents) {
+            dynamicCharacteristics.push({
+              icon: FileCheck,
+              label: "Документы",
+              value: mapped.rawFeatures.documents,
+            });
+          }
+          if (mapped.rawFeatures?.parking) {
+            dynamicCharacteristics.push({
+              icon: CarFront,
+              label: "Парковка",
+              value: mapped.rawFeatures.parking,
+            });
+          }
+          if (mapped.rawFeatures?.view) {
+            dynamicCharacteristics.push({
+              icon: Waves,
+              label: "Вид",
+              value: mapped.rawFeatures.view,
+            });
+          }
+
+          mapped.characteristics = dynamicCharacteristics;
+
+          mapped.amenities = Array.isArray(mapped.rawFeatures?.amenities)
+            ? mapped.rawFeatures.amenities
+            : mapped.rawFeatures?.amenities
+              ? [mapped.rawFeatures.amenities]
+              : ["Парковка", "Закрытая территория", "Видеонаблюдение"];
+
+          setProduct(mapped);
+        } else {
+          setError(res.message || "Объявление не найдено");
+        }
+      })
+      .catch((err) => {
+        console.error("Fetch my listing details error:", err);
+        setError("Ошибка загрузки объявления");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
 
   /*
    * =========================
@@ -231,6 +333,36 @@ export default function MyProductDetails() {
       console.error("Ошибка удаления объявления:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Загрузка объявления...</h2>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+          <h2>Объявление не найдено</h2>
+          <p style={{ marginTop: "10px", color: "#666" }}>{error || "Не удалось загрузить данные."}</p>
+          <button
+            type="button"
+            className={styles.back}
+            style={{ margin: "20px auto 0" }}
+            onClick={() => router.push("/profile/ads")}
+          >
+            <ArrowLeft size={18} />
+            Вернуться к объявлениям
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   /*
    * =========================
