@@ -14,41 +14,100 @@ import {
   Smartphone,
 } from "lucide-react";
 
-import styles from "./Footer.module.css";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { getMe } from "@/utils/api";
+
+import styles from "./Footer.module.css";
+
+const categories = [
+  {
+    title: "Квартиры",
+    icon: Building2,
+    value: "Квартира",
+  },
+  {
+    title: "Дома",
+    icon: Home,
+    value: "Дом",
+  },
+  {
+    title: "Участки",
+    icon: Trees,
+    value: "Участок",
+  },
+  {
+    title: "Паркинг",
+    icon: Car,
+    value: "Паркинг/гараж",
+  },
+];
 
 export default function Footer() {
-  const categories = [
-    {
-      title: "Квартиры",
-      icon: Building2,
-    },
-    {
-      title: "Дома",
-      icon: Home,
-    },
-    {
-      title: "Участки",
-      icon: Trees,
-    },
-    {
-      title: "Паркинг",
-      icon: Car,
-    },
-    {
-      title: "Избранное",
-      icon: Heart,
-    },
-  ];
+  const router = useRouter();
+
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem("uytap_token");
+        const storedUser = localStorage.getItem("uytap_user");
+
+        if (!token || !storedUser) {
+          setIsAuth(false);
+          return;
+        }
+
+        try {
+          const user = await getMe(token);
+          setIsAuth(Boolean(user));
+        } catch {
+          // Такая же логика, как в Header:
+          // если токен + сохранённый пользователь есть,
+          // считаем пользователя авторизованным,
+          // даже если getMe временно не ответил.
+          setIsAuth(true);
+        }
+      } catch {
+        setIsAuth(false);
+      }
+    };
+
+    checkAuth();
+
+    // Если пользователь вошёл/вышел в другой вкладке
+    window.addEventListener("storage", checkAuth);
+
+    // Если авторизация изменилась внутри этой вкладки
+    window.addEventListener("uytap:user-updated", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("uytap:user-updated", checkAuth);
+    };
+  }, []);
+
+  const protectedRoute = (path) => {
+    if (!isAuth) {
+      router.push("/auth-required");
+      return;
+    }
+
+    router.push(path);
+  };
 
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        {/* Бренд */}
+        {/* БРЕНД */}
+
         <div className={styles.brand}>
-          <div className={styles.logo}>
+          <Link href="/" className={styles.logo}>
             <img src="/assets/logo2.png" alt="UyTap" />
-          </div>
+          </Link>
 
           <p>
             Современный сервис поиска недвижимости. Найдите место, которое
@@ -58,22 +117,23 @@ export default function Footer() {
           <div className={styles.contacts}>
             <div>
               <Phone />
-              +996 555 000 000
+              <span>+996 555 000 000</span>
             </div>
 
             <div>
               <Mail />
-              uytap.official@gmail.com
+              <span>uytap.official@gmail.com</span>
             </div>
 
             <div>
               <MapPin />
-              Бишкек, Кыргызстан
+              <span>Бишкек, Кыргызстан</span>
             </div>
           </div>
         </div>
 
-        {/* Категории */}
+        {/* КАТЕГОРИИ */}
+
         <div className={styles.column}>
           <h3>Категории</h3>
 
@@ -81,36 +141,59 @@ export default function Footer() {
             const Icon = item.icon;
 
             return (
-              <a key={item.title}>
+              <Link
+                key={item.value}
+                href={`/all-products?category=${encodeURIComponent(
+                  item.value,
+                )}`}
+              >
                 <Icon />
-
                 {item.title}
-              </a>
+              </Link>
             );
           })}
+
+          <button
+            type="button"
+            className={styles.linkButton}
+            onClick={() => protectedRoute("/favorites")}
+          >
+            <Heart />
+            Избранное
+          </button>
         </div>
 
-        {/* Сервис */}
+        {/* СЕРВИС */}
+
         <div className={styles.column}>
           <h3>Сервис</h3>
 
-          <Link href="/#search">
+          <Link href="/all-products">
             <Search />
             Поиск недвижимости
           </Link>
 
-          <a>
+          <button
+            type="button"
+            className={styles.linkButton}
+            onClick={() => protectedRoute("/profile")}
+          >
             <UserRound />
             Личный кабинет
-          </a>
+          </button>
 
-          <a>
+          <button
+            type="button"
+            className={styles.linkButton}
+            onClick={() => protectedRoute("/profile/ads")}
+          >
             <Heart />
             Мои объявления
-          </a>
+          </button>
         </div>
 
-        {/* Приложение */}
+        {/* ПРИЛОЖЕНИЕ */}
+
         <div className={styles.column}>
           <h3>Мобильное приложение</h3>
 
@@ -126,17 +209,22 @@ export default function Footer() {
             </div>
           </div>
 
-          <a className={styles.playStore}>
+          <a
+            href="#"
+            className={styles.playStore}
+            onClick={(e) => e.preventDefault()}
+          >
             <div className={styles.playIcon}>▶</div>
 
             <div>
               <span>Скачайте в</span>
-
               <strong>Google Play</strong>
             </div>
           </a>
         </div>
       </div>
+
+      {/* BOTTOM */}
 
       <div className={styles.bottom}>
         © {new Date().getFullYear()} UyTap. Все права защищены.
