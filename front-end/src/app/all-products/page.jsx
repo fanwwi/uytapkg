@@ -1,270 +1,227 @@
 "use client";
 
-import Image from "next/image";
-import {
-  SlidersHorizontal,
-  Search,
-} from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { SlidersHorizontal, Search, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
+
 import { getListings } from "@/utils/api";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AllProducts.module.css";
 
-/*
-const listings = [
-  {
-    id: 1,
-    title: "Уютный дом у озера Иссык-Куль",
-    type: "Дом",
-    dealType: "Куплю",
-    status: "vip",
-    location: "Чолпон-Ата",
-    price: "120 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 24,
-    rooms: 5,
-    area: "180 м²",
-  },
-
-  {
-    id: 2,
-    title: "Современный коттедж с бассейном",
-    type: "Коттедж",
-    dealType: "Сниму в аренду",
-    status: "urgent",
-    location: "Бостери",
-    price: "250 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 41,
-    rooms: 7,
-    area: "320 м²",
-  },
-
-  {
-    id: 3,
-    title: "Участок 10 соток возле пляжа",
-    type: "Участок",
-    dealType: "Куплю",
-    status: null,
-    location: "Кара-Ой",
-    price: "45 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 18,
-    rooms: null,
-    area: "10 соток",
-  },
-
-  {
-    id: 4,
-    title: "Большой семейный дом",
-    type: "Дом",
-    dealType: "Сниму в аренду",
-    status: "vip",
-    location: "Боконбаево",
-    price: "95 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 31,
-    rooms: 6,
-    area: "210 м²",
-  },
-
-  {
-    id: 5,
-    title: "Квартира с видом на горы",
-    type: "Квартира",
-    dealType: "Куплю",
-    status: "urgent",
-    location: "Бишкек",
-    price: "85 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 56,
-    rooms: 3,
-    area: "95 м²",
-  },
-
-  {
-    id: 6,
-    title: "Земельный участок под строительство",
-    type: "Участок",
-    dealType: "Куплю",
-    status: null,
-    location: "Кант",
-    price: "32 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 12,
-    rooms: null,
-    area: "8 соток",
-  },
-
-  {
-    id: 7,
-    title: "Коммерческое помещение в центре",
-    type: "Коммерция",
-    dealType: "Куплю",
-    status: "vip",
-    location: "Бишкек",
-    price: "180 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 27,
-    rooms: null,
-    area: "150 м²",
-  },
-
-  {
-    id: 8,
-    title: "Паркинг возле центра города",
-    type: "Паркинг/гараж",
-    dealType: "Куплю",
-    status: "urgent",
-    location: "Бишкек",
-    price: "18 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 15,
-    rooms: null,
-    area: "24 м²",
-  },
-
-  {
-    id: 9,
-    title: "Уютная комната рядом с университетом",
-    type: "Комнаты",
-    dealType: "Сниму в аренду",
-    status: null,
-    location: "Бишкек",
-    price: "25 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    likes: 34,
-    rooms: 1,
-    area: "22 м²",
-  },
-];
-*/
-
 const categories = [
-  "Все",
-  "Дом",
-  "Квартира",
-  "Коттедж",
-  "Участок",
-  "Коммерция",
-  "Паркинг/гараж",
-  "Комнаты",
+  { value: "Все", label: "Все" },
+  { value: "Дом", label: "Дома" },
+  { value: "Квартира", label: "Квартиры" },
+  { value: "Коттедж", label: "Коттеджи" },
+  { value: "Участок", label: "Участки" },
+  { value: "Коммерция", label: "Коммерция" },
+  { value: "Паркинг/гараж", label: "Паркинг" },
+  { value: "Комнаты", label: "Комнаты" },
+];
+
+const dealTypes = [
+  { value: "Все", label: "Все объявления" },
+  { value: "Продажа", label: "Продажа" },
+  { value: "Сниму в аренду", label: "Сниму в аренду" },
 ];
 
 export default function AllProducts() {
-  const router = useRouter();
-
   const [search, setSearch] = useState("");
+
   const [activeCategory, setActiveCategory] = useState("Все");
+
   const [dealType, setDealType] = useState("Все");
 
   const [listingsList, setListingsList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState("");
+
+  /*
+   * =====================================================
+   * ЗАГРУЗКА ОБЪЯВЛЕНИЙ
+   * =====================================================
+   *
+   * Здесь НЕ передаём category/dealType.
+   *
+   * Мы сначала получаем объявления,
+   * потом фильтруем их прямо в React.
+   */
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    let cancelled = false;
 
-    // Sync URL parameters with UI tabs
-    const urlCategory = searchParams.get("category");
-    if (urlCategory) {
-      const categoryMapping = {
-        house: "Дом",
-        apartment: "Квартира",
-        cottage: "Коттедж",
-        land: "Участок",
-        commercial: "Коммерция",
-        garage: "Паркинг/гараж",
-        room: "Комнаты",
-      };
-      setActiveCategory(categoryMapping[urlCategory] || "Все");
-    } else {
-      setActiveCategory("Все");
-    }
+    async function loadListings() {
+      try {
+        setLoading(true);
+        setError("");
 
-    const urlDealType = searchParams.get("dealType");
-    if (urlDealType) {
-      const dealTypeMapping = {
-        sale: "Продажа",
-        rent: "Сниму в аренду",
-      };
-      setDealType(dealTypeMapping[urlDealType] || "Все");
-    } else {
-      setDealType("Все");
-    }
+        const response = await getListings({
+          page: 1,
+          limit: 100,
+        });
 
-    const queryParams = { page: 1, limit: 20 };
-    searchParams.forEach((value, key) => {
-      if (value !== "" && value !== "null" && value !== "undefined") {
-        queryParams[key] = value;
-      }
-    });
-
-    getListings(queryParams)
-      .then((res) => {
-        if (res && res.success) {
-          setListingsList(res.data || []);
-        } else {
-          throw new Error(res?.message || "Не удалось загрузить объявления");
+        if (!response?.success) {
+          throw new Error(
+            response?.message || "Не удалось загрузить объявления",
+          );
         }
-      })
-      .catch((err) => {
-        console.error("Failed to load listings", err);
-        setError(err.message || "Ошибка соединения с сервером");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [searchParams]);
+
+        if (!cancelled) {
+          setListingsList(Array.isArray(response.data) ? response.data : []);
+        }
+      } catch (err) {
+        console.error("Failed to load listings:", err);
+
+        if (!cancelled) {
+          setError(err?.message || "Ошибка соединения с сервером");
+
+          setListingsList([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadListings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /*
+   * =====================================================
+   * API -> CARD DATA
+   * =====================================================
+   */
 
   const mappedListings = useMemo(() => {
-    return listingsList.map(item => mapListingData(item));
+    return listingsList
+      .map((item) => {
+        try {
+          return mapListingData(item);
+        } catch (error) {
+          console.error("Ошибка преобразования объявления:", item, error);
+
+          return null;
+        }
+      })
+      .filter(Boolean);
   }, [listingsList]);
 
+  /*
+   * =====================================================
+   * ФИЛЬТРАЦИЯ
+   * =====================================================
+   */
+
   const filteredListings = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
+    const query = search.trim().toLowerCase();
 
-    const filtered = mappedListings.filter((item) => {
-      const matchesSearch =
-        item.title.toLowerCase().includes(normalizedSearch) ||
-        (item.location && item.location.toLowerCase().includes(normalizedSearch));
+    return (
+      mappedListings
+        .filter((item) => {
+          /*
+           * ---------------------------------------------
+           * ПОИСК
+           * ---------------------------------------------
+           */
 
-      const matchesCategory =
-        activeCategory === "Все" || item.type === activeCategory;
+          const title = String(item.title || "").toLowerCase();
 
-      const matchesDealType = dealType === "Все" || item.dealType === dealType;
+          const location = String(item.location || "").toLowerCase();
 
-      return matchesSearch && matchesCategory && matchesDealType;
-    });
+          const address = String(item.address || "").toLowerCase();
 
-    return [...filtered].sort((a, b) => {
-      const priority = {
-        vip: 0,
-        urgent: 1,
-        null: 2,
-      };
+          const description = String(item.description || "").toLowerCase();
 
-      const aStatus = a.status === null ? "null" : a.status;
-      const bStatus = b.status === null ? "null" : b.status;
+          const matchesSearch =
+            !query ||
+            title.includes(query) ||
+            location.includes(query) ||
+            address.includes(query) ||
+            description.includes(query);
 
-      return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
-    });
-  }, [search, activeCategory, dealType, mappedListings]);
+          /*
+           * ---------------------------------------------
+           * КАТЕГОРИЯ
+           * ---------------------------------------------
+           */
+
+          const itemType = String(item.type || "")
+            .trim()
+            .toLowerCase();
+
+          const selectedType = String(activeCategory || "")
+            .trim()
+            .toLowerCase();
+
+          const matchesCategory =
+            activeCategory === "Все" || itemType === selectedType;
+
+          /*
+           * ---------------------------------------------
+           * ТИП СДЕЛКИ
+           * ---------------------------------------------
+           */
+
+          const itemDeal = String(item.dealType || "")
+            .trim()
+            .toLowerCase();
+
+          const selectedDeal = String(dealType || "")
+            .trim()
+            .toLowerCase();
+
+          const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
+
+          return matchesSearch && matchesCategory && matchesDeal;
+        })
+
+        /*
+         * VIP → URGENT → остальные
+         */
+        .sort((a, b) => {
+          const priority = {
+            vip: 0,
+            urgent: 1,
+            null: 2,
+          };
+
+          const aStatus = a.status ?? "null";
+
+          const bStatus = b.status ?? "null";
+
+          return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
+        })
+    );
+  }, [mappedListings, search, activeCategory, dealType]);
+
+  /*
+   * =====================================================
+   * СБРОС
+   * =====================================================
+   */
+
+  function resetFilters() {
+    setSearch("");
+    setActiveCategory("Все");
+    setDealType("Все");
+  }
+
+  const hasFilters =
+    search.trim() !== "" || activeCategory !== "Все" || dealType !== "Все";
+
+  /*
+   * =====================================================
+   * RENDER
+   * =====================================================
+   */
 
   return (
     <main className={styles.page}>
@@ -282,92 +239,136 @@ export default function AllProducts() {
 
       <div className={styles.toolbar}>
         <div className={styles.search}>
-          <Search />
+          <Search size={21} />
 
           <input
             type="text"
-            placeholder="Поиск по названию..."
+            placeholder="Поиск по названию или адресу..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(event) => setSearch(event.target.value)}
           />
+
+          {search && (
+            <button
+              type="button"
+              className={styles.clearSearch}
+              onClick={() => setSearch("")}
+              aria-label="Очистить поиск"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
         <button
           type="button"
           className={styles.filter}
-          onClick={() => router.push("/#search")}
+          onClick={() => {
+            document.getElementById("filters")?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }}
         >
-          <SlidersHorizontal />
-          Фильтры
+          <SlidersHorizontal size={19} />
+
+          <span>Фильтры</span>
         </button>
       </div>
 
-      {/* CATEGORIES */}
+      {/* FILTERS */}
 
-      <div className={styles.categories}>
-        {categories.map((category) => (
+      <div id="filters">
+        {/* CATEGORY */}
+
+        <section className={styles.filterSection}>
+          <span className={styles.filterTitle}>Тип недвижимости</span>
+
+          <div className={styles.categories}>
+            {categories.map((category) => {
+              const active = activeCategory === category.value;
+
+              return (
+                <button
+                  key={category.value}
+                  type="button"
+                  className={active ? styles.categoryActive : ""}
+                  onClick={() => {
+                    setActiveCategory(category.value);
+                  }}
+                >
+                  {category.label}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* DEAL */}
+
+        <section className={styles.filterSection}>
+          <span className={styles.filterTitle}>Тип сделки</span>
+
+          <div className={styles.dealTypes}>
+            {dealTypes.map((deal) => {
+              const active = dealType === deal.value;
+
+              return (
+                <button
+                  key={deal.value}
+                  type="button"
+                  className={active ? styles.dealActive : ""}
+                  onClick={() => {
+                    setDealType(deal.value);
+                  }}
+                >
+                  {deal.label}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+
+      {/* RESULTS HEADER */}
+
+      <div className={styles.resultsHeader}>
+        <div className={styles.result}>
+          <span>Найдено объявлений:</span>
+
+          <strong>{loading ? "..." : filteredListings.length}</strong>
+        </div>
+
+        {hasFilters && !loading && (
           <button
-            key={category}
             type="button"
-            className={activeCategory === category ? styles.categoryActive : ""}
-            onClick={() => setActiveCategory(category)}
+            className={styles.resetButton}
+            onClick={resetFilters}
           >
-            {category}
+            <X size={15} />
+            Сбросить
           </button>
-        ))}
-      </div>
-
-      {/* DEAL TYPE */}
-
-      <div className={styles.dealTypes}>
-        <button
-          type="button"
-          className={dealType === "Все" ? styles.dealActive : ""}
-          onClick={() => setDealType("Все")}
-        >
-          Все объявления
-        </button>
-
-        <button
-          type="button"
-          className={dealType === "Продажа" ? styles.dealActive : ""}
-          onClick={() => setDealType("Продажа")}
-        >
-          Продажа
-        </button>
-
-        <button
-          type="button"
-          className={dealType === "Сниму в аренду" ? styles.dealActive : ""}
-          onClick={() => setDealType("Сниму в аренду")}
-        >
-          Сниму в аренду
-        </button>
+        )}
       </div>
 
       {/* LOADING */}
+
       {loading && (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "300px", fontSize: "16px", color: "#666" }}>
-          Загрузка объявлений...
+        <div className={styles.loading}>
+          <div className={styles.spinner} />
+
+          <span>Загружаем объявления...</span>
         </div>
       )}
 
       {/* ERROR */}
-      {error && !loading && (
-        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "8px", margin: "20px 0", textAlign: "center" }}>
-          {error}
-        </div>
-      )}
 
-      {/* RESULT & PRODUCTS */}
+      {!loading && error && <div className={styles.error}>{error}</div>}
+
+      {/* RESULTS */}
+
       {!loading && !error && (
         <>
-          <div className={styles.result}>
-            <span>Найдено объявлений: </span>
-
-            <strong>{filteredListings.length}</strong>
-          </div>
-
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
@@ -375,16 +376,21 @@ export default function AllProducts() {
               ))}
             </section>
           ) : (
-            /* EMPTY */
-
             <div className={styles.empty}>
-              <Search />
+              <Search size={42} />
 
               <h2>Ничего не найдено</h2>
 
               <p>
-                Попробуйте изменить поисковый запрос или выбрать другую категорию.
+                По вашему запросу нет подходящих объявлений. Попробуйте изменить
+                параметры поиска.
               </p>
+
+              {hasFilters && (
+                <button type="button" onClick={resetFilters}>
+                  Сбросить фильтры
+                </button>
+              )}
             </div>
           )}
         </>
