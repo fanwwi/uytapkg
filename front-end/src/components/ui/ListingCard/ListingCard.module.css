@@ -4,6 +4,7 @@
 
 .card {
   background: white;
+  color: #1a202c;
   border-radius: 28px;
   overflow: hidden;
   cursor: pointer;

@@ -119,11 +119,62 @@ export default function SmartSearch({ form, updateForm, onNext }) {
       }
 
       if (data.filters && typeof data.filters === "object") {
-        const safeFilters = Object.fromEntries(
-          Object.entries(data.filters).filter(([, value]) => value !== null && value !== undefined && value !== "")
+        const categoryMapping = {
+          apartment: "Квартира",
+          house: "Дом",
+          land: "Участок",
+          commercial: "Коммерция",
+          room: "Комнаты",
+          garage: "Паркинг/гараж"
+        };
+
+        const dealTypeMapping = {
+          sale: "Продажа",
+          rent: "Сниму в аренду"
+        };
+
+        const regionMapping = {
+          "Бишкек": "BISHKEK",
+          "Иссык-Кульская область": "ISSYK_KUL",
+          "Иссык-Куль": "ISSYK_KUL",
+          "Чуйская область": "CHUY",
+          "Ошская область": "OSH",
+          "Джалал-Абадская область": "JALAL_ABAD",
+          "Баткенская область": "BATKEN",
+          "Нарынская область": "NARYN",
+          "Таласская область": "TALAS"
+        };
+
+        const mapped = {};
+        const f = data.filters;
+        if (f.region) {
+          const mappedReg = regionMapping[f.region] || f.region;
+          mapped.region = mappedReg;
+          if (mappedReg === "ISSYK_KUL") {
+            mapped.city = "Иссык-Куль";
+          } else if (mappedReg === "BISHKEK") {
+            mapped.city = "Бишкек";
+          } else if (mappedReg === "OSH") {
+            mapped.city = "Ош";
+          }
+        }
+        if (f.city) {
+          mapped.city = f.city;
+        }
+        if (f.district) mapped.district = f.district;
+        if (f.propertyType) {
+          mapped.category = categoryMapping[f.propertyType] || "";
+        }
+        if (f.dealType) {
+          mapped.dealType = dealTypeMapping[f.dealType] || "";
+        }
+        if (f.maxPrice) mapped.priceTo = String(f.maxPrice);
+
+        const cleanMapped = Object.fromEntries(
+          Object.entries(mapped).filter(([, value]) => value !== null && value !== undefined && value !== "")
         );
 
-        updateForm(safeFilters);
+        updateForm(cleanMapped);
         setError("");
         onNext?.();
       } else {

@@ -53,7 +53,7 @@ export default function IssykKulProducts() {
         .catch((err) => console.error("Error loading favs:", err));
     }
 
-    getListings({ page: 1, limit: 20 })
+    getListings({ page: 1, limit: 100, region: "issyk" })
       .then((res) => {
         if (res && res.success) {
           setListingsList(res.data || []);
@@ -115,11 +115,19 @@ export default function IssykKulProducts() {
      * показываем ТОЛЬКО Иссык-Куль.
      */
     const filtered = mappedListings.filter((item) => {
-      const isIssykKul = item.region === "ISSYK_KUL";
+      const regionLower = (item.region || "").toLowerCase();
+      const cityLower = (item.location || "").toLowerCase();
+      const isIssykKul =
+        (item.region === "issykKul" ||
+        item.region === "ISSYK_KUL" ||
+        regionLower.includes("issyk") ||
+        regionLower.includes("иссык")) &&
+        !cityLower.includes("бишкек") &&
+        !cityLower.includes("ош");
 
       const matchesSearch =
-        item.title.toLowerCase().includes(normalizedSearch) ||
-        item.location.toLowerCase().includes(normalizedSearch);
+        String(item.title || "").toLowerCase().includes(normalizedSearch) ||
+        String(item.location || "").toLowerCase().includes(normalizedSearch);
 
       const matchesCategory =
         activeCategory === "Все" || item.type === activeCategory;

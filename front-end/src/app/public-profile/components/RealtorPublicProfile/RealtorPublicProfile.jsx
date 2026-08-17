@@ -11,9 +11,12 @@ import {
   CheckCircle,
 } from "lucide-react";
 
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { mapListingData } from "@/utils/mapListingData";
+
 import styles from "./RealtorPublicProfile.module.css";
 
-export default function RealtorPublicProfile({ user }) {
+export default function RealtorPublicProfile({ user, favIds = new Set(), onFavoriteClick }) {
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -40,7 +43,7 @@ export default function RealtorPublicProfile({ user }) {
   const website = profile.website || "";
   const officeAddress = profile.office_address || "";
 
-  const ads = profile.ads || profile.listings || profile.properties || [];
+  const ads = user.ads || profile.ads || profile.listings || profile.properties || [];
 
   const adsCount = profile.ads_count ?? ads.length;
   const clientsCount = profile.clients_count ?? 0;
@@ -187,22 +190,27 @@ export default function RealtorPublicProfile({ user }) {
         </div>
       </section>
 
-      {userId && (
-        <section className={styles.listingsLinkSection}>
-          <a href={`/profile/${userId}/ads`} className={styles.allAdsButton}>
-            <div className={styles.allAdsIcon}>
-              <Home />
-            </div>
-
-            <div className={styles.allAdsText}>
-              <strong>Смотреть объявления риэлтора</strong>
-              <span>Все объекты недвижимости и актуальные предложения</span>
-            </div>
-
-            <span className={styles.allAdsArrow}>→</span>
-          </a>
-        </section>
-      )}
+      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
+          Объявления риэлтора ({ads.length})
+        </h2>
+        {ads.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
+            {ads.map((item) => (
+              <ListingCard
+                key={item.id}
+                item={mapListingData(item)}
+                isFavorite={favIds.has(item.id)}
+                onFavoriteClick={onFavoriteClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
+            У риэлтора пока нет активных объявлений.
+          </div>
+        )}
+      </section>
     </main>
   );
 }

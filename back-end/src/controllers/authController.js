@@ -685,3 +685,82 @@ export const verifyOtp = async (req, res) => {
 
   return res.status(400).json({ success: false, message: "Неверный код из SMS/WhatsApp" });
 };
+
+// =======================================================
+// 7. Получение публичного профиля пользователя по ID
+// =======================================================
+export const getUserPublicProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("id, account_type, email, phone, is_verified, created_at")
+      .eq("id", id)
+      .single();
+
+    if (userError || !user) {
+      return res.status(404).json({
+        success: false,
+        message: "Пользователь не найден",
+      });
+    }
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    // Fetch active listings for this user
+    const { data: listings } = await supabase
+      .from("listings")
+      .select(`
+        *,
+        listing_photos (id, url, is_main, display_order)
+      `)
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
+
+    // If developer, fetch complexes!
+    let complexes = [];
+    if (user.account_type === "developer") {
+      const { data: devRow } = await supabase
+        .from("developers")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (devRow) {
+        const { data: devComplexes } = await supabase
+          .from("residential_complexes")
+          .select("*")
+          .eq("developer_id", devRow.id)
+          .order("created_at", { ascending: false });
+        complexes = devComplexes || [];
+      }
+    }
+
+    return res.json({
+      success: true,
+      user: {
+        id: user.id,
+        type: user.account_type,
+        email: user.email,
+        phone: user.phone,
+        isVerified: user.is_verified,
+        createdAt: user.created_at,
+        profile: profile || {},
+        ads: listings || [],
+        complexes: complexes || []
+      }
+    });
+  } catch (error) {
+    console.error("GetUserPublicProfile Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при получении публичного профиля",
+    });
+  }
+};

@@ -21,6 +21,8 @@ export function mapListingData(item) {
     location: item.city || item.region || "Кыргызстан",
     region: item.region,
     price: `${item.price?.toLocaleString() || 0} ${item.currency === "USD" ? "$" : "сом"}`,
+    rawPrice: item.price || 0,
+    rawArea: item.area || 0,
     image: mainPhoto,
     likes: 0,
     rooms: item.rooms,

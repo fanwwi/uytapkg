@@ -9,6 +9,7 @@ import {
   deleteUserAvatar,
   sendOtp,
   verifyOtp,
+  getUserPublicProfile,
 } from "../controllers/authController.js";
 import { authenticateToken } from "../middleware/auth.js";
 import { uploadAvatar } from "../middleware/upload.js";
@@ -30,6 +31,7 @@ router.post("/register", authLimiter, register);
 router.post("/login", authLimiter, login);
 router.post("/send-otp", authLimiter, sendOtp);
 router.post("/verify-otp", authLimiter, verifyOtp);
+router.get("/users/:id", getUserPublicProfile);
 
 // Защищенные эндпоинты
 router.get("/me", authenticateToken, getMe);

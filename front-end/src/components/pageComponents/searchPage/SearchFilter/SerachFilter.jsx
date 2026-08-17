@@ -79,7 +79,7 @@ export default function SearchFilter({ onSearch }) {
       }
     });
 
-    router.push(`/search?${params.toString()}`);
+    router.push(`/all-products?${params.toString()}`);
   }
 
   function submitSearch(searchData) {

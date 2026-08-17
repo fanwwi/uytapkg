@@ -151,6 +151,17 @@ export async function generateDescription(details) {
 }
 
 // 7. Профиль
+export async function getUserPublicProfile(id) {
+  const response = await fetch(`${API_URL}/auth/users/${id}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Ошибка получения публичного профиля");
+  }
+
+  return data;
+}
+
 export async function getMe(token) {
   const response = await fetch(`${API_URL}/auth/me`, {
     headers: {

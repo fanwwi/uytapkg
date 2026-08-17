@@ -164,9 +164,9 @@ export const createComplex = async (req, res) => {
     } = req.body;
 
     // Мапинг статусов
-    let completion_status = "construction";
-    if (status === "Проект" || status === "planning") completion_status = "planning";
-    if (status === "Строительство" || status === "construction") completion_status = "construction";
+    let completion_status = "building";
+    if (status === "Проект" || status === "planning") completion_status = "building";
+    if (status === "Строительство" || status === "construction") completion_status = "building";
     if (status === "Сдан" || status === "completed") completion_status = "completed";
 
     const cover_photo = Array.isArray(images) && images.length > 0 ? images[0] : null;
@@ -292,8 +292,8 @@ export const updateComplex = async (req, res) => {
 
     let completion_status = complex.completion_status;
     if (status) {
-      if (status === "Проект" || status === "planning") completion_status = "planning";
-      if (status === "Строительство" || status === "construction") completion_status = "construction";
+      if (status === "Проект" || status === "planning") completion_status = "building";
+      if (status === "Строительство" || status === "construction") completion_status = "building";
       if (status === "Сдан" || status === "completed") completion_status = "completed";
     }
 

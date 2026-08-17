@@ -3,9 +3,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { mapListingData } from "@/utils/mapListingData";
+
 import styles from "./PersonalPublicProfile.module.css";
 
-export default function PersonalPublicProfile({ user }) {
+export default function PersonalPublicProfile({ user, favIds = new Set(), onFavoriteClick }) {
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -30,6 +33,7 @@ export default function PersonalPublicProfile({ user }) {
   const profileType = getProfileType(role);
 
   const userId = user.id || user.user_id;
+  const ads = user.ads || [];
 
   return (
     <main className={styles.page}>
@@ -89,31 +93,25 @@ export default function PersonalPublicProfile({ user }) {
         <p>{profile.about || profileType.defaultAbout}</p>
       </section>
 
-      <section className={styles.actions}>
-        {userId && (
-          <Link href={`/profile/${userId}/ads`} className={styles.action}>
-            <div className={styles.icon}>⌂</div>
-
-            <div>
-              <h3>Объявления</h3>
-              <p>{profileType.adsDescription}</p>
-            </div>
-
-            <span className={styles.arrow}>→</span>
-          </Link>
-        )}
-
-        {userId && (
-          <Link href={`/profile/${userId}/favorites`} className={styles.action}>
-            <div className={styles.icon}>♡</div>
-
-            <div>
-              <h3>Объекты</h3>
-              <p>Посмотреть предложения</p>
-            </div>
-
-            <span className={styles.arrow}>→</span>
-          </Link>
+      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
+          Объявления пользователя ({ads.length})
+        </h2>
+        {ads.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
+            {ads.map((item) => (
+              <ListingCard
+                key={item.id}
+                item={mapListingData(item)}
+                isFavorite={favIds.has(item.id)}
+                onFavoriteClick={onFavoriteClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
+            У пользователя пока нет активных объявлений.
+          </div>
         )}
       </section>
     </main>

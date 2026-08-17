@@ -16,9 +16,12 @@ import {
   Home,
 } from "lucide-react";
 
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { mapListingData } from "@/utils/mapListingData";
+
 import styles from "./AgencyPublicProfile.module.css";
 
-export default function AgencyPublicProfile({ profile }) {
+export default function AgencyPublicProfile({ profile, favIds = new Set(), onFavoriteClick }) {
   if (!profile) return null;
 
   const data = profile.profile || {};
@@ -44,9 +47,9 @@ export default function AgencyPublicProfile({ profile }) {
   const website = data.website || "";
   const officeAddress = data.office_address || "";
 
-  const ads = data.ads || data.listings || data.properties || profile.ads || [];
+  const ads = profile.ads || data.ads || data.listings || data.properties || [];
 
-  const activeAds = data.ads_count ?? ads.length;
+  const activeAds = profile.ads_count ?? ads.length;
 
   const properties = data.properties_count ?? data.objects_count ?? ads.length;
 
@@ -208,6 +211,28 @@ export default function AgencyPublicProfile({ profile }) {
             <span>объектов всего</span>
           </div>
         </div>
+      </section>
+
+      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
+          Объявления агентства ({ads.length})
+        </h2>
+        {ads.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
+            {ads.map((item) => (
+              <ListingCard
+                key={item.id}
+                item={mapListingData(item)}
+                isFavorite={favIds.has(item.id)}
+                onFavoriteClick={onFavoriteClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
+            У агентства пока нет активных объявлений.
+          </div>
+        )}
       </section>
     </main>
   );

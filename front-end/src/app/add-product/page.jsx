@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { createListing, getConstants, uploadImage } from "@/utils/api";
 
@@ -74,6 +75,7 @@ const initialForm = {
 };
 
 export default function AddProductPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
 
@@ -348,6 +350,9 @@ export default function AddProductPage() {
 
       setForm(initialForm);
       setStep(1);
+      
+      // Перенаправляем пользователя в мои объявления
+      router.push("/profile/ads");
     } catch (error) {
       console.error("Ошибка публикации:", error);
 
