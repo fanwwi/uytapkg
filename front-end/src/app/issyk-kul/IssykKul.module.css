@@ -189,3 +189,29 @@
   margin-top: 50px;
   margin-bottom: 50px;
 }
+
+.homeButton {
+  height: 65px;
+  padding: 0 30px;
+
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+
+  backdrop-filter: blur(10px);
+
+  font-size: 17px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.homeButton:hover {
+  background: white;
+  color: #111;
+  transform: translateY(-8px);
+}

@@ -125,6 +125,14 @@ export default function Complexes() {
             <span>PREMIUM REAL ESTATE · KYRGYZSTAN</span>
           </div>
 
+          <button
+            type="button"
+            className={styles.homeButton}
+            onClick={() => router.push("/")}
+          >
+            На главную
+          </button>
+
           <h1>
             Жилые комплексы,
             <br />

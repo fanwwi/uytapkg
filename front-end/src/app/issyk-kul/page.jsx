@@ -33,6 +33,14 @@ export default function IssykKul() {
           </p>
 
           <div className={styles.buttons}>
+            <button
+              type="button"
+              className={styles.homeButton}
+              onClick={() => router.push("/")}
+            >
+              На главную
+            </button>
+
             <a
               type="button"
               className={styles.mainButton}
