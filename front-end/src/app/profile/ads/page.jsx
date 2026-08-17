@@ -13,8 +13,9 @@ import {
   Clock3,
   Layers3,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getMyListings, updateListing as updateListingApi, deleteListing as deleteListingApi } from "@/utils/api";
 
 import styles from "./Ads.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
@@ -80,7 +81,75 @@ const initialListings = [
 export default function Ads() {
   const router = useRouter();
 
-  const [listings, setListings] = useState(initialListings);
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const mapBackendListing = (l) => {
+    const mainPhoto = l.listing_photos?.find((p) => p.is_main)?.url || l.listing_photos?.[0]?.url || "";
+    
+    const propertyTypeMapping = {
+      apartment: "Квартира",
+      house: "Дом",
+      land: "Участок",
+      commercial: "Коммерция",
+      room: "Комнаты",
+      garage: "Паркинг/гараж",
+    };
+
+    const statusMapping = {
+      active: "Активно",
+      moderation: "На модерации",
+      draft: "Черновик",
+      hidden: "Скрыто",
+    };
+
+    return {
+      id: l.id,
+      title: l.title || "Без названия",
+      type: propertyTypeMapping[l.property_type] || "Другое",
+      location: l.city || l.region || "Кыргызстан",
+      address: l.address || "",
+      price: `${l.price?.toLocaleString() || 0} ${l.currency === "USD" ? "$" : "сом"}`,
+      image: mainPhoto || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400",
+      status: statusMapping[l.status] || "Активно",
+      likes: l.views_count || 0,
+      dealType: l.deal_type === "sale" ? "Продажа" : "Сдаю",
+      area: l.area ? `${l.area} м²` : "",
+      rooms: l.rooms,
+      floors: l.total_floors,
+      description: l.description || "",
+      raw: l,
+    };
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    getMyListings(token)
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = res.data.map(mapBackendListing);
+          setListings(mapped);
+        } else {
+          setError(res.message || "Не удалось загрузить ваши объявления");
+        }
+      })
+      .catch((err) => {
+        console.error("Load my listings error:", err);
+        setError("Ошибка при подключении к серверу");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [router]);
 
   // DELETE
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -121,27 +190,25 @@ export default function Ads() {
   const handleDelete = async () => {
     if (!selectedListing || isDeleting) return;
 
+    const token = localStorage.getItem("uytap_token");
+    if (!token) return;
+
     try {
       setIsDeleting(true);
 
-      // Здесь потом API:
-      //
-      // await fetch(`/api/ads/${selectedListing.id}`, {
-      //   method: "DELETE",
-      // });
-
-      await new Promise((resolve) => setTimeout(resolve, 700));
-
-      setListings((prev) =>
-        prev.filter((item) => item.id !== selectedListing.id),
-      );
-
-      console.log("Удалено объявление:", selectedListing.id);
-
-      setIsDeleteModalOpen(false);
-      setSelectedListing(null);
+      const res = await deleteListingApi(token, selectedListing.id);
+      if (res.success) {
+        setListings((prev) =>
+          prev.filter((item) => item.id !== selectedListing.id)
+        );
+        setIsDeleteModalOpen(false);
+        setSelectedListing(null);
+      } else {
+        alert(res.message || "Не удалось удалить объявление");
+      }
     } catch (error) {
       console.error("Ошибка удаления:", error);
+      alert("Не удалось удалить объявление");
     } finally {
       setIsDeleting(false);
     }
@@ -166,42 +233,58 @@ export default function Ads() {
   const handleSaveEdit = async (updatedListing) => {
     if (!editingListing || isSaving) return;
 
+    const token = localStorage.getItem("uytap_token");
+    if (!token) return;
+
     try {
       setIsSaving(true);
 
-      // Здесь потом реальный API:
-      //
-      // const response = await fetch(`/api/ads/${editingListing.id}`, {
-      //   method: "PUT",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(updatedListing),
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error("Не удалось обновить объявление");
-      // }
+      const priceVal = typeof updatedListing.price === "string"
+        ? Number(updatedListing.price.replace(/[^0-9]/g, ""))
+        : Number(updatedListing.price);
 
-      await new Promise((resolve) => setTimeout(resolve, 700));
+      const areaVal = typeof updatedListing.area === "string"
+        ? Number(updatedListing.area.replace(/[^0-9.]/g, ""))
+        : Number(updatedListing.area);
 
-      setListings((prev) =>
-        prev.map((item) =>
-          item.id === editingListing.id
-            ? {
-                ...item,
-                ...updatedListing,
-              }
-            : item,
-        ),
-      );
+      const propertyTypeMapping = {
+        "Квартира": "apartment",
+        "Дом": "house",
+        "Участок": "land",
+        "Коммерция": "commercial",
+        "Комнаты": "room",
+        "Паркинг/гараж": "garage",
+      };
 
-      console.log("Обновлено объявление:", editingListing.id);
+      const payload = {
+        title: updatedListing.title,
+        description: updatedListing.description,
+        propertyType: propertyTypeMapping[updatedListing.type] || editingListing.raw?.property_type || "apartment",
+        dealType: updatedListing.dealType === "Продажа" ? "sale" : "rent",
+        price: priceVal || 100000,
+        area: areaVal || null,
+        rooms: updatedListing.rooms ? Number(updatedListing.rooms) : null,
+        totalFloors: updatedListing.floors ? Number(updatedListing.floors) : null,
+        address: updatedListing.address || "",
+        region: editingListing.raw?.region || "BISHKEK",
+        city: editingListing.raw?.city || null,
+        country: editingListing.raw?.country || "Кыргызстан",
+      };
 
-      setIsEditModalOpen(false);
-      setEditingListing(null);
+      const res = await updateListingApi(token, editingListing.id, payload);
+      if (res.success && res.data) {
+        const mapped = mapBackendListing(res.data);
+        setListings((prev) =>
+          prev.map((item) => (item.id === editingListing.id ? mapped : item))
+        );
+        setIsEditModalOpen(false);
+        setEditingListing(null);
+      } else {
+        alert(res.message || "Не удалось обновить объявление");
+      }
     } catch (error) {
       console.error("Ошибка обновления:", error);
+      alert("Не удалось обновить объявление");
     } finally {
       setIsSaving(false);
     }
@@ -293,7 +376,17 @@ export default function Ads() {
 
         {/* LISTINGS */}
 
-        {listings.length > 0 ? (
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "80px 0", color: "#888" }}>
+            <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+            <div>Загрузка ваших объявлений...</div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : error ? (
+          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "20px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+            {error}
+          </div>
+        ) : listings.length > 0 ? (
           <section className={styles.grid}>
             {listings.map((item) => (
               <article key={item.id} className={styles.card}>

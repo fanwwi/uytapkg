@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getListingById } from "@/utils/api";
+import { getListingById, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
 import { mapListingDetail } from "@/utils/mapListingData";
 
 import {
@@ -178,7 +178,43 @@ export default function ProductDetails() {
       .finally(() => {
         setLoading(false);
       });
+
+    const token = localStorage.getItem("uytap_token");
+    if (token) {
+      getFavorites(token)
+        .then((res) => {
+          if (res.success && res.data) {
+            const isFav = res.data.some((l) => l.id === id);
+            setIsFavorite(isFav);
+          }
+        })
+        .catch((err) => console.error("Error fetching favs status:", err));
+    }
   }, [id]);
+
+  const handleFavoriteToggle = async () => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        const res = await removeFavorite(token, id);
+        if (res.success) {
+          setIsFavorite(false);
+        }
+      } else {
+        const res = await addFavorite(token, id);
+        if (res.success) {
+          setIsFavorite(true);
+        }
+      }
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
 
   const nextImage = () => {
     if (!product || !product.images) return;
@@ -350,7 +386,7 @@ export default function ProductDetails() {
               <button
                 type="button"
                 className={styles.favorite}
-                onClick={() => setIsFavorite(!isFavorite)}
+                onClick={handleFavoriteToggle}
               >
                 <Heart size={23} fill={isFavorite ? "currentColor" : "none"} />
               </button>

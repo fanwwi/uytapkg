@@ -504,7 +504,8 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
   useEffect(() => {
     getConstants()
-      .then((data) => {
+      .then((res) => {
+        const data = res?.data || res;
         if (data && data.amenities) {
           const combinedAmenities = [
             "Любые",

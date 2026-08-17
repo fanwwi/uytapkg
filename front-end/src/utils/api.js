@@ -112,6 +112,9 @@ export async function createListing(token, payload) {
   }
 
   if (!response.ok || !data.success) {
+    if (data.errors && Array.isArray(data.errors)) {
+      throw new Error(`${data.message || "Ошибка валидации данных"}: ${data.errors.join(", ")}`);
+    }
     throw new Error(data.message || "Ошибка создания объявления");
   }
 
@@ -300,6 +303,70 @@ export async function deleteComplex(token, id) {
 
 export async function getMyComplexes(token) {
   const response = await fetch(`${API_URL}/complexes/my`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+// 8. Избранное
+export async function getFavorites(token) {
+  const response = await fetch(`${API_URL}/favorites`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+export async function addFavorite(token, listingId) {
+  const response = await fetch(`${API_URL}/favorites`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ listingId }),
+  });
+  return response.json();
+}
+
+export async function removeFavorite(token, listingId) {
+  const response = await fetch(`${API_URL}/favorites/${listingId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+// 9. Мои объявления (CRUD)
+export async function getMyListings(token) {
+  const response = await fetch(`${API_URL}/listings/my`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+export async function updateListing(token, id, payload) {
+  const response = await fetch(`${API_URL}/listings/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+}
+
+export async function deleteListing(token, id) {
+  const response = await fetch(`${API_URL}/listings/${id}`, {
+    method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
     },

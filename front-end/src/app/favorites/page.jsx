@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { Heart, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import { getFavorites, removeFavorite as removeFavoriteApi } from "@/utils/api";
+import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./Favorites.module.css";
 
@@ -94,12 +96,55 @@ const categories = [
 export default function Favorites() {
   const router = useRouter();
 
-  const [favorites, setFavorites] = useState(initialFavorites);
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
 
-  function removeFavorite(id) {
-    setFavorites((prev) => prev.filter((item) => item.id !== id));
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    getFavorites(token)
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = res.data.map((item) => mapListingData(item));
+          setFavorites(mapped);
+        } else {
+          setError(res.message || "Не удалось загрузить список избранного");
+        }
+      })
+      .catch((err) => {
+        console.error("Load favorites error:", err);
+        setError("Ошибка при подключении к серверу");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [router]);
+
+  async function removeFavorite(id) {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) return;
+
+    try {
+      const res = await removeFavoriteApi(token, id);
+      if (res.success) {
+        setFavorites((prev) => prev.filter((item) => item.id !== id));
+      } else {
+        alert(res.message || "Ошибка при удалении из избранного");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Не удалось удалить из избранного");
+    }
   }
 
   const filteredFavorites = useMemo(() => {
@@ -205,7 +250,17 @@ export default function Favorites() {
 
       {/* PRODUCTS */}
 
-      {filteredFavorites.length > 0 ? (
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "80px 0", color: "#888" }}>
+          <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+          <div>Загрузка избранного...</div>
+          <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+        </div>
+      ) : error ? (
+        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "20px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+          {error}
+        </div>
+      ) : filteredFavorites.length > 0 ? (
         <section className={styles.grid}>
           {filteredFavorites.map((item) => (
             <ListingCard

@@ -235,11 +235,18 @@ export default function AddProductPage() {
 
         // Сделка
         dealType: form.dealType,
-        rentPeriod: form.rentalPeriod || null,
+        rentPeriod:
+          form.dealType === "rent"
+            ? form.rentalPeriod === "longTerm"
+              ? "long_term"
+              : form.rentalPeriod === "shortTerm"
+                ? "weekly"
+                : form.rentalPeriod || null
+            : null,
 
         // Местоположение
         country: form.country || "Кыргызстан",
-        region: form.region || null,
+        region: form.country === "turkey" ? "TURKEY" : (form.region || "BISHKEK"),
         city:
           (form.country === "turkey"
             ? form.city

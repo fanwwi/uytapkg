@@ -22,7 +22,7 @@ import styles from "./RealtorProfile.module.css";
 
 import RealtorEditModal from "./realtorEdit/RealtorEditModal";
 
-export default function RealtorProfile({ user }) {
+export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 }) {
   const [edit, setEdit] = useState(false);
 
   if (!user) return null;
@@ -146,13 +146,13 @@ export default function RealtorProfile({ user }) {
 
       <section className={styles.stats}>
         <div>
-          <strong>{profile.ads_count || 0}</strong>
+          <strong>{adsCount}</strong>
           <span>объявлений</span>
         </div>
 
         <div>
-          <strong>{profile.clients_count || 0}</strong>
-          <span>клиентов</span>
+          <strong>{favoritesCount}</strong>
+          <span>избранных</span>
         </div>
       </section>
 
@@ -167,7 +167,7 @@ export default function RealtorProfile({ user }) {
           Мои объявления
         </a>
 
-        <a href="/profile/favorites">
+        <a href="/favorites">
           <Heart />
           Избранное
         </a>

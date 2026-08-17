@@ -24,7 +24,7 @@ import {
 import styles from "./AgencyProfile.module.css";
 import AgencyEditModal from "./agencyEdit/AgencyEditModal";
 
-export default function AgencyProfile({ user }) {
+export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }) {
   const [openEdit, setOpenEdit] = useState(false);
 
   if (!user) return null;
@@ -219,12 +219,12 @@ export default function AgencyProfile({ user }) {
 
       <section className={styles.stats}>
         <div className={styles.stat}>
-          <strong>{profile.ads_count || 0}</strong>
+          <strong>{adsCount}</strong>
           <span>Объявлений</span>
         </div>
 
         <div className={styles.stat}>
-          <strong>{profile.favorites_count || 0}</strong>
+          <strong>{favoritesCount}</strong>
           <span>Избранных</span>
         </div>
       </section>
@@ -242,7 +242,7 @@ export default function AgencyProfile({ user }) {
           </div>
         </Link>
 
-        <Link href="/profile/favorites">
+        <Link href="/favorites">
           <div className={styles.icon}>
             <Heart />
           </div>

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
-import { getListings } from "@/utils/api";
+import { getListings, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
@@ -34,12 +34,25 @@ export default function IssykKulProducts() {
   const [dealType, setDealType] = useState("Все");
 
   const [listingsList, setListingsList] = useState([]);
+  const [favIds, setFavIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     setError(null);
+
+    const token = localStorage.getItem("uytap_token");
+    if (token) {
+      getFavorites(token)
+        .then((res) => {
+          if (res.success && res.data) {
+            setFavIds(new Set(res.data.map((l) => l.id)));
+          }
+        })
+        .catch((err) => console.error("Error loading favs:", err));
+    }
+
     getListings({ page: 1, limit: 20 })
       .then((res) => {
         if (res && res.success) {
@@ -60,6 +73,39 @@ export default function IssykKulProducts() {
   const mappedListings = useMemo(() => {
     return listingsList.map((item) => mapListingData(item));
   }, [listingsList]);
+
+  const handleFavoriteClick = async (clickedItem) => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    const isFav = favIds.has(clickedItem.id);
+    try {
+      if (isFav) {
+        const res = await removeFavorite(token, clickedItem.id);
+        if (res.success) {
+          setFavIds((prev) => {
+            const next = new Set(prev);
+            next.delete(clickedItem.id);
+            return next;
+          });
+        }
+      } else {
+        const res = await addFavorite(token, clickedItem.id);
+        if (res.success) {
+          setFavIds((prev) => {
+            const next = new Set(prev);
+            next.add(clickedItem.id);
+            return next;
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Favorite toggle error:", err);
+    }
+  };
 
   const filteredListings = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -231,7 +277,12 @@ export default function IssykKulProducts() {
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
-                <ListingCard key={item.id} item={item} />
+                <ListingCard
+                  key={item.id}
+                  item={item}
+                  isFavorite={favIds.has(item.id)}
+                  onFavoriteClick={handleFavoriteClick}
+                />
               ))}
             </section>
           ) : (

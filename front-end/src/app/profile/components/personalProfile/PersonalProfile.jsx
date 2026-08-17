@@ -20,7 +20,7 @@ import styles from "./PersonalProfile.module.css";
 
 import ProfileEditModal from "./profileEdit/ProfileEditModal";
 
-export default function PersonalProfile({ user }) {
+export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0 }) {
   const [openEdit, setOpenEdit] = useState(false);
 
   if (!user) return null;
@@ -122,7 +122,7 @@ export default function PersonalProfile({ user }) {
           </div>
         </Link>
 
-        <Link href="/profile/favorites">
+        <Link href="/favorites">
           <div className={styles.icon}>
             <Heart />
           </div>

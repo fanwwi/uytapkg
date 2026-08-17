@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getMyComplexes } from "@/utils/api";
 
 import {
   Pencil,
@@ -29,7 +30,7 @@ import styles from "./DeveloperProfile.module.css";
 
 import DeveloperEditModal from "./developerEdit/DeveloperEditModal";
 
-export default function DeveloperProfile({ user }) {
+export default function DeveloperProfile({ user, adsCount = 0 }) {
   const [edit, setEdit] = useState(false);
 
   if (!user) return null;
@@ -64,11 +65,38 @@ export default function DeveloperProfile({ user }) {
    *
    * Поэтому делаем компонент устойчивым.
    */
-  const projects =
+  const [dbProjects, setDbProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) return;
+
+    getMyComplexes(token)
+      .then((res) => {
+        if (res.success && Array.isArray(res.data)) {
+          const mapped = res.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            address: item.address,
+            image_url: item.cover_photo || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
+            completion_status: item.completion_status,
+            completion_date: item.completion_date,
+            apartments: item.features?.apartments || 0,
+          }));
+          setDbProjects(mapped);
+        }
+      })
+      .catch((err) => console.error("Error fetching developer profile projects:", err))
+      .finally(() => setLoadingProjects(false));
+  }, []);
+
+  const projects = dbProjects.length > 0 ? dbProjects : (
     profile.projects ||
     profile.residential_complexes ||
     profile.complexes ||
-    [];
+    []
+  );
 
   function logout() {
     localStorage.removeItem("uytap_user");
@@ -310,7 +338,11 @@ export default function DeveloperProfile({ user }) {
           </div>
 
           <div>
-            <strong>{profile.apartments_count || 0}</strong>
+            <strong>
+              {dbProjects.length > 0
+                ? dbProjects.reduce((sum, p) => sum + (Number(p.apartments) || 0), 0)
+                : (profile.apartments_count || 0)}
+            </strong>
 
             <span>квартир</span>
           </div>
@@ -322,7 +354,7 @@ export default function DeveloperProfile({ user }) {
           </div>
 
           <div>
-            <strong>{profile.ads_count || 0}</strong>
+            <strong>{adsCount}</strong>
 
             <span>объявлений</span>
           </div>
