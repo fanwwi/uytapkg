@@ -29,72 +29,6 @@ const typeOptions = [
 
 const dealOptions = ["Продажа", "Сдаю"];
 
-function CustomSelect({ value, options, onChange, placeholder }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleSelect = (option) => {
-    onChange(option);
-    setOpen(false);
-  };
-
-  return (
-    <div className={styles.customSelect} ref={ref}>
-      <button
-        type="button"
-        className={`${styles.selectButton} ${
-          open ? styles.selectButtonOpen : ""
-        } ${!value ? styles.selectPlaceholder : ""}`}
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <span>{value || placeholder}</span>
-
-        <ChevronDown
-          size={17}
-          className={`${styles.selectArrow} ${
-            open ? styles.selectArrowOpen : ""
-          }`}
-        />
-      </button>
-
-      {open && (
-        <div className={styles.selectDropdown}>
-          {options.map((option) => (
-            <button
-              type="button"
-              key={option}
-              className={`${styles.selectOption} ${
-                value === option ? styles.selectOptionActive : ""
-              }`}
-              onClick={() => handleSelect(option)}
-            >
-              <span>{option}</span>
-
-              {value === option && (
-                <span className={styles.selectCheck}>✓</span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function AdsEditModal({
   isOpen,
   onClose,
@@ -234,8 +168,8 @@ export default function AdsEditModal({
                 <CustomSelectBlack
                   value={form.type}
                   options={typeOptions}
-                  placeholder="Выберите тип"
-                  onChange={(value) =>
+                  title="Тип объекта"
+                  setValue={(value) =>
                     setForm((prev) => ({
                       ...prev,
                       type: value,
@@ -252,8 +186,8 @@ export default function AdsEditModal({
                 <CustomSelectBlack
                   value={form.dealType}
                   options={dealOptions}
-                  placeholder="Выберите тип"
-                  onChange={(value) =>
+                  title="Тип предложения"
+                  setValue={(value) =>
                     setForm((prev) => ({
                       ...prev,
                       dealType: value,
