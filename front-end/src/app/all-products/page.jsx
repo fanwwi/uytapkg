@@ -2,12 +2,8 @@
 
 import { SlidersHorizontal, Search, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
-<<<<<<< HEAD
+import { useRouter, useSearchParams } from "next/navigation";
 import { getListings, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
-=======
-
-import { getListings } from "@/utils/api";
->>>>>>> 9cbd95044c2ea692346c4ebc86752e27bd10e5c5
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
@@ -31,22 +27,15 @@ const dealTypes = [
 ];
 
 export default function AllProducts() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [search, setSearch] = useState("");
-
   const [activeCategory, setActiveCategory] = useState("Все");
-
   const [dealType, setDealType] = useState("Все");
-
   const [listingsList, setListingsList] = useState([]);
-<<<<<<< HEAD
   const [favIds, setFavIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-=======
->>>>>>> 9cbd95044c2ea692346c4ebc86752e27bd10e5c5
-
-  const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   /*
@@ -63,7 +52,6 @@ export default function AllProducts() {
   useEffect(() => {
     let cancelled = false;
 
-<<<<<<< HEAD
     const token = localStorage.getItem("uytap_token");
     if (token) {
       getFavorites(token)
@@ -91,12 +79,11 @@ export default function AllProducts() {
     } else {
       setActiveCategory("Все");
     }
-=======
+
     async function loadListings() {
       try {
         setLoading(true);
         setError("");
->>>>>>> 9cbd95044c2ea692346c4ebc86752e27bd10e5c5
 
         const response = await getListings({
           page: 1,
@@ -117,7 +104,6 @@ export default function AllProducts() {
 
         if (!cancelled) {
           setError(err?.message || "Ошибка соединения с сервером");
-
           setListingsList([]);
         }
       } finally {
@@ -132,7 +118,7 @@ export default function AllProducts() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [searchParams]);
 
   /*
    * =====================================================
@@ -147,14 +133,12 @@ export default function AllProducts() {
           return mapListingData(item);
         } catch (error) {
           console.error("Ошибка преобразования объявления:", item, error);
-
           return null;
         }
       })
       .filter(Boolean);
   }, [listingsList]);
 
-<<<<<<< HEAD
   const handleFavoriteClick = async (clickedItem) => {
     const token = localStorage.getItem("uytap_token");
     if (!token) {
@@ -187,13 +171,12 @@ export default function AllProducts() {
       console.error("Favorite toggle error:", err);
     }
   };
-=======
+
   /*
    * =====================================================
    * ФИЛЬТРАЦИЯ
    * =====================================================
    */
->>>>>>> 9cbd95044c2ea692346c4ebc86752e27bd10e5c5
 
   const filteredListings = useMemo(() => {
     const query = search.trim().toLowerCase();
