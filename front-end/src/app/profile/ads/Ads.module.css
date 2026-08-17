@@ -855,3 +855,55 @@
     min-height: 72px;
   }
 }
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.homeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 46px;
+  padding: 0 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #fff;
+  color: #111827;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.homeButton:hover {
+  background: #f5f5f5;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+  .headerActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .homeButton,
+  .addButton {
+    width: 100%;
+  }
+}

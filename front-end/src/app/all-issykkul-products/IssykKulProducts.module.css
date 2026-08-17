@@ -713,6 +713,46 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
 
+.btns {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}
 
+.btns span {
+  width: 70%;
+}
+
+.homeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #ff006f;
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+
+  margin-bottom: 20px;
+}
+
+.homeButton:hover {
+  background: #e60063;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 0, 111, 0.2);
 }

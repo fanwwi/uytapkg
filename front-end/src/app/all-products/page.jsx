@@ -1,9 +1,14 @@
 "use client";
 
-import { SlidersHorizontal, Search, X } from "lucide-react";
+import { SlidersHorizontal, Search, X, Home } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getListings, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
+import {
+  getListings,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+} from "@/utils/api";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
@@ -287,6 +292,14 @@ export default function AllProducts() {
 
       <div className={styles.header}>
         <div>
+          <button
+            type="button"
+            className={styles.homeButton}
+            onClick={() => router.push("/")}
+          >
+            <Home size={18} />
+            На главную
+          </button>
           <h1>Все объявления</h1>
 
           <p>Найдите подходящую недвижимость среди доступных предложений</p>
