@@ -30,7 +30,7 @@ export function mapComplexData(item) {
     id: item.id,
     name: item.name || "Жилой комплекс",
     developer: developerName,
-    developerId: item.developers?.id,
+    developerId: item.developers?.user_id || item.developers?.id,
     address: addressText,
     priceFrom: priceFrom || "По запросу",
     priceTo: priceTo ? ` — ${priceTo}` : "",

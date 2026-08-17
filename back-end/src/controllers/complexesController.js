@@ -9,7 +9,7 @@ export const getComplexes = async (req, res) => {
       .from("residential_complexes")
       .select(`
         *,
-        developers (id, company_name, logo_url, is_verified),
+        developers (id, user_id, company_name, logo_url, is_verified),
         complex_layouts (*)
       `)
       .order("created_at", { ascending: false });
@@ -75,7 +75,7 @@ export const getMyComplexes = async (req, res) => {
       .from("residential_complexes")
       .select(`
         *,
-        developers (id, company_name, logo_url, is_verified),
+        developers (id, user_id, company_name, logo_url, is_verified),
         complex_layouts (*)
       `)
       .eq("developer_id", developer.id)

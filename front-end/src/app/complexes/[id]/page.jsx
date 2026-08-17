@@ -161,6 +161,8 @@ const defaultResidentialComplex = {
   location: "Бишкек",
   address: "Юго-восточная часть города",
   developer: "MALINA Development",
+  developerId: null,
+  developerLogo: null,
   completion: "III квартал 2027",
   floors: 10,
   blocks: 3,
@@ -298,6 +300,8 @@ export default function ComplexesDetails() {
             location: res.data.city || res.data.region || "Кыргызстан",
             address: mapped.address,
             developer: mapped.developer,
+            developerId: mapped.developerId || null,
+            developerLogo: mapped.logo || null,
             completion: res.data.completion_date || "Уточняйте у застройщика",
             description: mapped.description,
             concept: res.data.description || defaultResidentialComplex.concept,
@@ -459,7 +463,15 @@ export default function ComplexesDetails() {
 
             <div className={styles.developer}>
               <div className={styles.developerIcon}>
-                <Building2 size={18} />
+                {residentialComplex.developerLogo ? (
+                  <img 
+                    src={residentialComplex.developerLogo} 
+                    alt={residentialComplex.developer} 
+                    style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} 
+                  />
+                ) : (
+                  <Building2 size={18} />
+                )}
               </div>
 
               <div>
@@ -508,11 +520,15 @@ export default function ComplexesDetails() {
             <button
               type="button"
               className={styles.primaryButton}
-              onClick={() =>
-                document
-                  .getElementById("apartments")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => {
+                if (residentialComplex.developerId) {
+                  router.push(`/public-profile/${residentialComplex.developerId}`);
+                } else {
+                  document
+                    .getElementById("apartments")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
             >
               Смотреть профиль застройщика
               <ArrowRight size={18} />
@@ -769,7 +785,16 @@ export default function ComplexesDetails() {
             </p>
           </div>
 
-          <button type="button" onClick={() => router.push("/apartments")}>
+          <button 
+            type="button" 
+            onClick={() => {
+              if (residentialComplex.developerId) {
+                router.push(`/public-profile/${residentialComplex.developerId}`);
+              } else {
+                router.push("/apartments");
+              }
+            }}
+          >
             Смотреть профиль застройщика
             <ArrowRight size={18} />
           </button>

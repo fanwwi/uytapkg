@@ -693,13 +693,34 @@ export const getUserPublicProfile = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { data: user, error: userError } = await supabase
+    let user = null;
+    const { data: userRow } = await supabase
       .from("users")
       .select("id, account_type, email, phone, is_verified, created_at")
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
-    if (userError || !user) {
+    if (userRow) {
+      user = userRow;
+    } else {
+      // Попробуем поискать по developers.id
+      const { data: devRow } = await supabase
+        .from("developers")
+        .select("user_id")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (devRow && devRow.user_id) {
+        const { data: userByDev } = await supabase
+          .from("users")
+          .select("id, account_type, email, phone, is_verified, created_at")
+          .eq("id", devRow.user_id)
+          .maybeSingle();
+        user = userByDev;
+      }
+    }
+
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "Пользователь не найден",

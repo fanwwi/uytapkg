@@ -25,7 +25,7 @@ export default function Developers() {
       .then((res) => {
         if (res.success && res.data) {
           const mapped = res.data.map((dev) => ({
-            id: dev.id,
+            id: dev.user_id || dev.id,
             nameRu: dev.company_name,
             nameEn: dev.company_name,
             objects: dev.residential_complexes?.length || 0,
@@ -247,8 +247,12 @@ export default function Developers() {
 
                 {/* BUTTON */}
 
-                <button type="button" className={styles.projects}>
-                  <span>Смотреть проекты</span>
+                <button 
+                  type="button" 
+                  className={styles.projects}
+                  onClick={() => router.push(`/public-profile/${item.id}`)}
+                >
+                  <span>Смотреть профиль</span>
 
                   <span className={styles.arrow}>
                     <ArrowRight />
