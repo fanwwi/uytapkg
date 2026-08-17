@@ -14,14 +14,20 @@ import {
   Check,
   ArrowUpRight,
   Home,
+  BriefcaseBusiness,
+  ArrowLeft,
 } from "lucide-react";
 
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AgencyPublicProfile.module.css";
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
-export default function AgencyPublicProfile({ profile, favIds = new Set(), onFavoriteClick }) {
+export default function AgencyPublicProfile({
+  profile,
+  favIds = new Set(),
+  onFavoriteClick,
+}) {
   if (!profile) return null;
 
   const data = profile.profile || {};
@@ -50,190 +56,276 @@ export default function AgencyPublicProfile({ profile, favIds = new Set(), onFav
   const ads = profile.ads || data.ads || data.listings || data.properties || [];
 
   const activeAds = profile.ads_count ?? ads.length;
-
   const properties = data.properties_count ?? data.objects_count ?? ads.length;
 
   return (
     <main className={styles.page}>
-      <div className={styles.glowOne} />
-      <div className={styles.glowTwo} />
+      <div className={styles.backgroundGlow} />
+      <div className={styles.backgroundGlowSecondary} />
 
-      {/* PROFILE */}
+      <div className={styles.container}>
+        {/* =====================================================
+            HERO
+        ===================================================== */}
+        <Link href="/" className={styles.backButton}>
+          <ArrowLeft size={17} />
+          <span>На главную</span>
+        </Link>
 
-      <motion.section
-        className={styles.profile}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-      >
-        <div className={styles.profileAccent} />
+        {/* =====================================================
+      HERO
+  ===================================================== */}
 
-        {/* LOGO */}
+        <motion.section
+          className={styles.hero}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+        >
+          <div className={styles.heroGlow} />
 
-        <div className={styles.logoSide}>
-          <div className={styles.logoFrame}>
-            <img src={logoUrl} alt={companyName} className={styles.logo} />
-          </div>
-        </div>
-
-        {/* CONTENT */}
-
-        <div className={styles.profileContent}>
-          <div className={styles.profileTop}>
-            <span className={styles.profileType}>
-              <Building2 />
+          <div className={styles.heroTopLine}>
+            <span className={styles.heroLabel}>
+              <Building2 size={14} />
               Агентство недвижимости
             </span>
 
             {profile.isVerified && (
-              <span className={styles.verified} title="Проверенное агентство">
-                <Check />
+              <span className={styles.verified}>
+                <Check size={14} />
                 Проверено
               </span>
             )}
           </div>
 
-          <h1>{companyName}</h1>
+          <div className={styles.heroMain}>
+            {/* LOGO */}
 
-          <div className={styles.director}>
-            <User />
-
-            <span>Руководитель</span>
-
-            <strong>{director}</strong>
-          </div>
-
-          <div className={styles.actions}>
-            {phone && (
-              <a href={`tel:${phone}`} className={styles.callButton}>
-                <Phone />
-                Позвонить
-              </a>
-            )}
-
-            {whatsappNumber && (
-              <a
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.actionButton}
-              >
-                <MessageCircle />
-                WhatsApp
-                <ArrowUpRight />
-              </a>
-            )}
-
-            {email && (
-              <a href={`mailto:${email}`} className={styles.actionButton}>
-                <Mail />
-                Email
-              </a>
-            )}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ABOUT */}
-
-      <section className={styles.about}>
-        <div className={styles.blockHeading}>
-          <span>01</span>
-          <div>
-            <h2>О компании</h2>
-            <p>Информация об агентстве</p>
-          </div>
-        </div>
-
-        <p className={styles.aboutText}>
-          {data.about ||
-            "Агентство пока не добавило описание своей деятельности."}
-        </p>
-      </section>
-
-      {/* DETAILS */}
-
-      {(officeAddress || website) && (
-        <section className={styles.details}>
-          {officeAddress && (
-            <div className={styles.detailCard}>
-              <div className={styles.detailIcon}>
-                <MapPin />
+            <div className={styles.logoColumn}>
+              <div className={styles.logoFrame}>
+                <img src={logoUrl} alt={companyName} className={styles.logo} />
               </div>
 
-              <div className={styles.detailContent}>
-                <span>Офис</span>
-                <strong>{officeAddress}</strong>
+              <span className={styles.logoCaption}>UyTap.kg</span>
+            </div>
+
+            {/* INFO */}
+
+            <div className={styles.heroContent}>
+              <h1>{companyName}</h1>
+
+              <div className={styles.director}>
+                <span className={styles.directorIcon}>
+                  <User size={15} />
+                </span>
+
+                <span className={styles.directorLabel}>Руководитель</span>
+
+                <strong>{director}</strong>
+              </div>
+
+              <p className={styles.heroDescription}>
+                {data.about ||
+                  "Профессиональное агентство недвижимости. Подбор, продажа и аренда объектов недвижимости."}
+              </p>
+
+              <div className={styles.actions}>
+                {phone && (
+                  <a href={`tel:${phone}`} className={styles.primaryButton}>
+                    <Phone size={16} />
+                    Позвонить
+                  </a>
+                )}
+
+                {whatsappNumber && (
+                  <a
+                    href={`https://wa.me/${whatsappNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.secondaryButton}
+                  >
+                    <MessageCircle size={16} />
+                    WhatsApp
+                    <ArrowUpRight size={14} />
+                  </a>
+                )}
+
+                {email && (
+                  <a
+                    href={`mailto:${email}`}
+                    className={styles.secondaryButton}
+                  >
+                    <Mail size={16} />
+                    Email
+                  </a>
+                )}
               </div>
             </div>
-          )}
+          </div>
 
-          {website && (
-            <a
-              href={website.startsWith("http") ? website : `https://${website}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.detailCard}
+          {/* STATS */}
+
+          <div className={styles.heroStats}>
+            <div className={styles.heroStat}>
+              <div className={styles.heroStatIcon}>
+                <Home size={17} />
+              </div>
+
+              <div>
+                <strong>{activeAds}</strong>
+                <span>Активных объявлений</span>
+              </div>
+            </div>
+
+            <div className={styles.statDivider} />
+
+            <div className={styles.heroStat}>
+              <div className={styles.heroStatIcon}>
+                <BriefcaseBusiness size={17} />
+              </div>
+
+              <div>
+                <strong>{properties}</strong>
+                <span>Объектов всего</span>
+              </div>
+            </div>
+
+            {officeAddress && (
+              <>
+                <div className={styles.statDivider} />
+
+                <div className={styles.heroStatLocation}>
+                  <MapPin size={17} />
+
+                  <div>
+                    <span>Офис</span>
+                    <strong>{officeAddress}</strong>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </motion.section>
+
+        {/* =====================================================
+            DETAILS
+        ===================================================== */}
+
+        {(officeAddress || website) && (
+          <motion.section
+            className={styles.details}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35 }}
+          >
+            {officeAddress && (
+              <div className={styles.detailCard}>
+                <div className={styles.detailIcon}>
+                  <MapPin size={18} />
+                </div>
+
+                <div>
+                  <span>Офис</span>
+                  <strong>{officeAddress}</strong>
+                </div>
+              </div>
+            )}
+
+            {website && (
+              <a
+                href={
+                  website.startsWith("http") ? website : `https://${website}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.detailCard}
+              >
+                <div className={styles.detailIcon}>
+                  <Globe size={18} />
+                </div>
+
+                <div>
+                  <span>Веб-сайт</span>
+                  <strong>{website.replace(/^https?:\/\//, "")}</strong>
+                </div>
+
+                <ArrowUpRight size={16} className={styles.externalIcon} />
+              </a>
+            )}
+          </motion.section>
+        )}
+
+        {/* =====================================================
+            LISTINGS
+        ===================================================== */}
+
+        <section className={styles.listingsSection}>
+          <div className={styles.listingsHeading}>
+            <div>
+              <span className={styles.sectionNumber}>02</span>
+
+              <h2>Объявления агентства</h2>
+
+              <p>Актуальные объекты недвижимости от {companyName}</p>
+            </div>
+
+            <span className={styles.count}>
+              {ads.length}
+              <small>объектов</small>
+            </span>
+          </div>
+
+          {ads.length > 0 ? (
+            <motion.div
+              className={styles.listingsGrid}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.05 }}
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.06,
+                  },
+                },
+              }}
             >
-              <div className={styles.detailIcon}>
-                <Globe />
+              {ads.map((item) => (
+                <motion.div
+                  key={item.id}
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 15,
+                    },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                    },
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ListingCardBlack
+                    item={mapListingData(item)}
+                    isFavorite={favIds.has(item.id)}
+                    onFavoriteClick={onFavoriteClick}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className={styles.empty}>
+              <div className={styles.emptyIcon}>
+                <Building2 size={24} />
               </div>
 
-              <div className={styles.detailContent}>
-                <span>Сайт</span>
+              <h3>Пока нет активных объявлений</h3>
 
-                <strong>{website.replace(/^https?:\/\//, "")}</strong>
-              </div>
-
-              <ArrowUpRight className={styles.externalIcon} />
-            </a>
+              <p>Агентство ещё не разместило объекты недвижимости.</p>
+            </div>
           )}
         </section>
-      )}
-
-      {/* STATS */}
-
-      <section className={styles.stats}>
-        <div className={styles.stat}>
-          <Home />
-
-          <div>
-            <strong>{activeAds}</strong>
-            <span>активных объявлений</span>
-          </div>
-        </div>
-
-        <div className={styles.stat}>
-          <Building2 />
-
-          <div>
-            <strong>{properties}</strong>
-            <span>объектов всего</span>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
-        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
-          Объявления агентства ({ads.length})
-        </h2>
-        {ads.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
-            {ads.map((item) => (
-              <ListingCard
-                key={item.id}
-                item={mapListingData(item)}
-                isFavorite={favIds.has(item.id)}
-                onFavoriteClick={onFavoriteClick}
-              />
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
-            У агентства пока нет активных объявлений.
-          </div>
-        )}
-      </section>
+      </div>
     </main>
   );
 }

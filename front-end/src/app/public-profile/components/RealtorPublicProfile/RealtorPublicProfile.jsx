@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   Phone,
   MessageCircle,
@@ -9,14 +10,22 @@ import {
   Home,
   Building2,
   CheckCircle,
+  ArrowUpRight,
+  ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./RealtorPublicProfile.module.css";
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+import Link from "next/link";
 
-export default function RealtorPublicProfile({ user, favIds = new Set(), onFavoriteClick }) {
+export default function RealtorPublicProfile({
+  user,
+  favIds = new Set(),
+  onFavoriteClick,
+}) {
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -38,12 +47,11 @@ export default function RealtorPublicProfile({ user, favIds = new Set(), onFavor
   const email = user.email || "";
   const whatsapp = phone.replace(/\D/g, "");
 
-  const userId = user.id || user.user_id;
-
   const website = profile.website || "";
   const officeAddress = profile.office_address || "";
 
-  const ads = user.ads || profile.ads || profile.listings || profile.properties || [];
+  const ads =
+    user.ads || profile.ads || profile.listings || profile.properties || [];
 
   const adsCount = profile.ads_count ?? ads.length;
   const clientsCount = profile.clients_count ?? 0;
@@ -53,164 +61,229 @@ export default function RealtorPublicProfile({ user, favIds = new Set(), onFavor
       <div className={styles.backgroundGlow} />
       <div className={styles.backgroundGlowTwo} />
 
-      {/* =========================
-          PROFILE
-      ========================= */}
+      <div className={styles.container}>
+        {/* PROFILE */}
 
-      <section className={styles.profileCard}>
-        <div className={styles.cardAccent} />
+        <Link href="/" className={styles.backButton}>
+          <ArrowLeft size={17} />
+          <span>На главную</span>
+        </Link>
 
-        <div className={styles.profileTop}>
-          {/* AVATAR */}
+        <motion.section
+          className={styles.profileCard}
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className={styles.cardGlow} />
 
-          <div className={styles.avatarColumn}>
-            <div className={styles.avatarRing}>
-              <div className={styles.avatar}>
-                <img src={avatarUrl} alt={name} />
+          <div className={styles.profileTop}>
+            {/* AVATAR */}
+
+            <motion.div
+              className={styles.avatarColumn}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className={styles.avatarRing}>
+                <div className={styles.avatar}>
+                  <img src={avatarUrl} alt={name} />
+                </div>
               </div>
-            </div>
-          </div>
-
-          {/* INFO */}
-
-          <div className={styles.info}>
-            <span className={styles.badge}>Риэлтор</span>
-
-            <div className={styles.nameRow}>
-              <h1>{name}</h1>
 
               {user.isVerified && (
-                <span className={styles.verified} title="Проверенный профиль">
+                <div className={styles.avatarVerified}>
                   <CheckCircle />
+                  Проверенный профиль
+                </div>
+              )}
+            </motion.div>
+
+            {/* INFO */}
+
+            <motion.div
+              className={styles.info}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+            >
+              <div className={styles.topMeta}>
+                <span className={styles.badge}>
+                  <span className={styles.badgeDot} />
+                  Риэлтор
                 </span>
-              )}
-            </div>
 
-            {company && (
-              <div className={styles.company}>
-                <Building2 />
-                <span>{company}</span>
+                {user.isVerified && (
+                  <span className={styles.verifiedLabel}>
+                    <CheckCircle />
+                    Проверен
+                  </span>
+                )}
               </div>
-            )}
 
-            <p className={styles.description}>
-              {profile.about ||
-                "Риэлтор пока не добавил описание своей деятельности."}
-            </p>
+              <h1>{name}</h1>
 
-            {/* ACTIONS */}
-
-            <div className={styles.actions}>
-              {phone && (
-                <a href={`tel:${phone}`} className={styles.primaryAction}>
-                  <Phone />
-                  Позвонить
-                </a>
+              {company && (
+                <div className={styles.company}>
+                  <Building2 />
+                  <span>{company}</span>
+                </div>
               )}
 
-              {whatsapp && (
+              <p className={styles.description}>
+                {profile.about ||
+                  "Риэлтор пока не добавил описание своей деятельности."}
+              </p>
+
+              <div className={styles.actions}>
+                {phone && (
+                  <a href={`tel:${phone}`} className={styles.primaryAction}>
+                    <Phone />
+                    Позвонить
+                  </a>
+                )}
+
+                {whatsapp && (
+                  <a
+                    href={`https://wa.me/${whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.secondaryAction}
+                  >
+                    <MessageCircle />
+                    WhatsApp
+                  </a>
+                )}
+
+                {email && (
+                  <a
+                    href={`mailto:${email}`}
+                    className={styles.secondaryAction}
+                  >
+                    <Mail />
+                    Email
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* DETAILS */}
+
+          {(officeAddress || website) && (
+            <div className={styles.details}>
+              {officeAddress && (
+                <div className={styles.detail}>
+                  <div className={styles.detailIcon}>
+                    <MapPin />
+                  </div>
+
+                  <div className={styles.detailContent}>
+                    <span>Офис</span>
+                    <strong>{officeAddress}</strong>
+                  </div>
+                </div>
+              )}
+
+              {website && (
                 <a
-                  href={`https://wa.me/${whatsapp}`}
+                  href={
+                    website.startsWith("http") ? website : `https://${website}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={styles.whatsappAction}
+                  className={styles.detail}
                 >
-                  <MessageCircle />
-                  WhatsApp
-                </a>
-              )}
+                  <div className={styles.detailIcon}>
+                    <Globe />
+                  </div>
 
-              {email && (
-                <a href={`mailto:${email}`} className={styles.secondaryAction}>
-                  <Mail />
-                  Email
+                  <div className={styles.detailContent}>
+                    <span>Сайт</span>
+                    <strong>{website.replace(/^https?:\/\//, "")}</strong>
+                  </div>
+
+                  <ArrowUpRight className={styles.detailArrow} />
                 </a>
               )}
             </div>
+          )}
+        </motion.section>
+
+        {/* STATS */}
+
+        <motion.section
+          className={styles.stats}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.25 }}
+        >
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <Home />
+            </div>
+
+            <div>
+              <strong>{adsCount}</strong>
+              <span>Активных объявлений</span>
+            </div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* CONTACT INFORMATION */}
+        {/* LISTINGS */}
 
-        {(officeAddress || website) && (
-          <div className={styles.details}>
-            {officeAddress && (
-              <div className={styles.detail}>
-                <div className={styles.detailIcon}>
-                  <MapPin />
-                </div>
+        <motion.section
+          className={styles.listingsSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className={styles.sectionHeader}>
+            <div>
+              <span>Предложения</span>
 
-                <div>
-                  <span>Офис</span>
-                  <strong>{officeAddress}</strong>
-                </div>
+              <h2>Объявления риэлтора</h2>
+
+              <p>Актуальные объекты недвижимости и предложения</p>
+            </div>
+
+            <div className={styles.count}>{ads.length}</div>
+          </div>
+
+          {ads.length > 0 ? (
+            <div className={styles.listingsGrid}>
+              {ads.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: 0.08 * index,
+                  }}
+                >
+                  <ListingCardBlack
+                    item={mapListingData(item)}
+                    isFavorite={favIds.has(item.id)}
+                    onFavoriteClick={onFavoriteClick}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.empty}>
+              <div className={styles.emptyIcon}>
+                <Home />
               </div>
-            )}
 
-            {website && (
-              <a
-                href={
-                  website.startsWith("http") ? website : `https://${website}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.detail}
-              >
-                <div className={styles.detailIcon}>
-                  <Globe />
-                </div>
+              <h3>Пока нет объявлений</h3>
 
-                <div>
-                  <span>Сайт</span>
-                  <strong>{website.replace(/^https?:\/\//, "")}</strong>
-                </div>
-              </a>
-            )}
-          </div>
-        )}
-      </section>
-
-      {/* =========================
-          STATS
-      ========================= */}
-
-      <section className={styles.stats}>
-        <div className={styles.statCard}>
-          <strong>{adsCount}</strong>
-          <span>Объявлений</span>
-
-          <Home className={styles.statBackgroundIcon} />
-        </div>
-
-        <div className={styles.statCard}>
-          <strong>{clientsCount}</strong>
-          <span>Клиентов</span>
-
-          <Building2 className={styles.statBackgroundIcon} />
-        </div>
-      </section>
-
-      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
-        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
-          Объявления риэлтора ({ads.length})
-        </h2>
-        {ads.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
-            {ads.map((item) => (
-              <ListingCard
-                key={item.id}
-                item={mapListingData(item)}
-                isFavorite={favIds.has(item.id)}
-                onFavoriteClick={onFavoriteClick}
-              />
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
-            У риэлтора пока нет активных объявлений.
-          </div>
-        )}
-      </section>
+              <p>У этого риэлтора сейчас нет активных предложений.</p>
+            </div>
+          )}
+        </motion.section>
+      </div>
     </main>
   );
 }
