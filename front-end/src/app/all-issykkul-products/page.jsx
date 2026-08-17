@@ -1,13 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import {
-  MapPin,
-  SlidersHorizontal,
-  Search,
-  MapPinIcon,
-  Home,
-} from "lucide-react";
+import { MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
 import {
@@ -21,22 +14,10 @@ import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
 
-const categories = [
-  "Все",
-  "Дом/Дача",
-  "Квартира",
-  "Коттедж",
-  "Гостевой дом",
-  "Участок",
-  "Коммерция",
-];
-
 export default function IssykKulProducts() {
   const router = useRouter();
 
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Все");
-  const [dealType, setDealType] = useState("Все");
 
   const [listingsList, setListingsList] = useState([]);
   const [favIds, setFavIds] = useState(new Set());
@@ -48,6 +29,7 @@ export default function IssykKulProducts() {
     setError(null);
 
     const token = localStorage.getItem("uytap_token");
+
     if (token) {
       getFavorites(token)
         .then((res) => {
@@ -76,20 +58,32 @@ export default function IssykKulProducts() {
   }, []);
 
   const mappedListings = useMemo(() => {
-    return listingsList.map((item) => mapListingData(item));
+    return listingsList
+      .map((item) => {
+        try {
+          return mapListingData(item);
+        } catch (err) {
+          console.error("Listing mapping error:", err, item);
+          return null;
+        }
+      })
+      .filter(Boolean);
   }, [listingsList]);
 
   const handleFavoriteClick = async (clickedItem) => {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
       router.push("/login");
       return;
     }
 
     const isFav = favIds.has(clickedItem.id);
+
     try {
       if (isFav) {
         const res = await removeFavorite(token, clickedItem.id);
+
         if (res.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
@@ -99,6 +93,7 @@ export default function IssykKulProducts() {
         }
       } else {
         const res = await addFavorite(token, clickedItem.id);
+
         if (res.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
@@ -116,35 +111,35 @@ export default function IssykKulProducts() {
     const normalizedSearch = search.trim().toLowerCase();
 
     /*
-     * ГЛАВНЫЙ ФИЛЬТР:
-     * показываем ТОЛЬКО Иссык-Куль.
+     * ПОКАЗЫВАЕМ ТОЛЬКО ИССЫК-КУЛЬСКИЕ ОБЪЯВЛЕНИЯ
      */
     const filtered = mappedListings.filter((item) => {
-      const regionLower = (item.region || "").toLowerCase();
-      const cityLower = (item.location || "").toLowerCase();
+      const region = String(item.region || "").toLowerCase();
+
       const isIssykKul =
-        (item.region === "issykKul" ||
-        item.region === "ISSYK_KUL" ||
-        regionLower.includes("issyk") ||
-        regionLower.includes("иссык")) &&
-        !cityLower.includes("бишкек") &&
-        !cityLower.includes("ош");
+        region === "issyk_kul" ||
+        region === "issykkul" ||
+        region === "issyk kul" ||
+        region.includes("issyk") ||
+        region.includes("иссык");
 
+      /*
+       * ПОИСК
+       */
       const matchesSearch =
-        String(item.title || "").toLowerCase().includes(normalizedSearch) ||
-        String(item.location || "").toLowerCase().includes(normalizedSearch);
+        !normalizedSearch ||
+        String(item.title || "")
+          .toLowerCase()
+          .includes(normalizedSearch) ||
+        String(item.location || "")
+          .toLowerCase()
+          .includes(normalizedSearch);
 
-      const matchesCategory =
-        activeCategory === "Все" || item.type === activeCategory;
-
-      const matchesDealType = dealType === "Все" || item.dealType === dealType;
-
-      return isIssykKul && matchesSearch && matchesCategory && matchesDealType;
+      return isIssykKul && matchesSearch;
     });
 
     /*
-     * Приоритет:
-     * VIP → Срочно → обычное
+     * VIP → Срочно → обычные
      */
     return [...filtered].sort((a, b) => {
       const priority = {
@@ -155,9 +150,10 @@ export default function IssykKulProducts() {
 
       const aStatus = a.status === null ? "null" : a.status;
       const bStatus = b.status === null ? "null" : b.status;
+
       return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
     });
-  }, [search, activeCategory, dealType]);
+  }, [mappedListings, search]);
 
   return (
     <main className={styles.page}>
@@ -165,21 +161,21 @@ export default function IssykKulProducts() {
 
       <header className={styles.header}>
         <div className={styles.headerText}>
-          <div className={styles.btns}>
+          <div className={styles.topActions}>
             <button
               type="button"
               className={styles.homeButton}
               onClick={() => router.push("/")}
             >
-              <Home size={18} />
               На главную
             </button>
 
             <span className={styles.regionBadge}>
-              <MapPinIcon size={15} />
+              <MapPin size={15} />
               Иссык-Куль
             </span>
           </div>
+
           <h1>Недвижимость Иссык-Куля</h1>
 
           <p>
@@ -212,61 +208,10 @@ export default function IssykKulProducts() {
             </button>
           )}
         </div>
-
-        <button
-          type="button"
-          className={styles.filter}
-          onClick={() => router.push("/issyk-kul/#searchIssykKul")}
-        >
-          <SlidersHorizontal size={19} />
-          Фильтры
-        </button>
-      </div>
-
-      {/* CATEGORIES */}
-
-      <div className={styles.categories}>
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            className={activeCategory === category ? styles.categoryActive : ""}
-            onClick={() => setActiveCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* DEAL TYPE */}
-
-      <div className={styles.dealTypes}>
-        <button
-          type="button"
-          className={dealType === "Все" ? styles.dealActive : ""}
-          onClick={() => setDealType("Все")}
-        >
-          Все объявления
-        </button>
-
-        <button
-          type="button"
-          className={dealType === "Куплю" ? styles.dealActive : ""}
-          onClick={() => setDealType("Куплю")}
-        >
-          Куплю
-        </button>
-
-        <button
-          type="button"
-          className={dealType === "Сниму в аренду" ? styles.dealActive : ""}
-          onClick={() => setDealType("Сниму в аренду")}
-        >
-          Сниму в аренду
-        </button>
       </div>
 
       {/* LOADING */}
+
       {loading && (
         <div
           style={{
@@ -283,6 +228,7 @@ export default function IssykKulProducts() {
       )}
 
       {/* ERROR */}
+
       {error && !loading && (
         <div
           style={{
@@ -336,19 +282,14 @@ export default function IssykKulProducts() {
 
               <p>
                 В Иссык-Кульской области пока нет объявлений, соответствующих
-                выбранным параметрам.
+                поиску.
               </p>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch("");
-                  setActiveCategory("Все");
-                  setDealType("Все");
-                }}
-              >
-                Сбросить фильтры
-              </button>
+              {search && (
+                <button type="button" onClick={() => setSearch("")}>
+                  Очистить поиск
+                </button>
+              )}
             </div>
           )}
         </>

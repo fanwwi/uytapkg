@@ -715,44 +715,41 @@
   }
 }
 
-.btns {
+.topActions {
   display: flex;
   flex-direction: column;
-  width: 25%;
+  gap: 12px;
+  margin-bottom: 25px;
+  width: 30%;
 }
 
-.btns span {
-  width: 70%;
+.topActions span {
+  width: 60%;
+  margin-top: 10px;
 }
 
 .homeButton {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 
-  padding: 12px 18px;
+  height: 42px;
+  padding: 0 20px;
 
   border: none;
   border-radius: 14px;
 
-  background: #ff006f;
-  color: #fff;
+  background: #111;
+  color: white;
 
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
 
   cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-
-  margin-bottom: 20px;
+  transition: 0.25s ease;
 }
 
 .homeButton:hover {
-  background: #e60063;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 0, 111, 0.2);
+  background: #222;
 }
