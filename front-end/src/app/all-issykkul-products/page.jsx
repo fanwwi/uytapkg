@@ -5,16 +5,21 @@ import {
   MapPin,
   SlidersHorizontal,
   Search,
+  MapPinIcon,
+  Home,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
-import { getListings, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
+import {
+  getListings,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+} from "@/utils/api";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
-
-
 
 const categories = [
   "Все",
@@ -160,11 +165,21 @@ export default function IssykKulProducts() {
 
       <header className={styles.header}>
         <div className={styles.headerText}>
-          <span className={styles.regionBadge}>
-            <MapPin size={15} />
-            Иссык-Куль
-          </span>
+          <div className={styles.btns}>
+            <button
+              type="button"
+              className={styles.homeButton}
+              onClick={() => router.push("/")}
+            >
+              <Home size={18} />
+              На главную
+            </button>
 
+            <span className={styles.regionBadge}>
+              <MapPinIcon size={15} />
+              Иссык-Куль
+            </span>
+          </div>
           <h1>Недвижимость Иссык-Куля</h1>
 
           <p>
@@ -253,14 +268,32 @@ export default function IssykKulProducts() {
 
       {/* LOADING */}
       {loading && (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "300px", fontSize: "16px", color: "#666" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "300px",
+            fontSize: "16px",
+            color: "#666",
+          }}
+        >
           Загрузка объявлений...
         </div>
       )}
 
       {/* ERROR */}
       {error && !loading && (
-        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "8px", margin: "20px 0", textAlign: "center" }}>
+        <div
+          style={{
+            color: "#e53e3e",
+            background: "#fed7d7",
+            padding: "15px",
+            borderRadius: "8px",
+            margin: "20px 0",
+            textAlign: "center",
+          }}
+        >
           {error}
         </div>
       )}
@@ -280,7 +313,7 @@ export default function IssykKulProducts() {
             </span>
           </div>
 
-      {/* PRODUCTS */}
+          {/* PRODUCTS */}
 
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>

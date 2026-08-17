@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, House } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { getListings } from "@/utils/api";
@@ -51,11 +51,7 @@ export default function SearchMode() {
         };
 
         searchParams.forEach((value, key) => {
-          if (
-            value !== "" &&
-            value !== "null" &&
-            value !== "undefined"
-          ) {
+          if (value !== "" && value !== "null" && value !== "undefined") {
             params[key] = value;
           }
         });
@@ -64,16 +60,14 @@ export default function SearchMode() {
 
         if (!response?.success) {
           throw new Error(
-            response?.message || "Не удалось загрузить объявления"
+            response?.message || "Не удалось загрузить объявления",
           );
         }
 
         setListings(response.data || []);
       } catch (err) {
         console.error("Failed to load listings:", err);
-        setError(
-          err?.message || "Не удалось загрузить объявления"
-        );
+        setError(err?.message || "Не удалось загрузить объявления");
       } finally {
         setLoading(false);
       }
@@ -100,18 +94,11 @@ export default function SearchMode() {
           location.toLowerCase().includes(query);
 
         const matchesCategory =
-          activeCategory === "Все" ||
-          item.type === activeCategory;
+          activeCategory === "Все" || item.type === activeCategory;
 
-        const matchesDeal =
-          dealType === "Все" ||
-          item.dealType === dealType;
+        const matchesDeal = dealType === "Все" || item.dealType === dealType;
 
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesDeal
-        );
+        return matchesSearch && matchesCategory && matchesDeal;
       })
       .sort((a, b) => {
         const priority = {
@@ -123,22 +110,11 @@ export default function SearchMode() {
         const aStatus = a.status ?? "null";
         const bStatus = b.status ?? "null";
 
-        return (
-          (priority[aStatus] ?? 2) -
-          (priority[bStatus] ?? 2)
-        );
+        return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
       });
-  }, [
-    mappedListings,
-    search,
-    activeCategory,
-    dealType,
-  ]);
+  }, [mappedListings, search, activeCategory, dealType]);
 
-  const hasFilters =
-    search ||
-    activeCategory !== "Все" ||
-    dealType !== "Все";
+  const hasFilters = search || activeCategory !== "Все" || dealType !== "Все";
 
   function resetFilters() {
     setSearch("");
@@ -156,6 +132,15 @@ export default function SearchMode() {
 
         <div className={styles.topLine}>
           <div className={styles.titleBlock}>
+            <button
+              type="button"
+              className={styles.homeButton}
+              onClick={() => router.push("/")}
+            >
+              <House size={18} />
+              <span>На главную</span>
+            </button>
+            
             <div className={styles.eyebrow}>
               <span />
               РЕЗУЛЬТАТЫ ПОИСКА
@@ -166,18 +151,16 @@ export default function SearchMode() {
               <span> недвижимость</span>
             </h1>
 
-            <p>
-              Подходящие объявления по вашему запросу
-            </p>
+            <p>Подходящие объявления по вашему запросу</p>
           </div>
 
-          <div className={styles.counter}>
-            <div className={styles.counterNumber}>
-              {filteredListings.length}
-            </div>
+          <div className={styles.topActions}>
+            <div className={styles.counter}>
+              <div className={styles.counterNumber}>
+                {filteredListings.length}
+              </div>
 
-            <div className={styles.counterText}>
-              объявлений
+              <div className={styles.counterText}>объявлений</div>
             </div>
           </div>
         </div>
@@ -186,18 +169,13 @@ export default function SearchMode() {
 
         <section className={styles.searchPanel}>
           <div className={styles.searchBox}>
-            <Search
-              size={20}
-              className={styles.searchIcon}
-            />
+            <Search size={20} className={styles.searchIcon} />
 
             <input
               type="text"
               placeholder="Поиск по названию или адресу..."
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
             />
 
             {search && (
@@ -226,29 +204,18 @@ export default function SearchMode() {
 
         <section className={styles.filters}>
           <div className={styles.filterGroup}>
-            <span className={styles.filterTitle}>
-              Тип недвижимости
-            </span>
+            <span className={styles.filterTitle}>Тип недвижимости</span>
 
             <div className={styles.categories}>
               {categories.map((category) => {
-                const active =
-                  activeCategory === category.value;
+                const active = activeCategory === category.value;
 
                 return (
                   <button
                     key={category.value}
                     type="button"
-                    className={
-                      active
-                        ? styles.categoryActive
-                        : ""
-                    }
-                    onClick={() =>
-                      setActiveCategory(
-                        category.value
-                      )
-                    }
+                    className={active ? styles.categoryActive : ""}
+                    onClick={() => setActiveCategory(category.value)}
                   >
                     {category.label}
                   </button>
@@ -258,27 +225,18 @@ export default function SearchMode() {
           </div>
 
           <div className={styles.filterGroup}>
-            <span className={styles.filterTitle}>
-              Тип сделки
-            </span>
+            <span className={styles.filterTitle}>Тип сделки</span>
 
             <div className={styles.dealTypes}>
               {dealTypes.map(([value, label]) => {
-                const active =
-                  dealType === value;
+                const active = dealType === value;
 
                 return (
                   <button
                     key={value}
                     type="button"
-                    className={
-                      active
-                        ? styles.dealActive
-                        : ""
-                    }
-                    onClick={() =>
-                      setDealType(value)
-                    }
+                    className={active ? styles.dealActive : ""}
+                    onClick={() => setDealType(value)}
                   >
                     {label}
                   </button>
@@ -294,9 +252,7 @@ export default function SearchMode() {
           <div className={styles.resultsTitle}>
             <span>Объявления</span>
 
-            <strong>
-              {filteredListings.length}
-            </strong>
+            <strong>{filteredListings.length}</strong>
           </div>
 
           {hasFilters && (
@@ -319,9 +275,7 @@ export default function SearchMode() {
 
             <span>
               Загружаем объявления
-              <span className={styles.loadingDots}>
-                ...
-              </span>
+              <span className={styles.loadingDots}>...</span>
             </span>
           </div>
         )}
@@ -330,14 +284,10 @@ export default function SearchMode() {
 
         {!loading && error && (
           <div className={styles.error}>
-            <div className={styles.errorMark}>
-              !
-            </div>
+            <div className={styles.errorMark}>!</div>
 
             <div>
-              <strong>
-                Не удалось загрузить объявления
-              </strong>
+              <strong>Не удалось загрузить объявления</strong>
 
               <p>{error}</p>
             </div>
@@ -351,10 +301,7 @@ export default function SearchMode() {
             {filteredListings.length > 0 ? (
               <section className={styles.grid}>
                 {filteredListings.map((item) => (
-                  <ListingCardBlack
-                    key={item.id}
-                    item={item}
-                  />
+                  <ListingCardBlack key={item.id} item={item} />
                 ))}
               </section>
             ) : (
@@ -363,20 +310,14 @@ export default function SearchMode() {
                   <Search size={27} />
                 </div>
 
-                <h2>
-                  Ничего не найдено
-                </h2>
+                <h2>Ничего не найдено</h2>
 
                 <p>
-                  По вашему запросу нет подходящих
-                  объявлений. Попробуйте изменить
-                  параметры поиска.
+                  По вашему запросу нет подходящих объявлений. Попробуйте
+                  изменить параметры поиска.
                 </p>
 
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                >
+                <button type="button" onClick={resetFilters}>
                   Сбросить поиск
                 </button>
               </div>

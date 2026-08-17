@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Search } from "lucide-react";
+import { Heart, Search, House } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
@@ -104,6 +104,7 @@ export default function Favorites() {
 
   useEffect(() => {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
       router.push("/login");
       return;
@@ -132,10 +133,12 @@ export default function Favorites() {
 
   async function removeFavorite(id) {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) return;
 
     try {
       const res = await removeFavoriteApi(token, id);
+
       if (res.success) {
         setFavorites((prev) => prev.filter((item) => item.id !== id));
       } else {
@@ -177,7 +180,15 @@ export default function Favorites() {
       {/* HEADER */}
 
       <header className={styles.header}>
-        <div>
+        <div className={styles.headerMain}>
+          <button
+            type="button"
+            className={styles.homeButton}
+            onClick={() => router.push("/")}
+          >
+            <House size={18} />
+            <span>На главную</span>
+          </button>
           <div className={styles.titleRow}>
             <div className={styles.titleIcon}>
               <Heart fill="currentColor" />
@@ -193,7 +204,9 @@ export default function Favorites() {
 
         <div className={styles.counter}>
           <Heart fill="currentColor" />
+
           <strong>{favorites.length}</strong>
+
           <span>
             {favorites.length === 1
               ? "объявление"
@@ -251,13 +264,52 @@ export default function Favorites() {
       {/* PRODUCTS */}
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "80px 0", color: "#888" }}>
-          <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+        <div
+          style={{
+            textAlign: "center",
+            padding: "80px 0",
+            color: "#888",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              border: "3px solid rgba(255,255,255,0.1)",
+              borderTop: "3px solid #ff3d99",
+              borderRadius: "50%",
+              width: "30px",
+              height: "30px",
+              animation: "spin 1s linear infinite",
+              marginBottom: "15px",
+            }}
+          />
+
           <div>Загрузка избранного...</div>
-          <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+
+          <style>{`
+            @keyframes spin {
+              0% {
+                transform: rotate(0deg);
+              }
+
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+          `}</style>
         </div>
       ) : error ? (
-        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "20px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+        <div
+          style={{
+            color: "#e53e3e",
+            background: "#fed7d7",
+            padding: "15px",
+            borderRadius: "10px",
+            margin: "20px 0",
+            textAlign: "center",
+            border: "1px solid #feb2b2",
+          }}
+        >
           {error}
         </div>
       ) : filteredFavorites.length > 0 ? (

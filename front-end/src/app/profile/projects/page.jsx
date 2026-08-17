@@ -15,14 +15,22 @@ import {
   TrendingUp,
   X,
   Save,
+  HomeIcon,
+  UserRoundArrowLeft,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getMyComplexes, updateComplex as updateComplexApi, deleteComplex as deleteComplexApi } from "@/utils/api";
+import {
+  getMyComplexes,
+  updateComplex as updateComplexApi,
+  deleteComplex as deleteComplexApi,
+} from "@/utils/api";
 
 import styles from "./ResidentialComplexes.module.css";
 import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
+import { ImProfile } from "react-icons/im";
+import { RiProfileFill } from "react-icons/ri";
 
 const initialComplexes = [
   {
@@ -131,8 +139,10 @@ export default function ResidentialComplexes() {
           const mapped = res.data.map((item) => {
             const compl = item;
             let completion_status = "Строительство";
-            if (compl.completion_status === "planning") completion_status = "Проект";
-            if (compl.completion_status === "completed") completion_status = "Сдан";
+            if (compl.completion_status === "planning")
+              completion_status = "Проект";
+            if (compl.completion_status === "completed")
+              completion_status = "Сдан";
 
             return {
               id: compl.id,
@@ -146,7 +156,9 @@ export default function ResidentialComplexes() {
               apartments: compl.features?.apartments || 0,
               parking: compl.features?.parking || 0,
               area: compl.features?.area ? `${compl.features.area} м²` : "0 м²",
-              image: compl.cover_photo || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
+              image:
+                compl.cover_photo ||
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
               amenities: compl.features?.amenities || [],
             };
           });
@@ -232,7 +244,9 @@ export default function ResidentialComplexes() {
       const res = await deleteComplexApi(token, deleteComplex.id);
       if (!res.success) throw new Error(res.message || "Ошибка удаления");
 
-      setComplexes((prev) => prev.filter((item) => item.id !== deleteComplex.id));
+      setComplexes((prev) =>
+        prev.filter((item) => item.id !== deleteComplex.id),
+      );
     } catch (err) {
       alert(err.message || "Не удалось удалить жилой комплекс");
     } finally {
@@ -353,7 +367,7 @@ export default function ResidentialComplexes() {
       };
 
       setComplexes((prev) =>
-        prev.map((item) => (item.id === editComplex.id ? updated : item))
+        prev.map((item) => (item.id === editComplex.id ? updated : item)),
       );
       setEditComplex(null);
     } catch (err) {
@@ -370,10 +384,21 @@ export default function ResidentialComplexes() {
 
         <header className={styles.header}>
           <div className={styles.headerText}>
-            <span className={styles.eyebrow}>
-              <Building2 />
-              Кабинет застройщика
-            </span>
+            <div className={styles.btns}>
+              <button
+                type="button"
+                className={styles.homeButton}
+                onClick={() => router.push("/profile")}
+              >
+                <UserRoundArrowLeft size={18} />
+                В профиль
+              </button>
+
+              <span className={styles.eyebrow}>
+                <Building2 />
+                Кабинет застройщика
+              </span>
+            </div>
 
             <h1>Мои жилые комплексы</h1>
 
@@ -383,14 +408,16 @@ export default function ResidentialComplexes() {
             </p>
           </div>
 
-          <button
-            type="button"
-            className={styles.addButton}
-            onClick={() => router.push("/add-residential-complex")}
-          >
-            <Plus />
-            Добавить ЖК
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.addButton}
+              onClick={() => router.push("/add-residential-complex")}
+            >
+              <Plus size={19} />
+              Добавить ЖК
+            </button>
+          </div>
         </header>
 
         {/* =========================================================
@@ -479,13 +506,41 @@ export default function ResidentialComplexes() {
         ========================================================= */}
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "#888", fontSize: "16px" }}>
-            <span style={{ display: "inline-block", border: "3px solid rgba(255,255,255,0.1)", borderTop: "3px solid #ff3d99", borderRadius: "50%", width: "30px", height: "30px", animation: "spin 1s linear infinite", marginBottom: "15px" }} />
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px 0",
+              color: "#888",
+              fontSize: "16px",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                border: "3px solid rgba(255,255,255,0.1)",
+                borderTop: "3px solid #ff3d99",
+                borderRadius: "50%",
+                width: "30px",
+                height: "30px",
+                animation: "spin 1s linear infinite",
+                marginBottom: "15px",
+              }}
+            />
             <div>Загрузка ваших жилых комплексов...</div>
             <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
           </div>
         ) : error ? (
-          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "15px", borderRadius: "10px", margin: "20px 0", textAlign: "center", border: "1px solid #feb2b2" }}>
+          <div
+            style={{
+              color: "#e53e3e",
+              background: "#fed7d7",
+              padding: "15px",
+              borderRadius: "10px",
+              margin: "20px 0",
+              textAlign: "center",
+              border: "1px solid #feb2b2",
+            }}
+          >
             {error}
           </div>
         ) : filteredComplexes.length > 0 ? (
