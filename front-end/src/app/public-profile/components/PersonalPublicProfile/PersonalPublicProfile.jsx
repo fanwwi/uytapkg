@@ -2,13 +2,26 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Building2,
+  Home,
+  MessageCircle,
+  Phone,
+  User,
+} from "lucide-react";
 
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./PersonalPublicProfile.module.css";
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
-export default function PersonalPublicProfile({ user, favIds = new Set(), onFavoriteClick }) {
+export default function PersonalPublicProfile({
+  user,
+  favIds = new Set(),
+  onFavoriteClick,
+}) {
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -25,6 +38,7 @@ export default function PersonalPublicProfile({ user, favIds = new Set(), onFavo
     "Пользователь";
 
   const phone = user.phone || "";
+
   const whatsappNumber = phone.replace(/\D/g, "");
 
   const role =
@@ -32,88 +46,147 @@ export default function PersonalPublicProfile({ user, favIds = new Set(), onFavo
 
   const profileType = getProfileType(role);
 
-  const userId = user.id || user.user_id;
   const ads = user.ads || [];
 
   return (
     <main className={styles.page}>
-      <div className={styles.topBar}>
-        <Link href="/" className={styles.homeButton}>
-          ← <span>На главную</span>
+      <div className={styles.backgroundGlow} />
+
+      <div className={styles.container}>
+        <Link href="/" className={styles.backButton}>
+          <ArrowLeft size={17} />
+          <span>На главную</span>
         </Link>
-      </div>
 
-      <motion.section
-        className={styles.profileCard}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-      >
-        <div className={styles.topGlow} />
+        {/* PROFILE */}
 
-        <div className={styles.avatarWrapper}>
-          <div className={styles.avatar}>
-            {avatarUrl ? (
-              <img src={avatarUrl} alt={fullName} />
-            ) : (
-              <span>👤</span>
-            )}
-          </div>
-        </div>
+        <motion.section
+          className={styles.profileCard}
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.45,
+            ease: "easeOut",
+          }}
+        >
+          <div className={styles.profileAccent} />
 
-        <div className={styles.info}>
-          <h1>{fullName}</h1>
+          <div className={styles.profileTop}>
+            <div className={styles.avatarWrapper}>
+              <div className={styles.avatar}>
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt={fullName} />
+                ) : (
+                  <User size={48} />
+                )}
+              </div>
+            </div>
 
-          <span className={styles.type}>{profileType.label}</span>
-
-          {phone && (
-            <div className={styles.contacts}>
-              <div className={styles.phone}>
-                ☎ <span>{phone}</span>
+            <div className={styles.profileInfo}>
+              <div className={styles.badge}>
+                {profileType.icon}
+                {profileType.label}
               </div>
 
-              {whatsappNumber && (
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.whatsapp}
-                >
-                  WhatsApp ↗
-                </a>
+              <h1>{fullName}</h1>
+
+              <div className={styles.profileRole}>
+                <span>{profileType.aboutTitle}</span>
+              </div>
+
+              {phone && (
+                <div className={styles.contacts}>
+                  <div className={styles.phone}>
+                    <Phone size={17} />
+                    <span>{phone}</span>
+                  </div>
+
+                  {whatsappNumber && (
+                    <a
+                      href={`https://wa.me/${whatsappNumber}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.whatsapp}
+                    >
+                      <MessageCircle size={17} />
+                      <span>WhatsApp</span>
+                      <ArrowUpRight size={14} />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
+          </div>
+        </motion.section>
+
+        {/* ABOUT */}
+
+        <motion.section
+          className={styles.aboutCard}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.45,
+            delay: 0.08,
+          }}
+        >
+          <div className={styles.aboutHeader}>
+            <span className={styles.aboutEyebrow}>Профиль</span>
+
+            <h2>{profileType.aboutTitle}</h2>
+          </div>
+
+          <p>{profile.about || profileType.defaultAbout}</p>
+        </motion.section>
+
+        {/* LISTINGS */}
+
+        <motion.section
+          className={styles.listingsSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.45,
+            delay: 0.14,
+          }}
+        >
+          <div className={styles.sectionHeader}>
+            <div>
+              <span className={styles.sectionEyebrow}>Недвижимость</span>
+
+              <h2>{profileType.adsDescription}</h2>
+            </div>
+
+            <span className={styles.count}>{ads.length}</span>
+          </div>
+
+          {ads.length > 0 ? (
+            <div className={styles.listingGrid}>
+              {ads.map((item) => (
+                <ListingCardBlack
+                  key={item.id}
+                  item={mapListingData(item)}
+                  isFavorite={favIds.has(item.id)}
+                  onFavoriteClick={onFavoriteClick}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <Home size={25} />
+              </div>
+
+              <h3>Пока нет объявлений</h3>
+
+              <p>
+                У пользователя пока нет активных объявлений о продаже
+                недвижимости.
+              </p>
+            </div>
           )}
-        </div>
-      </motion.section>
-
-      <section className={styles.about}>
-        <h3>{profileType.aboutTitle}</h3>
-
-        <p>{profile.about || profileType.defaultAbout}</p>
-      </section>
-
-      <section className={styles.listingsSection} style={{ maxWidth: "1200px", margin: "40px auto 0", padding: "0 20px", width: "100%" }}>
-        <h2 style={{ fontSize: "22px", fontWeight: "600", marginBottom: "20px", color: "#fff" }}>
-          Объявления пользователя ({ads.length})
-        </h2>
-        {ads.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", width: "100%" }}>
-            {ads.map((item) => (
-              <ListingCard
-                key={item.id}
-                item={mapListingData(item)}
-                isFavorite={favIds.has(item.id)}
-                onFavoriteClick={onFavoriteClick}
-              />
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: "center", padding: "40px", color: "#a0aec0", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px dashed rgba(255,255,255,0.15)" }}>
-            У пользователя пока нет активных объявлений.
-          </div>
-        )}
-      </section>
+        </motion.section>
+      </div>
     </main>
   );
 }
@@ -131,6 +204,7 @@ function getProfileType(role) {
       aboutTitle: "О компании",
       defaultAbout: "Застройщик пока не добавил описание.",
       adsDescription: "Объекты и предложения застройщика",
+      icon: <Building2 size={14} />,
     };
   }
 
@@ -144,6 +218,7 @@ function getProfileType(role) {
       aboutTitle: "Об агентстве",
       defaultAbout: "Агентство пока не добавило описание.",
       adsDescription: "Объекты агентства",
+      icon: <Building2 size={14} />,
     };
   }
 
@@ -157,6 +232,7 @@ function getProfileType(role) {
       aboutTitle: "О риэлторе",
       defaultAbout: "Риэлтор пока не добавил описание.",
       adsDescription: "Объекты риэлтора",
+      icon: <User size={14} />,
     };
   }
 
@@ -165,5 +241,6 @@ function getProfileType(role) {
     aboutTitle: "О себе",
     defaultAbout: "Пользователь пока не добавил описание.",
     adsDescription: "Объявления пользователя",
+    icon: <User size={14} />,
   };
 }

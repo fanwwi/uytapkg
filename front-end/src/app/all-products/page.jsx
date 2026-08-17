@@ -38,7 +38,7 @@ export default function AllProducts() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
-  
+
   // Advanced filters states
   const [city, setCity] = useState("Все");
   const [rooms, setRooms] = useState("Все");
@@ -215,89 +215,118 @@ export default function AllProducts() {
   const filteredListings = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    return (
-      mappedListings
-        .filter((item) => {
-          // 1. Поиск по тексту
-          const title = String(item.title || "").toLowerCase();
-          const location = String(item.location || "").toLowerCase();
-          const address = String(item.address || "").toLowerCase();
-          const description = String(item.description || "").toLowerCase();
+    return mappedListings
+      .filter((item) => {
+        // 1. Поиск по тексту
+        const title = String(item.title || "").toLowerCase();
+        const location = String(item.location || "").toLowerCase();
+        const address = String(item.address || "").toLowerCase();
+        const description = String(item.description || "").toLowerCase();
 
-          const matchesSearch =
-            !query ||
-            title.includes(query) ||
-            location.includes(query) ||
-            address.includes(query) ||
-            description.includes(query);
+        const matchesSearch =
+          !query ||
+          title.includes(query) ||
+          location.includes(query) ||
+          address.includes(query) ||
+          description.includes(query);
 
-          // 2. Тип недвижимости
-          const itemType = String(item.type || "").trim().toLowerCase();
-          const selectedType = String(activeCategory || "").trim().toLowerCase();
-          const matchesCategory = activeCategory === "Все" || itemType === selectedType;
+        // 2. Тип недвижимости
+        const itemType = String(item.type || "")
+          .trim()
+          .toLowerCase();
+        const selectedType = String(activeCategory || "")
+          .trim()
+          .toLowerCase();
+        const matchesCategory =
+          activeCategory === "Все" || itemType === selectedType;
 
-          // 3. Тип сделки
-          const itemDeal = String(item.dealType || "").trim().toLowerCase();
-          const selectedDeal = String(dealType || "").trim().toLowerCase();
-          const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
+        // 3. Тип сделки
+        const itemDeal = String(item.dealType || "")
+          .trim()
+          .toLowerCase();
+        const selectedDeal = String(dealType || "")
+          .trim()
+          .toLowerCase();
+        const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
 
-          // 4. Город / регион
-          const matchesCity = (() => {
-            if (city === "Все") return true;
-            const itemLocLower = String(item.location || "").toLowerCase();
-            const itemRegLower = String(item.region || "").toLowerCase();
-            const selectedCityLower = String(city).toLowerCase();
-            
-            if (selectedCityLower === "иссык-куль") {
-              return (
-                itemLocLower.includes("куль") ||
-                itemLocLower.includes("каракол") ||
-                itemLocLower.includes("чолпон") ||
-                itemRegLower.includes("issykkul") ||
-                itemRegLower.includes("issyk_kul")
-              );
-            }
-            return itemLocLower.includes(selectedCityLower) || itemRegLower.includes(selectedCityLower);
-          })();
+        // 4. Город / регион
+        const matchesCity = (() => {
+          if (city === "Все") return true;
+          const itemLocLower = String(item.location || "").toLowerCase();
+          const itemRegLower = String(item.region || "").toLowerCase();
+          const selectedCityLower = String(city).toLowerCase();
 
-          // 5. Комнаты
-          const matchesRooms = (() => {
-            if (rooms === "Все") return true;
-            const itemRooms = Number(item.rooms);
-            if (rooms === "4+") return itemRooms >= 4;
-            return itemRooms === Number(rooms);
-          })();
+          if (selectedCityLower === "иссык-куль") {
+            return (
+              itemLocLower.includes("куль") ||
+              itemLocLower.includes("каракол") ||
+              itemLocLower.includes("чолпон") ||
+              itemRegLower.includes("issykkul") ||
+              itemRegLower.includes("issyk_kul")
+            );
+          }
+          return (
+            itemLocLower.includes(selectedCityLower) ||
+            itemRegLower.includes(selectedCityLower)
+          );
+        })();
 
-          // 6. Диапазон цен
-          const matchesPrice = (() => {
-            const min = priceFrom ? Number(priceFrom) : null;
-            const max = priceTo ? Number(priceTo) : null;
-            const priceVal = Number(item.rawPrice);
-            if (min !== null && priceVal < min) return false;
-            if (max !== null && priceVal > max) return false;
-            return true;
-          })();
+        // 5. Комнаты
+        const matchesRooms = (() => {
+          if (rooms === "Все") return true;
+          const itemRooms = Number(item.rooms);
+          if (rooms === "4+") return itemRooms >= 4;
+          return itemRooms === Number(rooms);
+        })();
 
-          // 7. Диапазон площади
-          const matchesArea = (() => {
-            const min = areaFrom ? Number(areaFrom) : null;
-            const max = areaTo ? Number(areaTo) : null;
-            const areaVal = Number(item.rawArea);
-            if (min !== null && areaVal < min) return false;
-            if (max !== null && areaVal > max) return false;
-            return true;
-          })();
+        // 6. Диапазон цен
+        const matchesPrice = (() => {
+          const min = priceFrom ? Number(priceFrom) : null;
+          const max = priceTo ? Number(priceTo) : null;
+          const priceVal = Number(item.rawPrice);
+          if (min !== null && priceVal < min) return false;
+          if (max !== null && priceVal > max) return false;
+          return true;
+        })();
 
-          return matchesSearch && matchesCategory && matchesDeal && matchesCity && matchesRooms && matchesPrice && matchesArea;
-        })
-        .sort((a, b) => {
-          const priority = { vip: 0, urgent: 1, null: 2 };
-          const aStatus = a.status ?? "null";
-          const bStatus = b.status ?? "null";
-          return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
-        })
-    );
-  }, [mappedListings, search, activeCategory, dealType, city, rooms, priceFrom, priceTo, areaFrom, areaTo]);
+        // 7. Диапазон площади
+        const matchesArea = (() => {
+          const min = areaFrom ? Number(areaFrom) : null;
+          const max = areaTo ? Number(areaTo) : null;
+          const areaVal = Number(item.rawArea);
+          if (min !== null && areaVal < min) return false;
+          if (max !== null && areaVal > max) return false;
+          return true;
+        })();
+
+        return (
+          matchesSearch &&
+          matchesCategory &&
+          matchesDeal &&
+          matchesCity &&
+          matchesRooms &&
+          matchesPrice &&
+          matchesArea
+        );
+      })
+      .sort((a, b) => {
+        const priority = { vip: 0, urgent: 1, null: 2 };
+        const aStatus = a.status ?? "null";
+        const bStatus = b.status ?? "null";
+        return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
+      });
+  }, [
+    mappedListings,
+    search,
+    activeCategory,
+    dealType,
+    city,
+    rooms,
+    priceFrom,
+    priceTo,
+    areaFrom,
+    areaTo,
+  ]);
 
   function resetFilters() {
     setSearch("");
@@ -421,14 +450,44 @@ export default function AllProducts() {
 
         {/* ADVANCED FILTERS */}
         <section className={styles.filterSection} style={{ marginTop: "20px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px", background: "rgba(255,255,255,0.02)", padding: "20px", borderRadius: "16px", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "20px",
+              background: "rgba(255,255,255,0.02)",
+              padding: "20px",
+              borderRadius: "16px",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
             {/* CITY */}
             <div>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "12px", fontWeight: "800", color: "#a0aec0", textTransform: "uppercase" }}>Город / Регион</label>
-              <select 
-                value={city} 
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  color: "#a0aec0",
+                  textTransform: "uppercase",
+                }}
+              >
+                Город / Регион
+              </label>
+              <select
+                value={city}
                 onChange={(e) => setCity(e.target.value)}
-                style={{ width: "100%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none", cursor: "pointer" }}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  background: "#1a202c",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  outline: "none",
+                  cursor: "pointer",
+                }}
               >
                 <option value="Все">Все города</option>
                 <option value="Бишкек">Бишкек</option>
@@ -440,11 +499,31 @@ export default function AllProducts() {
 
             {/* ROOMS */}
             <div>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "12px", fontWeight: "800", color: "#a0aec0", textTransform: "uppercase" }}>Комнаты</label>
-              <select 
-                value={rooms} 
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  color: "#a0aec0",
+                  textTransform: "uppercase",
+                }}
+              >
+                Комнаты
+              </label>
+              <select
+                value={rooms}
                 onChange={(e) => setRooms(e.target.value)}
-                style={{ width: "100%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none", cursor: "pointer" }}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  background: "#1a202c",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  outline: "none",
+                  cursor: "pointer",
+                }}
               >
                 <option value="Все">Любое число</option>
                 <option value="1">1 комната</option>
@@ -456,42 +535,96 @@ export default function AllProducts() {
 
             {/* PRICE RANGE */}
             <div>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "12px", fontWeight: "800", color: "#a0aec0", textTransform: "uppercase" }}>Цена ($)</label>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  color: "#a0aec0",
+                  textTransform: "uppercase",
+                }}
+              >
+                Цена ($)
+              </label>
               <div style={{ display: "flex", gap: "8px" }}>
-                <input 
-                  type="number" 
-                  placeholder="от" 
-                  value={priceFrom} 
+                <input
+                  type="number"
+                  placeholder="от"
+                  value={priceFrom}
                   onChange={(e) => setPriceFrom(e.target.value)}
-                  style={{ width: "50%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none" }}
+                  style={{
+                    width: "50%",
+                    padding: "12px",
+                    borderRadius: "10px",
+                    background: "#1a202c",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    color: "#fff",
+                    outline: "none",
+                  }}
                 />
-                <input 
-                  type="number" 
-                  placeholder="до" 
-                  value={priceTo} 
+                <input
+                  type="number"
+                  placeholder="до"
+                  value={priceTo}
                   onChange={(e) => setPriceTo(e.target.value)}
-                  style={{ width: "50%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none" }}
+                  style={{
+                    width: "50%",
+                    padding: "12px",
+                    borderRadius: "10px",
+                    background: "#1a202c",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    color: "#fff",
+                    outline: "none",
+                  }}
                 />
               </div>
             </div>
 
             {/* AREA RANGE */}
             <div>
-              <label style={{ display: "block", marginBottom: "8px", fontSize: "12px", fontWeight: "800", color: "#a0aec0", textTransform: "uppercase" }}>Площадь (м²)</label>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  color: "#a0aec0",
+                  textTransform: "uppercase",
+                }}
+              >
+                Площадь (м²)
+              </label>
               <div style={{ display: "flex", gap: "8px" }}>
-                <input 
-                  type="number" 
-                  placeholder="от" 
-                  value={areaFrom} 
+                <input
+                  type="number"
+                  placeholder="от"
+                  value={areaFrom}
                   onChange={(e) => setAreaFrom(e.target.value)}
-                  style={{ width: "50%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none" }}
+                  style={{
+                    width: "50%",
+                    padding: "12px",
+                    borderRadius: "10px",
+                    background: "#1a202c",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    color: "#fff",
+                    outline: "none",
+                  }}
                 />
-                <input 
-                  type="number" 
-                  placeholder="до" 
-                  value={areaTo} 
+                <input
+                  type="number"
+                  placeholder="до"
+                  value={areaTo}
                   onChange={(e) => setAreaTo(e.target.value)}
-                  style={{ width: "50%", padding: "12px", borderRadius: "10px", background: "#1a202c", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none" }}
+                  style={{
+                    width: "50%",
+                    padding: "12px",
+                    borderRadius: "10px",
+                    background: "#1a202c",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    color: "#fff",
+                    outline: "none",
+                  }}
                 />
               </div>
             </div>
@@ -547,7 +680,10 @@ export default function AllProducts() {
             <div className={styles.empty}>
               <Search size={42} />
               <h2>Ничего не найдено</h2>
-              <p>По вашему запросу нет подходящих объявлений. Попробуйте изменить параметры поиска.</p>
+              <p>
+                По вашему запросу нет подходящих объявлений. Попробуйте изменить
+                параметры поиска.
+              </p>
               {hasFilters && (
                 <button type="button" onClick={resetFilters}>
                   Сбросить фильтры
