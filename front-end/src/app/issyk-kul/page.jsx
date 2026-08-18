@@ -271,50 +271,6 @@ export default function IssykKul() {
         </div>
       </section>
 
-      {/* LOCATIONS */}
-
-      <section className={styles.section}>
-        <div className={styles.sectionHeading}>
-          <span>ЛОКАЦИИ</span>
-          <h2>Популярные районы</h2>
-
-          <p>
-            Выбирайте район в зависимости от атмосферы, инфраструктуры, близости
-            к озеру и инвестиционной цели.
-          </p>
-        </div>
-
-        <div className={styles.locationsGrid}>
-          {locations.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <button
-                type="button"
-                className={styles.locationCard}
-                key={item.title}
-                onClick={() => router.push("/all-issykkul-products")}
-              >
-                <div className={styles.locationImage}>
-                  <div className={styles.locationOverlay} />
-
-                  <div className={styles.locationIcon}>
-                    <Icon size={23} />
-                  </div>
-
-                  <div className={styles.locationInfo}>
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                  </div>
-
-                  <ArrowRight className={styles.locationArrow} />
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
       {/* INVESTMENT */}
 
       <section className={styles.investment}>

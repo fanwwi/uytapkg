@@ -9,10 +9,10 @@ import {
   addFavorite,
   removeFavorite,
 } from "@/utils/api";
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 export default function IssykKulProducts() {
   const router = useRouter();
@@ -264,7 +264,7 @@ export default function IssykKulProducts() {
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
-                <ListingCard
+                <ListingCardBlack
                   key={item.id}
                   item={item}
                   isFavorite={favIds.has(item.id)}

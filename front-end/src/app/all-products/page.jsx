@@ -1,18 +1,29 @@
 "use client";
 
-import { SlidersHorizontal, Search, X, Home } from "lucide-react";
+import {
+  SlidersHorizontal,
+  Search,
+  X,
+  Home,
+  MapPin,
+  Building2,
+  DoorOpen,
+} from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   getListings,
   getFavorites,
   addFavorite,
   removeFavorite,
 } from "@/utils/api";
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
+
+import CustomSelectBlack from "@/components/ui/CustomSelectBlack/CustomSelectBlack";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AllProducts.module.css";
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 const categories = [
   { value: "Все", label: "Все" },
@@ -31,6 +42,10 @@ const dealTypes = [
   { value: "Сниму в аренду", label: "Сниму в аренду" },
 ];
 
+const cityOptions = ["Все", "Бишкек", "Ош", "Иссык-Куль", "Турция"];
+
+const roomOptions = ["Все", "1", "2", "3", "4+"];
+
 export default function AllProducts() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,111 +54,139 @@ export default function AllProducts() {
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
 
-  // Advanced filters states
   const [city, setCity] = useState("Все");
   const [rooms, setRooms] = useState("Все");
+
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
+
   const [areaFrom, setAreaFrom] = useState("");
   const [areaTo, setAreaTo] = useState("");
 
   const [listingsList, setListingsList] = useState([]);
   const [favIds, setFavIds] = useState(new Set());
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  /*
+   * =========================
+   * URL → FILTERS
+   * =========================
+   */
+
   useEffect(() => {
-    let cancelled = false;
-
-    const token = localStorage.getItem("uytap_token");
-    if (token) {
-      getFavorites(token)
-        .then((res) => {
-          if (res.success && res.data) {
-            setFavIds(new Set(res.data.map((l) => l.id)));
-          }
-        })
-        .catch((err) => console.error("Error loading favs:", err));
-    }
-
-    // Sync URL parameters with UI tabs & inputs
     const urlCategory = searchParams.get("category");
-    if (urlCategory) {
-      const categoryMapping = {
-        house: "Дом",
-        apartment: "Квартира",
-        cottage: "Коттедж",
-        land: "Участок",
-        commercial: "Коммерция",
-        garage: "Паркинг/гараж",
-        room: "Комнаты",
-      };
-      setActiveCategory(categoryMapping[urlCategory] || urlCategory);
-    } else {
-      setActiveCategory("Все");
-    }
+
+    const categoryMapping = {
+      house: "Дом",
+      apartment: "Квартира",
+      cottage: "Коттедж",
+      land: "Участок",
+      commercial: "Коммерция",
+      garage: "Паркинг/гараж",
+      room: "Комнаты",
+    };
+
+    setActiveCategory(
+      urlCategory ? categoryMapping[urlCategory] || urlCategory : "Все",
+    );
 
     const urlDeal = searchParams.get("dealType");
-    if (urlDeal) {
-      const dealMapping = {
-        sale: "Продажа",
-        rent: "Сниму в аренду",
-      };
-      setDealType(dealMapping[urlDeal] || urlDeal);
-    }
+
+    const dealMapping = {
+      sale: "Продажа",
+      rent: "Сниму в аренду",
+    };
+
+    setDealType(urlDeal ? dealMapping[urlDeal] || urlDeal : "Все");
 
     const urlSearch = searchParams.get("search");
-    if (urlSearch) setSearch(urlSearch);
+    setSearch(urlSearch || "");
 
     const urlCity = searchParams.get("city");
     const urlRegion = searchParams.get("region");
+
     if (urlCity) {
       setCity(urlCity);
     } else if (urlRegion) {
-      if (urlRegion === "BISHKEK" || urlRegion === "bishkek") {
+      const normalizedRegion = urlRegion.toLowerCase();
+
+      if (
+        normalizedRegion === "bishkek" ||
+        normalizedRegion === "BISHKEK".toLowerCase()
+      ) {
         setCity("Бишкек");
-      } else if (urlRegion === "ISSYK_KUL" || urlRegion === "issyk_kul") {
+      } else if (
+        normalizedRegion === "issyk_kul" ||
+        normalizedRegion === "issyk-kul"
+      ) {
         setCity("Иссык-Куль");
-      } else if (urlRegion === "OSH" || urlRegion === "osh") {
+      } else if (normalizedRegion === "osh") {
         setCity("Ош");
       } else {
         setCity(urlRegion);
       }
+    } else {
+      setCity("Все");
     }
 
     const urlRooms = searchParams.get("rooms");
-    if (urlRooms) setRooms(urlRooms);
+    setRooms(urlRooms || "Все");
 
-    const urlPriceFrom = searchParams.get("priceFrom");
-    if (urlPriceFrom) setPriceFrom(urlPriceFrom);
+    setPriceFrom(searchParams.get("priceFrom") || "");
+    setPriceTo(searchParams.get("priceTo") || "");
 
-    const urlPriceTo = searchParams.get("priceTo");
-    if (urlPriceTo) setPriceTo(urlPriceTo);
+    setAreaFrom(searchParams.get("areaFrom") || "");
+    setAreaTo(searchParams.get("areaTo") || "");
+  }, [searchParams]);
 
-    const urlAreaFrom = searchParams.get("areaFrom");
-    if (urlAreaFrom) setAreaFrom(urlAreaFrom);
+  /*
+   * =========================
+   * LOAD DATA
+   * =========================
+   */
 
-    const urlAreaTo = searchParams.get("areaTo");
-    if (urlAreaTo) setAreaTo(urlAreaTo);
+  useEffect(() => {
+    let cancelled = false;
 
-    async function loadListings() {
+    async function loadData() {
       try {
         setLoading(true);
         setError("");
 
-        const response = await getListings({
-          page: 1,
-          limit: 100,
-        });
+        const token = localStorage.getItem("uytap_token");
 
-        if (!response?.success) {
+        const [listingsResponse, favoritesResponse] = await Promise.all([
+          getListings({
+            page: 1,
+            limit: 100,
+          }),
+
+          token ? getFavorites(token) : Promise.resolve(null),
+        ]);
+
+        if (cancelled) return;
+
+        if (!listingsResponse?.success) {
           throw new Error(
-            response?.message || "Не удалось загрузить объявления",
+            listingsResponse?.message || "Не удалось загрузить объявления",
           );
         }
 
-        if (!cancelled) {
-          setListingsList(Array.isArray(response.data) ? response.data : []);
+        setListingsList(
+          Array.isArray(listingsResponse.data) ? listingsResponse.data : [],
+        );
+
+        if (
+          favoritesResponse?.success &&
+          Array.isArray(favoritesResponse.data)
+        ) {
+          setFavIds(
+            new Set(favoritesResponse.data.map((item) => String(item.id))),
+          );
+        } else {
+          setFavIds(new Set());
         }
       } catch (err) {
         console.error("Failed to load listings:", err);
@@ -159,50 +202,68 @@ export default function AllProducts() {
       }
     }
 
-    loadListings();
+    loadData();
 
     return () => {
       cancelled = true;
     };
-  }, [searchParams]);
+  }, []);
+
+  /*
+   * =========================
+   * MAP DATA
+   * =========================
+   */
 
   const mappedListings = useMemo(() => {
     return listingsList
       .map((item) => {
         try {
           return mapListingData(item);
-        } catch (error) {
-          console.error("Ошибка преобразования объявления:", item, error);
+        } catch (err) {
+          console.error("Ошибка преобразования объявления:", item, err);
+
           return null;
         }
       })
       .filter(Boolean);
   }, [listingsList]);
 
+  /*
+   * =========================
+   * FAVORITES
+   * =========================
+   */
+
   const handleFavoriteClick = async (clickedItem) => {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
       router.push("/login");
       return;
     }
 
-    const isFav = favIds.has(clickedItem.id);
+    const id = String(clickedItem.id);
+    const isFavorite = favIds.has(id);
+
     try {
-      if (isFav) {
-        const res = await removeFavorite(token, clickedItem.id);
-        if (res.success) {
+      if (isFavorite) {
+        const response = await removeFavorite(token, id);
+
+        if (response?.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
-            next.delete(clickedItem.id);
+            next.delete(id);
             return next;
           });
         }
       } else {
-        const res = await addFavorite(token, clickedItem.id);
-        if (res.success) {
+        const response = await addFavorite(token, id);
+
+        if (response?.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
-            next.add(clickedItem.id);
+            next.add(id);
             return next;
           });
         }
@@ -212,15 +273,27 @@ export default function AllProducts() {
     }
   };
 
+  /*
+   * =========================
+   * FILTERING
+   * =========================
+   */
+
   const filteredListings = useMemo(() => {
     const query = search.trim().toLowerCase();
 
     return mappedListings
       .filter((item) => {
-        // 1. Поиск по тексту
+        /*
+         * SEARCH
+         */
+
         const title = String(item.title || "").toLowerCase();
+
         const location = String(item.location || "").toLowerCase();
+
         const address = String(item.address || "").toLowerCase();
+
         const description = String(item.description || "").toLowerCase();
 
         const matchesSearch =
@@ -230,72 +303,125 @@ export default function AllProducts() {
           address.includes(query) ||
           description.includes(query);
 
-        // 2. Тип недвижимости
+        /*
+         * CATEGORY
+         */
+
         const itemType = String(item.type || "")
           .trim()
           .toLowerCase();
+
         const selectedType = String(activeCategory || "")
           .trim()
           .toLowerCase();
+
         const matchesCategory =
           activeCategory === "Все" || itemType === selectedType;
 
-        // 3. Тип сделки
+        /*
+         * DEAL
+         */
+
         const itemDeal = String(item.dealType || "")
           .trim()
           .toLowerCase();
+
         const selectedDeal = String(dealType || "")
           .trim()
           .toLowerCase();
+
         const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
 
-        // 4. Город / регион
-        const matchesCity = (() => {
-          if (city === "Все") return true;
-          const itemLocLower = String(item.location || "").toLowerCase();
-          const itemRegLower = String(item.region || "").toLowerCase();
-          const selectedCityLower = String(city).toLowerCase();
+        /*
+         * CITY
+         */
 
-          if (selectedCityLower === "иссык-куль") {
+        const matchesCity = (() => {
+          if (city === "Все") {
+            return true;
+          }
+
+          const itemLocation = String(item.location || "").toLowerCase();
+
+          const itemRegion = String(item.region || "").toLowerCase();
+
+          const selectedCity = String(city).toLowerCase();
+
+          if (selectedCity === "иссык-куль") {
             return (
-              itemLocLower.includes("куль") ||
-              itemLocLower.includes("каракол") ||
-              itemLocLower.includes("чолпон") ||
-              itemRegLower.includes("issykkul") ||
-              itemRegLower.includes("issyk_kul")
+              itemLocation.includes("куль") ||
+              itemLocation.includes("каракол") ||
+              itemLocation.includes("чолпон") ||
+              itemRegion.includes("issyk") ||
+              itemRegion.includes("issykkul")
             );
           }
+
           return (
-            itemLocLower.includes(selectedCityLower) ||
-            itemRegLower.includes(selectedCityLower)
+            itemLocation.includes(selectedCity) ||
+            itemRegion.includes(selectedCity)
           );
         })();
 
-        // 5. Комнаты
+        /*
+         * ROOMS
+         */
+
         const matchesRooms = (() => {
-          if (rooms === "Все") return true;
+          if (rooms === "Все") {
+            return true;
+          }
+
           const itemRooms = Number(item.rooms);
-          if (rooms === "4+") return itemRooms >= 4;
+
+          if (rooms === "4+") {
+            return itemRooms >= 4;
+          }
+
           return itemRooms === Number(rooms);
         })();
 
-        // 6. Диапазон цен
+        /*
+         * PRICE
+         */
+
         const matchesPrice = (() => {
           const min = priceFrom ? Number(priceFrom) : null;
+
           const max = priceTo ? Number(priceTo) : null;
-          const priceVal = Number(item.rawPrice);
-          if (min !== null && priceVal < min) return false;
-          if (max !== null && priceVal > max) return false;
+
+          const price = Number(item.rawPrice);
+
+          if (min !== null && !Number.isNaN(min) && price < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && price > max) {
+            return false;
+          }
+
           return true;
         })();
 
-        // 7. Диапазон площади
+        /*
+         * AREA
+         */
+
         const matchesArea = (() => {
           const min = areaFrom ? Number(areaFrom) : null;
+
           const max = areaTo ? Number(areaTo) : null;
-          const areaVal = Number(item.rawArea);
-          if (min !== null && areaVal < min) return false;
-          if (max !== null && areaVal > max) return false;
+
+          const area = Number(item.rawArea);
+
+          if (min !== null && !Number.isNaN(min) && area < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && area > max) {
+            return false;
+          }
+
           return true;
         })();
 
@@ -310,9 +436,16 @@ export default function AllProducts() {
         );
       })
       .sort((a, b) => {
-        const priority = { vip: 0, urgent: 1, null: 2 };
+        const priority = {
+          vip: 0,
+          urgent: 1,
+          null: 2,
+        };
+
         const aStatus = a.status ?? "null";
+
         const bStatus = b.status ?? "null";
+
         return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
       });
   }, [
@@ -328,7 +461,13 @@ export default function AllProducts() {
     areaTo,
   ]);
 
-  function resetFilters() {
+  /*
+   * =========================
+   * RESET
+   * =========================
+   */
+
+  const resetFilters = () => {
     setSearch("");
     setActiveCategory("Все");
     setDealType("Все");
@@ -338,7 +477,9 @@ export default function AllProducts() {
     setPriceTo("");
     setAreaFrom("");
     setAreaTo("");
-  }
+
+    router.replace("/products");
+  };
 
   const hasFilters =
     search.trim() !== "" ||
@@ -351,34 +492,58 @@ export default function AllProducts() {
     areaFrom !== "" ||
     areaTo !== "";
 
+  /*
+   * =========================
+   * UI
+   * =========================
+   */
+
   return (
     <main className={styles.page}>
+      <div className={styles.backgroundGlow} />
+
       {/* HEADER */}
-      <div className={styles.header}>
-        <div>
+
+      <header className={styles.header}>
+        <div className={styles.headerTop}>
           <button
             type="button"
             className={styles.homeButton}
             onClick={() => router.push("/")}
           >
             <Home size={18} />
-            На главную
+            <span>На главную</span>
           </button>
-          <h1>Все объявления</h1>
-          <p>Найдите подходящую недвижимость среди доступных предложений</p>
+
+          <div className={styles.headerBadge}>
+            <span className={styles.badgeDot} />
+            Все объявления
+          </div>
         </div>
-      </div>
+
+        <h1>
+          Найдите свою
+          <span> недвижимость</span>
+        </h1>
+
+        <p>
+          Дома, квартиры, участки и другие объекты недвижимости в Кыргызстане.
+        </p>
+      </header>
 
       {/* SEARCH */}
-      <div className={styles.toolbar}>
+
+      <section className={styles.toolbar}>
         <div className={styles.search}>
           <Search size={21} />
+
           <input
             type="text"
-            placeholder="Поиск по названию или адресу..."
+            placeholder="Поиск по названию, адресу или городу..."
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
+
           {search && (
             <button
               type="button"
@@ -393,7 +558,7 @@ export default function AllProducts() {
 
         <button
           type="button"
-          className={styles.filter}
+          className={styles.filterButton}
           onClick={() => {
             document.getElementById("filters")?.scrollIntoView({
               behavior: "smooth",
@@ -404,16 +569,22 @@ export default function AllProducts() {
           <SlidersHorizontal size={19} />
           <span>Фильтры</span>
         </button>
-      </div>
+      </section>
 
       {/* FILTERS */}
-      <div id="filters">
+
+      <section id="filters" className={styles.filtersContainer}>
         {/* CATEGORY */}
-        <section className={styles.filterSection}>
-          <span className={styles.filterTitle}>Тип недвижимости</span>
+
+        <div className={styles.filterBlock}>
+          <div className={styles.filterHeading}>
+            <span>Тип недвижимости</span>
+          </div>
+
           <div className={styles.categories}>
             {categories.map((category) => {
               const active = activeCategory === category.value;
+
               return (
                 <button
                   key={category.value}
@@ -426,14 +597,19 @@ export default function AllProducts() {
               );
             })}
           </div>
-        </section>
+        </div>
 
         {/* DEAL */}
-        <section className={styles.filterSection}>
-          <span className={styles.filterTitle}>Тип сделки</span>
+
+        <div className={styles.filterBlock}>
+          <div className={styles.filterHeading}>
+            <span>Тип сделки</span>
+          </div>
+
           <div className={styles.dealTypes}>
             {dealTypes.map((deal) => {
               const active = dealType === deal.value;
+
               return (
                 <button
                   key={deal.value}
@@ -446,197 +622,88 @@ export default function AllProducts() {
               );
             })}
           </div>
-        </section>
+        </div>
 
-        {/* ADVANCED FILTERS */}
-        <section className={styles.filterSection} style={{ marginTop: "20px" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: "20px",
-              background: "rgba(255,255,255,0.02)",
-              padding: "20px",
-              borderRadius: "16px",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
+        {/* ADVANCED */}
+
+        <div className={styles.advancedFilters}>
+          <div className={styles.advancedGrid}>
             {/* CITY */}
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontSize: "12px",
-                  fontWeight: "800",
-                  color: "#a0aec0",
-                  textTransform: "uppercase",
-                }}
-              >
-                Город / Регион
-              </label>
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "10px",
-                  background: "#1a202c",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#fff",
-                  outline: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <option value="Все">Все города</option>
-                <option value="Бишкек">Бишкек</option>
-                <option value="Ош">Ош</option>
-                <option value="Иссык-Куль">Иссык-Куль</option>
-                <option value="Турция">Турция</option>
-              </select>
-            </div>
+
+            <CustomSelectBlack
+              icon={MapPin}
+              title="Город / Регион"
+              options={cityOptions}
+              value={city}
+              setValue={setCity}
+            />
 
             {/* ROOMS */}
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontSize: "12px",
-                  fontWeight: "800",
-                  color: "#a0aec0",
-                  textTransform: "uppercase",
-                }}
-              >
-                Комнаты
-              </label>
-              <select
-                value={rooms}
-                onChange={(e) => setRooms(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: "10px",
-                  background: "#1a202c",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#fff",
-                  outline: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <option value="Все">Любое число</option>
-                <option value="1">1 комната</option>
-                <option value="2">2 комнаты</option>
-                <option value="3">3 комнаты</option>
-                <option value="4+">4+ комнат</option>
-              </select>
-            </div>
 
-            {/* PRICE RANGE */}
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontSize: "12px",
-                  fontWeight: "800",
-                  color: "#a0aec0",
-                  textTransform: "uppercase",
-                }}
-              >
-                Цена ($)
-              </label>
-              <div style={{ display: "flex", gap: "8px" }}>
+            <CustomSelectBlack
+              icon={DoorOpen}
+              title="Количество комнат"
+              options={roomOptions}
+              value={rooms}
+              setValue={setRooms}
+            />
+
+            {/* PRICE */}
+
+            <div className={styles.rangeField}>
+              <label>Цена ($)</label>
+
+              <div className={styles.rangeInputs}>
                 <input
                   type="number"
-                  placeholder="от"
+                  placeholder="От"
                   value={priceFrom}
-                  onChange={(e) => setPriceFrom(e.target.value)}
-                  style={{
-                    width: "50%",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    background: "#1a202c",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    color: "#fff",
-                    outline: "none",
-                  }}
+                  onChange={(event) => setPriceFrom(event.target.value)}
                 />
+
                 <input
                   type="number"
-                  placeholder="до"
+                  placeholder="До"
                   value={priceTo}
-                  onChange={(e) => setPriceTo(e.target.value)}
-                  style={{
-                    width: "50%",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    background: "#1a202c",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    color: "#fff",
-                    outline: "none",
-                  }}
+                  onChange={(event) => setPriceTo(event.target.value)}
                 />
               </div>
             </div>
 
-            {/* AREA RANGE */}
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontSize: "12px",
-                  fontWeight: "800",
-                  color: "#a0aec0",
-                  textTransform: "uppercase",
-                }}
-              >
-                Площадь (м²)
-              </label>
-              <div style={{ display: "flex", gap: "8px" }}>
+            {/* AREA */}
+
+            <div className={styles.rangeField}>
+              <label>Площадь (м²)</label>
+
+              <div className={styles.rangeInputs}>
                 <input
                   type="number"
-                  placeholder="от"
+                  placeholder="От"
                   value={areaFrom}
-                  onChange={(e) => setAreaFrom(e.target.value)}
-                  style={{
-                    width: "50%",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    background: "#1a202c",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    color: "#fff",
-                    outline: "none",
-                  }}
+                  onChange={(event) => setAreaFrom(event.target.value)}
                 />
+
                 <input
                   type="number"
-                  placeholder="до"
+                  placeholder="До"
                   value={areaTo}
-                  onChange={(e) => setAreaTo(e.target.value)}
-                  style={{
-                    width: "50%",
-                    padding: "12px",
-                    borderRadius: "10px",
-                    background: "#1a202c",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    color: "#fff",
-                    outline: "none",
-                  }}
+                  onChange={(event) => setAreaTo(event.target.value)}
                 />
               </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       {/* RESULTS HEADER */}
+
       <div className={styles.resultsHeader}>
         <div className={styles.result}>
-          <span>Найдено объявлений:</span>
+          <span>Найдено</span>
+
           <strong>{loading ? "..." : filteredListings.length}</strong>
+
+          <span>объявлений</span>
         </div>
 
         {hasFilters && !loading && (
@@ -652,6 +719,7 @@ export default function AllProducts() {
       </div>
 
       {/* LOADING */}
+
       {loading && (
         <div className={styles.loading}>
           <div className={styles.spinner} />
@@ -660,30 +728,42 @@ export default function AllProducts() {
       )}
 
       {/* ERROR */}
-      {!loading && error && <div className={styles.error}>{error}</div>}
+
+      {!loading && error && (
+        <div className={styles.error}>
+          <X size={20} />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* RESULTS */}
+
       {!loading && !error && (
         <>
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
-                <ListingCard
+                <ListingCardBlack
                   key={item.id}
                   item={item}
-                  isFavorite={favIds.has(item.id)}
+                  isFavorite={favIds.has(String(item.id))}
                   onFavoriteClick={handleFavoriteClick}
                 />
               ))}
             </section>
           ) : (
             <div className={styles.empty}>
-              <Search size={42} />
+              <div className={styles.emptyIcon}>
+                <Search size={30} />
+              </div>
+
               <h2>Ничего не найдено</h2>
+
               <p>
                 По вашему запросу нет подходящих объявлений. Попробуйте изменить
                 параметры поиска.
               </p>
+
               {hasFilters && (
                 <button type="button" onClick={resetFilters}>
                   Сбросить фильтры

@@ -1,86 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { Heart, Search, House } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import { getFavorites, removeFavorite as removeFavoriteApi } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./Favorites.module.css";
-
-const initialFavorites = [
-  {
-    id: 1,
-    title: "Уютный дом у озера Иссык-Куль",
-    type: "Дом",
-    dealType: "Куплю",
-    status: "vip",
-    location: "Чолпон-Ата",
-    price: "120 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    rooms: 5,
-    area: "180 м²",
-  },
-
-  {
-    id: 2,
-    title: "Современный коттедж с бассейном",
-    type: "Коттедж",
-    dealType: "Сниму в аренду",
-    status: "urgent",
-    location: "Бостери",
-    price: "250 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    rooms: 7,
-    area: "320 м²",
-  },
-
-  {
-    id: 3,
-    title: "Участок 10 соток возле пляжа",
-    type: "Участок",
-    dealType: "Куплю",
-    status: null,
-    location: "Кара-Ой",
-    price: "45 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    rooms: null,
-    area: "10 соток",
-  },
-
-  {
-    id: 4,
-    title: "Большой семейный дом",
-    type: "Дом",
-    dealType: "Сниму в аренду",
-    status: "vip",
-    location: "Боконбаево",
-    price: "95 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    rooms: 6,
-    area: "210 м²",
-  },
-
-  {
-    id: 5,
-    title: "Квартира с видом на горы",
-    type: "Квартира",
-    dealType: "Куплю",
-    status: "urgent",
-    location: "Бишкек",
-    price: "85 000 $",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    rooms: 3,
-    area: "95 м²",
-  },
-];
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 const categories = [
   "Все",
@@ -315,7 +242,7 @@ export default function Favorites() {
       ) : filteredFavorites.length > 0 ? (
         <section className={styles.grid}>
           {filteredFavorites.map((item) => (
-            <ListingCard
+            <ListingCardBlack
               key={item.id}
               item={item}
               isFavorite={true}

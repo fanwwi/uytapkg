@@ -10,50 +10,6 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import { getComplexes } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
 
-/*
-const complexes = [
-  {
-    id: 1,
-    name: "Avenue Residence",
-    developer: "BI Group",
-    address: "Бишкек, Асанбай",
-    priceFrom: "120 000 $",
-    priceTo: "350 000 $",
-    description:
-      "Современный жилой комплекс премиального класса с закрытой территорией, благоустроенным двором и развитой инфраструктурой.",
-    image:
-      "https://storage.googleapis.com/bd-kg-02/buildings-v2/800x630/2336.jpg",
-    logo: "https://yt3.googleusercontent.com/dd6jiK-pM4c-OpIys_CbeZAnr1CgKBWOx9cUgHMx5yNTOKcfmnx_Cgmi53ucme32vcNm3MuETA=s900-c-k-c0x00ffffff-no-rj",
-  },
-  {
-    id: 2,
-    name: "Royal Park",
-    developer: "Elite Development",
-    address: "Бишкек, центр",
-    priceFrom: "150 000 $",
-    priceTo: "500 000 $",
-    description:
-      "Элегантный городской комплекс в центральной части Бишкека с просторными квартирами и высоким уровнем приватности.",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3bLPug9XO4Cc_IQLfIZqk6TW2SyltDnPMWbp5Lc7_S-FhvDYWeIkfRQ8&s=10",
-    logo: "https://media.licdn.com/dms/image/v2/D4D0BAQED2Dra3BJ-Dw/company-logo_200_200/company-logo_200_200/0/1667350407993/elitemd_logo?e=2147483647&v=beta&t=BzMu9fKnwHvGTL-Rgy1aoIzEXJUGWOyivkYbbH3cmT4",
-  },
-  {
-    id: 3,
-    name: "Issyk Lake Villas",
-    developer: "Lake Group",
-    address: "Иссык-Куль",
-    priceFrom: "200 000 $",
-    priceTo: "700 000 $",
-    description:
-      "Коллекция приватных вилл у Иссык-Куля для тех, кто ценит простор, природу и архитектуру премиального уровня.",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxvLQC1rlyl1Ft34HMpKfUyVPRX8a4AIyTmKAsjnzL1jDPReKX4eORR_Qc&s=10",
-    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGesScTZwcv1HweHeROAtnssGSDz8gzFxYJxF7AJd_vWSaZT_QABekZ-c&s=10",
-  },
-];
-*/
-
 export default function Complexes() {
   const router = useRouter();
 
@@ -100,6 +56,7 @@ export default function Complexes() {
         item.description,
         item.priceFrom,
         item.priceTo,
+        item.class
       ]
         .join(" ")
         .toLowerCase()
@@ -257,7 +214,7 @@ export default function Complexes() {
 
                   <div className={styles.premiumBadge}>
                     <span />
-                    PREMIUM
+                    {item.housingClass}
                   </div>
                 </div>
 
