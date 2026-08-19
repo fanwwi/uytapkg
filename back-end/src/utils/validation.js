@@ -60,6 +60,10 @@ export const updateMeSchema = z.object({
   inn: z.string().optional().nullable(),
   officeAddress: z.string().optional().nullable(),
   agencyName: z.string().optional().nullable(),
+  actualAddress: z.string().optional().nullable(),
+  website: z.string().optional().nullable(),
+  socials: z.any().optional(),
+  region: z.string().optional().nullable(),
 });
 
 // Схема создания объявления (POST /api/listings)
