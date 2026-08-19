@@ -19,7 +19,7 @@ import {
   removeFavorite,
 } from "@/utils/api";
 
-import CustomSelectBlack from "@/components/ui/CustomSelectBlack/CustomSelectBlack";
+import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AllProducts.module.css";
