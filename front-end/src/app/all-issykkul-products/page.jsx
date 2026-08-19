@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
 import {
   getListings,
@@ -16,8 +16,16 @@ import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack"
 
 export default function IssykKulProducts() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const urlSearch = searchParams.get("search") || searchParams.get("query");
+    if (urlSearch) {
+      setSearch(urlSearch);
+    }
+  }, [searchParams]);
 
   const [listingsList, setListingsList] = useState([]);
   const [favIds, setFavIds] = useState(new Set());
@@ -123,6 +131,8 @@ export default function IssykKulProducts() {
         region.includes("issyk") ||
         region.includes("иссык");
 
+      if (!isIssykKul) return false;
+
       /*
        * ПОИСК
        */
@@ -135,7 +145,66 @@ export default function IssykKulProducts() {
           .toLowerCase()
           .includes(normalizedSearch);
 
-      return isIssykKul && matchesSearch;
+      if (!matchesSearch) return false;
+
+      // 1. City / Location match
+      const urlCity = searchParams.get("city") || searchParams.get("settlement") || searchParams.get("location");
+      if (urlCity && urlCity !== "Все") {
+        const itemLoc = String(item.location || "").toLowerCase();
+        const itemReg = String(item.region || "").toLowerCase();
+        const selectedLoc = urlCity.toLowerCase();
+        if (!itemLoc.includes(selectedLoc) && !itemReg.includes(selectedLoc)) {
+          return false;
+        }
+      }
+
+      // 2. Rooms match
+      const urlRooms = searchParams.get("rooms");
+      if (urlRooms && urlRooms !== "Все") {
+        const itemRooms = Number(item.rooms);
+        if (urlRooms === "4+") {
+          if (itemRooms < 4) return false;
+        } else if (itemRooms !== Number(urlRooms)) {
+          return false;
+        }
+      }
+
+      // 3. Price match
+      const priceVal = Number(item.rawPrice);
+      const urlPriceFrom = searchParams.get("priceFrom") || searchParams.get("minPrice");
+      if (urlPriceFrom && priceVal < Number(urlPriceFrom)) return false;
+
+      const urlPriceTo = searchParams.get("priceTo") || searchParams.get("maxPrice");
+      if (urlPriceTo && priceVal > Number(urlPriceTo)) return false;
+
+      // 4. Area match
+      const areaVal = Number(item.rawArea);
+      const urlAreaFrom = searchParams.get("areaFrom") || searchParams.get("minArea");
+      if (urlAreaFrom && areaVal < Number(urlAreaFrom)) return false;
+
+      const urlAreaTo = searchParams.get("areaTo") || searchParams.get("maxArea");
+      if (urlAreaTo && areaVal > Number(urlAreaTo)) return false;
+
+      // 5. Все остальные динамические параметры из URL (фильтры шагов)
+      for (const [key, value] of searchParams.entries()) {
+        if ([
+          "category", "propertyType", "dealType", "search", "query", "city", "region",
+          "rooms", "priceFrom", "priceTo", "areaFrom", "areaTo",
+          "page", "limit", "searchMode", "location"
+        ].includes(key)) {
+          continue;
+        }
+
+        if (value && value !== "" && value !== "Все" && value !== "Любой" && value !== "Любое" && value !== "Любые") {
+          const itemValue = String(item[key] || "").toLowerCase();
+          const filterValue = String(value).toLowerCase();
+          if (itemValue !== filterValue && !itemValue.includes(filterValue)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
     });
 
     /*
@@ -153,7 +222,7 @@ export default function IssykKulProducts() {
 
       return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
     });
-  }, [mappedListings, search]);
+  }, [mappedListings, search, searchParams]);
 
   return (
     <main className={styles.page}>
