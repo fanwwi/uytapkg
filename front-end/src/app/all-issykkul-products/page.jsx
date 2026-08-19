@@ -190,7 +190,8 @@ export default function IssykKulProducts() {
         if ([
           "category", "propertyType", "dealType", "search", "query", "city", "region",
           "rooms", "priceFrom", "priceTo", "areaFrom", "areaTo",
-          "page", "limit", "searchMode", "location"
+          "page", "limit", "searchMode", "location",
+          "country", "settlement", "district", "rentalPeriod", "address", "latitude", "longitude", "listingType"
         ].includes(key)) {
           continue;
         }
