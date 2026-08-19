@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = (process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
+let rawBackendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+rawBackendUrl = rawBackendUrl.replace(/\/$/, "");
+if (!rawBackendUrl.endsWith("/api") && !rawBackendUrl.includes("localhost")) {
+  rawBackendUrl = `${rawBackendUrl}/api`;
+}
+const BACKEND_API_URL = rawBackendUrl;
 
 async function proxyRequest(request) {
   try {
+    const url = new URL(request.url);
+    const searchParams = url.search;
+    const targetUrl = `${BACKEND_API_URL}/listings${searchParams}`;
+
     const headers = new Headers(request.headers);
     headers.delete("host");
 
@@ -17,7 +26,7 @@ async function proxyRequest(request) {
       init.duplex = "half";
     }
 
-    const upstream = await fetch(`${BACKEND_API_URL}/listings`, init);
+    const upstream = await fetch(targetUrl, init);
     const text = await upstream.text();
 
     let data = {};

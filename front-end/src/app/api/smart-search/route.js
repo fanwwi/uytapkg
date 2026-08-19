@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_API_URL = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+let rawBackendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+rawBackendUrl = rawBackendUrl.replace(/\/$/, "");
+if (!rawBackendUrl.endsWith("/api") && !rawBackendUrl.includes("localhost")) {
+  rawBackendUrl = `${rawBackendUrl}/api`;
+}
+const BACKEND_API_URL = rawBackendUrl;
 
 export async function POST(request) {
   try {
