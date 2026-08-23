@@ -22,6 +22,7 @@ import {
 import styles from "./IssykKul.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { useRouter } from "next/navigation";
+import { div } from "framer-motion/client";
 
 const locations = [
   {
@@ -104,250 +105,250 @@ export default function IssykKul() {
   const router = useRouter();
 
   return (
-    <main className={styles.page}>
-      {/* HERO */}
+    <div>
+      <main className={styles.page}>
+        <section className={styles.hero}>
+          <div className={styles.heroOverlay} />
 
-      <section className={styles.hero}>
-        <div className={styles.heroOverlay} />
+          <div className={styles.heroContent}>
+            <div className={styles.badge}>
+              <Waves />
+              Недвижимость Иссык-Куля
+            </div>
 
-        <div className={styles.heroContent}>
-          <div className={styles.badge}>
-            <Waves />
-            Недвижимость Иссык-Куля
-          </div>
-
-          <h1>
-            Ваш дом
-            <br />у самого озера
-          </h1>
-
-          <p>
-            Дома, коттеджи, квартиры, гостевые дома и земельные участки в
-            курортных районах Иссык-Куля — для жизни, отдыха и инвестиций.
-          </p>
-
-          <div className={styles.buttons}>
-            <button
-              type="button"
-              className={styles.homeButton}
-              onClick={() => router.push("/")}
-            >
-              На главную
-            </button>
-
-            <button
-              type="button"
-              className={styles.mainButton}
-              onClick={() => router.push("/all-issykkul-products")}
-            >
-              Смотреть объекты
-              <ArrowRight size={18} />
-            </button>
-
-            <button
-              type="button"
-              className={styles.whiteButton}
-              onClick={() => router.push("/add-product")}
-            >
-              <span>
-                <Plus size={19} />
-              </span>
-              Разместить объект
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* INTRO */}
-
-      <section className={styles.intro}>
-        <div className={styles.sectionHeading}>
-          <span>КУРОРТНАЯ ЗОНА</span>
-          <h2>Иссык-Куль — больше, чем место для отдыха</h2>
-        </div>
-
-        <div className={styles.introGrid}>
-          <div className={styles.introText}>
-            <p>
-              Иссык-Куль — одно из самых популярных туристических направлений
-              Кыргызстана. Здесь сочетаются озеро, горы, пляжи, чистый воздух и
-              активно развивающаяся инфраструктура.
-            </p>
+            <h1>
+              Ваш дом
+              <br />у самого озера
+            </h1>
 
             <p>
-              Поэтому недвижимость здесь интересна не только для собственного
-              отдыха. Дом, квартира или гостевой объект могут стать источником
-              сезонного дохода и долгосрочной инвестицией.
+              Дома, коттеджи, квартиры, гостевые дома и земельные участки в
+              курортных районах Иссык-Куля — для жизни, отдыха и инвестиций.
             </p>
 
-            <button
-              type="button"
-              className={styles.textButton}
-              onClick={() => router.push("/all-issykkul-products")}
-            >
-              Найти недвижимость
-              <ArrowRight size={18} />
-            </button>
+            <div className={styles.buttons}>
+              <button
+                type="button"
+                className={styles.homeButton}
+                onClick={() => router.push("/")}
+              >
+                На главную
+              </button>
+
+              <button
+                type="button"
+                className={styles.mainButton}
+                onClick={() => router.push("/all-issykkul-products")}
+              >
+                Смотреть объекты
+                <ArrowRight size={18} />
+              </button>
+
+              <button
+                type="button"
+                className={styles.whiteButton}
+                onClick={() => router.push("/add-product")}
+              >
+                <span>
+                  <Plus size={19} />
+                </span>
+                Разместить объект
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* INTRO */}
+
+        <section className={styles.intro}>
+          <div className={styles.sectionHeading}>
+            <span>КУРОРТНАЯ ЗОНА</span>
+            <h2>Иссык-Куль — больше, чем место для отдыха</h2>
           </div>
 
-          <div className={styles.introCard}>
-            <Waves size={34} />
+          <div className={styles.introGrid}>
+            <div className={styles.introText}>
+              <p>
+                Иссык-Куль — одно из самых популярных туристических направлений
+                Кыргызстана. Здесь сочетаются озеро, горы, пляжи, чистый воздух
+                и активно развивающаяся инфраструктура.
+              </p>
 
-            <strong>Жизнь у озера</strong>
+              <p>
+                Поэтому недвижимость здесь интересна не только для собственного
+                отдыха. Дом, квартира или гостевой объект могут стать источником
+                сезонного дохода и долгосрочной инвестицией.
+              </p>
+
+              <button
+                type="button"
+                className={styles.textButton}
+                onClick={() => router.push("/all-issykkul-products")}
+              >
+                Найти недвижимость
+                <ArrowRight size={18} />
+              </button>
+            </div>
+
+            <div className={styles.introCard}>
+              <Waves size={34} />
+
+              <strong>Жизнь у озера</strong>
+
+              <p>
+                Просыпаться рядом с водой, проводить лето на берегу и при этом
+                иметь собственную недвижимость.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* PROPERTY TYPES */}
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeading}>
+            <span>НЕДВИЖИМОСТЬ</span>
+            <h2>Что можно найти на Иссык-Куле?</h2>
 
             <p>
-              Просыпаться рядом с водой, проводить лето на берегу и при этом
-              иметь собственную недвижимость.
+              Подберите формат недвижимости под свои цели — от семейного отдыха
+              до полноценного туристического бизнеса.
             </p>
           </div>
-        </div>
-      </section>
 
-      {/* PROPERTY TYPES */}
+          <div className={styles.propertyGrid}>
+            {propertyTypes.map((item) => {
+              const Icon = item.icon;
 
-      <section className={styles.section}>
-        <div className={styles.sectionHeading}>
-          <span>НЕДВИЖИМОСТЬ</span>
-          <h2>Что можно найти на Иссык-Куле?</h2>
+              return (
+                <div className={styles.propertyCard} key={item.title}>
+                  <div className={styles.cardIcon}>
+                    <Icon size={23} />
+                  </div>
 
-          <p>
-            Подберите формат недвижимости под свои цели — от семейного отдыха до
-            полноценного туристического бизнеса.
-          </p>
-        </div>
-
-        <div className={styles.propertyGrid}>
-          {propertyTypes.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <div className={styles.propertyCard} key={item.title}>
-                <div className={styles.cardIcon}>
-                  <Icon size={23} />
-                </div>
-
-                <h3>{item.title}</h3>
-
-                <p>{item.description}</p>
-
-                <button
-                  type="button"
-                  onClick={() => router.push("/all-issykkul-products")}
-                >
-                  Смотреть
-                  <ArrowRight size={16} />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* BENEFITS */}
-
-      <section className={styles.benefitsSection}>
-        <div className={styles.sectionHeading}>
-          <span>ПОЧЕМУ ИССЫК-КУЛЬ</span>
-          <h2>Место для жизни и инвестиций</h2>
-        </div>
-
-        <div className={styles.benefitsGrid}>
-          {benefits.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <div className={styles.benefit} key={item.title}>
-                <div className={styles.benefitIcon}>
-                  <Icon size={21} />
-                </div>
-
-                <div>
                   <h3>{item.title}</h3>
+
                   <p>{item.description}</p>
+
+                  <button
+                    type="button"
+                    onClick={() => router.push("/all-issykkul-products")}
+                  >
+                    Смотреть
+                    <ArrowRight size={16} />
+                  </button>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
 
-      {/* INVESTMENT */}
+        {/* BENEFITS */}
 
-      <section className={styles.investment}>
-        <div className={styles.investmentOverlay} />
-
-        <div className={styles.investmentContent}>
-          <div className={styles.investmentIcon}>
-            <TrendingUp size={27} />
+        <section className={styles.benefitsSection}>
+          <div className={styles.sectionHeading}>
+            <span>ПОЧЕМУ ИССЫК-КУЛЬ</span>
+            <h2>Место для жизни и инвестиций</h2>
           </div>
 
-          <span>ИНВЕСТИЦИИ</span>
+          <div className={styles.benefitsGrid}>
+            {benefits.map((item) => {
+              const Icon = item.icon;
 
-          <h2>Недвижимость, которая может работать на вас</h2>
+              return (
+                <div className={styles.benefit} key={item.title}>
+                  <div className={styles.benefitIcon}>
+                    <Icon size={21} />
+                  </div>
 
-          <p>
-            Курортная недвижимость может использоваться для собственного отдыха,
-            долгосрочной аренды, посуточной сдачи или туристического бизнеса.
-          </p>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* INVESTMENT */}
+
+        <section className={styles.investment}>
+          <div className={styles.investmentOverlay} />
+
+          <div className={styles.investmentContent}>
+            <div className={styles.investmentIcon}>
+              <TrendingUp size={27} />
+            </div>
+
+            <span>ИНВЕСТИЦИИ</span>
+
+            <h2>Недвижимость, которая может работать на вас</h2>
+
+            <p>
+              Курортная недвижимость может использоваться для собственного
+              отдыха, долгосрочной аренды, посуточной сдачи или туристического
+              бизнеса.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => router.push("/all-issykkul-products")}
+            >
+              Посмотреть инвестиционные объекты
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        </section>
+
+        {/* QUICK SEARCH */}
+
+        <section className={styles.quickSearch}>
+          <div>
+            <div className={styles.quickIcon}>
+              <Search size={22} />
+            </div>
+
+            <div>
+              <span>ПОИСК</span>
+              <h2>Найдите свой объект на Иссык-Куле</h2>
+              <p>
+                Дома, квартиры, участки и коммерческая недвижимость в популярных
+                районах курортной зоны.
+              </p>
+            </div>
+          </div>
 
           <button
             type="button"
             onClick={() => router.push("/all-issykkul-products")}
           >
-            Посмотреть инвестиционные объекты
+            Смотреть все объекты
             <ArrowRight size={18} />
           </button>
-        </div>
-      </section>
+        </section>
 
-      {/* QUICK SEARCH */}
+        {/* ADD OBJECT */}
 
-      <section className={styles.quickSearch}>
-        <div>
-          <div className={styles.quickIcon}>
-            <Search size={22} />
-          </div>
-
+        <section className={styles.addSection}>
           <div>
-            <span>ПОИСК</span>
-            <h2>Найдите свой объект на Иссык-Куле</h2>
+            <span>ДЛЯ СОБСТВЕННИКОВ</span>
+
+            <h2>Есть недвижимость на Иссык-Куле?</h2>
+
             <p>
-              Дома, квартиры, участки и коммерческая недвижимость в популярных
-              районах курортной зоны.
+              Разместите объявление и покажите свой объект людям, которые ищут
+              недвижимость для отдыха, жизни и инвестиций.
             </p>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => router.push("/all-issykkul-products")}
-        >
-          Смотреть все объекты
-          <ArrowRight size={18} />
-        </button>
-      </section>
-
-      {/* ADD OBJECT */}
-
-      <section className={styles.addSection}>
-        <div>
-          <span>ДЛЯ СОБСТВЕННИКОВ</span>
-
-          <h2>Есть недвижимость на Иссык-Куле?</h2>
-
-          <p>
-            Разместите объявление и покажите свой объект людям, которые ищут
-            недвижимость для отдыха, жизни и инвестиций.
-          </p>
-        </div>
-
-        <button type="button" onClick={() => router.push("/add-product")}>
-          <Plus size={20} />
-          Разместить объект
-        </button>
-      </section>
-
+          <button type="button" onClick={() => router.push("/add-product")}>
+            <Plus size={20} />
+            Разместить объект
+          </button>
+        </section>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

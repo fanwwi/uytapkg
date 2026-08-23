@@ -1,12 +1,18 @@
 .header {
   position: fixed;
+
   top: 0;
   left: 0;
+
   width: 100%;
   z-index: 1000;
 
+  background: rgba(24, 24, 27, 0.72);
+
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   transition:
     background 0.35s ease,
@@ -15,34 +21,28 @@
     backdrop-filter 0.35s ease;
 }
 
-/* =========================
+/* =========================================================
    SCROLLED HEADER
-========================= */
+========================================================= */
 
 .scrolled {
-  background: linear-gradient(
-    180deg,
-    rgba(247, 248, 250, 0.97) 0%,
-    rgba(217, 220, 225, 0.95) 48%,
-    rgba(184, 189, 197, 0.96) 100%
-  );
+  background: rgba(24, 24, 27, 0.94);
 
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
 
-  color: #25272b;
+  color: #f2f2f5;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(112, 72, 255, 0.16);
 
   box-shadow:
-    0 12px 40px rgba(37, 39, 43, 0.16),
-    0 2px 8px rgba(255, 255, 255, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 12px 40px rgba(0, 0, 0, 0.28),
+    0 0 30px rgba(112, 72, 255, 0.04);
 }
 
-/* =========================
+/* =========================================================
    CONTAINER
-========================= */
+========================================================= */
 
 .container {
   height: 86px;
@@ -56,9 +56,9 @@
   gap: 25px;
 }
 
-/* =========================
+/* =========================================================
    LOGO
-========================= */
+========================================================= */
 
 .logo {
   display: flex;
@@ -81,9 +81,9 @@
   transform: translateY(-1px);
 }
 
-/* =========================
+/* =========================================================
    NAVIGATION
-========================= */
+========================================================= */
 
 .nav {
   display: flex;
@@ -100,9 +100,10 @@
   border: none;
   background: transparent;
 
-  color: #cccfd5;
+  color: #d7d7dc;
 
   text-decoration: none;
+
   cursor: pointer;
 
   display: flex;
@@ -121,13 +122,20 @@
     text-shadow 0.25s ease;
 }
 
+.scrolled .nav button,
+.scrolled .nav a {
+  color: #d7d7dc;
+}
+
 .nav button:hover,
-.nav a:hover {
-  color: #ff007f;
+.nav a:hover,
+.scrolled .nav button:hover,
+.scrolled .nav a:hover {
+  color: #8b73ff;
 
   transform: translateY(-1px);
 
-  text-shadow: 0 0 14px rgba(255, 0, 127, 0.22);
+  text-shadow: 0 0 14px rgba(112, 72, 255, 0.28);
 }
 
 .nav svg {
@@ -135,11 +143,22 @@
   height: 19px;
 
   stroke-width: 2;
+
+  transition:
+    color 0.25s ease,
+    filter 0.25s ease;
 }
 
-/* =========================
+.nav button:hover svg,
+.nav a:hover svg {
+  color: #8b73ff;
+
+  filter: drop-shadow(0 0 6px rgba(112, 72, 255, 0.35));
+}
+
+/* =========================================================
    DROPDOWN
-========================= */
+========================================================= */
 
 .dropdown {
   position: relative;
@@ -157,9 +176,9 @@
   transform: rotate(180deg);
 }
 
-/* =========================
-   METALLIC DROPDOWN
-========================= */
+/* =========================================================
+   DROPDOWN MENU
+========================================================= */
 
 .menu {
   position: absolute;
@@ -171,24 +190,15 @@
 
   padding: 9px;
 
-  background: linear-gradient(
-    145deg,
-    #f7f8fa 0%,
-    #d9dce1 30%,
-    #b8bdc5 52%,
-    #eef0f3 72%,
-    #aeb3bb 100%
-  );
+  background: #242429;
 
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   border-radius: 18px;
 
   box-shadow:
-    0 25px 70px rgba(37, 39, 43, 0.25),
-    0 4px 15px rgba(255, 255, 255, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 0 rgba(75, 80, 88, 0.18);
+    0 25px 70px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(112, 72, 255, 0.06);
 
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
@@ -213,7 +223,7 @@
 
   border-radius: 12px;
 
-  color: #33363c;
+  color: #d2d2d7;
 
   font-size: 15px;
 
@@ -224,24 +234,20 @@
 }
 
 .menu a:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 0, 127, 0.14),
-    rgba(255, 61, 154, 0.08)
-  );
+  background: rgba(112, 72, 255, 0.12);
 
-  color: #ff007f;
+  color: #a58fff;
 
   box-shadow:
-    inset 0 0 0 1px rgba(255, 0, 127, 0.12),
-    0 0 18px rgba(255, 0, 127, 0.08);
+    inset 0 0 0 1px rgba(112, 72, 255, 0.12),
+    0 0 18px rgba(112, 72, 255, 0.06);
 
   transform: none;
 }
 
-/* =========================
+/* =========================================================
    ACTIONS
-========================= */
+========================================================= */
 
 .actions {
   display: flex;
@@ -286,28 +292,20 @@
     color 0.3s ease;
 }
 
-/* =========================
-   ADD BUTTON — CHROME
-========================= */
+/* =========================================================
+   ADD BUTTON — GRAPHITE
+========================================================= */
 
 .add {
-  color: #25272b;
+  color: #e8e8ed;
 
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
-  background: linear-gradient(
-    135deg,
-    #f7f8fa 0%,
-    #cdd1d7 28%,
-    #ffffff 48%,
-    #b8bdc5 72%,
-    #eef0f3 100%
-  );
+  background: #25252a;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 rgba(75, 80, 88, 0.18),
-    0 4px 15px rgba(37, 39, 43, 0.12);
+    0 5px 18px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .add:hover {
@@ -315,66 +313,55 @@
 
   color: #ffffff;
 
-  background: linear-gradient(135deg, #ff007f 0%, #ff3d9a 50%, #c60062 100%);
+  background: #7048ff;
 
-  border-color: #ff007f;
+  border-color: #7048ff;
 
   box-shadow:
-    0 10px 30px rgba(255, 0, 127, 0.32),
-    0 0 22px rgba(255, 0, 127, 0.14);
+    0 12px 30px rgba(112, 72, 255, 0.3),
+    0 0 22px rgba(112, 72, 255, 0.12);
 }
 
-/* =========================
-   FREE BUTTON — MAGENTA
-========================= */
+/* =========================================================
+   FREE BUTTON — VIOLET
+========================================================= */
 
 .free {
   color: #ffffff;
 
-  background: linear-gradient(135deg, #ff007f 0%, #ff3d9a 45%, #c60062 100%);
+  background: #7048ff;
 
-  border: 1px solid #ff007f;
+  border: 1px solid #7048ff;
 
-  box-shadow:
-    0 8px 25px rgba(255, 0, 127, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(112, 72, 255, 0.25);
 }
 
 .free:hover {
   transform: translateY(-3px);
 
-  background: linear-gradient(135deg, #ff3d9a 0%, #ff007f 45%, #c60062 100%);
+  background: #8060ff;
 
-  border-color: #ff3d9a;
+  border-color: #8060ff;
 
   box-shadow:
-    0 15px 40px rgba(255, 0, 127, 0.42),
-    0 0 28px rgba(255, 0, 127, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 15px 40px rgba(112, 72, 255, 0.38),
+    0 0 28px rgba(112, 72, 255, 0.16);
 }
 
-/* =========================
-   LOGIN — CHROME
-========================= */
+/* =========================================================
+   LOGIN — GRAPHITE
+========================================================= */
 
 .login {
-  color: #25272b;
+  color: #eeeef2;
 
-  background: linear-gradient(
-    135deg,
-    #eef0f3 0%,
-    #b8bdc5 32%,
-    #ffffff 50%,
-    #aeb3bb 75%,
-    #e5e7ea 100%
-  );
+  background: #25252a;
 
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 rgba(75, 80, 88, 0.15),
-    0 4px 18px rgba(37, 39, 43, 0.12);
+    0 5px 18px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .login:hover {
@@ -382,18 +369,18 @@
 
   color: #ffffff;
 
-  background: linear-gradient(135deg, #ff007f, #ff3d9a, #c60062);
+  background: #7048ff;
 
-  border-color: #ff007f;
+  border-color: #7048ff;
 
   box-shadow:
-    0 10px 30px rgba(255, 0, 127, 0.3),
-    0 0 20px rgba(255, 0, 127, 0.12);
+    0 10px 30px rgba(112, 72, 255, 0.3),
+    0 0 20px rgba(112, 72, 255, 0.12);
 }
 
-/* =========================
+/* =========================================================
    FAVORITE
-========================= */
+========================================================= */
 
 .favorite {
   display: flex;
@@ -412,27 +399,31 @@
 }
 
 .favorite:hover svg {
-  color: #ff007f;
+  color: #8b73ff;
 
   transform: scale(1.08);
 
-  filter: drop-shadow(0 0 7px rgba(255, 0, 127, 0.35));
+  filter: drop-shadow(0 0 7px rgba(112, 72, 255, 0.38));
 }
 
-/* =========================
+/* =========================================================
    ICONS
-========================= */
+========================================================= */
 
 .actions svg {
   width: 19px;
   height: 19px;
 
   stroke-width: 2;
+
+  transition:
+    color 0.25s ease,
+    filter 0.25s ease;
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 1400px) {
   .container {
@@ -463,6 +454,7 @@
 
   .login {
     height: 44px;
+
     padding: 0 15px;
   }
 
@@ -487,7 +479,9 @@
 
   .login {
     width: 45px;
+
     padding: 0;
+
     border-radius: 14px;
   }
 }

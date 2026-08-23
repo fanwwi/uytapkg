@@ -1,13 +1,13 @@
 .page {
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
   box-sizing: border-box;
-
-  background: #08090b;
-  color: #f5f5f7;
-
   overflow-x: hidden;
-  padding: 100px;
+
+  background: #d9dadc;
+  color: #171717;
+
+  padding: 48px 64px;
 }
 
 /* =========================================================
@@ -15,22 +15,18 @@
 ========================================================= */
 
 .hero {
-  max-width: 100%;
-
   position: relative;
 
-  height: 720px;
+  width: 100%;
+  height: 690px;
 
   overflow: hidden;
 
-  border: 1px solid #292b31;
-  border-radius: 42px;
+  border-radius: 32px;
 
   background: url("/assets/issykKul.webp") center / cover no-repeat;
 
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.02);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
 }
 
 .heroOverlay {
@@ -39,9 +35,9 @@
 
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.12) 0%,
-    rgba(0, 0, 0, 0.35) 38%,
-    rgba(0, 0, 0, 0.88) 100%
+    rgba(23, 23, 23, 0.08) 0%,
+    rgba(23, 23, 23, 0.18) 35%,
+    rgba(23, 23, 23, 0.92) 100%
   );
 }
 
@@ -52,51 +48,49 @@
   height: 100%;
   box-sizing: border-box;
 
-  padding: 45px;
+  padding: 50px;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   text-align: center;
 
-  color: #ffffff;
+  color: #fff;
 }
 
 /* =========================================================
-   HERO BADGE
+   BADGE
 ========================================================= */
 
 .badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 
-  padding: 11px 18px;
+  padding: 9px 15px;
 
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
 
-  background: rgba(10, 10, 12, 0.68);
+  background: rgba(23, 23, 23, 0.55);
 
-  color: #f4f4f6;
+  color: #fff;
 
-  font-size: 13px;
-  font-weight: 750;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 
-  backdrop-filter: blur(14px);
-
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
 }
 
 .badge svg {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
 
-  color: #ff2f7d;
+  color: #ff007f;
 }
 
 /* =========================================================
@@ -104,29 +98,28 @@
 ========================================================= */
 
 .hero h1 {
-  margin: 30px 0 20px;
+  margin: 27px 0 20px;
 
-  color: #ffffff;
+  color: #fff;
 
-  font-size: clamp(48px, 6vw, 78px);
-  line-height: 0.98;
+  font-size: clamp(50px, 6vw, 82px);
+  line-height: 0.96;
 
   font-weight: 900;
+  letter-spacing: -4px;
 
-  letter-spacing: -3.5px;
-
-  text-shadow: 0 5px 30px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
 .hero p {
-  max-width: 760px;
+  max-width: 720px;
 
   margin: 0;
 
   color: rgba(255, 255, 255, 0.78);
 
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.65;
 }
 
 /* =========================================================
@@ -139,17 +132,17 @@
   justify-content: center;
   flex-wrap: wrap;
 
-  gap: 11px;
+  gap: 10px;
 
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
 .mainButton,
 .whiteButton,
 .homeButton {
-  height: 58px;
+  height: 54px;
 
-  padding: 0 24px;
+  padding: 0 22px;
 
   display: flex;
   align-items: center;
@@ -157,100 +150,98 @@
 
   gap: 9px;
 
-  border-radius: 16px;
+  border-radius: 13px;
 
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 800;
 
   cursor: pointer;
 
   transition:
-    transform 0.22s ease,
-    background 0.22s ease,
-    border-color 0.22s ease,
-    box-shadow 0.22s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
+/* PINK */
+
 .mainButton {
-  border: 1px solid #e6005c;
+  border: none;
 
-  background: #e6005c;
+  background: #ff007f;
+  color: #fff;
 
-  color: #ffffff;
-
-  box-shadow: 0 12px 35px rgba(230, 0, 92, 0.25);
+  box-shadow: 0 10px 25px rgba(255, 0, 127, 0.3);
 }
 
 .mainButton:hover {
-  background: #ff0a69;
-
   transform: translateY(-3px);
 
-  box-shadow: 0 18px 40px rgba(230, 0, 92, 0.35);
+  background: #ff2b98;
+
+  box-shadow: 0 15px 35px rgba(255, 0, 127, 0.4);
 }
 
+/* GRAPHITE */
+
 .whiteButton {
-  border: 1px solid #34363d;
+  border: 1px solid #4c4c4c;
 
-  background: #17181d;
-
-  color: #f5f5f7;
+  background: #171717;
+  color: #fff;
 }
 
 .whiteButton:hover {
-  background: #202127;
-
-  border-color: #484a53;
-
   transform: translateY(-3px);
+
+  background: #242424;
 }
 
 .whiteButton span {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 10px;
+  border-radius: 8px;
 
-  background: rgba(230, 0, 92, 0.13);
-
-  color: #ff2f7d;
+  background: #ff007f;
+  color: #fff;
 }
 
+/* SILVER */
+
 .homeButton {
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.45);
 
-  background: rgba(10, 10, 12, 0.5);
+  background: rgba(217, 218, 220, 0.18);
 
-  color: #eeeeef;
+  color: #fff;
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(7px);
 }
 
 .homeButton:hover {
-  background: rgba(25, 25, 29, 0.85);
-
-  border-color: rgba(255, 255, 255, 0.28);
-
   transform: translateY(-3px);
+
+  background: rgba(217, 218, 220, 0.3);
 }
 
 /* =========================================================
-   COMMON SECTIONS
+   COMMON
 ========================================================= */
 
 .section,
 .intro,
 .benefitsSection {
-  margin: 100px auto 0;
+  margin: 105px auto 0;
 }
 
 .sectionHeading {
-  margin-bottom: 38px;
+  margin-bottom: 36px;
 }
 
 .sectionHeading > span,
@@ -259,12 +250,12 @@
 .quickSearch span {
   display: block;
 
-  margin-bottom: 11px;
+  margin-bottom: 10px;
 
-  color: #ff2f7d;
+  color: #ff007f;
 
-  font-size: 11px;
-  font-weight: 850;
+  font-size: 10px;
+  font-weight: 900;
 
   letter-spacing: 2px;
 }
@@ -274,14 +265,13 @@
 
   margin: 0;
 
-  color: #ffffff;
+  color: #171717;
 
   font-size: 42px;
-  line-height: 1.08;
+  line-height: 1.05;
 
-  font-weight: 800;
-
-  letter-spacing: -1.6px;
+  font-weight: 900;
+  letter-spacing: -2px;
 }
 
 .sectionHeading p {
@@ -289,10 +279,9 @@
 
   margin: 14px 0 0;
 
-  color: #858890;
+  color: #4e4e4e;
 
   font-size: 15px;
-
   line-height: 1.7;
 }
 
@@ -303,60 +292,65 @@
 .introGrid {
   display: grid;
 
-  grid-template-columns: 1.55fr 0.85fr;
+  grid-template-columns: 1.45fr 0.85fr;
 
-  gap: 20px;
+  gap: 18px;
 }
 
 .introText {
   padding: 38px;
 
-  border: 1px solid #292b31;
-  border-radius: 26px;
+  box-sizing: border-box;
 
-  background: #111216;
+  border-radius: 25px;
 
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  background: #f0f0f1;
+
+  border: 1px solid #c4c5c7;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
 .introText p {
   margin: 0 0 18px;
 
-  color: #999ba2;
+  color: #4d4d50;
 
   font-size: 15px;
   line-height: 1.8;
 }
 
 .textButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  margin-top: 18px;
+  margin-top: 15px;
   padding: 0;
 
   border: none;
 
   background: transparent;
 
-  color: #ff2f7d;
+  color: #ff007f;
 
   font-family: inherit;
 
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 850;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: gap 0.2s ease;
 }
 
 .textButton:hover {
-  color: #ff5a98;
-
-  gap: 11px;
+  gap: 12px;
 }
+
+/* =========================================================
+   SILVER CARD
+========================================================= */
 
 .introCard {
   min-height: 280px;
@@ -365,26 +359,30 @@
 
   box-sizing: border-box;
 
-  border: 1px solid rgba(230, 0, 92, 0.25);
-  border-radius: 26px;
+  border-radius: 25px;
 
-  background:
-    radial-gradient(
-      circle at 80% 15%,
-      rgba(255, 47, 125, 0.18),
-      transparent 35%
-    ),
-    linear-gradient(145deg, #1b1117, #111216);
+  background: linear-gradient(
+    135deg,
+    #777 0%,
+    #dfe0e2 23%,
+    #f7f7f7 43%,
+    #b8b9bb 62%,
+    #686868 100%
+  );
 
-  color: #ffffff;
+  color: #171717;
 
-  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .introCard svg {
-  margin-bottom: 55px;
+  margin-bottom: 52px;
 
-  color: #ff2f7d;
+  color: #ff007f;
+
+  filter: drop-shadow(0 3px 5px rgba(255, 0, 127, 0.25));
 }
 
 .introCard strong {
@@ -392,23 +390,23 @@
 
   margin-bottom: 9px;
 
-  color: #ffffff;
-
   font-size: 25px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .introCard p {
+  max-width: 330px;
+
   margin: 0;
 
-  color: #999ba2;
+  color: #292929;
 
   font-size: 14px;
   line-height: 1.65;
 }
 
 /* =========================================================
-   PROPERTY TYPES
+   PROPERTY
 ========================================================= */
 
 .propertyGrid {
@@ -416,7 +414,7 @@
 
   grid-template-columns: repeat(4, 1fr);
 
-  gap: 16px;
+  gap: 15px;
 }
 
 .propertyCard {
@@ -426,25 +424,26 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #292b31;
-  border-radius: 24px;
+  border-radius: 22px;
 
-  background: #111216;
+  background: #f0f0f1;
+
+  border: 1px solid #c4c5c7;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .propertyCard:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
 
-  border-color: rgba(230, 0, 92, 0.38);
+  background: #fff;
 
-  box-shadow:
-    0 20px 45px rgba(0, 0, 0, 0.35),
-    0 8px 30px rgba(230, 0, 92, 0.05);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.11);
 }
 
 .cardIcon,
@@ -456,21 +455,20 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(230, 0, 92, 0.18);
-  border-radius: 14px;
+  border-radius: 12px;
 
-  background: rgba(230, 0, 92, 0.09);
+  background: #171717;
 
-  color: #ff2f7d;
+  color: #ff007f;
 }
 
 .propertyCard h3 {
-  margin: 24px 0 10px;
+  margin: 23px 0 9px;
 
-  color: #f4f5f7;
+  color: #171717;
 
   font-size: 18px;
-  font-weight: 750;
+  font-weight: 850;
 }
 
 .propertyCard p {
@@ -478,15 +476,14 @@
 
   margin: 0 0 18px;
 
-  color: #858890;
+  color: #5f6063;
 
   font-size: 13px;
-
   line-height: 1.65;
 }
 
 .propertyCard button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
 
@@ -496,22 +493,20 @@
 
   background: transparent;
 
-  color: #ff2f7d;
+  color: #ff007f;
 
   font-family: inherit;
 
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 850;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: gap 0.2s ease;
 }
 
 .propertyCard button:hover {
-  color: #ff5a98;
-
-  gap: 10px;
+  gap: 11px;
 }
 
 /* =========================================================
@@ -519,22 +514,25 @@
 ========================================================= */
 
 .benefitsSection {
-  padding: 65px;
+  padding: 58px;
 
   box-sizing: border-box;
 
-  border: 1px solid #292b31;
-  border-radius: 38px;
+  border-radius: 30px;
 
-  background:
-    radial-gradient(circle at 80% 0%, rgba(230, 0, 92, 0.07), transparent 35%),
-    #0f1013;
+  background: #242424;
 
-  color: #ffffff;
+  color: #fff;
+
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
 }
 
 .benefitsSection .sectionHeading {
   margin-bottom: 34px;
+}
+
+.benefitsSection .sectionHeading h2 {
+  color: #fff;
 }
 
 .benefitsGrid {
@@ -542,7 +540,7 @@
 
   grid-template-columns: repeat(2, 1fr);
 
-  gap: 14px;
+  gap: 12px;
 }
 
 .benefit {
@@ -550,44 +548,48 @@
 
   gap: 17px;
 
-  padding: 23px;
+  padding: 22px;
 
-  border: 1px solid #292b31;
-  border-radius: 20px;
+  border-radius: 17px;
 
-  background: #15161a;
+  background: #303030;
+
+  border: 1px solid #444;
 
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .benefit:hover {
-  border-color: rgba(230, 0, 92, 0.3);
+  transform: translateY(-3px);
 
-  background: #18191e;
+  border-color: #ff007f;
 }
 
 .benefitIcon {
   flex-shrink: 0;
+
+  background: #ff007f;
+
+  color: #fff;
 }
 
 .benefit h3 {
   margin: 2px 0 8px;
 
-  color: #f5f5f7;
+  color: #fff;
 
   font-size: 17px;
-  font-weight: 750;
+  font-weight: 850;
 }
 
 .benefit p {
   margin: 0;
 
-  color: #858890;
+  color: #a9a9ac;
 
   font-size: 13px;
-
   line-height: 1.65;
 }
 
@@ -600,7 +602,7 @@
 
   grid-template-columns: repeat(4, 1fr);
 
-  gap: 16px;
+  gap: 15px;
 }
 
 .locationCard {
@@ -624,65 +626,41 @@
 
   overflow: hidden;
 
-  border: 1px solid #292b31;
-  border-radius: 25px;
+  border-radius: 22px;
 
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8)),
+    linear-gradient(180deg, rgba(23, 23, 23, 0.05), rgba(23, 23, 23, 0.9)),
     url("/assets/issykKul.webp") center / cover;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.locationCard:nth-child(1) .locationImage {
-  background:
-    linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.85)),
-    url("/assets/issykKul.webp") center / cover;
-}
-
-.locationCard:nth-child(2) .locationImage {
-  background:
-    linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.85)),
-    url("/assets/issykKul.webp") 35% center / cover;
-}
-
-.locationCard:nth-child(3) .locationImage {
-  background:
-    linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.85)),
-    url("/assets/issykKul.webp") 65% center / cover;
-}
-
-.locationCard:nth-child(4) .locationImage {
-  background:
-    linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.85)),
-    url("/assets/issykKul.webp") right center / cover;
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .locationCard:hover .locationImage {
   transform: translateY(-5px);
 
-  border-color: rgba(230, 0, 92, 0.5);
+  box-shadow: 0 23px 45px rgba(0, 0, 0, 0.2);
 }
 
 .locationOverlay {
   position: absolute;
-
   inset: 0;
 
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.08) 25%,
-    rgba(0, 0, 0, 0.75) 100%
+    rgba(23, 23, 23, 0) 25%,
+    rgba(23, 23, 23, 0.85) 100%
   );
 }
 
 .locationIcon {
   position: absolute;
 
-  top: 18px;
-  left: 18px;
+  top: 17px;
+  left: 17px;
 
   width: 43px;
   height: 43px;
@@ -691,14 +669,11 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 13px;
+  border-radius: 12px;
 
-  background: rgba(12, 13, 16, 0.78);
+  background: #171717;
 
-  color: #ff2f7d;
-
-  backdrop-filter: blur(12px);
+  color: #ff007f;
 }
 
 .locationInfo {
@@ -708,23 +683,22 @@
   right: 42px;
   bottom: 19px;
 
-  color: #ffffff;
+  color: #fff;
 }
 
 .locationInfo h3 {
   margin: 0 0 5px;
 
   font-size: 21px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .locationInfo p {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.7);
 
   font-size: 12px;
-
   line-height: 1.5;
 }
 
@@ -734,15 +708,14 @@
   right: 18px;
   bottom: 21px;
 
-  color: #ffffff;
+  color: #fff;
 
   transition: 0.2s ease;
 }
 
 .locationCard:hover .locationArrow {
-  color: #ff2f7d;
-
-  transform: translateX(3px);
+  color: #ff007f;
+  transform: translateX(4px);
 }
 
 /* =========================================================
@@ -752,34 +725,31 @@
 .investment {
   position: relative;
 
-  min-height: 430px;
+  min-height: 420px;
 
-  margin: 110px auto 0;
+  margin: 105px auto 0;
 
   overflow: hidden;
 
-  border: 1px solid rgba(230, 0, 92, 0.28);
-  border-radius: 38px;
+  border-radius: 30px;
 
   background:
-    linear-gradient(135deg, rgba(230, 0, 92, 0.82), rgba(40, 5, 22, 0.9)),
+    linear-gradient(110deg, rgba(23, 23, 23, 0.9), rgba(23, 23, 23, 0.55)),
     url("/assets/issykKul.webp") center / cover;
 
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
 }
 
 .investmentOverlay {
   position: absolute;
-
   inset: 0;
 
-  background:
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 70, 145, 0.2),
-      transparent 35%
-    ),
-    rgba(0, 0, 0, 0.18);
+  background: linear-gradient(
+    90deg,
+    rgba(23, 23, 23, 0.95) 0%,
+    rgba(23, 23, 23, 0.55) 65%,
+    rgba(255, 0, 127, 0.18) 100%
+  );
 }
 
 .investmentContent {
@@ -788,62 +758,57 @@
 
   max-width: 700px;
 
-  padding: 70px;
+  padding: 68px;
 
-  color: #ffffff;
+  color: #fff;
 }
 
 .investmentIcon {
-  width: 53px;
-  height: 53px;
+  width: 52px;
+  height: 52px;
 
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 15px;
+  border-radius: 13px;
 
-  background: rgba(0, 0, 0, 0.22);
+  background: #ff007f;
 
-  color: #ffffff;
-
-  backdrop-filter: blur(10px);
+  color: #fff;
 }
 
 .investmentContent > span {
-  color: rgba(255, 255, 255, 0.75);
+  color: #ff007f;
 }
 
 .investmentContent h2 {
   margin: 0;
 
-  color: #ffffff;
+  color: #fff;
 
   font-size: 43px;
   line-height: 1.08;
 
-  font-weight: 850;
-
-  letter-spacing: -1.6px;
+  font-weight: 900;
+  letter-spacing: -2px;
 }
 
 .investmentContent p {
   margin: 20px 0 30px;
 
-  color: rgba(255, 255, 255, 0.76);
-
-  line-height: 1.7;
+  color: #bdbdc0;
 
   font-size: 15px;
+  line-height: 1.7;
 }
 
 .investmentContent button,
 .quickSearch button,
 .addSection button {
-  height: 55px;
+  height: 53px;
 
   padding: 0 21px;
 
@@ -853,30 +818,34 @@
 
   gap: 9px;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 15px;
+  border: none;
+  border-radius: 13px;
 
-  background: #ffffff;
+  background: #ff007f;
 
-  color: #111216;
+  color: #fff;
 
   font-family: inherit;
 
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 850;
 
   cursor: pointer;
 
-  transition: 0.22s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .investmentContent button:hover,
-.quickSearch button:hover {
+.quickSearch button:hover,
+.addSection button:hover {
   transform: translateY(-3px);
 
-  background: #f0f0f2;
+  background: #ff2b98;
 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 30px rgba(255, 0, 127, 0.3);
 }
 
 /* =========================================================
@@ -884,9 +853,9 @@
 ========================================================= */
 
 .quickSearch {
-  margin: 75px auto 0;
+  margin: 70px auto 0;
 
-  padding: 27px;
+  padding: 24px;
 
   display: flex;
   align-items: center;
@@ -896,12 +865,22 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #292b31;
-  border-radius: 25px;
+  border-radius: 22px;
 
-  background: #111216;
+  background: linear-gradient(
+    135deg,
+    #8e8f91 0%,
+    #eeeeef 28%,
+    #b9babd 50%,
+    #f5f5f5 72%,
+    #929396 100%
+  );
 
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid #a8a9ab;
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .quickSearch > div {
@@ -912,8 +891,8 @@
 }
 
 .quickIcon {
-  width: 51px;
-  height: 51px;
+  width: 49px;
+  height: 49px;
 
   flex-shrink: 0;
 
@@ -921,12 +900,11 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(230, 0, 92, 0.18);
-  border-radius: 15px;
+  border-radius: 13px;
 
-  background: rgba(230, 0, 92, 0.09);
+  background: #171717;
 
-  color: #ff2f7d;
+  color: #ff007f;
 }
 
 .quickSearch span {
@@ -936,16 +914,16 @@
 .quickSearch h2 {
   margin: 0;
 
-  color: #f5f5f7;
+  color: #171717;
 
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 21px;
+  font-weight: 900;
 }
 
 .quickSearch p {
   margin: 6px 0 0;
 
-  color: #777a82;
+  color: #404043;
 
   font-size: 13px;
 }
@@ -955,9 +933,9 @@
 ========================================================= */
 
 .addSection {
-  margin: 75px auto 110px;
+  margin: 70px auto 100px;
 
-  padding: 48px;
+  padding: 46px;
 
   display: flex;
   align-items: center;
@@ -967,21 +945,24 @@
 
   box-sizing: border-box;
 
-  border: 1px solid #292b31;
-  border-radius: 30px;
+  border-radius: 25px;
 
-  background:
-    radial-gradient(circle at 100% 0%, rgba(230, 0, 92, 0.08), transparent 35%),
-    #111216;
+  background: #171717;
+
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
+}
+
+.addSection > div > span {
+  color: #ff007f;
 }
 
 .addSection h2 {
   margin: 0;
 
-  color: #ffffff;
+  color: #fff;
 
   font-size: 32px;
-  font-weight: 800;
+  font-weight: 900;
 
   letter-spacing: -1px;
 }
@@ -991,33 +972,14 @@
 
   margin: 12px 0 0;
 
-  color: #858890;
-
-  line-height: 1.65;
+  color: #a5a5a8;
 
   font-size: 14px;
+  line-height: 1.65;
 }
 
 .addSection button {
   flex-shrink: 0;
-
-  background: #e6005c;
-
-  border-color: #e6005c;
-
-  color: #ffffff;
-
-  box-shadow: 0 10px 30px rgba(230, 0, 92, 0.2);
-}
-
-.addSection button:hover {
-  background: #ff0a69;
-
-  border-color: #ff0a69;
-
-  transform: translateY(-3px);
-
-  box-shadow: 0 15px 35px rgba(230, 0, 92, 0.3);
 }
 
 /* =========================================================
@@ -1025,23 +987,8 @@
 ========================================================= */
 
 @media (max-width: 1200px) {
-  .hero {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-
-  .section,
-  .intro,
-  .quickSearch,
-  .addSection,
-  .investment {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-
-  .benefitsSection {
-    margin-left: 20px;
-    margin-right: 20px;
+  .page {
+    padding: 35px;
   }
 
   .propertyGrid,
@@ -1051,11 +998,15 @@
 }
 
 @media (max-width: 800px) {
+  .page {
+    padding: 18px;
+  }
+
   .hero {
     height: auto;
-    min-height: 680px;
+    min-height: 650px;
 
-    border-radius: 30px;
+    border-radius: 25px;
   }
 
   .heroContent {
@@ -1064,16 +1015,15 @@
 
   .hero h1 {
     font-size: 48px;
-    letter-spacing: -2px;
+    letter-spacing: -2.5px;
   }
 
   .hero p {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .buttons {
     width: 100%;
-
     flex-direction: column;
   }
 
@@ -1111,10 +1061,6 @@
   .addSection {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .quickSearch {
-    padding: 25px;
   }
 
   .quickSearch button,

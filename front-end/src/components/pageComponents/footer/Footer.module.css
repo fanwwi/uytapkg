@@ -1,19 +1,29 @@
 .footer {
   width: 100%;
-  background: #090909;
-  color: #fff;
+
+  background: linear-gradient(180deg, #d9d9dc 0%, #c8c8cb 100%);
+
+  color: #1b1b1d;
+
   padding-top: 80px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
 }
+
+/* =========================
+   CONTAINER
+========================= */
 
 .container {
   width: 100%;
   max-width: 1450px;
+
   margin: 0 auto;
   padding: 0 40px;
 
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
+
   gap: 50px;
 }
 
@@ -28,29 +38,38 @@
 .logo {
   display: flex;
   align-items: center;
+
   width: fit-content;
+
   margin-bottom: 20px;
+
   text-decoration: none;
 }
 
 .logo img {
   display: block;
+
   width: 200px;
   height: auto;
+
   object-fit: contain;
+
   margin-left: -20px;
+
   transition: transform 0.3s ease;
 }
 
 .logo img:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .brand > p {
   margin: -20px 0 0;
+
   max-width: 350px;
 
-  color: #999;
+  color: #55555a;
+
   font-size: 15px;
   line-height: 1.6;
 }
@@ -64,29 +83,37 @@
 
   display: flex;
   flex-direction: column;
+
   gap: 15px;
 
-  color: #bbb;
+  color: #4f4f54;
+
   font-size: 14px;
 }
 
 .contacts div {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
-  transition: color 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .contacts div:hover {
-  color: #fff;
+  color: #ff007f;
+  transform: translateX(3px);
 }
 
 .contacts svg {
   width: 20px;
   height: 20px;
+
   flex-shrink: 0;
-  color: #ff2990;
+
+  color: #ff007f;
 }
 
 /* =========================
@@ -96,31 +123,38 @@
 .column {
   display: flex;
   flex-direction: column;
+
   gap: 18px;
 }
 
 .column h3 {
   margin: 0 0 10px;
 
-  color: #fff;
+  color: #19191b;
+
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 850;
 }
 
-/* Обычные ссылки */
+/* =========================
+   LINKS
+========================= */
 
 .column a {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   width: fit-content;
 
-  color: #aaa;
+  color: #55555a;
+
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 
   cursor: pointer;
+
   text-decoration: none;
 
   transition:
@@ -129,15 +163,18 @@
 }
 
 .column a:hover {
-  color: #ff2990;
+  color: #ff007f;
+
   transform: translateX(5px);
 }
 
 .column a svg {
   width: 20px;
   height: 20px;
+
   flex-shrink: 0;
-  color: #ff2990;
+
+  color: #ff007f;
 }
 
 /* =========================
@@ -147,6 +184,7 @@
 .linkButton {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   width: fit-content;
@@ -159,11 +197,12 @@
 
   background: transparent;
 
-  color: #aaa;
+  color: #55555a;
 
   font-family: inherit;
+
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 
   text-align: left;
 
@@ -175,42 +214,52 @@
 }
 
 .linkButton:hover {
-  color: #ff2990;
+  color: #ff007f;
+
   transform: translateX(5px);
 }
 
 .linkButton:focus-visible {
-  color: #ff2990;
-  outline: 2px solid rgba(255, 41, 144, 0.45);
+  color: #ff007f;
+
+  outline: 2px solid rgba(255, 0, 127, 0.35);
   outline-offset: 5px;
+
   border-radius: 5px;
 }
 
 .linkButton svg {
   width: 20px;
   height: 20px;
+
   flex-shrink: 0;
 
-  color: #ff2990;
+  color: #ff007f;
 }
 
 /* =========================
-   APP
+   APP BOX
 ========================= */
 
 .appBox {
   display: flex;
   align-items: center;
+
   gap: 15px;
 
   padding: 16px;
 
   border-radius: 20px;
 
-  background: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.38);
+
+  border: 1px solid rgba(255, 255, 255, 0.75);
 
   margin-top: 5px;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 
   transition:
     border-color 0.3s ease,
@@ -219,35 +268,40 @@
 }
 
 .appBox:hover {
-  background: #171717;
-  border-color: rgba(255, 41, 144, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+
+  border-color: rgba(255, 0, 127, 0.3);
+
   transform: translateY(-2px);
 }
 
 .appBox > svg {
   width: 38px;
   height: 38px;
+
   flex-shrink: 0;
 
-  color: #ff2990;
+  color: #ff007f;
 }
 
 .appBox strong {
   display: block;
 
-  color: #fff;
+  color: #1b1b1d;
+
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 .appBox strong span {
-  color: #f69ec9;
+  color: #ff007f;
 }
 
 .appBox p {
   margin: 5px 0 0;
 
-  color: #888;
+  color: #66666b;
+
   font-size: 13px;
   line-height: 1.4;
 }
@@ -259,6 +313,7 @@
 .playStore {
   display: flex !important;
   align-items: center;
+
   gap: 14px;
 
   width: 100% !important;
@@ -269,41 +324,46 @@
   margin-top: 15px;
   padding: 0 18px;
 
+  box-sizing: border-box;
+
   border-radius: 18px;
 
-  background: #000;
-  border: 1px solid #333;
+  background: #252527;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
 
   text-decoration: none;
 
   transition:
-    border-color 0.35s ease,
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .playStore:hover {
-  border-color: #ff2990;
+  border-color: #ff007f;
 
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 
-  box-shadow: 0 20px 40px rgba(255, 41, 144, 0.25);
+  box-shadow: 0 14px 30px rgba(255, 0, 127, 0.2);
 }
 
 .playIcon {
   width: 38px;
   height: 38px;
+
   flex-shrink: 0;
 
   border-radius: 50%;
 
-  background: #ff2990;
+  background: #ff007f;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #fff;
+  color: #ffffff;
+
   font-size: 15px;
 }
 
@@ -312,14 +372,16 @@
 
   margin-bottom: 2px;
 
-  color: #999;
+  color: #a8a8ad;
+
   font-size: 12px;
 }
 
 .playStore strong {
   display: block;
 
-  color: #fff;
+  color: #ffffff;
+
   font-size: 18px;
   font-weight: 800;
 }
@@ -330,11 +392,12 @@
 
 .bottom {
   margin-top: 60px;
+
   padding: 25px 20px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
 
-  color: #777;
+  color: #66666b;
 
   font-size: 13px;
 
@@ -348,6 +411,7 @@
 @media (max-width: 1100px) {
   .container {
     grid-template-columns: 1.5fr 1fr 1fr;
+
     gap: 40px;
   }
 
@@ -367,6 +431,7 @@
 
   .container {
     grid-template-columns: 1fr;
+
     gap: 42px;
 
     padding: 0 22px;
@@ -378,16 +443,19 @@
 
   .logo img {
     width: 175px;
+
     margin-left: -15px;
   }
 
   .brand > p {
     max-width: 100%;
+
     font-size: 14px;
   }
 
   .contacts {
     margin-top: 25px;
+
     gap: 13px;
   }
 
@@ -397,6 +465,7 @@
 
   .column h3 {
     margin-bottom: 7px;
+
     font-size: 17px;
   }
 
@@ -415,7 +484,9 @@
 
   .bottom {
     margin-top: 45px;
+
     padding: 20px 15px;
+
     font-size: 12px;
   }
 }
