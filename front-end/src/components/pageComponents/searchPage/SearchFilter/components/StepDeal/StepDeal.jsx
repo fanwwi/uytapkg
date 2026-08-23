@@ -7,7 +7,6 @@ import {
   Clock3,
   Home,
   KeyRound,
-  Moon,
   Sun,
 } from "lucide-react";
 
@@ -19,14 +18,12 @@ const dealTypes = [
     title: "Куплю",
     description: "Просмотреть объекты, размещенные на продажу",
     icon: BadgeDollarSign,
-    accent: "sale",
   },
   {
     value: "rent",
     title: "Сниму в аренду",
     description: "Посмотреть объекты, которые сдаются в аренду",
     icon: KeyRound,
-    accent: "rent",
   },
 ];
 
@@ -66,22 +63,25 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
 
   return (
     <div className={styles.step}>
+      {/* HEADER */}
       <div className={styles.header}>
-        <span className={styles.stepBadge}>
-          <span className={styles.stepDot} />
-          Шаг 2 из 5
-        </span>
-
         <h1>Выберите формат сделки</h1>
 
-        <p>Продажа или аренда недвижимости.</p>
+        <p>
+          Укажите, что вы хотите сделать с недвижимостью — купить объект или
+          снять его в аренду.
+        </p>
       </div>
 
       {/* DEAL TYPE */}
       <div className={styles.section}>
         <div className={styles.sectionTitle}>
-          <span>Тип сделки</span>
-          <small>Выберите один вариант</small>
+          <div>
+            <span>Тип сделки</span>
+            <small>Выберите один вариант</small>
+          </div>
+
+          <span className={styles.required}>Обязательно</span>
         </div>
 
         <div className={styles.cards}>
@@ -103,12 +103,22 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
                     <Icon />
                   </div>
 
-                  {selected && <span className={styles.check}></span>}
+                  <span
+                    className={`${styles.radio} ${
+                      selected ? styles.radioActive : ""
+                    }`}
+                  >
+                    {selected && <span />}
+                  </span>
                 </div>
 
                 <div className={styles.cardContent}>
                   <strong>{item.title}</strong>
                   <span>{item.description}</span>
+                </div>
+
+                <div className={styles.cardArrow}>
+                  <ChevronRight size={17} />
                 </div>
 
                 <div className={styles.cardGlow} />
@@ -156,7 +166,13 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
 
                   <span className={styles.smallLabel}>{item.label}</span>
 
-                  {selected && <span className={styles.smallCheck}>✓</span>}
+                  <span
+                    className={`${styles.smallRadio} ${
+                      selected ? styles.smallRadioActive : ""
+                    }`}
+                  >
+                    {selected && <span />}
+                  </span>
                 </button>
               );
             })}
@@ -170,17 +186,17 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
           Назад
         </button>
 
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.primary}
-            disabled={!canContinue}
-            onClick={onNext}
-          >
-            Продолжить
+        <button
+          type="button"
+          className={styles.primary}
+          disabled={!canContinue}
+          onClick={onNext}
+        >
+          <span>Продолжить</span>
+          <span className={styles.primaryIcon}>
             <ChevronRight size={18} />
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
     </div>
   );

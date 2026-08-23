@@ -19,11 +19,11 @@ import {
   removeFavorite,
 } from "@/utils/api";
 
-import CustomSelectBlack from "@/components/ui/CustomSelectBlack/CustomSelectBlack";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
 import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 
 /*
  * =========================

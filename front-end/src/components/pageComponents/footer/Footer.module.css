@@ -1,13 +1,15 @@
 .footer {
   width: 100%;
 
-  background: linear-gradient(180deg, #d9d9dc 0%, #c8c8cb 100%);
+  background: #17171b;
 
-  color: #1b1b1d;
+  color: #f4f4f5;
 
   padding-top: 80px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(168, 85, 247, 0.18);
+
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -25,6 +27,8 @@
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
 
   gap: 50px;
+
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -56,11 +60,14 @@
 
   margin-left: -20px;
 
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
 .logo img:hover {
   transform: scale(1.04);
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.22));
 }
 
 .brand > p {
@@ -68,7 +75,7 @@
 
   max-width: 350px;
 
-  color: #55555a;
+  color: #a1a1aa;
 
   font-size: 15px;
   line-height: 1.6;
@@ -86,7 +93,7 @@
 
   gap: 15px;
 
-  color: #4f4f54;
+  color: #a1a1aa;
 
   font-size: 14px;
 }
@@ -103,7 +110,7 @@
 }
 
 .contacts div:hover {
-  color: #ff007f;
+  color: #f4f4f5;
   transform: translateX(3px);
 }
 
@@ -113,7 +120,17 @@
 
   flex-shrink: 0;
 
-  color: #ff007f;
+  color: #a855f7;
+
+  transition:
+    color 0.25s ease,
+    filter 0.25s ease;
+}
+
+.contacts div:hover svg {
+  color: #c084fc;
+
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.35));
 }
 
 /* =========================
@@ -130,7 +147,7 @@
 .column h3 {
   margin: 0 0 10px;
 
-  color: #19191b;
+  color: #f4f4f5;
 
   font-size: 18px;
   font-weight: 850;
@@ -148,7 +165,7 @@
 
   width: fit-content;
 
-  color: #55555a;
+  color: #a1a1aa;
 
   font-size: 14px;
   font-weight: 600;
@@ -163,7 +180,7 @@
 }
 
 .column a:hover {
-  color: #ff007f;
+  color: #c084fc;
 
   transform: translateX(5px);
 }
@@ -174,7 +191,13 @@
 
   flex-shrink: 0;
 
-  color: #ff007f;
+  color: #a855f7;
+
+  transition: filter 0.25s ease;
+}
+
+.column a:hover svg {
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.35));
 }
 
 /* =========================
@@ -197,7 +220,7 @@
 
   background: transparent;
 
-  color: #55555a;
+  color: #a1a1aa;
 
   font-family: inherit;
 
@@ -214,15 +237,16 @@
 }
 
 .linkButton:hover {
-  color: #ff007f;
+  color: #c084fc;
 
   transform: translateX(5px);
 }
 
 .linkButton:focus-visible {
-  color: #ff007f;
+  color: #c084fc;
 
-  outline: 2px solid rgba(255, 0, 127, 0.35);
+  outline: 2px solid rgba(168, 85, 247, 0.4);
+
   outline-offset: 5px;
 
   border-radius: 5px;
@@ -234,7 +258,7 @@
 
   flex-shrink: 0;
 
-  color: #ff007f;
+  color: #a855f7;
 }
 
 /* =========================
@@ -251,28 +275,33 @@
 
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.38);
+  background: #222228;
 
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 
   margin-top: 5px;
 
   box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 12px 30px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   transition:
     border-color 0.3s ease,
     transform 0.3s ease,
-    background 0.3s ease;
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .appBox:hover {
-  background: rgba(255, 255, 255, 0.55);
+  background: #26262d;
 
-  border-color: rgba(255, 0, 127, 0.3);
+  border-color: rgba(168, 85, 247, 0.3);
 
   transform: translateY(-2px);
+
+  box-shadow:
+    0 16px 35px rgba(0, 0, 0, 0.22),
+    0 0 25px rgba(168, 85, 247, 0.06);
 }
 
 .appBox > svg {
@@ -281,26 +310,26 @@
 
   flex-shrink: 0;
 
-  color: #ff007f;
+  color: #a855f7;
 }
 
 .appBox strong {
   display: block;
 
-  color: #1b1b1d;
+  color: #f4f4f5;
 
   font-size: 16px;
   font-weight: 850;
 }
 
 .appBox strong span {
-  color: #ff007f;
+  color: #c084fc;
 }
 
 .appBox p {
   margin: 5px 0 0;
 
-  color: #66666b;
+  color: #85858e;
 
   font-size: 13px;
   line-height: 1.4;
@@ -328,9 +357,9 @@
 
   border-radius: 18px;
 
-  background: #252527;
+  background: #0f0f12;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
   text-decoration: none;
 
@@ -341,11 +370,13 @@
 }
 
 .playStore:hover {
-  border-color: #ff007f;
+  border-color: rgba(168, 85, 247, 0.7);
 
   transform: translateY(-4px);
 
-  box-shadow: 0 14px 30px rgba(255, 0, 127, 0.2);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.3),
+    0 0 22px rgba(168, 85, 247, 0.12);
 }
 
 .playIcon {
@@ -356,7 +387,7 @@
 
   border-radius: 50%;
 
-  background: #ff007f;
+  background: #8b5cf6;
 
   display: flex;
   align-items: center;
@@ -365,6 +396,8 @@
   color: #ffffff;
 
   font-size: 15px;
+
+  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.25);
 }
 
 .playStore span {
@@ -372,7 +405,7 @@
 
   margin-bottom: 2px;
 
-  color: #a8a8ad;
+  color: #85858e;
 
   font-size: 12px;
 }
@@ -380,7 +413,7 @@
 .playStore strong {
   display: block;
 
-  color: #ffffff;
+  color: #f4f4f5;
 
   font-size: 18px;
   font-weight: 800;
@@ -395,9 +428,11 @@
 
   padding: 25px 20px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 
-  color: #66666b;
+  background: #0f0f12;
+
+  color: #71717a;
 
   font-size: 13px;
 

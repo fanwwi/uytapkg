@@ -3,20 +3,33 @@
 ========================= */
 
 .card {
-  background: white;
-  color: #1a202c;
+  background: #ffffff;
+  color: #17131f;
+
+  border: 1px solid #ece8f3;
   border-radius: 28px;
+
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
+
+  box-shadow:
+    0 10px 35px rgba(35, 20, 55, 0.07),
+    0 2px 8px rgba(35, 20, 55, 0.03);
+
   transition:
     transform 0.25s ease,
-    box-shadow 0.25s ease;
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .card:hover {
   transform: translateY(-7px);
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.11);
+
+  border-color: #ddd2ec;
+
+  box-shadow:
+    0 22px 55px rgba(70, 35, 110, 0.13),
+    0 5px 15px rgba(70, 35, 110, 0.05);
 }
 
 /* =========================
@@ -25,12 +38,16 @@
 
 .image {
   height: 245px;
+
   position: relative;
   overflow: hidden;
+
+  background: #f1eef5;
 }
 
 .image img {
   object-fit: cover;
+
   transition: transform 0.4s ease;
 }
 
@@ -44,37 +61,56 @@
 
 .badges {
   position: absolute;
+
   top: 18px;
   left: 18px;
+
   z-index: 3;
+
   display: flex;
   align-items: center;
+
   gap: 7px;
+
   max-width: calc(100% - 75px);
+
   overflow: hidden;
 }
 
 .status,
 .type {
   height: 34px;
+
   padding: 0 12px;
+
   border-radius: 12px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 5px;
+
   font-size: 12px;
   font-weight: 800;
+
   white-space: nowrap;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+
+  box-shadow: 0 5px 15px rgba(25, 15, 40, 0.15);
+
   backdrop-filter: blur(8px);
 }
 
-/* VIP */
+/* =========================
+   VIP
+========================= */
 
 .vip {
-  background: linear-gradient(135deg, #fff2a8, #ffc400);
-  color: #6b4700;
+  background: linear-gradient(135deg, #f0e7ff, #d7baff);
+
+  color: #5b2a91;
+
+  border: 1px solid rgba(111, 63, 160, 0.12);
 }
 
 .vip svg {
@@ -82,11 +118,15 @@
   height: 14px;
 }
 
-/* URGENT */
+/* =========================
+   URGENT
+========================= */
 
 .urgent {
-  background: #ff006f;
-  color: white;
+  background: #6d28d9;
+  color: #ffffff;
+
+  box-shadow: 0 6px 18px rgba(109, 40, 217, 0.28);
 }
 
 .urgent svg {
@@ -94,11 +134,16 @@
   height: 14px;
 }
 
-/* PROPERTY TYPE */
+/* =========================
+   PROPERTY TYPE
+========================= */
 
 .type {
   background: rgba(255, 255, 255, 0.94);
-  color: #ff006f;
+
+  color: #6d28d9;
+
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 /* =========================
@@ -107,26 +152,47 @@
 
 .favorite {
   position: absolute;
+
   top: 16px;
   right: 16px;
+
   z-index: 4;
+
   width: 42px;
   height: 42px;
-  border: none;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.92);
-  color: #333;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  color: #514b5b;
+
   cursor: pointer;
-  transition: 0.2s;
+
+  box-shadow: 0 6px 18px rgba(20, 10, 35, 0.12);
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .favorite:hover {
-  background: #ffe4f0;
-  color: #ff006f;
+  background: #f1eaff;
+
+  color: #6d28d9;
+
   transform: scale(1.08);
+
+  box-shadow: 0 8px 22px rgba(109, 40, 217, 0.16);
 }
 
 .favorite svg {
@@ -144,8 +210,12 @@
 
 .content h2 {
   margin: 0;
+
+  color: #18131f;
+
   font-size: 21px;
   line-height: 1.3;
+
   font-weight: 800;
 }
 
@@ -155,18 +225,24 @@
 
 .location {
   margin-top: 13px;
+
   display: flex;
   align-items: center;
+
   gap: 7px;
-  color: #777;
+
+  color: #77717f;
+
   font-size: 15px;
 }
 
 .location svg {
   width: 18px;
   height: 18px;
+
   flex-shrink: 0;
-  color: #ff006f;
+
+  color: #6d28d9;
 }
 
 /* =========================
@@ -175,17 +251,25 @@
 
 .details {
   margin-top: 18px;
+
   display: flex;
   align-items: center;
+
   gap: 8px;
+
   flex-wrap: wrap;
 }
 
 .details span {
   padding: 7px 11px;
+
+  border: 1px solid #ebe6f0;
   border-radius: 10px;
-  background: #f5f5f5;
-  color: #666;
+
+  background: #f7f5f9;
+
+  color: #68616f;
+
   font-size: 13px;
   font-weight: 600;
 }
@@ -197,40 +281,59 @@
 .bottom {
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 1px solid #eee;
+
+  border-top: 1px solid #eeeaf2;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 12px;
 }
 
 .bottom strong {
+  color: #17131f;
+
   font-size: 21px;
   font-weight: 900;
+
   white-space: nowrap;
 }
+
+/* =========================
+   MORE BUTTON
+========================= */
 
 .more {
   height: 42px;
+
   padding: 0 17px;
+
   border: none;
   border-radius: 13px;
-  background: #ff006f;
-  color: white;
+
+  background: #6d28d9;
+  color: #ffffff;
+
   font-size: 14px;
   font-weight: 800;
+
   cursor: pointer;
+
   white-space: nowrap;
+
   transition:
-    background 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .more:hover {
-  background: #e60063;
+  background: #5b21b6;
+
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(255, 0, 111, 0.22);
+
+  box-shadow: 0 8px 20px rgba(109, 40, 217, 0.24);
 }
 
 .more:active {
@@ -264,26 +367,32 @@
 
   .more {
     padding: 0 14px;
+
     font-size: 13px;
   }
 
   .badges {
     top: 14px;
     left: 14px;
+
     gap: 6px;
+
     max-width: calc(100% - 68px);
   }
 
   .status,
   .type {
     height: 32px;
+
     padding: 0 10px;
+
     font-size: 11px;
   }
 
   .favorite {
     top: 13px;
     right: 13px;
+
     width: 40px;
     height: 40px;
   }

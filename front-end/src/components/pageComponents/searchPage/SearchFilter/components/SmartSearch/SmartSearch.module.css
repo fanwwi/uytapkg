@@ -1,42 +1,13 @@
 .smartSearch {
   position: relative;
   width: 100%;
-  margin-bottom: 28px;
-  padding: 30px;
 
   overflow: hidden;
-
-  background: #f3f3f4;
-
-  border: 1px solid #dedee1;
-  border-radius: 22px;
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   text-align: left;
 
   animation: smartAppear 0.35s ease-out;
-}
-
-/* небольшой розовый акцент, без glow-каши */
-
-.smartSearch::before {
-  content: "";
-
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  width: 180px;
-  height: 3px;
-
-  background: #ff007b;
-
-  border-radius: 0 22px 0 0;
-
-  pointer-events: none;
+  margin-top: 50px;
 }
 
 /* =========================
@@ -66,11 +37,11 @@
 
   border-radius: 14px;
 
-  background: #ff007b;
+  background: #7c3aed;
 
   color: #fff;
 
-  box-shadow: 0 8px 20px rgba(255, 0, 123, 0.22);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.22);
 }
 
 .badge {
@@ -79,7 +50,7 @@
 
   margin-bottom: 5px;
 
-  color: #ff007b;
+  color: #7c3aed;
 
   font-size: 10px;
   font-weight: 800;
@@ -90,7 +61,7 @@
 .header h1 {
   margin: 0;
 
-  color: #171719;
+  color: #17171a;
 
   font-size: 23px;
   line-height: 1.2;
@@ -104,7 +75,7 @@
 
   margin: 7px 0 0;
 
-  color: #77777b;
+  color: #77777d;
 
   font-size: 13px;
   line-height: 1.55;
@@ -128,7 +99,7 @@
 
   background: #ffffff;
 
-  border: 1px solid #dcdcdf;
+  border: 1px solid #dedee3;
   border-radius: 16px;
 
   box-shadow:
@@ -141,10 +112,10 @@
 }
 
 .searchBox:focus-within {
-  border-color: #ff007b;
+  border-color: #7c3aed;
 
   box-shadow:
-    0 0 0 3px rgba(255, 0, 123, 0.08),
+    0 0 0 3px rgba(124, 58, 237, 0.08),
     0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
@@ -167,7 +138,7 @@
 
   background: transparent;
 
-  color: #171719;
+  color: #17171a;
 
   font-family: inherit;
   font-size: 14px;
@@ -175,7 +146,7 @@
 }
 
 .searchBox textarea::placeholder {
-  color: #a2a2a6;
+  color: #a1a1a7;
 }
 
 .searchBox textarea:disabled {
@@ -201,12 +172,12 @@
 
   margin-bottom: 1px;
 
-  border: 1px solid #d9d9dc;
+  border: 1px solid #dedee3;
   border-radius: 13px;
 
-  background: #f1f1f3;
+  background: #f1f1f4;
 
-  color: #55555a;
+  color: #55555c;
 
   cursor: pointer;
 
@@ -218,15 +189,15 @@
 }
 
 .voiceButton:hover {
-  background: #ff007b;
+  background: #7c3aed;
 
-  border-color: #ff007b;
+  border-color: #7c3aed;
 
   color: #fff;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 7px 18px rgba(255, 0, 123, 0.2);
+  box-shadow: 0 7px 18px rgba(124, 58, 237, 0.2);
 }
 
 .voiceButton:active {
@@ -238,15 +209,15 @@
 ========================= */
 
 .listening {
-  background: #ff007b;
+  background: #7c3aed;
 
-  border-color: #ff007b;
+  border-color: #7c3aed;
 
   color: #fff;
 
   box-shadow:
-    0 7px 22px rgba(255, 0, 123, 0.28),
-    0 0 0 4px rgba(255, 0, 123, 0.08);
+    0 7px 22px rgba(124, 58, 237, 0.28),
+    0 0 0 4px rgba(124, 58, 237, 0.08);
 
   animation: micPulse 1.4s ease-in-out infinite;
 }
@@ -259,7 +230,7 @@
 
   inset: -5px;
 
-  border: 1px solid rgba(255, 0, 123, 0.3);
+  border: 1px solid rgba(124, 58, 237, 0.3);
 
   border-radius: 15px;
 
@@ -307,7 +278,7 @@
 
   margin-top: 12px;
 
-  color: #66666b;
+  color: #66666d;
 
   font-size: 12px;
   font-weight: 600;
@@ -321,22 +292,22 @@
 
   border-radius: 50%;
 
-  background: #ff007b;
+  background: #7c3aed;
 
   animation: statusPulse 1.3s infinite;
 }
 
 @keyframes statusPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 0, 123, 0.45);
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.45);
   }
 
   70% {
-    box-shadow: 0 0 0 8px rgba(255, 0, 123, 0);
+    box-shadow: 0 0 0 8px rgba(124, 58, 237, 0);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 0, 123, 0);
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
   }
 }
 
@@ -352,9 +323,10 @@
 
   padding: 9px 12px;
 
+  border: 1px solid #fecaca;
   border-radius: 9px;
 
-  background: #fff0f0;
+  background: #fff1f2;
 
   color: #dc2626;
 
@@ -384,7 +356,7 @@
   border: none;
   border-radius: 13px;
 
-  background: #ff007b;
+  background: #7c3aed;
 
   color: #fff;
 
@@ -394,7 +366,7 @@
 
   cursor: pointer;
 
-  box-shadow: 0 8px 20px rgba(255, 0, 123, 0.2);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -403,11 +375,11 @@
 }
 
 .searchButton:hover:not(:disabled) {
-  background: #ed006f;
+  background: #6d28d9;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 12px 28px rgba(255, 0, 123, 0.27);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.27);
 }
 
 .searchButton:active:not(:disabled) {
@@ -458,7 +430,7 @@
 .examples > span {
   margin-right: 2px;
 
-  color: #85858a;
+  color: #85858b;
 
   font-weight: 600;
 }
@@ -466,12 +438,12 @@
 .examples button {
   padding: 7px 11px;
 
-  border: 1px solid #dcdcdf;
+  border: 1px solid #dedee3;
   border-radius: 8px;
 
-  background: #e9e9eb;
+  background: #ededf0;
 
-  color: #5e5e63;
+  color: #5e5e65;
 
   font-family: inherit;
   font-size: 11px;
@@ -487,11 +459,11 @@
 }
 
 .examples button:hover {
-  background: #fff;
+  background: #ffffff;
 
-  border-color: #ff007b;
+  border-color: #7c3aed;
 
-  color: #ff007b;
+  color: #7c3aed;
 
   transform: translateY(-1px);
 }

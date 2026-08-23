@@ -501,7 +501,7 @@ export default function AllProducts() {
     setAreaFrom("");
     setAreaTo("");
 
-    router.replace("/products");
+    router.replace("/all-products");
   };
 
   const hasFilters =

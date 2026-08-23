@@ -4,10 +4,10 @@
   box-sizing: border-box;
   overflow-x: hidden;
 
-  background: #d9dadc;
-  color: #171717;
+  background: #0b0b0f;
+  color: #f5f5f7;
 
-  padding: 48px 64px;
+  padding: 32px 48px 0;
 }
 
 /* =========================================================
@@ -22,23 +22,27 @@
 
   overflow: hidden;
 
-  border-radius: 32px;
+  border-radius: 30px;
 
   background: url("/assets/issykKul.webp") center / cover no-repeat;
 
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    180deg,
-    rgba(23, 23, 23, 0.08) 0%,
-    rgba(23, 23, 23, 0.18) 35%,
-    rgba(23, 23, 23, 0.92) 100%
-  );
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7, 7, 10, 0.08) 0%,
+      rgba(7, 7, 10, 0.25) 38%,
+      rgba(7, 7, 10, 0.94) 100%
+    ),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.12), transparent 55%);
 }
 
 .heroContent {
@@ -71,26 +75,30 @@
 
   padding: 9px 15px;
 
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(167, 139, 250, 0.35);
   border-radius: 999px;
 
-  background: rgba(23, 23, 23, 0.55);
+  background: rgba(10, 10, 14, 0.65);
 
-  color: #fff;
+  color: #f5f3ff;
 
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .badge svg {
   width: 16px;
   height: 16px;
 
-  color: #ff007f;
+  color: #a855f7;
 }
 
 /* =========================================================
@@ -108,7 +116,9 @@
   font-weight: 900;
   letter-spacing: -4px;
 
-  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  text-shadow:
+    0 8px 35px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(124, 58, 237, 0.12);
 }
 
 .hero p {
@@ -116,7 +126,7 @@
 
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.75);
 
   font-size: 16px;
   line-height: 1.65;
@@ -161,41 +171,49 @@
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
-/* PINK */
+/* PURPLE */
 
 .mainButton {
   border: none;
 
-  background: #ff007f;
+  background: #8b5cf6;
   color: #fff;
 
-  box-shadow: 0 10px 25px rgba(255, 0, 127, 0.3);
+  box-shadow:
+    0 10px 30px rgba(139, 92, 246, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .mainButton:hover {
   transform: translateY(-3px);
 
-  background: #ff2b98;
+  background: #a78bfa;
 
-  box-shadow: 0 15px 35px rgba(255, 0, 127, 0.4);
+  box-shadow:
+    0 16px 40px rgba(139, 92, 246, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.15);
 }
 
-/* GRAPHITE */
+/* DARK */
 
 .whiteButton {
-  border: 1px solid #4c4c4c;
+  border: 1px solid #303038;
 
-  background: #171717;
+  background: #15151b;
   color: #fff;
+
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .whiteButton:hover {
   transform: translateY(-3px);
 
-  background: #242424;
+  background: #1d1d25;
+  border-color: #4b4b58;
 }
 
 .whiteButton span {
@@ -208,26 +226,27 @@
 
   border-radius: 8px;
 
-  background: #ff007f;
+  background: #8b5cf6;
   color: #fff;
 }
 
-/* SILVER */
+/* TRANSPARENT */
 
 .homeButton {
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 
-  background: rgba(217, 218, 220, 0.18);
+  background: rgba(10, 10, 14, 0.42);
 
   color: #fff;
 
-  backdrop-filter: blur(7px);
+  backdrop-filter: blur(10px);
 }
 
 .homeButton:hover {
   transform: translateY(-3px);
 
-  background: rgba(217, 218, 220, 0.3);
+  background: rgba(10, 10, 14, 0.68);
+  border-color: rgba(167, 139, 250, 0.55);
 }
 
 /* =========================================================
@@ -252,7 +271,7 @@
 
   margin-bottom: 10px;
 
-  color: #ff007f;
+  color: #a855f7;
 
   font-size: 10px;
   font-weight: 900;
@@ -265,7 +284,7 @@
 
   margin: 0;
 
-  color: #171717;
+  color: #f5f5f7;
 
   font-size: 42px;
   line-height: 1.05;
@@ -279,7 +298,7 @@
 
   margin: 14px 0 0;
 
-  color: #4e4e4e;
+  color: #92929c;
 
   font-size: 15px;
   line-height: 1.7;
@@ -304,17 +323,19 @@
 
   border-radius: 25px;
 
-  background: #f0f0f1;
+  background: #121218;
 
-  border: 1px solid #c4c5c7;
+  border: 1px solid #24242d;
 
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .introText p {
   margin: 0 0 18px;
 
-  color: #4d4d50;
+  color: #a2a2ac;
 
   font-size: 15px;
   line-height: 1.8;
@@ -332,7 +353,7 @@
 
   background: transparent;
 
-  color: #ff007f;
+  color: #a855f7;
 
   font-family: inherit;
 
@@ -341,15 +362,18 @@
 
   cursor: pointer;
 
-  transition: gap 0.2s ease;
+  transition:
+    gap 0.2s ease,
+    color 0.2s ease;
 }
 
 .textButton:hover {
   gap: 12px;
+  color: #c084fc;
 }
 
 /* =========================================================
-   SILVER CARD
+   PURPLE FEATURE CARD
 ========================================================= */
 
 .introCard {
@@ -361,28 +385,30 @@
 
   border-radius: 25px;
 
-  background: linear-gradient(
-    135deg,
-    #777 0%,
-    #dfe0e2 23%,
-    #f7f7f7 43%,
-    #b8b9bb 62%,
-    #686868 100%
-  );
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(168, 85, 247, 0.35),
+      transparent 45%
+    ),
+    linear-gradient(145deg, #241638 0%, #17121f 48%, #101016 100%);
 
-  color: #171717;
+  border: 1px solid rgba(168, 85, 247, 0.24);
+
+  color: #fff;
 
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    0 20px 45px rgba(0, 0, 0, 0.25),
+    0 0 40px rgba(124, 58, 237, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .introCard svg {
   margin-bottom: 52px;
 
-  color: #ff007f;
+  color: #a855f7;
 
-  filter: drop-shadow(0 3px 5px rgba(255, 0, 127, 0.25));
+  filter: drop-shadow(0 5px 15px rgba(168, 85, 247, 0.4));
 }
 
 .introCard strong {
@@ -399,7 +425,7 @@
 
   margin: 0;
 
-  color: #292929;
+  color: #aaa2b5;
 
   font-size: 14px;
   line-height: 1.65;
@@ -426,24 +452,31 @@
 
   border-radius: 22px;
 
-  background: #f0f0f1;
+  background: #121218;
 
-  border: 1px solid #c4c5c7;
+  border: 1px solid #25252e;
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
   transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .propertyCard:hover {
   transform: translateY(-5px);
 
-  background: #fff;
+  background: #17171f;
 
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.11);
+  border-color: rgba(168, 85, 247, 0.4);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.25),
+    0 0 25px rgba(139, 92, 246, 0.06);
 }
 
 .cardIcon,
@@ -457,15 +490,17 @@
 
   border-radius: 12px;
 
-  background: #171717;
+  background: #1d1528;
 
-  color: #ff007f;
+  color: #a855f7;
+
+  border: 1px solid rgba(168, 85, 247, 0.16);
 }
 
 .propertyCard h3 {
   margin: 23px 0 9px;
 
-  color: #171717;
+  color: #f5f5f7;
 
   font-size: 18px;
   font-weight: 850;
@@ -476,7 +511,7 @@
 
   margin: 0 0 18px;
 
-  color: #5f6063;
+  color: #858590;
 
   font-size: 13px;
   line-height: 1.65;
@@ -493,7 +528,7 @@
 
   background: transparent;
 
-  color: #ff007f;
+  color: #a855f7;
 
   font-family: inherit;
 
@@ -502,11 +537,14 @@
 
   cursor: pointer;
 
-  transition: gap 0.2s ease;
+  transition:
+    gap 0.2s ease,
+    color 0.2s ease;
 }
 
 .propertyCard button:hover {
   gap: 11px;
+  color: #c084fc;
 }
 
 /* =========================================================
@@ -520,11 +558,21 @@
 
   border-radius: 30px;
 
-  background: #242424;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(124, 58, 237, 0.12),
+      transparent 35%
+    ),
+    #111116;
 
   color: #fff;
 
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
+  border: 1px solid #24242d;
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .benefitsSection .sectionHeading {
@@ -552,27 +600,34 @@
 
   border-radius: 17px;
 
-  background: #303030;
+  background: #18181f;
 
-  border: 1px solid #444;
+  border: 1px solid #292932;
 
   transition:
     transform 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .benefit:hover {
   transform: translateY(-3px);
 
-  border-color: #ff007f;
+  background: #1c1c25;
+
+  border-color: rgba(168, 85, 247, 0.5);
 }
 
 .benefitIcon {
   flex-shrink: 0;
 
-  background: #ff007f;
+  background: #8b5cf6;
 
   color: #fff;
+
+  border-color: transparent;
+
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
 }
 
 .benefit h3 {
@@ -587,7 +642,7 @@
 .benefit p {
   margin: 0;
 
-  color: #a9a9ac;
+  color: #92929c;
 
   font-size: 13px;
   line-height: 1.65;
@@ -629,20 +684,27 @@
   border-radius: 22px;
 
   background:
-    linear-gradient(180deg, rgba(23, 23, 23, 0.05), rgba(23, 23, 23, 0.9)),
+    linear-gradient(180deg, rgba(8, 8, 12, 0.05), rgba(8, 8, 12, 0.92)),
     url("/assets/issykKul.webp") center / cover;
 
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
 
   transition:
     transform 0.25s ease,
-    box-shadow 0.25s ease;
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .locationCard:hover .locationImage {
   transform: translateY(-5px);
 
-  box-shadow: 0 23px 45px rgba(0, 0, 0, 0.2);
+  border-color: rgba(168, 85, 247, 0.45);
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.08);
 }
 
 .locationOverlay {
@@ -651,8 +713,8 @@
 
   background: linear-gradient(
     180deg,
-    rgba(23, 23, 23, 0) 25%,
-    rgba(23, 23, 23, 0.85) 100%
+    rgba(8, 8, 12, 0) 25%,
+    rgba(8, 8, 12, 0.9) 100%
   );
 }
 
@@ -671,9 +733,13 @@
 
   border-radius: 12px;
 
-  background: #171717;
+  background: rgba(10, 10, 14, 0.78);
 
-  color: #ff007f;
+  color: #a855f7;
+
+  border: 1px solid rgba(168, 85, 247, 0.25);
+
+  backdrop-filter: blur(10px);
 }
 
 .locationInfo {
@@ -696,7 +762,7 @@
 .locationInfo p {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.68);
 
   font-size: 12px;
   line-height: 1.5;
@@ -714,7 +780,7 @@
 }
 
 .locationCard:hover .locationArrow {
-  color: #ff007f;
+  color: #a855f7;
   transform: translateX(4px);
 }
 
@@ -734,22 +800,32 @@
   border-radius: 30px;
 
   background:
-    linear-gradient(110deg, rgba(23, 23, 23, 0.9), rgba(23, 23, 23, 0.55)),
+    linear-gradient(110deg, rgba(7, 7, 10, 0.96), rgba(7, 7, 10, 0.55)),
     url("/assets/issykKul.webp") center / cover;
 
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(124, 58, 237, 0.06);
 }
 
 .investmentOverlay {
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    90deg,
-    rgba(23, 23, 23, 0.95) 0%,
-    rgba(23, 23, 23, 0.55) 65%,
-    rgba(255, 0, 127, 0.18) 100%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 7, 10, 0.98) 0%,
+      rgba(7, 7, 10, 0.58) 65%,
+      rgba(124, 58, 237, 0.18) 100%
+    ),
+    radial-gradient(
+      circle at 100% 50%,
+      rgba(168, 85, 247, 0.18),
+      transparent 40%
+    );
 }
 
 .investmentContent {
@@ -775,13 +851,17 @@
 
   border-radius: 13px;
 
-  background: #ff007f;
+  background: #8b5cf6;
 
   color: #fff;
+
+  box-shadow:
+    0 12px 30px rgba(139, 92, 246, 0.3),
+    0 0 25px rgba(168, 85, 247, 0.15);
 }
 
 .investmentContent > span {
-  color: #ff007f;
+  color: #a855f7;
 }
 
 .investmentContent h2 {
@@ -799,7 +879,7 @@
 .investmentContent p {
   margin: 20px 0 30px;
 
-  color: #bdbdc0;
+  color: #aaaab3;
 
   font-size: 15px;
   line-height: 1.7;
@@ -821,7 +901,7 @@
   border: none;
   border-radius: 13px;
 
-  background: #ff007f;
+  background: #8b5cf6;
 
   color: #fff;
 
@@ -831,6 +911,8 @@
   font-weight: 850;
 
   cursor: pointer;
+
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -843,9 +925,9 @@
 .addSection button:hover {
   transform: translateY(-3px);
 
-  background: #ff2b98;
+  background: #a78bfa;
 
-  box-shadow: 0 12px 30px rgba(255, 0, 127, 0.3);
+  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.35);
 }
 
 /* =========================================================
@@ -855,7 +937,7 @@
 .quickSearch {
   margin: 70px auto 0;
 
-  padding: 24px;
+  padding: 25px;
 
   display: flex;
   align-items: center;
@@ -867,20 +949,19 @@
 
   border-radius: 22px;
 
-  background: linear-gradient(
-    135deg,
-    #8e8f91 0%,
-    #eeeeef 28%,
-    #b9babd 50%,
-    #f5f5f5 72%,
-    #929396 100%
-  );
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.15),
+      transparent 35%
+    ),
+    #15151c;
 
-  border: 1px solid #a8a9ab;
+  border: 1px solid #292932;
 
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 18px 40px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .quickSearch > div {
@@ -902,9 +983,11 @@
 
   border-radius: 13px;
 
-  background: #171717;
+  background: #241638;
 
-  color: #ff007f;
+  color: #a855f7;
+
+  border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .quickSearch span {
@@ -914,7 +997,7 @@
 .quickSearch h2 {
   margin: 0;
 
-  color: #171717;
+  color: #f5f5f7;
 
   font-size: 21px;
   font-weight: 900;
@@ -923,7 +1006,7 @@
 .quickSearch p {
   margin: 6px 0 0;
 
-  color: #404043;
+  color: #898993;
 
   font-size: 13px;
 }
@@ -947,13 +1030,23 @@
 
   border-radius: 25px;
 
-  background: #171717;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.16),
+      transparent 35%
+    ),
+    #111116;
 
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
+  border: 1px solid #282831;
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .addSection > div > span {
-  color: #ff007f;
+  color: #a855f7;
 }
 
 .addSection h2 {
@@ -972,7 +1065,7 @@
 
   margin: 12px 0 0;
 
-  color: #a5a5a8;
+  color: #8f8f99;
 
   font-size: 14px;
   line-height: 1.65;
@@ -988,7 +1081,7 @@
 
 @media (max-width: 1200px) {
   .page {
-    padding: 35px;
+    padding: 28px 32px 0;
   }
 
   .propertyGrid,
@@ -999,14 +1092,14 @@
 
 @media (max-width: 800px) {
   .page {
-    padding: 18px;
+    padding: 18px 18px 0;
   }
 
   .hero {
     height: auto;
     min-height: 650px;
 
-    border-radius: 25px;
+    border-radius: 24px;
   }
 
   .heroContent {
@@ -1093,6 +1186,10 @@
 
   .introText {
     padding: 25px;
+  }
+
+  .introCard {
+    min-height: 260px;
   }
 
   .addSection {

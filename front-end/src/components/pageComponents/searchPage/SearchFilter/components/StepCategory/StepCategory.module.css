@@ -22,6 +22,7 @@
 
 .header {
   margin-bottom: 38px;
+  margin-top: 50px;
 }
 
 .stepBadge {
@@ -30,33 +31,37 @@
   gap: 8px;
 
   margin-bottom: 14px;
-  padding: 7px 12px;
+  padding: 8px 13px;
 
-  border: 1px solid rgba(255, 0, 123, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.14);
   border-radius: 999px;
 
-  background: #fff0f7;
-  color: #ff007b;
+  background: #f5f3ff;
+  color: #8b5cf6;
 
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.02em;
+
+  box-shadow: 0 5px 18px rgba(139, 92, 246, 0.06);
 }
 
 .stepDot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 
   border-radius: 50%;
-  background: #ff007b;
+  background: #8b5cf6;
 
-  box-shadow: 0 0 0 4px rgba(255, 0, 123, 0.08);
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.1),
+    0 0 12px rgba(139, 92, 246, 0.25);
 }
 
 .header h1 {
   margin: 0;
 
-  color: #ff007b;
+  color: #8b5cf6;
 
   font-size: 35px;
   line-height: 1.1;
@@ -108,11 +113,13 @@
 
   border-radius: 9px;
 
-  background: #ff007b;
+  background: #8b5cf6;
   color: #fff;
 
   font-size: 11px;
   font-weight: 800;
+
+  box-shadow: 0 5px 14px rgba(139, 92, 246, 0.2);
 }
 
 .sectionTitle h2 {
@@ -154,17 +161,17 @@
 
   padding: 20px;
 
-  border: 1px solid #eee4e8;
+  border: 1px solid #e8e5ed;
   border-radius: 20px;
 
-  background: linear-gradient(145deg, #ffffff 0%, #fffafb 100%);
+  background: linear-gradient(145deg, #ffffff 0%, #fcfbff 100%);
 
   cursor: pointer;
   text-align: left;
 
   box-shadow:
     0 8px 25px rgba(0, 0, 0, 0.025),
-    0 2px 8px rgba(255, 0, 123, 0.025);
+    0 2px 8px rgba(139, 92, 246, 0.025);
 
   transition:
     transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
@@ -176,13 +183,13 @@
 .categoryCard:hover {
   transform: translateY(-5px);
 
-  border-color: rgba(255, 0, 123, 0.3);
+  border-color: rgba(139, 92, 246, 0.32);
 
-  background: linear-gradient(145deg, #fff 0%, #fff4f9 100%);
+  background: linear-gradient(145deg, #ffffff 0%, #f8f5ff 100%);
 
   box-shadow:
     0 18px 45px rgba(0, 0, 0, 0.07),
-    0 8px 30px rgba(255, 0, 123, 0.1);
+    0 8px 30px rgba(139, 92, 246, 0.1);
 }
 
 .categoryCard:active {
@@ -201,19 +208,23 @@
 
   border-radius: 16px;
 
-  background: #fff0f7;
-  color: #ff007b;
+  background: #f3efff;
+  color: #8b5cf6;
 
   transition:
     transform 0.25s ease,
-    background 0.25s ease;
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .categoryCard:hover .categoryIcon {
   transform: scale(1.08) rotate(-3deg);
 
-  background: #ff007b;
+  background: #8b5cf6;
   color: #fff;
+
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
 }
 
 .categoryContent {
@@ -245,7 +256,7 @@
 
   margin-left: auto;
 
-  color: #c8c2c5;
+  color: #c8c3cc;
 
   transition:
     transform 0.25s ease,
@@ -254,8 +265,7 @@
 
 .categoryCard:hover .categoryArrow {
   transform: translateX(4px);
-
-  color: #ff007b;
+  color: #8b5cf6;
 }
 
 /* =========================
@@ -271,14 +281,18 @@
   margin-bottom: 30px;
   padding: 15px 17px;
 
-  border: 1px solid rgba(255, 0, 123, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.16);
   border-radius: 18px;
 
   background:
-    radial-gradient(circle at 0% 50%, rgba(255, 0, 123, 0.08), transparent 45%),
-    #fff8fb;
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(139, 92, 246, 0.09),
+      transparent 45%
+    ),
+    #faf8ff;
 
-  box-shadow: 0 10px 30px rgba(255, 0, 123, 0.05);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.05);
 
   animation: selectedCategoryEnter 0.3s ease;
 }
@@ -295,6 +309,12 @@
   }
 }
 
+.selectedCategoryMain {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
 .selectedCategoryIcon {
   width: 45px;
   height: 45px;
@@ -307,10 +327,10 @@
 
   border-radius: 14px;
 
-  background: #ff007b;
+  background: #8b5cf6;
   color: #fff;
 
-  box-shadow: 0 8px 18px rgba(255, 0, 123, 0.2);
+  box-shadow: 0 8px 18px rgba(139, 92, 246, 0.22);
 }
 
 .selectedCategoryInfo {
@@ -321,11 +341,11 @@
   display: block;
 
   margin-bottom: 3px;
+  margin-top: 0;
 
   color: #999;
 
   font-size: 11px;
-  margin-top: 10px;
 }
 
 .selectedCategoryInfo strong {
@@ -346,7 +366,7 @@
 
   background: transparent;
 
-  color: #ff007b;
+  color: #8b5cf6;
 
   cursor: pointer;
 
@@ -386,7 +406,7 @@
 
   padding: 12px 14px;
 
-  border: 1px solid #eee5e8;
+  border: 1px solid #e9e6ed;
   border-radius: 17px;
 
   background: #fff;
@@ -402,11 +422,11 @@
 .inputCard:hover {
   transform: translateY(-2px);
 
-  border-color: #f0bfd2;
+  border-color: #cfc1f5;
 
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.05),
-    0 5px 18px rgba(255, 0, 123, 0.05);
+    0 5px 18px rgba(139, 92, 246, 0.06);
 }
 
 .inputIcon {
@@ -421,8 +441,8 @@
 
   border-radius: 12px;
 
-  background: #fff0f7;
-  color: #ff007b;
+  background: #f3efff;
+  color: #8b5cf6;
 }
 
 .field {
@@ -485,9 +505,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 14px;
-}
 
-.fieldsGrid {
   position: relative;
   z-index: 20;
 }
@@ -510,7 +528,7 @@
   margin-top: 38px;
   padding-top: 22px;
 
-  border-top: 1px solid #f0ebed;
+  border-top: 1px solid #eeeaf1;
 }
 
 .primary,
@@ -545,29 +563,35 @@
 
   border: 0;
 
-  background: linear-gradient(135deg, #ff007b, #ff2990);
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
 
   color: #fff;
 
   box-shadow:
-    0 10px 24px rgba(255, 0, 123, 0.2),
-    0 4px 10px rgba(255, 0, 123, 0.08);
+    0 10px 24px rgba(139, 92, 246, 0.2),
+    0 4px 10px rgba(139, 92, 246, 0.08);
 }
 
-.primary:hover {
+.primary:hover:not(:disabled) {
   transform: translateY(-2px);
 
   box-shadow:
-    0 14px 30px rgba(255, 0, 123, 0.28),
-    0 5px 12px rgba(255, 0, 123, 0.1);
+    0 14px 30px rgba(139, 92, 246, 0.28),
+    0 5px 12px rgba(139, 92, 246, 0.1);
 }
 
-.primary:active {
+.primary:active:not(:disabled) {
   transform: translateY(0);
 }
 
+.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .secondary {
-  border: 1px solid #e5dfe2;
+  border: 1px solid #e5e1e9;
 
   background: #fff;
 
@@ -577,109 +601,11 @@
 .secondary:hover {
   transform: translateY(-2px);
 
-  border-color: #ffb3d0;
+  border-color: #cfc1f5;
 
-  background: #fff8fb;
+  background: #faf8ff;
 
-  color: #ff007b;
-}
-
-/* =========================
-   ACCESSIBILITY
-========================= */
-
-.field input:focus,
-.field input:focus-visible,
-.field input:active {
-  outline: none;
-  border-color: #e2dfe0;
-  box-shadow: none;
-  background: #fff;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 1000px) {
-  .categoryGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .priceGrid,
-  .fieldsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .categoryGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .sectionTitle {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .header h1 {
-    font-size: 28px;
-  }
-}
-
-@media (max-width: 540px) {
-  .categoryGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 25px;
-  }
-
-  .categoryCard {
-    min-height: 105px;
-  }
-
-  .selectedCategory {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .selectedCategory button {
-    width: 100%;
-    margin-left: 58px;
-    justify-content: flex-start;
-  }
-
-  .actions {
-    flex-direction: column-reverse;
-  }
-
-  .primary,
-  .secondary {
-    width: 100%;
-  }
-
-  .primary {
-    margin-left: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .step,
-  .selectedCategory {
-    animation: none;
-  }
-
-  .categoryCard,
-  .categoryIcon,
-  .categoryArrow,
-  .inputCard,
-  .primary,
-  .secondary {
-    transition: none;
-  }
+  color: #8b5cf6;
 }
 
 /* =========================
@@ -688,13 +614,11 @@
 
 .searchTypeGrid {
   display: grid;
+
   grid-template-columns: repeat(3, minmax(0, 1fr));
+
   gap: 14px;
 }
-
-/* =========================
-   CARD
-========================= */
 
 .searchTypeCard {
   position: relative;
@@ -706,7 +630,7 @@
 
   padding: 20px;
 
-  border: 1px solid #ece9eb;
+  border: 1px solid #ece9ef;
   border-radius: 22px;
 
   background: #ffffff;
@@ -724,8 +648,6 @@
     background 0.25s ease;
 }
 
-/* мягкое свечение */
-
 .searchTypeCard::after {
   position: absolute;
 
@@ -737,7 +659,7 @@
 
   border-radius: 50%;
 
-  background: #f5f5f5;
+  background: #f5f3ff;
 
   opacity: 0.55;
 
@@ -753,18 +675,16 @@
   opacity: 0.8;
 }
 
-/* hover */
-
 .searchTypeCard:hover {
   transform: translateY(-3px);
 
-  border-color: #dedadd;
+  border-color: #d9d3df;
 
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.07);
 }
 
 /* =========================
-   TOP
+   SEARCH TYPE TOP
 ========================= */
 
 .searchTypeTop {
@@ -777,10 +697,6 @@
 
   margin-bottom: 19px;
 }
-
-/* =========================
-   ICON
-========================= */
 
 .searchTypeIcon {
   display: flex;
@@ -820,8 +736,8 @@
 /* Обычный */
 
 .normalIcon {
-  background: #f1f5f9;
-  color: #475569;
+  background: #f3efff;
+  color: #8b5cf6;
 }
 
 /* =========================
@@ -836,7 +752,7 @@
 
   border-radius: 999px;
 
-  background: #f7f6f7;
+  background: #f7f6f8;
 
   color: #8c878a;
 
@@ -934,15 +850,15 @@
 }
 
 .radioActive {
-  border-color: #ff2990;
+  border-color: #8b5cf6;
 
-  background: #ff2990;
+  background: #8b5cf6;
 
   color: #fff;
 
   transform: scale(1.05);
 
-  box-shadow: 0 4px 12px rgba(255, 41, 144, 0.25);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
 }
 
 /* =========================
@@ -1006,32 +922,60 @@
 ========================= */
 
 .searchTypeNormal {
-  border-color: #ff9bc7;
+  border-color: #b9a3f8;
 
-  background: linear-gradient(145deg, #fff, #fff7fb);
+  background: linear-gradient(145deg, #fff, #faf8ff);
 
   box-shadow:
-    0 0 0 2px rgba(255, 41, 144, 0.05),
-    0 16px 38px rgba(255, 41, 144, 0.08);
+    0 0 0 2px rgba(139, 92, 246, 0.06),
+    0 16px 38px rgba(139, 92, 246, 0.1);
 }
 
 .searchTypeNormal .normalIcon {
-  background: #ff2990;
+  background: #8b5cf6;
   color: #fff;
 }
 
 .searchTypeNormal .searchTypeBadge {
-  background: #fff0f7;
-  color: #ff2990;
+  background: #f3efff;
+  color: #8b5cf6;
 }
 
 .searchTypeNormal .searchTypeContent strong {
-  color: #e91e78;
+  color: #7c3aed;
 }
 
 /* =========================
-   MOBILE
+   ACCESSIBILITY
 ========================= */
+
+.categoryCard:focus-visible,
+.searchTypeCard:focus-visible,
+.primary:focus-visible,
+.secondary:focus-visible,
+.field input:focus-visible {
+  outline: 3px solid rgba(139, 92, 246, 0.18);
+  outline-offset: 3px;
+}
+
+.field input:focus,
+.field input:focus-visible,
+.field input:active {
+  outline: none;
+  border-color: transparent;
+  box-shadow: none;
+  background: #fff;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 900px) {
   .searchTypeGrid {
@@ -1047,12 +991,67 @@
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 768px) {
+  .priceGrid,
+  .fieldsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sectionTitle {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 540px) {
+  .categoryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 25px;
+  }
+
+  .categoryCard {
+    min-height: 105px;
+  }
+
+  .selectedCategory {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .selectedCategory button {
+    width: 100%;
+    margin-left: 58px;
+    justify-content: flex-start;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .primary,
+  .secondary {
+    width: 100%;
+  }
+
+  .primary {
+    margin-left: 0;
+  }
+
   .searchTypeCard {
     min-height: auto;
-
     padding: 16px;
-
     border-radius: 18px;
   }
 
@@ -1065,7 +1064,26 @@
   }
 }
 
+@media (max-width: 520px) {
+  .searchTypeCard {
+    min-height: auto;
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .step,
+  .selectedCategory {
+    animation: none;
+  }
+
+  .categoryCard,
+  .categoryIcon,
+  .categoryArrow,
+  .inputCard,
+  .primary,
+  .secondary,
   .searchTypeCard,
   .searchTypeIcon,
   .searchTypeRadio {

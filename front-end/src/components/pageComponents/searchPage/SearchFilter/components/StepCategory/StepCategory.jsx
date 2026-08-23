@@ -588,11 +588,6 @@ export default function StepCategory({
   return (
     <div className={styles.step}>
       <div className={styles.header}>
-        <div className={styles.stepBadge}>
-          <span className={styles.stepDot} />
-          Шаг 3 из 5
-        </div>
-
         <h1>Параметры объекта</h1>
 
         <p>Укажите основные характеристики недвижимости, которую ищите.</p>

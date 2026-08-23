@@ -46,13 +46,13 @@
 }
 
 .active {
-  color: #ff007b;
+  color: #6d28d9;
 }
 
 .active .progressCircle {
-  border-color: #ff007b;
+  border-color: #6d28d9;
 
-  background: #ff007b;
+  background: #6d28d9;
 
   color: #fff;
 

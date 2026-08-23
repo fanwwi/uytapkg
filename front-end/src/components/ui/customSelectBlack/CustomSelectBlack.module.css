@@ -1,6 +1,6 @@
-/* =========================
-   WRAPPER
-========================= */
+/* =========================================================
+   CUSTOM SELECT — DARK / PURPLE
+========================================================= */
 
 .wrapper {
   position: relative;
@@ -8,9 +8,9 @@
   z-index: 30;
 }
 
-/* =========================
+/* =========================================================
    SELECT
-========================= */
+========================================================= */
 
 .select {
   width: 100%;
@@ -22,12 +22,20 @@
 
   padding: 0 18px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  box-sizing: border-box;
 
-  background: #151519;
+  border: 1px solid #292632;
+  border-radius: 16px;
 
-  color: #f4f4f6;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.012)
+    ),
+    #111014;
+
+  color: #f5f3fa;
 
   cursor: pointer;
 
@@ -39,30 +47,45 @@
 }
 
 .select:hover {
-  border-color: rgba(255, 0, 95, 0.28);
+  border-color: rgba(139, 92, 246, 0.5);
 
-  background: #19191e;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.055),
+      rgba(255, 255, 255, 0.015)
+    ),
+    #151318;
 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(139, 92, 246, 0.06);
 }
 
 .selectOpen {
-  border-color: rgba(255, 0, 95, 0.42);
+  border-color: rgba(139, 92, 246, 0.85);
 
-  background: #17171c;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.08),
+      rgba(255, 255, 255, 0.015)
+    ),
+    #151318;
 
   box-shadow:
-    0 0 0 3px rgba(255, 0, 95, 0.06),
-    0 12px 35px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(139, 92, 246, 0.08),
+    0 14px 38px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.1);
 }
 
 .select:active {
   transform: scale(0.995);
 }
 
-/* =========================
+/* =========================================================
    LEFT
-========================= */
+========================================================= */
 
 .left {
   display: flex;
@@ -74,14 +97,14 @@
 }
 
 .icon {
-  width: 22px;
-  height: 22px;
+  width: 21px;
+  height: 21px;
 
   flex-shrink: 0;
 
-  color: #ff176d;
+  color: #8b5cf6;
 
-  filter: drop-shadow(0 0 7px rgba(255, 23, 109, 0.18));
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
 }
 
 .left section {
@@ -93,15 +116,15 @@
 }
 
 .left small {
-  color: #777780;
+  color: #77727f;
 
   font-size: 10px;
   line-height: 1;
 
-  font-weight: 700;
+  font-weight: 800;
 
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.7px;
 }
 
 .left strong {
@@ -109,7 +132,7 @@
 
   margin-top: 5px;
 
-  color: #eeeef1;
+  color: #f1eef7;
 
   font-size: 14px;
   line-height: 1.2;
@@ -121,32 +144,36 @@
   white-space: nowrap;
 }
 
-/* =========================
+/* =========================================================
    ARROW
-========================= */
+========================================================= */
 
 .arrow {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
 
   flex-shrink: 0;
 
-  color: #777780;
+  color: #77727f;
 
   transition:
     transform 0.25s ease,
     color 0.2s ease;
 }
 
+.select:hover .arrow {
+  color: #a78bfa;
+}
+
 .rotate {
   transform: rotate(180deg);
 
-  color: #ff176d;
+  color: #8b5cf6;
 }
 
-/* =========================
+/* =========================================================
    DROPDOWN
-========================= */
+========================================================= */
 
 .dropdown {
   box-sizing: border-box;
@@ -156,28 +183,30 @@
   overflow-y: auto;
   overflow-x: hidden;
 
-  padding: 8px;
+  padding: 7px;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 18px;
+  border: 1px solid #302b3b;
+  border-radius: 16px;
 
-  background: #151519;
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.045), transparent 45%), #111014;
 
-  color: #f4f4f6;
+  color: #f5f3fa;
 
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.55),
-    0 10px 30px rgba(0, 0, 0, 0.3);
+    0 28px 70px rgba(0, 0, 0, 0.7),
+    0 12px 35px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(139, 92, 246, 0.07);
 
   scrollbar-width: thin;
-  scrollbar-color: #4b2534 transparent;
+  scrollbar-color: #49366d transparent;
 
   animation: dropdownAppear 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* =========================
+/* =========================================================
    SCROLLBAR
-========================= */
+========================================================= */
 
 .dropdown::-webkit-scrollbar {
   width: 5px;
@@ -190,13 +219,13 @@
 }
 
 .dropdown::-webkit-scrollbar-thumb {
-  background: #492432;
+  background: #45345f;
 
   border-radius: 999px;
 }
 
 .dropdown::-webkit-scrollbar-thumb:hover {
-  background: #e60058;
+  background: #8b5cf6;
 }
 
 .dropdown::-webkit-scrollbar-button {
@@ -210,9 +239,9 @@
   background: transparent;
 }
 
-/* =========================
+/* =========================================================
    OPTIONS
-========================= */
+========================================================= */
 
 .option {
   width: 100%;
@@ -221,11 +250,11 @@
   padding: 0 14px;
 
   border: none;
-  border-radius: 12px;
+  border-radius: 11px;
 
   background: transparent;
 
-  color: #cfcfd4;
+  color: #c9c5d2;
 
   font-family: inherit;
   font-size: 14px;
@@ -237,71 +266,105 @@
 
   transition:
     background 0.18s ease,
-    color 0.18s ease;
+    color 0.18s ease,
+    transform 0.15s ease;
 }
 
 .option:hover {
-  background: rgba(230, 0, 88, 0.09);
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.14),
+    rgba(139, 92, 246, 0.05)
+  );
 
-  color: #ff4b91;
+  color: #b69cff;
 }
 
 .option:active {
-  background: rgba(230, 0, 88, 0.14);
+  background: rgba(139, 92, 246, 0.18);
+
+  transform: scale(0.99);
 }
 
 .optionSelected {
-  background: rgba(230, 0, 88, 0.11);
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.17),
+    rgba(139, 92, 246, 0.06)
+  );
 
-  color: #ff4b91;
+  color: #b69cff;
 
-  font-weight: 700;
+  font-weight: 750;
 }
 
-/* =========================
+/* маленький визуальный акцент выбранного пункта */
+
+.optionSelected::before {
+  content: "";
+
+  display: inline-block;
+
+  width: 4px;
+  height: 4px;
+
+  margin-right: 8px;
+
+  vertical-align: middle;
+
+  border-radius: 50%;
+
+  background: #8b5cf6;
+
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+}
+
+/* =========================================================
    EMPTY
-========================= */
+========================================================= */
 
 .empty {
   padding: 18px 15px;
 
-  color: #6f6f78;
+  color: #6f6a77;
 
   font-size: 13px;
 
   text-align: center;
 }
 
-/* =========================
+/* =========================================================
    ANIMATION
-========================= */
+========================================================= */
 
 @keyframes dropdownAppear {
   from {
     opacity: 0;
+
     transform: translateY(-5px) scale(0.985);
   }
 
   to {
     opacity: 1;
+
     transform: translateY(0) scale(1);
   }
 }
 
-/* =========================
-   ACCESSIBILITY
-========================= */
+/* =========================================================
+   FOCUS
+========================================================= */
 
 .select:focus-visible,
 .option:focus-visible {
-  outline: 2px solid rgba(255, 23, 109, 0.35);
+  outline: 2px solid rgba(139, 92, 246, 0.55);
 
   outline-offset: 2px;
 }
 
-/* =========================
+/* =========================================================
    REDUCED MOTION
-========================= */
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .select,
@@ -313,9 +376,9 @@
   }
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 600px) {
   .select {
@@ -323,7 +386,7 @@
 
     padding: 0 15px;
 
-    border-radius: 16px;
+    border-radius: 15px;
   }
 
   .left {
@@ -340,7 +403,7 @@
   }
 
   .dropdown {
-    border-radius: 16px;
+    border-radius: 15px;
   }
 
   .option {
