@@ -27,22 +27,11 @@ export default function SearchPage() {
           duration: 0.7,
         }}
       >
-        <div className={styles.badge}>
-          <Sparkles />
-          Умный поиск недвижимости
-        </div>
-
-        <h1 className={styles.title}>
-          Найдите место,
+        <h1 className={styles.title} id="search">
+          Умный поиск
           <br />
-          которое станет
-          <span>вашим домом</span>
+          <span>недвижимости</span>
         </h1>
-
-        <p className={styles.subtitle}>
-          Тысячи квартир, домов и коммерческих объектов. Используйте умные
-          фильтры UyTap и найдите недвижимость мечты быстрее.
-        </p>
 
         <SearchFilter
           onSearch={(filters) => {

@@ -14,6 +14,9 @@ import StepAddress from "./components/StepAddress/StepAddress";
 import StepListingType from "./components/StepListingType/StepListingType";
 
 import styles from "./AddProduct.module.css";
+import AuthRequired from "../auth-required/page";
+import { House } from "lucide-react";
+import Link from "next/link";
 
 const initialForm = {
   // =========================
@@ -120,7 +123,7 @@ export default function AddProductPage() {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Сначала войдите в аккаунт");
+        router.push("/auth-required");
       }
 
       if (!form.images?.length) {
@@ -196,16 +199,18 @@ export default function AddProductPage() {
       // =========================
       // ФОТО
       // =========================
-      
+
       const photos = [];
-      for (const img of (form.images || [])) {
+      for (const img of form.images || []) {
         if (img.file) {
           try {
             const uploadedUrl = await uploadImage(img.file);
             photos.push(uploadedUrl);
           } catch (e) {
             console.error("Failed to upload image:", img.file.name, e);
-            throw new Error(`Не удалось загрузить фотографию ${img.file.name}: ${e.message}`);
+            throw new Error(
+              `Не удалось загрузить фотографию ${img.file.name}: ${e.message}`,
+            );
           }
         } else if (img.url && !img.url.startsWith("blob:")) {
           photos.push(img.url);
@@ -248,7 +253,7 @@ export default function AddProductPage() {
 
         // Местоположение
         country: form.country || "Кыргызстан",
-        region: form.country === "turkey" ? "TURKEY" : (form.region || "BISHKEK"),
+        region: form.country === "turkey" ? "TURKEY" : form.region || "BISHKEK",
         city:
           (form.country === "turkey"
             ? form.city
@@ -313,7 +318,7 @@ export default function AddProductPage() {
               : null,
 
           developerOrComplex: form.developerOrComplex || null,
-          
+
           amenities: isResortAmenity ? [form.amenities] : [],
         },
 
@@ -330,8 +335,11 @@ export default function AddProductPage() {
           furniture: form.furniture || null,
           documents: form.documents || null,
           offerType: form.offerType || null,
-          
-          amenities: (!isResortAmenity && form.amenities && form.amenities !== "Любые") ? [form.amenities] : [],
+
+          amenities:
+            !isResortAmenity && form.amenities && form.amenities !== "Любые"
+              ? [form.amenities]
+              : [],
         },
       };
 
@@ -350,7 +358,7 @@ export default function AddProductPage() {
 
       setForm(initialForm);
       setStep(1);
-      
+
       // Перенаправляем пользователя в мои объявления
       router.push("/profile/ads");
     } catch (error) {
@@ -365,6 +373,11 @@ export default function AddProductPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
+        <Link href="/" className={styles.homeButton}>
+          <House size={18} />
+          На главную
+        </Link>
+
         <StepProgress currentStep={step} totalSteps={totalSteps} />
 
         <div className={styles.card}>
