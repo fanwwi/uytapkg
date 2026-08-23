@@ -13,6 +13,11 @@ import {
   Check,
   Trash2,
   UserRoundCog,
+  Building,
+  Hash,
+  Globe,
+  MapPin,
+  Briefcase,
 } from "lucide-react";
 
 import styles from "./ProfileEditModal.module.css";
@@ -39,7 +44,15 @@ export default function ProfileEditModal({ user, close }) {
 
   const [about, setAbout] = useState(profile.about || "");
 
-  const DEFAULT_AVATAR = "/personalImage.png";
+  const [inn, setInn] = useState(profile.inn || "");
+  const [officeAddress, setOfficeAddress] = useState(profile.office_address || "");
+  const [actualAddress, setActualAddress] = useState(profile.actualAddress || "");
+  const [website, setWebsite] = useState(profile.website || "");
+  const [region, setRegion] = useState(profile.region || "");
+  const [companyName, setCompanyName] = useState(profile.company_name || "");
+  const [fullName, setFullName] = useState(profile.first_name && profile.last_name ? `${profile.first_name} ${profile.last_name}` : profile.first_name || "");
+
+  const DEFAULT_AVATAR = "/assets/personalImage.png";
 
   const [avatar, setAvatar] = useState(
     profile.avatar_url || profile.avatar || DEFAULT_AVATAR,
@@ -49,6 +62,13 @@ export default function ProfileEditModal({ user, close }) {
 
   // true только если пользователь специально удалил аватар
   const [avatarRemoved, setAvatarRemoved] = useState(false);
+
+  const typeMapReverse = {
+    personal: "Частное лицо",
+    realtor: "Риэлтор",
+    agency: "Агентство",
+    developer: "Застройщик",
+  };
 
   const accountMap = {
     personal: "Частное лицо",
@@ -62,6 +82,14 @@ export default function ProfileEditModal({ user, close }) {
   );
 
   const accountTypes = ["Частное лицо", "Риэлтор", "Агентство", "Застройщик"];
+
+  const reverseMap = {
+    "Частное лицо": "personal",
+    "Риэлтор": "realtor",
+    "Агентство": "agency",
+    "Застройщик": "developer",
+  };
+  const selectedRole = reverseMap[type] || "personal";
 
   /*
    * =========================================================
@@ -174,7 +202,7 @@ export default function ProfileEditModal({ user, close }) {
      * -------------------------------------------------------
      */
 
-    return await fileFromUrl("/personalImage.png", "personalImage.png");
+    return await fileFromUrl("/assets/personalImage.png", "personalImage.png");
   }
 
   /*
@@ -275,14 +303,14 @@ export default function ProfileEditModal({ user, close }) {
         savedAvatar =
           refreshedProfile.avatar_url ||
           refreshedProfile.avatar ||
-          "/personalImage.png";
+          "/assets/personalImage.png";
       } else {
         savedAvatar =
           refreshedProfile.avatar_url ||
           refreshedProfile.avatar ||
           avatar ||
           initialAvatar ||
-          "/personalImage.png";
+          "/assets/personalImage.png";
       }
 
       /*
@@ -334,12 +362,35 @@ export default function ProfileEditModal({ user, close }) {
        * -----------------------------------------------------
        */
 
-      await updateMe(token, {
+      const reverseMap = {
+        "Частное лицо": "personal",
+        "Риэлтор": "realtor",
+        "Агентство": "agency",
+        "Застройщик": "developer",
+      };
+      const selectedRole = reverseMap[type] || "personal";
+
+      const payload = {
         firstName,
         lastName,
         phone,
         about,
-      });
+        accountType: selectedRole,
+      };
+
+      if (selectedRole === "realtor") {
+        payload.fullName = fullName;
+        payload.inn = inn;
+        payload.region = region;
+      } else if (selectedRole === "agency" || selectedRole === "developer") {
+        payload.companyName = companyName;
+        payload.inn = inn;
+        payload.officeAddress = officeAddress;
+        payload.actualAddress = actualAddress;
+        payload.website = website;
+      }
+
+      await updateMe(token, payload);
 
       /*
        * -----------------------------------------------------
@@ -359,9 +410,9 @@ export default function ProfileEditModal({ user, close }) {
         freshUser.profile = {
           ...(freshUser.profile || {}),
 
-          avatar_url: freshUser?.profile?.avatar_url || "/personalImage.png",
+          avatar_url: freshUser?.profile?.avatar_url || "/assets/personalImage.png",
 
-          avatar: freshUser?.profile?.avatar || "/personalImage.png",
+          avatar: freshUser?.profile?.avatar || "/assets/personalImage.png",
         };
       }
 
@@ -455,29 +506,132 @@ export default function ProfileEditModal({ user, close }) {
           ================================================= */}
 
           <div className={styles.fields}>
-            <div className={styles.row}>
-              <div className={styles.inputBox}>
-                <User />
+            {user?.accountType === "personal" && (
+              <CustomSelectBlack
+                icon={UserRoundCog}
+                title="Тип аккаунта"
+                options={accountTypes}
+                value={type}
+                setValue={setType}
+              />
+            )}
 
-                <input
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Имя"
-                  disabled={loading}
-                />
+            {/* Персональный профиль */}
+            {selectedRole === "personal" && (
+              <div className={styles.row}>
+                <div className={styles.inputBox}>
+                  <User />
+
+                  <input
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Имя"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <User />
+
+                  <input
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Фамилия"
+                    disabled={loading}
+                  />
+                </div>
               </div>
+            )}
 
-              <div className={styles.inputBox}>
-                <User />
+            {/* Риэлтор */}
+            {selectedRole === "realtor" && (
+              <>
+                <div className={styles.inputBox}>
+                  <User />
+                  <input
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="ФИО (обязательно)"
+                    disabled={loading}
+                  />
+                </div>
 
-                <input
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Фамилия"
-                  disabled={loading}
-                />
-              </div>
-            </div>
+                <div className={styles.inputBox}>
+                  <Hash />
+                  <input
+                    value={inn}
+                    onChange={(e) => setInn(e.target.value)}
+                    placeholder="ИНН (обязательно)"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <MapPin />
+                  <input
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                    placeholder="Регион работы"
+                    disabled={loading}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Агентство или Застройщик */}
+            {(selectedRole === "agency" || selectedRole === "developer") && (
+              <>
+                <div className={styles.inputBox}>
+                  <Building />
+                  <input
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder={selectedRole === "agency" ? "Название агентства (обязательно)" : "Название компании (обязательно)"}
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <Hash />
+                  <input
+                    value={inn}
+                    onChange={(e) => setInn(e.target.value)}
+                    placeholder="ИНН (обязательно)"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <MapPin />
+                  <input
+                    value={officeAddress}
+                    onChange={(e) => setOfficeAddress(e.target.value)}
+                    placeholder="Юридический адрес (обязательно)"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <MapPin />
+                  <input
+                    value={actualAddress}
+                    onChange={(e) => setActualAddress(e.target.value)}
+                    placeholder="Фактический адрес"
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className={styles.inputBox}>
+                  <Globe />
+                  <input
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="Сайт компании"
+                    disabled={loading}
+                  />
+                </div>
+              </>
+            )}
 
             <div className={styles.inputBox}>
               <Phone />
@@ -485,7 +639,7 @@ export default function ProfileEditModal({ user, close }) {
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Телефон"
+                placeholder="Рабочий телефон (обязательно)"
                 disabled={loading}
               />
             </div>
@@ -496,20 +650,10 @@ export default function ProfileEditModal({ user, close }) {
               <textarea
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder="Расскажите о себе"
+                placeholder={selectedRole === "personal" ? "Расскажите о себе" : "Описание деятельности (обязательно)"}
                 disabled={loading}
               />
             </div>
-
-            {user?.accountType === "personal" && (
-              <CustomSelectBlack
-                icon={UserRoundCog}
-                title="Тип аккаунта"
-                options={accountTypes}
-                value={type}
-                setValue={setType}
-              />
-            )}
           </div>
 
           {/* =================================================

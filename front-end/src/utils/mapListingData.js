@@ -27,6 +27,7 @@ export function mapListingData(item) {
     likes: 0,
     rooms: item.rooms,
     area: item.area ? `${item.area} м²` : "",
+    ...(item.features || {}),
   };
 }
 

@@ -19,7 +19,7 @@ import {
   removeFavorite,
 } from "@/utils/api";
 
-import CustomSelectBlack from "@/components/ui/CustomSelectBlack/CustomSelectBlack";
+import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AllProducts.module.css";
@@ -104,11 +104,14 @@ export default function AllProducts() {
     const urlSearch = searchParams.get("search");
     setSearch(urlSearch || "");
 
-    const urlCity = searchParams.get("city");
+    const urlCity = searchParams.get("city") || searchParams.get("settlement") || searchParams.get("location");
     const urlRegion = searchParams.get("region");
 
     if (urlCity) {
-      setCity(urlCity);
+      if (urlCity === "BISHKEK" || urlCity === "bishkek") setCity("Бишкек");
+      else if (urlCity === "ISSYK_KUL" || urlCity === "issyk_kul" || urlCity === "issykKul" || urlCity === "issyk") setCity("Иссык-Куль");
+      else if (urlCity === "OSH" || urlCity === "osh") setCity("Ош");
+      else setCity(urlCity);
     } else if (urlRegion) {
       const normalizedRegion = urlRegion.toLowerCase();
 
@@ -424,6 +427,26 @@ export default function AllProducts() {
 
           return true;
         })();
+
+        // Все остальные динамические параметры из URL (фильтры шагов)
+        for (const [key, value] of searchParams.entries()) {
+          if ([
+            "category", "propertyType", "dealType", "search", "query", "city", "region",
+            "rooms", "priceFrom", "priceTo", "areaFrom", "areaTo",
+            "page", "limit", "searchMode", "location",
+            "country", "settlement", "district", "rentalPeriod", "address", "latitude", "longitude", "listingType"
+          ].includes(key)) {
+            continue;
+          }
+
+          if (value && value !== "" && value !== "Все" && value !== "Любой" && value !== "Любое" && value !== "Любые") {
+            const itemValue = String(item[key] || "").toLowerCase();
+            const filterValue = String(value).toLowerCase();
+            if (itemValue !== filterValue && !itemValue.includes(filterValue)) {
+              return false;
+            }
+          }
+        }
 
         return (
           matchesSearch &&

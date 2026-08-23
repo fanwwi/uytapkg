@@ -8,22 +8,38 @@ import {
 } from "../utils/storage.js";
 
 async function syncDeveloperRecord(userId, accountType, profile, phone, email) {
-  if (accountType !== "developer") return;
-
   try {
+    if (accountType !== "developer") {
+      // Удаляем из застройщиков, если тип аккаунта сменился
+      await supabase
+        .from("developers")
+        .delete()
+        .eq("user_id", userId);
+      return;
+    }
+
     const { data: dev } = await supabase
       .from("developers")
       .select("id")
       .eq("user_id", userId)
       .maybeSingle();
 
+    let bioText = profile?.about || "";
+    if (bioText.startsWith("{") && bioText.endsWith("}")) {
+      try {
+        const parsed = JSON.parse(bioText);
+        bioText = parsed.bio || "";
+      } catch (e) {}
+    }
+
     const devData = {
       user_id: userId,
       company_name: profile?.company_name || "Застройщик",
       logo_url: profile?.avatar_url || null,
-      description: profile?.about || null,
+      description: bioText || null,
       phone: phone || null,
       email: email || null,
+      website: profile?.website || null,
     };
 
     if (dev) {
@@ -286,6 +302,25 @@ export const login = async (req, res) => {
 
 // =======================================================
 // 3. Получение текущего профиля авторизованного пользователя
+function formatProfileWithMetadata(profile) {
+  if (!profile) return {};
+  const formatted = { ...profile };
+  const aboutText = formatted.about || "";
+  if (aboutText.startsWith("{") && aboutText.endsWith("}")) {
+    try {
+      const parsed = JSON.parse(aboutText);
+      formatted.about = parsed.bio || "";
+      formatted.actualAddress = parsed.actualAddress || "";
+      formatted.website = parsed.website || "";
+      formatted.socials = parsed.socials || {};
+      formatted.region = parsed.region || "";
+    } catch (e) {}
+  }
+  return formatted;
+}
+
+// =======================================================
+// 3a. Получение данных текущего авторизованного пользователя
 // =======================================================
 export const getMe = async (req, res) => {
   try {
@@ -318,7 +353,7 @@ export const getMe = async (req, res) => {
         email: user.email,
         phone: user.phone,
         isVerified: user.is_verified,
-        profile: profile || {},
+        profile: formatProfileWithMetadata(profile),
       },
     });
   } catch (error) {
@@ -359,6 +394,10 @@ export const updateMe = async (req, res) => {
       "inn",
       "officeAddress",
       "agencyName",
+      "actualAddress",
+      "website",
+      "socials",
+      "region"
     ];
     const hasProfileUpdates =
       profileFieldKeys.some((key) => data[key] !== undefined) || data.accountType !== undefined;
@@ -388,6 +427,40 @@ export const updateMe = async (req, res) => {
       .select("*")
       .eq("user_id", userId)
       .maybeSingle();
+
+    // Валидация обязательных полей для бизнес-ролей
+    const targetAccountType = data.accountType || currentUser.account_type;
+    if (targetAccountType === "realtor") {
+      const finalFullName = data.fullName || data.firstName || currentProfile?.first_name;
+      const finalInn = data.inn || currentProfile?.inn;
+      const finalPhone = data.phone || currentUser.phone;
+      const finalAbout = data.about || currentProfile?.about;
+
+      if (!finalFullName || finalFullName.trim() === "") return res.status(400).json({ success: false, message: "ФИО обязательно для риэлтора" });
+      if (!finalInn || finalInn.trim() === "") return res.status(400).json({ success: false, message: "ИНН обязателен для риэлтора" });
+      if (!finalPhone || finalPhone.trim() === "") return res.status(400).json({ success: false, message: "Телефон обязателен для риэлтора" });
+      if (!finalAbout || finalAbout.trim() === "") return res.status(400).json({ success: false, message: "Описание обязательно для риэлтора" });
+    } else if (targetAccountType === "agency") {
+      const finalName = data.companyName || data.agencyName || currentProfile?.company_name;
+      const finalInn = data.inn || currentProfile?.inn;
+      const finalOffice = data.officeAddress || currentProfile?.office_address;
+      const finalPhone = data.phone || currentUser.phone;
+
+      if (!finalName || finalName.trim() === "") return res.status(400).json({ success: false, message: "Название агентства обязательно" });
+      if (!finalInn || finalInn.trim() === "") return res.status(400).json({ success: false, message: "ИНН обязателен для агентства" });
+      if (!finalOffice || finalOffice.trim() === "") return res.status(400).json({ success: false, message: "Юридический адрес обязателен для агентства" });
+      if (!finalPhone || finalPhone.trim() === "") return res.status(400).json({ success: false, message: "Телефон обязателен для агентства" });
+    } else if (targetAccountType === "developer") {
+      const finalName = data.companyName || currentProfile?.company_name;
+      const finalInn = data.inn || currentProfile?.inn;
+      const finalOffice = data.officeAddress || currentProfile?.office_address;
+      const finalPhone = data.phone || currentUser.phone;
+
+      if (!finalName || finalName.trim() === "") return res.status(400).json({ success: false, message: "Название компании застройщика обязательно" });
+      if (!finalInn || finalInn.trim() === "") return res.status(400).json({ success: false, message: "ИНН обязателен для застройщика" });
+      if (!finalOffice || finalOffice.trim() === "") return res.status(400).json({ success: false, message: "Юридический адрес обязателен для застройщика" });
+      if (!finalPhone || finalPhone.trim() === "") return res.status(400).json({ success: false, message: "Телефон обязателен для застройщика" });
+    }
 
     const userUpdates = {};
     if (data.phone !== undefined) {
@@ -431,7 +504,38 @@ export const updateMe = async (req, res) => {
 
     const profileUpdates = {};
 
-    if (data.about !== undefined) profileUpdates.about = data.about;
+    // Разбираем metadata из `about` колонки для не-personal аккаунтов
+    const existingAbout = currentProfile?.about || "";
+    let existingMetadata = {};
+    if (existingAbout.startsWith("{") && existingAbout.endsWith("}")) {
+      try {
+        existingMetadata = JSON.parse(existingAbout);
+      } catch (e) {}
+    }
+
+    const metadata = {
+      bio: data.about !== undefined ? data.about : (existingMetadata.bio || existingAbout),
+      actualAddress: data.actualAddress !== undefined ? data.actualAddress : (existingMetadata.actualAddress || ""),
+      website: data.website !== undefined ? data.website : (existingMetadata.website || ""),
+      socials: data.socials !== undefined ? data.socials : (existingMetadata.socials || {}),
+      region: data.region !== undefined ? data.region : (existingMetadata.region || ""),
+    };
+
+    const hasExtraUpdates =
+      data.about !== undefined ||
+      data.actualAddress !== undefined ||
+      data.website !== undefined ||
+      data.socials !== undefined ||
+      data.region !== undefined;
+
+    if (targetAccountType === "personal") {
+      if (data.about !== undefined) profileUpdates.about = data.about;
+    } else {
+      if (hasExtraUpdates) {
+        profileUpdates.about = JSON.stringify(metadata);
+      }
+    }
+
     if (data.inn !== undefined) profileUpdates.inn = data.inn;
     if (data.officeAddress !== undefined) profileUpdates.office_address = data.officeAddress;
     if (data.lastName !== undefined) profileUpdates.last_name = data.lastName;
@@ -519,7 +623,7 @@ export const updateMe = async (req, res) => {
         email: updatedUser.email,
         phone: updatedUser.phone,
         isVerified: updatedUser.is_verified,
-        profile: profile || {},
+        profile: formatProfileWithMetadata(profile),
       },
     });
   } catch (error) {
@@ -772,7 +876,7 @@ export const getUserPublicProfile = async (req, res) => {
         phone: user.phone,
         isVerified: user.is_verified,
         createdAt: user.created_at,
-        profile: profile || {},
+        profile: formatProfileWithMetadata(profile),
         ads: listings || [],
         complexes: complexes || []
       }

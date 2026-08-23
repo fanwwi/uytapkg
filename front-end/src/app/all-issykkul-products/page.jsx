@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  SlidersHorizontal,
+  MapPin,
   Search,
   X,
   Home,
-  MapPin,
+  SlidersHorizontal,
   DoorOpen,
 } from "lucide-react";
 
@@ -24,6 +24,12 @@ import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
 import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+
+/*
+ * =========================
+ * FILTER OPTIONS
+ * =========================
+ */
 
 const categories = [
   { value: "Все", label: "Все" },
@@ -53,18 +59,28 @@ const cityOptions = [
 
 const roomOptions = ["Все", "1", "2", "3", "4+"];
 
+/*
+ * =========================
+ * COMPONENT
+ * =========================
+ */
+
 export default function IssykKulProducts() {
   const router = useRouter();
 
-  // =========================
-  // SEARCH
-  // =========================
+  /*
+   * =========================
+   * SEARCH
+   * =========================
+   */
 
   const [search, setSearch] = useState("");
 
-  // =========================
-  // FILTERS
-  // =========================
+  /*
+   * =========================
+   * FILTERS
+   * =========================
+   */
 
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
@@ -78,9 +94,11 @@ export default function IssykKulProducts() {
   const [areaFrom, setAreaFrom] = useState("");
   const [areaTo, setAreaTo] = useState("");
 
-  // =========================
-  // DATA
-  // =========================
+  /*
+   * =========================
+   * DATA
+   * =========================
+   */
 
   const [listingsList, setListingsList] = useState([]);
   const [favIds, setFavIds] = useState(new Set());
@@ -88,9 +106,11 @@ export default function IssykKulProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // =========================
-  // LOAD DATA
-  // =========================
+  /*
+   * =========================
+   * LOAD DATA
+   * =========================
+   */
 
   useEffect(() => {
     let cancelled = false;
@@ -156,9 +176,11 @@ export default function IssykKulProducts() {
     };
   }, []);
 
-  // =========================
-  // MAP DATA
-  // =========================
+  /*
+   * =========================
+   * MAP DATA
+   * =========================
+   */
 
   const mappedListings = useMemo(() => {
     return listingsList
@@ -174,9 +196,11 @@ export default function IssykKulProducts() {
       .filter(Boolean);
   }, [listingsList]);
 
-  // =========================
-  // FAVORITES
-  // =========================
+  /*
+   * =========================
+   * FAVORITES
+   * =========================
+   */
 
   const handleFavoriteClick = async (clickedItem) => {
     const token = localStorage.getItem("uytap_token");
@@ -216,21 +240,28 @@ export default function IssykKulProducts() {
     }
   };
 
-  // =========================
-  // FILTERING
-  // =========================
+  /*
+   * =========================
+   * FILTERING
+   * =========================
+   */
 
   const filteredListings = useMemo(() => {
     const query = search.trim().toLowerCase();
 
     return mappedListings
       .filter((item) => {
-        // =========================
-        // ONLY ISSYK-KUL
-        // =========================
+        /*
+         * =========================
+         * ONLY ISSYK-KUL
+         * =========================
+         */
 
         const region = String(item.region || "").toLowerCase();
+
         const location = String(item.location || "").toLowerCase();
+
+        const cityValue = String(item.city || "").toLowerCase();
 
         const isIssykKul =
           region === "issyk_kul" ||
@@ -238,21 +269,26 @@ export default function IssykKulProducts() {
           region === "issyk kul" ||
           region.includes("issyk") ||
           region.includes("иссык") ||
-          location.includes("иссык-куль") ||
-          location.includes("иссык куль") ||
+          location.includes("иссык") ||
           location.includes("каракол") ||
-          location.includes("чолпон");
+          location.includes("чолпон") ||
+          cityValue.includes("каракол") ||
+          cityValue.includes("чолпон");
 
         if (!isIssykKul) {
           return false;
         }
 
-        // =========================
-        // SEARCH
-        // =========================
+        /*
+         * =========================
+         * SEARCH
+         * =========================
+         */
 
         const title = String(item.title || "").toLowerCase();
+
         const address = String(item.address || "").toLowerCase();
+
         const description = String(item.description || "").toLowerCase();
 
         const matchesSearch =
@@ -262,9 +298,11 @@ export default function IssykKulProducts() {
           address.includes(query) ||
           description.includes(query);
 
-        // =========================
-        // CATEGORY
-        // =========================
+        /*
+         * =========================
+         * CATEGORY
+         * =========================
+         */
 
         const itemType = String(item.type || "")
           .trim()
@@ -277,9 +315,11 @@ export default function IssykKulProducts() {
         const matchesCategory =
           activeCategory === "Все" || itemType === selectedType;
 
-        // =========================
-        // DEAL
-        // =========================
+        /*
+         * =========================
+         * DEAL TYPE
+         * =========================
+         */
 
         const itemDeal = String(item.dealType || "")
           .trim()
@@ -291,25 +331,29 @@ export default function IssykKulProducts() {
 
         const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
 
-        // =========================
-        // CITY
-        // =========================
+        /*
+         * =========================
+         * CITY
+         * =========================
+         */
 
         const matchesCity = (() => {
           if (city === "Все") {
             return true;
           }
 
-          const selectedCity = city.toLowerCase();
+          const selectedCity = city.toLowerCase().trim();
 
           return (
-            location.includes(selectedCity) || region.includes(selectedCity)
+            location.includes(selectedCity) || cityValue.includes(selectedCity)
           );
         })();
 
-        // =========================
-        // ROOMS
-        // =========================
+        /*
+         * =========================
+         * ROOMS
+         * =========================
+         */
 
         const matchesRooms = (() => {
           if (rooms === "Все") {
@@ -325,9 +369,11 @@ export default function IssykKulProducts() {
           return itemRooms === Number(rooms);
         })();
 
-        // =========================
-        // PRICE
-        // =========================
+        /*
+         * =========================
+         * PRICE
+         * =========================
+         */
 
         const matchesPrice = (() => {
           const min = priceFrom ? Number(priceFrom) : null;
@@ -347,9 +393,11 @@ export default function IssykKulProducts() {
           return true;
         })();
 
-        // =========================
-        // AREA
-        // =========================
+        /*
+         * =========================
+         * AREA
+         * =========================
+         */
 
         const matchesArea = (() => {
           const min = areaFrom ? Number(areaFrom) : null;
@@ -404,21 +452,33 @@ export default function IssykKulProducts() {
     areaTo,
   ]);
 
-  // =========================
-  // RESET
-  // =========================
+  /*
+   * =========================
+   * RESET FILTERS
+   * =========================
+   */
 
   const resetFilters = () => {
     setSearch("");
+
     setActiveCategory("Все");
     setDealType("Все");
+
     setCity("Все");
     setRooms("Все");
+
     setPriceFrom("");
     setPriceTo("");
+
     setAreaFrom("");
     setAreaTo("");
   };
+
+  /*
+   * =========================
+   * CHECK FILTERS
+   * =========================
+   */
 
   const hasFilters =
     search.trim() !== "" ||
@@ -431,9 +491,11 @@ export default function IssykKulProducts() {
     areaFrom !== "" ||
     areaTo !== "";
 
-  // =========================
-  // UI
-  // =========================
+  /*
+   * =========================
+   * UI
+   * =========================
+   */
 
   return (
     <main className={styles.page}>
@@ -673,6 +735,7 @@ export default function IssykKulProducts() {
       {loading && (
         <div className={styles.loading}>
           <div className={styles.spinner} />
+
           <span>Загружаем объявления...</span>
         </div>
       )}
