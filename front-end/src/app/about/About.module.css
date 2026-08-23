@@ -1,0 +1,1155 @@
+.page {
+  --bg: #101012;
+  --bg-soft: #151518;
+  --card: #19191d;
+  --card-light: #202025;
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #f7f7f8;
+  --muted: #9b9ba4;
+  --pink: #ff176f;
+  --pink-light: #ff4d91;
+
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 85% 8%,
+      rgba(255, 23, 111, 0.12),
+      transparent 28%
+    ),
+    var(--bg);
+
+  color: var(--text);
+  padding-top: 50px;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+.glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  opacity: 0.1;
+}
+
+.glowOne {
+  top: 500px;
+  left: -300px;
+  background: var(--pink);
+}
+
+.glowTwo {
+  top: 1700px;
+  right: -300px;
+  background: #ff176f;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  position: relative;
+  z-index: 1;
+
+  min-height: 760px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 100px 70px;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 80px;
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+
+  background-size: 70px 70px;
+
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow,
+.finalBadge {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 8px 13px;
+
+  border: 1px solid rgba(255, 23, 111, 0.25);
+  border-radius: 100px;
+
+  background: rgba(255, 23, 111, 0.07);
+
+  color: #ff6ca5;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.liveDot,
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink);
+
+  box-shadow: 0 0 15px rgba(255, 23, 111, 0.8);
+}
+
+.hero h1 {
+  max-width: 800px;
+  margin: 30px 0 25px;
+
+  font-size: clamp(56px, 7vw, 100px);
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+  font-weight: 800;
+}
+
+.hero h1 span,
+.intro h2 span,
+.sectionHeading h2 span,
+.workflowHeader h2 span,
+.regionContent h2 span,
+.roadmapIntro h2 span,
+.final h2 span {
+  color: var(--pink);
+}
+
+.heroText {
+  max-width: 620px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-top: 38px;
+}
+
+.primaryButton,
+.secondaryButton {
+  height: 52px;
+
+  padding: 0 20px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid var(--pink);
+
+  background: var(--pink);
+  color: white;
+
+  box-shadow: 0 10px 35px rgba(255, 23, 111, 0.2);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 45px rgba(255, 23, 111, 0.32);
+}
+
+.secondaryButton {
+  border: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: white;
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================
+   HERO VISUAL
+========================= */
+
+.heroVisual {
+  position: relative;
+
+  min-height: 480px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visualCard {
+  position: relative;
+  width: min(460px, 100%);
+
+  padding: 25px;
+
+  border: 1px solid var(--border);
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.07),
+      rgba(255, 255, 255, 0.025)
+    ),
+    #17171a;
+
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.45),
+    inset 0 1px rgba(255, 255, 255, 0.06);
+
+  transform: rotate(2deg);
+}
+
+.visualTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 45px;
+
+  color: #777781;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.visualTop > span {
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.visualTop div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.searchDemo {
+  min-height: 70px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 0 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+
+  background: #101012;
+
+  color: #b8b8c0;
+
+  font-size: 14px;
+}
+
+.searchDemo svg {
+  color: var(--pink);
+}
+
+.searchDemo b {
+  color: white;
+}
+
+.demoResult {
+  margin-top: 15px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.demoImage {
+  width: 55px;
+  height: 55px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: linear-gradient(135deg, #2a2a2f, #1b1b1f);
+
+  color: var(--pink);
+}
+
+.demoResult div:nth-child(2) {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.demoResult strong {
+  font-size: 13px;
+}
+
+.demoResult span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.demoResult > svg {
+  color: #66666e;
+}
+
+.aiBadge {
+  width: fit-content;
+
+  margin-top: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #ff6ca5;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.floatingCard {
+  position: absolute;
+  bottom: 45px;
+  left: -25px;
+
+  width: 170px;
+
+  padding: 17px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  background: rgba(28, 28, 32, 0.92);
+  backdrop-filter: blur(20px);
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+
+  transform: rotate(-4deg);
+}
+
+.floatingCard span {
+  color: var(--pink);
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.floatingCard strong,
+.floatingCard small {
+  display: block;
+}
+
+.floatingCard strong {
+  margin-top: 7px;
+  font-size: 13px;
+}
+
+.floatingCard small {
+  margin-top: 3px;
+
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* =========================
+   COMMON
+========================= */
+
+.intro,
+.featuresSection,
+.workflow,
+.regions,
+.principles,
+.roadmap {
+  position: relative;
+  z-index: 1;
+
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 130px 50px;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #777780;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sectionLabel span:first-child {
+  color: var(--pink);
+}
+
+.sectionLabel span:last-child {
+  color: #85858e;
+}
+
+.introContent {
+  margin-top: 45px;
+
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 100px;
+}
+
+.intro h2,
+.sectionHeading h2,
+.workflowHeader h2,
+.regionContent h2,
+.roadmapIntro h2 {
+  margin: 0;
+
+  font-size: clamp(42px, 5vw, 70px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.introText {
+  padding-top: 10px;
+}
+
+.introText p {
+  margin: 0 0 20px;
+
+  color: var(--muted);
+
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.featuresSection {
+  max-width: 1400px;
+}
+
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  gap: 50px;
+
+  margin-bottom: 55px;
+}
+
+.sectionHeading > p {
+  max-width: 350px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.sectionHeading h2 {
+  margin-top: 28px;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: -100px;
+}
+
+.featureCard {
+  position: relative;
+
+  min-height: 340px;
+
+  padding: 30px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.055),
+    rgba(255, 255, 255, 0.018)
+  );
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 23, 111, 0.3);
+}
+
+.featureCard::after {
+  content: "";
+
+  position: absolute;
+  width: 200px;
+  height: 200px;
+
+  right: -100px;
+  bottom: -100px;
+
+  border-radius: 50%;
+
+  background: var(--pink);
+
+  opacity: 0.06;
+
+  filter: blur(45px);
+}
+
+.featureTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.featureNumber {
+  color: #595960;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.featureIcon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(255, 23, 111, 0.2);
+  border-radius: 13px;
+
+  background: rgba(255, 23, 111, 0.08);
+
+  color: var(--pink);
+}
+
+.featureCard h3 {
+  margin: 65px 0 12px;
+
+  font-size: 25px;
+  letter-spacing: -0.03em;
+}
+
+.featureCard > p {
+  max-width: 480px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.featureExample {
+  position: absolute;
+  bottom: 27px;
+  left: 30px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #aaaab1;
+
+  font-size: 11px;
+}
+
+.featureExample span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: var(--pink);
+}
+
+/* =========================
+   WORKFLOW
+========================= */
+
+.workflow {
+  max-width: 1400px;
+}
+
+.workflowHeader {
+  max-width: 850px;
+}
+
+.workflowHeader h2 {
+  margin-top: 28px;
+}
+
+.workflowSteps {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+
+  margin-top: 80px;
+}
+
+.workflowLine {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  right: 30px;
+
+  height: 1px;
+
+  background: linear-gradient(90deg, var(--pink), rgba(255, 23, 111, 0.08));
+}
+
+.workflowStep {
+  position: relative;
+  z-index: 1;
+}
+
+.workflowNumber {
+  width: 60px;
+  height: 60px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(255, 23, 111, 0.3);
+  border-radius: 50%;
+
+  background: #151518;
+
+  color: var(--pink);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.workflowStep h3 {
+  margin: 28px 0 10px;
+
+  font-size: 20px;
+}
+
+.workflowStep p {
+  max-width: 320px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================
+   REGIONS
+========================= */
+
+.regionCard {
+  min-height: 480px;
+
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 28px;
+
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(255, 23, 111, 0.14),
+      transparent 35%
+    ),
+    #18181c;
+}
+
+.regionVisual {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  border-right: 1px solid var(--border);
+
+  color: var(--pink);
+}
+
+.regionVisual > svg {
+  position: relative;
+  z-index: 2;
+}
+
+.regionRing {
+  position: absolute;
+
+  width: 170px;
+  height: 170px;
+
+  border: 1px solid rgba(255, 23, 111, 0.25);
+  border-radius: 50%;
+}
+
+.regionRingTwo {
+  width: 300px;
+  height: 300px;
+
+  border-color: rgba(255, 23, 111, 0.08);
+}
+
+.regionContent {
+  padding: 65px;
+}
+
+.regionContent h2 {
+  margin: 30px 0 25px;
+}
+
+.regionContent p {
+  max-width: 600px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.regionTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 35px;
+}
+
+.regionTags span {
+  padding: 9px 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 100px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #b7b7bf;
+
+  font-size: 11px;
+}
+
+/* =========================
+   PRINCIPLES
+========================= */
+
+.principleGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  margin-top: 60px;
+}
+
+.principleCard {
+  min-height: 240px;
+
+  padding: 27px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.principleCard > svg {
+  color: var(--pink);
+}
+
+.principleCard h3 {
+  margin: 55px 0 10px;
+
+  font-size: 18px;
+}
+
+.principleCard p {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* =========================
+   ROADMAP
+========================= */
+
+.roadmap {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 100px;
+
+  border-top: 1px solid var(--border);
+}
+
+.roadmapIntro h2 {
+  margin-top: 28px;
+}
+
+.roadmapIntro p {
+  max-width: 390px;
+
+  margin-top: 30px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.roadmapList {
+  border-top: 1px solid var(--border);
+}
+
+.roadmapItem {
+  min-height: 72px;
+
+  display: grid;
+  grid-template-columns: 35px 40px 1fr;
+  align-items: center;
+  gap: 15px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.roadmapCheck {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 23, 111, 0.1);
+
+  color: var(--pink);
+}
+
+.roadmapItem > span {
+  color: #55555d;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.roadmapItem strong {
+  font-size: 14px;
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final {
+  position: relative;
+  z-index: 1;
+
+  max-width: 1400px;
+  margin: 50px auto 0;
+  padding: 0 50px 100px;
+}
+
+.finalContent {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 100px 60px;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 23, 111, 0.2);
+  border-radius: 30px;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 23, 111, 0.16),
+      transparent 45%
+    ),
+    #17171b;
+}
+
+.finalGlow {
+  position: absolute;
+}
+
+.finalContent .finalBadge {
+  margin: 0 auto;
+}
+
+.final h2 {
+  margin: 28px auto 20px;
+
+  font-size: clamp(44px, 6vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.final p {
+  max-width: 550px;
+
+  margin: 0 auto 35px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.final .primaryButton {
+  margin: 0 auto;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 80px;
+  }
+
+  .heroVisual {
+    min-height: 400px;
+  }
+
+  .introContent,
+  .roadmap {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .principleGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .regionCard {
+    grid-template-columns: 1fr;
+  }
+
+  .regionVisual {
+    min-height: 280px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 65px 22px;
+    min-height: auto;
+  }
+
+  .hero h1 {
+    font-size: 56px;
+  }
+
+  .heroText {
+    font-size: 16px;
+  }
+
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    justify-content: center;
+  }
+
+  .heroVisual {
+    min-height: 330px;
+  }
+
+  .floatingCard {
+    left: -5px;
+    bottom: 20px;
+  }
+
+  .intro,
+  .featuresSection,
+  .workflow,
+  .regions,
+  .principles,
+  .roadmap {
+    padding: 80px 22px;
+  }
+
+  .intro h2,
+  .sectionHeading h2,
+  .workflowHeader h2,
+  .regionContent h2,
+  .roadmapIntro h2 {
+    font-size: 42px;
+  }
+
+  .introContent {
+    gap: 35px;
+  }
+
+  .sectionHeading {
+    display: block;
+  }
+
+  .sectionHeading > p {
+    margin-top: 25px;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featureCard {
+    min-height: 320px;
+  }
+
+  .workflowSteps {
+    grid-template-columns: 1fr;
+    gap: 45px;
+    margin-top: 50px;
+  }
+
+  .workflowLine {
+    top: 30px;
+    bottom: 30px;
+    left: 30px;
+    right: auto;
+
+    width: 1px;
+    height: auto;
+
+    background: linear-gradient(180deg, var(--pink), rgba(255, 23, 111, 0.05));
+  }
+
+  .workflowStep {
+    padding-left: 85px;
+  }
+
+  .workflowNumber {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .regionContent {
+    padding: 40px 28px;
+  }
+
+  .principleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .roadmap {
+    gap: 45px;
+  }
+
+  .final {
+    padding: 0 22px 60px;
+  }
+
+  .finalContent {
+    padding: 70px 25px;
+  }
+
+  .final h2 {
+    font-size: 45px;
+  }
+}

@@ -1,99 +1,192 @@
 .hero {
   height: 100vh;
-
   min-height: 700px;
 
   position: relative;
 
   display: flex;
-
   align-items: center;
 
   overflow: hidden;
 
   background-image: url("/assets/bishkek-hero.jpg");
-
   background-size: cover;
-
   background-position: center;
 }
 
+/* =========================
+   DARK CINEMATIC OVERLAY
+========================= */
+
 .overlay {
   position: absolute;
-
   inset: 0;
 
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.45),
-    rgba(0, 0, 0, 0.25)
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(8, 9, 11, 0.62) 38%,
+    rgba(8, 9, 11, 0.32) 70%,
+    rgba(8, 9, 11, 0.18) 100%
   );
+
+  z-index: 1;
 }
+
+/* subtle magenta atmosphere */
+
+.overlay::after {
+  content: "";
+
+  position: absolute;
+  width: 650px;
+  height: 650px;
+
+  left: -250px;
+  bottom: -300px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 0, 127, 0.14) 0%,
+    rgba(255, 0, 127, 0.06) 35%,
+    transparent 70%
+  );
+
+  pointer-events: none;
+}
+
+/* =========================
+   CONTENT
+========================= */
 
 .content {
   position: relative;
-
   z-index: 2;
 
   max-width: 900px;
 
   margin-left: 80px;
 
-  color: white;
+  color: #ffffff;
 }
+
+/* =========================
+   LOCATION — METALLIC GLASS
+========================= */
 
 .location {
   display: flex;
-
   align-items: center;
 
   gap: 10px;
 
   width: max-content;
 
-  padding: 12px 20px;
+  padding: 11px 20px;
 
   border-radius: 40px;
 
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 600;
 
-  background: rgba(255, 255, 255, 0.15);
+  color: #25272b;
 
-  backdrop-filter: blur(12px);
+  background: linear-gradient(
+    135deg,
+    rgba(247, 248, 250, 0.95) 0%,
+    rgba(217, 220, 225, 0.88) 30%,
+    rgba(184, 189, 197, 0.92) 55%,
+    rgba(247, 248, 250, 0.9) 75%,
+    rgba(133, 139, 148, 0.88) 100%
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   margin-bottom: 25px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(75, 80, 88, 0.22),
+    0 10px 40px rgba(0, 0, 0, 0.28);
 }
 
 .location svg {
-  width: 22px;
+  width: 21px;
+  height: 21px;
 
-  height: 22px;
+  color: #ff007f;
 
-  color: #ff4fa3;
+  stroke-width: 2.5;
+
+  filter: drop-shadow(0 0 7px rgba(255, 0, 127, 0.55));
 }
+
+/* =========================
+   TITLE
+========================= */
 
 .title {
   font-size: 64px;
 
-  line-height: 1.1;
+  line-height: 1.08;
 
   font-weight: 900;
 
-  letter-spacing: -2px;
+  letter-spacing: -2.5px;
 
   margin: 0 0 30px;
+
+  color: #ffffff;
 }
 
+/* =========================
+   CHROME TEXT
+========================= */
+
 .highlight {
-  background: linear-gradient(135deg, #ff79c6, #ff0066);
+  position: relative;
+
+  background: linear-gradient(
+    105deg,
+    #4b5058 0%,
+    #858b94 12%,
+    #f7f8fa 25%,
+    #ffffff 34%,
+    #b8bdc5 47%,
+    #ffffff 58%,
+    #d9dce1 69%,
+    #858b94 84%,
+    #4b5058 100%
+  );
+
+  background-size: 220% auto;
 
   -webkit-background-clip: text;
-
   background-clip: text;
 
   color: transparent;
+
+  animation: chromeShine 6s linear infinite;
+
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.08));
 }
+
+@keyframes chromeShine {
+  0% {
+    background-position: 220% center;
+  }
+
+  100% {
+    background-position: -220% center;
+  }
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
 
 .description {
   font-size: 22px;
@@ -102,10 +195,16 @@
 
   max-width: 720px;
 
-  color: #eeeeee;
+  color: #d9dce1;
 
   margin-bottom: 40px;
+
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .buttons {
   display: flex;
@@ -113,69 +212,121 @@
   gap: 20px;
 }
 
+/* =========================
+   PRIMARY — MAGENTA CHROME
+========================= */
+
 .primary {
   height: 62px;
 
   padding: 0 35px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   display: flex;
-
   align-items: center;
 
   gap: 12px;
 
   font-size: 18px;
+  font-weight: 800;
 
-  font-weight: 700;
-
-  color: white;
+  color: #ffffff;
 
   cursor: pointer;
 
-  background: linear-gradient(135deg, #ff4fa3, #ff0066);
+  background: linear-gradient(135deg, #ff007f 0%, #ff3d9a 42%, #c60062 100%);
 
-  box-shadow: 0 15px 40px rgba(255, 0, 100, 0.45);
+  box-shadow:
+    0 12px 35px rgba(255, 0, 127, 0.34),
+    0 0 25px rgba(255, 0, 127, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.primary svg {
+  width: 21px;
+  height: 21px;
+
+  stroke-width: 2.5;
 }
 
 .primary:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+
+  background: linear-gradient(135deg, #ff3d9a 0%, #ff007f 48%, #c60062 100%);
+
+  box-shadow:
+    0 18px 45px rgba(255, 0, 127, 0.48),
+    0 0 35px rgba(255, 0, 127, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
+
+/* =========================
+   SECONDARY — METALLIC
+========================= */
 
 .secondary {
   height: 62px;
 
   padding: 0 35px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   font-size: 18px;
-
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
-  color: white;
+  color: #25272b;
 
-  background: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    135deg,
+    #f7f8fa 0%,
+    #b8bdc5 25%,
+    #ffffff 45%,
+    #858b94 70%,
+    #d9dce1 100%
+  );
 
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 
-  backdrop-filter: blur(15px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(75, 80, 88, 0.2),
+    0 10px 30px rgba(0, 0, 0, 0.28);
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .secondary:hover {
-  background: white;
+  transform: translateY(-4px);
 
-  color: #111;
+  color: #ffffff;
+
+  background: linear-gradient(135deg, #ff007f 0%, #ff3d9a 50%, #c60062 100%);
+
+  border-color: #ff007f;
+
+  box-shadow:
+    0 15px 35px rgba(255, 0, 127, 0.32),
+    0 0 25px rgba(255, 0, 127, 0.14);
 }
+
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 1000px) {
   .content {
@@ -191,13 +342,52 @@
   }
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
+  .hero {
+    min-height: 650px;
+
+    background-position: 60% center;
+  }
+
+  .overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.48) 0%,
+      rgba(8, 9, 11, 0.7) 48%,
+      rgba(8, 9, 11, 0.92) 100%
+    );
+  }
+
+  .content {
+    margin: 0 20px;
+  }
+
+  .location {
+    font-size: 14px;
+
+    padding: 9px 15px;
+  }
+
   .title {
     font-size: 36px;
+
+    letter-spacing: -1.5px;
+  }
+
+  .description {
+    font-size: 17px;
+
+    color: #d9dce1;
   }
 
   .buttons {
     flex-direction: column;
+
+    gap: 12px;
   }
 
   .primary,
