@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 
-let rawBackendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+let rawBackendUrl =
+  process.env.BACKEND_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:5000/api";
 rawBackendUrl = rawBackendUrl.replace(/\/$/, "");
 if (!rawBackendUrl.endsWith("/api") && !rawBackendUrl.includes("localhost")) {
   rawBackendUrl = `${rawBackendUrl}/api`;

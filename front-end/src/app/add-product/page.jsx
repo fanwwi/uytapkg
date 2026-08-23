@@ -14,11 +14,11 @@ import StepAddress from "./components/StepAddress/StepAddress";
 import StepListingType from "./components/StepListingType/StepListingType";
 
 import styles from "./AddProduct.module.css";
-import AuthRequired from "../auth-required/page";
 import { House } from "lucide-react";
 import Link from "next/link";
 
 const initialForm = {
+  title: "",
   // =========================
   // ФОТО
   // =========================
@@ -124,6 +124,11 @@ export default function AddProductPage() {
 
       if (!token) {
         router.push("/auth-required");
+        return;
+      }
+
+      if (!form.title?.trim()) {
+        throw new Error("Введите название объявления");
       }
 
       if (!form.images?.length) {
@@ -137,6 +142,8 @@ export default function AddProductPage() {
       if (!form.dealType) {
         throw new Error("Выберите тип сделки");
       }
+
+      // дальше твой код...
 
       // =========================
       // ЦЕНА
@@ -170,8 +177,6 @@ export default function AddProductPage() {
       };
 
       const categoryTitle = categoryTitles[form.category] || "недвижимости";
-
-      const derivedTitle = `${dealTitle} ${categoryTitle}`;
 
       // =========================
       // ОПИСАНИЕ
@@ -234,7 +239,7 @@ export default function AddProductPage() {
       }
 
       const payload = {
-        title: derivedTitle,
+        title: form.title.trim(),
         description: derivedDescription,
 
         // Категория

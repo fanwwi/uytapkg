@@ -127,6 +127,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
+  margin-top: 20px;
 }
 
 /* =========================
@@ -772,5 +773,261 @@
   .secondary,
   .cardGlow {
     transition: none;
+  }
+}
+
+/* =========================
+   TITLE SECTION
+========================= */
+
+.section {
+  margin-bottom: 36px;
+}
+
+.titleField {
+  margin-top: 18px;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper input {
+  width: 100%;
+  height: 58px;
+
+  box-sizing: border-box;
+
+  padding: 0 70px 0 18px;
+
+  border: 1px solid #e4e4e7;
+  border-radius: 14px;
+
+  outline: none;
+
+  background: #fafafa;
+  color: #111;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.inputWrapper input::placeholder {
+  color: #a1a1aa;
+  font-weight: 400;
+}
+
+.inputWrapper input:hover {
+  background: #fff;
+  border-color: #d4d4d8;
+}
+
+.inputWrapper input:focus {
+  background: #fff;
+  border-color: #111;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, 0.05),
+    0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.inputWrapper input:focus::placeholder {
+  color: #c4c4c7;
+}
+
+/* =========================
+   COUNTER
+========================= */
+
+.titleCounter {
+  position: absolute;
+
+  top: 50%;
+  right: 17px;
+
+  transform: translateY(-50%);
+
+  color: #a1a1aa;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  pointer-events: none;
+
+  user-select: none;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.titleFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-top: 9px;
+  padding: 0 3px;
+
+  color: #a1a1aa;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.titleFooter span {
+  color: #a1a1aa;
+}
+
+.required {
+  flex-shrink: 0;
+
+  color: #ef4444;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.inputError {
+  border-color: #ef4444 !important;
+
+  background: #fffafa !important;
+}
+
+.inputError:focus {
+  border-color: #ef4444 !important;
+
+  box-shadow:
+    0 0 0 3px rgba(239, 68, 68, 0.08),
+    0 8px 25px rgba(239, 68, 68, 0.05) !important;
+}
+
+/* =========================
+   SECTION LABEL
+========================= */
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  margin-bottom: 0;
+}
+
+.sectionLabel > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #111;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.sectionLabel > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.sectionLabel strong {
+  color: #111;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sectionLabel small {
+  color: #a1a1aa;
+
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .titleField {
+    margin-top: 15px;
+  }
+
+  .inputWrapper input {
+    height: 54px;
+
+    padding-left: 15px;
+    padding-right: 60px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+  }
+
+  .titleCounter {
+    right: 14px;
+
+    font-size: 11px;
+  }
+
+  .titleFooter {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 8px;
+
+    font-size: 11px;
+  }
+
+  .sectionLabel {
+    gap: 10px;
+  }
+
+  .sectionLabel > span {
+    width: 29px;
+    height: 29px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+
+  .sectionLabel strong {
+    font-size: 13px;
+  }
+
+  .sectionLabel small {
+    font-size: 11px;
   }
 }
