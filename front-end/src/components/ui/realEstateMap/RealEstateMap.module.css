@@ -4,14 +4,14 @@
   height: 420px;
   overflow: hidden;
 
-  border: 1px solid #f0d7e3;
+  border: 1px solid #e9e4ee;
   border-radius: 24px;
 
   background: #fff;
 
   box-shadow:
-    0 20px 60px rgba(255, 41, 144, 0.08),
-    0 4px 14px rgba(0, 0, 0, 0.04);
+    0 20px 60px rgba(25, 15, 35, 0.06),
+    0 4px 14px rgba(25, 15, 35, 0.035);
 }
 
 .map {
@@ -19,7 +19,9 @@
   height: 100%;
 }
 
-/* Наш кастомный розовый маркер */
+/* =========================
+   CUSTOM MARKER
+========================= */
 
 .customMarker {
   background: transparent !important;
@@ -38,11 +40,13 @@
 
   border-radius: 50% 50% 50% 0;
 
-  background: linear-gradient(135deg, #ff2990, #ff006f);
+  background: linear-gradient(135deg, #7c3aed, #9b5cf6);
 
   transform: rotate(-45deg);
 
-  box-shadow: 0 8px 20px rgba(255, 0, 111, 0.35);
+  box-shadow:
+    0 8px 20px rgba(124, 58, 237, 0.3),
+    0 3px 8px rgba(124, 58, 237, 0.12);
 }
 
 .markerDot {
@@ -54,9 +58,13 @@
   background: #fff;
 
   transform: rotate(45deg);
+
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
 }
 
-/* Подсказка */
+/* =========================
+   MAP HINT
+========================= */
 
 .hint {
   position: absolute;
@@ -74,14 +82,16 @@
 
   padding: 10px 16px;
 
-  border: 1px solid rgba(255, 41, 144, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.13);
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
 
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 8px 30px rgba(25, 15, 35, 0.12),
+    0 2px 8px rgba(124, 58, 237, 0.05);
 
-  color: #555;
+  color: #5c5660;
 
   font-size: 13px;
   font-weight: 500;
@@ -95,12 +105,80 @@
   width: 8px;
   height: 8px;
 
+  flex-shrink: 0;
+
   border-radius: 50%;
 
-  background: #ff2990;
+  background: #7c3aed;
 
-  box-shadow: 0 0 0 4px rgba(255, 41, 144, 0.12);
+  box-shadow:
+    0 0 0 4px rgba(124, 58, 237, 0.1),
+    0 0 10px rgba(124, 58, 237, 0.2);
 }
+
+/* =========================
+   LEAFLET UI
+========================= */
+
+/*
+ * Немного приводим стандартные элементы Leaflet
+ * к общей светлой стилистике сайта.
+ */
+
+.wrapper :global(.leaflet-control-zoom) {
+  border: 1px solid #e4dfe8 !important;
+  border-radius: 12px !important;
+
+  overflow: hidden;
+
+  box-shadow: 0 8px 20px rgba(25, 15, 35, 0.08) !important;
+}
+
+.wrapper :global(.leaflet-control-zoom a) {
+  width: 34px !important;
+  height: 34px !important;
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  border: none !important;
+
+  background: rgba(255, 255, 255, 0.96) !important;
+
+  color: #5c5660 !important;
+
+  font-weight: 600;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.wrapper :global(.leaflet-control-zoom a:hover) {
+  background: #f7f3ff !important;
+  color: #7c3aed !important;
+}
+
+.wrapper :global(.leaflet-control-attribution) {
+  border-radius: 8px 0 0 0;
+
+  background: rgba(255, 255, 255, 0.9) !important;
+
+  color: #8f8994 !important;
+
+  font-size: 10px !important;
+
+  backdrop-filter: blur(8px);
+}
+
+.wrapper :global(.leaflet-control-attribution a) {
+  color: #7c3aed !important;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 768px) {
   .wrapper {
@@ -113,6 +191,28 @@
 
     max-width: calc(100% - 24px);
 
+    padding: 9px 13px;
+
     font-size: 12px;
+  }
+
+  .wrapper :global(.leaflet-control-zoom a) {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    height: 300px;
+    border-radius: 18px;
+  }
+
+  .hint {
+    max-width: calc(100% - 20px);
+
+    padding: 8px 12px;
+
+    font-size: 11px;
   }
 }

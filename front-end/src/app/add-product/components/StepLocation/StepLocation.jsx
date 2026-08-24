@@ -635,7 +635,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 2 из 5
+          Шаг 2 из 6
         </div>
 
         <h1>Где находится объект?</h1>
@@ -674,7 +674,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
             onClick={() => selectCountry("kyrgyzstan")}
           >
             <div className={styles.choiceIcon}>
-              <span style={{ color: "#ff3d99", marginTop: "-5px" }}>🇰🇬</span>
+              <span style={{ color: "#6d28d9", marginTop: "-5px" }}>🇰🇬</span>
             </div>
 
             <div className={styles.choiceContent}>
@@ -699,7 +699,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
             onClick={() => selectCountry("turkey")}
           >
             <div className={styles.choiceIcon}>
-              <span style={{ color: "#ff3d99", marginTop: "-5px" }}>🇹🇷</span>
+              <span style={{ color: "#6d28d9", marginTop: "-5px" }}>🇹🇷</span>
             </div>
 
             <div className={styles.choiceContent}>

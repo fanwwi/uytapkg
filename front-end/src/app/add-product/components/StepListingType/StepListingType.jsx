@@ -7,6 +7,7 @@ import {
   Zap,
   ArrowLeft,
   ArrowRight,
+  TrendingUp,
 } from "lucide-react";
 
 import styles from "./StepListingType.module.css";
@@ -31,6 +32,13 @@ const types = [
     description:
       "Покажите покупателям, что объект нужно продать или сдать быстрее.",
     icon: Zap,
+  },
+  {
+    id: "top",
+    title: "Поднять в ТОП",
+    description:
+      "Поднимите объявление выше других и получите больше просмотров.",
+    icon: TrendingUp,
   },
 ];
 
@@ -144,13 +152,16 @@ export default function StepListingType({
 
           <div>
             <strong>Название объявления</strong>
-
             <small>Придумайте короткое и понятное название</small>
           </div>
         </div>
 
         <div className={styles.titleField}>
-          <div className={styles.inputWrapper}>
+          <div
+            className={`${styles.inputWrapper} ${
+              !isTitleValid && title.length > 0 ? styles.inputWrapperError : ""
+            }`}
+          >
             <input
               type="text"
               value={title}
@@ -159,9 +170,6 @@ export default function StepListingType({
               maxLength={100}
               autoComplete="off"
               autoFocus
-              className={
-                title.length > 0 && !isTitleValid ? styles.inputError : ""
-              }
             />
 
             <span className={styles.titleCounter}>{title.length}/100</span>
@@ -187,7 +195,6 @@ export default function StepListingType({
 
           <div>
             <strong>Тип размещения</strong>
-
             <small>Выберите один вариант</small>
           </div>
         </div>
@@ -268,15 +275,11 @@ export default function StepListingType({
         </div>
 
         <div className={styles.summaryGrid}>
-          {/* TITLE */}
-
           <div className={styles.summaryItemWide}>
             <span>Название</span>
 
             <strong>{title.trim() || "Не указано"}</strong>
           </div>
-
-          {/* COUNTRY */}
 
           <div className={styles.summaryItem}>
             <span>Страна</span>
@@ -284,15 +287,11 @@ export default function StepListingType({
             <strong>{countryName}</strong>
           </div>
 
-          {/* REGION */}
-
           <div className={styles.summaryItem}>
             <span>Регион</span>
 
             <strong>{regionName}</strong>
           </div>
-
-          {/* DEAL */}
 
           <div className={styles.summaryItem}>
             <span>Тип сделки</span>
@@ -300,23 +299,17 @@ export default function StepListingType({
             <strong>{dealName}</strong>
           </div>
 
-          {/* CATEGORY */}
-
           <div className={styles.summaryItem}>
             <span>Категория</span>
 
             <strong>{categoryName}</strong>
           </div>
 
-          {/* ADDRESS */}
-
           <div className={styles.summaryItemWide}>
             <span>Адрес</span>
 
             <strong>{form.address || "Не указан"}</strong>
           </div>
-
-          {/* LISTING TYPE */}
 
           <div className={styles.summaryItemWide}>
             <span>Размещение</span>

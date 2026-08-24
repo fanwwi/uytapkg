@@ -124,7 +124,7 @@ export default function StepImage({ form, updateForm, onNext }) {
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 1 из 5
+          Шаг 1 из 6
         </div>
 
         <h1>Добавьте фотографии</h1>

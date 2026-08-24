@@ -69,7 +69,7 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
       <div className={styles.header}>
         <span className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 2 из 5
+          Шаг 3 из 6
         </span>
 
         <h1>Что вы хотите сделать?</h1>

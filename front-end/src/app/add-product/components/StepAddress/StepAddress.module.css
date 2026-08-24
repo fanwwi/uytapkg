@@ -27,24 +27,21 @@
   display: inline-flex;
   align-items: center;
   margin-bottom: 14px;
-  padding: 7px 13px;
-
-  border: 1px solid #ffd1e3;
+  padding: 8px 13px;
+  border: 1px solid rgba(124, 58, 237, 0.14);
   border-radius: 999px;
-
-  background: linear-gradient(135deg, #fff0f7, #fff8fb);
-  color: #ff007b;
-
+  background: linear-gradient(135deg, #f5f0ff, #eee7ff);
+  color: #7c3aed;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  box-shadow: 0 5px 18px rgba(124, 58, 237, 0.07);
 }
 
 .header h1 {
   margin: 0;
-
-  color: #171717;
+  color: #1c1820;
   font-size: 36px;
   line-height: 1.1;
   font-weight: 800;
@@ -54,8 +51,7 @@
 .header p {
   max-width: 650px;
   margin: 12px 0 0;
-
-  color: #777;
+  color: #6f6875;
   font-size: 15px;
   line-height: 1.65;
 }
@@ -72,8 +68,7 @@
 .addressSearch > label {
   display: block;
   margin-bottom: 9px;
-
-  color: #252525;
+  color: #25202b;
   font-size: 13px;
   font-weight: 750;
 }
@@ -84,21 +79,20 @@
 
 .searchInput {
   position: relative;
-
   display: flex;
   align-items: center;
-
   width: 100%;
   height: 66px;
+  box-sizing: border-box;
 
-  border: 1px solid #e9e5e7;
+  border: 1px solid #e9e4ee;
   border-radius: 20px;
 
   background: #fff;
 
   box-shadow:
-    0 3px 12px rgba(0, 0, 0, 0.025),
-    0 12px 30px rgba(0, 0, 0, 0.035);
+    0 3px 12px rgba(25, 15, 35, 0.025),
+    0 12px 30px rgba(25, 15, 35, 0.035);
 
   transition:
     border-color 0.22s ease,
@@ -107,15 +101,15 @@
 }
 
 .searchInput:hover {
-  border-color: #ffc0d9;
+  border-color: #cdb8ef;
 }
 
 .searchInput:focus-within {
-  border-color: #ff2990;
+  border-color: #7c3aed;
 
   box-shadow:
-    0 0 0 4px rgba(255, 41, 144, 0.07),
-    0 14px 35px rgba(255, 41, 144, 0.09);
+    0 0 0 4px rgba(124, 58, 237, 0.08),
+    0 14px 35px rgba(124, 58, 237, 0.09);
 
   transform: translateY(-1px);
 }
@@ -123,34 +117,38 @@
 .searchInput input {
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
 
   padding: 0 56px;
 
-  border: none;
-  outline: none;
+  border: none !important;
+  outline: none !important;
 
-  background: transparent;
+  background: transparent !important;
 
-  color: #171717;
-
+  color: #211d25;
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
+
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.searchInput input::placeholder {
-  color: #aaa;
-  font-weight: 450;
-}
-
-/* Убираем абсолютно все стандартные рамки браузера */
-
+.searchInput input:hover,
 .searchInput input:focus,
 .searchInput input:focus-visible,
 .searchInput input:active {
-  outline: none;
-  box-shadow: none;
-  border: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.searchInput input::placeholder {
+  color: #aaa4ae;
+  font-weight: 450;
 }
 
 .searchIcon {
@@ -160,7 +158,7 @@
   width: 21px;
   height: 21px;
 
-  color: #ff2990;
+  color: #7c3aed;
 
   pointer-events: none;
 }
@@ -173,13 +171,13 @@
   width: 20px;
   height: 20px;
 
-  color: #aaa;
+  color: #aaa4ae;
 
   pointer-events: none;
 }
 
 .loader {
-  color: #ff2990;
+  color: #7c3aed;
   animation: spin 0.8s linear infinite;
 }
 
@@ -198,7 +196,6 @@
   top: calc(100% + 9px);
   left: 0;
   right: 0;
-
   z-index: 2000;
 
   max-height: 320px;
@@ -206,14 +203,14 @@
 
   padding: 8px;
 
-  border: 1px solid #f0e3e8;
+  border: 1px solid #e9e1f0;
   border-radius: 20px;
 
   background: rgba(255, 255, 255, 0.98);
 
   box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.14),
-    0 8px 25px rgba(255, 41, 144, 0.08);
+    0 25px 60px rgba(25, 15, 35, 0.14),
+    0 8px 25px rgba(124, 58, 237, 0.08);
 
   backdrop-filter: blur(16px);
 
@@ -229,12 +226,12 @@
 }
 
 .suggestions::-webkit-scrollbar-thumb {
-  background: #ffc2dc;
+  background: #d8c7f5;
   border-radius: 999px;
 }
 
 .suggestions::-webkit-scrollbar-thumb:hover {
-  background: #ff2990;
+  background: #7c3aed;
 }
 
 .suggestion {
@@ -243,17 +240,16 @@
   gap: 12px;
 
   width: 100%;
-
   padding: 13px 12px;
 
   border: none;
   border-radius: 14px;
 
   background: transparent;
-
   color: #222;
 
   text-align: left;
+
   cursor: pointer;
 
   transition:
@@ -262,7 +258,7 @@
 }
 
 .suggestion:hover {
-  background: #fff1f7;
+  background: #f7f3ff;
   transform: translateX(3px);
 }
 
@@ -277,7 +273,7 @@
   flex-shrink: 0;
   margin-top: 2px;
 
-  color: #ff2990;
+  color: #7c3aed;
 }
 
 .suggestion div {
@@ -291,7 +287,7 @@
 .suggestion strong {
   overflow: hidden;
 
-  color: #222;
+  color: #211d25;
   font-size: 14px;
   font-weight: 700;
 
@@ -302,7 +298,7 @@
 .suggestion span {
   overflow: hidden;
 
-  color: #929292;
+  color: #92909a;
   font-size: 12px;
   line-height: 1.45;
 
@@ -330,24 +326,20 @@
   position: relative;
 
   margin-top: 24px;
+
   overflow: hidden;
 
   min-height: 420px;
 
-  border: 1px solid #e9e5e7;
+  border: 1px solid #e9e4ee;
   border-radius: 24px;
 
-  background: #f7f7f7;
+  background: #f7f6f9;
 
   box-shadow:
-    0 4px 15px rgba(0, 0, 0, 0.03),
-    0 18px 45px rgba(0, 0, 0, 0.06);
+    0 4px 15px rgba(25, 15, 35, 0.03),
+    0 18px 45px rgba(25, 15, 35, 0.06);
 }
-
-/*
-  Если карта внутри имеет свои элементы,
-  они не должны визуально вылезать за скругление.
-*/
 
 .map > * {
   width: 100%;
@@ -365,10 +357,12 @@
   margin-top: 12px;
   padding: 14px 17px;
 
-  border: 1px solid #ffd9e8;
+  border: 1px solid rgba(124, 58, 237, 0.14);
   border-radius: 15px;
 
-  background: linear-gradient(135deg, #fff4f9 0%, #fffafd 100%);
+  background: linear-gradient(135deg, #f7f3ff 0%, #fcfaff 100%);
+
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.04);
 }
 
 .coordinatesPreview span {
@@ -376,7 +370,7 @@
   align-items: center;
   gap: 7px;
 
-  color: #888;
+  color: #88818f;
   font-size: 12px;
   font-weight: 600;
 }
@@ -389,13 +383,15 @@
 
   border-radius: 50%;
 
-  background: #ff2990;
-  box-shadow: 0 0 0 4px rgba(255, 41, 144, 0.09);
+  background: #7c3aed;
+
+  box-shadow:
+    0 0 0 4px rgba(124, 58, 237, 0.09),
+    0 0 10px rgba(124, 58, 237, 0.2);
 }
 
 .coordinatesPreview strong {
-  color: #ff2990;
-
+  color: #7c3aed;
   font-size: 13px;
   font-weight: 750;
   font-variant-numeric: tabular-nums;
@@ -407,7 +403,9 @@
 
 .actions {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+
   gap: 12px;
 
   margin-top: 30px;
@@ -416,6 +414,11 @@
 .primary,
 .secondary {
   min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   padding: 0 26px;
 
@@ -432,10 +435,6 @@
     box-shadow 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease;
-
-display: flex;
-align-items: center;
-gap: 10px
 }
 
 .primary {
@@ -443,19 +442,19 @@ gap: 10px
 
   border: none;
 
-  background: linear-gradient(135deg, #ff007b 0%, #ff2990 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #9b5cf6 100%);
 
   color: #fff;
 
   box-shadow:
-    0 8px 22px rgba(255, 0, 123, 0.2),
-    0 2px 5px rgba(255, 0, 123, 0.1);
+    0 8px 22px rgba(124, 58, 237, 0.2),
+    0 2px 5px rgba(124, 58, 237, 0.1);
 }
 
 .primary:hover:not(:disabled) {
   box-shadow:
-    0 12px 28px rgba(255, 0, 123, 0.27),
-    0 3px 8px rgba(255, 0, 123, 0.12);
+    0 12px 28px rgba(124, 58, 237, 0.27),
+    0 3px 8px rgba(124, 58, 237, 0.12);
 
   transform: translateY(-2px);
 }
@@ -471,23 +470,39 @@ gap: 10px
 }
 
 .secondary {
-  border: 1px solid #e0dbdd;
-
+  border: 1px solid #e1dce6;
   background: #fff;
-  color: #555;
+  color: #5c5660;
 }
 
 .secondary:hover {
-  border-color: #ffb1d0;
-
-  background: #fff8fb;
-  color: #ff007b;
+  border-color: #cdb8ef;
+  background: #faf7ff;
+  color: #7c3aed;
 
   transform: translateY(-1px);
+
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.07);
 }
 
 .secondary:active {
   transform: translateY(0);
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid rgba(124, 58, 237, 0.16);
+  outline-offset: 2px;
+}
+
+.searchInput input:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* =========================
@@ -497,24 +512,9 @@ gap: 10px
 .mapAttribution {
   margin-top: 8px;
 
-  color: #aaa;
+  color: #aaa4ae;
   font-size: 10px;
-
   text-align: right;
-}
-
-/* =========================
-   ACCESSIBILITY
-========================= */
-
-.primary:focus-visible,
-.secondary:focus-visible {
-  outline: 3px solid rgba(194, 24, 91, 0.16);
-  outline-offset: 2px;
-}
-
-.searchInput input:focus-visible {
-  outline: none;
 }
 
 /* =========================

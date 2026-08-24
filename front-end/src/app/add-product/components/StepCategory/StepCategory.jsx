@@ -545,7 +545,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 3 из 5
+          Шаг 4 из 6
         </div>
 
         <h1>Параметры объекта</h1>

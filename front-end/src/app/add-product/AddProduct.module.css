@@ -1,118 +1,132 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   position: relative;
+
   min-height: 100vh;
-  padding: 50px 20px 80px;
+
+  padding: 42px 24px 80px;
+
   overflow: hidden;
 
   background:
     radial-gradient(
-      circle at 10% 10%,
-      rgba(255, 0, 123, 0.22) 0%,
-      rgba(255, 0, 123, 0.08) 22%,
-      transparent 45%
+      circle at 8% 5%,
+      rgba(124, 58, 237, 0.2) 0%,
+      rgba(124, 58, 237, 0.08) 22%,
+      transparent 46%
     ),
     radial-gradient(
-      circle at 90% 85%,
-      rgba(180, 0, 80, 0.2) 0%,
-      rgba(120, 0, 60, 0.08) 25%,
-      transparent 50%
+      circle at 92% 90%,
+      rgba(139, 92, 246, 0.14) 0%,
+      rgba(91, 33, 182, 0.06) 24%,
+      transparent 48%
     ),
     radial-gradient(
-      circle at 50% 0%,
-      rgba(255, 41, 144, 0.08) 0%,
+      circle at 50% -10%,
+      rgba(167, 139, 250, 0.08),
       transparent 35%
     ),
-    linear-gradient(135deg, #050505 0%, #0b080a 35%, #10080d 65%, #050505 100%);
+    linear-gradient(135deg, #08080a 0%, #0d0d10 35%, #111015 65%, #08080a 100%);
+
+  color: #f5f5f7;
 }
 
-/* Маленький декоративный glow на фоне */
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
 
 .page::before {
+  content: "";
+
   position: absolute;
-  top: -180px;
+
+  top: -220px;
   left: -180px;
 
-  width: 450px;
-  height: 450px;
+  width: 520px;
+  height: 520px;
 
   border-radius: 50%;
 
-  background: rgba(255, 0, 123, 0.08);
+  background: rgba(124, 58, 237, 0.11);
 
-  filter: blur(100px);
+  filter: blur(110px);
 
   pointer-events: none;
 }
 
 .page::after {
-  position: absolute;
-  right: -200px;
-  bottom: -200px;
+  content: "";
 
-  width: 500px;
-  height: 500px;
+  position: absolute;
+
+  right: -220px;
+  bottom: -220px;
+
+  width: 560px;
+  height: 560px;
 
   border-radius: 50%;
 
-  background: rgba(190, 0, 90, 0.08);
+  background: rgba(139, 92, 246, 0.08);
 
-  filter: blur(120px);
+  filter: blur(130px);
 
   pointer-events: none;
 }
 
+/* =========================================================
+   CONTAINER
+========================================================= */
+
 .container {
   position: relative;
+
   z-index: 1;
 
-  width: min(100%, 900px);
+  width: min(100%, 920px);
+
   margin: 0 auto;
 }
 
-.card {
-  background: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 36px;
-
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.45),
-    0 0 80px rgba(255, 0, 123, 0.04);
-}
-
-@media (max-width: 768px) {
-  .page {
-    padding: 25px 12px 50px;
-  }
-
-  .card {
-    padding: 22px 16px;
-    border-radius: 16px;
-  }
-}
+/* =========================================================
+   HOME BUTTON
+========================================================= */
 
 .homeButton {
   position: relative;
-  z-index: 2;
 
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 
-  margin-bottom: 22px;
-  padding: 10px 14px;
+  gap: 9px;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 11px;
+  margin-bottom: 24px;
 
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
+  padding: 11px 15px;
 
-  color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
 
+  background: rgba(24, 24, 28, 0.82);
+
+  color: #b9b9c2;
+
+  font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 650;
+
   text-decoration: none;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+  backdrop-filter: blur(16px);
 
   transition:
     color 0.2s ease,
@@ -122,42 +136,305 @@
     box-shadow 0.2s ease;
 }
 
+.homeButton svg {
+  width: 17px;
+  height: 17px;
+
+  color: #8b5cf6;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
 .homeButton:hover {
   color: #fff;
 
-  background: rgba(255, 0, 123, 0.12);
-  border-color: rgba(255, 0, 123, 0.4);
+  background: rgba(36, 30, 48, 0.95);
+
+  border-color: rgba(139, 92, 246, 0.45);
+
+  transform: translateY(-2px);
 
   box-shadow:
-    0 6px 20px rgba(255, 0, 123, 0.12),
-    inset 0 0 12px rgba(255, 0, 123, 0.04);
+    0 12px 30px rgba(0, 0, 0, 0.35),
+    0 8px 25px rgba(124, 58, 237, 0.1);
+}
+
+.homeButton:hover svg {
+  color: #a78bfa;
 
   transform: translateX(-2px);
 }
 
 .homeButton:active {
-  transform: translateX(-2px) scale(0.97);
+  transform: translateY(0) scale(0.98);
 }
 
-.homeButton svg {
-  color: #ff007b;
+/* =========================================================
+   MAIN CARD
+========================================================= */
 
-  transition:
-    transform 0.2s ease,
-    color 0.2s ease;
+.card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 38px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 24px;
+
+  background-color: #f4f4f6;
+
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.48),
+    0 15px 40px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+  backdrop-filter: blur(20px);
+
+  animation: cardAppear 0.35s ease-out;
 }
 
-.homeButton:hover svg {
-  transform: translateX(-3px);
-  color: #ff2b91;
+/* тонкая фиолетовая линия сверху */
+
+.card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 260px;
+  height: 2px;
+
+  transform: translateX(-50%);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #8b5cf6,
+    #a78bfa,
+    transparent
+  );
+
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.45);
+
+  pointer-events: none;
 }
+
+/* мягкое свечение внутри */
+
+.card::after {
+  content: "";
+
+  position: absolute;
+
+  top: -180px;
+  right: -120px;
+
+  width: 320px;
+  height: 320px;
+
+  border-radius: 50%;
+
+  background: rgba(124, 58, 237, 0.055);
+
+  filter: blur(80px);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   FORM ELEMENT SUPPORT
+   ========================================================= */
+
+.card input,
+.card textarea,
+.card select {
+  color-scheme: dark;
+}
+
+/* Если дочерние компоненты используют стандартные input */
+
+.card input,
+.card textarea,
+.card select {
+  background-color: #151519;
+  color: #f4f4f6;
+
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.card input:focus,
+.card textarea:focus,
+.card select:focus {
+  border-color: rgba(139, 92, 246, 0.7);
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.1),
+    0 8px 25px rgba(124, 58, 237, 0.08);
+}
+
+.card input::placeholder,
+.card textarea::placeholder {
+  color: #66666f;
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.successMessage {
+  position: relative;
+
+  z-index: 5;
+
+  margin-top: 20px;
+
+  padding: 13px 15px;
+
+  border: 1px solid rgba(74, 222, 128, 0.2);
+
+  border-radius: 12px;
+
+  background: rgba(34, 197, 94, 0.08);
+
+  color: #86efac;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.errorMessage {
+  position: relative;
+
+  z-index: 5;
+
+  margin-top: 20px;
+
+  padding: 13px 15px;
+
+  border: 1px solid rgba(248, 113, 113, 0.2);
+
+  border-radius: 12px;
+
+  background: rgba(239, 68, 68, 0.08);
+
+  color: #fca5a5;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 34px 18px 65px;
+  }
+
+  .container {
+    width: min(100%, 760px);
+  }
+
+  .card {
+    padding: 30px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
+  .page {
+    padding: 24px 12px 50px;
+  }
+
+  .card {
+    padding: 22px 16px;
+
+    border-radius: 18px;
+  }
+
   .homeButton {
-    margin-bottom: 16px;
+    margin-bottom: 17px;
+
     padding: 9px 12px;
 
-    font-size: 12px;
     border-radius: 10px;
+
+    font-size: 12px;
+  }
+
+  .homeButton svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 18px 9px 40px;
+  }
+
+  .card {
+    padding: 18px 13px;
+
+    border-radius: 16px;
+  }
+
+  .homeButton {
+    padding: 9px 11px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+
+  .homeButton {
+    transition: none;
   }
 }

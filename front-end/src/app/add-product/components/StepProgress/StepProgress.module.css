@@ -1,8 +1,18 @@
 .progress {
+  position: relative;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
+
+  width: 100%;
+
   margin-bottom: 30px;
 }
+
+/* =========================
+   ITEM
+========================= */
 
 .progressItem {
   position: relative;
@@ -12,10 +22,25 @@
 
   gap: 8px;
 
-  color: #aaa;
+  color: #a1a1aa;
 
   font-size: 12px;
-  font-weight: 650;}
+  font-weight: 650;
+
+  z-index: 1;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.progressItem span {
+  white-space: nowrap;
+}
+
+/* =========================
+   CIRCLE
+========================= */
 
 .progressCircle {
   display: flex;
@@ -28,12 +53,15 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid #e5e0e2;
+  border: 1px solid #e5e3e9;
   border-radius: 50%;
 
-  background: #f6f5f5;
+  background: #faf9fb;
 
-  color: #888;
+  color: #96949d;
+
+  font-size: 12px;
+  font-weight: 750;
 
   transition:
     background 0.3s ease,
@@ -43,20 +71,52 @@
     transform 0.3s ease;
 }
 
+/* =========================
+   ACTIVE
+========================= */
+
 .active {
-  color: #ff007b;
+  color: #7c3aed;
 }
 
 .active .progressCircle {
-  border-color: #ff007b;
+  border-color: rgba(139, 92, 246, 0.7);
 
-  background: #ff007b;
+  background: #8b5cf6;
 
-  color: #fff;
+  color: #ffffff;
 
-  box-shadow: 0 5px 15px rgba(194, 24, 91, 0.2);
+  box-shadow:
+    0 5px 15px rgba(139, 92, 246, 0.22),
+    0 0 0 4px rgba(139, 92, 246, 0.07);
 
   transform: scale(1.05);
+}
+
+/* =========================
+   HOVER
+========================= */
+
+.progressItem:hover {
+  color: #8b5cf6;
+}
+
+.progressItem:hover .progressCircle {
+  border-color: rgba(139, 92, 246, 0.45);
+
+  background: rgba(139, 92, 246, 0.06);
+
+  color: #8b5cf6;
+}
+
+/* Don't override active state on hover */
+
+.progressItem.active:hover .progressCircle {
+  border-color: rgba(139, 92, 246, 0.7);
+
+  background: #8b5cf6;
+
+  color: #ffffff;
 }
 
 /* =========================
@@ -64,8 +124,33 @@
 ========================= */
 
 @media (max-width: 768px) {
+  .progress {
+    margin-bottom: 25px;
+  }
+
   .progressItem span {
     display: none;
+  }
+
+  .progressItem {
+    gap: 0;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .progress {
+    margin-bottom: 22px;
+  }
+
+  .progressCircle {
+    width: 29px;
+    height: 29px;
+
+    font-size: 11px;
   }
 }
 
@@ -74,7 +159,8 @@
 ========================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .progressCircle {
+  .progressCircle,
+  .progressItem {
     transition: none;
   }
 }

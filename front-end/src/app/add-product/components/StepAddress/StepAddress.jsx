@@ -135,7 +135,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
   return (
     <div className={styles.step}>
       <div className={styles.header}>
-        <span>Шаг 4 из 5</span>
+        <span>Шаг 5 из 6</span>
 
         <h1>Где находится объект?</h1>
 
