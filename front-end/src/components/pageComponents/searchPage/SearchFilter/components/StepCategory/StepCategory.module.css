@@ -890,6 +890,183 @@
 }
 
 /* =========================
+   DISTANCE TO BEACH
+========================= */
+
+.beachDistanceCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  width: 100%;
+  padding: 20px;
+
+  border: 1px solid #e9e5f5;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow: 0 8px 25px rgba(91, 63, 160, 0.06);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.beachDistanceCard:focus-within {
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.08),
+    0 10px 30px rgba(91, 63, 160, 0.08);
+}
+
+.beachDistanceIcon {
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #f3efff;
+  color: #7c3aed;
+}
+
+.beachDistanceContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.beachDistanceContent label {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #25212d;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rangeInputs {
+  display: flex;
+  gap: 12px;
+
+  width: 100%;
+}
+
+.unitInput {
+  position: relative;
+  flex: 1;
+}
+
+.unitInput input {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 48px 0 15px;
+
+  border: 1px solid #e4dfed;
+  border-radius: 12px;
+
+  outline: none;
+
+  background: #faf9fc;
+
+  color: #211d29;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.unitInput input::placeholder {
+  color: #a39cab;
+}
+
+.unitInput input:hover {
+  border-color: #cfc6df;
+}
+
+.unitInput input:focus {
+  border-color: #8b5cf6;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+}
+
+.unitInput span {
+  position: absolute;
+
+  top: 50%;
+  right: 14px;
+
+  transform: translateY(-50%);
+
+  color: #8b8495;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  pointer-events: none;
+}
+
+.beachDistanceContent small {
+  display: block;
+
+  margin-top: 9px;
+
+  color: #9a94a3;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .beachDistanceCard {
+    padding: 16px;
+
+    gap: 12px;
+  }
+
+  .beachDistanceIcon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+  }
+
+  .rangeInputs {
+    gap: 8px;
+  }
+
+  .unitInput input {
+    height: 46px;
+
+    padding-left: 12px;
+    padding-right: 40px;
+  }
+
+  .unitInput span {
+    right: 11px;
+  }
+}
+
+/* =========================
    SELECTED — VIP
 ========================= */
 

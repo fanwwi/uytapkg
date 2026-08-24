@@ -71,6 +71,7 @@ const fieldIcons = {
 const categoryIcons = {
   apartment: Building2,
   house: House,
+  cottage: House,
   land: Map,
   room: DoorOpen,
   commercial: Store,
@@ -80,6 +81,9 @@ const categoryIcons = {
 const categories = {
   apartment: {
     title: "Квартира",
+
+    description: "Квартиры и апартаменты",
+
     fields: [
       ["series", "Серия / тип"],
       ["rooms", "Количество комнат"],
@@ -96,6 +100,9 @@ const categories = {
 
   house: {
     title: "Дом",
+
+    description: "Частные дома и особняки",
+
     fields: [
       ["houseType", "Тип дома"],
       ["floors", "Этажность"],
@@ -110,6 +117,9 @@ const categories = {
 
   land: {
     title: "Участок",
+
+    description: "Земельные участки",
+
     fields: [
       ["purpose", "Назначение"],
       ["fence", "Забор"],
@@ -123,6 +133,9 @@ const categories = {
 
   room: {
     title: "Комната",
+
+    description: "Отдельные комнаты",
+
     fields: [
       ["location", "Расположение"],
       ["roomsInApartment", "Комнат в квартире"],
@@ -139,6 +152,9 @@ const categories = {
 
   commercial: {
     title: "Коммерция",
+
+    description: "Офисы, магазины и другие помещения",
+
     fields: [
       ["floor", "Этаж"],
       ["condition", "Состояние"],
@@ -155,6 +171,9 @@ const categories = {
 
   parking: {
     title: "Паркинг / гараж",
+
+    description: "Гаражи и парковочные места",
+
     fields: [
       ["ceilingHeight", "Высота потолков"],
       ["parkingType", "Тип парковки"],
@@ -365,15 +384,6 @@ function getFieldOptions(field, dynamicOptions) {
   return dynamicOptions[field] || options[field] || [];
 }
 
-const categoryDescriptions = {
-  apartment: "Квартиры и апартаменты",
-  house: "Частные дома, коттеджи и дачи",
-  land: "Земельные участки",
-  room: "Отдельные комнаты",
-  commercial: "Офисы, магазины и другие помещения",
-  parking: "Гаражи и парковочные места",
-};
-
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
   const [dynamicOptions, setDynamicOptions] = useState({});
   const [apiError, setApiError] = useState(false);
@@ -383,22 +393,22 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       .then((res) => {
         const data = res?.data || res;
 
-        if (data && data.amenities) {
-          const combinedAmenities = [
-            "Любые",
-            ...new Set([
-              ...(data.amenities.general || []),
-              ...(data.amenities.resort || []),
-            ]),
-          ];
-
-          setDynamicOptions((prev) => ({
-            ...prev,
-            amenities: combinedAmenities,
-          }));
-        } else {
+        if (!data?.amenities) {
           throw new Error("No data returned");
         }
+
+        const combinedAmenities = [
+          "Любые",
+          ...new Set([
+            ...(data.amenities.general || []),
+            ...(data.amenities.resort || []),
+          ]),
+        ];
+
+        setDynamicOptions((prev) => ({
+          ...prev,
+          amenities: combinedAmenities,
+        }));
       })
       .catch((err) => {
         console.error("Failed to fetch constants", err);
@@ -412,17 +422,49 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       });
   }, []);
 
+  /*
+   * Иссык-Куль может приходить в разных форматах
+   */
+  const isIssykKul =
+    form.region === "ISSYK_KUL" ||
+    form.region === "issykKul" ||
+    form.region === "ISSYK-KUL" ||
+    form.region === "issyk-kul";
+
+  /*
+   * Показываем категорию "Коттедж" только на Иссык-Куле.
+   */
+  const visibleCategories = Object.entries(categories).filter(
+    ([key]) => key !== "cottage" || isIssykKul,
+  );
+
   const category = categories[form.category];
   const CategoryIcon = categoryIcons[form.category];
 
   const isLand = form.category === "land";
 
-  // Иссык-Куль может приходить в разных форматах
-  const isIssykKul = form.region === "ISSYK_KUL" || form.region === "issykKul";
+  /*
+   * Если пользователь поменял Иссык-Куль на другой регион,
+   * автоматически сбрасываем коттедж.
+   */
+  useEffect(() => {
+    if (!isIssykKul && form.category === "cottage") {
+      updateForm({
+        category: "",
+        beachDistance: "",
+      });
+    }
+  }, [isIssykKul, form.category]);
 
   function updateField(name, value) {
     updateForm({
       [name]: value,
+    });
+  }
+
+  function selectCategory(key) {
+    updateForm({
+      category: key,
     });
   }
 
@@ -469,23 +511,25 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               <h2>Выберите категорию</h2>
             </div>
 
-            <p>Это поможет подобрать нужные параметры.</p>
+            <p>
+              {isIssykKul
+                ? "Для Иссык-Куля доступны дополнительные категории."
+                : "Это поможет подобрать нужные параметры."}
+            </p>
           </div>
 
           <div className={styles.categoryGrid}>
-            {Object.entries(categories).map(([key, item]) => {
+            {visibleCategories.map(([key, item]) => {
               const Icon = categoryIcons[key];
 
               return (
                 <button
                   type="button"
                   key={key}
-                  className={styles.categoryCard}
-                  onClick={() =>
-                    updateForm({
-                      category: key,
-                    })
-                  }
+                  className={`${styles.categoryCard} ${
+                    key === "cottage" ? styles.cottageCard : ""
+                  }`}
+                  onClick={() => selectCategory(key)}
                 >
                   <div className={styles.categoryIcon}>
                     <Icon size={25} strokeWidth={2.1} />
@@ -494,10 +538,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   <div className={styles.categoryContent}>
                     <strong>{item.title}</strong>
 
-                    <span>
-                      {categoryDescriptions[key] ||
-                        "Заполнить параметры объекта"}
-                    </span>
+                    <span>{item.description}</span>
                   </div>
 
                   <ArrowRight className={styles.categoryArrow} size={19} />
@@ -608,7 +649,8 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
           </div>
 
           {/* =========================
-              ISSYK-KUL BEACH DISTANCE
+              ISSYK-KUL
+              BEACH DISTANCE
           ========================= */}
 
           {isIssykKul && (
@@ -620,52 +662,27 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   <h2>Расстояние до пляжа</h2>
                 </div>
 
-                <p>Укажите расстояние от объекта до пляжа</p>
+                <p>Укажите фактическое расстояние от объекта до пляжа</p>
               </div>
 
-              <div className={styles.priceGrid}>
-                {/* FROM */}
-
+              <div className={styles.beachDistanceGrid}>
                 <div className={styles.inputCard}>
                   <div className={styles.inputIcon}>
                     <MapPin size={19} />
                   </div>
 
                   <div className={styles.field}>
-                    <label>Минимальное расстояние, м</label>
+                    <label>Расстояние до пляжа, м</label>
 
                     <input
                       type="number"
                       min="0"
-                      placeholder="Например 100"
-                      value={form.beachDistanceFrom || ""}
+                      step="1"
+                      placeholder="Например 300"
+                      value={form.beachDistance || ""}
                       onChange={(e) =>
                         updateForm({
-                          beachDistanceFrom: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                {/* TO */}
-
-                <div className={styles.inputCard}>
-                  <div className={styles.inputIcon}>
-                    <MapPin size={19} />
-                  </div>
-
-                  <div className={styles.field}>
-                    <label>Максимальное расстояние, м</label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="Например 500"
-                      value={form.beachDistanceTo || ""}
-                      onChange={(e) =>
-                        updateForm({
-                          beachDistanceTo: e.target.value,
+                          beachDistance: e.target.value,
                         })
                       }
                     />
