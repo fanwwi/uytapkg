@@ -5,6 +5,7 @@ import {
   Building2,
   House,
   Map,
+  MapPin,
   DoorOpen,
   Store,
   CarFront,
@@ -17,6 +18,7 @@ import {
   Maximize,
   ChevronRight,
 } from "lucide-react";
+
 import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
@@ -78,150 +80,93 @@ const categoryIcons = {
 const categories = {
   apartment: {
     title: "Квартира",
-
     fields: [
       ["series", "Серия / тип"],
-
       ["rooms", "Количество комнат"],
-
       ["floor", "Этаж"],
-
       ["condition", "Состояние"],
-
       ["walls", "Стены"],
-
       ["heating", "Отопление"],
-
       ["documents", "Документы"],
-
       ["furniture", "Мебель"],
-
       ["amenities", "Удобства"],
-
       ["offerType", "Тип предложения"],
     ],
   },
 
   house: {
     title: "Дом",
-
     fields: [
       ["houseType", "Тип дома"],
-
       ["floors", "Этажность"],
-
       ["heating", "Отопление"],
-
       ["sewerage", "Канализация"],
-
       ["water", "Питьевая вода"],
-
       ["electricity", "Электричество"],
-
       ["documents", "Документы"],
-
       ["offerType", "Тип предложения"],
     ],
   },
 
   land: {
     title: "Участок",
-
     fields: [
       ["purpose", "Назначение"],
-
       ["fence", "Забор"],
-
       ["documents", "Документы"],
-
       ["offerType", "Тип предложения"],
-
       ["location", "Расположение"],
-
       ["terrain", "Рельеф"],
-
       ["communications", "Коммуникации"],
     ],
   },
 
   room: {
     title: "Комната",
-
     fields: [
       ["location", "Расположение"],
-
       ["roomsInApartment", "Комнат в квартире"],
-
       ["floor", "Этаж"],
-
       ["condition", "Состояние"],
-
       ["walls", "Стены"],
-
       ["heating", "Отопление"],
-
       ["amenities", "Удобства"],
-
       ["privateBathroom", "Свой санузел"],
-
       ["documents", "Документы"],
-
       ["offerType", "Тип предложения"],
     ],
   },
 
   commercial: {
     title: "Коммерция",
-
     fields: [
       ["floor", "Этаж"],
-
       ["condition", "Состояние"],
-
       ["walls", "Стены"],
-
       ["heating", "Отопление"],
-
       ["premisesType", "Тип помещения"],
-
       ["technicalParameters", "Технические параметры"],
-
       ["firstLine", "Первая линия"],
-
       ["separateEntrance", "Отдельный вход"],
-
       ["rentalBusiness", "Готовый арендный бизнес"],
-
       ["offerType", "Тип предложения"],
     ],
   },
 
   parking: {
     title: "Паркинг / гараж",
-
     fields: [
       ["ceilingHeight", "Высота потолков"],
-
       ["parkingType", "Тип парковки"],
-
       ["material", "Материал"],
-
       ["security", "Видеонаблюдение"],
-
       ["gates", "Ворота"],
-
       ["inspectionPit", "Смотровая яма"],
-
       ["basement", "Погреб"],
-
       ["electricity", "Электричество"],
-
       ["truckAccess", "Для грузового авто"],
-
       ["gateType", "Тип ворот"],
-
       ["documents", "Документы"],
-
       ["offerType", "Тип предложения"],
     ],
   },
@@ -230,23 +175,14 @@ const categories = {
 const options = {
   series: [
     "Любой",
-
     "Новостройка",
-
     "102 серия",
-
     "104 серия",
-
     "105 серия",
-
     "106 серия",
-
     "Сталинка",
-
     "Хрущевка",
-
     "Элитка",
-
     "Пентхаус",
   ],
 
@@ -256,63 +192,40 @@ const options = {
 
   condition: [
     "Любое",
-
     "Дизайнерский ремонт",
-
     "Евроремонт",
-
     "Косметический",
-
     "Под самоотделку",
-
     "Старый ремонт",
-
     "Без ремонта",
   ],
 
   walls: [
     "Любые",
-
     "Кирпич",
-
     "Бетон",
-
     "Газобетон",
-
     "Панельные",
-
     "Монолитные",
-
     "Монолитно-кирпичные",
-
     "Монолитно-каркасные",
   ],
 
   heating: [
     "Любое",
-
     "Автономное",
-
     "Газовое",
-
     "Центральное",
-
     "Электрическое",
-
     "Комбинированное",
   ],
 
   documents: [
     "Любые",
-
     "Красная книга",
-
     "Тех паспорт",
-
     "Договор купли-продажи",
-
     "Договор долевого участия",
-
     "Акт приема-передачи",
   ],
 
@@ -322,29 +235,19 @@ const options = {
 
   offerType: [
     "Любой",
-
     "Наличный расчет",
-
     "Ипотека",
-
     "Рассрочка",
-
     "Возможен обмен",
   ],
 
   houseType: [
     "Любой",
-
     "Частный дом",
-
     "Особняк",
-
     "Коттедж",
-
     "Таунхаус",
-
     "Дача",
-
     "Времянка",
   ],
 
@@ -380,15 +283,10 @@ const options = {
 
   purpose: [
     "ИЖС",
-
     "ЛПХ",
-
     "Коммерческое",
-
     "Сельхозназначение",
-
     "Многоэтажное строительство",
-
     "Другое",
   ],
 
@@ -400,19 +298,12 @@ const options = {
 
   communications: [
     "Все коммуникации",
-
     "Электричество",
-
     "Газ",
-
     "Вода",
-
     "Канализация",
-
     "Интернет",
-
     "Отопление",
-
     "Нет коммуникаций",
   ],
 
@@ -422,31 +313,20 @@ const options = {
 
   premisesType: [
     "Любой",
-
     "Офис",
-
     "Магазин",
-
     "Склад",
-
     "Производство",
-
     "Общепит",
-
     "Гостиница",
-
     "Промбаза",
   ],
 
   technicalParameters: [
     "Центральная канализация",
-
     "Трехфазное питание",
-
     "Приточно-вытяжная вентиляция",
-
     "Кондиционирование",
-
     "Охранная/Пожарная сигнализация",
   ],
 
@@ -474,13 +354,9 @@ const options = {
 
   gateType: [
     "Распашные",
-
     "Секционные",
-
     "Откатные",
-
     "Роллетные",
-
     "Автоматические",
   ],
 };
@@ -506,11 +382,16 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
     getConstants()
       .then((res) => {
         const data = res?.data || res;
+
         if (data && data.amenities) {
           const combinedAmenities = [
             "Любые",
-            ...new Set([...(data.amenities.general || []), ...(data.amenities.resort || [])])
+            ...new Set([
+              ...(data.amenities.general || []),
+              ...(data.amenities.resort || []),
+            ]),
           ];
+
           setDynamicOptions((prev) => ({
             ...prev,
             amenities: combinedAmenities,
@@ -521,7 +402,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       })
       .catch((err) => {
         console.error("Failed to fetch constants", err);
+
         setApiError(true);
+
         setDynamicOptions((prev) => ({
           ...prev,
           amenities: options.amenities,
@@ -534,6 +417,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
   const isLand = form.category === "land";
 
+  // Иссык-Куль может приходить в разных форматах
+  const isIssykKul = form.region === "ISSYK_KUL" || form.region === "issykKul";
+
   function updateField(name, value) {
     updateForm({
       [name]: value,
@@ -542,6 +428,10 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
   return (
     <div className={styles.step}>
+      {/* =========================
+          HEADER
+      ========================= */}
+
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
@@ -556,11 +446,20 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         </p>
       </div>
 
+      {/* =========================
+          API ERROR
+      ========================= */}
+
       {apiError && (
-        <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "14px" }}>
-          Не удалось загрузить актуальный список удобств. Попробуйте обновить страницу.
+        <div className={styles.apiError}>
+          Не удалось загрузить актуальный список удобств. Попробуйте обновить
+          страницу.
         </div>
       )}
+
+      {/* =========================
+          CATEGORY
+      ========================= */}
 
       {!category && (
         <div className={styles.categorySection}>
@@ -609,6 +508,10 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         </div>
       )}
 
+      {/* =========================
+          SELECTED CATEGORY
+      ========================= */}
+
       {category && (
         <>
           <div className={styles.selectedCategory}>
@@ -619,6 +522,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
               <div className={styles.selectedCategoryInfo}>
                 <span>Вы выбрали</span>
+
                 <strong>{category.title}</strong>
               </div>
             </div>
@@ -636,10 +540,15 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </button>
           </div>
 
+          {/* =========================
+              PRICE / AREA
+          ========================= */}
+
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
                 <span>02</span>
+
                 <h2>Цена и площадь</h2>
               </div>
 
@@ -647,7 +556,8 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
 
             <div className={styles.priceGrid}>
-              {/* Фиксированная цена */}
+              {/* PRICE */}
+
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
                   <DollarSign size={19} />
@@ -670,7 +580,8 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 </div>
               </div>
 
-              {/* Фиксированная площадь */}
+              {/* AREA */}
+
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
                   <Maximize size={18} />
@@ -696,10 +607,83 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           </div>
 
+          {/* =========================
+              ISSYK-KUL BEACH DISTANCE
+          ========================= */}
+
+          {isIssykKul && (
+            <div className={styles.sectionBlock}>
+              <div className={styles.sectionTitle}>
+                <div>
+                  <span>03</span>
+
+                  <h2>Расстояние до пляжа</h2>
+                </div>
+
+                <p>Укажите расстояние от объекта до пляжа</p>
+              </div>
+
+              <div className={styles.priceGrid}>
+                {/* FROM */}
+
+                <div className={styles.inputCard}>
+                  <div className={styles.inputIcon}>
+                    <MapPin size={19} />
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Минимальное расстояние, м</label>
+
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Например 100"
+                      value={form.beachDistanceFrom || ""}
+                      onChange={(e) =>
+                        updateForm({
+                          beachDistanceFrom: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* TO */}
+
+                <div className={styles.inputCard}>
+                  <div className={styles.inputIcon}>
+                    <MapPin size={19} />
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Максимальное расстояние, м</label>
+
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Например 500"
+                      value={form.beachDistanceTo || ""}
+                      onChange={(e) =>
+                        updateForm({
+                          beachDistanceTo: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =========================
+              CHARACTERISTICS
+          ========================= */}
+
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
-                <span>03</span>
+                <span>{isIssykKul ? "04" : "03"}</span>
+
                 <h2>Характеристики</h2>
               </div>
 
@@ -709,6 +693,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             <div className={styles.fieldsGrid}>
               {category.fields.map(([name, label]) => {
                 const fieldOptions = getFieldOptions(name, dynamicOptions);
+
                 const Icon = fieldIcons[name] || Tag;
 
                 if (fieldOptions.length > 0) {
@@ -745,6 +730,10 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               })}
             </div>
           </div>
+
+          {/* =========================
+              ACTIONS
+          ========================= */}
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondary} onClick={onBack}>
