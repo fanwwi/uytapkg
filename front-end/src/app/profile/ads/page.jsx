@@ -280,8 +280,7 @@ export default function Ads() {
               className={styles.homeButton}
               onClick={() => router.push("/profile")}
             >
-              <UserRoundArrowLeft size={19} />
-              В профиль
+              <UserRoundArrowLeft size={19} />В профиль
             </button>
             <span className={styles.eyebrow}>Личный кабинет</span>
 
@@ -333,17 +332,6 @@ export default function Ads() {
             <div>
               <span>Активные</span>
               <strong>{activeCount}</strong>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={`${styles.statIcon} ${styles.orange}`}>
-              <Clock3 size={21} />
-            </div>
-
-            <div>
-              <span>На модерации</span>
-              <strong>{pendingCount}</strong>
             </div>
           </div>
 

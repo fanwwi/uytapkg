@@ -2,34 +2,78 @@
   min-height: 100vh;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   padding: 20px;
 
+  position: relative;
+  overflow: hidden;
+
   background:
-    radial-gradient(circle at top, rgba(255, 0, 111, 0.15), transparent 40%),
-    linear-gradient(180deg, #fff5fa, #ffffff);
+    radial-gradient(
+      700px 500px at 50% -10%,
+      rgba(139, 92, 246, 0.18),
+      transparent 65%
+    ),
+    radial-gradient(
+      500px 400px at 10% 100%,
+      rgba(124, 58, 237, 0.08),
+      transparent 65%
+    ),
+    #07070a;
 }
 
-.card {
-  width: 100%;
+/* Дополнительное мягкое свечение */
 
+.page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  border-radius: 50%;
+
+  background: rgba(139, 92, 246, 0.07);
+
+  filter: blur(120px);
+
+  pointer-events: none;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
   max-width: 520px;
 
   padding: 55px 45px;
 
   text-align: center;
 
-  background: white;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(139, 92, 246, 0.08),
+      transparent 55%
+    ),
+    linear-gradient(145deg, #111014, #0c0c10);
 
   border-radius: 40px;
 
-  box-shadow: 0 30px 80px rgba(255, 0, 111, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
-  border: 1px solid rgba(255, 0, 111, 0.08);
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(139, 92, 246, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   animation: show 0.4s ease;
 }
@@ -37,18 +81,21 @@
 @keyframes show {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.98);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
+/* =========================
+   SUCCESS ICON
+========================= */
+
 .icon {
   width: 90px;
-
   height: 90px;
 
   margin: 0 auto 25px;
@@ -56,32 +103,56 @@
   border-radius: 50%;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  background: linear-gradient(135deg, #ff2990, #ff006f);
+  background:
+    radial-gradient(circle at 35% 25%, #c084fc, transparent 50%),
+    linear-gradient(135deg, #8b5cf6, #6d28d9);
 
   color: white;
 
-  box-shadow: 0 20px 45px rgba(255, 0, 111, 0.35);
+  border: 1px solid rgba(216, 180, 254, 0.25);
+
+  box-shadow:
+    0 20px 45px rgba(124, 58, 237, 0.35),
+    0 0 40px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  animation: iconAppear 0.5s ease 0.1s both;
+}
+
+@keyframes iconAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .icon svg {
   width: 45px;
-
   height: 45px;
+
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
 }
+
+/* =========================
+   TEXT
+========================= */
 
 .card h1 {
   margin: 0 0 18px;
 
   font-size: 32px;
 
-  font-weight: 950;
+  font-weight: 900;
 
-  color: #111;
+  color: #ffffff;
 
   letter-spacing: -1px;
 }
@@ -89,18 +160,21 @@
 .card p {
   margin: 0;
 
-  color: #777;
+  color: #85838d;
 
   font-size: 16px;
 
   line-height: 1.7;
 }
 
+/* =========================
+   ACTIONS
+========================= */
+
 .actions {
   margin-top: 35px;
 
   display: flex;
-
   flex-direction: column;
 
   gap: 14px;
@@ -112,56 +186,113 @@
   border-radius: 18px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 10px;
 
   text-decoration: none;
 
-  font-weight: 850;
+  font-weight: 800;
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .actions svg {
   width: 20px;
+  height: 20px;
 }
 
+/* =========================
+   LOGIN
+========================= */
+
 .login {
-  background: linear-gradient(135deg, #ff2990, #ff006f);
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
 
   color: white;
 
-  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
+  border: 1px solid rgba(216, 180, 254, 0.2);
+
+  box-shadow:
+    0 15px 35px rgba(124, 58, 237, 0.3),
+    0 0 30px rgba(139, 92, 246, 0.1);
 }
 
 .login:hover {
   transform: translateY(-3px);
+
+  box-shadow:
+    0 22px 45px rgba(124, 58, 237, 0.4),
+    0 0 35px rgba(139, 92, 246, 0.2);
+
+  background: linear-gradient(135deg, #b36af8, #8b5cf6);
 }
 
-.home {
-  background: #f7f7f7;
+/* =========================
+   HOME
+========================= */
 
-  color: #222;
+.home {
+  background: #17151c;
+
+  color: #b7b4bf;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .home:hover {
-  background: #ffe5f1;
+  background: rgba(139, 92, 246, 0.1);
 
-  color: #ff006f;
+  border-color: rgba(139, 92, 246, 0.3);
+
+  color: #c084fc;
+
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+
+  transform: translateY(-2px);
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
+  .page {
+    padding: 20px 14px;
+  }
+
   .card {
     padding: 40px 25px;
 
     border-radius: 30px;
   }
 
+  .icon {
+    width: 78px;
+    height: 78px;
+
+    margin-bottom: 22px;
+  }
+
+  .icon svg {
+    width: 39px;
+    height: 39px;
+  }
+
   .card h1 {
     font-size: 25px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+
+  .actions a {
+    height: 53px;
   }
 }

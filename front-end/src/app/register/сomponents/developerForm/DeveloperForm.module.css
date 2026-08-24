@@ -3,13 +3,13 @@
 
   border-radius: 32px;
 
-  background: linear-gradient(145deg, #0b0b0f, #171019);
+  background: linear-gradient(145deg, #0b0b12, #11101a);
 
-  border: 1px solid rgba(255, 0, 120, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.22);
 
   box-shadow:
-    0 35px 90px rgba(0, 0, 0, 0.35),
-    inset 0 0 50px rgba(255, 0, 120, 0.06);
+    0 35px 90px rgba(0, 0, 0, 0.5),
+    inset 0 0 50px rgba(139, 92, 246, 0.05);
 
   animation: appear 0.4s ease;
 }
@@ -49,15 +49,17 @@
 
   color: white;
 
-  background: linear-gradient(135deg, #ff006f, #ff4da6);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
 
-  box-shadow: 0 15px 40px rgba(255, 0, 120, 0.45);
+  box-shadow:
+    0 15px 40px rgba(124, 58, 237, 0.4),
+    0 0 25px rgba(168, 85, 247, 0.15);
 }
 
 .header h2 {
   margin: 0;
 
-  color: white;
+  color: #ffffff;
 
   font-size: 24px;
 
@@ -67,7 +69,7 @@
 .header p {
   margin: 6px 0 0;
 
-  color: #aaa;
+  color: #9993a8;
 
   font-size: 14px;
 }
@@ -99,21 +101,33 @@
 
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.96);
+  background: #17151f;
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
 
 .inputBox:hover {
   transform: translateY(-2px);
+
+  background: #1a1823;
+
+  border-color: rgba(139, 92, 246, 0.25);
 }
 
 .inputBox:focus-within {
-  border-color: #ff006f;
+  border-color: #8b5cf6;
 
-  box-shadow: 0 0 30px rgba(255, 0, 120, 0.35);
+  background: #191722;
+
+  box-shadow:
+    0 0 30px rgba(139, 92, 246, 0.2),
+    inset 0 0 20px rgba(139, 92, 246, 0.03);
 }
 
 .inputBox svg {
@@ -121,9 +135,17 @@
 
   height: 22px;
 
-  color: #ff006f;
+  color: #a855f7;
 
   flex-shrink: 0;
+
+  transition: 0.3s;
+}
+
+.inputBox:focus-within > svg {
+  color: #c084fc;
+
+  filter: drop-shadow(0 0 7px rgba(168, 85, 247, 0.6));
 }
 
 .inputBox input {
@@ -141,11 +163,11 @@
 
   font-size: 15px;
 
-  color: #111;
+  color: #ffffff;
 }
 
 .inputBox input::placeholder {
-  color: #999;
+  color: #777281;
 }
 
 /* DESCRIPTION */
@@ -165,23 +187,79 @@
 
   border-radius: 22px;
 
-  background: white;
+  background: #17151f;
 
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   outline: none;
 
   font-size: 15px;
+
+  font-family: inherit;
+
+  color: #ffffff;
+
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.textarea:hover {
+  border-color: rgba(139, 92, 246, 0.25);
 }
 
 .textarea:focus {
-  border-color: #ff006f;
+  background: #191722;
 
-  box-shadow: 0 0 30px rgba(255, 0, 120, 0.3);
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 30px rgba(139, 92, 246, 0.2),
+    inset 0 0 20px rgba(139, 92, 246, 0.03);
 }
 
 .textarea::placeholder {
-  color: #999;
+  color: #777281;
+}
+
+/* PASSWORD EYE */
+
+.eye {
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #777281;
+
+  padding: 5px;
+
+  transition: 0.3s;
+}
+
+.eye:hover {
+  color: #a855f7;
+
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
+}
+
+.eye svg {
+  width: 22px;
+
+  height: 22px;
+}
+
+.inputBox input[type="password"],
+.inputBox input[type="text"] {
+  flex: 1;
 }
 
 /* BUTTON */
@@ -205,18 +283,43 @@
 
   font-weight: 900;
 
-  background: linear-gradient(135deg, #ff006f, #ff3d9a);
+  background: linear-gradient(135deg, #7c3aed, #9333ea, #a855f7);
 
-  box-shadow: 0 20px 50px rgba(255, 0, 120, 0.4);
+  box-shadow:
+    0 20px 50px rgba(124, 58, 237, 0.35),
+    0 0 25px rgba(168, 85, 247, 0.1);
 
-  transition: 0.35s;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease;
 }
 
 .submit:hover {
   transform: translateY(-4px);
 
-  box-shadow: 0 30px 70px rgba(255, 0, 120, 0.6);
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 30px 70px rgba(124, 58, 237, 0.5),
+    0 0 35px rgba(168, 85, 247, 0.2);
 }
+
+.submit:active {
+  transform: translateY(-1px);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+/* MOBILE */
 
 @media (max-width: 600px) {
   .wrapper {
@@ -228,39 +331,24 @@
   .header h2 {
     font-size: 20px;
   }
-}
 
-.eye {
-  border: none;
+  .header > svg {
+    width: 52px;
 
-  background: transparent;
+    height: 52px;
 
-  display: flex;
+    padding: 11px;
 
-  align-items: center;
+    border-radius: 18px;
+  }
 
-  justify-content: center;
+  .inputBox {
+    height: 56px;
 
-  cursor: pointer;
+    padding: 0 16px;
+  }
 
-  color: #999;
-
-  padding: 5px;
-
-  transition: 0.3s;
-}
-
-.eye:hover {
-  color: #ff006f;
-}
-
-.eye svg {
-  width: 22px;
-
-  height: 22px;
-}
-
-.inputBox input[type="password"],
-.inputBox input[type="text"] {
-  flex: 1;
+  .textarea {
+    height: 120px;
+  }
 }

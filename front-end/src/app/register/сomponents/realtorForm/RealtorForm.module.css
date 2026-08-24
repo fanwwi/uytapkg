@@ -3,13 +3,13 @@
 
   border-radius: 32px;
 
-  background: linear-gradient(145deg, #ffffff, #fff5fa);
+  background: linear-gradient(145deg, #0b0a0f, #15111f);
 
-  border: 1px solid rgba(255, 0, 120, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.22);
 
   box-shadow:
-    0 30px 70px rgba(255, 0, 120, 0.12),
-    inset 0 0 40px rgba(255, 0, 120, 0.04);
+    0 35px 90px rgba(0, 0, 0, 0.45),
+    inset 0 0 50px rgba(139, 92, 246, 0.05);
 
   animation: appear 0.4s ease;
 }
@@ -26,7 +26,9 @@
   }
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .header {
   display: flex;
@@ -49,9 +51,11 @@
 
   color: white;
 
-  background: linear-gradient(135deg, #ff006f, #ff5ca8);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
 
-  box-shadow: 0 15px 35px rgba(255, 0, 120, 0.35);
+  box-shadow:
+    0 15px 35px rgba(139, 92, 246, 0.35),
+    0 0 25px rgba(139, 92, 246, 0.15);
 }
 
 .header h2 {
@@ -61,18 +65,20 @@
 
   font-weight: 900;
 
-  color: #111;
+  color: #ffffff;
 }
 
 .header p {
   margin: 6px 0 0;
 
-  color: #888;
+  color: #918b9e;
 
   font-size: 14px;
 }
 
-/* INPUTS */
+/* =========================
+   INPUTS
+========================= */
 
 .grid {
   display: flex;
@@ -97,25 +103,35 @@
 
   border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.9);
-
-  border: 1px solid rgba(255, 0, 120, 0.12);
-
-  transition: 0.3s ease;
-
   box-sizing: border-box;
+
+  background: #17151f;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .inputBox:hover {
-  border-color: rgba(255, 0, 120, 0.35);
+  background: #1a1823;
+
+  border-color: rgba(139, 92, 246, 0.3);
 
   transform: translateY(-2px);
 }
 
 .inputBox:focus-within {
-  border-color: #ff006f;
+  background: #191722;
 
-  box-shadow: 0 0 25px rgba(255, 0, 120, 0.18);
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.08),
+    0 0 30px rgba(139, 92, 246, 0.2);
 }
 
 .inputBox svg {
@@ -123,9 +139,17 @@
 
   height: 22px;
 
-  color: #ff006f;
+  color: #a855f7;
 
   flex-shrink: 0;
+
+  transition: 0.3s;
+}
+
+.inputBox:focus-within > svg {
+  color: #c084fc;
+
+  filter: drop-shadow(0 0 7px rgba(168, 85, 247, 0.55));
 }
 
 .inputBox input {
@@ -143,14 +167,16 @@
 
   font-size: 15px;
 
-  color: #111;
+  color: #ffffff;
 }
 
 .inputBox input::placeholder {
-  color: #aaa;
+  color: #777281;
 }
 
-/* TEXTAREA */
+/* =========================
+   TEXTAREA
+========================= */
 
 .textarea {
   margin-top: 16px;
@@ -167,28 +193,87 @@
 
   border-radius: 22px;
 
-  background: white;
+  background: #17151f;
 
-  border: 1px solid rgba(255, 0, 120, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   outline: none;
 
   font-size: 15px;
 
-  transition: 0.3s;
+  font-family: inherit;
+
+  color: #ffffff;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.textarea:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+
+  background: #1a1823;
 }
 
 .textarea:focus {
-  border-color: #ff006f;
+  background: #191722;
 
-  box-shadow: 0 0 25px rgba(255, 0, 120, 0.18);
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.08),
+    0 0 30px rgba(139, 92, 246, 0.2);
 }
 
 .textarea::placeholder {
-  color: #aaa;
+  color: #777281;
 }
 
-/* BUTTON */
+/* =========================
+   PASSWORD EYE
+========================= */
+
+.eye {
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  padding: 5px;
+
+  color: #777281;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.eye:hover {
+  color: #a855f7;
+
+  transform: scale(1.08);
+
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
+}
+
+.eye svg {
+  width: 22px;
+
+  height: 22px;
+}
+
+/* =========================
+   BUTTON
+========================= */
 
 .submit {
   margin-top: 22px;
@@ -209,18 +294,45 @@
 
   font-weight: 900;
 
-  background: linear-gradient(135deg, #ff006f, #ff4da6);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
 
-  box-shadow: 0 20px 45px rgba(255, 0, 120, 0.35);
+  box-shadow:
+    0 20px 45px rgba(124, 58, 237, 0.35),
+    0 0 25px rgba(168, 85, 247, 0.12);
 
-  transition: 0.35s;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease;
 }
 
 .submit:hover {
   transform: translateY(-4px);
 
-  box-shadow: 0 30px 60px rgba(255, 0, 120, 0.5);
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 30px 65px rgba(124, 58, 237, 0.5),
+    0 0 35px rgba(168, 85, 247, 0.2);
 }
+
+.submit:active {
+  transform: translateY(-1px);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
   .wrapper {
@@ -232,30 +344,24 @@
   .header h2 {
     font-size: 20px;
   }
-}
 
-.eye {
-  border: none;
-  background: transparent;
+  .header > svg {
+    width: 52px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    height: 52px;
 
-  cursor: pointer;
+    padding: 11px;
 
-  padding: 5px;
-}
+    border-radius: 18px;
+  }
 
-.eye svg {
-  width: 22px;
-  height: 22px;
+  .inputBox {
+    height: 58px;
 
-  color: #999;
+    padding: 0 17px;
+  }
 
-  transition: 0.25s;
-}
-
-.eye:hover svg {
-  color: #ff006f;
+  .textarea {
+    height: 120px;
+  }
 }

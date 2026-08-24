@@ -8,15 +8,15 @@
   background:
     radial-gradient(
       800px 500px at -5% -10%,
-      rgba(190, 24, 93, 0.2),
+      rgba(139, 92, 246, 0.16),
       transparent 65%
     ),
     radial-gradient(
       700px 450px at 105% 15%,
-      rgba(157, 23, 77, 0.14),
+      rgba(124, 58, 237, 0.12),
       transparent 65%
     ),
-    #070709;
+    #07070a;
 
   color: #fff;
 }
@@ -29,6 +29,10 @@
   margin: 0 auto;
 }
 
+/* =========================
+   GLOW
+========================= */
+
 .glow {
   position: absolute;
 
@@ -37,7 +41,7 @@
 
   border-radius: 50%;
 
-  background: rgba(190, 24, 93, 0.08);
+  background: rgba(139, 92, 246, 0.07);
 
   filter: blur(100px);
 
@@ -75,7 +79,7 @@
 
   margin-bottom: 14px;
 
-  color: #f43f83;
+  color: #a855f7;
 
   font-size: 10px;
   font-weight: 800;
@@ -89,9 +93,9 @@
 
   border-radius: 10px;
 
-  background: #f43f83;
+  background: #a855f7;
 
-  box-shadow: 0 0 12px rgba(244, 63, 131, 0.8);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
 }
 
 .titleBlock h1 {
@@ -107,7 +111,9 @@
 }
 
 .titleBlock h1 span {
-  color: #f43f83;
+  color: #a855f7;
+
+  text-shadow: 0 0 35px rgba(168, 85, 247, 0.25);
 }
 
 .titleBlock p {
@@ -130,16 +136,16 @@
 
   padding: 19px 25px;
 
-  border: 1px solid rgba(244, 63, 131, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.22);
   border-radius: 20px;
 
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(244, 63, 131, 0.13),
+      rgba(139, 92, 246, 0.14),
       transparent 65%
     ),
-    rgba(18, 18, 22, 0.8);
+    rgba(18, 18, 22, 0.82);
 
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.3),
@@ -149,13 +155,15 @@
 }
 
 .counterNumber {
-  color: #f43f83;
+  color: #a855f7;
 
   font-size: 32px;
   line-height: 1;
 
   font-weight: 800;
   letter-spacing: -0.04em;
+
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
 }
 
 .counterText {
@@ -182,10 +190,10 @@
 
   padding: 7px;
 
-  border: 1px solid #232329;
+  border: 1px solid #25252d;
   border-radius: 19px;
 
-  background: rgba(17, 17, 20, 0.78);
+  background: rgba(17, 17, 21, 0.78);
 
   box-shadow:
     0 25px 70px rgba(0, 0, 0, 0.3),
@@ -207,7 +215,7 @@
   border: 1px solid transparent;
   border-radius: 13px;
 
-  background: #0d0d10;
+  background: #0d0d11;
 
   transition:
     border-color 0.2s ease,
@@ -216,13 +224,13 @@
 }
 
 .searchBox:focus-within {
-  border-color: rgba(244, 63, 131, 0.55);
+  border-color: rgba(139, 92, 246, 0.65);
 
   background: #101014;
 
   box-shadow:
-    0 0 0 4px rgba(190, 24, 93, 0.07),
-    0 0 35px rgba(190, 24, 93, 0.1);
+    0 0 0 4px rgba(139, 92, 246, 0.08),
+    0 0 35px rgba(139, 92, 246, 0.13);
 }
 
 .searchIcon {
@@ -230,7 +238,15 @@
 
   margin-right: 11px;
 
-  color: #676770;
+  color: #777281;
+
+  transition: 0.2s;
+}
+
+.searchBox:focus-within .searchIcon {
+  color: #a855f7;
+
+  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
 }
 
 .searchBox input {
@@ -273,10 +289,12 @@
 }
 
 .clearSearch:hover {
-  background: #be185d;
+  background: #7c3aed;
   color: #fff;
 
   transform: rotate(90deg);
+
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
 }
 
 .filterButton {
@@ -306,17 +324,19 @@
 }
 
 .filterButton:hover {
-  border-color: #be185d;
+  border-color: #8b5cf6;
 
   background: linear-gradient(
     135deg,
-    rgba(190, 24, 93, 0.18),
-    rgba(190, 24, 93, 0.05)
+    rgba(139, 92, 246, 0.18),
+    rgba(139, 92, 246, 0.05)
   );
 
   color: #fff;
 
-  box-shadow: 0 8px 25px rgba(190, 24, 93, 0.12);
+  box-shadow:
+    0 8px 25px rgba(139, 92, 246, 0.14),
+    0 0 25px rgba(139, 92, 246, 0.08);
 }
 
 /* =========================
@@ -386,7 +406,7 @@
 }
 
 .categories button:hover {
-  border-color: #3b3b43;
+  border-color: #494151;
 
   background: #151518;
 
@@ -396,14 +416,15 @@
 }
 
 .categories .categoryActive {
-  border-color: #be185d;
+  border-color: #8b5cf6;
 
-  background: linear-gradient(135deg, #be185d, #9d174d);
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 
   color: #fff;
 
   box-shadow:
-    0 8px 25px rgba(190, 24, 93, 0.25),
+    0 8px 25px rgba(139, 92, 246, 0.25),
+    0 0 25px rgba(139, 92, 246, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
@@ -447,11 +468,13 @@
 }
 
 .dealTypes .dealActive {
-  background: #29292f;
+  background: #2a2535;
 
   color: #fff;
 
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(139, 92, 246, 0.08);
 }
 
 /* =========================
@@ -490,9 +513,9 @@
 
   border-radius: 7px;
 
-  background: rgba(190, 24, 93, 0.14);
+  background: rgba(139, 92, 246, 0.13);
 
-  color: #f43f83;
+  color: #a855f7;
 
   font-size: 11px;
 }
@@ -517,7 +540,7 @@
 }
 
 .resetButton:hover {
-  color: #f43f83;
+  color: #a855f7;
 }
 
 /* =========================
@@ -560,17 +583,17 @@
   height: 34px;
 
   border: 3px solid #29292f;
-  border-top-color: #f43f83;
+  border-top-color: #a855f7;
 
   border-radius: 50%;
 
-  box-shadow: 0 0 25px rgba(244, 63, 131, 0.15);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 
   animation: spin 0.7s linear infinite;
 }
 
 .loadingDots {
-  color: #f43f83;
+  color: #a855f7;
 
   animation: dots 1.2s infinite;
 }
@@ -609,16 +632,16 @@
 
   padding: 18px 20px;
 
-  border: 1px solid rgba(244, 63, 131, 0.22);
+  border: 1px solid rgba(139, 92, 246, 0.22);
   border-radius: 15px;
 
   background: linear-gradient(
     135deg,
-    rgba(190, 24, 93, 0.1),
-    rgba(190, 24, 93, 0.025)
+    rgba(139, 92, 246, 0.1),
+    rgba(139, 92, 246, 0.025)
   );
 
-  color: #fb7185;
+  color: #c4b5fd;
 }
 
 .errorMark {
@@ -633,7 +656,9 @@
 
   border-radius: 11px;
 
-  background: rgba(244, 63, 131, 0.13);
+  background: rgba(139, 92, 246, 0.13);
+
+  color: #a855f7;
 
   font-weight: 800;
 }
@@ -645,7 +670,7 @@
 .error p {
   margin: 4px 0 0;
 
-  color: #8b5666;
+  color: #75698b;
 
   font-size: 12px;
 }
@@ -675,20 +700,22 @@
 
   margin-bottom: 18px;
 
-  border: 1px solid rgba(244, 63, 131, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 21px;
 
   background:
     radial-gradient(
       circle at 50% 30%,
-      rgba(244, 63, 131, 0.16),
+      rgba(139, 92, 246, 0.16),
       transparent 65%
     ),
     #111114;
 
-  color: #f43f83;
+  color: #a855f7;
 
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.3),
+    0 0 35px rgba(139, 92, 246, 0.08);
 }
 
 .empty h2 {
@@ -715,12 +742,12 @@
 .empty button {
   padding: 10px 17px;
 
-  border: 1px solid rgba(244, 63, 131, 0.4);
+  border: 1px solid rgba(139, 92, 246, 0.4);
   border-radius: 10px;
 
-  background: rgba(190, 24, 93, 0.1);
+  background: rgba(139, 92, 246, 0.1);
 
-  color: #f43f83;
+  color: #a855f7;
 
   font-size: 12px;
   font-weight: 700;
@@ -731,13 +758,81 @@
 }
 
 .empty button:hover {
-  border-color: #be185d;
+  border-color: #8b5cf6;
 
-  background: #be185d;
+  background: #7c3aed;
 
   color: #fff;
 
-  box-shadow: 0 10px 30px rgba(190, 24, 93, 0.25);
+  box-shadow:
+    0 10px 30px rgba(124, 58, 237, 0.25),
+    0 0 25px rgba(139, 92, 246, 0.15);
+}
+
+/* =========================
+   HOME BUTTON
+========================= */
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.homeButton {
+  height: 46px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  margin-bottom: 20px;
+}
+
+.homeButton svg {
+  color: #a855f7;
+
+  transition: 0.2s ease;
+}
+
+.homeButton:hover {
+  background: #7c3aed;
+
+  border-color: #8b5cf6;
+
+  color: #fff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 30px rgba(124, 58, 237, 0.25),
+    0 0 25px rgba(139, 92, 246, 0.15);
+}
+
+.homeButton:hover svg {
+  color: #fff;
 }
 
 /* =========================
@@ -801,6 +896,22 @@
 
     gap: 17px;
   }
+
+  .topActions {
+    gap: 12px;
+  }
+
+  .homeButton {
+    width: 46px;
+
+    padding: 0;
+
+    flex-shrink: 0;
+  }
+
+  .homeButton span {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -822,70 +933,5 @@
 
   .dealTypes button {
     flex: 1;
-  }
-}
-
-.topActions {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.homeButton {
-  height: 46px;
-  padding: 0 18px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-
-    margin-bottom: 20px;
-}
-
-.homeButton svg {
-  color: #ff006f;
-}
-
-.homeButton:hover {
-  background: #ff006f;
-  border-color: #ff006f;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.homeButton:hover svg {
-  color: #fff;
-}
-
-@media (max-width: 700px) {
-  .topActions {
-    gap: 12px;
-  }
-
-  .homeButton {
-    width: 46px;
-    padding: 0;
-    flex-shrink: 0;
-  }
-
-  .homeButton span {
-    display: none;
   }
 }

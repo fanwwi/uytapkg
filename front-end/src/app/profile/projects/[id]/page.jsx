@@ -57,7 +57,7 @@ const initialResidentialComplex = {
   floors: 10,
   blocks: 3,
 
-  landArea: "1 га",
+  landArea: "соток",
   area: 1,
 
   apartments: "120 квартир",

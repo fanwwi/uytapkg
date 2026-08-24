@@ -90,7 +90,7 @@ export default function Header() {
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
           <Image
-            src={scrolled ? "/assets/logo.png" : "/assets/logo2.png"}
+            src={scrolled ? "/assets/uytap.png" : "/assets/uytap2.png"}
             width={140}
             height={80}
             alt="UyTap"

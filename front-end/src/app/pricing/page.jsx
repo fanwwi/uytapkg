@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Check,
@@ -15,11 +16,13 @@ import {
   ShieldCheck,
   ArrowRight,
   Wallet,
+  Zap,
 } from "lucide-react";
 
 import styles from "./Pricing.module.css";
 
 export default function Pricing() {
+  const router = useRouter();
   const [period, setPeriod] = useState("1");
 
   const tariffs = [
@@ -28,7 +31,6 @@ export default function Pricing() {
       price: "0",
       icon: User,
       desc: "Для собственников, которые продают или сдают свою недвижимость",
-
       features: [
         "1 бесплатное объявление",
         "Срок размещения 45 дней",
@@ -42,7 +44,6 @@ export default function Pricing() {
       price: "390",
       icon: Rocket,
       desc: "Для начинающих риелторов и частных специалистов",
-
       features: [
         "До 10 активных объявлений",
         "3 авто-UP в месяц",
@@ -57,7 +58,6 @@ export default function Pricing() {
       icon: Crown,
       popular: true,
       desc: "Лучший выбор для активных специалистов",
-
       features: [
         "До 20 активных объявлений",
         "5 авто-UP в месяц",
@@ -72,7 +72,6 @@ export default function Pricing() {
       price: "1890",
       icon: Building2,
       desc: "Для агентств недвижимости и команд",
-
       features: [
         "До 40 активных объявлений",
         "Официальная страница агентства",
@@ -88,7 +87,6 @@ export default function Pricing() {
       icon: Sparkles,
       developer: true,
       desc: "Для строительных компаний и жилых комплексов",
-
       features: [
         "Карточки жилых комплексов",
         "Интерактивные шахматки квартир",
@@ -105,19 +103,16 @@ export default function Pricing() {
       title: "1 месяц",
       discount: "",
     },
-
     {
       id: "3",
       title: "3 месяца",
       discount: "-10%",
     },
-
     {
       id: "6",
       title: "6 месяцев",
       discount: "-20%",
     },
-
     {
       id: "12",
       title: "12 месяцев",
@@ -125,97 +120,176 @@ export default function Pricing() {
     },
   ];
 
+  const handleProfileClick = () => {
+    const token = localStorage.getItem("uytap_token");
+
+    if (token) {
+      router.push("/profile");
+    } else {
+      router.push("/auth-required");
+    }
+  };
+
+  const handleTariffClick = () => {
+    const token = localStorage.getItem("uytap_token");
+
+    if (token) {
+      router.push("/profile");
+    } else {
+      router.push("/auth-required");
+    }
+  };
+
   return (
     <main className={styles.page}>
+      <div className={styles.noise} />
+      <div className={styles.glowOne} />
+      <div className={styles.glowTwo} />
+
+      {/* HERO */}
+
       <section className={styles.hero}>
-        <h1>Тарифы UyTap</h1>
+        <div className={styles.heroBadge}>
+          <Zap size={14} />
+          UyTap PRO
+        </div>
+
+        <h1>
+          Тарифы, которые
+          <span> работают на вас.</span>
+        </h1>
 
         <p>
           Выберите подходящий пакет для продажи, аренды и продвижения
-          недвижимости
+          недвижимости на UyTap.
         </p>
+
+        {/* PERIODS */}
 
         <div className={styles.periods}>
           {periods.map((item) => (
             <button
               key={item.id}
+              type="button"
               className={period === item.id ? styles.activePeriod : ""}
               onClick={() => setPeriod(item.id)}
             >
-              {item.title}
+              <span>{item.title}</span>
 
-              {item.discount && <span>{item.discount}</span>}
+              {item.discount && <small>{item.discount}</small>}
             </button>
           ))}
         </div>
       </section>
 
-      <section className={styles.cards}>
-        {tariffs.map((item) => {
-          const Icon = item.icon;
+      {/* TARIFFS */}
 
-          return (
-            <div
-              key={item.title}
-              className={`
+      <section className={styles.cardsSection}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <span className={styles.sectionNumber}>01</span>
+            <span className={styles.sectionLabel}>Тарифы</span>
+          </div>
+
+          <p>Для собственников, риелторов, агентств и застройщиков.</p>
+        </div>
+
+        <div className={styles.cards}>
+          {tariffs.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <article
+                key={item.title}
+                className={`
                   ${styles.card}
                   ${item.popular ? styles.popular : ""}
                   ${item.developer ? styles.developer : ""}
                 `}
-            >
-              {item.popular && (
-                <div className={styles.badge}>
-                  <Star />
-                  ХИТ ПРОДАЖ
-                </div>
-              )}
-
-              <div className={styles.icon}>
-                <Icon />
-              </div>
-
-              <h2>{item.title}</h2>
-
-              <p className={styles.desc}>{item.desc}</p>
-
-              <div className={styles.price}>
-                {item.price === "Индивидуально" ? (
-                  item.price
-                ) : (
-                  <>
-                    {item.price}
-
-                    <span>сом / месяц</span>
-                  </>
+              >
+                {item.popular && (
+                  <div className={styles.badge}>
+                    <Star size={12} />
+                    ПОПУЛЯРНЫЙ
+                  </div>
                 )}
-              </div>
 
-              <ul>
-                {item.features.map((feature) => (
-                  <li key={feature}>
-                    <Check />
+                <div className={styles.cardTop}>
+                  <div className={styles.icon}>
+                    <Icon size={23} />
+                  </div>
 
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+                  <span className={styles.cardIndex}>
+                    0{tariffs.indexOf(item) + 1}
+                  </span>
+                </div>
 
-              <button className={styles.button}>
-                {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
+                <h2>{item.title}</h2>
 
-                <ArrowRight />
-              </button>
-            </div>
-          );
-        })}
+                <p className={styles.desc}>{item.desc}</p>
+
+                <div className={styles.price}>
+                  {item.price === "Индивидуально" ? (
+                    <strong className={styles.individualPrice}>
+                      Индивидуально
+                    </strong>
+                  ) : (
+                    <>
+                      <strong>{item.price}</strong>
+                      <span>сом / месяц</span>
+                    </>
+                  )}
+                </div>
+
+                <div className={styles.divider} />
+
+                <ul>
+                  {item.features.map((feature) => (
+                    <li key={feature}>
+                      <span className={styles.check}>
+                        <Check size={12} />
+                      </span>
+
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  type="button"
+                  className={styles.cardButton}
+                  onClick={handleTariffClick}
+                >
+                  {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
+
+                  <ArrowRight size={16} />
+                </button>
+              </article>
+            );
+          })}
+        </div>
       </section>
 
+      {/* HOW IT WORKS */}
+
       <section className={styles.how}>
-        <h2>Как подключить тариф?</h2>
+        <div className={styles.sectionTitle}>
+          <span className={styles.sectionNumber}>02</span>
+          <span className={styles.sectionLabel}>Как это работает</span>
+
+          <h2>
+            Подключиться
+            <span> проще, чем кажется.</span>
+          </h2>
+
+          <p>
+            Всего несколько шагов — и ваши объявления начинают работать на вас.
+          </p>
+        </div>
 
         <div className={styles.steps}>
-          <div>
-            <span>1</span>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>01</div>
 
             <h3>Выберите тариф</h3>
 
@@ -225,8 +299,8 @@ export default function Pricing() {
             </p>
           </div>
 
-          <div>
-            <span>2</span>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>02</div>
 
             <h3>Создайте аккаунт</h3>
 
@@ -235,8 +309,8 @@ export default function Pricing() {
             </p>
           </div>
 
-          <div>
-            <span>3</span>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>03</div>
 
             <h3>Оплатите тариф</h3>
 
@@ -246,46 +320,67 @@ export default function Pricing() {
             </p>
           </div>
 
-          <div>
-            <span>4</span>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>04</div>
 
             <h3>Получайте клиентов</h3>
 
-            <p>Размещайте объекты и увеличивайте количество обращений.</p>
+            <p>
+              Размещайте объекты, продвигайте их и увеличивайте количество
+              обращений.
+            </p>
           </div>
         </div>
       </section>
 
+      {/* PAYMENT */}
+
       <section className={styles.payment}>
-        <h2>Удобная оплата</h2>
+        <div className={styles.sectionTitle}>
+          <span className={styles.sectionNumber}>03</span>
+          <span className={styles.sectionLabel}>Оплата</span>
+
+          <h2>
+            Всё необходимое
+            <span> для бизнеса.</span>
+          </h2>
+        </div>
 
         <div className={styles.paymentGrid}>
-          <div>
-            <CreditCard />
+          <div className={styles.paymentCard}>
+            <div className={styles.smallIcon}>
+              <CreditCard size={20} />
+            </div>
 
             <h3>Банковская карта</h3>
 
             <p>Быстрая онлайн-оплата через безопасный сервис.</p>
           </div>
 
-          <div>
-            <Smartphone />
+          <div className={styles.paymentCard}>
+            <div className={styles.smallIcon}>
+              <Smartphone size={20} />
+            </div>
 
             <h3>Мобильные платежи</h3>
 
             <p>Оплачивайте через популярные платежные системы Кыргызстана.</p>
           </div>
 
-          <div>
-            <Wallet />
+          <div className={styles.paymentCard}>
+            <div className={styles.smallIcon}>
+              <Wallet size={20} />
+            </div>
 
             <h3>Для бизнеса</h3>
 
             <p>Индивидуальные условия для агентств и застройщиков.</p>
           </div>
 
-          <div>
-            <ShieldCheck />
+          <div className={styles.paymentCard}>
+            <div className={styles.smallIcon}>
+              <ShieldCheck size={20} />
+            </div>
 
             <h3>Безопасность</h3>
 
@@ -294,28 +389,51 @@ export default function Pricing() {
         </div>
       </section>
 
+      {/* PROMOTION */}
+
       <section className={styles.promotion}>
-        <h2>Продвижение объектов</h2>
+        <div className={styles.promotionHeader}>
+          <div>
+            <span className={styles.sectionNumber}>04</span>
+            <span className={styles.sectionLabel}>Продвижение</span>
+
+            <h2>
+              Сделайте объект
+              <span> заметнее.</span>
+            </h2>
+          </div>
+
+          <p>
+            Дополнительные инструменты, чтобы ваши объявления получили больше
+            внимания.
+          </p>
+        </div>
 
         <div className={styles.promoGrid}>
-          <div>
+          <div className={styles.promoCard}>
             <Crown />
+
+            <span>01</span>
 
             <h3>VIP</h3>
 
             <p>290 сом / день</p>
           </div>
 
-          <div>
+          <div className={styles.promoCard}>
             <Rocket />
+
+            <span>02</span>
 
             <h3>ТОП</h3>
 
             <p>190 сом / день</p>
           </div>
 
-          <div>
+          <div className={styles.promoCard}>
             <Sparkles />
+
+            <span>03</span>
 
             <h3>Авто-UP</h3>
 
@@ -324,18 +442,37 @@ export default function Pricing() {
         </div>
       </section>
 
+      {/* CTA */}
+
       <section className={styles.cta}>
-        <h2>Развивайте продажи недвижимости вместе с <span className={styles.pink}>UyTap</span></h2>
+        <div className={styles.ctaGlow} />
 
-        <p>
-          Получайте больше клиентов, продвигайте объекты и управляйте
-          недвижимостью профессионально.
-        </p>
+        <div className={styles.ctaContent}>
+          <div className={styles.ctaBadge}>
+            <Sparkles size={14} />
+            UyTap
+          </div>
 
-        <button className={styles.button}>
-          Перейти в личный кабинет
-          <ArrowRight />
-        </button>
+          <h2>
+            Развивайте продажи
+            <br />
+            недвижимости с <span>UyTap.</span>
+          </h2>
+
+          <p>
+            Получайте больше клиентов, продвигайте объекты и управляйте
+            недвижимостью профессионально.
+          </p>
+
+          <button
+            type="button"
+            className={styles.ctaButton}
+            onClick={handleProfileClick}
+          >
+            Перейти в личный кабинет
+            <ArrowRight size={18} />
+          </button>
+        </div>
       </section>
     </main>
   );

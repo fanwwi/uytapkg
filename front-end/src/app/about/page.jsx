@@ -6,13 +6,14 @@ import {
   Building2,
   Check,
   ChevronRight,
+  Home,
+  LifeBuoy,
   MapPin,
   Mic,
   Search,
   ShieldCheck,
   Sparkles,
   Users,
-  Zap,
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -23,19 +24,35 @@ import Footer from "@/components/pageComponents/footer/Footer";
 const features = [
   {
     number: "01",
-    icon: Search,
-    title: "Умный поиск",
+    icon: Mic,
+    title: "Голосовой умный поиск",
     description:
-      "Не нужно разбираться в десятках фильтров. Просто напишите, что вы ищете, — UyTap сам понимает запрос и подбирает подходящие объекты.",
-    example: "«Двушка в Асанбае до $70 000»",
+      "Просто скажите, что ищете. UyTap распознаёт речь, понимает параметры запроса и автоматически подбирает подходящую недвижимость.",
+    example: "«Найди дом у Иссык-Куля до $120 000»",
   },
   {
     number: "02",
-    icon: Mic,
-    title: "Голос вместо анкеты",
+    icon: BrainCircuit,
+    title: "Подходящие рекомендации",
     description:
-      "Расскажите о своей недвижимости своими словами. AI превратит обычную речь в структурированное объявление и заполнит нужные поля.",
-    example: "«Дом недалеко от озера, три комнаты...»",
+      "UyTap анализирует ваши запросы и сохранённые объекты, чтобы показывать недвижимость, которая действительно может вам подойти.",
+    example: "Подборка объектов специально для вас",
+  },
+  {
+    number: "03",
+    icon: ShieldCheck,
+    title: "Проверка и прозрачность",
+    description:
+      "Мы внедряем инструменты верификации продавцов и дополнительные механизмы доверия, чтобы сделать рынок безопаснее.",
+    example: "Верифицированный продавец",
+  },
+  {
+    number: "04",
+    icon: Building2,
+    title: "Фильтры под объект",
+    description:
+      "Для каждой категории недвижимости свои параметры. Квартиры, дома, участки, коммерция и паркинги имеют собственный набор характеристик, чтобы вы смогли найти именно то, что подходит именно вам.",
+    example: "Квартира → этаж, серия, отопление, ремонт...",
   },
 ];
 
@@ -76,11 +93,14 @@ export default function AboutPage() {
   return (
     <main className={styles.page}>
       <Header />
-      <div className={styles.noise} />
-      <div className={styles.glow.glowOne} />
-      <div className={styles.glow.glowTwo} />
 
-      {/* HERO */}
+      <div className={styles.noise} />
+      <div className={`${styles.glow} ${styles.glowOne}`} />
+      <div className={`${styles.glow} ${styles.glowTwo}`} />
+
+      {/* =========================
+          HERO
+      ========================= */}
 
       <section className={styles.hero}>
         <div className={styles.heroGrid} />
@@ -167,7 +187,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* INTRO */}
+      {/* =========================
+          INTRO
+      ========================= */}
 
       <section className={styles.intro}>
         <div className={styles.sectionLabel}>
@@ -197,7 +219,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* FEATURES */}
+      {/* =========================
+          FEATURES
+      ========================= */}
 
       <section className={styles.featuresSection}>
         <div className={styles.sectionHeading}>
@@ -248,7 +272,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* =========================
+          HOW IT WORKS
+      ========================= */}
 
       <section className={styles.workflow}>
         <div className={styles.workflowHeader}>
@@ -268,16 +294,19 @@ export default function AboutPage() {
 
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>01</div>
+
             <h3>Расскажите</h3>
+
             <p>
-              Напишите или расскажите голосом, какую недвижимость вы ищете или
-              хотите разместить.
+              Напишите или расскажите голосом, какую недвижимость вы ищете.
             </p>
           </div>
 
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>02</div>
+
             <h3>UyTap понимает</h3>
+
             <p>
               AI анализирует запрос, выделяет параметры и превращает обычную
               речь в понятные данные.
@@ -286,16 +315,20 @@ export default function AboutPage() {
 
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>03</div>
+
             <h3>Вы получаете результат</h3>
+
             <p>
-              Подходящие объекты или готовое объявление появляются без лишней
+              Подходящие объекты появляются без лишней
               ручной работы.
             </p>
           </div>
         </div>
       </section>
 
-      {/* REGIONS */}
+      {/* =========================
+          REGIONS
+      ========================= */}
 
       <section className={styles.regions}>
         <div className={styles.regionCard}>
@@ -303,7 +336,7 @@ export default function AboutPage() {
             <MapPin size={32} />
 
             <div className={styles.regionRing} />
-            <div className={styles.regionRing.regionRingTwo} />
+            <div className={`${styles.regionRing} ${styles.regionRingTwo}`} />
           </div>
 
           <div className={styles.regionContent}>
@@ -335,7 +368,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* PRINCIPLES */}
+      {/* =========================
+          PRINCIPLES
+      ========================= */}
 
       <section className={styles.principles}>
         <div className={styles.sectionHeading}>
@@ -370,7 +405,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ROADMAP */}
+      {/* =========================
+          ROADMAP
+      ========================= */}
 
       <section className={styles.roadmap}>
         <div className={styles.roadmapIntro}>
@@ -399,20 +436,23 @@ export default function AboutPage() {
               </div>
 
               <span>0{index + 1}</span>
+
               <strong>{item}</strong>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* =========================
+          FINAL CTA
+      ========================= */}
 
       <section className={styles.final}>
         <div className={styles.finalGlow} />
 
         <div className={styles.finalContent}>
           <span className={styles.finalBadge}>
-            <Sparkles size={14} />
+            <Home size={14} />
             UyTap
           </span>
 
@@ -437,6 +477,7 @@ export default function AboutPage() {
           </button>
         </div>
       </section>
+
       <Footer />
     </main>
   );

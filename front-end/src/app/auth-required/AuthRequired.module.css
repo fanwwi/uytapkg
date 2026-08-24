@@ -1,127 +1,365 @@
 .page {
+  --bg: #08080c;
+  --card: #111116;
+  --card-light: #17171e;
+
+  --text: #f5f5f7;
+  --text-secondary: #a6a6b0;
+  --text-muted: #6f6f7a;
+
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --accent-dark: #6d28d9;
+
+  position: relative;
+
   min-height: 100vh;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 20px;
+  padding: 24px;
+
+  overflow: hidden;
 
   background:
-    radial-gradient(circle at top, rgba(255, 0, 111, 0.15), transparent 40%),
-    linear-gradient(180deg, #fff5fa, #ffffff);
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(139, 92, 246, 0.16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(109, 40, 217, 0.12),
+      transparent 32%
+    ),
+    linear-gradient(180deg, #0b0b10 0%, #08080c 100%);
+
+  color: var(--text);
 }
 
+.page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  top: -220px;
+  left: -180px;
+
+  border-radius: 50%;
+
+  background: rgba(139, 92, 246, 0.14);
+
+  filter: blur(100px);
+
+  pointer-events: none;
+}
+
+.page::after {
+  content: "";
+
+  position: absolute;
+
+  width: 380px;
+  height: 380px;
+
+  right: -180px;
+  bottom: -200px;
+
+  border-radius: 50%;
+
+  background: rgba(109, 40, 217, 0.12);
+
+  filter: blur(100px);
+
+  pointer-events: none;
+}
+
+/* =========================
+   CARD
+========================= */
+
 .card {
+  position: relative;
+  z-index: 2;
+
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
 
-  padding: 45px 40px;
-
-  border-radius: 35px;
-
-  background: white;
+  padding: 52px 45px;
 
   text-align: center;
 
-  box-shadow: 0 30px 80px rgba(255, 0, 111, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
-  border: 1px solid rgba(255, 0, 111, 0.08);
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    ),
+    rgba(17, 17, 22, 0.92);
+
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.5),
+    0 0 70px rgba(139, 92, 246, 0.08);
+
+  animation: cardAppear 0.45s ease;
 }
 
-.icon {
-  width: 90px;
-  height: 90px;
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.98);
+  }
 
-  margin: 0 auto 25px;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   ICON
+========================= */
+
+.icon {
+  position: relative;
+
+  width: 88px;
+  height: 88px;
+
+  margin: 0 auto 28px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 30px;
+  border: 1px solid rgba(167, 139, 250, 0.25);
 
-  background: linear-gradient(135deg, #ff2990, #ff006f);
+  border-radius: 26px;
 
-  color: white;
+  background: linear-gradient(
+    135deg,
+    rgba(167, 139, 250, 0.2),
+    rgba(109, 40, 217, 0.12)
+  );
 
-  box-shadow: 0 20px 40px rgba(255, 0, 111, 0.35);
+  color: var(--accent-light);
+
+  box-shadow:
+    0 20px 45px rgba(109, 40, 217, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.icon::before {
+  content: "";
+
+  position: absolute;
+  inset: -8px;
+
+  border-radius: 31px;
+
+  border: 1px solid rgba(139, 92, 246, 0.08);
+
+  pointer-events: none;
 }
 
 .icon svg {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
+
+  stroke-width: 1.8;
 }
+
+/* =========================
+   TEXT
+========================= */
 
 .card h1 {
   margin: 0;
 
-  font-size: 32px;
+  color: #fff;
 
-  font-weight: 950;
+  font-size: 34px;
+  line-height: 1.15;
 
-  color: #111;
+  font-weight: 850;
+
+  letter-spacing: -1px;
 }
 
 .card p {
-  margin: 18px 0 35px;
+  max-width: 390px;
 
-  color: #777;
+  margin: 17px auto 35px;
 
-  line-height: 1.6;
+  color: var(--text-secondary);
 
   font-size: 16px;
+  line-height: 1.65;
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .buttons {
   display: flex;
-
   flex-direction: column;
 
-  gap: 14px;
+  gap: 12px;
 }
 
 .login,
 .home {
-  height: 58px;
-
-  border-radius: 20px;
+  min-height: 58px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 10px;
 
+  border-radius: 16px;
+
   text-decoration: none;
 
-  font-weight: 850;
+  font-family: inherit;
 
-  transition: 0.3s;
+  font-size: 15px;
+  font-weight: 750;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
 }
+
+/* =========================
+   LOGIN
+========================= */
 
 .login {
-  color: white;
+  border: 1px solid rgba(167, 139, 250, 0.35);
 
-  background: linear-gradient(135deg, #ff2990, #ff006f);
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 
-  box-shadow: 0 15px 35px rgba(255, 0, 111, 0.3);
+  color: #fff;
+
+  box-shadow:
+    0 15px 35px rgba(109, 40, 217, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
+
+.login:hover {
+  transform: translateY(-3px);
+
+  background: linear-gradient(135deg, #9b6cff, #7c3aed);
+
+  box-shadow:
+    0 20px 45px rgba(109, 40, 217, 0.38),
+    0 0 25px rgba(139, 92, 246, 0.12);
+}
+
+/* =========================
+   HOME
+========================= */
 
 .home {
-  color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.045);
+
+  color: var(--text-secondary);
 }
 
-.login:hover,
 .home:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+
+  border-color: rgba(139, 92, 246, 0.25);
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: var(--accent-light);
 }
+
+/* =========================
+   ICONS
+========================= */
 
 .login svg,
 .home svg {
-  width: 20px;
+  width: 19px;
+  height: 19px;
+
+  transition: transform 0.25s ease;
+}
+
+.login:hover svg {
+  transform: translateX(2px);
+}
+
+.home:hover svg {
+  transform: translateX(-2px);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 18px;
+  }
+
+  .card {
+    padding: 40px 24px;
+
+    border-radius: 25px;
+  }
+
+  .icon {
+    width: 78px;
+    height: 78px;
+
+    margin-bottom: 24px;
+
+    border-radius: 22px;
+  }
+
+  .icon svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .card h1 {
+    font-size: 28px;
+  }
+
+  .card p {
+    margin-top: 14px;
+    margin-bottom: 28px;
+
+    font-size: 14px;
+  }
+
+  .login,
+  .home {
+    min-height: 55px;
+
+    border-radius: 15px;
+
+    font-size: 14px;
+  }
 }

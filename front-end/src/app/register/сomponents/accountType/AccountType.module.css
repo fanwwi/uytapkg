@@ -2,8 +2,13 @@
   margin-top: 35px;
 }
 
+/* =========================================
+   HEADER
+========================================= */
+
 .header {
   text-align: center;
+
   margin-bottom: 28px;
 }
 
@@ -14,26 +19,30 @@
 
   font-weight: 900;
 
-  color: #ff006f;
+  color: #ffffff;
+
+  letter-spacing: -0.5px;
 }
 
 .header p {
   margin-top: 8px;
 
-  color: #999;
+  color: #77727f;
 
   font-size: 13px;
 }
+
+/* =========================================
+   CARDS
+========================================= */
 
 .cards {
   display: flex;
 
   flex-direction: column;
 
-  gap: 18px;
+  gap: 14px;
 }
-
-/* CARD */
 
 .card {
   position: relative;
@@ -42,19 +51,23 @@
 
   width: 100%;
 
-  padding: 24px;
+  padding: 20px;
 
-  border-radius: 30px;
+  border-radius: 23px;
 
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 
-  background: linear-gradient(135deg, #ff006f, #ff3d91);
+  background: linear-gradient(
+    145deg,
+    rgba(27, 24, 34, 0.98),
+    rgba(14, 13, 18, 0.98)
+  );
 
   display: flex;
 
   align-items: center;
 
-  gap: 18px;
+  gap: 17px;
 
   cursor: pointer;
 
@@ -62,14 +75,20 @@
 
   color: white;
 
-  box-shadow: 0 20px 45px rgba(255, 0, 111, 0.25);
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
   transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
 
-/* светлый блик */
+/* =========================================
+   PURPLE GLOW
+========================================= */
 
 .card::before {
   content: "";
@@ -77,138 +96,171 @@
   position: absolute;
 
   width: 220px;
-
   height: 220px;
 
-  right: -70px;
-
-  top: -90px;
+  right: -100px;
+  top: -110px;
 
   border-radius: 50%;
 
   background: radial-gradient(
     circle,
-    rgba(255, 220, 235, 0.9),
-    rgba(255, 180, 215, 0.4),
+    rgba(139, 92, 246, 0.28),
+    rgba(124, 58, 237, 0.1),
     transparent 70%
   );
 
-  opacity: 0;
+  opacity: 0.5;
 
-  transform: scale(0.6);
+  transform: scale(0.7);
 
-  transition: 0.5s ease;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
 }
 
-/* второй блик */
+/* нижний glow */
 
 .card::after {
   content: "";
 
   position: absolute;
 
-  width: 120px;
+  width: 130px;
+  height: 130px;
 
-  height: 120px;
-
-  left: -50px;
-
-  bottom: -50px;
+  left: -70px;
+  bottom: -70px;
 
   border-radius: 50%;
 
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(124, 58, 237, 0.12);
 
-  filter: blur(20px);
+  filter: blur(25px);
 
   opacity: 0;
 
-  transition: 0.5s;
+  transition: opacity 0.45s ease;
 }
 
-.card:hover {
-  transform: translateY(-7px);
+/* =========================================
+   HOVER
+========================================= */
 
-  box-shadow: 0 35px 80px rgba(255, 0, 111, 0.45);
+.card:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: linear-gradient(
+    145deg,
+    rgba(31, 27, 42, 0.99),
+    rgba(15, 14, 20, 0.99)
+  );
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.4),
+    0 0 35px rgba(124, 58, 237, 0.09),
+    inset 0 1px 0 rgba(167, 139, 250, 0.05);
 }
 
 .card:hover::before {
   opacity: 1;
 
-  transform: scale(1);
+  transform: scale(1.15);
 }
 
 .card:hover::after {
   opacity: 1;
 }
 
-/* ICON */
+/* =========================================
+   ICON
+========================================= */
 
 .icon {
   position: relative;
+
   z-index: 2;
 
-  width: 68px;
-  height: 68px;
+  width: 62px;
+  height: 62px;
 
-  border-radius: 24px;
+  flex-shrink: 0;
+
+  border-radius: 19px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  background: rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.16),
+    rgba(124, 58, 237, 0.055)
+  );
 
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
-  backdrop-filter: blur(14px);
-
-  color: white;
+  color: #a78bfa;
 
   box-shadow:
-    inset 0 0 20px rgba(255, 255, 255, 0.18),
-    0 8px 25px rgba(255, 255, 255, 0.12);
+    inset 0 0 20px rgba(139, 92, 246, 0.05),
+    0 8px 25px rgba(0, 0, 0, 0.25);
 
   transition:
-    transform 0.35s ease,
-    background 0.35s ease,
-    box-shadow 0.35s ease;
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .icon svg {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
 
-  color: white;
+  color: #a78bfa;
 
-  stroke-width: 2.6;
+  stroke-width: 2;
 
-  filter: drop-shadow(0 3px 8px rgba(255, 255, 255, 0.35));
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.25));
 
-  transition: 0.35s ease;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
-/* hover */
+/* icon hover */
 
 .card:hover .icon {
-  background: rgba(255, 255, 255, 0.28);
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.25),
+    rgba(109, 40, 217, 0.12)
+  );
 
-  border-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(167, 139, 250, 0.45);
 
-  transform: scale(1.08) rotate(-3deg);
+  transform: scale(1.05) rotate(-2deg);
 
   box-shadow:
-    0 0 35px rgba(255, 220, 240, 0.65),
-    inset 0 0 25px rgba(255, 255, 255, 0.35);
+    0 0 28px rgba(124, 58, 237, 0.18),
+    inset 0 0 20px rgba(139, 92, 246, 0.08);
 }
 
 .card:hover .icon svg {
-  transform: scale(1.15);
+  transform: scale(1.1);
 
-  filter: drop-shadow(0 0 12px white);
+  color: #c4b5fd;
+
+  filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.55));
 }
 
-/* CONTENT */
+/* =========================================
+   CONTENT
+========================================= */
 
 .content {
   position: relative;
@@ -216,38 +268,45 @@
   z-index: 2;
 
   flex: 1;
+
+  min-width: 0;
 }
 
 .content h3 {
   margin: 0 0 6px;
 
-  color: white;
+  color: #f5f3ff;
 
   font-size: 17px;
 
-  font-weight: 900;
+  font-weight: 850;
+
+  letter-spacing: -0.2px;
 }
 
 .content p {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.85);
+  color: #817b8c;
 
   font-size: 13px;
 
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
-/* ARROW */
+/* =========================================
+   ARROW
+========================================= */
 
 .arrow {
   position: relative;
 
   z-index: 2;
 
-  width: 40px;
+  width: 39px;
+  height: 39px;
 
-  height: 40px;
+  flex-shrink: 0;
 
   border-radius: 50%;
 
@@ -257,67 +316,164 @@
 
   justify-content: center;
 
-  background: white;
+  background: rgba(139, 92, 246, 0.1);
 
-  color: #ff006f;
+  border: 1px solid rgba(139, 92, 246, 0.18);
 
-  opacity: 0.85;
+  color: #a78bfa;
 
-  transition: 0.35s;
+  opacity: 0.8;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .arrow svg {
-  width: 19px;
+  width: 18px;
+
+  height: 18px;
 }
 
 .card:hover .arrow {
-  transform: translateX(6px);
+  transform: translateX(5px);
 
   opacity: 1;
 
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  background: #8b5cf6;
+
+  border-color: #8b5cf6;
+
+  color: white;
+
+  box-shadow: 0 0 22px rgba(139, 92, 246, 0.35);
 }
 
-/* разные оттенки */
+/* =========================================
+   ACCOUNT TYPES
+========================================= */
 
-.personal {
-  background: linear-gradient(135deg, #ff006f, #ff4d9d);
-}
-
-.realtor {
-  background: linear-gradient(135deg, #e60063, #ff2990);
-}
-
+.personal,
+.realtor,
+.agency,
 .developer {
-  background: linear-gradient(135deg, #c90055, #ff006f);
+  background: linear-gradient(
+    145deg,
+    rgba(27, 24, 34, 0.98),
+    rgba(14, 13, 18, 0.98)
+  );
 }
 
-/* MOBILE */
+/* subtle individual purple tones */
+
+.personal:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.realtor:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.agency:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+}
+
+.developer:hover {
+  border-color: rgba(109, 40, 217, 0.5);
+}
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 600px) {
-  .card {
-    padding: 18px;
+  .wrapper {
+    margin-top: 28px;
+  }
 
-    border-radius: 24px;
+  .header {
+    margin-bottom: 22px;
+  }
+
+  .header h2 {
+    font-size: 21px;
+  }
+
+  .cards {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 17px;
+
+    border-radius: 20px;
+
+    gap: 13px;
   }
 
   .icon {
-    width: 55px;
+    width: 54px;
+    height: 54px;
 
-    height: 55px;
+    border-radius: 16px;
   }
 
   .icon svg {
-    width: 28px;
-
-    height: 28px;
+    width: 27px;
+    height: 27px;
   }
 
   .content h3 {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .content p {
-    font-size: 13px;
+    font-size: 12px;
+  }
+
+  .arrow {
+    width: 35px;
+    height: 35px;
+  }
+
+  .arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    padding: 15px;
+
+    gap: 11px;
+  }
+
+  .icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 14px;
+  }
+
+  .icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .content h3 {
+    font-size: 15px;
+  }
+
+  .content p {
+    font-size: 11px;
+  }
+
+  .arrow {
+    width: 32px;
+    height: 32px;
   }
 }

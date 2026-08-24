@@ -6,117 +6,140 @@
   align-items: center;
 
   position: relative;
-
   overflow: hidden;
 
   padding: 20px;
 
   background:
     radial-gradient(
-      circle at top left,
-      rgba(255, 0, 120, 0.25),
-      transparent 35%
+      circle at 15% 10%,
+      rgba(124, 58, 237, 0.16),
+      transparent 32%
     ),
-    #050505;
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(139, 92, 246, 0.1),
+      transparent 30%
+    ),
+    #09090b;
 
-  color: white;
+  color: #f5f5f7;
 }
 
-/* CARD */
+/* =========================================================
+   CARD
+========================================================= */
 
 .card {
+  position: relative;
+  z-index: 2;
+
   width: 460px;
 
-  padding: 45px;
-  padding-left: 40px;
-  border-radius: 35px;
+  padding: 45px 40px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.04)
-  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.018)
+    ),
+    #111114;
 
   backdrop-filter: blur(30px);
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
   box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.5),
-    0 0 60px rgba(255, 0, 120, 0.25);
-
-  z-index: 2;
+    0 40px 100px rgba(0, 0, 0, 0.55),
+    0 0 70px rgba(124, 58, 237, 0.12);
 }
 
-/* BACK */
+/* =========================================================
+   BACK
+========================================================= */
 
 .back {
   display: flex;
-
   align-items: center;
 
   gap: 8px;
 
   width: max-content;
 
-  color: #999;
+  margin-bottom: 28px;
+
+  color: #777780;
+
+  font-size: 14px;
+  font-weight: 700;
 
   text-decoration: none;
 
-  font-size: 15px;
-
-  margin-bottom: 25px;
-
-  transition: 0.3s;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back svg {
   width: 18px;
+  height: 18px;
 }
 
 .back:hover {
-  color: #ff4fa3;
+  color: #a78bfa;
 
-  transform: translateX(-5px);
+  transform: translateX(-4px);
 }
 
-/* BRAND */
+/* =========================================================
+   BRAND
+========================================================= */
 
 .brand {
-  color: #ff4fa3;
+  color: #a78bfa;
 
-  font-size: 17px;
+  font-size: 16px;
 
   font-weight: 900;
 
-  letter-spacing: 4px;
+  letter-spacing: 3px;
 
   text-transform: uppercase;
 }
 
-/* TITLE */
+/* =========================================================
+   TITLE
+========================================================= */
 
 .title {
-  margin: 15px 0 10px;
+  margin: 14px 0 10px;
+
+  color: #ffffff;
 
   font-size: 40px;
 
   line-height: 1.1;
 
   font-weight: 900;
+
+  letter-spacing: -1.2px;
 }
 
 .subtitle {
-  color: #aaa;
+  margin: 0 0 30px;
 
-  font-size: 16px;
+  color: #8f8f98;
 
-  line-height: 1.5;
+  font-size: 15px;
 
-  margin-bottom: 30px;
+  line-height: 1.6;
 }
 
-/* FORM */
+/* =========================================================
+   FORM
+========================================================= */
 
 .form {
   display: flex;
@@ -126,197 +149,267 @@
   gap: 16px;
 }
 
-/* INPUT */
+/* =========================================================
+   INPUT
+========================================================= */
 
 .inputBox {
   height: 62px;
 
   display: flex;
-
   align-items: center;
 
   gap: 14px;
 
-  padding: 0 20px;
+  padding: 0 18px;
 
-  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
 
-  border-radius: 20px;
+  background: #151519;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  transition: 0.35s;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .inputBox:hover {
-  border-color: rgba(255, 79, 163, 0.4);
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: #17171c;
 }
 
 .inputBox:focus-within {
-  border-color: #ff4fa3;
+  border-color: rgba(139, 92, 246, 0.7);
 
-  box-shadow: 0 0 30px rgba(255, 79, 163, 0.3);
+  background: #17171c;
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
-.inputBox svg {
-  width: 23px;
+.inputBox > svg {
+  width: 21px;
+  height: 21px;
 
-  height: 23px;
+  flex-shrink: 0;
 
-  color: #ff4fa3;
+  color: #a78bfa;
 }
 
 .inputBox input {
   flex: 1;
 
+  width: 100%;
   height: 100%;
 
-  background: none;
-
   border: none;
-
   outline: none;
 
-  color: white;
+  background: transparent;
 
+  color: #fff;
+
+  font-family: inherit;
   font-size: 16px;
 }
 
 .inputBox input::placeholder {
-  color: #777;
+  color: #5f5f68;
 }
 
-/* EYE */
+/* =========================================================
+   EYE
+========================================================= */
 
 .eye {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
   border: none;
 
-  background: none;
+  background: transparent;
 
-  color: #ff4fa3;
+  color: #777780;
 
   cursor: pointer;
 
-  display: flex;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
 
-  align-items: center;
+.eye svg {
+  width: 20px;
+  height: 20px;
 }
 
 .eye:hover {
-  transform: scale(1.1);
+  color: #a78bfa;
+
+  transform: scale(1.08);
 }
 
-/* BUTTON */
+/* =========================================================
+   BUTTON
+========================================================= */
 
 .submit {
   height: 62px;
 
-  border: none;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 16px;
 
-  border-radius: 22px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 
-  background: linear-gradient(135deg, #ff4fa3, #ff0066);
+  color: #fff;
 
-  color: white;
-
-  font-size: 17px;
-
-  font-weight: 900;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 850;
 
   cursor: pointer;
 
-  transition: 0.35s;
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
 
-  box-shadow: 0 20px 45px rgba(255, 0, 120, 0.4);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
 
 .submit:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 
-  box-shadow: 0 30px 70px rgba(255, 0, 120, 0.65);
+  filter: brightness(1.08);
+
+  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.35);
+}
+
+.submit:active {
+  transform: translateY(0);
 }
 
 .submit:disabled {
   opacity: 0.45;
 
   cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
 }
 
-/* ERROR */
+/* =========================================================
+   ERROR
+========================================================= */
 
 .error {
-  color: #ff5b75;
-
-  font-size: 14px;
-
   margin: -5px 0;
+
+  color: #fb7185;
+
+  font-size: 13px;
 
   font-weight: 700;
 }
 
-/* BOTTOM */
+/* =========================================================
+   BOTTOM
+========================================================= */
 
 .bottom {
   margin-top: 28px;
 
   text-align: center;
 
-  color: #888;
+  color: #686871;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .bottom a {
-  margin-left: 8px;
+  margin-left: 7px;
 
-  color: #ff4fa3;
+  color: #a78bfa;
 
   font-weight: 800;
 
   text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
-/* GLOWS */
+.bottom a:hover {
+  color: #c4b5fd;
+}
+
+/* =========================================================
+   GLOWS
+========================================================= */
 
 .glowOne,
 .glowTwo {
   position: absolute;
 
   width: 450px;
-
   height: 450px;
 
   border-radius: 50%;
 
   filter: blur(150px);
+
+  pointer-events: none;
+
+  opacity: 0.35;
 }
 
 .glowOne {
-  background: #ff1493;
-
   top: -250px;
-
   left: -250px;
+
+  background: #7c3aed;
 }
 
 .glowTwo {
-  background: #ff0066;
-
+  right: -250px;
   bottom: -250px;
 
-  right: -250px;
+  background: #8b5cf6;
 }
 
-/* MOBILE */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 520px) {
+  .page {
+    padding: 16px;
+  }
+
   .card {
     width: 100%;
 
-    padding: 30px;
+    padding: 30px 22px;
+
+    border-radius: 22px;
   }
 
   .title {
     font-size: 34px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .inputBox,
+  .submit {
+    height: 58px;
   }
 }

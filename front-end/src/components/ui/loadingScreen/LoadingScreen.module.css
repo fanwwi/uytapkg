@@ -29,13 +29,13 @@
   top: 10px;
   left: 10px;
 
-  background: #ff1493;
+  background: #6d28d9;
 
   border-radius: 7px;
 
   box-shadow:
-    0 0 12px rgba(255, 20, 147, 0.8),
-    0 0 30px rgba(255, 20, 147, 0.35);
+    0 0 12px #4d1b9d,
+    0 0 30px #460ca2;
 
   animation: loaderMove 2s infinite linear;
 }

@@ -56,7 +56,7 @@ export default function Complexes() {
         item.description,
         item.priceFrom,
         item.priceTo,
-        item.class
+        item.class,
       ]
         .join(" ")
         .toLowerCase()
@@ -240,26 +240,6 @@ export default function Complexes() {
                   {/* DESCRIPTION */}
 
                   <p className={styles.description}>{item.description}</p>
-
-                  {/* PRICE */}
-
-                  <div className={styles.priceBlock}>
-                    <div className={styles.priceIcon}>
-                      <Wallet />
-                    </div>
-
-                    <div>
-                      <span>Стоимость квартир</span>
-
-                      <strong>
-                        {item.priceFrom}
-                        <small> — </small>
-                        {item.priceTo}
-                      </strong>
-                    </div>
-                  </div>
-
-                  {/* DEVELOPER */}
 
                   <div className={styles.developer}>
                     <div className={styles.logo}>

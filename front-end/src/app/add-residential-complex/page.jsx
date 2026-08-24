@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createComplex, uploadImage } from "@/utils/api";
+
 import {
   ArrowLeft,
   Building2,
@@ -16,6 +17,8 @@ import {
   CalendarDays,
   Ruler,
   Upload,
+  Maximize,
+  Blocks,
 } from "lucide-react";
 
 import styles from "./AddResidentialComplex.module.css";
@@ -24,6 +27,15 @@ import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBla
 const statuses = ["Проект", "Строительство", "Сдан"];
 
 const classes = ["Эконом", "Комфорт", "Бизнес", "Премиум"];
+
+const constructions = [
+  "Монолит",
+  "Монолитно-каркасный",
+  "Кирпичный",
+  "Панельный",
+  "Газобетон",
+  "Комбинированный",
+];
 
 const amenities = [
   "Детская площадка",
@@ -44,20 +56,31 @@ const MAX_IMAGES = 20;
 
 export default function AddResidentialComplex() {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [form, setForm] = useState({
     name: "",
     address: "",
     city: "Бишкек",
     description: "",
+
     status: "Строительство",
     class: "Комфорт",
+    construction: "Монолитно-каркасный",
+
     completionDate: "",
+
     floors: "",
+    blocks: "",
     apartments: "",
     parking: "",
+
+    ceilingHeight: "",
+
     area: "",
+    areaSotka: "",
   });
 
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -123,29 +146,35 @@ export default function AddResidentialComplex() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
     try {
       const token = localStorage.getItem("uytap_token");
+
       if (!token) {
         throw new Error("Вы не авторизованы. Пожалуйста, войдите в аккаунт.");
       }
 
-      // 1. Загружаем все изображения
       const uploadedUrls = [];
+
       for (const img of images) {
         try {
           const url = await uploadImage(img.file);
+
           if (url) {
             uploadedUrls.push(url);
           }
         } catch (uploadErr) {
-          console.error("Ошибка загрузки изображения:", img.file.name, uploadErr);
+          console.error(
+            "Ошибка загрузки изображения:",
+            img.file.name,
+            uploadErr,
+          );
         }
       }
 
-      // 2. Создаем ЖК
       const payload = {
         ...form,
         amenities: selectedAmenities,
@@ -153,15 +182,18 @@ export default function AddResidentialComplex() {
       };
 
       const res = await createComplex(token, payload);
+
       if (!res.success) {
         throw new Error(res.message || "Не удалось добавить жилой комплекс");
       }
 
-      // Перенаправляем в личный кабинет
       router.push("/profile");
     } catch (err) {
       console.error("Error adding complex:", err);
-      setError(err.message || "Произошла ошибка при сохранении ЖК");
+
+      setError(
+        err.message || "Произошла ошибка при сохранении жилого комплекса",
+      );
     } finally {
       setLoading(false);
     }
@@ -178,32 +210,35 @@ export default function AddResidentialComplex() {
         <header className={styles.header}>
           <a href="/profile" className={styles.back}>
             <ArrowLeft />
-            <span>Назад</span>
+            <span>Назад в профиль</span>
           </a>
 
           <div className={styles.headerContent}>
-            <span className={styles.eyebrow}>
+            <div className={styles.eyebrow}>
               <Building2 />
-              Застройщик
-            </span>
+              Панель застройщика
+            </div>
 
             <h1>Добавить жилой комплекс</h1>
 
             <p>
-              Заполните информацию о ЖК, добавьте характеристики, инфраструктуру
-              и фотографии.
+              Создайте карточку жилого комплекса: укажите характеристики,
+              инфраструктуру, расположение и добавьте фотографии.
             </p>
           </div>
         </header>
 
         {error && (
-          <div style={{ color: "#e53e3e", background: "#fed7d7", padding: "12px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px", border: "1px solid #feb2b2" }}>
+          <div className={styles.error}>
+            <span>!</span>
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* MAIN INFORMATION */}
+          {/* =====================================================
+              01 — ОСНОВНАЯ ИНФОРМАЦИЯ
+          ===================================================== */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -213,7 +248,9 @@ export default function AddResidentialComplex() {
 
               <div>
                 <span className={styles.sectionNumber}>01</span>
+
                 <h2>Основная информация</h2>
+
                 <p>Название, расположение и описание жилого комплекса.</p>
               </div>
             </div>
@@ -270,7 +307,7 @@ export default function AddResidentialComplex() {
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    placeholder="Расскажите о жилом комплексе, его концепции, расположении и преимуществах..."
+                    placeholder="Расскажите о концепции ЖК, расположении, архитектуре и преимуществах..."
                     rows={7}
                     maxLength={1000}
                   />
@@ -283,7 +320,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* CHARACTERISTICS */}
+          {/* =====================================================
+              02 — ХАРАКТЕРИСТИКИ
+          ===================================================== */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -293,12 +332,16 @@ export default function AddResidentialComplex() {
 
               <div>
                 <span className={styles.sectionNumber}>02</span>
-                <h2>Характеристики</h2>
-                <p>Основные параметры и статус строительства.</p>
+
+                <h2>Характеристики комплекса</h2>
+
+                <p>Основные параметры здания, территории и квартир.</p>
               </div>
             </div>
 
             <div className={styles.grid}>
+              {/* STATUS */}
+
               <div className={styles.field}>
                 <label>Статус строительства</label>
 
@@ -311,6 +354,8 @@ export default function AddResidentialComplex() {
                 />
               </div>
 
+              {/* CLASS */}
+
               <div className={styles.field}>
                 <label>Класс жилья</label>
 
@@ -322,6 +367,22 @@ export default function AddResidentialComplex() {
                   setValue={(value) => setField("class", value)}
                 />
               </div>
+
+              {/* CONSTRUCTION */}
+
+              <div className={styles.field}>
+                <label>Конструкция здания</label>
+
+                <CustomSelectBlack
+                  icon={Building2}
+                  title="Конструкция"
+                  options={constructions}
+                  value={form.construction}
+                  setValue={(value) => setField("construction", value)}
+                />
+              </div>
+
+              {/* COMPLETION */}
 
               <div className={styles.field}>
                 <label>Дата сдачи</label>
@@ -337,6 +398,8 @@ export default function AddResidentialComplex() {
                   />
                 </div>
               </div>
+
+              {/* FLOORS */}
 
               <div className={styles.field}>
                 <label>Количество этажей</label>
@@ -355,6 +418,27 @@ export default function AddResidentialComplex() {
                 </div>
               </div>
 
+              {/* BLOCKS */}
+
+              <div className={styles.field}>
+                <label>Количество блоков</label>
+
+                <div className={styles.inputWithIcon}>
+                  <Blocks />
+
+                  <input
+                    type="number"
+                    name="blocks"
+                    value={form.blocks}
+                    onChange={handleChange}
+                    placeholder="4"
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              {/* APARTMENTS */}
+
               <div className={styles.field}>
                 <label>Количество квартир</label>
 
@@ -371,6 +455,8 @@ export default function AddResidentialComplex() {
                   />
                 </div>
               </div>
+
+              {/* PARKING */}
 
               <div className={styles.field}>
                 <label>Парковочных мест</label>
@@ -389,26 +475,51 @@ export default function AddResidentialComplex() {
                 </div>
               </div>
 
+              {/* CEILING */}
+
               <div className={styles.field}>
-                <label>Площадь территории, м²</label>
+                <label>Высота потолков, м</label>
+
+                <div className={styles.inputWithIcon}>
+                  <Maximize />
+
+                  <input
+                    type="number"
+                    name="ceilingHeight"
+                    value={form.ceilingHeight}
+                    onChange={handleChange}
+                    placeholder="2.8"
+                    min="1"
+                    step="0.1"
+                  />
+                </div>
+              </div>
+
+              {/* SOTKA */}
+
+              <div className={styles.field}>
+                <label>Площадь территории, соток</label>
 
                 <div className={styles.inputWithIcon}>
                   <Ruler />
 
                   <input
                     type="number"
-                    name="area"
-                    value={form.area}
+                    name="areaSotka"
+                    value={form.areaSotka}
                     onChange={handleChange}
-                    placeholder="25000"
+                    placeholder="250"
                     min="0"
+                    step="0.01"
                   />
                 </div>
               </div>
             </div>
           </section>
 
-          {/* AMENITIES */}
+          {/* =====================================================
+              03 — ИНФРАСТРУКТУРА
+          ===================================================== */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -418,8 +529,10 @@ export default function AddResidentialComplex() {
 
               <div>
                 <span className={styles.sectionNumber}>03</span>
+
                 <h2>Инфраструктура</h2>
-                <p>Отметьте всё, что предусмотрено в жилом комплексе.</p>
+
+                <p>Выберите объекты и удобства, которые доступны жителям.</p>
               </div>
             </div>
 
@@ -447,7 +560,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* PHOTOS */}
+          {/* =====================================================
+              04 — ФОТОГРАФИИ
+          ===================================================== */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -460,9 +575,7 @@ export default function AddResidentialComplex() {
 
                 <h2>Фотографии</h2>
 
-                <p>
-                  Первое изображение будет использоваться как главное фото ЖК.
-                </p>
+                <p>Первое изображение станет главным фото жилого комплекса.</p>
               </div>
             </div>
 
@@ -470,7 +583,10 @@ export default function AddResidentialComplex() {
               <div>
                 <strong>Фотографии жилого комплекса</strong>
 
-                <span>Можно добавить до {MAX_IMAGES} изображений.</span>
+                <span>
+                  Добавьте качественные фотографии фасада, территории и
+                  инфраструктуры.
+                </span>
               </div>
 
               <div className={styles.imageCount}>
@@ -493,14 +609,14 @@ export default function AddResidentialComplex() {
 
                 <strong>Добавить фотографии</strong>
 
-                <span>PNG, JPG или WEBP · максимум {MAX_IMAGES} файлов</span>
+                <span>PNG, JPG или WEBP · до {MAX_IMAGES} изображений</span>
               </label>
             )}
 
             {images.length === MAX_IMAGES && (
               <div className={styles.limitReached}>
                 <Check />
-                Вы добавили максимальное количество фотографий
+                Максимальное количество фотографий добавлено
               </div>
             )}
 
@@ -539,6 +655,7 @@ export default function AddResidentialComplex() {
 
             <button type="submit" className={styles.submit} disabled={loading}>
               <Building2 />
+
               {loading ? "Добавление..." : "Добавить ЖК"}
             </button>
           </div>

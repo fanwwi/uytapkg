@@ -1,17 +1,26 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   min-height: 100vh;
   padding: 34px 45px 90px;
 
-  color: #fff;
+  color: #f7f7fb;
 
   background:
-    radial-gradient(circle at 10% 0%, rgba(174, 0, 76, 0.16), transparent 30%),
+    radial-gradient(circle at 8% 0%, rgba(124, 58, 237, 0.2), transparent 28%),
     radial-gradient(
-      circle at 95% 35%,
-      rgba(255, 0, 105, 0.08),
-      transparent 28%
+      circle at 92% 25%,
+      rgba(139, 92, 246, 0.1),
+      transparent 30%
     ),
-    linear-gradient(135deg, #08080a 0%, #0c0c0f 48%, #09090b 100%);
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(91, 33, 182, 0.08),
+      transparent 35%
+    ),
+    #08080c;
 }
 
 .container {
@@ -19,160 +28,65 @@
   margin: 0 auto;
 }
 
-/* =========================
-   BACK
-========================= */
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
 
 .back {
   display: flex;
   align-items: center;
   gap: 9px;
 
-  margin-bottom: 25px;
-
   padding: 0;
 
   border: none;
   background: transparent;
 
-  color: #77777f;
+  color: #8b8b98;
 
   font-size: 13px;
   font-weight: 700;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back:hover {
-  color: #ff176f;
+  color: #a855f7;
   transform: translateX(-3px);
-}
-
-/* =========================
-   DEVELOPER ACTIONS
-========================= */
-
-.developerActions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 15px;
-
-  margin-bottom: 18px;
-  padding: 16px 18px;
-
-  border-radius: 18px;
-
-  background: rgba(20, 20, 24, 0.92);
-
-  border: 1px solid rgba(255, 255, 255, 0.07);
-
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
 }
 
 .ownerLabel {
   display: flex;
   align-items: center;
-  gap: 11px;
-}
+  gap: 8px;
 
-.ownerIcon {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 12px;
-
-  color: #ff176f;
-
-  background: rgba(255, 0, 105, 0.09);
-
-  border: 1px solid rgba(255, 0, 105, 0.15);
-}
-
-.ownerLabel div {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.ownerLabel span {
-  color: #67676e;
+  color: #747480;
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: 1.5px;
+  letter-spacing: 1.7px;
 }
 
-.ownerLabel strong {
-  font-size: 13px;
+.ownerLabel svg {
+  color: #a855f7;
 }
 
-.editButton,
-.deleteButton {
-  height: 42px;
-
-  padding: 0 15px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 8px;
-
-  border-radius: 11px;
-
-  font-size: 11px;
-  font-weight: 900;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.editButton {
-  color: #fff;
-
-  background: rgba(255, 0, 105, 0.1);
-
-  border: 1px solid rgba(255, 0, 105, 0.22);
-}
-
-.editButton:hover {
-  background: #e90067;
-  border-color: #e90067;
-
-  transform: translateY(-1px);
-}
-
-.deleteButton {
-  color: #ff6f91;
-
-  background: rgba(255, 70, 100, 0.06);
-
-  border: 1px solid rgba(255, 70, 100, 0.15);
-  width: 100%;
-  margin-top: 20px;
-}
-
-.deleteButton:hover {
-  color: #fff;
-
-  background: #b90046;
-
-  border-color: #b90046;
-}
-
-/* =========================
+/* =========================================================
    HERO
-========================= */
+========================================================= */
 
 .hero {
   display: grid;
@@ -184,9 +98,9 @@
   gap: 22px;
 }
 
-/* =========================
+/* =========================================================
    GALLERY
-========================= */
+========================================================= */
 
 .heroGallery {
   min-width: 0;
@@ -199,21 +113,21 @@
 
   overflow: hidden;
 
-  border-radius: 30px;
+  border-radius: 28px;
 
-  background: #111114;
+  background: #101015;
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.6),
-    0 0 70px rgba(174, 0, 76, 0.08);
+    0 35px 100px rgba(0, 0, 0, 0.65),
+    0 0 90px rgba(124, 58, 237, 0.08);
 }
 
 .mainImage img {
   object-fit: cover;
 
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
 }
 
 .mainImage:hover img {
@@ -226,18 +140,18 @@
 
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.5),
     transparent 30%,
     transparent 55%,
-    rgba(0, 0, 0, 0.82)
+    rgba(0, 0, 0, 0.9)
   );
 
   pointer-events: none;
 }
 
-/* =========================
+/* =========================================================
    BADGES
-========================= */
+========================================================= */
 
 .heroBadges {
   position: absolute;
@@ -266,70 +180,79 @@
   font-size: 11px;
   font-weight: 900;
 
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
 }
 
 .premiumBadge {
   color: #fff;
 
-  background: linear-gradient(135deg, #d0005b, #ff176f);
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
 
-  box-shadow: 0 10px 30px rgba(255, 0, 105, 0.3);
+  border: 1px solid rgba(216, 180, 254, 0.25);
+
+  box-shadow: 0 12px 35px rgba(124, 58, 237, 0.35);
 }
 
 .statusBadge {
-  color: #fff;
+  color: #ddd6fe;
 
-  background: rgba(12, 12, 15, 0.75);
+  background: rgba(12, 10, 18, 0.75);
 
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* =========================
-   FAVORITE
-========================= */
+/* =========================================================
+   EDIT IMAGE
+========================================================= */
 
-.favorite {
+.editImageButton {
   position: absolute;
 
-  top: 20px;
-  right: 20px;
+  top: 22px;
+  right: 22px;
 
-  width: 48px;
-  height: 48px;
+  height: 40px;
+
+  padding: 0 14px;
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
 
-  border-radius: 15px;
+  border-radius: 11px;
+
+  background: rgba(8, 8, 12, 0.72);
 
   border: 1px solid rgba(255, 255, 255, 0.13);
 
-  background: rgba(8, 8, 10, 0.7);
-
   color: #fff;
+
+  font-size: 11px;
+  font-weight: 800;
 
   cursor: pointer;
 
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(15px);
 
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 
-  z-index: 3;
+  z-index: 4;
 }
 
-.favorite:hover {
-  background: #e90067;
+.editImageButton:hover {
+  background: #7c3aed;
 
-  border-color: #e90067;
+  border-color: #8b5cf6;
 
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
-/* =========================
+/* =========================================================
    IMAGE TEXT
-========================= */
+========================================================= */
 
 .heroImageText {
   position: absolute;
@@ -346,7 +269,7 @@
 }
 
 .heroImageText span {
-  color: #ff4c94;
+  color: #c084fc;
 
   font-size: 10px;
   font-weight: 900;
@@ -355,15 +278,17 @@
 }
 
 .heroImageText strong {
+  color: #fff;
+
   font-size: 34px;
   line-height: 1;
 
   letter-spacing: -1.2px;
 }
 
-/* =========================
+/* =========================================================
    COUNTER
-========================= */
+========================================================= */
 
 .imageCounter {
   position: absolute;
@@ -375,21 +300,21 @@
 
   border-radius: 10px;
 
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
 
   color: #fff;
 
   font-size: 11px;
   font-weight: 800;
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 
   z-index: 3;
 }
 
-/* =========================
+/* =========================================================
    GALLERY ARROWS
-========================= */
+========================================================= */
 
 .galleryArrow {
   position: absolute;
@@ -409,7 +334,7 @@
 
   border-radius: 14px;
 
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(5, 5, 8, 0.65);
 
   color: #fff;
 
@@ -417,7 +342,12 @@
 
   opacity: 0;
 
-  transition: 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  backdrop-filter: blur(12px);
 
   z-index: 3;
 }
@@ -427,9 +357,8 @@
 }
 
 .galleryArrow:hover {
-  background: #e90067;
-
-  border-color: #e90067;
+  background: #7c3aed;
+  border-color: #8b5cf6;
 }
 
 .galleryLeft {
@@ -440,9 +369,9 @@
   right: 20px;
 }
 
-/* =========================
+/* =========================================================
    THUMBNAILS
-========================= */
+========================================================= */
 
 .thumbnails {
   display: flex;
@@ -450,6 +379,14 @@
   gap: 10px;
 
   margin-top: 12px;
+
+  overflow-x: auto;
+
+  scrollbar-width: none;
+}
+
+.thumbnails::-webkit-scrollbar {
+  display: none;
 }
 
 .thumbnail {
@@ -468,13 +405,16 @@
 
   border: 2px solid transparent;
 
-  background: #151518;
+  background: #15151a;
 
-  opacity: 0.5;
+  opacity: 0.45;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .thumbnail img {
@@ -482,20 +422,21 @@
 }
 
 .thumbnail:hover {
-  opacity: 0.85;
+  opacity: 0.8;
+  transform: translateY(-2px);
 }
 
 .thumbnailActive {
   opacity: 1;
 
-  border-color: #ff176f;
+  border-color: #8b5cf6;
 
-  box-shadow: 0 5px 25px rgba(255, 0, 105, 0.2);
+  box-shadow: 0 5px 25px rgba(124, 58, 237, 0.25);
 }
 
-/* =========================
+/* =========================================================
    HERO INFO
-========================= */
+========================================================= */
 
 .heroInfo {
   min-height: 650px;
@@ -505,17 +446,17 @@
   display: flex;
   flex-direction: column;
 
-  border-radius: 30px;
+  border-radius: 28px;
 
   background: linear-gradient(
     145deg,
-    rgba(27, 27, 31, 0.98),
-    rgba(14, 14, 17, 0.98)
+    rgba(28, 28, 35, 0.98),
+    rgba(14, 14, 19, 0.98)
   );
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.075);
 
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
 }
 
 .eyebrow {
@@ -524,7 +465,7 @@
 
   gap: 8px;
 
-  color: #ff176f;
+  color: #a855f7;
 
   font-size: 10px;
   font-weight: 900;
@@ -534,6 +475,8 @@
 
 .heroInfo h1 {
   margin: 18px 0 8px;
+
+  color: #fff;
 
   font-size: clamp(42px, 4vw, 62px);
 
@@ -545,15 +488,15 @@
 .heroSubtitle {
   margin: 0;
 
-  color: #898990;
+  color: #8d8d99;
 
   font-size: 15px;
   line-height: 1.6;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-========================= */
+========================================================= */
 
 .heroLocation {
   display: flex;
@@ -562,7 +505,7 @@
 
   margin-top: 25px;
 
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .heroLocation div {
@@ -579,14 +522,14 @@
 }
 
 .heroLocation span {
-  color: #77777f;
+  color: #777783;
 
   font-size: 12px;
 }
 
-/* =========================
+/* =========================================================
    DIVIDER
-========================= */
+========================================================= */
 
 .heroDivider {
   width: 100%;
@@ -597,9 +540,9 @@
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
 }
 
-/* =========================
+/* =========================================================
    DEVELOPER
-========================= */
+========================================================= */
 
 .developer {
   display: flex;
@@ -618,11 +561,11 @@
 
   border-radius: 13px;
 
-  background: rgba(255, 0, 105, 0.09);
+  background: rgba(124, 58, 237, 0.11);
 
-  color: #ff176f;
+  color: #a855f7;
 
-  border: 1px solid rgba(255, 0, 105, 0.16);
+  border: 1px solid rgba(168, 85, 247, 0.18);
 }
 
 .developer > div:last-child {
@@ -634,7 +577,7 @@
 
 .developer span,
 .completion span {
-  color: #696970;
+  color: #696973;
 
   font-size: 9px;
   font-weight: 900;
@@ -644,12 +587,14 @@
 
 .developer strong,
 .completion strong {
+  color: #fff;
+
   font-size: 14px;
 }
 
-/* =========================
+/* =========================================================
    HERO STATS
-========================= */
+========================================================= */
 
 .heroStats {
   display: grid;
@@ -673,22 +618,31 @@
 
   border-radius: 14px;
 
-  background: #202024;
+  background: #1c1c22;
 
   border: 1px solid rgba(255, 255, 255, 0.055);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.heroStats > div:hover {
+  background: #202026;
+  border-color: rgba(168, 85, 247, 0.18);
 }
 
 .heroStats svg {
   width: 18px;
 
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .heroStats span {
   display: flex;
   flex-direction: column;
 
-  color: #6d6d74;
+  color: #6d6d78;
 
   font-size: 9px;
 }
@@ -699,9 +653,9 @@
   font-size: 13px;
 }
 
-/* =========================
+/* =========================================================
    COMPLETION
-========================= */
+========================================================= */
 
 .completion {
   display: flex;
@@ -717,11 +671,11 @@
 
   background: linear-gradient(
     110deg,
-    rgba(255, 0, 105, 0.09),
-    rgba(255, 0, 105, 0.015)
+    rgba(124, 58, 237, 0.14),
+    rgba(124, 58, 237, 0.025)
   );
 
-  border: 1px solid rgba(255, 0, 105, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.15);
 }
 
 .completionIcon {
@@ -736,7 +690,9 @@
 
   color: #fff;
 
-  background: #e90067;
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
 }
 
 .completion div:last-child {
@@ -746,12 +702,21 @@
   gap: 4px;
 }
 
-/* =========================
-   PRIMARY BUTTON
-========================= */
+/* =========================================================
+   MANAGEMENT BUTTONS
+========================================================= */
+
+.managementButtons {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: auto;
+}
 
 .primaryButton {
-  width: 100%;
+  flex: 1;
+
   height: 54px;
 
   margin-top: 20px;
@@ -766,7 +731,7 @@
 
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #d4005d, #ff176f);
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
 
   color: #fff;
 
@@ -775,33 +740,77 @@
 
   cursor: pointer;
 
-  box-shadow: 0 15px 35px rgba(255, 0, 105, 0.2);
+  box-shadow: 0 15px 35px rgba(124, 58, 237, 0.22);
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .primaryButton:hover {
   transform: translateY(-2px);
 
-  box-shadow: 0 18px 40px rgba(255, 0, 105, 0.3);
+  box-shadow: 0 18px 42px rgba(124, 58, 237, 0.35);
 }
 
-/* =========================
+.actionButton {
+  width: 54px;
+  height: 54px;
+
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.deleteButton {
+  color: #f87171;
+
+  background: rgba(239, 68, 68, 0.06);
+
+  border: 1px solid rgba(239, 68, 68, 0.16);
+}
+
+.deleteButton:hover {
+  color: #fff;
+
+  background: #dc2626;
+
+  border-color: #dc2626;
+
+  transform: translateY(-2px);
+}
+
+/* =========================================================
    SECTIONS
-========================= */
+========================================================= */
 
 .section {
   margin-top: 22px;
 
   padding: 34px;
 
-  border-radius: 25px;
+  border-radius: 24px;
 
-  background: #111114;
+  background: linear-gradient(
+    145deg,
+    rgba(19, 19, 24, 0.98),
+    rgba(13, 13, 17, 0.98)
+  );
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
 }
 
 .sectionHeader {
@@ -825,15 +834,15 @@
 
   border-radius: 13px;
 
-  background: rgba(255, 0, 105, 0.08);
+  background: rgba(124, 58, 237, 0.1);
 
-  border: 1px solid rgba(255, 0, 105, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.16);
 
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .sectionHeader span {
-  color: #ff176f;
+  color: #a855f7;
 
   font-size: 9px;
   font-weight: 900;
@@ -851,9 +860,9 @@
   letter-spacing: -0.7px;
 }
 
-/* =========================
+/* =========================================================
    ABOUT
-========================= */
+========================================================= */
 
 .aboutGrid {
   display: grid;
@@ -868,7 +877,7 @@
 .description {
   margin: 0 0 17px;
 
-  color: #9b9ba2;
+  color: #9898a4;
 
   font-size: 15px;
 
@@ -887,34 +896,36 @@
 
   background: linear-gradient(
     145deg,
-    rgba(255, 0, 105, 0.11),
-    rgba(255, 0, 105, 0.025)
+    rgba(124, 58, 237, 0.14),
+    rgba(124, 58, 237, 0.025)
   );
 
-  border: 1px solid rgba(255, 0, 105, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.16);
 }
 
 .aboutHighlight svg {
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .aboutHighlight strong {
+  color: #fff;
+
   font-size: 20px;
 
   line-height: 1.2;
 }
 
 .aboutHighlight span {
-  color: #77777f;
+  color: #777783;
 
   font-size: 12px;
 
   line-height: 1.6;
 }
 
-/* =========================
+/* =========================================================
    PROJECT DETAILS
-========================= */
+========================================================= */
 
 .projectDetails {
   display: grid;
@@ -938,19 +949,23 @@
 
   border-radius: 15px;
 
-  background: #19191c;
+  background: #19191f;
 
   border: 1px solid rgba(255, 255, 255, 0.045);
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .projectDetails > div:hover {
-  border-color: rgba(255, 0, 105, 0.16);
+  border-color: rgba(168, 85, 247, 0.2);
+
+  transform: translateY(-2px);
 }
 
 .projectDetails span {
-  color: #696970;
+  color: #696973;
 
   font-size: 10px;
 }
@@ -961,9 +976,9 @@
   font-size: 13px;
 }
 
-/* =========================
+/* =========================================================
    ADVANTAGES
-========================= */
+========================================================= */
 
 .advantages {
   display: grid;
@@ -982,15 +997,20 @@
 
   border-radius: 17px;
 
-  background: #19191c;
+  background: #19191f;
 
   border: 1px solid rgba(255, 255, 255, 0.05);
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .advantage:hover {
-  border-color: rgba(255, 0, 105, 0.2);
+  background: #1d1d24;
+
+  border-color: rgba(168, 85, 247, 0.22);
 
   transform: translateY(-2px);
 }
@@ -1007,28 +1027,30 @@
 
   border-radius: 12px;
 
-  background: rgba(255, 0, 105, 0.09);
+  background: rgba(124, 58, 237, 0.1);
 
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .advantage strong {
+  color: #fff;
+
   font-size: 14px;
 }
 
 .advantage p {
   margin: 6px 0 0;
 
-  color: #707077;
+  color: #70707b;
 
   font-size: 11px;
 
   line-height: 1.6;
 }
 
-/* =========================
+/* =========================================================
    ARCHITECTURE
-========================= */
+========================================================= */
 
 .architectureGrid {
   display: grid;
@@ -1045,13 +1067,23 @@
 
   border-radius: 17px;
 
-  background: linear-gradient(145deg, #1b1b1f, #131316);
+  background: linear-gradient(145deg, #1c1c22, #131318);
 
   border: 1px solid rgba(255, 255, 255, 0.05);
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.architectureItem:hover {
+  border-color: rgba(168, 85, 247, 0.18);
+
+  transform: translateY(-2px);
 }
 
 .architectureItem > span {
-  color: #ff176f;
+  color: #a855f7;
 
   font-size: 11px;
   font-weight: 900;
@@ -1060,22 +1092,24 @@
 .architectureItem h3 {
   margin: 27px 0 10px;
 
+  color: #fff;
+
   font-size: 17px;
 }
 
 .architectureItem p {
   margin: 0;
 
-  color: #797980;
+  color: #797984;
 
   font-size: 12px;
 
   line-height: 1.7;
 }
 
-/* =========================
+/* =========================================================
    INFRASTRUCTURE
-========================= */
+========================================================= */
 
 .infrastructure {
   display: flex;
@@ -1095,22 +1129,32 @@
 
   border-radius: 11px;
 
-  background: #1a1a1d;
+  background: #1a1a20;
 
   border: 1px solid rgba(255, 255, 255, 0.055);
 
-  color: #b3b3b8;
+  color: #b3b3bc;
 
   font-size: 12px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.infrastructureItem:hover {
+  background: #202026;
+
+  border-color: rgba(168, 85, 247, 0.18);
 }
 
 .infrastructureItem svg {
-  color: #ff176f;
+  color: #a855f7;
 }
 
-/* =========================
+/* =========================================================
    ENGINEERING
-========================= */
+========================================================= */
 
 .engineering {
   display: grid;
@@ -1130,15 +1174,25 @@
 
   border-radius: 15px;
 
-  background: #19191c;
+  background: #19191f;
 
   border: 1px solid rgba(255, 255, 255, 0.05);
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.engineeringItem:hover {
+  border-color: rgba(168, 85, 247, 0.2);
+
+  transform: translateY(-2px);
 }
 
 .engineeringItem > svg {
   width: 20px;
 
-  color: #ff176f;
+  color: #a855f7;
 }
 
 .engineeringItem div {
@@ -1149,36 +1203,42 @@
 }
 
 .engineeringItem span {
-  color: #696970;
+  color: #696973;
 
   font-size: 10px;
 }
 
 .engineeringItem strong {
+  color: #fff;
+
   font-size: 12px;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-========================= */
+========================================================= */
 
-.address {
+.addressBlock {
   padding: 25px 28px;
 
   border-radius: 18px;
 
-  background: linear-gradient(135deg, #19191c, #131316);
+  background: linear-gradient(135deg, #19191f, #131318);
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.address:hover {
-  border-color: rgba(255, 0, 105, 0.16);
+.addressBlock:hover {
+  border-color: rgba(168, 85, 247, 0.2);
+
+  transform: translateY(-2px);
 }
 
-.address strong {
+.addressBlock strong {
   color: #fff;
 
   font-size: 18px;
@@ -1186,103 +1246,170 @@
   line-height: 1.5;
 }
 
-/* =========================
-   CTA
-========================= */
+/* =========================================================
+   DELETE MODAL
+========================================================= */
 
-.apartmentsCta {
-  margin-top: 22px;
+.modalOverlay {
+  position: fixed;
+  inset: 0;
 
-  padding: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 30px;
-
-  border-radius: 25px;
-
-  background:
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(255, 0, 105, 0.22),
-      transparent 35%
-    ),
-    linear-gradient(135deg, #17171b, #0e0e11);
-
-  border: 1px solid rgba(255, 0, 105, 0.18);
-
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-}
-
-.apartmentsCta span {
-  color: #ff176f;
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: 2px;
-}
-
-.apartmentsCta h2 {
-  margin: 8px 0;
-
-  font-size: 30px;
-
-  letter-spacing: -1px;
-}
-
-.apartmentsCta p {
-  margin: 0;
-
-  max-width: 500px;
-
-  color: #77777f;
-
-  font-size: 13px;
-
-  line-height: 1.6;
-}
-
-.apartmentsCta button {
-  flex-shrink: 0;
-
-  height: 52px;
-
-  padding: 0 22px;
+  z-index: 9999;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 9px;
+  padding: 24px;
 
-  border: none;
+  background: rgba(3, 3, 6, 0.75);
 
-  border-radius: 13px;
+  backdrop-filter: blur(10px);
+}
 
-  background: #e90067;
+.deleteModal {
+  width: min(100%, 460px);
+
+  padding: 32px;
+
+  background: linear-gradient(145deg, #1d1d24, #101015);
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 24px;
+
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+
+  animation: deleteModalIn 0.2s ease-out;
+}
+
+.deleteModalIcon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  color: #f87171;
+
+  background: rgba(239, 68, 68, 0.09);
+
+  border: 1px solid rgba(239, 68, 68, 0.15);
+
+  border-radius: 14px;
+}
+
+.deleteModalContent h3 {
+  margin: 0 0 10px;
 
   color: #fff;
 
-  font-size: 12px;
-  font-weight: 900;
+  font-size: 22px;
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.deleteModalContent p {
+  margin: 0;
+
+  color: #92929d;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+.deleteModalActions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+.cancelDeleteButton,
+.confirmDeleteButton {
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
 }
 
-.apartmentsCta button:hover {
-  transform: translateY(-2px);
+.cancelDeleteButton {
+  flex: 1;
 
-  background: #ff176f;
+  color: #dddde5;
+
+  background: #202027;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* =========================
+.cancelDeleteButton:hover {
+  background: #292930;
+}
+
+.confirmDeleteButton {
+  flex: 1;
+
+  color: #fff;
+
+  background: #dc2626;
+
+  border: 1px solid #dc2626;
+}
+
+.confirmDeleteButton:hover {
+  background: #b91c1c;
+
+  border-color: #b91c1c;
+}
+
+.cancelDeleteButton:active,
+.confirmDeleteButton:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes deleteModalIn {
+  from {
+    opacity: 0;
+
+    transform: translateY(10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
    TABLET
-========================= */
+========================================================= */
 
 @media (max-width: 1100px) {
   .page {
@@ -1318,27 +1445,21 @@
   }
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 700px) {
   .page {
     padding: 20px 14px 55px;
   }
 
-  .developerActions {
+  .topBar {
     align-items: flex-start;
-    flex-direction: column;
   }
 
-  .actions {
-    width: 100%;
-  }
-
-  .editButton,
-  .deleteButton {
-    flex: 1;
+  .ownerLabel {
+    display: none;
   }
 
   .mainImage {
@@ -1383,10 +1504,6 @@
     height: 40px;
   }
 
-  .thumbnails {
-    overflow-x: auto;
-  }
-
   .section {
     padding: 23px;
 
@@ -1409,164 +1526,27 @@
     grid-template-columns: 1fr;
   }
 
-  .apartmentsCta {
-    padding: 27px;
-
-    flex-direction: column;
-
-    align-items: flex-start;
+  .managementButtons {
+    flex-direction: row;
   }
 
-  .apartmentsCta button {
-    width: 100%;
-  }
-}
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 24px;
-
-  background: rgba(0, 0, 0, 0.58);
-  backdrop-filter: blur(8px);
-}
-
-.deleteModal {
-  width: min(100%, 460px);
-
-  padding: 32px;
-
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 24px;
-
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
-
-  animation: deleteModalIn 0.2s ease-out;
-}
-
-.deleteModalIcon {
-  width: 52px;
-  height: 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 20px;
-
-  color: #dc2626;
-  background: #fef2f2;
-
-  border-radius: 14px;
-}
-
-.deleteModalContent h3 {
-  margin: 0 0 10px;
-
-  color: #111111;
-
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.deleteModalContent p {
-  margin: 0;
-
-  color: #6b7280;
-
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.deleteModalActions {
-  display: flex;
-  gap: 12px;
-
-  margin-top: 28px;
-}
-
-.cancelDeleteButton,
-.confirmDeleteButton {
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  border-radius: 12px;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.cancelDeleteButton {
-  flex: 1;
-
-  color: #111111;
-  background: #ffffff;
-
-  border: 1px solid #d1d5db;
-}
-
-.cancelDeleteButton:hover {
-  background: #f5f5f5;
-}
-
-.confirmDeleteButton {
-  flex: 1;
-
-  color: #ffffff;
-  background: #dc2626;
-
-  border: 1px solid #dc2626;
-}
-
-.confirmDeleteButton:hover {
-  background: #b91c1c;
-  border-color: #b91c1c;
-}
-
-.cancelDeleteButton:active,
-.confirmDeleteButton:active {
-  transform: scale(0.98);
-}
-
-@keyframes deleteModalIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.97);
+  .primaryButton {
+    min-width: 0;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  .actionButton {
+    flex-shrink: 0;
   }
-}
 
-@media (max-width: 600px) {
   .modalOverlay {
     align-items: flex-end;
+
     padding: 12px;
   }
 
   .deleteModal {
     padding: 24px;
+
     border-radius: 20px;
   }
 
@@ -1576,6 +1556,45 @@
 
   .cancelDeleteButton,
   .confirmDeleteButton {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .mainImage {
+    height: 350px;
+  }
+
+  .heroInfo {
+    padding: 20px;
+  }
+
+  .heroInfo h1 {
+    font-size: 36px;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr;
+  }
+
+  .heroStats > div:last-child {
+    grid-column: auto;
+  }
+
+  .managementButtons {
+    flex-direction: column;
+  }
+
+  .actionButton {
     width: 100%;
   }
 }

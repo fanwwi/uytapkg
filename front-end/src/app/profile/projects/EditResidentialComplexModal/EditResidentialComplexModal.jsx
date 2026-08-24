@@ -14,6 +14,9 @@ import {
   ImagePlus,
   Upload,
   Trash2,
+  Warehouse,
+  Maximize,
+  Blocks,
 } from "lucide-react";
 
 import styles from "./EditResidentialComplexModal.module.css";
@@ -22,6 +25,15 @@ import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBla
 const statuses = ["Проект", "Строительство", "Сдан"];
 
 const classes = ["Эконом", "Комфорт", "Бизнес", "Премиум"];
+
+const constructions = [
+  "Монолит",
+  "Монолитно-кирпичный",
+  "Кирпичный",
+  "Панельный",
+  "Каркасно-монолитный",
+  "Газобетон",
+];
 
 const amenities = [
   "Детская площадка",
@@ -47,11 +59,15 @@ const initialForm = {
   description: "",
   status: "Строительство",
   class: "Комфорт",
+  construction: "Монолит",
   completionDate: "",
   floors: "",
+  blocks: "",
   apartments: "",
   parking: "",
   area: "",
+  landArea: "",
+  ceilingHeight: "",
 };
 
 export default function EditResidentialComplexModal({
@@ -73,11 +89,15 @@ export default function EditResidentialComplexModal({
       description: complex.description || "",
       status: complex.status || "Строительство",
       class: complex.class || "Комфорт",
+      construction: complex.construction || "Монолит",
       completionDate: complex.completionDate || "",
       floors: complex.floors ?? "",
+      blocks: complex.blocks ?? "",
       apartments: complex.apartments ?? "",
       parking: complex.parking ?? "",
       area: complex.area ?? "",
+      landArea: complex.landArea ?? "",
+      ceilingHeight: complex.ceilingHeight ?? "",
     });
 
     setSelectedAmenities(complex.amenities || []);
@@ -186,9 +206,12 @@ export default function EditResidentialComplexModal({
       ...form,
 
       floors: Number(form.floors) || 0,
+      blocks: Number(form.blocks) || 0,
       apartments: Number(form.apartments) || 0,
       parking: Number(form.parking) || 0,
       area: Number(form.area) || 0,
+      landArea: Number(form.landArea) || 0,
+      ceilingHeight: Number(form.ceilingHeight) || 0,
 
       amenities: selectedAmenities,
 
@@ -242,7 +265,7 @@ export default function EditResidentialComplexModal({
           </button>
         </header>
 
-        {/* SCROLL AREA */}
+        {/* BODY */}
 
         <div className={styles.modalBody}>
           <form onSubmit={handleSubmit} className={styles.form}>
@@ -373,6 +396,18 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
+                  <label>Конструкция</label>
+
+                  <CustomSelectBlack
+                    icon={Blocks}
+                    title="Конструкция"
+                    options={constructions}
+                    value={form.construction}
+                    setValue={(value) => setField("construction", value)}
+                  />
+                </div>
+
+                <div className={styles.field}>
                   <label htmlFor="completion-date">Дата сдачи</label>
 
                   <div className={styles.inputWithIcon}>
@@ -399,6 +434,24 @@ export default function EditResidentialComplexModal({
                       type="number"
                       name="floors"
                       value={form.floors}
+                      onChange={handleChange}
+                      min="1"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="complex-blocks">Количество блоков</label>
+
+                  <div className={styles.inputWithIcon}>
+                    <Blocks />
+
+                    <input
+                      id="complex-blocks"
+                      type="number"
+                      name="blocks"
+                      value={form.blocks}
                       onChange={handleChange}
                       min="1"
                       placeholder="0"
@@ -443,19 +496,43 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-area">Площадь территории</label>
+                  <label htmlFor="complex-land-area">
+                    Площадь территории, соток
+                  </label>
 
                   <div className={styles.inputWithIcon}>
-                    <Ruler />
+                    <Maximize />
 
                     <input
-                      id="complex-area"
+                      id="complex-land-area"
                       type="number"
-                      name="area"
-                      value={form.area}
+                      name="landArea"
+                      value={form.landArea}
                       onChange={handleChange}
                       min="0"
+                      step="0.01"
                       placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="complex-ceiling-height">
+                    Высота потолков, м
+                  </label>
+
+                  <div className={styles.inputWithIcon}>
+                    <Warehouse />
+
+                    <input
+                      id="complex-ceiling-height"
+                      type="number"
+                      name="ceilingHeight"
+                      value={form.ceilingHeight}
+                      onChange={handleChange}
+                      min="0"
+                      step="0.01"
+                      placeholder="2.8"
                     />
                   </div>
                 </div>
@@ -501,10 +578,6 @@ export default function EditResidentialComplexModal({
               </div>
             </section>
 
-            {/* 04 — PHOTOS */}
-
-            {/* SUBMIT */}
-
             <div className={styles.formBottomSpace} />
           </form>
         </div>
@@ -517,8 +590,7 @@ export default function EditResidentialComplexModal({
           </button>
 
           <button
-            type="submit"
-            form={undefined}
+            type="button"
             className={styles.save}
             onClick={(event) => {
               const formElement = event.currentTarget

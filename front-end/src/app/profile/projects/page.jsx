@@ -893,7 +893,7 @@ export default function ResidentialComplexes() {
                   {/* AREA */}
 
                   <div className={styles.editField}>
-                    <label>Площадь территории, м²</label>
+                    <label>Площадь территории, соток</label>
 
                     <div className={styles.editInput}>
                       <Layers3 />

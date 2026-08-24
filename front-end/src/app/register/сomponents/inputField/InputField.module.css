@@ -1,71 +1,136 @@
 .wrapper {
-  height: 58px;
-
   width: 100%;
+  height: 62px;
 
   display: flex;
-
   align-items: center;
+  gap: 14px;
 
-  gap: 12px;
+  padding: 0 20px;
+  box-sizing: border-box;
 
-  padding: 0 18px;
+  background: #17151f;
 
-  background: #fff;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
-  border: 1px solid #e8e8e8;
+  border-radius: 20px;
 
-  border-radius: 18px;
-
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
+
+/* HOVER */
+
+.wrapper:hover {
+  background: #1a1823;
+
+  border-color: rgba(139, 92, 246, 0.4);
+
+  transform: translateY(-1px);
+}
+
+/* FOCUS */
 
 .wrapper:focus-within {
-  border-color: #ff006f;
+  background: #191722;
 
-  box-shadow: 0 0 0 4px rgba(255, 0, 111, 0.12);
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.08),
+    0 0 25px rgba(139, 92, 246, 0.3),
+    0 0 50px rgba(139, 92, 246, 0.08);
 }
+
+/* ICON */
 
 .icon {
   width: 21px;
-
   height: 21px;
 
-  color: #ff006f;
+  color: #a855f7;
+
+  flex-shrink: 0;
+
+  transition:
+    color 0.3s ease,
+    filter 0.3s ease,
+    transform 0.3s ease;
 }
+
+.wrapper:focus-within .icon {
+  color: #c084fc;
+
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.7));
+
+  transform: scale(1.05);
+}
+
+/* INPUT */
 
 .wrapper input {
   flex: 1;
+
+  min-width: 0;
 
   border: none;
 
   outline: none;
 
-  background: none;
+  background: transparent;
 
   font-size: 14px;
 
-  color: #111;
+  color: #ffffff;
 }
 
 .wrapper input::placeholder {
-  color: #999;
+  color: #777281;
+
+  transition: color 0.3s ease;
 }
+
+.wrapper:focus-within input::placeholder {
+  color: #8d8798;
+}
+
+/* PASSWORD EYE */
 
 .eye {
   border: none;
 
-  background: none;
+  background: transparent;
 
   cursor: pointer;
 
   display: flex;
 
-  color: #777;
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 4px;
+
+  color: #777281;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+.eye:hover {
+  color: #a855f7;
+
+  transform: scale(1.08);
+
+  filter: drop-shadow(0 0 7px rgba(168, 85, 247, 0.6));
 }
 
 .eye svg {
   width: 20px;
-
   height: 20px;
 }

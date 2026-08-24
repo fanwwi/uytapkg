@@ -1,31 +1,40 @@
 .page {
-  --bg: #09090b;
-  --card: #111114;
-  --card-2: #151519;
-  --card-3: #1a1a20;
+  --bg: #08080c;
+  --card: #101016;
+  --card-2: #15151d;
+  --card-3: #1b1b25;
 
   --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(230, 0, 88, 0.4);
+  --border-hover: rgba(139, 92, 246, 0.45);
 
-  --text: #f5f5f7;
-  --text-secondary: #b8b8c0;
-  --text-muted: #777780;
+  --text: #f7f7fb;
+  --text-secondary: #b8b7c3;
+  --text-muted: #777684;
 
-  --accent: #e60058;
-  --accent-light: #ff2b78;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --accent-dark: #6d28d9;
 
   position: relative;
 
   min-height: 100vh;
 
-  padding: 70px 40px 100px;
+  padding: 65px 40px 100px;
 
   overflow: hidden;
 
   background:
-    radial-gradient(circle at 15% 10%, rgba(230, 0, 88, 0.08), transparent 30%),
-    radial-gradient(circle at 90% 80%, rgba(230, 0, 88, 0.05), transparent 30%),
-    var(--bg);
+    radial-gradient(
+      circle at 10% 5%,
+      rgba(139, 92, 246, 0.14),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(124, 58, 237, 0.1),
+      transparent 30%
+    ),
+    linear-gradient(180deg, #08080c 0%, #0b0b10 100%);
 
   color: var(--text);
 
@@ -38,6 +47,10 @@
   box-sizing: border-box;
 }
 
+/* =========================
+   BACKGROUND
+========================= */
+
 .backgroundGlow,
 .backgroundGlowTwo {
   position: absolute;
@@ -47,31 +60,32 @@
 
   border-radius: 50%;
 
-  pointer-events: none;
+  filter: blur(120px);
 
-  filter: blur(100px);
+  pointer-events: none;
 }
 
 .backgroundGlow {
-  top: -300px;
-  left: -200px;
+  top: -330px;
+  left: -230px;
 
-  background: rgba(230, 0, 88, 0.08);
+  background: rgba(139, 92, 246, 0.14);
 }
 
 .backgroundGlowTwo {
   right: -300px;
   bottom: -300px;
 
-  background: rgba(230, 0, 88, 0.05);
+  background: rgba(124, 58, 237, 0.1);
 }
 
-/* =========================================================
+/* =========================
    CONTAINER
-========================================================= */
+========================= */
 
 .container {
   position: relative;
+
   z-index: 1;
 
   width: min(100%, 1180px);
@@ -79,12 +93,12 @@
   margin: 0 auto;
 }
 
-/* =========================================================
+/* =========================
    HEADER
-========================================================= */
+========================= */
 
 .header {
-  margin-bottom: 38px;
+  margin-bottom: 40px;
 }
 
 .back {
@@ -95,7 +109,7 @@
 
   gap: 8px;
 
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 
   color: var(--text-muted);
 
@@ -112,7 +126,7 @@
 .back:hover {
   color: #fff;
 
-  transform: translateX(-3px);
+  transform: translateX(-4px);
 }
 
 .back svg {
@@ -121,22 +135,23 @@
 }
 
 .headerContent {
-  max-width: 760px;
+  max-width: 800px;
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
 
-  gap: 7px;
+  gap: 8px;
 
   color: var(--accent-light);
 
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 850;
 
   text-transform: uppercase;
-  letter-spacing: 1px;
+
+  letter-spacing: 1.5px;
 }
 
 .eyebrow svg {
@@ -145,32 +160,79 @@
 }
 
 .header h1 {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
 
   color: #fff;
 
-  font-size: clamp(34px, 5vw, 50px);
-  line-height: 1.05;
+  font-size: clamp(36px, 5vw, 52px);
+
+  line-height: 1.02;
 
   font-weight: 850;
 
-  letter-spacing: -1.8px;
+  letter-spacing: -2px;
 }
 
 .header p {
-  max-width: 680px;
+  max-width: 700px;
 
-  margin: 15px 0 0;
+  margin: 16px 0 0;
 
   color: var(--text-muted);
 
   font-size: 16px;
+
   line-height: 1.65;
 }
 
-/* =========================================================
+/* =========================
+   ERROR
+========================= */
+
+.error {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(239, 68, 68, 0.2);
+
+  border-radius: 14px;
+
+  background: rgba(239, 68, 68, 0.08);
+
+  color: #fca5a5;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.error span {
+  width: 23px;
+  height: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: rgba(239, 68, 68, 0.15);
+
+  color: #f87171;
+
+  font-weight: 900;
+}
+
+/* =========================
    FORM
-========================================================= */
+========================= */
 
 .form {
   display: flex;
@@ -179,22 +241,37 @@
   gap: 18px;
 }
 
-/* =========================================================
+/* =========================
    CARD
-========================================================= */
+========================= */
 
 .card {
   padding: 34px;
 
   border: 1px solid var(--border);
-  border-radius: 24px;
+
+  border-radius: 25px;
 
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 40%),
     var(--card);
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.025);
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
 }
+
+.card:hover {
+  border-color: rgba(139, 92, 246, 0.16);
+}
+
+/* =========================
+   SECTION HEADER
+========================= */
 
 .sectionHeader {
   display: flex;
@@ -206,21 +283,30 @@
 }
 
 .sectionIcon {
-  width: 48px;
-  height: 48px;
-
-  flex-shrink: 0;
+  width: 49px;
+  height: 49px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(230, 0, 88, 0.18);
-  border-radius: 14px;
+  flex-shrink: 0;
 
-  background: rgba(230, 0, 88, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+
+  border-radius: 15px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.18),
+    rgba(139, 92, 246, 0.05)
+  );
 
   color: var(--accent-light);
+
+  box-shadow:
+    0 8px 25px rgba(139, 92, 246, 0.08),
+    inset 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .sectionIcon svg {
@@ -231,14 +317,15 @@
 .sectionNumber {
   display: block;
 
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 
   color: var(--accent-light);
 
   font-size: 10px;
-  font-weight: 800;
 
-  letter-spacing: 1px;
+  font-weight: 850;
+
+  letter-spacing: 1.5px;
 }
 
 .sectionHeader h2 {
@@ -247,9 +334,12 @@
   color: #fff;
 
   font-size: 22px;
+
   line-height: 1.2;
 
   font-weight: 800;
+
+  letter-spacing: -0.4px;
 }
 
 .sectionHeader p {
@@ -257,20 +347,21 @@
 
   color: var(--text-muted);
 
-  font-size: 14px;
+  font-size: 13px;
+
   line-height: 1.5;
 }
 
-/* =========================================================
+/* =========================
    GRID
-========================================================= */
+========================= */
 
 .grid {
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 22px;
+  gap: 21px;
 }
 
 .full {
@@ -281,6 +372,10 @@
   min-width: 0;
 }
 
+.fieldLarge {
+  grid-column: span 1;
+}
+
 .field label {
   display: block;
 
@@ -289,6 +384,7 @@
   color: var(--text-secondary);
 
   font-size: 13px;
+
   font-weight: 750;
 }
 
@@ -296,15 +392,16 @@
   color: var(--accent-light);
 }
 
-/* =========================================================
+/* =========================
    INPUTS
-========================================================= */
+========================= */
 
 .field input,
 .field textarea {
   width: 100%;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
   border-radius: 15px;
 
   background: var(--card-2);
@@ -312,6 +409,7 @@
   color: #fff;
 
   font-family: inherit;
+
   font-size: 15px;
 
   outline: none;
@@ -340,7 +438,7 @@
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #595961;
+  color: #555562;
 }
 
 .field input:hover,
@@ -350,18 +448,22 @@
 
 .field input:focus,
 .field textarea:focus {
-  border-color: rgba(230, 0, 88, 0.55);
+  border-color: rgba(139, 92, 246, 0.65);
 
-  background: #17171c;
+  background: #181820;
 
   box-shadow:
-    0 0 0 3px rgba(230, 0, 88, 0.08),
-    0 8px 25px rgba(0, 0, 0, 0.18);
+    0 0 0 3px rgba(139, 92, 246, 0.09),
+    0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* =========================================================
-   INPUT WITH ICON
-========================================================= */
+.field input[type="date"] {
+  color-scheme: dark;
+}
+
+/* =========================
+   INPUT ICON
+========================= */
 
 .inputWithIcon {
   position: relative;
@@ -387,6 +489,10 @@
   padding-left: 49px;
 }
 
+/* =========================
+   TEXTAREA
+========================= */
+
 .textareaWrapper {
   position: relative;
 }
@@ -397,14 +503,20 @@
   right: 14px;
   bottom: 12px;
 
-  color: #55555d;
+  padding: 3px 6px;
 
-  font-size: 11px;
+  border-radius: 6px;
+
+  background: rgba(0, 0, 0, 0.25);
+
+  color: #555562;
+
+  font-size: 10px;
 }
 
-/* =========================================================
+/* =========================
    AMENITIES
-========================================================= */
+========================= */
 
 .amenities {
   display: grid;
@@ -415,7 +527,7 @@
 }
 
 .amenity {
-  min-height: 54px;
+  min-height: 55px;
 
   display: flex;
   align-items: center;
@@ -425,14 +537,17 @@
   padding: 10px 13px;
 
   border: 1px solid var(--border);
-  border-radius: 13px;
+
+  border-radius: 14px;
 
   background: var(--card-2);
 
   color: var(--text-secondary);
 
   font-family: inherit;
+
   font-size: 13px;
+
   font-weight: 650;
 
   text-align: left;
@@ -447,7 +562,7 @@
 }
 
 .amenity:hover {
-  border-color: rgba(230, 0, 88, 0.25);
+  border-color: rgba(139, 92, 246, 0.3);
 
   background: var(--card-3);
 
@@ -457,9 +572,13 @@
 }
 
 .amenityActive {
-  border-color: rgba(230, 0, 88, 0.5);
+  border-color: rgba(139, 92, 246, 0.55);
 
-  background: rgba(230, 0, 88, 0.09);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.14),
+    rgba(109, 40, 217, 0.06)
+  );
 
   color: #fff;
 }
@@ -475,6 +594,7 @@
   justify-content: center;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
+
   border-radius: 7px;
 
   background: #101014;
@@ -486,6 +606,8 @@
   background: var(--accent);
 
   color: #fff;
+
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.25);
 }
 
 .amenityCheck svg {
@@ -493,9 +615,9 @@
   height: 13px;
 }
 
-/* =========================================================
+/* =========================
    UPLOAD
-========================================================= */
+========================= */
 
 .uploadTop {
   display: flex;
@@ -518,7 +640,7 @@
 .uploadTop span {
   display: block;
 
-  margin-top: 4px;
+  margin-top: 5px;
 
   color: var(--text-muted);
 
@@ -530,14 +652,16 @@
 
   padding: 7px 11px;
 
-  border: 1px solid rgba(230, 0, 88, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+
   border-radius: 9px;
 
-  background: rgba(230, 0, 88, 0.07);
+  background: rgba(139, 92, 246, 0.08);
 
   color: var(--accent-light);
 
   font-size: 12px;
+
   font-weight: 800;
 }
 
@@ -552,26 +676,37 @@
   gap: 9px;
 
   border: 1px dashed rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
+
+  border-radius: 19px;
 
   background:
-    radial-gradient(circle at center, rgba(230, 0, 88, 0.06), transparent 60%),
-    rgba(255, 255, 255, 0.015);
+    radial-gradient(
+      circle at center,
+      rgba(139, 92, 246, 0.08),
+      transparent 60%
+    ),
+    rgba(255, 255, 255, 0.012);
 
   cursor: pointer;
 
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
 }
 
 .upload:hover {
-  border-color: rgba(230, 0, 88, 0.45);
+  border-color: rgba(139, 92, 246, 0.5);
 
   background:
-    radial-gradient(circle at center, rgba(230, 0, 88, 0.09), transparent 60%),
+    radial-gradient(
+      circle at center,
+      rgba(139, 92, 246, 0.12),
+      transparent 60%
+    ),
     rgba(255, 255, 255, 0.02);
+
+  transform: translateY(-1px);
 }
 
 .upload input {
@@ -579,8 +714,8 @@
 }
 
 .uploadIcon {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
 
   display: flex;
   align-items: center;
@@ -588,22 +723,25 @@
 
   margin-bottom: 4px;
 
-  border-radius: 15px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
-  background: rgba(230, 0, 88, 0.09);
+  border-radius: 16px;
+
+  background: rgba(139, 92, 246, 0.1);
 
   color: var(--accent-light);
 }
 
 .uploadIcon svg {
-  width: 23px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
 }
 
 .upload strong {
   color: #fff;
 
   font-size: 15px;
+
   font-weight: 750;
 }
 
@@ -613,9 +751,9 @@
   font-size: 12px;
 }
 
-/* =========================================================
+/* =========================
    IMAGE GRID
-========================================================= */
+========================= */
 
 .images {
   display: grid;
@@ -635,9 +773,10 @@
   overflow: hidden;
 
   border: 1px solid var(--border);
-  border-radius: 14px;
 
-  background: #0d0d10;
+  border-radius: 15px;
+
+  background: #0c0c10;
 }
 
 .image img {
@@ -652,7 +791,7 @@
 }
 
 .image:hover img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .image::after {
@@ -664,9 +803,9 @@
 
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.32),
     transparent 40%,
-    rgba(0, 0, 0, 0.45)
+    rgba(0, 0, 0, 0.5)
   );
 
   pointer-events: none;
@@ -689,7 +828,10 @@
   color: #fff;
 
   font-size: 10px;
+
   font-weight: 800;
+
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.25);
 }
 
 .imageNumber {
@@ -709,11 +851,12 @@
 
   border-radius: 7px;
 
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.72);
 
   color: #fff;
 
   font-size: 10px;
+
   font-weight: 800;
 }
 
@@ -733,9 +876,10 @@
   justify-content: center;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
+
   border-radius: 8px;
 
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.68);
 
   color: #fff;
 
@@ -747,15 +891,19 @@
 }
 
 .removeImage:hover {
-  background: #d60052;
+  background: #7c3aed;
 
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .removeImage svg {
   width: 14px;
   height: 14px;
 }
+
+/* =========================
+   LIMIT
+========================= */
 
 .limitReached {
   min-height: 54px;
@@ -767,14 +915,16 @@
 
   padding: 0 15px;
 
-  border: 1px solid rgba(230, 0, 88, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+
   border-radius: 13px;
 
-  background: rgba(230, 0, 88, 0.06);
+  background: rgba(139, 92, 246, 0.06);
 
   color: var(--text-secondary);
 
   font-size: 13px;
+
   font-weight: 650;
 }
 
@@ -785,9 +935,9 @@
   color: var(--accent-light);
 }
 
-/* =========================================================
+/* =========================
    ACTIONS
-========================================================= */
+========================= */
 
 .formActions {
   display: flex;
@@ -801,7 +951,7 @@
 
 .cancel,
 .submit {
-  min-height: 54px;
+  min-height: 55px;
 
   display: inline-flex;
   align-items: center;
@@ -809,12 +959,14 @@
 
   gap: 9px;
 
-  padding: 0 22px;
+  padding: 0 23px;
 
-  border-radius: 13px;
+  border-radius: 14px;
 
   font-family: inherit;
+
   font-size: 14px;
+
   font-weight: 750;
 
   text-decoration: none;
@@ -824,7 +976,8 @@
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .cancel {
@@ -836,6 +989,8 @@
 }
 
 .cancel:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+
   background: var(--card-2);
 
   color: #fff;
@@ -844,19 +999,29 @@
 .submit {
   border: 1px solid var(--accent);
 
-  background: var(--accent);
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 
   color: #fff;
 
-  box-shadow: 0 10px 30px rgba(230, 0, 88, 0.18);
+  box-shadow:
+    0 12px 30px rgba(124, 58, 237, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.15);
 }
 
-.submit:hover {
-  background: var(--accent-light);
+.submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #9f70ff, #8b5cf6);
 
   transform: translateY(-2px);
 
-  box-shadow: 0 14px 35px rgba(230, 0, 88, 0.25);
+  box-shadow:
+    0 16px 38px rgba(124, 58, 237, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.submit:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
 }
 
 .submit svg,
@@ -865,17 +1030,13 @@
   height: 17px;
 }
 
-/* =========================================================
+/* =========================
    RESPONSIVE
-========================================================= */
+========================= */
 
 @media (max-width: 900px) {
   .page {
     padding: 45px 22px 70px;
-  }
-
-  .container {
-    width: 100%;
   }
 
   .card {
@@ -897,11 +1058,13 @@
   }
 
   .header {
-    margin-bottom: 25px;
+    margin-bottom: 27px;
   }
 
   .header h1 {
     font-size: 32px;
+
+    letter-spacing: -1.2px;
   }
 
   .header p {
@@ -911,7 +1074,7 @@
   .card {
     padding: 21px 16px;
 
-    border-radius: 18px;
+    border-radius: 19px;
   }
 
   .sectionHeader {
@@ -975,5 +1138,29 @@
   .cancel,
   .submit {
     width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .card {
+    padding: 18px 13px;
+  }
+
+  .header h1 {
+    font-size: 29px;
+  }
+
+  .images {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .uploadTop {
+    flex-direction: column;
+    gap: 10px;
   }
 }

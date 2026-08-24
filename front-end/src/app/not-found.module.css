@@ -2,19 +2,33 @@
   min-height: 100vh;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   position: relative;
-
   overflow: hidden;
 
   padding: 30px;
 
-  background: radial-gradient(circle at top, #250018, #000 55%);
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(124, 58, 237, 0.16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(139, 92, 246, 0.1),
+      transparent 30%
+    ),
+    #09090b;
+
+  color: #f5f5f7;
 }
+
+/* =========================================================
+   BACKGROUND GLOWS
+========================================================= */
 
 .glowOne,
 .glowTwo {
@@ -24,106 +38,128 @@
 
   filter: blur(140px);
 
-  opacity: 0.35;
+  pointer-events: none;
+
+  opacity: 0.28;
 }
 
 .glowOne {
   width: 450px;
-
   height: 450px;
 
-  background: #ff0066;
-
   top: -180px;
-
   left: -150px;
+
+  background: #7c3aed;
 }
 
 .glowTwo {
   width: 350px;
-
   height: 350px;
 
-  background: #ff2990;
-
   right: -120px;
-
   bottom: -120px;
+
+  background: #8b5cf6;
 }
+
+/* =========================================================
+   CARD
+========================================================= */
 
 .card {
   position: relative;
-
   z-index: 2;
 
   width: 100%;
-
   max-width: 650px;
 
   padding: 60px 50px;
 
   text-align: center;
 
-  color: white;
+  color: #fff;
 
-  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
 
-  background: rgba(255, 255, 255, 0.06);
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    ),
+    #111114;
 
   backdrop-filter: blur(25px);
 
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    0 0 70px rgba(124, 58, 237, 0.1);
 }
+
+/* =========================================================
+   ICON
+========================================================= */
 
 .iconBox {
   width: 90px;
-
   height: 90px;
 
   margin: 0 auto 25px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  border-radius: 30px;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 26px;
 
-  background: linear-gradient(135deg, #ff5aa8, #ff0066);
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 
-  box-shadow: 0 20px 50px rgba(255, 0, 102, 0.4);
+  color: #fff;
+
+  box-shadow: 0 20px 50px rgba(124, 58, 237, 0.3);
 }
 
 .iconBox svg {
-  width: 45px;
-
-  height: 45px;
+  width: 42px;
+  height: 42px;
 }
+
+/* =========================================================
+   BADGE
+========================================================= */
 
 .badge {
   display: inline-flex;
-
   align-items: center;
 
   gap: 8px;
 
-  padding: 10px 22px;
+  padding: 9px 18px;
 
+  border: 1px solid rgba(139, 92, 246, 0.18);
   border-radius: 50px;
 
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(124, 58, 237, 0.08);
 
-  font-weight: 700;
+  color: #d4d4d8;
 
-  color: white;
+  font-size: 13px;
+  font-weight: 750;
 }
 
 .badge svg {
-  color: #ff2990;
+  width: 16px;
+  height: 16px;
+
+  color: #a78bfa;
 }
+
+/* =========================================================
+   404 NUMBER
+========================================================= */
 
 .number {
   margin: 20px 0 0;
@@ -134,141 +170,225 @@
 
   font-weight: 1000;
 
-  background: linear-gradient(135deg, #fff, #ff2990);
+  letter-spacing: -6px;
+
+  background: linear-gradient(135deg, #ffffff 20%, #c4b5fd 55%, #7c3aed 100%);
 
   -webkit-background-clip: text;
-
   background-clip: text;
 
   color: transparent;
 }
 
+/* =========================================================
+   TITLE
+========================================================= */
+
 .title {
-  margin-top: 20px;
+  margin: 20px 0 0;
+
+  color: #fff;
 
   font-size: 34px;
 
+  line-height: 1.2;
+
   font-weight: 900;
+
+  letter-spacing: -0.8px;
 }
 
 .title span {
-  color: #ff2990;
+  color: #a78bfa;
 }
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
 
 .description {
   max-width: 520px;
 
-  margin: 25px auto;
+  margin: 25px auto 0;
 
-  color: #aaa;
+  color: #8f8f98;
 
-  font-size: 18px;
+  font-size: 16px;
 
-  line-height: 1.6;
+  line-height: 1.7;
 }
+
+/* =========================================================
+   ACTIONS
+========================================================= */
 
 .actions {
   display: flex;
 
   justify-content: center;
 
-  gap: 15px;
+  gap: 12px;
 
   margin-top: 35px;
 }
 
 .actions a {
-  height: 56px;
+  min-height: 56px;
 
-  padding: 0 30px;
-
-  border-radius: 20px;
+  padding: 0 25px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  gap: 10px;
+  gap: 9px;
 
-  font-size: 16px;
+  border-radius: 15px;
 
-  font-weight: 700;
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 800;
 
   text-decoration: none;
 
   cursor: pointer;
 
-  transition: .35s;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.actions a svg {
+  width: 18px;
+  height: 18px;
 }
 
 .actions a:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
-.actions button:hover {
-  transform: translateY(-5px);
-}
+/* =========================================================
+   PRIMARY
+========================================================= */
 
 .primaryButton {
-  border: none;
+  border: 1px solid rgba(139, 92, 246, 0.55);
 
-  color: white;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 
-  background: linear-gradient(135deg, #ff5aa8, #ff0066);
+  color: #fff;
 
-  box-shadow: 0 15px 35px rgba(255, 0, 102, 0.35);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
 }
+
+.primaryButton:hover {
+  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.4);
+}
+
+/* =========================================================
+   SECONDARY
+========================================================= */
 
 .secondaryButton {
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.09);
 
-  background: white;
+  background: #19191e;
 
-  color: #111;
+  color: #d4d4d8;
 }
+
+.secondaryButton:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: #1d1d24;
+
+  color: #fff;
+}
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
 
 .backButton {
   margin: 25px auto 0;
 
   display: flex;
-
   align-items: center;
 
   gap: 8px;
 
   border: none;
 
-  background: none;
+  background: transparent;
 
-  color: #999;
+  color: #777780;
 
   cursor: pointer;
 
-  font-size: 15px;
+  font-family: inherit;
+  font-size: 14px;
 
-  transition: 0.3s;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .backButton:hover {
-  color: #ff2990;
+  color: #a78bfa;
+
+  transform: translateX(-3px);
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 600px) {
+  .page {
+    padding: 18px;
+  }
+
   .card {
-    padding: 40px 25px;
+    padding: 42px 22px;
+
+    border-radius: 22px;
+  }
+
+  .iconBox {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 22px;
+  }
+
+  .iconBox svg {
+    width: 35px;
+    height: 35px;
   }
 
   .number {
     font-size: 80px;
+
+    letter-spacing: -4px;
   }
 
   .title {
     font-size: 25px;
   }
 
+  .description {
+    font-size: 14px;
+  }
+
   .actions {
     flex-direction: column;
+
+    width: 100%;
+  }
+
+  .actions a {
+    width: 100%;
   }
 }

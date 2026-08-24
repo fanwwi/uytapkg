@@ -1,11 +1,24 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   min-height: 100vh;
   padding: 110px 20px 80px;
 
   background:
-    radial-gradient(circle at 85% 5%, rgba(255, 0, 111, 0.14), transparent 30%),
-    radial-gradient(circle at 5% 50%, rgba(126, 0, 55, 0.12), transparent 30%),
-    linear-gradient(180deg, #08080a 0%, #0d0d10 45%, #09090b 100%);
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(139, 92, 246, 0.16),
+      transparent 30%
+    ),
+    radial-gradient(circle at 5% 50%, rgba(91, 33, 182, 0.12), transparent 32%),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(124, 58, 237, 0.07),
+      transparent 35%
+    ),
+    linear-gradient(180deg, #060608 0%, #0b0b0f 45%, #070709 100%);
 
   color: #f7f7f8;
 
@@ -15,9 +28,9 @@
   gap: 24px;
 }
 
-/* =========================
+/* =========================================================
    TOP BAR
-========================= */
+========================================================= */
 
 .topBar {
   width: 100%;
@@ -31,12 +44,12 @@
 
   padding: 13px 19px;
 
-  background: rgba(24, 24, 28, 0.8);
+  background: rgba(20, 20, 26, 0.82);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 15px;
 
-  color: #a9a9b0;
+  color: #a4a4ae;
 
   text-decoration: none;
 
@@ -54,22 +67,22 @@
 
 .homeButton svg {
   width: 18px;
-  color: #ff1479;
+  color: #8b5cf6;
 }
 
 .homeButton:hover {
   color: #fff;
 
-  background: rgba(35, 35, 40, 0.95);
+  background: rgba(30, 27, 39, 0.95);
 
-  border-color: rgba(255, 0, 111, 0.3);
+  border-color: rgba(139, 92, 246, 0.35);
 
   transform: translateX(-4px);
 }
 
-/* =========================
+/* =========================================================
    PROFILE CARD
-========================= */
+========================================================= */
 
 .profileCard {
   width: 100%;
@@ -85,18 +98,21 @@
 
   gap: 35px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(29, 29, 34, 0.98),
-    rgba(15, 15, 18, 0.98)
-  );
+  background:
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(139, 92, 246, 0.08),
+      transparent 32%
+    ),
+    linear-gradient(145deg, rgba(25, 25, 32, 0.98), rgba(12, 12, 16, 0.98));
 
   border: 1px solid rgba(255, 255, 255, 0.075);
 
   border-radius: 32px;
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.5),
+    0 35px 100px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(109, 40, 217, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
@@ -114,11 +130,11 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 0, 111, 0.5),
+    rgba(139, 92, 246, 0.55),
     transparent
   );
 
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .topGlow {
@@ -130,18 +146,18 @@
   right: -160px;
   top: -170px;
 
-  background: #ff006f;
+  background: #8b5cf6;
 
-  opacity: 0.1;
+  opacity: 0.12;
 
-  filter: blur(110px);
+  filter: blur(115px);
 
   pointer-events: none;
 }
 
-/* =========================
+/* =========================================================
    AVATAR
-========================= */
+========================================================= */
 
 .avatarWrapper {
   position: relative;
@@ -160,16 +176,21 @@
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(135deg, #5e002d, #ff006f);
+  background: radial-gradient(
+    circle at 30% 20%,
+    #a78bfa,
+    #7c3aed 48%,
+    #2e1065 100%
+  );
 
   color: #fff;
 
-  border: 5px solid #202025;
+  border: 5px solid #1d1b24;
 
   box-shadow:
-    0 0 0 1px rgba(255, 0, 111, 0.35),
+    0 0 0 1px rgba(139, 92, 246, 0.4),
     0 20px 55px rgba(0, 0, 0, 0.55),
-    0 0 45px rgba(255, 0, 111, 0.16);
+    0 0 50px rgba(139, 92, 246, 0.18);
 }
 
 .avatar img {
@@ -186,9 +207,9 @@
   opacity: 0.9;
 }
 
-/* =========================
+/* =========================================================
    INFO
-========================= */
+========================================================= */
 
 .info {
   flex: 1;
@@ -219,11 +240,11 @@
 
   border-radius: 999px;
 
-  background: rgba(255, 0, 111, 0.1);
+  background: rgba(139, 92, 246, 0.1);
 
-  border: 1px solid rgba(255, 0, 111, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.24);
 
-  color: #ff4a9b;
+  color: #a78bfa;
 
   font-size: 12px;
 
@@ -234,9 +255,9 @@
   letter-spacing: 0.4px;
 }
 
-/* =========================
+/* =========================================================
    CONTACTS
-========================= */
+========================================================= */
 
 .contacts {
   display: flex;
@@ -265,16 +286,16 @@
 }
 
 .phone {
-  background: #202024;
+  background: #19191f;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.065);
 
   color: #c5c5ca;
 }
 
 .phone svg {
   width: 17px;
-  color: #ff1479;
+  color: #8b5cf6;
 }
 
 .whatsapp {
@@ -301,9 +322,9 @@
   transform: translateY(-2px);
 }
 
-/* =========================
+/* =========================================================
    EDIT
-========================= */
+========================================================= */
 
 .edit {
   position: absolute;
@@ -314,13 +335,13 @@
   width: 50px;
   height: 50px;
 
-  border: 1px solid rgba(255, 0, 111, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.3);
 
   border-radius: 14px;
 
-  background: rgba(255, 0, 111, 0.1);
+  background: rgba(139, 92, 246, 0.1);
 
-  color: #ff3d91;
+  color: #a78bfa;
 
   display: flex;
   align-items: center;
@@ -336,20 +357,20 @@
 }
 
 .edit:hover {
-  background: #ff006f;
+  background: #8b5cf6;
 
-  border-color: #ff006f;
+  border-color: #8b5cf6;
 
   color: white;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 12px 35px rgba(255, 0, 111, 0.25);
+  box-shadow: 0 12px 35px rgba(139, 92, 246, 0.3);
 }
 
-/* =========================
+/* =========================================================
    ABOUT
-========================= */
+========================================================= */
 
 .about {
   width: 100%;
@@ -357,17 +378,19 @@
 
   padding: 28px 32px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(23, 23, 27, 0.98),
-    rgba(15, 15, 18, 0.98)
-  );
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.05),
+      transparent 30%
+    ),
+    linear-gradient(145deg, rgba(22, 22, 28, 0.98), rgba(12, 12, 16, 0.98));
 
   border: 1px solid rgba(255, 255, 255, 0.065);
 
   border-radius: 25px;
 
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
 
   position: relative;
 }
@@ -383,9 +406,9 @@
   width: 45px;
   height: 2px;
 
-  background: #ff006f;
+  background: #8b5cf6;
 
-  box-shadow: 0 0 15px rgba(255, 0, 111, 0.5);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.55);
 }
 
 .about h3 {
@@ -399,16 +422,16 @@
 .about p {
   margin: 0;
 
-  color: #88888f;
+  color: #888892;
 
   font-size: 14px;
 
   line-height: 1.75;
 }
 
-/* =========================
+/* =========================================================
    ACTIONS
-========================= */
+========================================================= */
 
 .actions {
   width: 100%;
@@ -432,11 +455,13 @@
 
   gap: 17px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(24, 24, 28, 0.98),
-    rgba(15, 15, 18, 0.98)
-  );
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.035),
+      transparent 35%
+    ),
+    linear-gradient(145deg, rgba(22, 22, 28, 0.98), rgba(12, 12, 16, 0.98));
 
   border: 1px solid rgba(255, 255, 255, 0.065);
 
@@ -459,22 +484,24 @@
 .logout:hover {
   transform: translateY(-5px);
 
-  border-color: rgba(255, 0, 111, 0.28);
+  border-color: rgba(139, 92, 246, 0.3);
 
-  background: linear-gradient(
-    145deg,
-    rgba(31, 22, 27, 0.98),
-    rgba(18, 16, 19, 0.98)
-  );
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.08),
+      transparent 40%
+    ),
+    linear-gradient(145deg, rgba(28, 24, 38, 0.98), rgba(15, 14, 20, 0.98));
 
   box-shadow:
-    0 20px 55px rgba(0, 0, 0, 0.45),
-    0 0 35px rgba(255, 0, 111, 0.05);
+    0 20px 55px rgba(0, 0, 0, 0.48),
+    0 0 35px rgba(139, 92, 246, 0.06);
 }
 
-/* =========================
+/* =========================================================
    ICON
-========================= */
+========================================================= */
 
 .icon {
   width: 56px;
@@ -490,19 +517,19 @@
 
   background: linear-gradient(
     145deg,
-    rgba(255, 0, 111, 0.15),
-    rgba(255, 0, 111, 0.05)
+    rgba(139, 92, 246, 0.17),
+    rgba(139, 92, 246, 0.05)
   );
 
-  border: 1px solid rgba(255, 0, 111, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.18);
 }
 
 .icon svg {
   width: 25px;
 
-  color: #ff1479;
+  color: #a78bfa;
 
-  filter: drop-shadow(0 0 8px rgba(255, 0, 111, 0.25));
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
 }
 
 .actions h3 {
@@ -518,14 +545,14 @@
 .actions p {
   margin: 5px 0 0;
 
-  color: #6f6f76;
+  color: #6f6f78;
 
   font-size: 12px;
 }
 
-/* =========================
+/* =========================================================
    LOGOUT
-========================= */
+========================================================= */
 
 .logout {
   font-family: inherit;
@@ -550,22 +577,22 @@
 }
 
 .logout:hover {
-  border-color: rgba(255, 60, 90, 0.3);
+  border-color: rgba(255, 70, 90, 0.3);
 }
 
 .logout:hover .icon {
-  background: rgba(255, 60, 90, 0.1);
+  background: rgba(255, 70, 90, 0.1);
 
-  border-color: rgba(255, 60, 90, 0.2);
+  border-color: rgba(255, 70, 90, 0.2);
 }
 
 .logout:hover .icon svg {
   color: #ff5570;
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 750px) {
   .page {

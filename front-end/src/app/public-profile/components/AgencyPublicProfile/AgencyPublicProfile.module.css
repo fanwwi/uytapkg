@@ -3,16 +3,20 @@
   isolation: isolate;
 
   min-height: 100vh;
-
   padding: 90px 32px 80px;
 
   overflow: hidden;
 
-  color: #fff;
+  color: #ffffff;
 
   background:
-    radial-gradient(circle at 80% 0%, rgba(255, 0, 111, 0.1), transparent 28%),
-    linear-gradient(180deg, #08080a 0%, #0b0b0e 48%, #08080a 100%);
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(124, 58, 237, 0.16),
+      transparent 30%
+    ),
+    radial-gradient(circle at 5% 70%, rgba(91, 33, 182, 0.08), transparent 28%),
+    linear-gradient(180deg, #07070a 0%, #0a0a0f 48%, #07070a 100%);
 }
 
 .container {
@@ -20,7 +24,6 @@
   z-index: 1;
 
   width: min(1180px, 100%);
-
   margin: 0 auto;
 }
 
@@ -32,30 +35,77 @@
 .backgroundGlowSecondary {
   position: fixed;
 
-  width: 500px;
-  height: 500px;
+  width: 520px;
+  height: 520px;
 
   border-radius: 50%;
 
   pointer-events: none;
-
   z-index: -1;
 
-  filter: blur(150px);
+  filter: blur(160px);
 }
 
 .backgroundGlow {
   top: -300px;
   right: -180px;
 
-  background: rgba(255, 0, 111, 0.09);
+  background: rgba(124, 58, 237, 0.13);
 }
 
 .backgroundGlowSecondary {
-  bottom: -300px;
-  left: -250px;
+  bottom: -320px;
+  left: -260px;
 
-  background: rgba(255, 0, 111, 0.045);
+  background: rgba(109, 40, 217, 0.07);
+}
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 18px;
+  padding: 11px 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+
+  background: rgba(15, 15, 20, 0.75);
+
+  color: #9d9da8;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  backdrop-filter: blur(18px);
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.backButton:hover {
+  color: #ffffff;
+
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: #15151b;
+
+  transform: translateX(-3px);
+}
+
+.backButton svg {
+  color: #a855f7;
 }
 
 /* =========================================================
@@ -70,7 +120,6 @@
   padding: 34px;
 
   border: 1px solid rgba(255, 255, 255, 0.075);
-
   border-radius: 28px;
 
   background:
@@ -79,10 +128,10 @@
       rgba(255, 255, 255, 0.045),
       rgba(255, 255, 255, 0.012)
     ),
-    #101014;
+    #101015;
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.45),
+    0 35px 100px rgba(0, 0, 0, 0.5),
     inset 0 1px rgba(255, 255, 255, 0.035);
 }
 
@@ -100,27 +149,27 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 0, 111, 0.8),
+    rgba(139, 92, 246, 0.9),
     transparent
   );
 
-  box-shadow: 0 0 25px rgba(255, 0, 111, 0.5);
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.55);
 }
 
 .heroGlow {
   position: absolute;
 
-  width: 300px;
-  height: 300px;
+  width: 340px;
+  height: 340px;
 
-  right: -130px;
-  top: -150px;
+  right: -150px;
+  top: -170px;
 
   border-radius: 50%;
 
-  background: rgba(255, 0, 111, 0.07);
+  background: rgba(124, 58, 237, 0.1);
 
-  filter: blur(70px);
+  filter: blur(80px);
 
   pointer-events: none;
 }
@@ -135,8 +184,8 @@
 
   display: flex;
   align-items: center;
-  gap: 8px;
 
+  gap: 8px;
   flex-wrap: wrap;
 
   margin-bottom: 32px;
@@ -150,7 +199,6 @@
   gap: 7px;
 
   min-height: 30px;
-
   padding: 0 10px;
 
   border-radius: 8px;
@@ -163,11 +211,11 @@
 }
 
 .heroLabel {
-  color: #ff4b9b;
+  color: #c084fc;
 
-  background: rgba(255, 0, 111, 0.065);
+  background: rgba(139, 92, 246, 0.08);
 
-  border: 1px solid rgba(255, 0, 111, 0.14);
+  border: 1px solid rgba(139, 92, 246, 0.18);
 }
 
 .verified {
@@ -214,11 +262,11 @@
 
   border-radius: 25px;
 
-  background: linear-gradient(145deg, #ff006f, #b80050 55%, #32001b);
+  background: linear-gradient(145deg, #a855f7 0%, #7c3aed 48%, #2e1065 100%);
 
   box-shadow:
-    0 20px 55px rgba(255, 0, 111, 0.15),
-    0 0 0 1px rgba(255, 0, 111, 0.1);
+    0 20px 55px rgba(124, 58, 237, 0.2),
+    0 0 0 1px rgba(168, 85, 247, 0.12);
 }
 
 .logo {
@@ -231,13 +279,13 @@
 
   border-radius: 21px;
 
-  background: #16161a;
+  background: #15151b;
 }
 
 .logoCaption {
   margin-top: 10px;
 
-  color: #44444c;
+  color: #454550;
 
   font-size: 9px;
   font-weight: 900;
@@ -260,7 +308,7 @@
 
   margin: 0;
 
-  color: #fff;
+  color: #ffffff;
 
   font-size: clamp(38px, 5vw, 62px);
 
@@ -279,7 +327,7 @@
 
   margin-top: 18px;
 
-  color: #696970;
+  color: #70707b;
 
   font-size: 13px;
 }
@@ -292,21 +340,21 @@
   align-items: center;
   justify-content: center;
 
-  color: #ff1479;
+  color: #a855f7;
 
-  background: rgba(255, 0, 111, 0.065);
+  background: rgba(139, 92, 246, 0.08);
 
-  border: 1px solid rgba(255, 0, 111, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.15);
 
   border-radius: 8px;
 }
 
 .directorLabel {
-  color: #55555d;
+  color: #575761;
 }
 
 .director strong {
-  color: #d5d5da;
+  color: #d8d8df;
 
   font-weight: 800;
 }
@@ -316,7 +364,7 @@
 
   margin: 18px 0 0;
 
-  color: #77777f;
+  color: #7c7c87;
 
   font-size: 14px;
 
@@ -360,39 +408,42 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .primaryButton {
-  color: #fff;
+  color: #ffffff;
 
-  background: #ff006f;
+  background: #7c3aed;
 
-  border: 1px solid #ff006f;
+  border: 1px solid #8b5cf6;
 
-  box-shadow: 0 10px 25px rgba(255, 0, 111, 0.16);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
 }
 
 .primaryButton:hover {
-  background: #ff217f;
+  background: #8b5cf6;
 
   transform: translateY(-2px);
+
+  box-shadow: 0 14px 30px rgba(124, 58, 237, 0.28);
 }
 
 .secondaryButton {
-  color: #a3a3aa;
+  color: #a9a9b4;
 
-  background: #18181c;
+  background: #18181e;
 
-  border: 1px solid #2b2b31;
+  border: 1px solid #2b2b33;
 }
 
 .secondaryButton:hover {
-  color: #fff;
+  color: #ffffff;
 
-  background: #1d1d22;
+  background: #1e1e26;
 
-  border-color: rgba(255, 0, 111, 0.28);
+  border-color: rgba(139, 92, 246, 0.38);
 
   transform: translateY(-2px);
 }
@@ -411,7 +462,7 @@
   margin-top: 34px;
   padding-top: 23px;
 
-  border-top: 1px solid #25252b;
+  border-top: 1px solid #25252d;
 }
 
 .heroStat {
@@ -431,11 +482,11 @@
   align-items: center;
   justify-content: center;
 
-  color: #ff1479;
+  color: #a855f7;
 
-  background: rgba(255, 0, 111, 0.06);
+  background: rgba(139, 92, 246, 0.08);
 
-  border: 1px solid rgba(255, 0, 111, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.14);
 
   border-radius: 10px;
 }
@@ -449,7 +500,7 @@
 }
 
 .heroStat strong {
-  color: #fff;
+  color: #ffffff;
 
   font-size: 22px;
   line-height: 1;
@@ -458,7 +509,7 @@
 }
 
 .heroStat span {
-  color: #5d5d65;
+  color: #60606b;
 
   font-size: 9px;
   font-weight: 850;
@@ -473,7 +524,7 @@
 
   margin: 0 24px;
 
-  background: #29292f;
+  background: #292930;
 }
 
 .heroStatLocation {
@@ -484,7 +535,7 @@
 
   min-width: 0;
 
-  color: #ff1479;
+  color: #a855f7;
 }
 
 .heroStatLocation > div {
@@ -492,7 +543,7 @@
 }
 
 .heroStatLocation span {
-  color: #5d5d65;
+  color: #60606b;
 
   font-size: 9px;
   font-weight: 850;
@@ -506,7 +557,7 @@
 
   overflow: hidden;
 
-  color: #bdbdc4;
+  color: #c4c4cc;
 
   font-size: 12px;
   font-weight: 750;
@@ -541,21 +592,24 @@
 
   color: inherit;
 
-  background: #101013;
+  background: #101015;
 
-  border: 1px solid #24242a;
+  border: 1px solid #24242c;
 
   border-radius: 15px;
 
   text-decoration: none;
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .detailCard:hover {
-  background: #16161a;
+  background: #16161d;
 
-  border-color: rgba(255, 0, 111, 0.23);
+  border-color: rgba(139, 92, 246, 0.3);
 
   transform: translateY(-2px);
 }
@@ -570,11 +624,11 @@
   align-items: center;
   justify-content: center;
 
-  color: #ff1479;
+  color: #a855f7;
 
-  background: rgba(255, 0, 111, 0.06);
+  background: rgba(139, 92, 246, 0.08);
 
-  border: 1px solid rgba(255, 0, 111, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.14);
 
   border-radius: 10px;
 }
@@ -589,7 +643,7 @@
 }
 
 .detailCard span {
-  color: #505057;
+  color: #53535e;
 
   font-size: 9px;
   font-weight: 900;
@@ -601,7 +655,7 @@
 .detailCard strong {
   overflow: hidden;
 
-  color: #c5c5cb;
+  color: #c8c8d0;
 
   font-size: 12px;
   font-weight: 750;
@@ -615,7 +669,7 @@
 
   flex-shrink: 0;
 
-  color: #56565e;
+  color: #5b5b67;
 }
 
 /* =========================================================
@@ -641,7 +695,7 @@
 
   margin-bottom: 7px;
 
-  color: #ff1479;
+  color: #a855f7;
 
   font-size: 10px;
   font-weight: 950;
@@ -652,7 +706,7 @@
 .listingsHeading h2 {
   margin: 0;
 
-  color: #fff;
+  color: #ffffff;
 
   font-size: 30px;
 
@@ -666,7 +720,7 @@
 .listingsHeading p {
   margin: 7px 0 0;
 
-  color: #5f5f67;
+  color: #62626d;
 
   font-size: 12px;
 }
@@ -679,11 +733,11 @@
 
   padding: 8px 11px;
 
-  color: #ff4b9b;
+  color: #c084fc;
 
-  background: rgba(255, 0, 111, 0.055);
+  background: rgba(139, 92, 246, 0.07);
 
-  border: 1px solid rgba(255, 0, 111, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.16);
 
   border-radius: 9px;
 
@@ -692,7 +746,7 @@
 }
 
 .count small {
-  color: #66666e;
+  color: #686873;
 
   font-size: 9px;
   font-weight: 750;
@@ -722,9 +776,9 @@
 
   text-align: center;
 
-  background: #101013;
+  background: #101015;
 
-  border: 1px dashed #2c2c33;
+  border: 1px dashed #2c2c35;
 
   border-radius: 20px;
 }
@@ -739,11 +793,11 @@
 
   margin-bottom: 14px;
 
-  color: #ff1479;
+  color: #a855f7;
 
-  background: rgba(255, 0, 111, 0.06);
+  background: rgba(139, 92, 246, 0.08);
 
-  border: 1px solid rgba(255, 0, 111, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.16);
 
   border-radius: 14px;
 }
@@ -751,7 +805,7 @@
 .empty h3 {
   margin: 0;
 
-  color: #d2d2d7;
+  color: #d4d4dc;
 
   font-size: 16px;
   font-weight: 850;
@@ -760,7 +814,7 @@
 .empty p {
   margin: 7px 0 0;
 
-  color: #606069;
+  color: #62626d;
 
   font-size: 12px;
 }
@@ -942,53 +996,4 @@
   .heroStatLocation {
     grid-column: auto;
   }
-}
-
-/* =========================================================
-   BACK
-========================================================= */
-
-.backButton {
-  display: inline-flex;
-  align-items: center;
-
-  gap: 9px;
-
-  margin-bottom: 18px;
-
-  padding: 11px 15px;
-
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 12px;
-
-  background: rgba(18, 18, 22, 0.72);
-
-  color: #a3a3aa;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  text-decoration: none;
-
-  backdrop-filter: blur(18px);
-
-  transition:
-    transform 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
-}
-
-.backButton:hover {
-  color: #fff;
-
-  border-color: rgba(255, 0, 111, 0.3);
-
-  background: #19191e;
-
-  transform: translateX(-3px);
-}
-
-.backButton svg {
-  color: #ff1479;
 }

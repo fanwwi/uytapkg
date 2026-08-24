@@ -1,16 +1,25 @@
 .page {
   min-height: 100vh;
-  color: #fff;
+  padding: 100px;
+  color: #f5f5f7;
 
   background:
-    radial-gradient(circle at 20% 0%, rgba(255, 0, 111, 0.08), transparent 35%),
     radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 0, 111, 0.05),
-      transparent 30%
+      circle at 15% 0%,
+      rgba(139, 92, 246, 0.12),
+      transparent 32%
     ),
-    #0b0b0d;
-    padding: 100px;
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(168, 85, 247, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(139, 92, 246, 0.045),
+      transparent 35%
+    ),
+    #08080b;
 }
 
 /* =========================================================
@@ -20,36 +29,34 @@
 .topBar {
   display: flex;
   align-items: center;
-
   margin-bottom: 18px;
 }
 
 .homeButton {
   height: 42px;
-
   display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  padding: 0 14px;
+  padding: 0 15px;
 
   border-radius: 12px;
 
-  background: #121214;
-  border: 1px solid #27272c;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid #272731;
 
-  color: #85858d;
+  color: #858592;
 
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 750;
 
   text-decoration: none;
 
   transition:
+    transform 0.2s ease,
     color 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s ease;
 }
 
 .homeButton svg {
@@ -58,12 +65,12 @@
 }
 
 .homeButton:hover {
-  transform: translateX(-2px);
+  transform: translateX(-3px);
 
   color: #fff;
 
-  background: #18181b;
-  border-color: rgba(255, 0, 111, 0.35);
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.35);
 }
 
 /* =========================================================
@@ -75,11 +82,9 @@
   overflow: hidden;
 
   display: grid;
-
   grid-template-columns: 180px minmax(0, 1fr) 48px;
 
   gap: 30px;
-
   align-items: center;
 
   padding: 34px;
@@ -87,15 +92,19 @@
   border-radius: 30px;
 
   background:
-    radial-gradient(circle at 90% 0%, rgba(255, 0, 111, 0.14), transparent 28%),
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(139, 92, 246, 0.14),
+      transparent 28%
+    ),
     radial-gradient(
       circle at 0% 100%,
-      rgba(255, 0, 111, 0.045),
+      rgba(168, 85, 247, 0.05),
       transparent 30%
     ),
-    linear-gradient(145deg, #19191c 0%, #111113 52%, #0b0b0d 100%);
+    linear-gradient(145deg, #18181f 0%, #111116 55%, #0d0d11 100%);
 
-  border: 1px solid #29292e;
+  border: 1px solid #292933;
 
   box-shadow:
     0 35px 90px rgba(0, 0, 0, 0.65),
@@ -106,7 +115,6 @@
   content: "";
 
   position: absolute;
-
   top: 0;
   left: 12%;
   right: 12%;
@@ -116,29 +124,28 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 0, 111, 0.9),
+    rgba(139, 92, 246, 0.95),
     transparent
   );
 
-  box-shadow: 0 0 25px rgba(255, 0, 111, 0.45);
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.45);
 }
 
 .topGlow {
   position: absolute;
 
-  width: 320px;
-  height: 320px;
+  width: 340px;
+  height: 340px;
 
-  top: -190px;
+  top: -200px;
   right: -100px;
 
   border-radius: 50%;
 
-  background: #ff006f;
+  background: #8b5cf6;
+  opacity: 0.1;
 
-  opacity: 0.07;
-
-  filter: blur(90px);
+  filter: blur(95px);
 
   pointer-events: none;
 }
@@ -167,20 +174,20 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 26px;
+  border-radius: 28px;
 
   background: radial-gradient(
     circle at 30% 20%,
-    #ff3c91,
-    #ff006f 45%,
-    #68002f 100%
+    #b47cff,
+    #8b5cf6 45%,
+    #3b1b70 100%
   );
 
-  border: 1px solid rgba(255, 0, 111, 0.4);
+  border: 1px solid rgba(139, 92, 246, 0.5);
 
   box-shadow:
-    0 0 0 5px rgba(255, 0, 111, 0.045),
-    0 20px 55px rgba(255, 0, 111, 0.16),
+    0 0 0 5px rgba(139, 92, 246, 0.045),
+    0 20px 55px rgba(139, 92, 246, 0.2),
     inset 0 0 35px rgba(0, 0, 0, 0.3);
 }
 
@@ -192,9 +199,9 @@
 
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.1),
     transparent 35%,
-    rgba(0, 0, 0, 0.22)
+    rgba(0, 0, 0, 0.25)
   );
 
   pointer-events: none;
@@ -220,7 +227,6 @@
 .heading {
   display: flex;
   align-items: center;
-
   gap: 10px;
 }
 
@@ -233,7 +239,6 @@
   line-height: 1.05;
 
   font-weight: 950;
-
   letter-spacing: -1.6px;
 }
 
@@ -249,13 +254,13 @@
 
   border-radius: 50%;
 
-  color: #ff1479;
+  color: #a78bfa;
 
-  background: rgba(255, 0, 111, 0.09);
+  background: rgba(139, 92, 246, 0.1);
 
-  border: 1px solid rgba(255, 0, 111, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.35);
 
-  box-shadow: 0 0 18px rgba(255, 0, 111, 0.12);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
 }
 
 .verified svg {
@@ -268,21 +273,20 @@
 
   display: inline-flex;
   align-items: center;
-
   gap: 7px;
 
   margin-top: 12px;
-  padding: 7px 10px;
+  padding: 7px 11px;
 
   border-radius: 9px;
 
-  color: #ff4a9b;
+  color: #a78bfa;
 
-  background: rgba(255, 0, 111, 0.065);
+  background: rgba(139, 92, 246, 0.075);
 
-  border: 1px solid rgba(255, 0, 111, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
 
   text-transform: uppercase;
@@ -297,12 +301,11 @@
 .director {
   display: flex;
   align-items: center;
-
   gap: 8px;
 
   margin-top: 13px;
 
-  color: #77777f;
+  color: #777780;
 
   font-size: 15px;
 }
@@ -311,12 +314,11 @@
   width: 16px;
   height: 16px;
 
-  color: #ff1479;
+  color: #9b7aff;
 }
 
 .director strong {
-  color: #bdbdc3;
-
+  color: #c8c8cf;
   font-weight: 750;
 }
 
@@ -327,7 +329,6 @@
 .contacts {
   display: flex;
   flex-wrap: wrap;
-
   gap: 8px;
 
   margin-top: 19px;
@@ -338,18 +339,17 @@
 
   display: inline-flex;
   align-items: center;
-
   gap: 7px;
 
-  padding: 0 11px;
+  padding: 0 12px;
 
   border-radius: 10px;
 
   background: rgba(255, 255, 255, 0.025);
 
-  border: 1px solid #27272c;
+  border: 1px solid #292931;
 
-  color: #88888f;
+  color: #888892;
 
   font-size: 13px;
   font-weight: 700;
@@ -366,23 +366,23 @@
   width: 15px;
   height: 15px;
 
-  color: #ff1479;
+  color: #9b7aff;
 }
 
 .contact:hover {
-  color: #e8e8ec;
+  color: #eeeef2;
 
-  background: rgba(255, 0, 111, 0.055);
+  background: rgba(139, 92, 246, 0.065);
 
-  border-color: rgba(255, 0, 111, 0.22);
+  border-color: rgba(139, 92, 246, 0.3);
 }
 
 .whatsapp {
-  color: #ff4a9b;
+  color: #b39aff;
 
-  border-color: rgba(255, 0, 111, 0.17);
+  border-color: rgba(139, 92, 246, 0.2);
 
-  background: rgba(255, 0, 111, 0.045);
+  background: rgba(139, 92, 246, 0.05);
 }
 
 /* =========================================================
@@ -399,11 +399,11 @@
 
   border-radius: 14px;
 
-  background: #171719;
+  background: #17171d;
 
-  border: 1px solid #2a2a2f;
+  border: 1px solid #2b2b34;
 
-  color: #77777f;
+  color: #777780;
 
   cursor: pointer;
 
@@ -424,9 +424,9 @@
 
   color: #fff;
 
-  background: rgba(255, 0, 111, 0.09);
+  background: rgba(139, 92, 246, 0.1);
 
-  border-color: rgba(255, 0, 111, 0.3);
+  border-color: rgba(139, 92, 246, 0.35);
 }
 
 /* =========================================================
@@ -445,18 +445,17 @@
   background:
     radial-gradient(
       circle at 100% 0%,
-      rgba(255, 0, 111, 0.055),
+      rgba(139, 92, 246, 0.065),
       transparent 35%
     ),
-    #111113;
+    #111116;
 
-  border: 1px solid #25252a;
+  border: 1px solid #25252e;
 }
 
 .sectionTitle {
   display: flex;
   align-items: center;
-
   gap: 9px;
 
   margin-bottom: 12px;
@@ -466,7 +465,7 @@
   width: 18px;
   height: 18px;
 
-  color: #ff1479;
+  color: #9b7aff;
 }
 
 .sectionTitle h3 {
@@ -483,7 +482,7 @@
 
   margin: 0;
 
-  color: #85858d;
+  color: #85858e;
 
   font-size: 15px;
   line-height: 1.75;
@@ -495,7 +494,6 @@
 
 .details {
   display: grid;
-
   grid-template-columns: repeat(2, 1fr);
 
   gap: 10px;
@@ -508,16 +506,15 @@
 
   display: flex;
   align-items: center;
-
   gap: 13px;
 
   padding: 16px;
 
   border-radius: 16px;
 
-  background: #121214;
+  background: #121217;
 
-  border: 1px solid #25252a;
+  border: 1px solid #27272f;
 
   color: inherit;
 
@@ -532,9 +529,9 @@
 .detail:hover {
   transform: translateY(-2px);
 
-  background: #171719;
+  background: #18181f;
 
-  border-color: rgba(255, 0, 111, 0.2);
+  border-color: rgba(139, 92, 246, 0.25);
 }
 
 .detailIcon {
@@ -549,9 +546,9 @@
 
   border-radius: 11px;
 
-  background: rgba(255, 0, 111, 0.07);
+  background: rgba(139, 92, 246, 0.08);
 
-  color: #ff1479;
+  color: #9b7aff;
 }
 
 .detailIcon svg {
@@ -564,12 +561,11 @@
 
   display: flex;
   flex-direction: column;
-
   gap: 4px;
 }
 
 .detail span {
-  color: #5f5f66;
+  color: #62626c;
 
   font-size: 12px;
   font-weight: 850;
@@ -581,7 +577,7 @@
 .detail strong {
   overflow: hidden;
 
-  color: #c7c7cc;
+  color: #c8c8ce;
 
   font-size: 15px;
   font-weight: 700;
@@ -596,7 +592,6 @@
 
 .stats {
   display: grid;
-
   grid-template-columns: repeat(2, 1fr);
 
   gap: 12px;
@@ -618,9 +613,9 @@
       rgba(255, 255, 255, 0.035),
       rgba(255, 255, 255, 0.012)
     ),
-    #121214;
+    #121217;
 
-  border: 1px solid #25252a;
+  border: 1px solid #27272f;
 }
 
 .stat::after {
@@ -628,19 +623,19 @@
 
   position: absolute;
 
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
 
-  right: -30px;
-  bottom: -35px;
+  right: -35px;
+  bottom: -40px;
 
   border-radius: 50%;
 
-  background: #ff006f;
+  background: #8b5cf6;
 
-  opacity: 0.035;
+  opacity: 0.055;
 
-  filter: blur(20px);
+  filter: blur(25px);
 }
 
 .stat strong {
@@ -661,7 +656,7 @@
 
   margin-top: 7px;
 
-  color: #696970;
+  color: #696971;
 
   font-size: 13px;
   font-weight: 800;
@@ -697,9 +692,9 @@
 
   border-radius: 17px;
 
-  background: #121214;
+  background: #121217;
 
-  border: 1px solid #25252a;
+  border: 1px solid #27272f;
 
   color: inherit;
 
@@ -721,10 +716,10 @@
   transform: translateY(-3px);
 
   background:
-    radial-gradient(circle at 0% 50%, rgba(255, 0, 111, 0.08), transparent 45%),
-    #171719;
+    radial-gradient(circle at 0% 50%, rgba(139, 92, 246, 0.1), transparent 45%),
+    #18181f;
 
-  border-color: rgba(255, 0, 111, 0.2);
+  border-color: rgba(139, 92, 246, 0.25);
 
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
@@ -741,9 +736,9 @@
 
   border-radius: 12px;
 
-  background: rgba(255, 0, 111, 0.07);
+  background: rgba(139, 92, 246, 0.08);
 
-  color: #ff1479;
+  color: #9b7aff;
 }
 
 .icon svg {
@@ -754,7 +749,7 @@
 .actions h3 {
   margin: 0;
 
-  color: #e7e7ea;
+  color: #e7e7eb;
 
   font-size: 15px;
   font-weight: 850;
@@ -763,7 +758,7 @@
 .actions p {
   margin: 4px 0 0;
 
-  color: #626269;
+  color: #62626b;
 
   font-size: 13px;
   font-weight: 600;
@@ -774,25 +769,29 @@
 }
 
 /* =========================================================
-   TARIF — АКЦЕНТ
+   TARIFF
 ========================================================= */
 
 .actions > a[href="/profile/tariff"] {
   background:
-    linear-gradient(135deg, rgba(255, 0, 111, 0.1), rgba(255, 0, 111, 0.025)),
-    #121214;
+    linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.12),
+      rgba(139, 92, 246, 0.025)
+    ),
+    #121217;
 
-  border-color: rgba(255, 0, 111, 0.22);
+  border-color: rgba(139, 92, 246, 0.25);
 }
 
 .actions > a[href="/profile/tariff"] .icon {
-  background: rgba(255, 0, 111, 0.12);
+  background: rgba(139, 92, 246, 0.13);
 
-  box-shadow: 0 0 25px rgba(255, 0, 111, 0.08);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.1);
 }
 
 .actions > a[href="/profile/tariff"] h3 {
-  color: #ff4a9b;
+  color: #a78bfa;
 }
 
 /* =========================================================
@@ -806,9 +805,9 @@
 }
 
 .logout:hover .icon {
-  color: #ff527f;
+  color: #c084fc;
 
-  background: rgba(255, 45, 100, 0.08);
+  background: rgba(139, 92, 246, 0.08);
 }
 
 /* =========================================================
@@ -816,11 +815,13 @@
 ========================================================= */
 
 @media (max-width: 900px) {
+  .page {
+    padding: 70px 35px;
+  }
+
   .profileCard {
     grid-template-columns: 135px minmax(0, 1fr) 45px;
-
     gap: 22px;
-
     padding: 27px;
   }
 
@@ -853,9 +854,7 @@
 
   .homeButton {
     height: 39px;
-
     padding: 0 11px;
-
     font-size: 14px;
   }
 
@@ -888,7 +887,6 @@
 
   .heading h1 {
     font-size: 27px;
-
     letter-spacing: -1px;
   }
 
@@ -922,7 +920,6 @@
 
   .about {
     padding: 21px 18px;
-
     border-radius: 20px;
   }
 
@@ -979,7 +976,6 @@
 
   .contact {
     width: 100%;
-
     justify-content: center;
   }
 

@@ -12,6 +12,8 @@ import {
   Search,
   UserRound,
   Smartphone,
+  MessageCircle,
+  Laptop,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -21,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { getMe } from "@/utils/api";
 
 import styles from "./Footer.module.css";
+import { FcAbout } from "react-icons/fc";
 
 const categories = [
   {
@@ -106,7 +109,7 @@ export default function Footer() {
 
         <div className={styles.brand}>
           <Link href="/" className={styles.logo}>
-            <img src="/assets/logo2.png" alt="UyTap" />
+            <img src="/assets/uytap2.png" alt="UyTap" />
           </Link>
 
           <p>
@@ -167,6 +170,11 @@ export default function Footer() {
 
         <div className={styles.column}>
           <h3>Сервис</h3>
+
+          <Link href="/about">
+            <Laptop />
+            О проекте
+          </Link>
 
           <Link href="/all-products">
             <Search />
