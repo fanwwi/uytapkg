@@ -27,7 +27,6 @@
   margin: 0 auto;
 }
 
-
 /* =========================================================
    BACK
 ========================================================= */
@@ -59,7 +58,6 @@
   transform: translateX(-3px);
 }
 
-
 /* =========================================================
    TOP
 ========================================================= */
@@ -69,7 +67,6 @@
   grid-template-columns: minmax(0, 1.55fr) minmax(380px, 0.85fr);
   gap: 28px;
 }
-
 
 /* =========================================================
    GALLERY
@@ -110,17 +107,15 @@
   position: absolute;
   inset: 0;
 
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.28),
-      transparent 35%,
-      rgba(0, 0, 0, 0.35)
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.28),
+    transparent 35%,
+    rgba(0, 0, 0, 0.35)
+  );
 
   pointer-events: none;
 }
-
 
 /* =========================================================
    BADGES
@@ -157,38 +152,25 @@
   backdrop-filter: blur(12px);
 }
 
-
 /* VIP */
 
 .vip {
-  background: linear-gradient(
-    135deg,
-    #c4b5fd,
-    #8b5cf6
-  );
+  background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
 
   color: #ffffff;
 
-  box-shadow:
-    0 8px 25px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
 }
-
 
 /* URGENT */
 
 .urgent {
-  background: linear-gradient(
-    135deg,
-    #a855f7,
-    #7c3aed
-  );
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
 
   color: #fff;
 
-  box-shadow:
-    0 8px 25px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.25);
 }
-
 
 /* CATEGORY */
 
@@ -199,7 +181,6 @@
 
   color: #f5f3ff;
 }
-
 
 /* =========================================================
    FAVORITE
@@ -245,10 +226,8 @@
 
   transform: scale(1.06);
 
-  box-shadow:
-    0 8px 25px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
 }
-
 
 /* =========================================================
    IMAGE COUNTER
@@ -273,7 +252,6 @@
 
   backdrop-filter: blur(10px);
 }
-
 
 /* =========================================================
    GALLERY ARROWS
@@ -319,8 +297,7 @@
 
   border-color: #8b5cf6;
 
-  box-shadow:
-    0 8px 25px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.25);
 }
 
 .left {
@@ -330,7 +307,6 @@
 .right {
   right: 20px;
 }
-
 
 /* =========================================================
    THUMBNAILS
@@ -378,14 +354,12 @@
 
   opacity: 1;
 
-  box-shadow:
-    0 5px 20px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 5px 20px rgba(124, 58, 237, 0.25);
 }
 
 .thumbnail img {
   object-fit: cover;
 }
-
 
 /* =========================================================
    DOTS
@@ -394,7 +368,6 @@
 .dots {
   display: none;
 }
-
 
 /* =========================================================
    SUMMARY
@@ -407,17 +380,11 @@
 
   border-radius: 30px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #1a1820,
-      #101014
-    );
+  background: linear-gradient(145deg, #1a1820, #101014);
 
   border: 1px solid rgba(255, 255, 255, 0.07);
 
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 
   display: flex;
   flex-direction: column;
@@ -468,7 +435,6 @@
   letter-spacing: -1.2px;
 }
 
-
 /* =========================================================
    LOCATION
 ========================================================= */
@@ -503,7 +469,6 @@
   font-size: 13px;
 }
 
-
 /* =========================================================
    PRICE
 ========================================================= */
@@ -518,10 +483,8 @@
 
   letter-spacing: -1px;
 
-  text-shadow:
-    0 0 25px rgba(139, 92, 246, 0.15);
+  text-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
 }
-
 
 /* =========================================================
    QUICK INFO
@@ -577,7 +540,6 @@
   font-size: 12px;
 }
 
-
 /* =========================================================
    CONTENT
 ========================================================= */
@@ -596,7 +558,6 @@
   min-width: 0;
 }
 
-
 /* =========================================================
    SECTIONS
 ========================================================= */
@@ -608,17 +569,11 @@
 
   border-radius: 25px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #16151a,
-      #101014
-    );
+  background: linear-gradient(145deg, #16151a, #101014);
 
   border: 1px solid rgba(255, 255, 255, 0.065);
 
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .sectionHeader {
@@ -674,7 +629,6 @@
   font-size: 15px;
   line-height: 1.8;
 }
-
 
 /* =========================================================
    CHARACTERISTICS
@@ -749,7 +703,6 @@
   font-size: 14px;
 }
 
-
 /* =========================================================
    AMENITIES
 ========================================================= */
@@ -785,7 +738,6 @@
   color: #a78bfa;
 }
 
-
 /* =========================================================
    ADDRESS
 ========================================================= */
@@ -800,12 +752,11 @@
 
   border-radius: 16px;
 
-  background:
-    linear-gradient(
-      120deg,
-      rgba(124, 58, 237, 0.12),
-      rgba(124, 58, 237, 0.025)
-    );
+  background: linear-gradient(
+    120deg,
+    rgba(124, 58, 237, 0.12),
+    rgba(124, 58, 237, 0.025)
+  );
 
   border: 1px solid rgba(139, 92, 246, 0.16);
 }
@@ -818,11 +769,7 @@
 
   border-radius: 12px;
 
-  background: linear-gradient(
-    135deg,
-    #8b5cf6,
-    #6d28d9
-  );
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 
   color: white;
 
@@ -830,8 +777,7 @@
   align-items: center;
   justify-content: center;
 
-  box-shadow:
-    0 8px 20px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.25);
 }
 
 .addressCard strong {
@@ -847,7 +793,6 @@
 
   font-size: 13px;
 }
-
 
 /* =========================================================
    SIDEBAR
@@ -866,17 +811,11 @@
 
   border-radius: 23px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #17161b,
-      #101014
-    );
+  background: linear-gradient(145deg, #17161b, #101014);
 
   border: 1px solid rgba(255, 255, 255, 0.07);
 
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .sideTop {
@@ -918,7 +857,6 @@
 
   font-size: 12px;
 }
-
 
 /* =========================================================
    OWNER SIDE
@@ -1019,10 +957,8 @@
 
   transform: translateY(-2px);
 
-  box-shadow:
-    0 8px 22px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.25);
 }
-
 
 /* =========================================================
    PHONE
@@ -1048,7 +984,6 @@
 
   transform: translateY(-1px);
 }
-
 
 /* =========================================================
    TABLET
@@ -1077,7 +1012,6 @@
     grid-template-columns: 1fr 1fr;
   }
 }
-
 
 /* =========================================================
    MOBILE
@@ -1163,8 +1097,7 @@
 
     background: #8b5cf6;
 
-    box-shadow:
-      0 0 10px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
   }
 
   .summary {
@@ -1210,4 +1143,64 @@
   .sidebar {
     display: flex;
   }
+}
+
+.lawyerCard {
+  margin-top: 20px;
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(
+    145deg,
+    rgba(124, 58, 237, 0.16),
+    rgba(168, 85, 247, 0.07)
+  );
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.lawyerIcon {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(139, 92, 246, 0.15);
+  color: #a855f7;
+}
+
+.lawyerContent strong {
+  display: block;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lawyerContent p {
+  margin: 8px 0 18px;
+  color: #999;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.lawyerButton {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.lawyerButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
 }

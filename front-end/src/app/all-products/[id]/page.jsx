@@ -524,7 +524,6 @@ export default function ProductDetails() {
 
                       <div>
                         <span>{item.label}</span>
-
                         <strong>{item.value}</strong>
                       </div>
                     </div>
@@ -578,7 +577,6 @@ export default function ProductDetails() {
 
                 <div>
                   <strong>{product.location}</strong>
-
                   <p>{product.address}</p>
                 </div>
               </div>
@@ -611,7 +609,7 @@ export default function ProductDetails() {
                 <strong>{product.createdAt}</strong>
               </div>
 
-              {/* РАССТОЯНИЕ ДО ПЛЯЖА */}
+              {/* BEACH DISTANCE */}
 
               <div className={styles.sideRow}>
                 <span>Расстояние до пляжа</span>
@@ -644,7 +642,6 @@ export default function ProductDetails() {
 
                 <div>
                   <strong>{product.owner.name}</strong>
-
                   <span>{product.owner.role}</span>
                 </div>
               </div>
@@ -687,6 +684,32 @@ export default function ProductDetails() {
                 }
               >
                 Связаться с владельцем
+                <ArrowRight size={17} />
+              </button>
+            </div>
+
+            {/* LAWYER VERIFICATION */}
+
+            <div className={styles.lawyerCard}>
+              <div className={styles.lawyerIcon}>
+                <ShieldCheck size={22} />
+              </div>
+
+              <div className={styles.lawyerContent}>
+                <strong>Проверка у юриста</strong>
+
+                <p>
+                  Хотите убедиться в юридической чистоте объекта? Запросите
+                  проверку объявления у юриста.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={styles.lawyerButton}
+                onClick={() => router.push("/lawyers")}
+              >
+                Запросить проверку
                 <ArrowRight size={17} />
               </button>
             </div>

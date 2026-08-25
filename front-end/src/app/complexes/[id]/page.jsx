@@ -25,132 +25,16 @@ import {
   Flame,
   Zap,
   Camera,
-  Coffee,
-  ShoppingBag,
-  UsersRound,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  FileCheck,
+  ExternalLink,
 } from "lucide-react";
 
 import styles from "./ComplexDetail.module.css";
 
-/*
-const residentialComplex = {
-  id: 1,
-  name: "ЖК MALINA",
-  subtitle: "Премиальный жилой комплекс в Бишкеке",
-  class: "Премиум-класс",
-  status: "В продаже",
-  location: "Бишкек",
-  address: "Юго-восточная часть города",
-  developer: "MALINA Development",
-  completion: "III квартал 2027",
-  floors: 10,
-  blocks: 3,
-  landArea: "1 га",
-  apartments: "120 квартир",
-  ceilingHeight: "до 3,6 м",
-  constructionType: "Монолитно-каркасная",
-  heating: "Автономная газовая котельная",
-  parking: "Подземный паркинг",
-  description:
-    "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
-  concept:
-    "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
-  images: [
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
-  ],
-  advantages: [
-    {
-      icon: Trees,
-      title: "Просторная территория",
-      description: "Озеленённый двор с ландшафтным дизайном и зонами отдыха.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность 24/7",
-      description:
-        "Закрытая территория, видеонаблюдение и контролируемый доступ.",
-    },
-    {
-      icon: CarFront,
-      title: "Подземный паркинг",
-      description: "Безопасное парковочное пространство для жителей комплекса.",
-    },
-    {
-      icon: Waves,
-      title: "Зоны отдыха",
-      description: "Продуманные пространства для отдыха жителей и гостей.",
-    },
-    {
-      icon: Dumbbell,
-      title: "Фитнес",
-      description: "Спортивная инфраструктура для активного образа жизни.",
-    },
-    {
-      icon: DoorOpen,
-      title: "Премиальное лобби",
-      description: "Современная входная группа с качественными материалами.",
-    },
-  ],
-  infrastructure: [
-    "Закрытая территория",
-    "Двор без машин",
-    "Детская площадка",
-    "Взрослая зона отдыха",
-    "Ландшафтный дизайн",
-    "Подземный паркинг",
-    "Видеонаблюдение",
-    "Охрана 24/7",
-    "Современное лобби",
-    "Зоны отдыха",
-    "Фитнес-инфраструктура",
-    "Коммерческие помещения",
-  ],
-  architecture: [
-    {
-      title: "Современная архитектура",
-      text: "Чистые линии, панорамное остекление и выразительные фасады формируют узнаваемый облик комплекса.",
-    },
-    {
-      title: "Продуманные пространства",
-      text: "Архитектура комплекса создаёт баланс между приватностью жителей и комфортными общественными пространствами.",
-    },
-    {
-      title: "Панорамное остекление",
-      text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
-    },
-  ],
-  engineering: [
-    {
-      icon: Flame,
-      title: "Отопление",
-      value: "Автономная газовая котельная",
-    },
-    {
-      icon: Zap,
-      title: "Электроснабжение",
-      value: "Современная инженерная система",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность",
-      value: "Контролируемый доступ",
-    },
-    {
-      icon: Camera,
-      title: "Видеонаблюдение",
-      value: "24/7",
-    },
-  ],
-  galleryLabel: "Галерея комплекса",
-  createdAt: "12 августа 2026",
-};
-*/
+const MINSTROY_URL = "https://minstroy.gov.kg/ru/map";
 
 const defaultResidentialComplex = {
   id: 1,
@@ -172,16 +56,20 @@ const defaultResidentialComplex = {
   constructionType: "Монолитно-каркасная",
   heating: "Автономная газовая котельная",
   parking: "Подземный паркинг",
+
   description:
     "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
+
   concept:
     "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
+
   images: [
     "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
   ],
+
   advantages: [
     {
       icon: Trees,
@@ -215,6 +103,7 @@ const defaultResidentialComplex = {
       description: "Современная входная группа с качественными материалами.",
     },
   ],
+
   infrastructure: [
     "Закрытая территория",
     "Двор без машин",
@@ -229,6 +118,7 @@ const defaultResidentialComplex = {
     "Фитнес-инфраструктура",
     "Коммерческие помещения",
   ],
+
   architecture: [
     {
       title: "Современная архитектура",
@@ -243,6 +133,7 @@ const defaultResidentialComplex = {
       text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
     },
   ],
+
   engineering: [
     {
       icon: Flame,
@@ -265,6 +156,7 @@ const defaultResidentialComplex = {
       value: "24/7",
     },
   ],
+
   galleryLabel: "Галерея комплекса",
   createdAt: "12 августа 2026",
 };
@@ -274,7 +166,10 @@ export default function ComplexesDetails() {
   const params = useParams();
   const complexId = params?.id;
 
-  const [residentialComplex, setResidentialComplex] = useState(defaultResidentialComplex);
+  const [residentialComplex, setResidentialComplex] = useState(
+    defaultResidentialComplex,
+  );
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentImage, setCurrentImage] = useState(0);
@@ -287,35 +182,70 @@ export default function ComplexesDetails() {
       try {
         setLoading(true);
         setError("");
+
         const res = await getComplexById(complexId);
+
         if (res && res.success && res.data) {
           const mapped = mapComplexData(res.data);
+
           setResidentialComplex({
             ...defaultResidentialComplex,
+
             id: res.data.id,
+
             name: mapped.name,
+
             subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
+
             class: mapped.housingClass,
+
             status: mapped.completionStatus,
+
             location: res.data.city || res.data.region || "Кыргызстан",
+
             address: mapped.address,
+
             developer: mapped.developer,
+
             developerId: mapped.developerId || null,
+
             developerLogo: mapped.logo || null,
+
             completion: res.data.completion_date || "Уточняйте у застройщика",
+
             description: mapped.description,
+
             concept: res.data.description || defaultResidentialComplex.concept,
-            floors: res.data.features?.floors || defaultResidentialComplex.floors,
-            apartments: res.data.features?.apartments ? `${res.data.features.apartments} квартир` : defaultResidentialComplex.apartments,
-            parking: res.data.features?.parking ? `${res.data.features.parking} мест` : defaultResidentialComplex.parking,
-            landArea: res.data.features?.area ? `${res.data.features.area} м²` : defaultResidentialComplex.landArea,
-            images: (res.data.features?.images && res.data.features.images.length > 0)
-              ? res.data.features.images
-              : (res.data.cover_photo ? [res.data.cover_photo] : defaultResidentialComplex.images),
+
+            floors:
+              res.data.features?.floors || defaultResidentialComplex.floors,
+
+            blocks:
+              res.data.features?.blocks || defaultResidentialComplex.blocks,
+
+            apartments: res.data.features?.apartments
+              ? `${res.data.features.apartments} квартир`
+              : defaultResidentialComplex.apartments,
+
+            parking: res.data.features?.parking
+              ? `${res.data.features.parking} мест`
+              : defaultResidentialComplex.parking,
+
+            landArea: res.data.features?.area
+              ? `${res.data.features.area} м²`
+              : defaultResidentialComplex.landArea,
+
+            images:
+              res.data.features?.images && res.data.features.images.length > 0
+                ? res.data.features.images
+                : res.data.cover_photo
+                  ? [res.data.cover_photo]
+                  : defaultResidentialComplex.images,
           });
         }
       } catch (err) {
         console.error("Failed to load complex detail:", err);
+
         setError(err.message || "Ошибка загрузки жилого комплекса");
       } finally {
         setLoading(false);
@@ -337,6 +267,10 @@ export default function ComplexesDetails() {
     );
   };
 
+  const openMinstroy = () => {
+    window.open(MINSTROY_URL, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -354,6 +288,8 @@ export default function ComplexesDetails() {
         {/* HERO */}
 
         <section className={styles.hero}>
+          {/* GALLERY */}
+
           <div className={styles.heroGallery}>
             <div className={styles.mainImage}>
               <Image
@@ -411,9 +347,12 @@ export default function ComplexesDetails() {
 
               <div className={styles.heroImageText}>
                 <span>ЖИЛОЙ КОМПЛЕКС</span>
+
                 <strong>{residentialComplex.name}</strong>
               </div>
             </div>
+
+            {/* THUMBNAILS */}
 
             <div className={styles.thumbnails}>
               {residentialComplex.images.map((image, index) => (
@@ -455,19 +394,27 @@ export default function ComplexesDetails() {
 
               <div>
                 <strong>{residentialComplex.location}</strong>
+
                 <span>{residentialComplex.address}</span>
               </div>
             </div>
 
             <div className={styles.heroDivider} />
 
+            {/* DEVELOPER */}
+
             <div className={styles.developer}>
               <div className={styles.developerIcon}>
                 {residentialComplex.developerLogo ? (
-                  <img 
-                    src={residentialComplex.developerLogo} 
-                    alt={residentialComplex.developer} 
-                    style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} 
+                  <img
+                    src={residentialComplex.developerLogo}
+                    alt={residentialComplex.developer}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
                   />
                 ) : (
                   <Building2 size={18} />
@@ -476,13 +423,17 @@ export default function ComplexesDetails() {
 
               <div>
                 <span>ЗАСТРОЙЩИК</span>
+
                 <strong>{residentialComplex.developer}</strong>
               </div>
             </div>
 
+            {/* STATS */}
+
             <div className={styles.heroStats}>
               <div>
                 <Layers3 />
+
                 <span>
                   <strong>{residentialComplex.floors}</strong>
                   этажей
@@ -491,6 +442,7 @@ export default function ComplexesDetails() {
 
               <div>
                 <Building2 />
+
                 <span>
                   <strong>{residentialComplex.blocks}</strong>
                   блока
@@ -499,12 +451,15 @@ export default function ComplexesDetails() {
 
               <div>
                 <Ruler />
+
                 <span>
                   <strong>{residentialComplex.landArea}</strong>
                   территория
                 </span>
               </div>
             </div>
+
+            {/* COMPLETION */}
 
             <div className={styles.completion}>
               <div className={styles.completionIcon}>
@@ -513,20 +468,25 @@ export default function ComplexesDetails() {
 
               <div>
                 <span>СРОК СДАЧИ</span>
+
                 <strong>{residentialComplex.completion}</strong>
               </div>
             </div>
+
+            {/* DEVELOPER PROFILE */}
 
             <button
               type="button"
               className={styles.primaryButton}
               onClick={() => {
                 if (residentialComplex.developerId) {
-                  router.push(`/public-profile/${residentialComplex.developerId}`);
+                  router.push(
+                    `/public-profile/${residentialComplex.developerId}`,
+                  );
                 } else {
-                  document
-                    .getElementById("apartments")
-                    ?.scrollIntoView({ behavior: "smooth" });
+                  document.getElementById("apartments")?.scrollIntoView({
+                    behavior: "smooth",
+                  });
                 }
               }}
             >
@@ -659,6 +619,7 @@ export default function ComplexesDetails() {
 
                   <div>
                     <strong>{item.title}</strong>
+
                     <p>{item.description}</p>
                   </div>
                 </div>
@@ -742,6 +703,7 @@ export default function ComplexesDetails() {
 
                   <div>
                     <span>{item.title}</span>
+
                     <strong>{item.value}</strong>
                   </div>
                 </div>
@@ -771,6 +733,45 @@ export default function ComplexesDetails() {
           </div>
         </section>
 
+        {/* MINSTROY DOCUMENTS */}
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <span>ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ</span>
+              <h2>Документы о жилом комплексе</h2>
+            </div>
+          </div>
+
+          <div className={styles.ministryCard}>
+            <div className={styles.ministryInfo}>
+              <div className={styles.ministryIcon}>
+                <FileCheck size={22} />
+              </div>
+
+              <div className={styles.ministryText}>
+                <strong>Проверьте информацию о строительстве</strong>
+
+                <p>
+                  Перейдите на официальный ресурс Министерства строительства и
+                  проверьте паспорт строительного объекта и доступную информацию
+                  о жилом комплексе.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className={styles.ministryButton}
+              onClick={openMinstroy}
+            >
+              <FileCheck size={18} />
+              Смотреть документы
+              <ExternalLink size={16} />
+            </button>
+          </div>
+        </section>
+
         {/* APARTMENTS CTA */}
 
         <section className={styles.apartmentsCta} id="apartments">
@@ -785,19 +786,35 @@ export default function ComplexesDetails() {
             </p>
           </div>
 
-          <button 
-            type="button" 
-            onClick={() => {
-              if (residentialComplex.developerId) {
-                router.push(`/public-profile/${residentialComplex.developerId}`);
-              } else {
-                router.push("/apartments");
-              }
+          <div
+            style={{
+              display: "flex",
+              gap: "12px",
+              flexWrap: "wrap",
             }}
           >
-            Смотреть профиль застройщика
-            <ArrowRight size={18} />
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (residentialComplex.developerId) {
+                  router.push(
+                    `/public-profile/${residentialComplex.developerId}`,
+                  );
+                } else {
+                  router.push("/apartments");
+                }
+              }}
+            >
+              Смотреть профиль застройщика
+              <ArrowRight size={18} />
+            </button>
+
+            <button type="button" onClick={openMinstroy}>
+              <FileCheck size={18} />
+              Документы Минстроя
+              <ExternalLink size={16} />
+            </button>
+          </div>
         </section>
       </div>
     </main>

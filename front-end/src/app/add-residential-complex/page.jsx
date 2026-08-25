@@ -19,6 +19,8 @@ import {
   Upload,
   Maximize,
   Blocks,
+  FileCheck,
+  ExternalLink,
 } from "lucide-react";
 
 import styles from "./AddResidentialComplex.module.css";
@@ -81,34 +83,36 @@ export default function AddResidentialComplex() {
 
     area: "",
     areaSotka: "",
+
+    documentsUrl: "",
   });
 
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [images, setImages] = useState([]);
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
-  }
+  };
 
-  function setField(name, value) {
+  const setField = (name, value) => {
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
-  }
+  };
 
-  function toggleAmenity(item) {
+  const toggleAmenity = (item) => {
     setSelectedAmenities((prev) =>
       prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
     );
-  }
+  };
 
-  function handleImages(e) {
+  const handleImages = (e) => {
     const files = Array.from(e.target.files || []);
 
     if (!files.length) return;
@@ -130,9 +134,9 @@ export default function AddResidentialComplex() {
     setImages((prev) => [...prev, ...newImages]);
 
     e.target.value = "";
-  }
+  };
 
-  function removeImage(index) {
+  const removeImage = (index) => {
     setImages((prev) => {
       const image = prev[index];
 
@@ -142,10 +146,12 @@ export default function AddResidentialComplex() {
 
       return prev.filter((_, i) => i !== index);
     });
-  }
+  };
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
 
     setLoading(true);
     setError("");
@@ -157,47 +163,100 @@ export default function AddResidentialComplex() {
         throw new Error("Вы не авторизованы. Пожалуйста, войдите в аккаунт.");
       }
 
+      if (!form.name.trim()) {
+        throw new Error("Введите название жилого комплекса.");
+      }
+
+      if (!form.address.trim()) {
+        throw new Error("Введите адрес жилого комплекса.");
+      }
+
+      if (!form.documentsUrl.trim()) {
+        throw new Error(
+          "Добавьте ссылку на официальный паспорт или документы ЖК.",
+        );
+      }
+
+      try {
+        new URL(form.documentsUrl);
+      } catch {
+        throw new Error("Ссылка на документы должна быть корректным URL.");
+      }
+
+      /* =========================
+         UPLOAD IMAGES
+      ========================= */
+
       const uploadedUrls = [];
 
-      for (const img of images) {
+      for (const image of images) {
         try {
-          const url = await uploadImage(img.file);
+          const url = await uploadImage(image.file);
 
           if (url) {
             uploadedUrls.push(url);
           }
-        } catch (uploadErr) {
+        } catch (uploadError) {
           console.error(
-            "Ошибка загрузки изображения:",
-            img.file.name,
-            uploadErr,
+            `Ошибка загрузки изображения ${image.file.name}:`,
+            uploadError,
           );
         }
       }
 
+      /* =========================
+         PAYLOAD
+      ========================= */
+
       const payload = {
-        ...form,
+        name: form.name.trim(),
+        address: form.address.trim(),
+        city: form.city.trim(),
+        description: form.description.trim(),
+
+        status: form.status,
+        class: form.class,
+        construction: form.construction,
+
+        completionDate: form.completionDate || null,
+
+        floors: form.floors ? Number(form.floors) : 0,
+        blocks: form.blocks ? Number(form.blocks) : 0,
+        apartments: form.apartments ? Number(form.apartments) : 0,
+        parking: form.parking ? Number(form.parking) : 0,
+
+        ceilingHeight: form.ceilingHeight ? Number(form.ceilingHeight) : 0,
+
+        area: form.area ? Number(form.area) : 0,
+
+        areaSotka: form.areaSotka ? Number(form.areaSotka) : 0,
+
         amenities: selectedAmenities,
+
         images: uploadedUrls,
+
+        documentsUrl: form.documentsUrl.trim(),
       };
+
+      console.log("CREATE COMPLEX PAYLOAD:", payload);
 
       const res = await createComplex(token, payload);
 
-      if (!res.success) {
-        throw new Error(res.message || "Не удалось добавить жилой комплекс");
+      if (!res?.success) {
+        throw new Error(res?.message || "Не удалось добавить жилой комплекс.");
       }
 
-      router.push("/profile");
+      router.push("/profile/projects");
     } catch (err) {
-      console.error("Error adding complex:", err);
+      console.error("Ошибка добавления ЖК:", err);
 
       setError(
-        err.message || "Произошла ошибка при сохранении жилого комплекса",
+        err?.message || "Произошла ошибка при сохранении жилого комплекса.",
       );
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <main className={styles.page}>
@@ -205,17 +264,23 @@ export default function AddResidentialComplex() {
       <div className={styles.backgroundGlowTwo} />
 
       <div className={styles.container}>
-        {/* HEADER */}
+        {/* =========================
+            HEADER
+        ========================= */}
 
         <header className={styles.header}>
-          <a href="/profile" className={styles.back}>
-            <ArrowLeft />
+          <button
+            type="button"
+            className={styles.back}
+            onClick={() => router.push("/profile")}
+          >
+            <ArrowLeft size={20} />
             <span>Назад в профиль</span>
-          </a>
+          </button>
 
           <div className={styles.headerContent}>
             <div className={styles.eyebrow}>
-              <Building2 />
+              <Building2 size={18} />
               Панель застройщика
             </div>
 
@@ -228,10 +293,14 @@ export default function AddResidentialComplex() {
           </div>
         </header>
 
+        {/* =========================
+            ERROR
+        ========================= */}
+
         {error && (
           <div className={styles.error}>
             <span>!</span>
-            {error}
+            <p>{error}</p>
           </div>
         )}
 
@@ -256,13 +325,17 @@ export default function AddResidentialComplex() {
             </div>
 
             <div className={styles.grid}>
+              {/* NAME */}
+
               <div className={`${styles.field} ${styles.fieldLarge}`}>
-                <label>
+                <label htmlFor="complex-name">
                   Название ЖК <span>*</span>
                 </label>
 
                 <input
+                  id="complex-name"
                   name="name"
+                  type="text"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Например: ЖК Ала-Тоо"
@@ -270,19 +343,25 @@ export default function AddResidentialComplex() {
                 />
               </div>
 
+              {/* CITY */}
+
               <div className={styles.field}>
-                <label>Город</label>
+                <label htmlFor="complex-city">Город</label>
 
                 <input
+                  id="complex-city"
                   name="city"
+                  type="text"
                   value={form.city}
                   onChange={handleChange}
                   placeholder="Бишкек"
                 />
               </div>
 
+              {/* ADDRESS */}
+
               <div className={`${styles.field} ${styles.full}`}>
-                <label>
+                <label htmlFor="complex-address">
                   Адрес <span>*</span>
                 </label>
 
@@ -290,20 +369,50 @@ export default function AddResidentialComplex() {
                   <MapPin />
 
                   <input
+                    id="complex-address"
                     name="address"
+                    type="text"
                     value={form.address}
                     onChange={handleChange}
                     placeholder="Улица, номер дома"
+                    autoComplete="street-address"
                     required
                   />
                 </div>
               </div>
 
+              {/* DOCUMENTS */}
+
               <div className={`${styles.field} ${styles.full}`}>
-                <label>Описание</label>
+                <label htmlFor="complex-documents">
+                  Ссылка на официальный паспорт / документы ЖК с сайта
+                  Министерства строительства КР
+                  <span> *</span>
+                </label>
+
+                <div className={styles.inputWithIcon}>
+                  <FileCheck />
+
+                  <input
+                    id="complex-documents"
+                    name="documentsUrl"
+                    type="url"
+                    value={form.documentsUrl}
+                    onChange={handleChange}
+                    placeholder="https://..."
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* DESCRIPTION */}
+
+              <div className={`${styles.field} ${styles.full}`}>
+                <label htmlFor="complex-description">Описание</label>
 
                 <div className={styles.textareaWrapper}>
                   <textarea
+                    id="complex-description"
                     name="description"
                     value={form.description}
                     onChange={handleChange}
@@ -382,15 +491,16 @@ export default function AddResidentialComplex() {
                 />
               </div>
 
-              {/* COMPLETION */}
+              {/* COMPLETION DATE */}
 
               <div className={styles.field}>
-                <label>Дата сдачи</label>
+                <label htmlFor="completion-date">Дата сдачи</label>
 
                 <div className={styles.inputWithIcon}>
                   <CalendarDays />
 
                   <input
+                    id="completion-date"
                     type="date"
                     name="completionDate"
                     value={form.completionDate}
@@ -402,12 +512,13 @@ export default function AddResidentialComplex() {
               {/* FLOORS */}
 
               <div className={styles.field}>
-                <label>Количество этажей</label>
+                <label htmlFor="floors">Количество этажей</label>
 
                 <div className={styles.inputWithIcon}>
                   <Layers3 />
 
                   <input
+                    id="floors"
                     type="number"
                     name="floors"
                     value={form.floors}
@@ -421,12 +532,13 @@ export default function AddResidentialComplex() {
               {/* BLOCKS */}
 
               <div className={styles.field}>
-                <label>Количество блоков</label>
+                <label htmlFor="blocks">Количество блоков</label>
 
                 <div className={styles.inputWithIcon}>
                   <Blocks />
 
                   <input
+                    id="blocks"
                     type="number"
                     name="blocks"
                     value={form.blocks}
@@ -440,12 +552,13 @@ export default function AddResidentialComplex() {
               {/* APARTMENTS */}
 
               <div className={styles.field}>
-                <label>Количество квартир</label>
+                <label htmlFor="apartments">Количество квартир</label>
 
                 <div className={styles.inputWithIcon}>
                   <Home />
 
                   <input
+                    id="apartments"
                     type="number"
                     name="apartments"
                     value={form.apartments}
@@ -459,12 +572,13 @@ export default function AddResidentialComplex() {
               {/* PARKING */}
 
               <div className={styles.field}>
-                <label>Парковочных мест</label>
+                <label htmlFor="parking">Парковочных мест</label>
 
                 <div className={styles.inputWithIcon}>
                   <Car />
 
                   <input
+                    id="parking"
                     type="number"
                     name="parking"
                     value={form.parking}
@@ -478,12 +592,13 @@ export default function AddResidentialComplex() {
               {/* CEILING */}
 
               <div className={styles.field}>
-                <label>Высота потолков, м</label>
+                <label htmlFor="ceiling-height">Высота потолков, м</label>
 
                 <div className={styles.inputWithIcon}>
                   <Maximize />
 
                   <input
+                    id="ceiling-height"
                     type="number"
                     name="ceilingHeight"
                     value={form.ceilingHeight}
@@ -495,15 +610,37 @@ export default function AddResidentialComplex() {
                 </div>
               </div>
 
-              {/* SOTKA */}
+              {/* AREA */}
 
               <div className={styles.field}>
-                <label>Площадь территории, соток</label>
+                <label htmlFor="area">Площадь территории, м²</label>
 
                 <div className={styles.inputWithIcon}>
                   <Ruler />
 
                   <input
+                    id="area"
+                    type="number"
+                    name="area"
+                    value={form.area}
+                    onChange={handleChange}
+                    placeholder="25000"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+
+              {/* AREA SOTKA */}
+
+              <div className={styles.field}>
+                <label htmlFor="area-sotka">Площадь территории, соток</label>
+
+                <div className={styles.inputWithIcon}>
+                  <Ruler />
+
+                  <input
+                    id="area-sotka"
                     type="number"
                     name="areaSotka"
                     value={form.areaSotka}
@@ -548,9 +685,10 @@ export default function AddResidentialComplex() {
                       active ? styles.amenityActive : ""
                     }`}
                     onClick={() => toggleAmenity(item)}
+                    aria-pressed={active}
                   >
                     <span className={styles.amenityCheck}>
-                      {active && <Check />}
+                      {active && <Check size={14} />}
                     </span>
 
                     <span>{item}</span>
@@ -636,7 +774,7 @@ export default function AddResidentialComplex() {
                       type="button"
                       onClick={() => removeImage(index)}
                       className={styles.removeImage}
-                      aria-label="Удалить фото"
+                      aria-label={`Удалить фото ${index + 1}`}
                     >
                       <X />
                     </button>
@@ -646,15 +784,73 @@ export default function AddResidentialComplex() {
             )}
           </section>
 
-          {/* ACTIONS */}
+          {/* =====================================================
+              05 — ДОКУМЕНТЫ
+          ===================================================== */}
+
+          <section className={styles.card}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <FileCheck />
+              </div>
+
+              <div>
+                <span className={styles.sectionNumber}>05</span>
+
+                <h2>Официальная информация</h2>
+
+                <p>
+                  Ссылка на официальный паспорт или документы строительного
+                  объекта.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.documentCard}>
+              <div className={styles.documentIcon}>
+                <FileCheck size={24} />
+              </div>
+
+              <div className={styles.documentContent}>
+                <strong>Документы о жилом комплексе</strong>
+
+                <p>
+                  Добавьте ссылку на официальный ресурс Министерства
+                  строительства КР, где можно проверить паспорт и информацию о
+                  строительстве.
+                </p>
+
+                {form.documentsUrl && (
+                  <a
+                    href={form.documentsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.documentPreview}
+                  >
+                    <ExternalLink size={15} />
+                    Проверить ссылку
+                  </a>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* =====================================================
+              ACTIONS
+          ===================================================== */}
 
           <div className={styles.formActions}>
-            <a href="/profile" className={styles.cancel}>
+            <button
+              type="button"
+              className={styles.cancel}
+              onClick={() => router.push("/profile")}
+              disabled={loading}
+            >
               Отмена
-            </a>
+            </button>
 
             <button type="submit" className={styles.submit} disabled={loading}>
-              <Building2 />
+              <Building2 size={18} />
 
               {loading ? "Добавление..." : "Добавить ЖК"}
             </button>

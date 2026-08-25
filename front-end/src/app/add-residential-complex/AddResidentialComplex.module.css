@@ -111,7 +111,7 @@
 
   margin-bottom: 30px;
 
-  color: var(--text-muted);
+  color: #fff;
 
   font-size: 14px;
   font-weight: 700;
@@ -121,11 +121,19 @@
   transition:
     color 0.2s ease,
     transform 0.2s ease;
+  background-color: #7c3aed;
+
+  border: none;
+
+  padding: 15px;
+  border-radius: 10px;
+
+  cursor: pointer;
 }
 
 .back:hover {
-  color: #fff;
-
+  color: #555562;
+background-color: #a78bfa;
   transform: translateX(-4px);
 }
 
