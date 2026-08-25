@@ -1,0 +1,951 @@
+.page {
+  --bg: #08070c;
+  --card: #111019;
+  --card-2: #16131f;
+  --card-3: #1b1726;
+
+  --border: rgba(255, 255, 255, 0.09);
+  --border-hover: rgba(139, 92, 246, 0.45);
+
+  --text: #f7f5fb;
+  --text-secondary: #b7b1c5;
+  --text-muted: #777180;
+
+  --purple: #8b5cf6;
+  --purple-light: #a78bfa;
+  --purple-dark: #6d28d9;
+
+  min-height: 100vh;
+
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(124, 58, 237, 0.16),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 95% 70%,
+      rgba(139, 92, 246, 0.09),
+      transparent 30%
+    ),
+    var(--bg);
+
+  color: var(--text);
+  padding-top: 130px;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.glowOne,
+.glowTwo {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  filter: blur(120px);
+}
+
+.glowOne {
+  width: 500px;
+  height: 500px;
+
+  top: -280px;
+  left: -220px;
+
+  background: rgba(124, 58, 237, 0.18);
+}
+
+.glowTwo {
+  width: 450px;
+  height: 450px;
+
+  right: -260px;
+  bottom: -250px;
+
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+
+  width: min(100%, 1200px);
+
+  margin: 0 auto;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  min-height: 470px;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+
+  align-items: center;
+
+  gap: 70px;
+
+  margin-bottom: 85px;
+}
+
+.heroContent {
+  max-width: 720px;
+}
+
+.eyebrow {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 8px 13px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 100px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: var(--purple-light);
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.eyebrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hero h1 {
+  margin: 20px 0 0;
+
+  font-size: clamp(42px, 5vw, 68px);
+
+  line-height: 1.02;
+
+  letter-spacing: -2.5px;
+
+  font-weight: 900;
+}
+
+.hero h1 span {
+  display: block;
+
+  background: linear-gradient(135deg, #ffffff, var(--purple-light));
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.heroContent > p {
+  max-width: 650px;
+
+  margin: 25px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+
+  margin-top: 35px;
+}
+
+.primaryButton {
+  min-height: 55px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 22px;
+
+  border-radius: 15px;
+
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  box-shadow: 0 15px 40px rgba(109, 40, 217, 0.25);
+
+  transition: 0.25s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 20px 50px rgba(109, 40, 217, 0.38);
+}
+
+.primaryButton svg {
+  width: 17px;
+}
+
+.trust {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+}
+
+.trust svg {
+  width: 19px;
+
+  color: var(--purple-light);
+}
+
+/* =========================================================
+   HERO CARD
+========================================================= */
+
+.heroCard {
+  position: relative;
+
+  padding: 32px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 26px;
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.12), transparent 55%),
+    var(--card);
+
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+}
+
+.heroCardIcon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 28px;
+
+  border-radius: 17px;
+
+  background: rgba(139, 92, 246, 0.12);
+
+  color: var(--purple-light);
+}
+
+.heroCardIcon svg {
+  width: 27px;
+  height: 27px;
+}
+
+.heroCardLabel {
+  color: var(--purple-light);
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
+.heroCard h2 {
+  margin: 10px 0 25px;
+
+  font-size: 23px;
+
+  line-height: 1.25;
+
+  font-weight: 850;
+}
+
+.heroChecks {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 13px;
+}
+
+.heroChecks div {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  color: var(--text-secondary);
+
+  font-size: 13px;
+}
+
+.heroChecks svg {
+  width: 18px;
+
+  flex-shrink: 0;
+
+  color: var(--purple-light);
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.infoSection,
+.lawyersSection {
+  margin-bottom: 85px;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+.sectionHeading > span {
+  padding-top: 4px;
+
+  color: var(--purple-light);
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 1.5px;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+
+  color: #fff;
+
+  font-size: 30px;
+
+  letter-spacing: -0.8px;
+
+  font-weight: 850;
+}
+
+.sectionHeading p {
+  margin: 7px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   STEPS
+========================================================= */
+
+.steps {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 16px;
+
+  min-height: 155px;
+
+  padding: 25px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 20px;
+
+  background: var(--card);
+
+  transition: 0.25s ease;
+}
+
+.step:hover {
+  border-color: var(--border-hover);
+
+  transform: translateY(-3px);
+}
+
+.stepNumber {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: var(--purple-light);
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.step h3 {
+  margin: 1px 0 8px;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.step p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+/* =========================================================
+   BENEFITS
+========================================================= */
+
+.benefits {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 15px;
+}
+
+.benefit {
+  padding: 28px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 21px;
+
+  background: var(--card);
+
+  transition: 0.25s ease;
+}
+
+.benefit:hover {
+  border-color: var(--border-hover);
+
+  background: var(--card-2);
+
+  transform: translateY(-3px);
+}
+
+.benefitIcon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border-radius: 14px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: var(--purple-light);
+}
+
+.benefitIcon svg {
+  width: 22px;
+}
+
+.benefit h3 {
+  margin: 0 0 9px;
+
+  font-size: 17px;
+
+  font-weight: 800;
+}
+
+.benefit p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+  line-height: 1.65;
+}
+
+/* =========================================================
+   LAWYERS
+========================================================= */
+
+.lawyersGrid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 17px;
+}
+
+.lawyerCard {
+  padding: 25px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 45%),
+    var(--card);
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.lawyerCard:hover {
+  border-color: var(--border-hover);
+
+  transform: translateY(-4px);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
+}
+
+.lawyerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 22px;
+}
+
+.avatar {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+
+  color: white;
+
+  font-size: 17px;
+  font-weight: 900;
+
+  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.25);
+}
+
+.verified {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 6px 8px;
+
+  border-radius: 8px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: var(--purple-light);
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+.verified svg {
+  width: 14px;
+}
+
+.lawyerInfo h3 {
+  margin: 0;
+
+  font-size: 19px;
+
+  font-weight: 850;
+}
+
+.specialization {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 7px;
+
+  color: var(--purple-light);
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.specialization svg {
+  width: 14px;
+}
+
+.lawyerInfo p {
+  min-height: 65px;
+
+  margin: 15px 0 20px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+.lawyerMeta {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+
+  padding: 15px 0;
+
+  border-top: 1px solid var(--border);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.lawyerMeta div {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--text-secondary);
+
+  font-size: 11px;
+}
+
+.lawyerMeta svg {
+  width: 15px;
+
+  color: var(--purple-light);
+}
+
+.contacts {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 9px;
+
+  margin-top: 17px;
+}
+
+.contacts a {
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 11px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.contacts svg {
+  width: 16px;
+}
+
+.phone {
+  border: 1px solid var(--border);
+
+  background: var(--card-2);
+
+  color: var(--text-secondary);
+}
+
+.phone:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+
+  color: #fff;
+}
+
+.whatsapp {
+  border: 1px solid rgba(139, 92, 246, 0.25);
+
+  background: rgba(139, 92, 246, 0.09);
+
+  color: var(--purple-light);
+}
+
+.whatsapp:hover {
+  background: rgba(139, 92, 246, 0.16);
+}
+
+/* =========================================================
+   BOTTOM CTA
+========================================================= */
+
+.bottomCta {
+  display: grid;
+
+  grid-template-columns: auto 1fr auto;
+
+  align-items: center;
+
+  gap: 25px;
+
+  padding: 35px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+
+  border-radius: 25px;
+
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(139, 92, 246, 0.12),
+      transparent 40%
+    ),
+    var(--card);
+  margin-bottom: 100px;
+}
+
+.bottomCtaIcon {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: var(--purple-light);
+}
+
+.bottomCtaIcon svg {
+  width: 27px;
+}
+
+.bottomCta span {
+  color: var(--purple-light);
+
+  font-size: 11px;
+
+  font-weight: 850;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+.bottomCta h2 {
+  margin: 7px 0;
+
+  font-size: 23px;
+
+  line-height: 1.25;
+
+  font-weight: 850;
+}
+
+.bottomCta p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+}
+
+.ctaButton {
+  min-height: 50px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 18px;
+
+  border-radius: 13px;
+
+  background: var(--purple);
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition: 0.25s ease;
+}
+
+.ctaButton:hover {
+  background: var(--purple-light);
+
+  transform: translateY(-2px);
+}
+
+.ctaButton svg {
+  width: 16px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .heroCard {
+    max-width: 600px;
+  }
+
+  .steps,
+  .benefits,
+  .lawyersGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 40px 16px 70px;
+  }
+
+  .hero {
+    min-height: auto;
+
+    margin-bottom: 65px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+
+    letter-spacing: -1.7px;
+  }
+
+  .heroContent > p {
+    font-size: 15px;
+  }
+
+  .heroActions {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 17px;
+  }
+
+  .sectionHeading h2 {
+    font-size: 25px;
+  }
+
+  .steps,
+  .benefits,
+  .lawyersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomCta {
+    grid-template-columns: 1fr;
+
+    padding: 27px;
+  }
+
+  .bottomCta h2 {
+    font-size: 21px;
+  }
+
+  .ctaButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 25px 12px 55px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .heroCard {
+    padding: 24px;
+  }
+
+  .step,
+  .benefit,
+  .lawyerCard {
+    padding: 21px;
+  }
+
+  .contacts {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

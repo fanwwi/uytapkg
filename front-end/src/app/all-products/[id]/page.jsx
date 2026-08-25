@@ -3,7 +3,14 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { getListingById, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
+
+import {
+  getListingById,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+} from "@/utils/api";
+
 import { mapListingDetail } from "@/utils/mapListingData";
 
 import {
@@ -15,10 +22,8 @@ import {
   Ruler,
   BedDouble,
   Building2,
-  CalendarDays,
   UserRound,
   Phone,
-  MessageCircle,
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
@@ -26,7 +31,6 @@ import {
   Layers3,
   Flame,
   Sparkles,
-  DoorOpen,
   CarFront,
   Waves,
   Zap,
@@ -35,116 +39,6 @@ import {
 } from "lucide-react";
 
 import styles from "./ProductDetails.module.css";
-
-/*
-const product = {
-  id: 1,
-
-  title: "Уютный дом у озера Иссык-Куль",
-
-  price: "120 000 $",
-
-  type: "Дом",
-
-  dealType: "Продажа",
-
-  location: "Чолпон-Ата",
-
-  address: "ул. Советская, 24",
-
-  area: "180 м²",
-
-  rooms: 5,
-
-  floors: 2,
-
-  year: 2021,
-
-  status: "vip",
-
-  description:
-    "Просторный и уютный дом в живописном районе Чолпон-Аты. До озера несколько минут пешком. Дом отлично подходит как для постоянного проживания, так и для отдыха всей семьёй.",
-
-  images: [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlAPyE1_cDUmR3d8OUVHVSlPr8dssvtQW7pvssq74Xc-_5uW0a8S5RXO9T&s=10",
-  ],
-
-  characteristics: [
-    {
-      icon: BedDouble,
-      label: "Комнаты",
-      value: "5 комнат",
-    },
-    {
-      icon: Ruler,
-      label: "Площадь",
-      value: "180 м²",
-    },
-    {
-      icon: Layers3,
-      label: "Этажность",
-      value: "2 этажа",
-    },
-    {
-      icon: Home,
-      label: "Тип дома",
-      value: "Частный дом",
-    },
-    {
-      icon: Flame,
-      label: "Отопление",
-      value: "Автономное",
-    },
-    {
-      icon: Droplets,
-      label: "Канализация",
-      value: "Септик",
-    },
-    {
-      icon: Zap,
-      label: "Электричество",
-      value: "Есть",
-    },
-    {
-      icon: FileCheck,
-      label: "Документы",
-      value: "Красная книга",
-    },
-    {
-      icon: CarFront,
-      label: "Парковка",
-      value: "Есть",
-    },
-    {
-      icon: Waves,
-      label: "Вид",
-      value: "Вид на озеро",
-    },
-  ],
-
-  amenities: [
-    "Балкон / лоджия",
-    "Видеонаблюдение",
-    "Закрытая территория",
-    "Парковка",
-    "Бытовая техника",
-    "Вид на горы",
-    "Охрана",
-    "Не затапливалась",
-  ],
-
-  owner: {
-    id: "4",
-    name: "Александр Иванов",
-    role: "Владелец объявления",
-    avatar: "https://i.pravatar.cc/150?img=12",
-  },
-
-  createdAt: "12 августа 2026",
-};
-*/
 
 export default function ProductDetails() {
   const router = useRouter();
@@ -159,10 +53,10 @@ export default function ProductDetails() {
 
   useEffect(() => {
     if (!id) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     getListingById(id)
       .then((res) => {
         if (res.success && res.data) {
@@ -180,6 +74,7 @@ export default function ProductDetails() {
       });
 
     const token = localStorage.getItem("uytap_token");
+
     if (token) {
       getFavorites(token)
         .then((res) => {
@@ -188,12 +83,15 @@ export default function ProductDetails() {
             setIsFavorite(isFav);
           }
         })
-        .catch((err) => console.error("Error fetching favs status:", err));
+        .catch((err) => {
+          console.error("Error fetching favs status:", err);
+        });
     }
   }, [id]);
 
   const handleFavoriteToggle = async () => {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
       router.push("/login");
       return;
@@ -202,11 +100,13 @@ export default function ProductDetails() {
     try {
       if (isFavorite) {
         const res = await removeFavorite(token, id);
+
         if (res.success) {
           setIsFavorite(false);
         }
       } else {
         const res = await addFavorite(token, id);
+
         if (res.success) {
           setIsFavorite(true);
         }
@@ -218,6 +118,7 @@ export default function ProductDetails() {
 
   const nextImage = () => {
     if (!product || !product.images) return;
+
     setCurrentImage((prev) =>
       prev === product.images.length - 1 ? 0 : prev + 1,
     );
@@ -225,6 +126,7 @@ export default function ProductDetails() {
 
   const previousImage = () => {
     if (!product || !product.images) return;
+
     setCurrentImage((prev) =>
       prev === 0 ? product.images.length - 1 : prev - 1,
     );
@@ -233,7 +135,13 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <main className={styles.page}>
-        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+        <div
+          className={styles.container}
+          style={{
+            textAlign: "center",
+            padding: "100px 0",
+          }}
+        >
           <h2>Загрузка объявления...</h2>
         </div>
       </main>
@@ -243,13 +151,30 @@ export default function ProductDetails() {
   if (error || !product) {
     return (
       <main className={styles.page}>
-        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+        <div
+          className={styles.container}
+          style={{
+            textAlign: "center",
+            padding: "100px 0",
+          }}
+        >
           <h2>Объявление не найдено</h2>
-          <p style={{ marginTop: "10px", color: "#666" }}>{error || "Не удалось загрузить данные."}</p>
+
+          <p
+            style={{
+              marginTop: "10px",
+              color: "#666",
+            }}
+          >
+            {error || "Не удалось загрузить данные."}
+          </p>
+
           <button
             type="button"
             className={styles.back}
-            style={{ margin: "20px auto 0" }}
+            style={{
+              margin: "20px auto 0",
+            }}
             onClick={() => router.push("/all-products")}
           >
             <ArrowLeft size={18} />
@@ -260,7 +185,10 @@ export default function ProductDetails() {
     );
   }
 
-  // Динамически строим характеристики
+  /*
+    ХАРАКТЕРИСТИКИ
+  */
+
   const characteristics = [
     {
       icon: BedDouble,
@@ -282,7 +210,20 @@ export default function ProductDetails() {
       label: "Тип",
       value: product.type,
     },
+
+    // РАССТОЯНИЕ ДО ПЛЯЖА
+    {
+      icon: Waves,
+      label: "Расстояние до пляжа",
+      value: product.beachDistance
+        ? `${product.beachDistance} м`
+        : "Не указано",
+    },
   ];
+
+  /*
+    ДОПОЛНИТЕЛЬНЫЕ ХАРАКТЕРИСТИКИ
+  */
 
   if (product.rawFeatures?.heating) {
     characteristics.push({
@@ -291,6 +232,7 @@ export default function ProductDetails() {
       value: product.rawFeatures.heating,
     });
   }
+
   if (product.rawFeatures?.sewerage) {
     characteristics.push({
       icon: Droplets,
@@ -298,13 +240,18 @@ export default function ProductDetails() {
       value: product.rawFeatures.sewerage,
     });
   }
+
   if (product.rawFeatures?.electricity) {
     characteristics.push({
       icon: Zap,
       label: "Электричество",
-      value: product.rawFeatures.electricity === true ? "Есть" : product.rawFeatures.electricity,
+      value:
+        product.rawFeatures.electricity === true
+          ? "Есть"
+          : product.rawFeatures.electricity,
     });
   }
+
   if (product.rawFeatures?.documents) {
     characteristics.push({
       icon: FileCheck,
@@ -312,6 +259,7 @@ export default function ProductDetails() {
       value: product.rawFeatures.documents,
     });
   }
+
   if (product.rawFeatures?.parking) {
     characteristics.push({
       icon: CarFront,
@@ -319,6 +267,7 @@ export default function ProductDetails() {
       value: product.rawFeatures.parking,
     });
   }
+
   if (product.rawFeatures?.view) {
     characteristics.push({
       icon: Waves,
@@ -327,12 +276,15 @@ export default function ProductDetails() {
     });
   }
 
-  // Удобства
+  /*
+    УДОБСТВА
+  */
+
   const amenities = Array.isArray(product.rawFeatures?.amenities)
     ? product.rawFeatures.amenities
     : product.rawFeatures?.amenities
       ? [product.rawFeatures.amenities]
-      : ["Парковка", "Закрытая территория", "Видеонаблюдение"]; // fallback-удобства по умолчанию, если нет в БД
+      : ["Парковка", "Закрытая территория", "Видеонаблюдение"];
 
   return (
     <main className={styles.page}>
@@ -469,6 +421,7 @@ export default function ProductDetails() {
 
             <div className={styles.location}>
               <MapPin size={20} />
+
               <div>
                 <strong>{product.location}</strong>
                 <span>{product.address}</span>
@@ -481,6 +434,7 @@ export default function ProductDetails() {
               {product.rooms > 0 && (
                 <div>
                   <BedDouble />
+
                   <span>
                     <b>{product.rooms}</b>
                     комнат
@@ -491,6 +445,7 @@ export default function ProductDetails() {
               {product.area && (
                 <div>
                   <Ruler />
+
                   <span>
                     <b>{product.area}</b>
                   </span>
@@ -500,12 +455,24 @@ export default function ProductDetails() {
               {product.floors > 0 && (
                 <div>
                   <Layers3 />
+
                   <span>
                     <b>{product.floors}</b>
                     этаж(а)
                   </span>
                 </div>
               )}
+
+              {/* РАССТОЯНИЕ ДО ПЛЯЖА */}
+
+              <div>
+                <Waves />
+
+                <span>
+                  <b>{product.beachDistance || "—"} м</b>
+                  до пляжа
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -557,6 +524,7 @@ export default function ProductDetails() {
 
                       <div>
                         <span>{item.label}</span>
+
                         <strong>{item.value}</strong>
                       </div>
                     </div>
@@ -610,15 +578,18 @@ export default function ProductDetails() {
 
                 <div>
                   <strong>{product.location}</strong>
+
                   <p>{product.address}</p>
                 </div>
               </div>
             </section>
           </div>
 
-          {/* SIDE */}
+          {/* SIDEBAR */}
 
           <aside className={styles.sidebar}>
+            {/* INFORMATION */}
+
             <div className={styles.sideCard}>
               <div className={styles.sideTop}>
                 <Tag />
@@ -639,7 +610,21 @@ export default function ProductDetails() {
                 <span>Дата публикации</span>
                 <strong>{product.createdAt}</strong>
               </div>
+
+              {/* РАССТОЯНИЕ ДО ПЛЯЖА */}
+
+              <div className={styles.sideRow}>
+                <span>Расстояние до пляжа</span>
+
+                <strong>
+                  {product.beachDistance
+                    ? `${product.beachDistance} м`
+                    : "Не указано"}
+                </strong>
+              </div>
             </div>
+
+            {/* OWNER */}
 
             <div className={styles.ownerSideCard}>
               <div className={styles.ownerSideHeader}>
@@ -659,12 +644,20 @@ export default function ProductDetails() {
 
                 <div>
                   <strong>{product.owner.name}</strong>
+
                   <span>{product.owner.role}</span>
                 </div>
               </div>
 
               {product.owner.phone && (
-                <div style={{ marginTop: "15px", display: "flex", gap: "10px", flexDirection: "column" }}>
+                <div
+                  style={{
+                    marginTop: "15px",
+                    display: "flex",
+                    gap: "10px",
+                    flexDirection: "column",
+                  }}
+                >
                   <a
                     href={`tel:${product.owner.phone}`}
                     className={styles.projects}
@@ -689,7 +682,9 @@ export default function ProductDetails() {
 
               <button
                 type="button"
-                onClick={() => router.push(`/public-profile/${product.owner.id}`)}
+                onClick={() =>
+                  router.push(`/public-profile/${product.owner.id}`)
+                }
               >
                 Связаться с владельцем
                 <ArrowRight size={17} />

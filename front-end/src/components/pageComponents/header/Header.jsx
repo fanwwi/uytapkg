@@ -141,6 +141,8 @@ export default function Header() {
                 <Link href="/pricing">Тарифы</Link>
 
                 <Link href="/all-products">Все объявления</Link>
+
+                <Link href="/lawyers">Юристы</Link>
               </div>
             )}
           </div>
