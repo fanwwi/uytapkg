@@ -14,6 +14,7 @@ import {
   Smartphone,
   MessageCircle,
   Laptop,
+  ShieldCheck,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -174,6 +175,11 @@ export default function Footer() {
           <Link href="/about">
             <Laptop />
             О проекте
+          </Link>
+
+          <Link href="/about">
+            <ShieldCheck />
+            Безопасность
           </Link>
 
           <Link href="/all-products">

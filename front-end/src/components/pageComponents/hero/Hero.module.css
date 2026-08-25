@@ -12,10 +12,11 @@
   background-image: url("/assets/bishkek-hero.jpg");
   background-size: cover;
   background-position: center;
+  padding-top: 100px;
 }
 
 /* =========================
-   GRAPHITE OVERLAY
+   OVERLAY
 ========================= */
 
 .overlay {
@@ -32,8 +33,6 @@
 
   z-index: 1;
 }
-
-/* МЯГКОЕ ФИОЛЕТОВОЕ СВЕЧЕНИЕ */
 
 .overlay::after {
   content: "";
@@ -149,7 +148,7 @@
 }
 
 /* =========================
-   PURPLE HIGHLIGHT
+   HIGHLIGHT
 ========================= */
 
 .highlight {
@@ -203,23 +202,25 @@
 
   color: #d6d1df;
 
-  margin-bottom: 40px;
+  margin: 0 0 40px;
 
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================
-   BUTTONS
+   MAIN BUTTONS
 ========================= */
 
 .buttons {
   display: flex;
 
   gap: 20px;
+
+  align-items: center;
 }
 
 /* =========================
-   PRIMARY — PURPLE
+   PRIMARY
 ========================= */
 
 .primary {
@@ -275,7 +276,7 @@
 }
 
 /* =========================
-   SECONDARY — GRAPHITE
+   SECONDARY
 ========================= */
 
 .secondary {
@@ -323,6 +324,130 @@
   box-shadow:
     0 15px 35px rgba(0, 0, 0, 0.35),
     0 0 25px rgba(139, 92, 246, 0.13);
+}
+
+/* =========================
+   SAFETY BUTTON
+========================= */
+
+.safetyButton {
+  margin-top: 22px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  width: max-content;
+
+  padding: 11px 15px 11px 11px;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  background: rgba(18, 17, 23, 0.72);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.safetyButton:hover {
+  transform: translateY(-3px);
+
+  background: rgba(30, 27, 39, 0.9);
+
+  border-color: rgba(167, 139, 250, 0.42);
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+.safetyIcon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  color: #c4b5fd;
+
+  background: rgba(139, 92, 246, 0.14);
+
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.safetyIcon svg {
+  width: 20px;
+  height: 20px;
+
+  stroke-width: 2;
+}
+
+.safetyText {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 2px;
+
+  text-align: left;
+}
+
+.safetyText strong {
+  font-size: 14px;
+
+  font-weight: 800;
+
+  color: #ffffff;
+}
+
+.safetyText small {
+  font-size: 12px;
+
+  font-weight: 500;
+
+  color: #aaa4b6;
+}
+
+.safetyArrow {
+  width: 16px;
+  height: 16px;
+
+  margin-left: 7px;
+
+  color: #8f899d;
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.safetyButton:hover .safetyArrow {
+  color: #c4b5fd;
+
+  transform: translate(2px, -2px);
 }
 
 /* =========================
@@ -389,6 +514,8 @@
     flex-direction: column;
 
     gap: 12px;
+
+    width: 100%;
   }
 
   .primary,
@@ -396,5 +523,21 @@
     width: 100%;
 
     justify-content: center;
+  }
+
+  .safetyButton {
+    width: 100%;
+
+    margin-top: 18px;
+
+    padding: 11px 13px;
+  }
+
+  .safetyText {
+    flex: 1;
+  }
+
+  .safetyArrow {
+    margin-left: 0;
   }
 }
