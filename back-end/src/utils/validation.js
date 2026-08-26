@@ -272,6 +272,9 @@ export const createComplexSchema = z
     ceilingHeight: z.union([z.number(), z.string()]).optional().nullable(),
     area: z.union([z.number(), z.string()]).optional().nullable(),
     areaSotka: z.union([z.number(), z.string()]).optional().nullable(),
+    documentsUrl: z
+      .string({ required_error: "Укажите ссылку на документы ЖК" })
+      .min(1, "Укажите ссылку на документы ЖК"),
     amenities: z.array(z.string()).optional(),
     images: z.array(z.string()).optional(),
     features: z.record(z.any()).optional(),

@@ -300,6 +300,7 @@ export default function ComplexesDetails() {
         const res = await getComplexById(complexId);
 
         if (res && res.success && res.data) {
+          const mapped = mapComplexData(res.data);
           const f = res.data.features || {};
 
           const formatBlocks = (val) => {
@@ -336,6 +337,7 @@ export default function ComplexesDetails() {
             landArea: f.areaSotka ? `${f.areaSotka} соток` : (f.area ? `${f.area} м²` : "Не указано"),
             ceilingHeight: formatHeight(f.ceilingHeight),
             constructionType: f.construction || "Не указано",
+            documentsUrl: f.documentsUrl || mapped.documentsUrl || null,
             images: (f.images && f.images.length > 0)
               ? f.images
               : (res.data.cover_photo ? [res.data.cover_photo] : []),
@@ -366,7 +368,8 @@ export default function ComplexesDetails() {
   };
 
   const openMinstroy = () => {
-    window.open(MINSTROY_URL, "_blank", "noopener,noreferrer");
+    const link = residentialComplex.documentsUrl || MINSTROY_URL;
+    window.open(link, "_blank", "noopener,noreferrer");
   };
 
   return (

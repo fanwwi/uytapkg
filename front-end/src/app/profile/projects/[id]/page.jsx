@@ -225,6 +225,7 @@ export default function MyComplexDetail() {
           throw new Error("Жилой комплекс не найден");
         }
 
+        const mapped = mapComplexData(res.data);
         const f = res.data.features || {};
 
         const formatBlocks = (val) => {

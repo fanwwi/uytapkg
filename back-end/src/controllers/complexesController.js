@@ -174,6 +174,7 @@ export const createComplex = async (req, res) => {
       construction,
       area,
       areaSotka,
+      documentsUrl,
       amenities,
       images,
       features,
@@ -209,6 +210,7 @@ export const createComplex = async (req, res) => {
         construction: construction || null,
         area: area || null,
         areaSotka: areaSotka || null,
+        documentsUrl: documentsUrl || null,
         amenities: amenities || [],
         images: images || [],
       },
@@ -319,6 +321,7 @@ export const updateComplex = async (req, res) => {
       construction,
       area,
       areaSotka,
+      documentsUrl,
       amenities,
     } = validationResult.data;
 
@@ -352,6 +355,7 @@ export const updateComplex = async (req, res) => {
         construction: construction !== undefined ? construction : complex.features?.construction,
         area: area !== undefined ? area : complex.features?.area,
         areaSotka: areaSotka !== undefined ? areaSotka : complex.features?.areaSotka,
+        documentsUrl: documentsUrl !== undefined ? documentsUrl : complex.features?.documentsUrl,
         amenities: amenities || complex.features?.amenities || [],
         images: oldImages, // Неизменяемые картинки
       },

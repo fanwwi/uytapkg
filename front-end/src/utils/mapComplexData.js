@@ -52,6 +52,7 @@ export function mapComplexData(item) {
     construction: features.construction || null,
     area: features.area || null,
     areaSotka: features.areaSotka || null,
+    documentsUrl: features.documentsUrl || null,
     amenities: features.amenities || [],
     images: features.images || [],
     layouts: item.complex_layouts || [],

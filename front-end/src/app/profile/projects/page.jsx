@@ -144,6 +144,12 @@ export default function ResidentialComplexes() {
             if (compl.completion_status === "completed")
               completion_status = "Сдан";
 
+            const parseNumber = (val) => {
+              if (!val) return 0;
+              const n = parseInt(String(val).replace(/\D+/g, ""), 10);
+              return isNaN(n) ? 0 : n;
+            };
+
             return {
               id: compl.id,
               name: compl.name,
@@ -152,14 +158,15 @@ export default function ResidentialComplexes() {
               class: compl.housing_class || "Комфорт",
               completionLabel: getCompletionLabel(compl.completion_date),
               completionDate: compl.completion_date,
-              floors: compl.features?.floors || 0,
-              apartments: compl.features?.apartments || 0,
-              parking: compl.features?.parking || 0,
-              area: compl.features?.area ? `${compl.features.area} м²` : "0 м²",
+              floors: parseNumber(compl.features?.floors),
+              apartments: parseNumber(compl.features?.apartments),
+              parking: parseNumber(compl.features?.parking),
+              area: compl.features?.areaSotka ? `${compl.features.areaSotka} соток` : (compl.features?.area ? `${compl.features.area} м²` : "0 м²"),
               image:
                 compl.cover_photo ||
                 "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
               amenities: compl.features?.amenities || [],
+              rawFeatures: compl.features || {},
             };
           });
           setComplexes(mapped);
@@ -214,7 +221,7 @@ export default function ResidentialComplexes() {
   }, [complexes, status, search]);
 
   const totalApartments = complexes.reduce(
-    (sum, item) => sum + item.apartments,
+    (sum, item) => sum + (Number(item.apartments) || 0),
     0,
   );
 
