@@ -149,8 +149,6 @@ const residentialComplex = {
   galleryLabel: "Галерея комплекса",
   createdAt: "12 августа 2026",
 };
-*/
->>>>>>> 63d5f3b (Исправления безопасности, сортировки и характеристик ЖК/объявлений)
 
 const defaultResidentialComplex = {
   id: 1,
