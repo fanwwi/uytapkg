@@ -13,6 +13,11 @@ export function mapListingData(item) {
     || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400";
 
   return {
+    // Характеристики категории (серия, этаж, стены и т.д.) — берём из
+    // features первыми, чтобы канонические поля ниже всегда были главнее
+    // и не могли быть случайно затёрты значениями формы (см. add-product).
+    ...(item.features || {}),
+
     id: item.id,
     title: item.title || "Без названия",
     type: propertyTypeMapping[item.property_type] || "Другое",
@@ -24,6 +29,7 @@ export function mapListingData(item) {
           : (item.promotion_status === "top" ? "top" : "regular")),
     location: item.city || item.region || "Кыргызстан",
     region: item.region,
+    district: item.district,
     price: `${item.price?.toLocaleString() || 0} ${item.currency === "USD" ? "$" : "сом"}`,
     rawPrice: item.price || 0,
     rawArea: item.area || 0,
@@ -31,7 +37,6 @@ export function mapListingData(item) {
     likes: 0,
     rooms: item.rooms,
     area: item.area ? `${item.area} м²` : "",
-    ...(item.features || {}),
   };
 }
 
@@ -70,6 +75,18 @@ export function mapListingDetail(item) {
   };
 
   const features = item.features || {};
+  const resortFilters = item.resort_filters || {};
+
+  // Расстояние до пляжа: у новых объявлений хранится в resort_filters
+  // (корректно сохраняется после исправления формы добавления объявления),
+  // у старых объявлений (созданных до исправления) значение осело только
+  // в features.beachDistance — проверяем оба источника, чтобы не терять данные.
+  const beachDistance =
+    resortFilters.beachDistanceFrom ??
+    resortFilters.beachDistanceTo ??
+    features.beachDistance ??
+    features.beachDistanceFrom ??
+    null;
 
   const dateOptions = { day: "numeric", month: "long", year: "numeric" };
   const createdAtFormatted = item.created_at
@@ -88,6 +105,7 @@ export function mapListingDetail(item) {
     rooms: item.rooms || 0,
     floors: item.total_floors || item.floor || 0,
     year: features.year || null,
+    beachDistance,
     status: item.is_urgent ? "urgent" : (item.promotion_status === "vip" ? "vip" : null),
     description: item.description || "Описание отсутствует.",
     images,

@@ -169,6 +169,7 @@ export default function SmartSearch({ form, updateForm, onNext }) {
           mapped.dealType = dealTypeMapping[f.dealType] || "";
         }
         if (f.maxPrice) mapped.priceTo = String(f.maxPrice);
+        if (f.rooms) mapped.rooms = Number(f.rooms) >= 4 ? "4+" : String(f.rooms);
 
         const cleanMapped = Object.fromEntries(
           Object.entries(mapped).filter(([, value]) => value !== null && value !== undefined && value !== "")

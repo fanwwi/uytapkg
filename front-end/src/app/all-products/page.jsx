@@ -104,7 +104,10 @@ export default function AllProducts() {
     const urlSearch = searchParams.get("search");
     setSearch(urlSearch || "");
 
-    const urlCity = searchParams.get("city") || searchParams.get("settlement") || searchParams.get("location");
+    // ВАЖНО: "location" сюда намеренно не включаем — это отдельная
+    // характеристика для участков/комнат ("В городе"/"За городом" и т.д.),
+    // а не название города, иначе фильтр по городу ломается.
+    const urlCity = searchParams.get("city") || searchParams.get("settlement");
     const urlRegion = searchParams.get("region");
 
     if (urlCity) {
@@ -163,7 +166,7 @@ export default function AllProducts() {
         const [listingsResponse, favoritesResponse] = await Promise.all([
           getListings({
             page: 1,
-            limit: 100,
+            limit: 500,
           }),
 
           token ? getFavorites(token) : Promise.resolve(null),
@@ -351,12 +354,38 @@ export default function AllProducts() {
           const selectedCity = String(city).toLowerCase();
 
           if (selectedCity === "иссык-куль") {
-            return (
+            // Название населенного пункта — самый надежный признак:
+            // у некоторых объявлений "region" в БД рассинхронизирован с
+            // реальным городом (например, city="Бишкек" при region="ISSYK_KUL"),
+            // поэтому нельзя засчитывать совпадение только по region.
+            const isIssykKulSettlement =
               itemLocation.includes("куль") ||
               itemLocation.includes("каракол") ||
               itemLocation.includes("чолпон") ||
-              itemRegion.includes("issyk") ||
-              itemRegion.includes("issykkul")
+              itemLocation.includes("бостери") ||
+              itemLocation.includes("каджи-сай") ||
+              itemLocation.includes("тамчы") ||
+              itemLocation.includes("боконбаево") ||
+              itemLocation.includes("григорьев") ||
+              itemLocation.includes("ананьево") ||
+              itemLocation.includes("барскоон") ||
+              itemLocation.includes("тюп") ||
+              itemLocation.includes("жыргалан") ||
+              itemLocation.includes("балыкчы");
+
+            if (isIssykKulSettlement) {
+              return true;
+            }
+
+            // Регион как резерв — только если сам город явно не указывает
+            // на другое место (иначе неверный/тестовый region перетянет
+            // сюда объявления из других городов).
+            const cityLooksUnspecified =
+              !itemLocation || itemLocation === "кыргызстан";
+
+            return (
+              cityLooksUnspecified &&
+              (itemRegion.includes("issyk") || itemRegion.includes("issykkul"))
             );
           }
 
@@ -428,13 +457,61 @@ export default function AllProducts() {
           return true;
         })();
 
+        /*
+         * DISTRICT
+         */
+
+        const matchesDistrict = (() => {
+          const district = searchParams.get("district");
+          if (!district) return true;
+
+          const value = district.toLowerCase();
+          const itemDistrict = String(item.district || "").toLowerCase();
+          const itemLocationText = String(item.location || "").toLowerCase();
+
+          // AI-поиск и другие источники иногда кладут в "district" название
+          // населенного пункта (например "Чолпон-Ата"), которое в БД хранится
+          // в "city", а не в "district" (там null для не-бишкекских объектов).
+          // Поэтому проверяем оба поля.
+          return (
+            itemDistrict.includes(value) || itemLocationText.includes(value)
+          );
+        })();
+
+        /*
+         * BEACH DISTANCE (диапазон, не точное совпадение)
+         */
+
+        const matchesBeachDistance = (() => {
+          const fromParam = searchParams.get("beachDistanceFrom");
+          const toParam = searchParams.get("beachDistanceTo");
+          if (!fromParam && !toParam) return true;
+
+          const min = fromParam ? Number(fromParam) : null;
+          const max = toParam ? Number(toParam) : null;
+          const distance = Number(item.beachDistanceFrom ?? item.beachDistance);
+
+          if (Number.isNaN(distance)) return true;
+
+          if (min !== null && !Number.isNaN(min) && distance < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && distance > max) {
+            return false;
+          }
+
+          return true;
+        })();
+
         // Все остальные динамические параметры из URL (фильтры шагов)
         for (const [key, value] of searchParams.entries()) {
           if ([
             "category", "propertyType", "dealType", "search", "query", "city", "region",
             "rooms", "priceFrom", "priceTo", "areaFrom", "areaTo",
-            "page", "limit", "searchMode", "location",
-            "country", "settlement", "district", "rentalPeriod", "address", "latitude", "longitude", "listingType"
+            "page", "limit", "searchMode", "location", "district",
+            "beachDistanceFrom", "beachDistanceTo",
+            "country", "settlement", "rentalPeriod", "address", "latitude", "longitude", "listingType"
           ].includes(key)) {
             continue;
           }
@@ -455,7 +532,9 @@ export default function AllProducts() {
           matchesCity &&
           matchesRooms &&
           matchesPrice &&
-          matchesArea
+          matchesArea &&
+          matchesDistrict &&
+          matchesBeachDistance
         );
       })
       .sort((a, b) => {
@@ -483,6 +562,10 @@ export default function AllProducts() {
     priceTo,
     areaFrom,
     areaTo,
+    // searchParams меняется при каждом переходе с новыми фильтрами
+    // (district, beachDistance и характеристики категорий читаются
+    // напрямую из searchParams внутри фильтра выше)
+    searchParams,
   ]);
 
   /*

@@ -60,8 +60,7 @@ const initialForm = {
   // =========================
   // ДОПОЛНИТЕЛЬНЫЕ ФИЛЬТРЫ
   // =========================
-  beachDistanceFrom: "",
-  beachDistanceTo: "",
+  beachDistance: "",
   developerOrComplex: "",
 
   // =========================
@@ -155,6 +154,15 @@ export default function AddProductPage() {
       if (price > 0) {
         derivedPrice = price;
       }
+
+      // =========================
+      // РАССТОЯНИЕ ДО ПЛЯЖА
+      // =========================
+      // Поле "Расстояние до пляжа" на шаге характеристик хранится в
+      // form.beachDistance (одно значение), а не в form.beachDistanceFrom/To —
+      // те поля никогда не заполняются ни одним компонентом формы.
+      const beachDistanceValue =
+        Number(form.beachDistance) > 0 ? Number(form.beachDistance) : null;
 
       // =========================
       // НАЗВАНИЕ
@@ -284,15 +292,8 @@ export default function AddProductPage() {
         areaTo: form.area ? Number(form.area) : null,
 
         // Расстояние до пляжа
-        beachDistanceFrom:
-          Number(form.beachDistanceFrom) > 0
-            ? Number(form.beachDistanceFrom)
-            : null,
-
-        beachDistanceTo:
-          Number(form.beachDistanceTo) > 0
-            ? Number(form.beachDistanceTo)
-            : null,
+        beachDistanceFrom: beachDistanceValue,
+        beachDistanceTo: beachDistanceValue,
 
         // Застройщик / ЖК
         developerOrComplex: form.developerOrComplex || null,
@@ -312,15 +313,8 @@ export default function AddProductPage() {
         isResort: true,
 
         resortFilters: {
-          beachDistanceFrom:
-            Number(form.beachDistanceFrom) > 0
-              ? Number(form.beachDistanceFrom)
-              : null,
-
-          beachDistanceTo:
-            Number(form.beachDistanceTo) > 0
-              ? Number(form.beachDistanceTo)
-              : null,
+          beachDistanceFrom: beachDistanceValue,
+          beachDistanceTo: beachDistanceValue,
 
           developerOrComplex: form.developerOrComplex || null,
 
