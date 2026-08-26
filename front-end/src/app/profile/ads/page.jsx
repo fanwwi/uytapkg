@@ -236,12 +236,13 @@ export default function Ads() {
           : null,
 
         address: updatedListing.address || "",
-
         region: editingListing.raw?.region || "BISHKEK",
-
         city: editingListing.raw?.city || null,
-
         country: editingListing.raw?.country || "Кыргызстан",
+        features: {
+          ...(editingListing.raw?.features || {}),
+          ...(updatedListing.features || {}),
+        },
       };
 
       const res = await updateListingApi(token, editingListing.id, payload);

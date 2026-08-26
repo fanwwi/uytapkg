@@ -141,7 +141,7 @@ export const createListingSchema = z
     features: z.record(z.any()).optional(),
     photos: z.array(z.string()).optional(),
   })
-  .strict({ message: "Обнаружены неизвестные/запрещённые поля" })
+  .passthrough()
   .superRefine((data, ctx) => {
     if (data.dealType === "rent" && !data.rentPeriod) {
       ctx.addIssue({
@@ -242,7 +242,7 @@ export const updateListingSchema = z
     userId: z.any().optional(),
     user_id: z.any().optional(),
   })
-  .strict({ message: "Обнаружены неизвестные/запрещённые поля" })
+  .passthrough()
   .superRefine((data, ctx) => {
     if (data.dealType === "rent" && data.rentPeriod === null) {
       ctx.addIssue({
@@ -252,5 +252,33 @@ export const updateListingSchema = z
       });
     }
   });
+
+// Схема создания Жилого Комплекса (POST /api/complexes)
+export const createComplexSchema = z
+  .object({
+    name: z.string({ required_error: "Укажите название ЖК" }).min(2, "Название ЖК слишком короткое"),
+    description: z.string().optional().nullable(),
+    region: z.string().optional().nullable(),
+    city: z.string().optional().nullable(),
+    address: z.string().optional().nullable(),
+    status: z.string().optional().nullable(),
+    class: z.string().optional().nullable(),
+    construction: z.string().optional().nullable(),
+    completionDate: z.string().optional().nullable(),
+    floors: z.union([z.number(), z.string()]).optional().nullable(),
+    blocks: z.union([z.number(), z.string()]).optional().nullable(),
+    apartments: z.union([z.number(), z.string()]).optional().nullable(),
+    parking: z.union([z.number(), z.string()]).optional().nullable(),
+    ceilingHeight: z.union([z.number(), z.string()]).optional().nullable(),
+    area: z.union([z.number(), z.string()]).optional().nullable(),
+    areaSotka: z.union([z.number(), z.string()]).optional().nullable(),
+    amenities: z.array(z.string()).optional(),
+    images: z.array(z.string()).optional(),
+    features: z.record(z.any()).optional(),
+  })
+  .passthrough();
+
+// Схема обновления Жилого Комплекса (PUT /api/complexes/:id)
+export const updateComplexSchema = createComplexSchema.partial();
 
 

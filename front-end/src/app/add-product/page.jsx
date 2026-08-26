@@ -329,6 +329,7 @@ export default function AddProductPage() {
 
         // Остальные характеристики
         features: {
+          ...form,
           wifi: form.wifi || null,
           pool: form.pool || null,
           bath: form.bath || null,
@@ -340,7 +341,10 @@ export default function AddProductPage() {
           furniture: form.furniture || null,
           documents: form.documents || null,
           offerType: form.offerType || null,
-
+          ceilingHeight: form.ceilingHeight || null,
+          buildingType: form.buildingType || null,
+          repair: form.repair || null,
+          heating: form.heating || null,
           amenities:
             !isResortAmenity && form.amenities && form.amenities !== "Любые"
               ? [form.amenities]

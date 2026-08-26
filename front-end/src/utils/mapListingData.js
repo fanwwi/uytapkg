@@ -17,7 +17,11 @@ export function mapListingData(item) {
     title: item.title || "Без названия",
     type: propertyTypeMapping[item.property_type] || "Другое",
     dealType: item.deal_type === "sale" ? "Продажа" : "Сниму в аренду",
-    status: item.is_urgent ? "urgent" : (item.promotion_status === "vip" ? "vip" : null),
+    status: item.promotion_status === "vip"
+      ? "vip"
+      : (item.is_urgent
+          ? "urgent"
+          : (item.promotion_status === "top" ? "top" : "regular")),
     location: item.city || item.region || "Кыргызстан",
     region: item.region,
     price: `${item.price?.toLocaleString() || 0} ${item.currency === "USD" ? "$" : "сом"}`,

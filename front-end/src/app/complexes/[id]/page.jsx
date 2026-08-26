@@ -35,6 +35,122 @@ import {
 import styles from "./ComplexDetail.module.css";
 
 const MINSTROY_URL = "https://minstroy.gov.kg/ru/map";
+const residentialComplex = {
+  id: 1,
+  name: "ЖК MALINA",
+  subtitle: "Премиальный жилой комплекс в Бишкеке",
+  class: "Премиум-класс",
+  status: "В продаже",
+  location: "Бишкек",
+  address: "Юго-восточная часть города",
+  developer: "MALINA Development",
+  completion: "III квартал 2027",
+  floors: "Не указано",
+  blocks: "Не указано",
+  landArea: "Не указано",
+  apartments: "Не указано",
+  ceilingHeight: "Не указано",
+  constructionType: "Не указано",
+  heating: "Не указано",
+  parking: "Не указано",
+  description:
+    "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
+  concept:
+    "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
+  images: [
+    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
+  ],
+  advantages: [
+    {
+      icon: Trees,
+      title: "Просторная территория",
+      description: "Озеленённый двор с ландшафтным дизайном и зонами отдыха.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Безопасность 24/7",
+      description:
+        "Закрытая территория, видеонаблюдение и контролируемый доступ.",
+    },
+    {
+      icon: CarFront,
+      title: "Подземный паркинг",
+      description: "Безопасное парковочное пространство для жителей комплекса.",
+    },
+    {
+      icon: Waves,
+      title: "Зоны отдыха",
+      description: "Продуманные пространства для отдыха жителей и гостей.",
+    },
+    {
+      icon: Dumbbell,
+      title: "Фитнес",
+      description: "Спортивная инфраструктура для активного образа жизни.",
+    },
+    {
+      icon: DoorOpen,
+      title: "Премиальное лобби",
+      description: "Современная входная группа с качественными материалами.",
+    },
+  ],
+  infrastructure: [
+    "Закрытая территория",
+    "Двор без машин",
+    "Детская площадка",
+    "Взрослая зона отдыха",
+    "Ландшафтный дизайн",
+    "Подземный паркинг",
+    "Видеонаблюдение",
+    "Охрана 24/7",
+    "Современное лобби",
+    "Зоны отдыха",
+    "Фитнес-инфраструктура",
+    "Коммерческие помещения",
+  ],
+  architecture: [
+    {
+      title: "Современная архитектура",
+      text: "Чистые линии, панорамное остекление и выразительные фасады формируют узнаваемый облик комплекса.",
+    },
+    {
+      title: "Продуманные пространства",
+      text: "Архитектура комплекса создаёт баланс между приватностью жителей и комфортными общественными пространствами.",
+    },
+    {
+      title: "Панорамное остекление",
+      text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
+    },
+  ],
+  engineering: [
+    {
+      icon: Flame,
+      title: "Отопление",
+      value: "Автономная газовая котельная",
+    },
+    {
+      icon: Zap,
+      title: "Электроснабжение",
+      value: "Современная инженерная система",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Безопасность",
+      value: "Контролируемый доступ",
+    },
+    {
+      icon: Camera,
+      title: "Видеонаблюдение",
+      value: "24/7",
+    },
+  ],
+  galleryLabel: "Галерея комплекса",
+  createdAt: "12 августа 2026",
+};
+*/
+>>>>>>> 63d5f3b (Исправления безопасности, сортировки и характеристик ЖК/объявлений)
 
 const defaultResidentialComplex = {
   id: 1,
@@ -186,61 +302,45 @@ export default function ComplexesDetails() {
         const res = await getComplexById(complexId);
 
         if (res && res.success && res.data) {
-          const mapped = mapComplexData(res.data);
+          const f = res.data.features || {};
+
+          const formatBlocks = (val) => {
+            if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
+            const str = String(val).trim();
+            return str.includes("блок") ? str : `${str} блоков`;
+          };
+
+          const formatHeight = (val) => {
+            if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
+            const str = String(val).trim();
+            return str.includes("м") ? str : `${str} м`;
+          };
 
           setResidentialComplex({
             ...defaultResidentialComplex,
-
             id: res.data.id,
-
             name: mapped.name,
-
             subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
-
             class: mapped.housingClass,
-
             status: mapped.completionStatus,
-
             location: res.data.city || res.data.region || "Кыргызстан",
-
             address: mapped.address,
-
             developer: mapped.developer,
-
             developerId: mapped.developerId || null,
-
             developerLogo: mapped.logo || null,
-
             completion: res.data.completion_date || "Уточняйте у застройщика",
-
             description: mapped.description,
-
-            concept: res.data.description || defaultResidentialComplex.concept,
-
-            floors:
-              res.data.features?.floors || defaultResidentialComplex.floors,
-
-            blocks:
-              res.data.features?.blocks || defaultResidentialComplex.blocks,
-
-            apartments: res.data.features?.apartments
-              ? `${res.data.features.apartments} квартир`
-              : defaultResidentialComplex.apartments,
-
-            parking: res.data.features?.parking
-              ? `${res.data.features.parking} мест`
-              : defaultResidentialComplex.parking,
-
-            landArea: res.data.features?.area
-              ? `${res.data.features.area} м²`
-              : defaultResidentialComplex.landArea,
-
-            images:
-              res.data.features?.images && res.data.features.images.length > 0
-                ? res.data.features.images
-                : res.data.cover_photo
-                  ? [res.data.cover_photo]
-                  : defaultResidentialComplex.images,
+            concept: res.data.description || "Описание проекта от застройщика.",
+            floors: f.floors ? `${f.floors}` : "Не указано",
+            blocks: formatBlocks(f.blocks),
+            apartments: f.apartments ? `${f.apartments} квартир` : "Не указано",
+            parking: f.parking ? `${f.parking} мест` : "Не указано",
+            landArea: f.areaSotka ? `${f.areaSotka} соток` : (f.area ? `${f.area} м²` : "Не указано"),
+            ceilingHeight: formatHeight(f.ceilingHeight),
+            constructionType: f.construction || "Не указано",
+            images: (f.images && f.images.length > 0)
+              ? f.images
+              : (res.data.cover_photo ? [res.data.cover_photo] : []),
           });
         }
       } catch (err) {

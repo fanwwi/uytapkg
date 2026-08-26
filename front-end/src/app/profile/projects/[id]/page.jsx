@@ -62,18 +62,18 @@ const initialResidentialComplex = {
   completion: "III квартал 2027",
   completionDate: "2027-09-01",
 
-  floors: 10,
-  blocks: 3,
+  floors: "Не указано",
+  blocks: "Не указано",
 
-  landArea: "1 соток",
-  area: 1,
+  landArea: "Не указано",
+  area: null,
 
-  apartments: "120 квартир",
-  parking: "Подземный паркинг",
+  apartments: "Не указано",
+  parking: "Не указано",
 
-  ceilingHeight: "до 3,6 м",
-  constructionType: "Монолитно-каркасная",
-  heating: "Автономная газовая котельная",
+  ceilingHeight: "Не указано",
+  constructionType: "Не указано",
+  heating: "Не указано",
 
   description:
     "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
@@ -225,88 +225,52 @@ export default function MyComplexDetail() {
           throw new Error("Жилой комплекс не найден");
         }
 
-        const mapped = mapComplexData(res.data);
+        const f = res.data.features || {};
 
-        const images =
-          res.data.features?.images &&
-          Array.isArray(res.data.features.images) &&
-          res.data.features.images.length > 0
-            ? res.data.features.images
-            : res.data.cover_photo
-              ? [res.data.cover_photo]
-              : initialResidentialComplex.images;
+        const formatBlocks = (val) => {
+          if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
+          const str = String(val).trim();
+          return str.includes("блок") ? str : `${str} блоков`;
+        };
+
+        const formatHeight = (val) => {
+          if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
+          const str = String(val).trim();
+          return str.includes("м") ? str : `${str} м`;
+        };
 
         setResidentialComplex({
           ...initialResidentialComplex,
-
           id: res.data.id,
-
-          name: mapped.name || res.data.name || initialResidentialComplex.name,
-
-          subtitle: `${mapped.housingClass || initialResidentialComplex.class} в регионе ${
-            mapped.address || "Кыргызстан"
-          }`,
-
-          class: mapped.housingClass || initialResidentialComplex.class,
-
-          status: mapped.completionStatus || initialResidentialComplex.status,
-
+          name: mapped.name,
+          subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
+          class: mapped.housingClass,
+          status: mapped.completionStatus,
           location: res.data.city || res.data.region || "Кыргызстан",
-
           city: res.data.city || res.data.region || "Кыргызстан",
-
-          address:
-            mapped.address ||
-            res.data.address ||
-            initialResidentialComplex.address,
-
-          developer:
-            mapped.developer ||
-            res.data.developer ||
-            initialResidentialComplex.developer,
-
+          address: mapped.address,
+          developer: mapped.developer,
           completion: res.data.completion_date || "Уточняйте у застройщика",
-
-          completionDate:
-            res.data.completion_date ||
-            initialResidentialComplex.completionDate,
-
-          description:
-            mapped.description || initialResidentialComplex.description,
-
-          concept: res.data.description || initialResidentialComplex.concept,
-
-          floors: res.data.features?.floors ?? initialResidentialComplex.floors,
-
-          blocks: res.data.features?.blocks ?? initialResidentialComplex.blocks,
-
-          apartments: res.data.features?.apartments
-            ? `${res.data.features.apartments} квартир`
-            : initialResidentialComplex.apartments,
-
-          parking: res.data.features?.parking
-            ? `${res.data.features.parking} мест`
-            : initialResidentialComplex.parking,
-
-          landArea: res.data.features?.area
-            ? `${res.data.features.area} м²`
-            : initialResidentialComplex.landArea,
-
-          area:
-            Number(res.data.features?.area) || initialResidentialComplex.area,
-
-          images,
+          completionDate: res.data.completion_date || "",
+          description: mapped.description,
+          concept: res.data.description || "Описание проекта от застройщика.",
+          floors: f.floors ? `${f.floors}` : "Не указано",
+          blocks: formatBlocks(f.blocks),
+          apartments: f.apartments ? `${f.apartments} квартир` : "Не указано",
+          parking: f.parking ? `${f.parking} мест` : "Не указано",
+          landArea: f.areaSotka ? `${f.areaSotka} соток` : (f.area ? `${f.area} м²` : "Не указано"),
+          ceilingHeight: formatHeight(f.ceilingHeight),
+          constructionType: f.construction || "Не указано",
+          images: (f.images && f.images.length > 0)
+            ? f.images
+            : (res.data.cover_photo ? [res.data.cover_photo] : []),
+          rawFeatures: f,
         });
 
         setCurrentImage(0);
       } catch (err) {
         console.error("Failed to load complex detail:", err);
-
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Ошибка загрузки жилого комплекса",
-        );
+        setError(err.message || "Ошибка загрузки жилого комплекса");
       } finally {
         setLoading(false);
       }
@@ -358,20 +322,27 @@ export default function MyComplexDetail() {
         throw new Error("Вы не авторизованы");
       }
 
+      const parseNum = (val) => {
+        if (val === undefined || val === null || val === "") return null;
+        const num = parseFloat(String(val).replace(",", "."));
+        return isNaN(num) ? val : num;
+      };
+
       const payload = {
         name: updatedComplex.name,
         address: updatedComplex.address,
         status: updatedComplex.status,
         class: updatedComplex.class,
+        construction: updatedComplex.construction,
         completionDate: updatedComplex.completionDate,
-
-        floors: Number(updatedComplex.floors) || 0,
-
-        apartments: Number(updatedComplex.apartments) || 0,
-
-        parking: Number(updatedComplex.parking) || 0,
-
-        area: Number(updatedComplex.area) || 0,
+        floors: parseNum(updatedComplex.floors),
+        blocks: parseNum(updatedComplex.blocks),
+        apartments: parseNum(updatedComplex.apartments),
+        parking: parseNum(updatedComplex.parking),
+        ceilingHeight: parseNum(updatedComplex.ceilingHeight),
+        area: parseNum(updatedComplex.area),
+        areaSotka: parseNum(updatedComplex.landArea || updatedComplex.areaSotka),
+        amenities: updatedComplex.amenities || [],
       };
 
       const res = await updateComplexApi(token, residentialComplex.id, payload);

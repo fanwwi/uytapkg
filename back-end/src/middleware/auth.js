@@ -4,7 +4,12 @@ import { supabase } from "../config/db.js";
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "uytap_fallback_jwt_secret_key_2026";
+if (!process.env.JWT_SECRET) {
+  console.error("❌ CRITICAL ERROR: JWT_SECRET environment variable is missing!");
+  throw new Error("JWT_SECRET environment variable is not defined in .env");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Генерация JWT токена
 export const generateToken = (payload) => {

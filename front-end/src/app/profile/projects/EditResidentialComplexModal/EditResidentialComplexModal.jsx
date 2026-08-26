@@ -82,6 +82,15 @@ export default function EditResidentialComplexModal({
   useEffect(() => {
     if (!complex) return;
 
+    const f = complex.rawFeatures || complex.features || {};
+
+    const extractVal = (rawVal, val) => {
+      if (rawVal !== undefined && rawVal !== null && rawVal !== "") return rawVal;
+      if (val === undefined || val === null || val === "" || val === "Не указано") return "";
+      const cleaned = String(val).replace(/[^\d.,]/g, "").replace(",", ".");
+      return cleaned || "";
+    };
+
     setForm({
       name: complex.name || "",
       address: complex.address || "",
@@ -89,15 +98,15 @@ export default function EditResidentialComplexModal({
       description: complex.description || "",
       status: complex.status || "Строительство",
       class: complex.class || "Комфорт",
-      construction: complex.construction || "Монолит",
+      construction: f.construction || complex.constructionVal || (complex.constructionType !== "Не указано" ? complex.constructionType : "Монолит"),
       completionDate: complex.completionDate || "",
-      floors: complex.floors ?? "",
-      blocks: complex.blocks ?? "",
-      apartments: complex.apartments ?? "",
-      parking: complex.parking ?? "",
-      area: complex.area ?? "",
-      landArea: complex.landArea ?? "",
-      ceilingHeight: complex.ceilingHeight ?? "",
+      floors: extractVal(f.floors, complex.floors),
+      blocks: extractVal(f.blocks, complex.blocks),
+      apartments: extractVal(f.apartments, complex.apartments),
+      parking: extractVal(f.parking, complex.parking),
+      area: extractVal(f.area, complex.area),
+      landArea: extractVal(f.areaSotka, complex.landArea),
+      ceilingHeight: extractVal(f.ceilingHeight, complex.ceilingHeight),
     });
 
     setSelectedAmenities(complex.amenities || []);
@@ -201,17 +210,23 @@ export default function EditResidentialComplexModal({
   function handleSubmit(event) {
     event.preventDefault();
 
+    const parseNum = (val) => {
+      if (val === undefined || val === null || val === "") return null;
+      const num = parseFloat(String(val).replace(",", "."));
+      return isNaN(num) ? val : num;
+    };
+
     const updatedComplex = {
       ...complex,
       ...form,
 
-      floors: Number(form.floors) || 0,
-      blocks: Number(form.blocks) || 0,
-      apartments: Number(form.apartments) || 0,
-      parking: Number(form.parking) || 0,
-      area: Number(form.area) || 0,
-      landArea: Number(form.landArea) || 0,
-      ceilingHeight: Number(form.ceilingHeight) || 0,
+      floors: parseNum(form.floors),
+      blocks: parseNum(form.blocks),
+      apartments: parseNum(form.apartments),
+      parking: parseNum(form.parking),
+      area: parseNum(form.area),
+      landArea: parseNum(form.landArea),
+      ceilingHeight: parseNum(form.ceilingHeight),
 
       amenities: selectedAmenities,
 

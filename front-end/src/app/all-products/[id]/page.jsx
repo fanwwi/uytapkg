@@ -267,7 +267,62 @@ export default function ProductDetails() {
       value: product.rawFeatures.parking,
     });
   }
-
+  if (product.rawFeatures?.ceilingHeight) {
+    characteristics.push({
+      icon: Ruler,
+      label: "Высота потолков",
+      value: String(product.rawFeatures.ceilingHeight).includes("м")
+        ? product.rawFeatures.ceilingHeight
+        : `${product.rawFeatures.ceilingHeight} м`,
+    });
+  }
+  if (product.rawFeatures?.buildingType) {
+    characteristics.push({
+      icon: Building2,
+      label: "Тип дома",
+      value: product.rawFeatures.buildingType,
+    });
+  }
+  if (product.rawFeatures?.repair) {
+    characteristics.push({
+      icon: Sparkles,
+      label: "Ремонт",
+      value: product.rawFeatures.repair,
+    });
+  }
+  if (product.rawFeatures?.developerOrComplex) {
+    characteristics.push({
+      icon: Building2,
+      label: "Застройщик / ЖК",
+      value: product.rawFeatures.developerOrComplex,
+    });
+  }
+  if (product.rawFeatures?.blocks) {
+    characteristics.push({
+      icon: Layers3,
+      label: "Количество блоков",
+      value: String(product.rawFeatures.blocks).includes("блок")
+        ? product.rawFeatures.blocks
+        : `${product.rawFeatures.blocks} блоков`,
+    });
+  }
+  if (product.rawFeatures?.areaSotka || product.rawFeatures?.landArea) {
+    const areaVal = product.rawFeatures.areaSotka || product.rawFeatures.landArea;
+    characteristics.push({
+      icon: Ruler,
+      label: "Площадь территории",
+      value: String(areaVal).includes("соток") || String(areaVal).includes("м²")
+        ? areaVal
+        : `${areaVal} соток`,
+    });
+  }
+  if (product.rawFeatures?.construction || product.rawFeatures?.constructionType) {
+    characteristics.push({
+      icon: Building2,
+      label: "Конструкция",
+      value: product.rawFeatures.construction || product.rawFeatures.constructionType,
+    });
+  }
   if (product.rawFeatures?.view) {
     characteristics.push({
       icon: Waves,

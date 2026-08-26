@@ -54,7 +54,7 @@ export const getListings = async (req, res) => {
     const from = (Number(page) - 1) * Number(limit);
     const to = from + Number(limit) - 1;
 
-    query = query.order("promotion_status", { ascending: false }).order("created_at", { ascending: false }).range(from, to);
+    query = query.order("created_at", { ascending: false });
 
     const { data: listings, count, error } = await query;
 
@@ -63,17 +63,35 @@ export const getListings = async (req, res) => {
       return res.status(500).json({ success: false, message: "Ошибка загрузки объявлений" });
     }
 
+    // Вспомогательная функция приоритета: vip (0) -> urgent (1) -> top (2) -> regular (3)
+    const getListingPriority = (item) => {
+      if (item.promotion_status === "vip") return 0;
+      if (item.is_urgent) return 1;
+      if (item.promotion_status === "top") return 2;
+      return 3;
+    };
+
+    // Точная сортировка объявлений по требуемому приоритету
+    let filteredListings = (listings || []).sort((a, b) => {
+      const prioA = getListingPriority(a);
+      const prioB = getListingPriority(b);
+      if (prioA !== prioB) return prioA - prioB;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
     // ТЗ Правило: В блок "Популярные" на главной не попадают объявления без фотографий!
-    let filteredListings = listings || [];
     if (onlyPopular === "true") {
       filteredListings = filteredListings.filter(
         (item) => item.listing_photos && item.listing_photos.length > 0
       );
     }
 
+    // Применение пагинации после точной сортировки
+    const paginatedListings = filteredListings.slice(from, to + 1);
+
     return res.json({
       success: true,
-      data: filteredListings,
+      data: paginatedListings,
       pagination: {
         total: count || filteredListings.length,
         page: Number(page),
@@ -98,7 +116,7 @@ export const getListingById = async (req, res) => {
       .select(`
         *,
         listing_photos (*),
-        users (id, email, phone, is_verified, account_type, user_profiles (*))
+        users (id, email, phone, is_verified, account_type, user_profiles (first_name, last_name, company_name, avatar_url, about))
       `)
       .eq("id", id)
       .single();
@@ -154,10 +172,34 @@ export const createListing = async (req, res) => {
       floor,
       totalFloors,
       isResort,
-      resortFilters,
-      features,
+      resortFilters = {},
+      features = {},
       photos = [],
+      listingType,
+      beachDistanceFrom,
+      beachDistanceTo,
+      developerOrComplex,
     } = validationResult.data;
+
+    // Мапинг типа размещения (standard, vip, urgent, top)
+    let promotion_status = "regular";
+    let is_urgent = false;
+
+    if (listingType === "vip") {
+      promotion_status = "vip";
+    } else if (listingType === "top") {
+      promotion_status = "top";
+    } else if (listingType === "urgent") {
+      is_urgent = true;
+    }
+
+    // Сборка комплексного объекта курортных фильтров
+    const mergedResortFilters = {
+      ...resortFilters,
+      beachDistanceFrom: beachDistanceFrom || resortFilters?.beachDistanceFrom || null,
+      beachDistanceTo: beachDistanceTo || resortFilters?.beachDistanceTo || null,
+      developerOrComplex: developerOrComplex || resortFilters?.developerOrComplex || null,
+    };
 
     const { data: newListing, error: createError } = await supabase
       .from("listings")
@@ -181,9 +223,11 @@ export const createListing = async (req, res) => {
           floor: floor ? Number(floor) : null,
           total_floors: totalFloors ? Number(totalFloors) : null,
           is_resort: Boolean(isResort),
-          resort_filters: resortFilters || {},
+          resort_filters: mergedResortFilters,
           features: features || {},
           status: "active",
+          promotion_status,
+          is_urgent,
         },
       ])
       .select()

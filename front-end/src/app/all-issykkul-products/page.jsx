@@ -431,13 +431,15 @@ export default function IssykKulProducts() {
         const priority = {
           vip: 0,
           urgent: 1,
-          null: 2,
+          top: 2,
+          regular: 3,
+          null: 3,
         };
 
-        const aStatus = a.status ?? "null";
-        const bStatus = b.status ?? "null";
+        const aStatus = a.status ?? "regular";
+        const bStatus = b.status ?? "regular";
 
-        return (priority[aStatus] ?? 2) - (priority[bStatus] ?? 2);
+        return (priority[aStatus] ?? 3) - (priority[bStatus] ?? 3);
       });
   }, [
     mappedListings,

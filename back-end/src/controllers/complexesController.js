@@ -1,4 +1,5 @@
 import { supabase } from "../config/db.js";
+import { createComplexSchema, updateComplexSchema } from "../utils/validation.js";
 
 // =======================================================
 // 1. Получение списка ЖК (GET /api/complexes)
@@ -146,6 +147,16 @@ export const createComplex = async (req, res) => {
       developer = newDev;
     }
 
+    // Валидация входных данных через Zod
+    const validationResult = createComplexSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных жилого комплекса",
+        errors: validationResult.error.errors.map((e) => e.message),
+      });
+    }
+
     const {
       name,
       description,
@@ -156,12 +167,17 @@ export const createComplex = async (req, res) => {
       class: housingClass,
       completionDate,
       floors,
+      blocks,
       apartments,
       parking,
+      ceilingHeight,
+      construction,
       area,
+      areaSotka,
       amenities,
       images,
-    } = req.body;
+      features,
+    } = validationResult.data;
 
     // Мапинг статусов
     let completion_status = "building";
@@ -171,6 +187,7 @@ export const createComplex = async (req, res) => {
 
     const cover_photo = Array.isArray(images) && images.length > 0 ? images[0] : null;
 
+    // TODO: Временное решение для сохранения площади территории в двух единицах измерения (area в кв.м и areaSotka в сотках). Требуется обсудить единый стандарт измерения.
     const complexData = {
       developer_id: developer.id,
       name: name || "Без названия",
@@ -183,10 +200,15 @@ export const createComplex = async (req, res) => {
       housing_class: housingClass || "Комфорт",
       cover_photo,
       features: {
+        ...(features || {}),
         floors: floors || null,
+        blocks: blocks || null,
         apartments: apartments || null,
         parking: parking || null,
+        ceilingHeight: ceilingHeight || null,
+        construction: construction || null,
         area: area || null,
+        areaSotka: areaSotka || null,
         amenities: amenities || [],
         images: images || [],
       },
@@ -263,10 +285,20 @@ export const updateComplex = async (req, res) => {
       });
     }
 
-    if (complex.developer_id !== developer.id) {
+    if (complex.developer_id !== developer.id && req.user.role !== "admin") {
       return res.status(403).json({
         success: false,
         message: "Вы не являетесь владельцем этого жилого комплекса",
+      });
+    }
+
+    // Валидация входных данных через Zod
+    const validationResult = updateComplexSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных жилого комплекса",
+        errors: validationResult.error.errors.map((e) => e.message),
       });
     }
 
@@ -280,11 +312,15 @@ export const updateComplex = async (req, res) => {
       class: housingClass,
       completionDate,
       floors,
+      blocks,
       apartments,
       parking,
+      ceilingHeight,
+      construction,
       area,
+      areaSotka,
       amenities,
-    } = req.body;
+    } = validationResult.data;
 
     // ТЗ ТРЕБОВАНИЕ: Изображения редактировать нельзя!
     const cover_photo = complex.cover_photo;
@@ -307,10 +343,15 @@ export const updateComplex = async (req, res) => {
       completion_date: completionDate !== undefined ? completionDate : complex.completion_date,
       housing_class: housingClass || complex.housing_class,
       features: {
+        ...(complex.features || {}),
         floors: floors !== undefined ? floors : complex.features?.floors,
+        blocks: blocks !== undefined ? blocks : complex.features?.blocks,
         apartments: apartments !== undefined ? apartments : complex.features?.apartments,
         parking: parking !== undefined ? parking : complex.features?.parking,
+        ceilingHeight: ceilingHeight !== undefined ? ceilingHeight : complex.features?.ceilingHeight,
+        construction: construction !== undefined ? construction : complex.features?.construction,
         area: area !== undefined ? area : complex.features?.area,
+        areaSotka: areaSotka !== undefined ? areaSotka : complex.features?.areaSotka,
         amenities: amenities || complex.features?.amenities || [],
         images: oldImages, // Неизменяемые картинки
       },
@@ -388,7 +429,7 @@ export const deleteComplex = async (req, res) => {
       });
     }
 
-    if (complex.developer_id !== developer.id) {
+    if (complex.developer_id !== developer.id && req.user.role !== "admin") {
       return res.status(403).json({
         success: false,
         message: "Вы не являетесь владельцем этого жилого комплекса",

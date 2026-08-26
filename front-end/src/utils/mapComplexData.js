@@ -26,6 +26,8 @@ export function mapComplexData(item) {
     [item.city, item.region].filter(Boolean).join(", ") ||
     "Кыргызстан";
 
+  const features = item.features || {};
+
   return {
     id: item.id,
     name: item.name || "Жилой комплекс",
@@ -42,6 +44,16 @@ export function mapComplexData(item) {
     completionStatus: item.completion_status === "completed" ? "Сдан" : "Строится",
     completionDate: item.completion_date || "",
     housingClass: item.housing_class || "Премиум-класс",
+    floors: features.floors || null,
+    blocks: features.blocks || null,
+    apartments: features.apartments || null,
+    parking: features.parking || null,
+    ceilingHeight: features.ceilingHeight || null,
+    construction: features.construction || null,
+    area: features.area || null,
+    areaSotka: features.areaSotka || null,
+    amenities: features.amenities || [],
+    images: features.images || [],
     layouts: item.complex_layouts || [],
     raw: item,
   };
