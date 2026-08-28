@@ -21,6 +21,7 @@ import {
   Blocks,
   FileCheck,
   ExternalLink,
+  AlignLeft,
 } from "lucide-react";
 
 import styles from "./AddResidentialComplex.module.css";
@@ -64,21 +65,19 @@ export default function AddResidentialComplex() {
 
   const [form, setForm] = useState({
     name: "",
-    address: "",
     city: "Бишкек",
+    address: "",
     description: "",
 
     status: "Строительство",
     class: "Комфорт",
     construction: "Монолитно-каркасный",
-
     completionDate: "",
 
     floors: "",
     blocks: "",
     apartments: "",
     parking: "",
-
     ceilingHeight: "",
 
     area: "",
@@ -167,6 +166,10 @@ export default function AddResidentialComplex() {
         throw new Error("Введите название жилого комплекса.");
       }
 
+      if (!form.city.trim()) {
+        throw new Error("Введите город.");
+      }
+
       if (!form.address.trim()) {
         throw new Error("Введите адрес жилого комплекса.");
       }
@@ -210,8 +213,8 @@ export default function AddResidentialComplex() {
 
       const payload = {
         name: form.name.trim(),
-        address: form.address.trim(),
         city: form.city.trim(),
+        address: form.address.trim(),
         description: form.description.trim(),
 
         status: form.status,
@@ -228,11 +231,9 @@ export default function AddResidentialComplex() {
         ceilingHeight: form.ceilingHeight ? Number(form.ceilingHeight) : 0,
 
         area: form.area ? Number(form.area) : 0,
-
         areaSotka: form.areaSotka ? Number(form.areaSotka) : 0,
 
         amenities: selectedAmenities,
-
         images: uploadedUrls,
 
         documentsUrl: form.documentsUrl.trim(),
@@ -274,21 +275,21 @@ export default function AddResidentialComplex() {
             className={styles.back}
             onClick={() => router.push("/profile")}
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
             <span>Назад в профиль</span>
           </button>
 
           <div className={styles.headerContent}>
             <div className={styles.eyebrow}>
-              <Building2 size={18} />
+              <Building2 size={16} />
               Панель застройщика
             </div>
 
             <h1>Добавить жилой комплекс</h1>
 
             <p>
-              Создайте карточку жилого комплекса: укажите характеристики,
-              инфраструктуру, расположение и добавьте фотографии.
+              Заполните информацию о жилом комплексе, добавьте характеристики,
+              инфраструктуру, фотографии и официальные документы.
             </p>
           </div>
         </header>
@@ -305,9 +306,9 @@ export default function AddResidentialComplex() {
         )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* =====================================================
+          {/* =========================
               01 — ОСНОВНАЯ ИНФОРМАЦИЯ
-          ===================================================== */}
+          ========================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -315,7 +316,7 @@ export default function AddResidentialComplex() {
                 <Building2 />
               </div>
 
-              <div>
+              <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>01</span>
 
                 <h2>Основная информация</h2>
@@ -327,40 +328,51 @@ export default function AddResidentialComplex() {
             <div className={styles.grid}>
               {/* NAME */}
 
-              <div className={`${styles.field} ${styles.fieldLarge}`}>
+              <div className={`${styles.field} ${styles.full}`}>
                 <label htmlFor="complex-name">
                   Название ЖК <span>*</span>
                 </label>
 
-                <input
-                  id="complex-name"
-                  name="name"
-                  type="text"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Например: ЖК Ала-Тоо"
-                  required
-                />
+                <div className={styles.inputWithIcon}>
+                  <Building2 />
+
+                  <input
+                    id="complex-name"
+                    name="name"
+                    type="text"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Например: ЖК Ала-Тоо"
+                    required
+                  />
+                </div>
               </div>
 
               {/* CITY */}
 
               <div className={styles.field}>
-                <label htmlFor="complex-city">Город</label>
+                <label htmlFor="complex-city">
+                  Город <span>*</span>
+                </label>
 
-                <input
-                  id="complex-city"
-                  name="city"
-                  type="text"
-                  value={form.city}
-                  onChange={handleChange}
-                  placeholder="Бишкек"
-                />
+                <div className={styles.inputWithIcon}>
+                  <MapPin />
+
+                  <input
+                    id="complex-city"
+                    name="city"
+                    type="text"
+                    value={form.city}
+                    onChange={handleChange}
+                    placeholder="Бишкек"
+                    required
+                  />
+                </div>
               </div>
 
               {/* ADDRESS */}
 
-              <div className={`${styles.field} ${styles.full}`}>
+              <div className={styles.field}>
                 <label htmlFor="complex-address">
                   Адрес <span>*</span>
                 </label>
@@ -381,42 +393,20 @@ export default function AddResidentialComplex() {
                 </div>
               </div>
 
-              {/* DOCUMENTS */}
-
-              <div className={`${styles.field} ${styles.full}`}>
-                <label htmlFor="complex-documents">
-                  Ссылка на официальный паспорт / документы ЖК с сайта
-                  Министерства строительства КР
-                  <span> *</span>
-                </label>
-
-                <div className={styles.inputWithIcon}>
-                  <FileCheck />
-
-                  <input
-                    id="complex-documents"
-                    name="documentsUrl"
-                    type="url"
-                    value={form.documentsUrl}
-                    onChange={handleChange}
-                    placeholder="https://..."
-                    required
-                  />
-                </div>
-              </div>
-
               {/* DESCRIPTION */}
 
               <div className={`${styles.field} ${styles.full}`}>
                 <label htmlFor="complex-description">Описание</label>
 
                 <div className={styles.textareaWrapper}>
+                  <AlignLeft className={styles.textareaIcon} />
+
                   <textarea
                     id="complex-description"
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    placeholder="Расскажите о концепции ЖК, расположении, архитектуре и преимуществах..."
+                    placeholder="Расскажите о концепции ЖК, архитектуре, расположении, инфраструктуре и преимуществах..."
                     rows={7}
                     maxLength={1000}
                   />
@@ -429,9 +419,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =====================================================
+          {/* =========================
               02 — ХАРАКТЕРИСТИКИ
-          ===================================================== */}
+          ========================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -439,7 +429,7 @@ export default function AddResidentialComplex() {
                 <Layers3 />
               </div>
 
-              <div>
+              <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>02</span>
 
                 <h2>Характеристики комплекса</h2>
@@ -613,7 +603,7 @@ export default function AddResidentialComplex() {
               {/* AREA */}
 
               <div className={styles.field}>
-                <label htmlFor="area">Площадь территории, м²</label>
+                <label htmlFor="area">Площадь комплекса, м²</label>
 
                 <div className={styles.inputWithIcon}>
                   <Ruler />
@@ -654,9 +644,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =====================================================
+          {/* =========================
               03 — ИНФРАСТРУКТУРА
-          ===================================================== */}
+          ========================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -664,12 +654,12 @@ export default function AddResidentialComplex() {
                 <Check />
               </div>
 
-              <div>
+              <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>03</span>
 
                 <h2>Инфраструктура</h2>
 
-                <p>Выберите объекты и удобства, которые доступны жителям.</p>
+                <p>Выберите объекты и удобства, доступные жителям.</p>
               </div>
             </div>
 
@@ -698,9 +688,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =====================================================
+          {/* =========================
               04 — ФОТОГРАФИИ
-          ===================================================== */}
+          ========================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -708,7 +698,7 @@ export default function AddResidentialComplex() {
                 <ImagePlus />
               </div>
 
-              <div>
+              <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>04</span>
 
                 <h2>Фотографии</h2>
@@ -721,10 +711,7 @@ export default function AddResidentialComplex() {
               <div>
                 <strong>Фотографии жилого комплекса</strong>
 
-                <span>
-                  Добавьте качественные фотографии фасада, территории и
-                  инфраструктуры.
-                </span>
+                <span>Добавьте фасад, территорию, дворы и инфраструктуру.</span>
               </div>
 
               <div className={styles.imageCount}>
@@ -784,9 +771,9 @@ export default function AddResidentialComplex() {
             )}
           </section>
 
-          {/* =====================================================
+          {/* =========================
               05 — ДОКУМЕНТЫ
-          ===================================================== */}
+          ========================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -794,50 +781,62 @@ export default function AddResidentialComplex() {
                 <FileCheck />
               </div>
 
-              <div>
+              <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>05</span>
 
                 <h2>Официальная информация</h2>
 
                 <p>
-                  Ссылка на официальный паспорт или документы строительного
-                  объекта.
+                  Добавьте ссылку на официальный паспорт или документы
+                  строительного объекта.
                 </p>
               </div>
             </div>
 
-            <div className={styles.documentCard}>
-              <div className={styles.documentIcon}>
-                <FileCheck size={24} />
+            <div className={styles.documentForm}>
+              <div className={styles.field}>
+                <label htmlFor="complex-documents">
+                  Ссылка на официальный паспорт / документы ЖК
+                  <span>*</span>
+                </label>
+
+                <div className={styles.inputWithIcon}>
+                  <FileCheck />
+
+                  <input
+                    id="complex-documents"
+                    name="documentsUrl"
+                    type="url"
+                    value={form.documentsUrl}
+                    onChange={handleChange}
+                    placeholder="https://..."
+                    required
+                  />
+                </div>
+
+                <small className={styles.fieldHint}>
+                  Укажите ссылку на официальный ресурс Министерства
+                  строительства КР или другой официальный источник.
+                </small>
               </div>
 
-              <div className={styles.documentContent}>
-                <strong>Документы о жилом комплексе</strong>
-
-                <p>
-                  Добавьте ссылку на официальный ресурс Министерства
-                  строительства КР, где можно проверить паспорт и информацию о
-                  строительстве.
-                </p>
-
-                {form.documentsUrl && (
-                  <a
-                    href={form.documentsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.documentPreview}
-                  >
-                    <ExternalLink size={15} />
-                    Проверить ссылку
-                  </a>
-                )}
-              </div>
+              {form.documentsUrl && (
+                <a
+                  href={form.documentsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.documentPreview}
+                >
+                  <ExternalLink size={15} />
+                  Проверить ссылку
+                </a>
+              )}
             </div>
           </section>
 
-          {/* =====================================================
+          {/* =========================
               ACTIONS
-          ===================================================== */}
+          ========================= */}
 
           <div className={styles.formActions}>
             <button
