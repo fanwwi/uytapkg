@@ -2,60 +2,122 @@ export function mapComplexData(item) {
   if (!item) return null;
 
   const developerName = item.developers?.company_name || "Застройщик не указан";
-  const developerLogo =
-    item.developers?.logo_url ||
-    "https://yt3.googleusercontent.com/dd6jiK-pM4c-OpIys_CbeZAnr1CgKBWOx9cUgHMx5yNTOKcfmnx_Cgmi53ucme32vcNm3MuETA=s900-c-k-c0x00ffffff-no-rj";
+
+  const developerLogo = item.developers?.logo_url || null;
+
+  const features = item.features || {};
 
   let priceFrom = null;
   let priceTo = null;
 
-  if (item.complex_layouts && item.complex_layouts.length > 0) {
+  if (item.complex_layouts?.length) {
     const prices = item.complex_layouts
-      .map((l) => Number(l.price))
-      .filter((p) => !isNaN(p) && p > 0);
-    if (prices.length > 0) {
-      const minP = Math.min(...prices);
-      const maxP = Math.max(...prices);
-      priceFrom = `${minP.toLocaleString()} $`;
-      priceTo = `${maxP.toLocaleString()} $`;
+      .map((layout) => Number(layout.price))
+      .filter((price) => Number.isFinite(price) && price > 0);
+
+    if (prices.length) {
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+
+      priceFrom = minPrice;
+      priceTo = maxPrice;
     }
   }
 
-  const addressText =
+  const address =
     item.address ||
     [item.city, item.region].filter(Boolean).join(", ") ||
     "Кыргызстан";
 
-  const features = item.features || {};
+  const formatNumber = (value) => {
+    if (value === null || value === undefined || value === "") {
+      return null;
+    }
+
+    const number = Number(value);
+
+    if (Number.isFinite(number)) {
+      return number.toLocaleString("ru-RU");
+    }
+
+    return String(value);
+  };
 
   return {
     id: item.id,
+
     name: item.name || "Жилой комплекс",
+
     developer: developerName,
-    developerId: item.developers?.user_id || item.developers?.id,
-    address: addressText,
-    priceFrom: priceFrom || "По запросу",
-    priceTo: priceTo ? ` — ${priceTo}` : "",
-    description: item.description || "Описание жилого комплекса отсутствует.",
-    image:
-      item.cover_photo ||
-      "https://storage.googleapis.com/bd-kg-02/buildings-v2/800x630/2336.jpg",
+
+    developerId: item.developers?.user_id || item.developers?.id || null,
+
     logo: developerLogo,
-    completionStatus: item.completion_status === "completed" ? "Сдан" : "Строится",
-    completionDate: item.completion_date || "",
-    housingClass: item.housing_class || "Премиум-класс",
-    floors: features.floors || null,
-    blocks: features.blocks || null,
-    apartments: features.apartments || null,
-    parking: features.parking || null,
-    ceilingHeight: features.ceilingHeight || null,
-    construction: features.construction || null,
-    area: features.area || null,
-    areaSotka: features.areaSotka || null,
-    documentsUrl: features.documentsUrl || null,
-    amenities: features.amenities || [],
-    images: features.images || [],
-    layouts: item.complex_layouts || [],
+
+    address,
+
+    city: item.city || null,
+
+    region: item.region || null,
+
+    description: item.description || "Описание жилого комплекса отсутствует.",
+
+    housingClass: item.housing_class || "Класс не указан",
+
+    completionStatus:
+      item.completion_status === "completed"
+        ? "Сдан"
+        : item.completion_status === "building"
+          ? "Строится"
+          : item.completion_status || "Статус не указан",
+
+    completionDate: item.completion_date || null,
+
+    priceFrom,
+
+    priceTo,
+
+    image: item.cover_photo || features.images?.[0] || null,
+
+    images: features.images?.length
+      ? features.images
+      : item.cover_photo
+        ? [item.cover_photo]
+        : [],
+
+    floors: features.floors ?? null,
+
+    blocks: features.blocks ?? null,
+
+    apartments: features.apartments ?? null,
+
+    parking: features.parking ?? null,
+
+    ceilingHeight: features.ceilingHeight ?? features.ceiling_height ?? null,
+
+    construction: features.construction ?? features.constructionType ?? null,
+
+    area: features.area ?? null,
+
+    areaSotka: features.areaSotka ?? features.area_sotka ?? null,
+
+    heating: features.heating ?? null,
+
+    electricity: features.electricity ?? null,
+
+    security: features.security ?? null,
+
+    videoSurveillance:
+      features.videoSurveillance ?? features.video_surveillance ?? null,
+
+    documentsUrl: features.documentsUrl || features.documents_url || null,
+
+    amenities: Array.isArray(features.amenities) ? features.amenities : [],
+
+    layouts: Array.isArray(item.complex_layouts) ? item.complex_layouts : [],
+
     raw: item,
+
+    formatNumber,
   };
 }

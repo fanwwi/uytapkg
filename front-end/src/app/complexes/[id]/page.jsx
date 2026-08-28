@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { getComplexById } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
 
@@ -30,262 +31,123 @@ import {
   ChevronRight,
   FileCheck,
   ExternalLink,
+  Home,
+  Maximize,
+  Grid3X3,
+  Landmark,
+  BadgeDollarSign,
 } from "lucide-react";
 
 import styles from "./ComplexDetail.module.css";
 
 const MINSTROY_URL = "https://minstroy.gov.kg/ru/map";
-const residentialComplex = {
-  id: 1,
-  name: "ЖК MALINA",
-  subtitle: "Премиальный жилой комплекс в Бишкеке",
-  class: "Премиум-класс",
-  status: "В продаже",
-  location: "Бишкек",
-  address: "Юго-восточная часть города",
-  developer: "MALINA Development",
-  completion: "III квартал 2027",
-  floors: "Не указано",
-  blocks: "Не указано",
-  landArea: "Не указано",
-  apartments: "Не указано",
-  ceilingHeight: "Не указано",
-  constructionType: "Не указано",
-  heating: "Не указано",
-  parking: "Не указано",
-  description:
-    "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
-  concept:
-    "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
-  images: [
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
-  ],
-  advantages: [
-    {
-      icon: Trees,
-      title: "Просторная территория",
-      description: "Озеленённый двор с ландшафтным дизайном и зонами отдыха.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность 24/7",
-      description:
-        "Закрытая территория, видеонаблюдение и контролируемый доступ.",
-    },
-    {
-      icon: CarFront,
-      title: "Подземный паркинг",
-      description: "Безопасное парковочное пространство для жителей комплекса.",
-    },
-    {
-      icon: Waves,
-      title: "Зоны отдыха",
-      description: "Продуманные пространства для отдыха жителей и гостей.",
-    },
-    {
-      icon: Dumbbell,
-      title: "Фитнес",
-      description: "Спортивная инфраструктура для активного образа жизни.",
-    },
-    {
-      icon: DoorOpen,
-      title: "Премиальное лобби",
-      description: "Современная входная группа с качественными материалами.",
-    },
-  ],
-  infrastructure: [
-    "Закрытая территория",
-    "Двор без машин",
-    "Детская площадка",
-    "Взрослая зона отдыха",
-    "Ландшафтный дизайн",
-    "Подземный паркинг",
-    "Видеонаблюдение",
-    "Охрана 24/7",
-    "Современное лобби",
-    "Зоны отдыха",
-    "Фитнес-инфраструктура",
-    "Коммерческие помещения",
-  ],
-  architecture: [
-    {
-      title: "Современная архитектура",
-      text: "Чистые линии, панорамное остекление и выразительные фасады формируют узнаваемый облик комплекса.",
-    },
-    {
-      title: "Продуманные пространства",
-      text: "Архитектура комплекса создаёт баланс между приватностью жителей и комфортными общественными пространствами.",
-    },
-    {
-      title: "Панорамное остекление",
-      text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
-    },
-  ],
-  engineering: [
-    {
-      icon: Flame,
-      title: "Отопление",
-      value: "Автономная газовая котельная",
-    },
-    {
-      icon: Zap,
-      title: "Электроснабжение",
-      value: "Современная инженерная система",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность",
-      value: "Контролируемый доступ",
-    },
-    {
-      icon: Camera,
-      title: "Видеонаблюдение",
-      value: "24/7",
-    },
-  ],
-  galleryLabel: "Галерея комплекса",
-  createdAt: "12 августа 2026",
-};
 
-const defaultResidentialComplex = {
-  id: 1,
-  name: "ЖК MALINA",
-  subtitle: "Премиальный жилой комплекс в Бишкеке",
-  class: "Премиум-класс",
-  status: "В продаже",
-  location: "Бишкек",
-  address: "Юго-восточная часть города",
-  developer: "MALINA Development",
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop";
+
+const EMPTY_COMPLEX = {
+  id: null,
+  name: "Жилой комплекс",
+  developer: "Застройщик не указан",
   developerId: null,
-  developerLogo: null,
-  completion: "III квартал 2027",
-  floors: 10,
-  blocks: 3,
-  landArea: "1 га",
-  apartments: "120 квартир",
-  ceilingHeight: "до 3,6 м",
-  constructionType: "Монолитно-каркасная",
-  heating: "Автономная газовая котельная",
-  parking: "Подземный паркинг",
+  logo: null,
 
-  description:
-    "MALINA — современный жилой комплекс премиального класса, созданный для людей, которые ценят приватность, архитектуру и качество городской среды. Комплекс объединяет выразительную архитектуру, озеленённую территорию, продуманную инфраструктуру и современные инженерные решения.",
+  address: "Кыргызстан",
+  city: null,
+  region: null,
 
-  concept:
-    "Главная идея MALINA — создать не просто место для проживания, а закрытую жилую среду, где архитектура, природа, безопасность и повседневный комфорт работают как единая система.",
+  description: "Описание жилого комплекса отсутствует.",
 
-  images: [
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1800&auto=format&fit=crop",
-  ],
+  housingClass: "Класс не указан",
+  completionStatus: "Статус не указан",
+  completionDate: null,
 
-  advantages: [
-    {
-      icon: Trees,
-      title: "Просторная территория",
-      description: "Озеленённый двор с ландшафтным дизайном и зонами отдыха.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность 24/7",
-      description:
-        "Закрытая территория, видеонаблюдение и контролируемый доступ.",
-    },
-    {
-      icon: CarFront,
-      title: "Подземный паркинг",
-      description: "Безопасное парковочное пространство для жителей комплекса.",
-    },
-    {
-      icon: Waves,
-      title: "Зоны отдыха",
-      description: "Продуманные пространства для отдыха жителей и гостей.",
-    },
-    {
-      icon: Dumbbell,
-      title: "Фитнес",
-      description: "Спортивная инфраструктура для активного образа жизни.",
-    },
-    {
-      icon: DoorOpen,
-      title: "Премиальное лобби",
-      description: "Современная входная группа с качественными материалами.",
-    },
-  ],
+  priceFrom: null,
+  priceTo: null,
 
-  infrastructure: [
-    "Закрытая территория",
-    "Двор без машин",
-    "Детская площадка",
-    "Взрослая зона отдыха",
-    "Ландшафтный дизайн",
-    "Подземный паркинг",
-    "Видеонаблюдение",
-    "Охрана 24/7",
-    "Современное лобби",
-    "Зоны отдыха",
-    "Фитнес-инфраструктура",
-    "Коммерческие помещения",
-  ],
+  images: [],
 
-  architecture: [
-    {
-      title: "Современная архитектура",
-      text: "Чистые линии, панорамное остекление и выразительные фасады формируют узнаваемый облик комплекса.",
-    },
-    {
-      title: "Продуманные пространства",
-      text: "Архитектура комплекса создаёт баланс между приватностью жителей и комфортными общественными пространствами.",
-    },
-    {
-      title: "Панорамное остекление",
-      text: "Большие окна обеспечивают естественное освещение и визуально расширяют пространство квартир.",
-    },
-  ],
+  floors: null,
+  blocks: null,
+  apartments: null,
+  parking: null,
+  ceilingHeight: null,
+  construction: null,
+  area: null,
+  areaSotka: null,
 
-  engineering: [
-    {
-      icon: Flame,
-      title: "Отопление",
-      value: "Автономная газовая котельная",
-    },
-    {
-      icon: Zap,
-      title: "Электроснабжение",
-      value: "Современная инженерная система",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Безопасность",
-      value: "Контролируемый доступ",
-    },
-    {
-      icon: Camera,
-      title: "Видеонаблюдение",
-      value: "24/7",
-    },
-  ],
+  heating: null,
+  electricity: null,
+  security: null,
+  videoSurveillance: null,
 
-  galleryLabel: "Галерея комплекса",
-  createdAt: "12 августа 2026",
+  documentsUrl: null,
+
+  amenities: [],
+  layouts: [],
 };
 
-export default function ComplexesDetails() {
+const formatValue = (value, suffix = "") => {
+  if (value === null || value === undefined || value === "" || value === 0) {
+    return "Не указано";
+  }
+
+  return `${value}${suffix}`;
+};
+
+const formatPrice = (value) => {
+  if (
+    value === null ||
+    value === undefined ||
+    value === "" ||
+    Number(value) <= 0
+  ) {
+    return null;
+  }
+
+  return `${Number(value).toLocaleString("ru-RU")} $`;
+};
+
+const formatDate = (value) => {
+  if (!value) return "Уточняйте у застройщика";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
+const getLayoutValue = (layout, keys) => {
+  for (const key of keys) {
+    if (
+      layout?.[key] !== undefined &&
+      layout?.[key] !== null &&
+      layout?.[key] !== ""
+    ) {
+      return layout[key];
+    }
+  }
+
+  return null;
+};
+
+export default function ComplexDetails() {
   const router = useRouter();
   const params = useParams();
+
   const complexId = params?.id;
 
-  const [residentialComplex, setResidentialComplex] = useState(
-    defaultResidentialComplex,
-  );
-
+  const [complex, setComplex] = useState(EMPTY_COMPLEX);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -297,56 +159,24 @@ export default function ComplexesDetails() {
         setLoading(true);
         setError("");
 
-        const res = await getComplexById(complexId);
+        const response = await getComplexById(complexId);
 
-        if (res && res.success && res.data) {
-          const mapped = mapComplexData(res.data);
-          const f = res.data.features || {};
-
-          const formatBlocks = (val) => {
-            if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
-            const str = String(val).trim();
-            return str.includes("блок") ? str : `${str} блоков`;
-          };
-
-          const formatHeight = (val) => {
-            if (val === undefined || val === null || val === "" || val === 0) return "Не указано";
-            const str = String(val).trim();
-            return str.includes("м") ? str : `${str} м`;
-          };
-
-          setResidentialComplex({
-            ...defaultResidentialComplex,
-            id: res.data.id,
-            name: mapped.name,
-            subtitle: `${mapped.housingClass} в регионе ${mapped.address}`,
-            class: mapped.housingClass,
-            status: mapped.completionStatus,
-            location: res.data.city || res.data.region || "Кыргызстан",
-            address: mapped.address,
-            developer: mapped.developer,
-            developerId: mapped.developerId || null,
-            developerLogo: mapped.logo || null,
-            completion: res.data.completion_date || "Уточняйте у застройщика",
-            description: mapped.description,
-            concept: res.data.description || "Описание проекта от застройщика.",
-            floors: f.floors ? `${f.floors}` : "Не указано",
-            blocks: formatBlocks(f.blocks),
-            apartments: f.apartments ? `${f.apartments} квартир` : "Не указано",
-            parking: f.parking ? `${f.parking} мест` : "Не указано",
-            landArea: f.areaSotka ? `${f.areaSotka} соток` : (f.area ? `${f.area} м²` : "Не указано"),
-            ceilingHeight: formatHeight(f.ceilingHeight),
-            constructionType: f.construction || "Не указано",
-            documentsUrl: f.documentsUrl || mapped.documentsUrl || null,
-            images: (f.images && f.images.length > 0)
-              ? f.images
-              : (res.data.cover_photo ? [res.data.cover_photo] : []),
-          });
+        if (!response?.success || !response?.data) {
+          throw new Error(response?.message || "Жилой комплекс не найден");
         }
+
+        const mapped = mapComplexData(response.data);
+
+        setComplex({
+          ...EMPTY_COMPLEX,
+          ...mapped,
+        });
+
+        setCurrentImage(0);
       } catch (err) {
         console.error("Failed to load complex detail:", err);
 
-        setError(err.message || "Ошибка загрузки жилого комплекса");
+        setError(err?.message || "Ошибка загрузки жилого комплекса");
       } finally {
         setLoading(false);
       }
@@ -355,22 +185,159 @@ export default function ComplexesDetails() {
     loadComplex();
   }, [complexId]);
 
+  const images = useMemo(() => {
+    if (complex.images?.length) {
+      return complex.images;
+    }
+
+    return [FALLBACK_IMAGE];
+  }, [complex.images]);
+
   const nextImage = () => {
-    setCurrentImage((prev) =>
-      prev === residentialComplex.images.length - 1 ? 0 : prev + 1,
-    );
+    setCurrentImage((prev) => (prev >= images.length - 1 ? 0 : prev + 1));
   };
 
   const previousImage = () => {
-    setCurrentImage((prev) =>
-      prev === 0 ? residentialComplex.images.length - 1 : prev - 1,
-    );
+    setCurrentImage((prev) => (prev <= 0 ? images.length - 1 : prev - 1));
   };
 
   const openMinstroy = () => {
-    const link = residentialComplex.documentsUrl || MINSTROY_URL;
-    window.open(link, "_blank", "noopener,noreferrer");
+    const url = complex.documentsUrl || MINSTROY_URL;
+
+    window.open(url, "_blank", "noopener,noreferrer");
   };
+
+  const priceText = useMemo(() => {
+    const from = formatPrice(complex.priceFrom);
+    const to = formatPrice(complex.priceTo);
+
+    if (from && to && from !== to) {
+      return `${from} — ${to}`;
+    }
+
+    if (from) {
+      return `от ${from}`;
+    }
+
+    return "Цена по запросу";
+  }, [complex.priceFrom, complex.priceTo]);
+
+  const detailItems = [
+    {
+      label: "Класс",
+      value: complex.housingClass,
+      icon: Sparkles,
+    },
+    {
+      label: "Количество квартир",
+      value: formatValue(complex.apartments, " квартир"),
+      icon: Home,
+    },
+    {
+      label: "Этажность",
+      value: formatValue(complex.floors, " этажей"),
+      icon: Layers3,
+    },
+    {
+      label: "Количество блоков",
+      value: formatValue(complex.blocks, " блоков"),
+      icon: Building2,
+    },
+    {
+      label: "Площадь территории",
+      value: complex.areaSotka
+        ? `${complex.areaSotka} соток`
+        : complex.area
+          ? `${complex.area} м²`
+          : "Не указано",
+      icon: Ruler,
+    },
+    {
+      label: "Высота потолков",
+      value: formatValue(complex.ceilingHeight, " м"),
+      icon: Maximize,
+    },
+    {
+      label: "Конструкция",
+      value: formatValue(complex.construction),
+      icon: Grid3X3,
+    },
+    {
+      label: "Паркинг",
+      value: formatValue(complex.parking, " мест"),
+      icon: CarFront,
+    },
+  ];
+
+  const engineeringItems = [
+    {
+      icon: Flame,
+      title: "Отопление",
+      value: complex.heating,
+    },
+    {
+      icon: Zap,
+      title: "Электроснабжение",
+      value: complex.electricity,
+    },
+    {
+      icon: ShieldCheck,
+      title: "Безопасность",
+      value: complex.security,
+    },
+    {
+      icon: Camera,
+      title: "Видеонаблюдение",
+      value: complex.videoSurveillance,
+    },
+  ].filter(
+    (item) =>
+      item.value !== null && item.value !== undefined && item.value !== "",
+  );
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <div className={styles.loading}>
+            <div className={styles.loadingSpinner} />
+            <span>Загрузка жилого комплекса...</span>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <button
+            type="button"
+            className={styles.back}
+            onClick={() => router.back()}
+          >
+            <ArrowLeft size={18} />
+            Вернуться назад
+          </button>
+
+          <div className={styles.error}>
+            <div className={styles.errorIcon}>
+              <Building2 size={28} />
+            </div>
+
+            <h1>Не удалось загрузить ЖК</h1>
+
+            <p>{error}</p>
+
+            <button type="button" onClick={() => window.location.reload()}>
+              Попробовать снова
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className={styles.page}>
@@ -394,11 +361,11 @@ export default function ComplexesDetails() {
           <div className={styles.heroGallery}>
             <div className={styles.mainImage}>
               <Image
-                src={residentialComplex.images[currentImage]}
-                alt={residentialComplex.name}
+                src={images[currentImage]}
+                alt={complex.name}
                 fill
                 priority
-                sizes="(max-width: 900px) 100vw, 68vw"
+                sizes="(max-width: 1100px) 100vw, 68vw"
               />
 
               <div className={styles.imageGradient} />
@@ -406,28 +373,30 @@ export default function ComplexesDetails() {
               <div className={styles.heroBadges}>
                 <span className={styles.premiumBadge}>
                   <Sparkles size={14} />
-                  {residentialComplex.class}
+                  {complex.housingClass}
                 </span>
 
                 <span className={styles.statusBadge}>
-                  {residentialComplex.status}
+                  {complex.completionStatus}
                 </span>
               </div>
 
               <button
                 type="button"
                 className={styles.favorite}
-                onClick={() => setIsFavorite(!isFavorite)}
+                aria-label="Добавить в избранное"
+                onClick={() => setIsFavorite((prev) => !prev)}
               >
                 <Heart size={22} fill={isFavorite ? "currentColor" : "none"} />
               </button>
 
-              {residentialComplex.images.length > 1 && (
+              {images.length > 1 && (
                 <>
                   <button
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryLeft}`}
                     onClick={previousImage}
+                    aria-label="Предыдущее изображение"
                   >
                     <ChevronLeft />
                   </button>
@@ -436,6 +405,7 @@ export default function ComplexesDetails() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryRight}`}
                     onClick={nextImage}
+                    aria-label="Следующее изображение"
                   >
                     <ChevronRight />
                   </button>
@@ -443,39 +413,38 @@ export default function ComplexesDetails() {
               )}
 
               <div className={styles.imageCounter}>
-                {currentImage + 1} / {residentialComplex.images.length}
+                {currentImage + 1} / {images.length}
               </div>
 
               <div className={styles.heroImageText}>
                 <span>ЖИЛОЙ КОМПЛЕКС</span>
-
-                <strong>{residentialComplex.name}</strong>
+                <strong>{complex.name}</strong>
               </div>
             </div>
 
-            {/* THUMBNAILS */}
-
-            <div className={styles.thumbnails}>
-              {residentialComplex.images.map((image, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className={
-                    index === currentImage
-                      ? `${styles.thumbnail} ${styles.thumbnailActive}`
-                      : styles.thumbnail
-                  }
-                  onClick={() => setCurrentImage(index)}
-                >
-                  <Image
-                    src={image}
-                    alt={`${residentialComplex.name} ${index + 1}`}
-                    fill
-                    sizes="110px"
-                  />
-                </button>
-              ))}
-            </div>
+            {images.length > 1 && (
+              <div className={styles.thumbnails}>
+                {images.map((image, index) => (
+                  <button
+                    key={`${image}-${index}`}
+                    type="button"
+                    className={
+                      index === currentImage
+                        ? `${styles.thumbnail} ${styles.thumbnailActive}`
+                        : styles.thumbnail
+                    }
+                    onClick={() => setCurrentImage(index)}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${complex.name} ${index + 1}`}
+                      fill
+                      sizes="110px"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* HERO INFO */}
@@ -486,37 +455,36 @@ export default function ComplexesDetails() {
               ЖИЛОЙ КОМПЛЕКС
             </div>
 
-            <h1>{residentialComplex.name}</h1>
+            <h1>{complex.name}</h1>
 
-            <p className={styles.heroSubtitle}>{residentialComplex.subtitle}</p>
+            <p className={styles.heroSubtitle}>{complex.housingClass}</p>
 
             <div className={styles.heroLocation}>
               <MapPin size={19} />
 
               <div>
-                <strong>{residentialComplex.location}</strong>
+                {complex.city && <strong>{complex.city}</strong>}
 
-                <span>{residentialComplex.address}</span>
+                <span>{complex.address}</span>
               </div>
             </div>
 
             <div className={styles.heroDivider} />
 
+            {/* PRICE */}
+
+            <div className={styles.priceBlock}>
+              <span>СТОИМОСТЬ КВАРТИР</span>
+
+              <strong>{priceText}</strong>
+            </div>
+
             {/* DEVELOPER */}
 
             <div className={styles.developer}>
               <div className={styles.developerIcon}>
-                {residentialComplex.developerLogo ? (
-                  <img
-                    src={residentialComplex.developerLogo}
-                    alt={residentialComplex.developer}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
+                {complex.logo ? (
+                  <img src={complex.logo} alt={complex.developer} />
                 ) : (
                   <Building2 size={18} />
                 )}
@@ -524,19 +492,18 @@ export default function ComplexesDetails() {
 
               <div>
                 <span>ЗАСТРОЙЩИК</span>
-
-                <strong>{residentialComplex.developer}</strong>
+                <strong>{complex.developer}</strong>
               </div>
             </div>
 
-            {/* STATS */}
+            {/* HERO STATS */}
 
             <div className={styles.heroStats}>
               <div>
                 <Layers3 />
 
                 <span>
-                  <strong>{residentialComplex.floors}</strong>
+                  <strong>{formatValue(complex.floors)}</strong>
                   этажей
                 </span>
               </div>
@@ -545,17 +512,17 @@ export default function ComplexesDetails() {
                 <Building2 />
 
                 <span>
-                  <strong>{residentialComplex.blocks}</strong>
-                  блока
+                  <strong>{formatValue(complex.blocks)}</strong>
+                  блоков
                 </span>
               </div>
 
               <div>
-                <Ruler />
+                <Home />
 
                 <span>
-                  <strong>{residentialComplex.landArea}</strong>
-                  территория
+                  <strong>{formatValue(complex.apartments)}</strong>
+                  квартир
                 </span>
               </div>
             </div>
@@ -570,20 +537,16 @@ export default function ComplexesDetails() {
               <div>
                 <span>СРОК СДАЧИ</span>
 
-                <strong>{residentialComplex.completion}</strong>
+                <strong>{formatDate(complex.completionDate)}</strong>
               </div>
             </div>
-
-            {/* DEVELOPER PROFILE */}
 
             <button
               type="button"
               className={styles.primaryButton}
               onClick={() => {
-                if (residentialComplex.developerId) {
-                  router.push(
-                    `/public-profile/${residentialComplex.developerId}`,
-                  );
+                if (complex.developerId) {
+                  router.push(`/public-profile/${complex.developerId}`);
                 } else {
                   document.getElementById("apartments")?.scrollIntoView({
                     behavior: "smooth",
@@ -613,25 +576,17 @@ export default function ComplexesDetails() {
 
           <div className={styles.aboutGrid}>
             <div>
-              <p className={styles.description}>
-                {residentialComplex.description}
-              </p>
-
-              <p className={styles.description}>{residentialComplex.concept}</p>
+              <p className={styles.description}>{complex.description}</p>
             </div>
 
             <div className={styles.aboutHighlight}>
               <Sparkles />
 
-              <strong>
-                Пространство,
-                <br />
-                созданное для жизни
-              </strong>
+              <strong>{complex.name}</strong>
 
               <span>
-                Архитектура, природа и приватность объединены в единую
-                концепцию.
+                Современный жилой комплекс с продуманной инфраструктурой и
+                комфортной городской средой.
               </span>
             </div>
           </div>
@@ -652,159 +607,17 @@ export default function ComplexesDetails() {
           </div>
 
           <div className={styles.projectDetails}>
-            <div>
-              <span>Класс</span>
-              <strong>{residentialComplex.class}</strong>
-            </div>
-
-            <div>
-              <span>Количество квартир</span>
-              <strong>{residentialComplex.apartments}</strong>
-            </div>
-
-            <div>
-              <span>Этажность</span>
-              <strong>{residentialComplex.floors} этажей</strong>
-            </div>
-
-            <div>
-              <span>Количество блоков</span>
-              <strong>{residentialComplex.blocks}</strong>
-            </div>
-
-            <div>
-              <span>Площадь территории</span>
-              <strong>{residentialComplex.landArea}</strong>
-            </div>
-
-            <div>
-              <span>Высота потолков</span>
-              <strong>{residentialComplex.ceilingHeight}</strong>
-            </div>
-
-            <div>
-              <span>Конструкция</span>
-              <strong>{residentialComplex.constructionType}</strong>
-            </div>
-
-            <div>
-              <span>Паркинг</span>
-              <strong>{residentialComplex.parking}</strong>
-            </div>
-          </div>
-        </section>
-
-        {/* ADVANTAGES */}
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionIcon}>
-              <Sparkles />
-            </div>
-
-            <div>
-              <span>ПРЕИМУЩЕСТВА</span>
-              <h2>Почему этот ЖК</h2>
-            </div>
-          </div>
-
-          <div className={styles.advantages}>
-            {residentialComplex.advantages.map((item, index) => {
+            {detailItems.map((item) => {
               const Icon = item.icon;
 
               return (
-                <div className={styles.advantage} key={index}>
-                  <div className={styles.advantageIcon}>
-                    <Icon size={21} />
+                <div className={styles.detailCard} key={item.label}>
+                  <div className={styles.detailIcon}>
+                    <Icon size={18} />
                   </div>
 
                   <div>
-                    <strong>{item.title}</strong>
-
-                    <p>{item.description}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ARCHITECTURE */}
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionIcon}>
-              <Building2 />
-            </div>
-
-            <div>
-              <span>АРХИТЕКТУРА</span>
-              <h2>Архитектурная концепция</h2>
-            </div>
-          </div>
-
-          <div className={styles.architectureGrid}>
-            {residentialComplex.architecture.map((item, index) => (
-              <div className={styles.architectureItem} key={index}>
-                <span>0{index + 1}</span>
-
-                <h3>{item.title}</h3>
-
-                <p>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* INFRASTRUCTURE */}
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionIcon}>
-              <Trees />
-            </div>
-
-            <div>
-              <span>ТЕРРИТОРИЯ</span>
-              <h2>Инфраструктура комплекса</h2>
-            </div>
-          </div>
-
-          <div className={styles.infrastructure}>
-            {residentialComplex.infrastructure.map((item, index) => (
-              <div className={styles.infrastructureItem} key={index}>
-                <CheckCircle2 size={17} />
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ENGINEERING */}
-
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionIcon}>
-              <Zap />
-            </div>
-
-            <div>
-              <span>ИНЖЕНЕРИЯ</span>
-              <h2>Инженерные решения и безопасность</h2>
-            </div>
-          </div>
-
-          <div className={styles.engineering}>
-            {residentialComplex.engineering.map((item, index) => {
-              const Icon = item.icon;
-
-              return (
-                <div className={styles.engineeringItem} key={index}>
-                  <Icon />
-
-                  <div>
-                    <span>{item.title}</span>
-
+                    <span>{item.label}</span>
                     <strong>{item.value}</strong>
                   </div>
                 </div>
@@ -812,6 +625,79 @@ export default function ComplexesDetails() {
             })}
           </div>
         </section>
+
+        {/* ENGINEERING */}
+
+        {engineeringItems.length > 0 && (
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <Zap />
+              </div>
+
+              <div>
+                <span>ИНЖЕНЕРИЯ</span>
+                <h2>Инженерные решения и безопасность</h2>
+              </div>
+            </div>
+
+            <div className={styles.engineering}>
+              {engineeringItems.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div className={styles.engineeringItem} key={item.title}>
+                    <Icon />
+
+                    <div>
+                      <span>{item.title}</span>
+
+                      <strong>{item.value}</strong>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* AMENITIES */}
+
+        {complex.amenities?.length > 0 && (
+          <section className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <Trees />
+              </div>
+
+              <div>
+                <span>ТЕРРИТОРИЯ</span>
+                <h2>Инфраструктура комплекса</h2>
+              </div>
+            </div>
+
+            <div className={styles.infrastructure}>
+              {complex.amenities.map((item, index) => {
+                const text =
+                  typeof item === "string"
+                    ? item
+                    : item?.name || item?.title || item?.label || "";
+
+                if (!text) return null;
+
+                return (
+                  <div
+                    className={styles.infrastructureItem}
+                    key={`${text}-${index}`}
+                  >
+                    <CheckCircle2 size={17} />
+                    {text}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* LOCATION */}
 
@@ -827,19 +713,124 @@ export default function ComplexesDetails() {
             </div>
           </div>
 
-          <div className={styles.address}>
-            <div>
-              <strong>{residentialComplex.address}</strong>
+          <div className={styles.locationCard}>
+            <div className={styles.locationContent}>
+              <span>АДРЕС</span>
+
+              <strong>{complex.address}</strong>
+
+              {complex.city && <p>{complex.city}</p>}
             </div>
           </div>
         </section>
 
-        {/* MINSTROY DOCUMENTS */}
+        {/* APARTMENT LAYOUTS */}
+
+        {complex.layouts?.length > 0 && (
+          <section className={styles.section} id="apartments">
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <Home />
+              </div>
+
+              <div>
+                <span>КВАРТИРЫ</span>
+                <h2>Планировки и цены</h2>
+              </div>
+            </div>
+
+            <div className={styles.layouts}>
+              {complex.layouts.map((layout, index) => {
+                const layoutImage = getLayoutValue(layout, [
+                  "image",
+                  "photo",
+                  "image_url",
+                  "photo_url",
+                ]);
+
+                const rooms = getLayoutValue(layout, [
+                  "rooms",
+                  "room_count",
+                  "bedrooms",
+                ]);
+
+                const area = getLayoutValue(layout, [
+                  "area",
+                  "square",
+                  "total_area",
+                  "area_m2",
+                ]);
+
+                const floor = getLayoutValue(layout, ["floor"]);
+
+                const price = getLayoutValue(layout, ["price"]);
+
+                return (
+                  <div
+                    className={styles.layoutCard}
+                    key={layout.id || layout.layout_id || index}
+                  >
+                    {layoutImage ? (
+                      <div className={styles.layoutImage}>
+                        <Image
+                          src={layoutImage}
+                          alt={`Планировка ${index + 1}`}
+                          fill
+                          sizes="(max-width: 700px) 100vw, 300px"
+                        />
+                      </div>
+                    ) : (
+                      <div className={styles.layoutPlaceholder}>
+                        <Home size={38} />
+                        <span>Планировка</span>
+                      </div>
+                    )}
+
+                    <div className={styles.layoutContent}>
+                      <div className={styles.layoutTop}>
+                        <span>
+                          {rooms !== null
+                            ? `${rooms}-комнатная`
+                            : `Вариант ${index + 1}`}
+                        </span>
+
+                        {price && <strong>{formatPrice(price)}</strong>}
+                      </div>
+
+                      <div className={styles.layoutMeta}>
+                        {area !== null && (
+                          <span>
+                            <Ruler size={14} />
+                            {area} м²
+                          </span>
+                        )}
+
+                        {floor !== null && (
+                          <span>
+                            <Layers3 size={14} />
+                            {floor} этаж
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* DOCUMENTS */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon}>
+              <FileCheck />
+            </div>
+
             <div>
               <span>ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ</span>
+
               <h2>Документы о жилом комплексе</h2>
             </div>
           </div>
@@ -873,40 +864,44 @@ export default function ComplexesDetails() {
           </div>
         </section>
 
-        {/* APARTMENTS CTA */}
+        {/* CTA */}
 
-        <section className={styles.apartmentsCta} id="apartments">
+        <section className={styles.apartmentsCta}>
           <div>
             <span>ВЫБОР КВАРТИРЫ</span>
 
             <h2>Найдите своё пространство</h2>
 
             <p>
-              Выберите планировку, этаж и площадь квартиры в{" "}
-              {residentialComplex.name}.
+              Посмотрите доступные планировки, характеристики квартир и цены в{" "}
+              {complex.name}.
             </p>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              flexWrap: "wrap",
-            }}
-          >
+          <div className={styles.ctaActions}>
+            {complex.layouts?.length > 0 && (
+              <button
+                type="button"
+                onClick={() =>
+                  document.getElementById("apartments")?.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                Смотреть планировки
+                <ArrowRight size={18} />
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => {
-                if (residentialComplex.developerId) {
-                  router.push(
-                    `/public-profile/${residentialComplex.developerId}`,
-                  );
-                } else {
-                  router.push("/apartments");
+                if (complex.developerId) {
+                  router.push(`/public-profile/${complex.developerId}`);
                 }
               }}
             >
-              Смотреть профиль застройщика
+              Профиль застройщика
               <ArrowRight size={18} />
             </button>
 
