@@ -795,10 +795,6 @@ export default function MyComplexDetail() {
           </div>
 
           <div className={styles.aboutContent}>
-            <p className={styles.description}>
-              {residentialComplex.description}
-            </p>
-
             {residentialComplex.concept && (
               <p className={styles.description}>{residentialComplex.concept}</p>
             )}

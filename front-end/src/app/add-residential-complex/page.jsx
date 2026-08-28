@@ -819,18 +819,6 @@ export default function AddResidentialComplex() {
                   строительства КР или другой официальный источник.
                 </small>
               </div>
-
-              {form.documentsUrl && (
-                <a
-                  href={form.documentsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.documentPreview}
-                >
-                  <ExternalLink size={15} />
-                  Проверить ссылку
-                </a>
-              )}
             </div>
           </section>
 
