@@ -20,7 +20,7 @@
 
   overflow: hidden;
 
-  padding: 110px 30px 100px;
+  padding-top: 100px;
 
   background:
     radial-gradient(
@@ -924,6 +924,7 @@
   max-width: 1200px;
 
   margin: 100px auto 0;
+  margin-bottom: 100px;
 }
 
 .ctaContent {
@@ -1164,4 +1165,41 @@
   .ctaButton {
     width: 100%;
   }
+}
+
+.oldPrice {
+  width: 100%;
+
+  color: #5f5d68 !important;
+
+  font-size: 12px !important;
+  font-weight: 600;
+
+  line-height: 1;
+
+  text-decoration: line-through;
+}
+
+.discountInfo {
+  position: relative;
+  z-index: 1;
+
+  width: fit-content;
+
+  margin-top: -8px;
+  margin-bottom: 12px;
+
+  padding: 4px 8px;
+
+  border-radius: 6px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: var(--purple-light);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }

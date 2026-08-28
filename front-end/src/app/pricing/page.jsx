@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 
 import styles from "./Pricing.module.css";
+import Header from "@/components/pageComponents/header/Header";
+import Footer from "@/components/pageComponents/footer/Footer";
 
 export default function Pricing() {
   const router = useRouter();
@@ -28,7 +30,7 @@ export default function Pricing() {
   const tariffs = [
     {
       title: "Частный",
-      price: "0",
+      price: 0,
       icon: User,
       desc: "Для собственников, которые продают или сдают свою недвижимость",
       features: [
@@ -41,7 +43,7 @@ export default function Pricing() {
 
     {
       title: "СТАРТ",
-      price: "390",
+      price: 390,
       icon: Rocket,
       desc: "Для начинающих риелторов и частных специалистов",
       features: [
@@ -54,7 +56,7 @@ export default function Pricing() {
 
     {
       title: "ОПТИМАЛЬНЫЙ",
-      price: "790",
+      price: 790,
       icon: Crown,
       popular: true,
       desc: "Лучший выбор для активных специалистов",
@@ -69,7 +71,7 @@ export default function Pricing() {
 
     {
       title: "БИЗНЕС",
-      price: "1890",
+      price: 1890,
       icon: Building2,
       desc: "Для агентств недвижимости и команд",
       features: [
@@ -83,7 +85,7 @@ export default function Pricing() {
 
     {
       title: "ЗАСТРОЙЩИК",
-      price: "Индивидуально",
+      price: null,
       icon: Sparkles,
       developer: true,
       desc: "Для строительных компаний и жилых комплексов",
@@ -102,23 +104,43 @@ export default function Pricing() {
       id: "1",
       title: "1 месяц",
       discount: "",
+      discountPercent: 0,
     },
     {
       id: "3",
       title: "3 месяца",
       discount: "-10%",
+      discountPercent: 10,
     },
     {
       id: "6",
       title: "6 месяцев",
       discount: "-20%",
+      discountPercent: 20,
     },
     {
       id: "12",
       title: "12 месяцев",
       discount: "-35%",
+      discountPercent: 35,
     },
   ];
+
+  const selectedPeriod = periods.find((item) => item.id === period);
+
+  const discountPercent = selectedPeriod?.discountPercent ?? 0;
+
+  const getPrice = (price) => {
+    if (price === null) return null;
+
+    if (price === 0) return 0;
+
+    return Math.round(price * (1 - discountPercent / 100));
+  };
+
+  const hasDiscount = (price) => {
+    return discountPercent > 0 && price !== null && price > 0;
+  };
 
   const handleProfileClick = () => {
     const token = localStorage.getItem("uytap_token");
@@ -142,6 +164,8 @@ export default function Pricing() {
 
   return (
     <main className={styles.page}>
+      <Header />
+
       <div className={styles.noise} />
       <div className={styles.glowOne} />
       <div className={styles.glowTwo} />
@@ -188,6 +212,7 @@ export default function Pricing() {
         <div className={styles.sectionHeader}>
           <div>
             <span className={styles.sectionNumber}>01</span>
+
             <span className={styles.sectionLabel}>Тарифы</span>
           </div>
 
@@ -195,8 +220,12 @@ export default function Pricing() {
         </div>
 
         <div className={styles.cards}>
-          {tariffs.map((item) => {
+          {tariffs.map((item, index) => {
             const Icon = item.icon;
+
+            const currentPrice = getPrice(item.price);
+
+            const discounted = hasDiscount(item.price);
 
             return (
               <article
@@ -207,6 +236,8 @@ export default function Pricing() {
                   ${item.developer ? styles.developer : ""}
                 `}
               >
+                {/* POPULAR BADGE */}
+
                 {item.popular && (
                   <div className={styles.badge}>
                     <Star size={12} />
@@ -214,34 +245,64 @@ export default function Pricing() {
                   </div>
                 )}
 
+                {/* CARD TOP */}
+
                 <div className={styles.cardTop}>
                   <div className={styles.icon}>
                     <Icon size={23} />
                   </div>
 
                   <span className={styles.cardIndex}>
-                    0{tariffs.indexOf(item) + 1}
+                    {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
 
+                {/* TITLE */}
+
                 <h2>{item.title}</h2>
+
+                {/* DESCRIPTION */}
 
                 <p className={styles.desc}>{item.desc}</p>
 
+                {/* PRICE */}
+
                 <div className={styles.price}>
-                  {item.price === "Индивидуально" ? (
+                  {item.price === null ? (
                     <strong className={styles.individualPrice}>
                       Индивидуально
                     </strong>
+                  ) : item.price === 0 ? (
+                    <>
+                      <strong>0</strong>
+                      <span>сом / месяц</span>
+                    </>
                   ) : (
                     <>
-                      <strong>{item.price}</strong>
+                      {discounted && (
+                        <span className={styles.oldPrice}>
+                          {item.price} сом
+                        </span>
+                      )}
+
+                      <strong>{currentPrice}</strong>
+
                       <span>сом / месяц</span>
                     </>
                   )}
                 </div>
 
+                {/* DISCOUNT INFO */}
+
+                {discounted && (
+                  <div className={styles.discountInfo}>
+                    Экономия {discountPercent}%
+                  </div>
+                )}
+
                 <div className={styles.divider} />
+
+                {/* FEATURES */}
 
                 <ul>
                   {item.features.map((feature) => (
@@ -254,6 +315,8 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
+
+                {/* BUTTON */}
 
                 <button
                   type="button"
@@ -275,6 +338,7 @@ export default function Pricing() {
       <section className={styles.how}>
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>02</span>
+
           <span className={styles.sectionLabel}>Как это работает</span>
 
           <h2>
@@ -338,6 +402,7 @@ export default function Pricing() {
       <section className={styles.payment}>
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>03</span>
+
           <span className={styles.sectionLabel}>Оплата</span>
 
           <h2>
@@ -395,6 +460,7 @@ export default function Pricing() {
         <div className={styles.promotionHeader}>
           <div>
             <span className={styles.sectionNumber}>04</span>
+
             <span className={styles.sectionLabel}>Продвижение</span>
 
             <h2>
@@ -474,6 +540,8 @@ export default function Pricing() {
           </button>
         </div>
       </section>
+
+      <Footer />
     </main>
   );
 }
