@@ -1,5 +1,5 @@
 .hero {
-  height: 100vh;
+  height: 120vh;
   min-height: 700px;
 
   position: relative;
@@ -12,6 +12,7 @@
   background-image: url("/assets/bishkek-hero.jpg");
   background-size: cover;
   background-position: center;
+
   padding-top: 100px;
 }
 
@@ -84,6 +85,8 @@
 
   padding: 11px 20px;
 
+  margin-bottom: 25px;
+
   border-radius: 40px;
 
   font-size: 17px;
@@ -97,8 +100,6 @@
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-
-  margin-bottom: 25px;
 
   box-shadow:
     0 10px 35px rgba(0, 0, 0, 0.3),
@@ -134,15 +135,14 @@
 ========================= */
 
 .title {
-  font-size: 64px;
+  margin: 0 0 30px;
 
+  font-size: 64px;
   line-height: 1.08;
 
   font-weight: 900;
 
   letter-spacing: -2.5px;
-
-  margin: 0 0 30px;
 
   color: #ffffff;
 }
@@ -194,15 +194,14 @@
 ========================= */
 
 .description {
-  font-size: 22px;
-
-  line-height: 1.5;
-
   max-width: 720px;
 
-  color: #d6d1df;
-
   margin: 0 0 40px;
+
+  font-size: 22px;
+  line-height: 1.5;
+
+  color: #d6d1df;
 
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
@@ -213,10 +212,9 @@
 
 .buttons {
   display: flex;
+  align-items: center;
 
   gap: 20px;
-
-  align-items: center;
 }
 
 /* =========================
@@ -226,16 +224,17 @@
 .primary {
   height: 62px;
 
-  padding: 0 35px;
-
-  border-radius: 18px;
-
-  border: 1px solid rgba(167, 139, 250, 0.4);
-
   display: flex;
   align-items: center;
 
   gap: 12px;
+
+  padding: 0 35px;
+
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 18px;
+
+  font-family: inherit;
 
   font-size: 18px;
   font-weight: 800;
@@ -286,6 +285,8 @@
 
   border-radius: 18px;
 
+  font-family: inherit;
+
   font-size: 18px;
   font-weight: 800;
 
@@ -327,11 +328,143 @@
 }
 
 /* =========================
+   MAP BUTTON
+========================= */
+
+.mapButton {
+  margin-top: 22px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  width: max-content;
+
+  padding: 11px 15px 11px 11px;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(167, 139, 250, 0.22);
+
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.13),
+    rgba(18, 17, 23, 0.72)
+  );
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    0 0 25px rgba(139, 92, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.mapButton:hover {
+  transform: translateY(-3px);
+
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(30, 27, 39, 0.9)
+  );
+
+  border-color: rgba(167, 139, 250, 0.48);
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.32),
+    0 0 25px rgba(139, 92, 246, 0.13);
+}
+
+.mapIcon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  color: #c4b5fd;
+
+  background: rgba(139, 92, 246, 0.14);
+
+  border: 1px solid rgba(167, 139, 250, 0.22);
+
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.08);
+}
+
+.mapIcon svg {
+  width: 20px;
+  height: 20px;
+
+  stroke-width: 2;
+}
+
+.mapText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 2px;
+
+  text-align: left;
+}
+
+.mapText strong {
+  font-size: 14px;
+  font-weight: 800;
+
+  color: #ffffff;
+}
+
+.mapText small {
+  font-size: 12px;
+  font-weight: 500;
+
+  color: #aaa4b6;
+}
+
+.mapArrow {
+  width: 16px;
+  height: 16px;
+
+  margin-left: 7px;
+
+  color: #8f899d;
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.mapButton:hover .mapArrow {
+  color: #c4b5fd;
+
+  transform: translate(2px, -2px);
+}
+
+/* =========================
    SAFETY BUTTON
 ========================= */
 
 .safetyButton {
-  margin-top: 22px;
+  margin-top: 12px;
 
   display: flex;
   align-items: center;
@@ -489,7 +622,11 @@
   }
 
   .content {
-    margin: 0 20px;
+    width: 100%;
+
+    margin: 0;
+
+    padding: 0 20px;
   }
 
   .location {
@@ -525,18 +662,29 @@
     justify-content: center;
   }
 
+  .mapButton,
   .safetyButton {
     width: 100%;
+  }
 
+  .mapButton {
     margin-top: 18px;
 
     padding: 11px 13px;
   }
 
+  .safetyButton {
+    margin-top: 10px;
+
+    padding: 11px 13px;
+  }
+
+  .mapText,
   .safetyText {
     flex: 1;
   }
 
+  .mapArrow,
   .safetyArrow {
     margin-left: 0;
   }

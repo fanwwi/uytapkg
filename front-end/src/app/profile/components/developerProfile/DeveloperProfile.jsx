@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getMyComplexes } from "@/utils/api";
 
 import {
@@ -15,15 +16,15 @@ import {
   CreditCard,
   LogOut,
   Landmark,
-  CheckCircle,
   Mail,
   House,
   Hash,
   ArrowUpRight,
   Plus,
-  Map,
   CalendarDays,
   Layers3,
+  CheckCircle2,
+  CheckCircle2Icon,
 } from "lucide-react";
 
 import styles from "./DeveloperProfile.module.css";
@@ -31,7 +32,11 @@ import styles from "./DeveloperProfile.module.css";
 import DeveloperEditModal from "./developerEdit/DeveloperEditModal";
 
 export default function DeveloperProfile({ user, adsCount = 0 }) {
+  const router = useRouter();
+
   const [edit, setEdit] = useState(false);
+  const [dbProjects, setDbProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
 
   if (!user) return null;
 
@@ -55,22 +60,13 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
   const whatsapp = user.phone?.replace(/\D/g, "") || "";
 
-  /*
-   * ЖК.
-   *
-   * Backend может вернуть:
-   * profile.projects
-   * profile.residential_complexes
-   * profile.complexes
-   *
-   * Поэтому делаем компонент устойчивым.
-   */
-  const [dbProjects, setDbProjects] = useState([]);
-  const [loadingProjects, setLoadingProjects] = useState(true);
-
   useEffect(() => {
     const token = localStorage.getItem("uytap_token");
-    if (!token) return;
+
+    if (!token) {
+      setLoadingProjects(false);
+      return;
+    }
 
     getMyComplexes(token)
       .then((res) => {
@@ -79,27 +75,34 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             id: item.id,
             name: item.name,
             address: item.address,
-            image_url: item.cover_photo || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
+            image_url:
+              item.cover_photo ||
+              "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
             completion_status: item.completion_status,
             completion_date: item.completion_date,
             apartments: item.features?.apartments || 0,
           }));
+
           setDbProjects(mapped);
         }
       })
-      .catch((err) => console.error("Error fetching developer profile projects:", err))
+      .catch((err) =>
+        console.error("Error fetching developer profile projects:", err),
+      )
       .finally(() => setLoadingProjects(false));
   }, []);
 
-  const projects = dbProjects.length > 0 ? dbProjects : (
-    profile.projects ||
-    profile.residential_complexes ||
-    profile.complexes ||
-    []
-  );
+  const projects =
+    dbProjects.length > 0
+      ? dbProjects
+      : profile.projects ||
+        profile.residential_complexes ||
+        profile.complexes ||
+        [];
 
   function logout() {
     localStorage.removeItem("uytap_user");
+    localStorage.removeItem("uytap_token");
 
     document.cookie = "uytap_token=; path=/; max-age=0";
 
@@ -132,7 +135,12 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
   }
 
   function getProjectStatus(project) {
-    return project.status || project.construction_status || "Строительство";
+    return (
+      project.completion_status ||
+      project.status ||
+      project.construction_status ||
+      "Строительство"
+    );
   }
 
   function getProjectApartments(project) {
@@ -144,7 +152,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
   return (
     <main className={styles.page}>
       {/* =====================================================
-          MAIN PROFILE
+          PROFILE
       ===================================================== */}
 
       <section className={styles.profileCard}>
@@ -157,31 +165,26 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             <div className={styles.avatar}>
               <img src={avatar} alt={company} />
             </div>
-
-            {user.isVerified && (
-              <div className={styles.avatarVerified}>
-                <CheckCircle />
-              </div>
-            )}
           </div>
 
           {/* INFO */}
 
           <div className={styles.info}>
             <div className={styles.badge}>
-              <Building2 size={14} />
+              <Building2 />
               Застройщик
             </div>
 
             <div className={styles.titleRow}>
               <h1>{company}</h1>
 
-              {user.isVerified && <CheckCircle className={styles.verify} />}
+              <div className={styles.verifiedBadge} title="Профиль подтверждён">
+                <CheckCircle2Icon />
+              </div>
             </div>
 
             <p className={styles.person}>
               <UserIcon />
-
               {fullName}
             </p>
 
@@ -201,6 +204,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             type="button"
             className={styles.edit}
             onClick={() => setEdit(true)}
+            aria-label="Редактировать профиль"
           >
             <Pencil />
           </button>
@@ -327,7 +331,6 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
           <div>
             <strong>{profile.projects_count || projects.length || 0}</strong>
-
             <span>ЖК</span>
           </div>
         </div>
@@ -340,8 +343,11 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           <div>
             <strong>
               {dbProjects.length > 0
-                ? dbProjects.reduce((sum, p) => sum + (Number(p.apartments) || 0), 0)
-                : (profile.apartments_count || 0)}
+                ? dbProjects.reduce(
+                    (sum, project) => sum + (Number(project.apartments) || 0),
+                    0,
+                  )
+                : profile.apartments_count || 0}
             </strong>
 
             <span>квартир</span>
@@ -355,21 +361,20 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
           <div>
             <strong>{adsCount}</strong>
-
             <span>объявлений</span>
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          MY ЖК
+          PROJECTS
       ===================================================== */}
 
       <section className={styles.projectsSection}>
         <div className={styles.sectionHeader}>
           <div>
             <div className={styles.sectionLabel}>
-              <Building2 size={15} />
+              <Building2 />
               Портфолио
             </div>
 
@@ -387,7 +392,15 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           </a>
         </div>
 
-        {projects.length > 0 ? (
+        {loadingProjects ? (
+          <div className={styles.emptyProjects}>
+            <div className={styles.emptyIcon}>
+              <Building2 />
+            </div>
+
+            <h3>Загрузка проектов...</h3>
+          </div>
+        ) : projects.length > 0 ? (
           <div className={styles.projectsGrid}>
             {projects.map((project, index) => {
               const name = getProjectName(project);
@@ -424,7 +437,6 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
                       {project.completion_date && (
                         <span>
                           <CalendarDays />
-
                           {project.completion_date}
                         </span>
                       )}
@@ -512,15 +524,11 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
   );
 }
 
-/*
- * Маленькая обёртка вместо импорта User,
- * чтобы не конфликтовать с переменной user.
- */
 function UserIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

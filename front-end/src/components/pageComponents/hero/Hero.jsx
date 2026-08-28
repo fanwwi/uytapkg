@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Search, MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { Search, MapPin, ShieldCheck, ArrowUpRight, Map } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import styles from "./Hero.module.css";
@@ -71,6 +71,25 @@ export default function Hero() {
             Смотреть все объявления
           </button>
         </div>
+
+        {/* MAP BUTTON */}
+
+        <button
+          type="button"
+          className={styles.mapButton}
+          onClick={() => router.push("/search-map")}
+        >
+          <span className={styles.mapIcon}>
+            <Map />
+          </span>
+
+          <span className={styles.mapText}>
+            <strong>Искать объекты на карте</strong>
+            <small>Найдите недвижимость рядом с вами</small>
+          </span>
+
+          <ArrowUpRight className={styles.mapArrow} />
+        </button>
 
         {/* SAFETY */}
 
