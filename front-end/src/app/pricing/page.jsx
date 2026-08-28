@@ -40,7 +40,6 @@ export default function Pricing() {
         "Базовый профиль пользователя",
       ],
     },
-
     {
       title: "СТАРТ",
       price: 390,
@@ -53,7 +52,6 @@ export default function Pricing() {
         "Контакт WhatsApp в 1 клик",
       ],
     },
-
     {
       title: "ОПТИМАЛЬНЫЙ",
       price: 790,
@@ -68,7 +66,6 @@ export default function Pricing() {
         "Скрытие похожих объявлений",
       ],
     },
-
     {
       title: "БИЗНЕС",
       price: 1890,
@@ -82,7 +79,6 @@ export default function Pricing() {
         "Статистика команды",
       ],
     },
-
     {
       title: "ЗАСТРОЙЩИК",
       price: null,
@@ -129,6 +125,7 @@ export default function Pricing() {
   const selectedPeriod = periods.find((item) => item.id === period);
 
   const discountPercent = selectedPeriod?.discountPercent ?? 0;
+  const months = Number(period);
 
   const getPrice = (price) => {
     if (price === null) return null;
@@ -136,6 +133,16 @@ export default function Pricing() {
     if (price === 0) return 0;
 
     return Math.round(price * (1 - discountPercent / 100));
+  };
+
+  const getTotal = (price) => {
+    if (price === null) return null;
+
+    if (price === 0) return 0;
+
+    const monthlyPrice = getPrice(price);
+
+    return monthlyPrice * months;
   };
 
   const hasDiscount = (price) => {
@@ -152,14 +159,19 @@ export default function Pricing() {
     }
   };
 
-  const handleTariffClick = () => {
-    const token = localStorage.getItem("uytap_token");
+  const handleTariffClick = (tariff) => {
+    const currentPrice = getPrice(tariff.price);
+    const total = getTotal(tariff.price);
 
-    if (token) {
-      router.push("/profile");
-    } else {
-      router.push("/auth-required");
-    }
+    const params = new URLSearchParams({
+      tariff: tariff.title,
+      price: String(currentPrice ?? 0),
+      months: String(months),
+      discount: String(discountPercent),
+      total: String(total ?? 0),
+    });
+
+    router.push(`/payment?${params.toString()}`);
   };
 
   return (
@@ -188,8 +200,6 @@ export default function Pricing() {
           недвижимости на UyTap.
         </p>
 
-        {/* PERIODS */}
-
         <div className={styles.periods}>
           {periods.map((item) => (
             <button
@@ -212,7 +222,6 @@ export default function Pricing() {
         <div className={styles.sectionHeader}>
           <div>
             <span className={styles.sectionNumber}>01</span>
-
             <span className={styles.sectionLabel}>Тарифы</span>
           </div>
 
@@ -224,6 +233,7 @@ export default function Pricing() {
             const Icon = item.icon;
 
             const currentPrice = getPrice(item.price);
+            const total = getTotal(item.price);
 
             const discounted = hasDiscount(item.price);
 
@@ -236,16 +246,12 @@ export default function Pricing() {
                   ${item.developer ? styles.developer : ""}
                 `}
               >
-                {/* POPULAR BADGE */}
-
                 {item.popular && (
                   <div className={styles.badge}>
                     <Star size={12} />
                     ПОПУЛЯРНЫЙ
                   </div>
                 )}
-
-                {/* CARD TOP */}
 
                 <div className={styles.cardTop}>
                   <div className={styles.icon}>
@@ -257,15 +263,9 @@ export default function Pricing() {
                   </span>
                 </div>
 
-                {/* TITLE */}
-
                 <h2>{item.title}</h2>
 
-                {/* DESCRIPTION */}
-
                 <p className={styles.desc}>{item.desc}</p>
-
-                {/* PRICE */}
 
                 <div className={styles.price}>
                   {item.price === null ? (
@@ -292,8 +292,6 @@ export default function Pricing() {
                   )}
                 </div>
 
-                {/* DISCOUNT INFO */}
-
                 {discounted && (
                   <div className={styles.discountInfo}>
                     Экономия {discountPercent}%
@@ -301,8 +299,6 @@ export default function Pricing() {
                 )}
 
                 <div className={styles.divider} />
-
-                {/* FEATURES */}
 
                 <ul>
                   {item.features.map((feature) => (
@@ -316,12 +312,10 @@ export default function Pricing() {
                   ))}
                 </ul>
 
-                {/* BUTTON */}
-
                 <button
                   type="button"
                   className={styles.cardButton}
-                  onClick={handleTariffClick}
+                  onClick={() => handleTariffClick(item)}
                 >
                   {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
 
@@ -354,9 +348,7 @@ export default function Pricing() {
         <div className={styles.steps}>
           <div className={styles.step}>
             <div className={styles.stepNumber}>01</div>
-
             <h3>Выберите тариф</h3>
-
             <p>
               Подберите решение для собственника, риелтора, агентства или
               застройщика.
@@ -365,9 +357,7 @@ export default function Pricing() {
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>02</div>
-
             <h3>Создайте аккаунт</h3>
-
             <p>
               Войдите в личный кабинет и заполните информацию о вашем профиле.
             </p>
@@ -375,9 +365,7 @@ export default function Pricing() {
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>03</div>
-
             <h3>Оплатите тариф</h3>
-
             <p>
               После успешной оплаты возможности тарифа активируются
               автоматически.
@@ -386,9 +374,7 @@ export default function Pricing() {
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>04</div>
-
             <h3>Получайте клиентов</h3>
-
             <p>
               Размещайте объекты, продвигайте их и увеличивайте количество
               обращений.
@@ -418,7 +404,6 @@ export default function Pricing() {
             </div>
 
             <h3>Банковская карта</h3>
-
             <p>Быстрая онлайн-оплата через безопасный сервис.</p>
           </div>
 
@@ -428,7 +413,6 @@ export default function Pricing() {
             </div>
 
             <h3>Мобильные платежи</h3>
-
             <p>Оплачивайте через популярные платежные системы Кыргызстана.</p>
           </div>
 
@@ -438,7 +422,6 @@ export default function Pricing() {
             </div>
 
             <h3>Для бизнеса</h3>
-
             <p>Индивидуальные условия для агентств и застройщиков.</p>
           </div>
 
@@ -448,7 +431,6 @@ export default function Pricing() {
             </div>
 
             <h3>Безопасность</h3>
-
             <p>Проверенные платежи и защита вашего аккаунта.</p>
           </div>
         </div>
@@ -478,31 +460,22 @@ export default function Pricing() {
         <div className={styles.promoGrid}>
           <div className={styles.promoCard}>
             <Crown />
-
             <span>01</span>
-
             <h3>VIP</h3>
-
             <p>290 сом / день</p>
           </div>
 
           <div className={styles.promoCard}>
             <Rocket />
-
             <span>02</span>
-
             <h3>ТОП</h3>
-
             <p>190 сом / день</p>
           </div>
 
           <div className={styles.promoCard}>
             <Sparkles />
-
             <span>03</span>
-
             <h3>Авто-UP</h3>
-
             <p>290 сом / 30 дней</p>
           </div>
         </div>
