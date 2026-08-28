@@ -13,26 +13,103 @@ import StepProgress from "./components/StepProgress/StepProgress";
 import SmartSearch from "./components/SmartSearch/SmartSearch";
 
 const initialForm = {
+  /* =========================
+     LOCATION
+  ========================= */
+
   country: "",
   region: "",
   city: "",
   settlement: "",
   district: "",
 
+  address: "",
+  latitude: null,
+  longitude: null,
+
+  /* =========================
+     DEAL
+  ========================= */
+
   dealType: "",
   rentalPeriod: "",
 
+  /* =========================
+     CATEGORY
+  ========================= */
+
   category: "",
+
+  /* =========================
+     PRICE
+  ========================= */
 
   priceFrom: "",
   priceTo: "",
 
+  /* =========================
+     AREA
+  ========================= */
+
   areaFrom: "",
   areaTo: "",
 
-  address: "",
-  latitude: null,
-  longitude: null,
+  /* =========================
+     CATEGORY PARAMETERS
+  ========================= */
+
+  series: "",
+  rooms: "",
+  floor: "",
+  condition: "",
+  walls: "",
+  heating: "",
+  documents: "",
+  furniture: "",
+  amenities: [],
+  offerType: "",
+
+  houseType: "",
+  floors: "",
+  sewerage: "",
+  water: "",
+  electricity: "",
+
+  purpose: "",
+  fence: "",
+  location: "",
+  terrain: "",
+  communications: "",
+
+  roomsInApartment: "",
+  privateBathroom: "",
+
+  premisesType: "",
+  technicalParameters: "",
+  firstLine: "",
+  separateEntrance: "",
+  rentalBusiness: "",
+
+  ceilingHeight: "",
+  parkingType: "",
+  material: "",
+  security: "",
+  gates: "",
+  inspectionPit: "",
+  basement: "",
+  truckAccess: "",
+  gateType: "",
+
+  /* =========================
+     ISSYK-KUL
+  ========================= */
+
+  beachDistanceFrom: "",
+  beachDistanceTo: "",
+
+  /* =========================
+     OTHER
+  ========================= */
 
   listingType: "",
 
@@ -41,11 +118,16 @@ const initialForm = {
 
 export default function SearchFilter({ onSearch }) {
   const router = useRouter();
+
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
   const [isSearching, setIsSearching] = useState(false);
 
-  const totalSteps = 5;
+  const totalSteps = 3;
+
+  /* =========================================================
+     UPDATE FORM
+  ========================================================= */
 
   function updateForm(values) {
     setForm((prev) => ({
@@ -54,56 +136,102 @@ export default function SearchFilter({ onSearch }) {
     }));
   }
 
+  /* =========================================================
+     SEARCH MODE
+  ========================================================= */
+
   function selectSearchMode(mode) {
     updateForm({
       searchMode: mode,
     });
   }
 
-  const nextStep = () => {
+  /* =========================================================
+     STEPS
+  ========================================================= */
+
+  function nextStep() {
     setStep((prev) => Math.min(prev + 1, totalSteps));
-  };
+  }
 
-  const prevStep = () => {
+  function prevStep() {
     setStep((prev) => Math.max(prev - 1, 1));
-  };
+  }
 
-  function handleSmartSearch(values) {
-    const merged = { ...form, ...values };
-    updateForm(merged);
+  /* =========================================================
+     BUILD SEARCH PARAMS
+  ========================================================= */
 
+  function buildSearchParams(data) {
     const params = new URLSearchParams();
-    Object.entries(merged).forEach(([key, value]) => {
-      if (value !== "" && value !== null && value !== undefined) {
-        params.set(key, String(value));
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        value !== "" &&
+        value !== null &&
+        value !== undefined &&
+        (!Array.isArray(value) || value.length > 0)
+      ) {
+        params.set(key, Array.isArray(value) ? value.join(",") : String(value));
       }
     });
+
+    return params;
+  }
+
+  /* =========================================================
+     SMART SEARCH
+  ========================================================= */
+
+  function handleSmartSearch(values) {
+    const merged = {
+      ...form,
+      ...values,
+      searchMode: "smart",
+    };
+
+    updateForm(merged);
+
+    const params = buildSearchParams(merged);
 
     router.push(`/all-products?${params.toString()}`);
   }
 
+  /* =========================================================
+     NORMAL SEARCH
+  ========================================================= */
+
   function submitSearch(searchData) {
-    const finalForm = searchData || form;
+    const finalForm = {
+      ...form,
+      ...(searchData || {}),
+      searchMode: "normal",
+    };
+
     setIsSearching(true);
+
+    updateForm(finalForm);
 
     if (onSearch) {
       onSearch(finalForm);
     }
 
-    const params = new URLSearchParams();
-    Object.entries(finalForm).forEach(([key, value]) => {
-      if (value !== "" && value !== null && value !== undefined) {
-        params.set(key, String(value));
-      }
-    });
+    const params = buildSearchParams(finalForm);
 
     router.push(`/all-products?${params.toString()}`);
   }
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* SEARCH MODE */}
+        {/* =====================================================
+            SEARCH MODE
+        ===================================================== */}
+
         <div className={styles.searchMode}>
           <div className={styles.searchModeSwitch}>
             <div
@@ -136,7 +264,10 @@ export default function SearchFilter({ onSearch }) {
           </div>
         </div>
 
-        {/* SMART SEARCH */}
+        {/* =====================================================
+            SMART SEARCH
+        ===================================================== */}
+
         {form.searchMode === "smart" ? (
           <SmartSearch
             form={form}
@@ -145,9 +276,17 @@ export default function SearchFilter({ onSearch }) {
           />
         ) : (
           <>
+            {/* =================================================
+                PROGRESS
+            ================================================= */}
+
             <StepProgress currentStep={step} totalSteps={totalSteps} />
 
             <div className={styles.card}>
+              {/* ===============================================
+                  STEP 1 — LOCATION
+              =============================================== */}
+
               {step === 1 && (
                 <StepLocation
                   form={form}
@@ -155,6 +294,10 @@ export default function SearchFilter({ onSearch }) {
                   onNext={nextStep}
                 />
               )}
+
+              {/* ===============================================
+                  STEP 2 — DEAL
+              =============================================== */}
 
               {step === 2 && (
                 <StepDeal
@@ -165,6 +308,10 @@ export default function SearchFilter({ onSearch }) {
                 />
               )}
 
+              {/* ===============================================
+                  STEP 3 — CATEGORY + SEARCH
+              =============================================== */}
+
               {step === 3 && (
                 <StepCategory
                   form={form}
@@ -174,14 +321,6 @@ export default function SearchFilter({ onSearch }) {
                   onSubmit={submitSearch}
                   isLoading={isSearching}
                 />
-              )}
-
-              {step === 4 && (
-                <div style={{ padding: 24 }}>
-                  <button type="button" onClick={submitSearch} style={{ padding: "12px 20px", borderRadius: 10, cursor: "pointer" }}>
-                    Показать результаты
-                  </button>
-                </div>
               )}
             </div>
           </>
