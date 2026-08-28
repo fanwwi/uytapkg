@@ -1,11 +1,6 @@
-/* =========================================================
-   PAGE
-========================================================= */
-
 .page {
   min-height: 100vh;
   padding: 34px 45px 90px;
-
   color: #f7f7fb;
 
   background:
@@ -36,7 +31,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-bottom: 24px;
 }
 
@@ -47,7 +41,7 @@
 
   padding: 0;
 
-  border: none;
+  border: 0;
   background: transparent;
 
   color: #8b8b98;
@@ -82,6 +76,134 @@
 
 .ownerLabel svg {
   color: #a855f7;
+}
+
+/* =========================================================
+   LOADING / ERROR
+========================================================= */
+
+.loadingState {
+  min-height: 70vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  color: #858591;
+
+  font-size: 14px;
+}
+
+.loader {
+  width: 34px;
+  height: 34px;
+
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-color: #a855f7;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+.errorState {
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  text-align: center;
+
+  border-radius: 24px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(22, 22, 28, 0.98),
+    rgba(12, 12, 16, 0.98)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.errorIcon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border-radius: 16px;
+
+  color: #f87171;
+
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.errorState h2 {
+  margin: 0 0 8px;
+
+  color: #fff;
+
+  font-size: 24px;
+}
+
+.errorState p {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: #777783;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.errorButton {
+  height: 46px;
+
+  margin-top: 24px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+
+  background: rgba(124, 58, 237, 0.1);
+
+  color: #c084fc;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.errorButton:hover {
+  color: #fff;
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* =========================================================
@@ -159,10 +281,10 @@
   top: 22px;
   left: 22px;
 
+  z-index: 2;
+
   display: flex;
   gap: 9px;
-
-  z-index: 2;
 }
 
 .premiumBadge,
@@ -211,6 +333,8 @@
   top: 22px;
   right: 22px;
 
+  z-index: 4;
+
   height: 40px;
 
   padding: 0 14px;
@@ -238,15 +362,11 @@
     background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
-
-  z-index: 4;
 }
 
 .editImageButton:hover {
   background: #7c3aed;
-
   border-color: #8b5cf6;
-
   transform: translateY(-2px);
 }
 
@@ -260,12 +380,12 @@
   left: 28px;
   bottom: 28px;
 
+  z-index: 2;
+
   display: flex;
   flex-direction: column;
 
   gap: 5px;
-
-  z-index: 2;
 }
 
 .heroImageText span {
@@ -296,6 +416,8 @@
   right: 22px;
   bottom: 22px;
 
+  z-index: 3;
+
   padding: 8px 12px;
 
   border-radius: 10px;
@@ -308,18 +430,18 @@
   font-weight: 800;
 
   backdrop-filter: blur(12px);
-
-  z-index: 3;
 }
 
 /* =========================================================
-   GALLERY ARROWS
+   ARROWS
 ========================================================= */
 
 .galleryArrow {
   position: absolute;
 
   top: 50%;
+
+  z-index: 3;
 
   width: 46px;
   height: 46px;
@@ -331,7 +453,6 @@
   transform: translateY(-50%);
 
   border: 1px solid rgba(255, 255, 255, 0.14);
-
   border-radius: 14px;
 
   background: rgba(5, 5, 8, 0.65);
@@ -342,14 +463,12 @@
 
   opacity: 0;
 
+  backdrop-filter: blur(12px);
+
   transition:
     opacity 0.25s ease,
     background 0.2s ease,
     border-color 0.2s ease;
-
-  backdrop-filter: blur(12px);
-
-  z-index: 3;
 }
 
 .mainImage:hover .galleryArrow {
@@ -462,7 +581,6 @@
 .eyebrow {
   display: flex;
   align-items: center;
-
   gap: 8px;
 
   color: #a855f7;
@@ -483,6 +601,8 @@
   line-height: 0.98;
 
   letter-spacing: -2.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .heroSubtitle {
@@ -511,7 +631,6 @@
 .heroLocation div {
   display: flex;
   flex-direction: column;
-
   gap: 3px;
 }
 
@@ -525,6 +644,8 @@
   color: #777783;
 
   font-size: 12px;
+
+  line-height: 1.5;
 }
 
 /* =========================================================
@@ -547,13 +668,14 @@
 .developer {
   display: flex;
   align-items: center;
-
   gap: 12px;
 }
 
 .developerIcon {
   width: 43px;
   height: 43px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -571,8 +693,9 @@
 .developer > div:last-child {
   display: flex;
   flex-direction: column;
-
   gap: 4px;
+
+  min-width: 0;
 }
 
 .developer span,
@@ -590,6 +713,8 @@
   color: #fff;
 
   font-size: 14px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -629,16 +754,21 @@
 
 .heroStats > div:hover {
   background: #202026;
+
   border-color: rgba(168, 85, 247, 0.18);
 }
 
 .heroStats svg {
+  flex-shrink: 0;
+
   width: 18px;
 
   color: #a855f7;
 }
 
 .heroStats span {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -651,6 +781,8 @@
   color: #fff;
 
   font-size: 13px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -682,6 +814,8 @@
   width: 42px;
   height: 42px;
 
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -700,10 +834,12 @@
   flex-direction: column;
 
   gap: 4px;
+
+  min-width: 0;
 }
 
 /* =========================================================
-   MANAGEMENT BUTTONS
+   MANAGEMENT
 ========================================================= */
 
 .managementButtons {
@@ -727,8 +863,7 @@
 
   gap: 10px;
 
-  border: none;
-
+  border: 0;
   border-radius: 14px;
 
   background: linear-gradient(135deg, #6d28d9, #9333ea);
@@ -756,6 +891,8 @@
 .actionButton {
   width: 54px;
   height: 54px;
+
+  flex-shrink: 0;
 
   margin-top: 20px;
 
@@ -875,7 +1012,7 @@
 }
 
 .description {
-  margin: 0 0 17px;
+  margin: 0;
 
   color: #9898a4;
 
@@ -936,9 +1073,9 @@
 }
 
 .projectDetails > div {
-  padding: 18px;
-
   min-height: 82px;
+
+  padding: 18px;
 
   display: flex;
   flex-direction: column;
@@ -974,137 +1111,8 @@
   color: #fff;
 
   font-size: 13px;
-}
 
-/* =========================================================
-   ADVANTAGES
-========================================================= */
-
-.advantages {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 12px;
-}
-
-.advantage {
-  padding: 20px;
-
-  display: flex;
-
-  gap: 14px;
-
-  border-radius: 17px;
-
-  background: #19191f;
-
-  border: 1px solid rgba(255, 255, 255, 0.05);
-
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-
-.advantage:hover {
-  background: #1d1d24;
-
-  border-color: rgba(168, 85, 247, 0.22);
-
-  transform: translateY(-2px);
-}
-
-.advantageIcon {
-  width: 43px;
-  height: 43px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 12px;
-
-  background: rgba(124, 58, 237, 0.1);
-
-  color: #a855f7;
-}
-
-.advantage strong {
-  color: #fff;
-
-  font-size: 14px;
-}
-
-.advantage p {
-  margin: 6px 0 0;
-
-  color: #70707b;
-
-  font-size: 11px;
-
-  line-height: 1.6;
-}
-
-/* =========================================================
-   ARCHITECTURE
-========================================================= */
-
-.architectureGrid {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 12px;
-}
-
-.architectureItem {
-  padding: 24px;
-
-  min-height: 190px;
-
-  border-radius: 17px;
-
-  background: linear-gradient(145deg, #1c1c22, #131318);
-
-  border: 1px solid rgba(255, 255, 255, 0.05);
-
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.architectureItem:hover {
-  border-color: rgba(168, 85, 247, 0.18);
-
-  transform: translateY(-2px);
-}
-
-.architectureItem > span {
-  color: #a855f7;
-
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.architectureItem h3 {
-  margin: 27px 0 10px;
-
-  color: #fff;
-
-  font-size: 17px;
-}
-
-.architectureItem p {
-  margin: 0;
-
-  color: #797984;
-
-  font-size: 12px;
-
-  line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -1149,30 +1157,27 @@
 }
 
 .infrastructureItem svg {
+  flex-shrink: 0;
+
   color: #a855f7;
 }
 
 /* =========================================================
-   ENGINEERING
+   LAYOUTS
 ========================================================= */
 
-.engineering {
+.layoutsGrid {
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 11px;
-}
-
-.engineeringItem {
-  padding: 20px;
-
-  display: flex;
-  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
 
   gap: 12px;
+}
 
-  border-radius: 15px;
+.layoutCard {
+  padding: 20px;
+
+  border-radius: 17px;
 
   background: #19191f;
 
@@ -1180,38 +1185,60 @@
 
   transition:
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
-.engineeringItem:hover {
+.layoutCard:hover {
+  background: #1d1d24;
+
   border-color: rgba(168, 85, 247, 0.2);
 
   transform: translateY(-2px);
 }
 
-.engineeringItem > svg {
-  width: 20px;
-
-  color: #a855f7;
-}
-
-.engineeringItem div {
+.layoutTop {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 
-  gap: 4px;
+  gap: 15px;
 }
 
-.engineeringItem span {
-  color: #696973;
-
-  font-size: 10px;
-}
-
-.engineeringItem strong {
+.layoutTop span {
   color: #fff;
 
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.layoutTop strong {
+  flex-shrink: 0;
+
+  color: #c084fc;
+
+  font-size: 13px;
+}
+
+.layoutInfo {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.layoutInfo span {
+  padding: 7px 9px;
+
+  border-radius: 8px;
+
+  background: #222229;
+
+  color: #777783;
+
+  font-size: 10px;
 }
 
 /* =========================================================
@@ -1219,7 +1246,14 @@
 ========================================================= */
 
 .addressBlock {
-  padding: 25px 28px;
+  min-height: 76px;
+
+  padding: 22px 25px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
 
   border-radius: 18px;
 
@@ -1238,173 +1272,184 @@
   transform: translateY(-2px);
 }
 
+.addressBlock svg {
+  flex-shrink: 0;
+
+  color: #a855f7;
+}
+
 .addressBlock strong {
   color: #fff;
 
-  font-size: 18px;
+  font-size: 17px;
 
   line-height: 1.5;
 }
 
 /* =========================================================
-   DELETE MODAL
+   MINISTRY
 ========================================================= */
 
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-
-  z-index: 9999;
+.ministryCard {
+  position: relative;
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+
+  gap: 30px;
 
   padding: 24px;
 
-  background: rgba(3, 3, 6, 0.75);
+  overflow: hidden;
 
-  backdrop-filter: blur(10px);
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(139, 92, 246, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(145deg, #19161f 0%, #14121a 100%);
+
+  border: 1px solid rgba(139, 92, 246, 0.14);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.deleteModal {
-  width: min(100%, 460px);
+.ministryCard::before {
+  content: "";
 
-  padding: 32px;
+  position: absolute;
 
-  background: linear-gradient(145deg, #1d1d24, #101015);
+  top: 0;
+  bottom: 0;
+  left: 0;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  width: 3px;
 
-  border-radius: 24px;
-
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
-
-  animation: deleteModalIn 0.2s ease-out;
+  background: linear-gradient(180deg, #7c3aed, #a855f7);
 }
 
-.deleteModalIcon {
-  width: 52px;
-  height: 52px;
+.ministryCard:hover {
+  border-color: rgba(168, 85, 247, 0.28);
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.22),
+    0 0 35px rgba(139, 92, 246, 0.05);
+}
+
+.ministryInfo {
+  min-width: 0;
 
   display: flex;
   align-items: center;
-  justify-content: center;
 
-  margin-bottom: 20px;
-
-  color: #f87171;
-
-  background: rgba(239, 68, 68, 0.09);
-
-  border: 1px solid rgba(239, 68, 68, 0.15);
-
-  border-radius: 14px;
+  gap: 15px;
 }
 
-.deleteModalContent h3 {
-  margin: 0 0 10px;
-
-  color: #fff;
-
-  font-size: 22px;
-  font-weight: 700;
-
-  line-height: 1.25;
-}
-
-.deleteModalContent p {
-  margin: 0;
-
-  color: #92929d;
-
-  font-size: 15px;
-
-  line-height: 1.6;
-}
-
-.deleteModalActions {
-  display: flex;
-
-  gap: 12px;
-
-  margin-top: 28px;
-}
-
-.cancelDeleteButton,
-.confirmDeleteButton {
+.ministryIcon {
+  width: 48px;
   height: 48px;
 
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 8px;
+  border-radius: 13px;
+
+  color: #a855f7;
+
+  background: rgba(139, 92, 246, 0.09);
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+}
+
+.ministryText {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.ministryText strong {
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+.ministryText p {
+  max-width: 720px;
+
+  margin: 0;
+
+  color: #777481;
+
+  font-size: 12px;
+
+  line-height: 1.65;
+}
+
+.ministryButton {
+  flex-shrink: 0;
+
+  height: 48px;
+
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
 
   border-radius: 12px;
 
-  font-size: 14px;
-  font-weight: 600;
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #c084fc;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  white-space: nowrap;
 
   cursor: pointer;
 
   transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.cancelDeleteButton {
-  flex: 1;
+.ministryButton:hover {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
 
-  color: #dddde5;
-
-  background: #202027;
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.cancelDeleteButton:hover {
-  background: #292930;
-}
-
-.confirmDeleteButton {
-  flex: 1;
+  border-color: transparent;
 
   color: #fff;
 
-  background: #dc2626;
+  transform: translateY(-2px);
 
-  border: 1px solid #dc2626;
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.22);
 }
 
-.confirmDeleteButton:hover {
-  background: #b91c1c;
-
-  border-color: #b91c1c;
-}
-
-.cancelDeleteButton:active,
-.confirmDeleteButton:active {
-  transform: scale(0.98);
-}
-
-/* =========================================================
-   ANIMATION
-========================================================= */
-
-@keyframes deleteModalIn {
-  from {
-    opacity: 0;
-
-    transform: translateY(10px) scale(0.97);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0) scale(1);
-  }
+.ministryButton:active {
+  transform: translateY(0);
 }
 
 /* =========================================================
@@ -1432,15 +1477,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .advantages {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .architectureGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .engineering {
+  .layoutsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -1518,11 +1555,7 @@
     grid-template-columns: 1fr;
   }
 
-  .advantages {
-    grid-template-columns: 1fr;
-  }
-
-  .engineering {
+  .layoutsGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1538,24 +1571,34 @@
     flex-shrink: 0;
   }
 
-  .modalOverlay {
-    align-items: flex-end;
+  .ministryCard {
+    align-items: stretch;
 
-    padding: 12px;
+    flex-direction: column;
+
+    gap: 20px;
+
+    padding: 20px;
   }
 
-  .deleteModal {
-    padding: 24px;
-
-    border-radius: 20px;
+  .ministryInfo {
+    align-items: flex-start;
   }
 
-  .deleteModalActions {
-    flex-direction: column-reverse;
+  .ministryIcon {
+    width: 44px;
+    height: 44px;
   }
 
-  .cancelDeleteButton,
-  .confirmDeleteButton {
+  .ministryText strong {
+    font-size: 14px;
+  }
+
+  .ministryText p {
+    font-size: 11px;
+  }
+
+  .ministryButton {
     width: 100%;
   }
 }
@@ -1597,218 +1640,45 @@
   .actionButton {
     width: 100%;
   }
-}
 
-/* =========================
-   MINSTROY DOCUMENTS
-========================= */
+  .heroBadges {
+    top: 14px;
+    left: 14px;
 
-.ministryCard {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 30px;
-
-  padding: 24px;
-
-  border-radius: 18px;
-
-  background:
-    radial-gradient(
-      circle at 0% 50%,
-      rgba(139, 92, 246, 0.12),
-      transparent 35%
-    ),
-    linear-gradient(145deg, #19161f 0%, #14121a 100%);
-
-  border: 1px solid rgba(139, 92, 246, 0.14);
-
-  overflow: hidden;
-
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.ministryCard::before {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  top: 0;
-  bottom: 0;
-
-  width: 3px;
-
-  background: linear-gradient(180deg, #7c3aed, #a855f7);
-
-  border-radius: 3px;
-}
-
-.ministryCard:hover {
-  border-color: rgba(168, 85, 247, 0.28);
-
-  box-shadow:
-    0 15px 45px rgba(0, 0, 0, 0.22),
-    0 0 35px rgba(139, 92, 246, 0.05);
-}
-
-/* =========================
-   MINSTROY INFO
-========================= */
-
-.ministryInfo {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
-  gap: 15px;
-}
-
-.ministryIcon {
-  width: 48px;
-  height: 48px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 13px;
-
-  color: #a855f7;
-
-  background: rgba(139, 92, 246, 0.09);
-
-  border: 1px solid rgba(139, 92, 246, 0.16);
-}
-
-.ministryText {
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 6px;
-}
-
-.ministryText strong {
-  color: #ffffff;
-
-  font-size: 15px;
-  font-weight: 800;
-
-  line-height: 1.3;
-}
-
-.ministryText p {
-  max-width: 720px;
-
-  margin: 0;
-
-  color: #777481;
-
-  font-size: 12px;
-
-  line-height: 1.65;
-}
-
-/* =========================
-   MINSTROY BUTTON
-========================= */
-
-.ministryButton {
-  flex-shrink: 0;
-
-  height: 48px;
-
-  padding: 0 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 9px;
-
-  border: 1px solid rgba(139, 92, 246, 0.2);
-
-  border-radius: 12px;
-
-  background: rgba(139, 92, 246, 0.08);
-
-  color: #c084fc;
-
-  font-size: 12px;
-  font-weight: 900;
-
-  white-space: nowrap;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.ministryButton:hover {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-
-  border-color: transparent;
-
-  color: #ffffff;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.22);
-}
-
-.ministryButton:active {
-  transform: translateY(0);
-}
-
-.ministryButton svg {
-  flex-shrink: 0;
-}
-
-@media (max-width: 700px) {
-  .ministryCard {
-    align-items: stretch;
-
-    flex-direction: column;
-
-    gap: 20px;
-
-    padding: 20px;
+    flex-wrap: wrap;
   }
 
-  .ministryInfo {
+  .editImageButton {
+    top: 14px;
+    right: 14px;
+  }
+
+  .heroImageText strong {
+    font-size: 24px;
+  }
+
+  .sectionHeader {
     align-items: flex-start;
   }
 
-  .ministryIcon {
-    width: 44px;
-    height: 44px;
+  .sectionIcon {
+    width: 40px;
+    height: 40px;
   }
 
-  .ministryText strong {
-    font-size: 14px;
+  .sectionHeader span {
+    font-size: 8px;
   }
 
-  .ministryText p {
-    font-size: 11px;
+  .sectionHeader h2 {
+    font-size: 18px;
   }
 
-  .ministryButton {
-    width: 100%;
+  .addressBlock {
+    align-items: flex-start;
+  }
+
+  .addressBlock strong {
+    font-size: 15px;
   }
 }
