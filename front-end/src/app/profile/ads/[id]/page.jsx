@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
+
 import { getListingById } from "@/utils/api";
 import { mapListingDetail } from "@/utils/mapListingData";
 
@@ -28,114 +29,24 @@ import {
   Waves,
   Pencil,
   Trash2,
+  CalendarDays,
+  LandPlot,
+  Bath,
+  Sofa,
+  Trees,
+  Compass,
+  Maximize,
+  DoorOpen,
+  Building,
+  CircleDollarSign,
+  Clock3,
+  CheckCircle2,
 } from "lucide-react";
 
 import styles from "./MyAdsDetails.module.css";
+
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 import AdsEditModal from "../AdsEditModal/AdsEditModal";
-
-/*
-const initialProduct = {
-  id: 1,
-
-  title: "Уютный дом у озера Иссык-Куль",
-
-  price: "120 000 $",
-
-  type: "Дом",
-
-  dealType: "Продажа",
-
-  location: "Чолпон-Ата",
-
-  address: "ул. Советская, 24",
-
-  area: "180 м²",
-
-  rooms: 5,
-
-  floors: 2,
-
-  year: 2021,
-
-  status: "vip",
-
-  description:
-    "Просторный и уютный дом в живописном районе Чолпон-Аты. До озера несколько минут пешком. Дом отлично подходит как для постоянного проживания, так и для отдыха всей семьёй.",
-
-  images: [
-    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=1800&auto=format&fit=crop",
-  ],
-
-  characteristics: [
-    {
-      icon: BedDouble,
-      label: "Комнаты",
-      value: "5 комнат",
-    },
-    {
-      icon: Ruler,
-      label: "Площадь",
-      value: "180 м²",
-    },
-    {
-      icon: Layers3,
-      label: "Этажность",
-      value: "2 этажа",
-    },
-    {
-      icon: Home,
-      label: "Тип дома",
-      value: "Частный дом",
-    },
-    {
-      icon: Flame,
-      label: "Отопление",
-      value: "Автономное",
-    },
-    {
-      icon: Droplets,
-      label: "Канализация",
-      value: "Септик",
-    },
-    {
-      icon: Zap,
-      label: "Электричество",
-      value: "Есть",
-    },
-    {
-      icon: FileCheck,
-      label: "Документы",
-      value: "Красная книга",
-    },
-    {
-      icon: CarFront,
-      label: "Парковка",
-      value: "Есть",
-    },
-    {
-      icon: Waves,
-      label: "Вид",
-      value: "Вид на озеро",
-    },
-  ],
-
-  amenities: [
-    "Балкон / лоджия",
-    "Видеонаблюдение",
-    "Закрытая территория",
-    "Парковка",
-    "Бытовая техника",
-    "Вид на горы",
-    "Охрана",
-    "Не затапливалась",
-  ],
-
-  createdAt: "12 августа 2026",
-};
-*/
 
 export default function MyProductDetails() {
   const router = useRouter();
@@ -147,92 +58,20 @@ export default function MyProductDetails() {
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
+
     setLoading(true);
     setError(null);
+
     getListingById(id)
       .then((res) => {
         if (res.success && res.data) {
           const mapped = mapListingDetail(res.data);
-          
-          // Build characteristics dynamically and attach to mapped object
-          const dynamicCharacteristics = [
-            {
-              icon: BedDouble,
-              label: "Комнаты",
-              value: `${mapped.rooms} комнат`,
-            },
-            {
-              icon: Ruler,
-              label: "Площадь",
-              value: mapped.area || "Не указана",
-            },
-            {
-              icon: Layers3,
-              label: "Этажность / Этаж",
-              value: `${mapped.floors} этаж(а)`,
-            },
-            {
-              icon: Home,
-              label: "Тип",
-              value: mapped.type,
-            },
-          ];
-
-          if (mapped.rawFeatures?.heating) {
-            dynamicCharacteristics.push({
-              icon: Flame,
-              label: "Отопление",
-              value: mapped.rawFeatures.heating,
-            });
-          }
-          if (mapped.rawFeatures?.sewerage) {
-            dynamicCharacteristics.push({
-              icon: Droplets,
-              label: "Канализация",
-              value: mapped.rawFeatures.sewerage,
-            });
-          }
-          if (mapped.rawFeatures?.electricity) {
-            dynamicCharacteristics.push({
-              icon: Zap,
-              label: "Электричество",
-              value: mapped.rawFeatures.electricity === true ? "Есть" : mapped.rawFeatures.electricity,
-            });
-          }
-          if (mapped.rawFeatures?.documents) {
-            dynamicCharacteristics.push({
-              icon: FileCheck,
-              label: "Документы",
-              value: mapped.rawFeatures.documents,
-            });
-          }
-          if (mapped.rawFeatures?.parking) {
-            dynamicCharacteristics.push({
-              icon: CarFront,
-              label: "Парковка",
-              value: mapped.rawFeatures.parking,
-            });
-          }
-          if (mapped.rawFeatures?.view) {
-            dynamicCharacteristics.push({
-              icon: Waves,
-              label: "Вид",
-              value: mapped.rawFeatures.view,
-            });
-          }
-
-          mapped.characteristics = dynamicCharacteristics;
-
-          mapped.amenities = Array.isArray(mapped.rawFeatures?.amenities)
-            ? mapped.rawFeatures.amenities
-            : mapped.rawFeatures?.amenities
-              ? [mapped.rawFeatures.amenities]
-              : ["Парковка", "Закрытая территория", "Видеонаблюдение"];
 
           setProduct(mapped);
         } else {
@@ -249,13 +88,205 @@ export default function MyProductDetails() {
   }, [id]);
 
   /*
-   * =========================
+   * =========================================================
+   * HELPERS
+   * =========================================================
+   */
+
+  const raw = product?.rawFeatures || {};
+
+  const hasValue = (value) => {
+    return (
+      value !== undefined && value !== null && value !== "" && value !== false
+    );
+  };
+
+  const formatValue = (value, suffix = "") => {
+    if (!hasValue(value)) return null;
+
+    if (typeof value === "boolean") {
+      return value ? "Есть" : null;
+    }
+
+    return `${value}${suffix}`;
+  };
+
+  /*
+   * =========================================================
+   * CHARACTERISTICS
+   * Все новые поля собираются здесь.
+   * Пустые значения автоматически не отображаются.
+   * =========================================================
+   */
+
+  const characteristics = useMemo(() => {
+    if (!product) return [];
+
+    const items = [];
+
+    const add = (icon, label, value) => {
+      if (hasValue(value)) {
+        items.push({
+          icon,
+          label,
+          value: String(value),
+        });
+      }
+    };
+
+    // Общие
+    add(BedDouble, "Комнаты", product.rooms);
+    add(Ruler, "Площадь", product.area);
+
+    // Этажи
+    add(Layers3, "Этаж", raw.floor ?? product.floor);
+
+    add(Building2, "Этажность", raw.floors ?? product.floors);
+
+    // Тип
+    add(Home, "Тип недвижимости", product.type);
+
+    // Тип дома
+    add(Building, "Тип дома", raw.buildingType);
+
+    // Год
+    add(CalendarDays, "Год постройки", raw.year);
+
+    add(CalendarDays, "Год сдачи", raw.yearBuilt);
+
+    // Состояние / ремонт
+    add(Sparkles, "Ремонт", raw.repair);
+
+    add(Sofa, "Мебель", raw.furniture);
+
+    // Потолки
+    if (hasValue(raw.ceilingHeight)) {
+      add(
+        Maximize,
+        "Высота потолков",
+        String(raw.ceilingHeight).includes("м")
+          ? raw.ceilingHeight
+          : `${raw.ceilingHeight} м`,
+      );
+    }
+
+    // Санузел
+    add(Bath, "Санузел", raw.bathroom);
+
+    add(Bath, "Количество санузлов", raw.bathrooms);
+
+    // Отопление
+    add(Flame, "Отопление", raw.heating);
+
+    // Канализация
+    add(Droplets, "Канализация", raw.sewerage);
+
+    // Вода
+    add(Droplets, "Водоснабжение", raw.water);
+
+    // Электричество
+    if (hasValue(raw.electricity)) {
+      add(
+        Zap,
+        "Электричество",
+        raw.electricity === true ? "Есть" : raw.electricity,
+      );
+    }
+
+    // Газ
+    if (hasValue(raw.gas)) {
+      add(Flame, "Газ", raw.gas === true ? "Есть" : raw.gas);
+    }
+
+    // Документы
+    add(FileCheck, "Документы", raw.documents);
+
+    // Парковка
+    add(CarFront, "Парковка", raw.parking);
+
+    // Вид
+    add(Waves, "Вид", raw.view);
+
+    // Ориентация
+    add(Compass, "Ориентация", raw.orientation);
+
+    // Территория
+    add(LandPlot, "Площадь участка", raw.landArea);
+
+    if (hasValue(raw.areaSotka)) {
+      add(
+        LandPlot,
+        "Площадь участка",
+        String(raw.areaSotka).includes("сот")
+          ? raw.areaSotka
+          : `${raw.areaSotka} соток`,
+      );
+    }
+
+    // Количество блоков
+    if (hasValue(raw.blocks)) {
+      add(
+        Layers3,
+        "Количество блоков",
+        String(raw.blocks).includes("блок")
+          ? raw.blocks
+          : `${raw.blocks} блоков`,
+      );
+    }
+
+    // Конструкция
+    add(Building2, "Конструкция", raw.construction ?? raw.constructionType);
+
+    // Застройщик / ЖК
+    add(Building2, "Застройщик / ЖК", raw.developerOrComplex);
+
+    // Расстояние до пляжа
+    if (hasValue(product.beachDistance)) {
+      add(Waves, "Расстояние до пляжа", `${product.beachDistance} м`);
+    }
+
+    // Дополнительные новые поля
+    add(DoorOpen, "Количество входов", raw.entrances);
+
+    add(Trees, "Площадь двора", raw.yardArea);
+
+    add(Ruler, "Ширина участка", raw.landWidth);
+
+    add(Ruler, "Длина участка", raw.landLength);
+
+    return items;
+  }, [product, raw]);
+
+  /*
+   * =========================================================
+   * AMENITIES
+   * =========================================================
+   */
+
+  const amenities = useMemo(() => {
+    if (!product) return [];
+
+    const source = raw.amenities;
+
+    if (Array.isArray(source)) {
+      return source.filter(Boolean);
+    }
+
+    if (source) {
+      return [source];
+    }
+
+    return [];
+  }, [product, raw]);
+
+  /*
+   * =========================================================
    * GALLERY
-   * =========================
+   * =========================================================
    */
 
   const nextImage = () => {
-    if (!product.images?.length) return;
+    if (!product?.images?.length) return;
 
     setCurrentImage((prev) =>
       prev === product.images.length - 1 ? 0 : prev + 1,
@@ -263,7 +294,7 @@ export default function MyProductDetails() {
   };
 
   const previousImage = () => {
-    if (!product.images?.length) return;
+    if (!product?.images?.length) return;
 
     setCurrentImage((prev) =>
       prev === 0 ? product.images.length - 1 : prev - 1,
@@ -271,9 +302,9 @@ export default function MyProductDetails() {
   };
 
   /*
-   * =========================
+   * =========================================================
    * EDIT
-   * =========================
+   * =========================================================
    */
 
   const handleEdit = () => {
@@ -286,12 +317,6 @@ export default function MyProductDetails() {
 
   const handleSave = async (updatedProduct) => {
     try {
-      /*
-       * Здесь потом можно поставить API:
-       *
-       * await api.put(`/ads/${product.id}`, updatedProduct);
-       */
-
       const updatedImages = updatedProduct.image
         ? [updatedProduct.image, ...(product.images?.slice(1) || [])]
         : product.images;
@@ -303,57 +328,69 @@ export default function MyProductDetails() {
       }));
 
       setCurrentImage(0);
-
       setShowEditModal(false);
-    } catch (error) {
-      console.error("Ошибка сохранения объявления:", error);
+    } catch (err) {
+      console.error("Ошибка сохранения объявления:", err);
     }
   };
 
   /*
-   * =========================
+   * =========================================================
    * DELETE
-   * =========================
+   * =========================================================
    */
 
   const handleDelete = async () => {
     try {
-      /*
-       * Здесь потом:
-       *
-       * await api.delete(`/ads/${product.id}`);
-       */
-
       console.log("Удаление объявления:", product.id);
 
       setShowDeleteModal(false);
 
       router.push("/profile/ads");
-    } catch (error) {
-      console.error("Ошибка удаления объявления:", error);
+    } catch (err) {
+      console.error("Ошибка удаления объявления:", err);
     }
   };
+
+  /*
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
 
   if (loading) {
     return (
       <main className={styles.page}>
-        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+        <div className={styles.state}>
+          <div className={styles.stateLoader} />
           <h2>Загрузка объявления...</h2>
+          <p>Получаем информацию об объекте</p>
         </div>
       </main>
     );
   }
 
+  /*
+   * =========================================================
+   * ERROR
+   * =========================================================
+   */
+
   if (error || !product) {
     return (
       <main className={styles.page}>
-        <div className={styles.container} style={{ textAlign: "center", padding: "100px 0" }}>
+        <div className={styles.state}>
+          <div className={styles.stateIcon}>
+            <Home size={28} />
+          </div>
+
           <h2>Объявление не найдено</h2>
-          <p style={{ marginTop: "10px", color: "#666" }}>{error || "Не удалось загрузить данные."}</p>
+
+          <p>{error || "Не удалось загрузить данные объявления."}</p>
+
           <button
             type="button"
-            className={styles.back}
-            style={{ margin: "20px auto 0" }}
+            className={styles.stateButton}
             onClick={() => router.push("/profile/ads")}
           >
             <ArrowLeft size={18} />
@@ -364,16 +401,14 @@ export default function MyProductDetails() {
     );
   }
 
-  /*
-   * =========================
-   * RENDER
-   * =========================
-   */
+  const images = product.images || [];
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* BACK */}
+        {/* =====================================================
+            TOP BAR
+        ===================================================== */}
 
         <div className={styles.topBar}>
           <button
@@ -391,20 +426,29 @@ export default function MyProductDetails() {
           </span>
         </div>
 
-        {/* TOP */}
+        {/* =====================================================
+            TOP
+        ===================================================== */}
 
         <section className={styles.top}>
           {/* GALLERY */}
 
           <div className={styles.gallery}>
             <div className={styles.mainImage}>
-              <Image
-                src={product.images[currentImage]}
-                alt={product.title}
-                fill
-                priority
-                sizes="(max-width: 900px) 100vw, 65vw"
-              />
+              {images.length > 0 ? (
+                <Image
+                  src={images[currentImage]}
+                  alt={product.title}
+                  fill
+                  priority
+                  sizes="(max-width: 900px) 100vw, 65vw"
+                />
+              ) : (
+                <div className={styles.noImage}>
+                  <Home size={48} />
+                  <span>Нет фотографий</span>
+                </div>
+              )}
 
               <div className={styles.imageOverlay} />
 
@@ -420,14 +464,17 @@ export default function MyProductDetails() {
 
                 {product.status === "urgent" && (
                   <span className={`${styles.badge} ${styles.urgent}`}>
+                    <Flame size={14} />
                     Срочно
                   </span>
                 )}
 
-                <span className={styles.categoryBadge}>{product.type}</span>
+                {product.type && (
+                  <span className={styles.categoryBadge}>{product.type}</span>
+                )}
               </div>
 
-              {/* IMAGE MANAGEMENT */}
+              {/* ACTIONS */}
 
               <div className={styles.imageActions}>
                 <button
@@ -462,7 +509,7 @@ export default function MyProductDetails() {
 
               {/* ARROWS */}
 
-              {product.images.length > 1 && (
+              {images.length > 1 && (
                 <>
                   <button
                     type="button"
@@ -486,112 +533,137 @@ export default function MyProductDetails() {
 
               {/* COUNTER */}
 
-              <div className={styles.imageCounter}>
-                {currentImage + 1} / {product.images.length}
-              </div>
+              {images.length > 0 && (
+                <div className={styles.imageCounter}>
+                  {currentImage + 1} / {images.length}
+                </div>
+              )}
 
               {/* IMAGE TITLE */}
 
               <div className={styles.imageTitle}>
                 <span>МОЯ НЕДВИЖИМОСТЬ</span>
-
                 <strong>{product.title}</strong>
               </div>
             </div>
 
             {/* THUMBNAILS */}
 
-            <div className={styles.thumbnails}>
-              {product.images.map((image, index) => (
-                <button
-                  key={`${image}-${index}`}
-                  type="button"
-                  className={
-                    index === currentImage
-                      ? `${styles.thumbnail} ${styles.thumbnailActive}`
-                      : styles.thumbnail
-                  }
-                  onClick={() => setCurrentImage(index)}
-                >
-                  <Image
-                    src={image}
-                    alt={`Фото ${index + 1}`}
-                    fill
-                    sizes="100px"
-                  />
-                </button>
-              ))}
-            </div>
+            {images.length > 1 && (
+              <>
+                <div className={styles.thumbnails}>
+                  {images.map((image, index) => (
+                    <button
+                      key={`${image}-${index}`}
+                      type="button"
+                      className={
+                        index === currentImage
+                          ? `${styles.thumbnail} ${styles.thumbnailActive}`
+                          : styles.thumbnail
+                      }
+                      onClick={() => setCurrentImage(index)}
+                    >
+                      <Image
+                        src={image}
+                        alt={`Фото ${index + 1}`}
+                        fill
+                        sizes="100px"
+                      />
+                    </button>
+                  ))}
+                </div>
 
-            {/* DOTS */}
-
-            <div className={styles.dots}>
-              {product.images.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className={
-                    index === currentImage
-                      ? `${styles.dot} ${styles.dotActive}`
-                      : styles.dot
-                  }
-                  onClick={() => setCurrentImage(index)}
-                  aria-label={`Фото ${index + 1}`}
-                />
-              ))}
-            </div>
+                <div className={styles.dots}>
+                  {images.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className={
+                        index === currentImage
+                          ? `${styles.dot} ${styles.dotActive}`
+                          : styles.dot
+                      }
+                      onClick={() => setCurrentImage(index)}
+                      aria-label={`Фото ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           {/* SUMMARY */}
 
           <div className={styles.summary}>
             <div className={styles.summaryTop}>
-              <span className={styles.deal}>{product.dealType}</span>
+              {product.dealType && (
+                <span className={styles.deal}>{product.dealType}</span>
+              )}
 
-              <span className={styles.published}>Опубликовано</span>
+              <span className={styles.published}>
+                <CheckCircle2 size={13} />
+                Опубликовано
+              </span>
             </div>
 
             <h1>{product.title}</h1>
 
-            <div className={styles.location}>
-              <MapPin size={20} />
+            {(product.location || product.address) && (
+              <div className={styles.location}>
+                <MapPin size={20} />
 
-              <div>
-                <strong>{product.location}</strong>
+                <div>
+                  {product.location && <strong>{product.location}</strong>}
 
-                <span>{product.address}</span>
+                  {product.address && <span>{product.address}</span>}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className={styles.price}>{product.price}</div>
 
+            {/* QUICK INFO */}
+
             <div className={styles.quickInfo}>
-              <div>
-                <BedDouble />
+              {hasValue(product.rooms) && (
+                <div>
+                  <BedDouble />
+                  <span>
+                    <b>{product.rooms}</b>
+                    комнат
+                  </span>
+                </div>
+              )}
 
-                <span>
-                  <b>{product.rooms}</b>
-                  комнат
-                </span>
-              </div>
+              {hasValue(product.area) && (
+                <div>
+                  <Ruler />
+                  <span>
+                    <b>{product.area}</b>
+                    площадь
+                  </span>
+                </div>
+              )}
 
-              <div>
-                <Ruler />
+              {hasValue(raw.floor ?? product.floor) && (
+                <div>
+                  <Layers3 />
+                  <span>
+                    <b>{raw.floor ?? product.floor}</b>
+                    этаж
+                  </span>
+                </div>
+              )}
 
-                <span>
-                  <b>{product.area}</b>
-                  площадь
-                </span>
-              </div>
-
-              <div>
-                <Layers3 />
-
-                <span>
-                  <b>{product.floors}</b>
-                  этажа
-                </span>
-              </div>
+              {hasValue(product.beachDistance) && (
+                <div>
+                  <Waves />
+                  <span>
+                    <b>{product.beachDistance} м</b>
+                    до пляжа
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* MANAGEMENT */}
@@ -612,149 +684,187 @@ export default function MyProductDetails() {
                 onClick={() => setShowDeleteModal(true)}
               >
                 <Trash2 size={17} />
-                Удалить объявление
+                Удалить
               </button>
             </div>
           </div>
         </section>
 
-        {/* CONTENT */}
+        {/* =====================================================
+            CONTENT
+        ===================================================== */}
 
         <div className={styles.contentGrid}>
           <div className={styles.mainContent}>
             {/* DESCRIPTION */}
 
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionIcon}>
-                  <Home />
+            {product.description && (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionIcon}>
+                    <Home />
+                  </div>
+
+                  <div>
+                    <span>ОБ ОБЪЕКТЕ</span>
+                    <h2>Описание</h2>
+                  </div>
                 </div>
 
-                <div>
-                  <span>ОБ ОБЪЕКТЕ</span>
-                  <h2>Описание</h2>
-                </div>
-              </div>
-
-              <p className={styles.description}>{product.description}</p>
-            </section>
+                <p className={styles.description}>{product.description}</p>
+              </section>
+            )}
 
             {/* CHARACTERISTICS */}
 
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionIcon}>
-                  <Building2 />
+            {characteristics.length > 0 && (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionIcon}>
+                    <Building2 />
+                  </div>
+
+                  <div>
+                    <span>ПОДРОБНОСТИ</span>
+                    <h2>Характеристики объекта</h2>
+                  </div>
                 </div>
 
-                <div>
-                  <span>ПОДРОБНОСТИ</span>
-                  <h2>Характеристики объекта</h2>
+                <div className={styles.characteristics}>
+                  {characteristics.map((item, index) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <div
+                        className={styles.characteristic}
+                        key={`${item.label}-${index}`}
+                      >
+                        <div className={styles.characteristicIcon}>
+                          <Icon size={19} />
+                        </div>
+
+                        <div>
+                          <span>{item.label}</span>
+                          <strong>{item.value}</strong>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-
-              <div className={styles.characteristics}>
-                {product.characteristics.map((item, index) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <div className={styles.characteristic} key={index}>
-                      <div className={styles.characteristicIcon}>
-                        <Icon size={19} />
-                      </div>
-
-                      <div>
-                        <span>{item.label}</span>
-
-                        <strong>{item.value}</strong>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* AMENITIES */}
 
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionIcon}>
-                  <Sparkles />
-                </div>
-
-                <div>
-                  <span>ДОПОЛНИТЕЛЬНО</span>
-                  <h2>Удобства</h2>
-                </div>
-              </div>
-
-              <div className={styles.amenities}>
-                {product.amenities.map((item, index) => (
-                  <div className={styles.amenity} key={index}>
-                    <ShieldCheck size={17} />
-                    {item}
+            {amenities.length > 0 && (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionIcon}>
+                    <Sparkles />
                   </div>
-                ))}
-              </div>
-            </section>
+
+                  <div>
+                    <span>ДОПОЛНИТЕЛЬНО</span>
+                    <h2>Удобства</h2>
+                  </div>
+                </div>
+
+                <div className={styles.amenities}>
+                  {amenities.map((item, index) => (
+                    <div className={styles.amenity} key={`${item}-${index}`}>
+                      <ShieldCheck size={17} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* ADDRESS */}
 
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <div className={styles.sectionIcon}>
-                  <MapPin />
+            {(product.location || product.address) && (
+              <section className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <div className={styles.sectionIcon}>
+                    <MapPin />
+                  </div>
+
+                  <div>
+                    <span>РАСПОЛОЖЕНИЕ</span>
+                    <h2>Адрес объекта</h2>
+                  </div>
                 </div>
 
-                <div>
-                  <span>РАСПОЛОЖЕНИЕ</span>
-                  <h2>Адрес объекта</h2>
-                </div>
-              </div>
+                <div className={styles.addressCard}>
+                  <div className={styles.addressIcon}>
+                    <MapPin />
+                  </div>
 
-              <div className={styles.addressCard}>
-                <div className={styles.addressIcon}>
-                  <MapPin />
-                </div>
+                  <div>
+                    {product.location && <strong>{product.location}</strong>}
 
-                <div>
-                  <strong>{product.location}</strong>
-
-                  <p>{product.address}</p>
+                    {product.address && <p>{product.address}</p>}
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
           </div>
 
-          {/* SIDEBAR */}
+          {/* =====================================================
+              SIDEBAR
+          ===================================================== */}
 
           <aside className={styles.sidebar}>
+            {/* INFORMATION */}
+
             <div className={styles.sideCard}>
               <div className={styles.sideTop}>
                 <Tag />
                 <span>Информация</span>
               </div>
 
-              <div className={styles.sideRow}>
-                <span>Категория</span>
-                <strong>{product.type}</strong>
-              </div>
+              {product.type && (
+                <div className={styles.sideRow}>
+                  <span>Категория</span>
+                  <strong>{product.type}</strong>
+                </div>
+              )}
 
-              <div className={styles.sideRow}>
-                <span>Тип предложения</span>
-                <strong>{product.dealType}</strong>
-              </div>
+              {product.dealType && (
+                <div className={styles.sideRow}>
+                  <span>Тип предложения</span>
+                  <strong>{product.dealType}</strong>
+                </div>
+              )}
 
-              <div className={styles.sideRow}>
-                <span>Дата публикации</span>
-                <strong>{product.createdAt}</strong>
-              </div>
+              {product.createdAt && (
+                <div className={styles.sideRow}>
+                  <span>Дата публикации</span>
+                  <strong>{product.createdAt}</strong>
+                </div>
+              )}
+
+              {product.price && (
+                <div className={styles.sideRow}>
+                  <span>Стоимость</span>
+                  <strong>{product.price}</strong>
+                </div>
+              )}
+
+              {product.beachDistance && (
+                <div className={styles.sideRow}>
+                  <span>До пляжа</span>
+                  <strong>{product.beachDistance} м</strong>
+                </div>
+              )}
             </div>
+
+            {/* MANAGEMENT */}
 
             <div className={styles.ownerCard}>
               <div className={styles.ownerHeader}>
                 <Building2 />
-                Управление
+                Управление объявлением
               </div>
 
               <button
@@ -772,16 +882,14 @@ export default function MyProductDetails() {
                 className={styles.sideDelete}
               >
                 <Trash2 size={16} />
-                Удалить
+                Удалить объявление
               </button>
             </div>
           </aside>
         </div>
       </div>
 
-      {/* =========================
-          DELETE MODAL
-          ========================= */}
+      {/* DELETE */}
 
       <DeleteModal
         isOpen={showDeleteModal}
@@ -791,9 +899,7 @@ export default function MyProductDetails() {
         description={`Вы действительно хотите удалить «${product.title}»? Это действие нельзя будет отменить.`}
       />
 
-      {/* =========================
-          EDIT MODAL
-          ========================= */}
+      {/* EDIT */}
 
       <AdsEditModal
         isOpen={showEditModal}
