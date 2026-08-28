@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import {
   Building2,
   House,
   Map,
+  MapPin,
   DoorOpen,
   Store,
   CarFront,
@@ -15,10 +18,17 @@ import {
   DollarSign,
   Maximize,
   ChevronRight,
+  Check,
 } from "lucide-react";
+
+import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepCategory.module.css";
+
+/* =========================================================
+   ICONS
+========================================================= */
 
 const fieldIcons = {
   series: Tag,
@@ -29,7 +39,6 @@ const fieldIcons = {
   heating: Tag,
   documents: Tag,
   furniture: House,
-  amenities: Tag,
   offerType: Tag,
 
   houseType: House,
@@ -64,37 +73,68 @@ const fieldIcons = {
   gateType: DoorOpen,
 };
 
+/* =========================================================
+   CATEGORY ICONS
+========================================================= */
+
 const categoryIcons = {
   apartment: Building2,
   house: House,
+  cottage: House,
   land: Map,
   room: DoorOpen,
   commercial: Store,
   parking: CarFront,
 };
 
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
 const categories = {
   apartment: {
     title: "Квартира",
+    description: "Квартиры и апартаменты",
+
     fields: [
       ["series", "Серия / тип"],
       ["rooms", "Количество комнат"],
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
       ["documents", "Документы"],
       ["furniture", "Мебель"],
-      ["amenities", "Удобства"],
       ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Балкон / лоджия",
+      "Лифт",
+      "Раздельный санузел",
+      "Совмещенный санузел",
+      "Встроенная кухня",
+      "Бытовая техника",
+      "Видеонаблюдение",
+      "Охрана",
+      "Парковка",
+      "Закрытая территория",
+      "Вид на горы",
+      "Не угловая",
+      "Не затапливалась",
+      "Не сдавалась квартирантам",
+      "Бронированные двери",
     ],
   },
 
   house: {
     title: "Дом",
+    description: "Частные дома и особняки",
+
     fields: [
       ["houseType", "Тип дома"],
       ["floors", "Этажность"],
+      ["rooms", "Количество комнат"],
       ["heating", "Отопление"],
       ["sewerage", "Канализация"],
       ["water", "Питьевая вода"],
@@ -102,10 +142,69 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Гараж",
+      "Парковка",
+      "Баня",
+      "Сауна",
+      "Бассейн",
+      "Терраса",
+      "Балкон",
+      "Подвал",
+      "Погреб",
+      "Мебель",
+      "Бытовая техника",
+      "Охрана",
+      "Видеонаблюдение",
+      "Закрытая территория",
+      "Сад",
+      "Огород",
+      "Вид на горы",
+    ],
+  },
+
+  cottage: {
+    title: "Коттедж",
+    description: "Коттеджи и загородные дома",
+
+    fields: [
+      ["houseType", "Тип объекта"],
+      ["floors", "Этажность"],
+      ["rooms", "Количество комнат"],
+      ["heating", "Отопление"],
+      ["sewerage", "Канализация"],
+      ["water", "Питьевая вода"],
+      ["electricity", "Электричество"],
+      ["documents", "Документы"],
+      ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Бассейн",
+      "Сауна",
+      "Баня",
+      "Терраса",
+      "Балкон",
+      "Гараж",
+      "Парковка",
+      "Сад",
+      "Беседка",
+      "Мангал",
+      "Вид на горы",
+      "Первая линия",
+      "Закрытая территория",
+      "Охрана",
+      "Видеонаблюдение",
+      "Мебель",
+      "Бытовая техника",
+    ],
   },
 
   land: {
     title: "Участок",
+    description: "Земельные участки",
+
     fields: [
       ["purpose", "Назначение"],
       ["fence", "Забор"],
@@ -115,30 +214,60 @@ const categories = {
       ["terrain", "Рельеф"],
       ["communications", "Коммуникации"],
     ],
+
+    amenities: [
+      "Электричество",
+      "Газ",
+      "Вода",
+      "Канализация",
+      "Интернет",
+      "Отопление",
+      "Подъездная дорога",
+      "Огороженная территория",
+      "Сад",
+      "Плодовые деревья",
+      "Вид на горы",
+    ],
   },
 
   room: {
     title: "Комната",
+    description: "Отдельные комнаты",
+
     fields: [
       ["location", "Расположение"],
       ["roomsInApartment", "Комнат в квартире"],
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
-      ["amenities", "Удобства"],
       ["privateBathroom", "Свой санузел"],
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Мебель",
+      "Бытовая техника",
+      "Балкон / лоджия",
+      "Лифт",
+      "Интернет",
+      "Видеонаблюдение",
+      "Охрана",
+      "Парковка",
+      "Закрытая территория",
+      "Вид на горы",
     ],
   },
 
   commercial: {
     title: "Коммерция",
+    description: "Офисы, магазины и другие помещения",
+
     fields: [
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
       ["premisesType", "Тип помещения"],
       ["technicalParameters", "Технические параметры"],
@@ -147,10 +276,29 @@ const categories = {
       ["rentalBusiness", "Готовый арендный бизнес"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Парковка",
+      "Отдельный вход",
+      "Первая линия",
+      "Витринные окна",
+      "Охрана",
+      "Видеонаблюдение",
+      "Пожарная сигнализация",
+      "Кондиционер",
+      "Вентиляция",
+      "Интернет",
+      "Мебель",
+      "Готовый ремонт",
+      "Грузовой вход",
+      "Санузел",
+    ],
   },
 
   parking: {
     title: "Паркинг / гараж",
+    description: "Гаражи и парковочные места",
+
     fields: [
       ["ceilingHeight", "Высота потолков"],
       ["parkingType", "Тип парковки"],
@@ -165,8 +313,25 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Освещение",
+      "Электричество",
+      "Отопление",
+      "Видеонаблюдение",
+      "Охрана",
+      "Автоматические ворота",
+      "Смотровая яма",
+      "Погреб",
+      "Вода",
+      "Удобный заезд",
+    ],
   },
 };
+
+/* =========================================================
+   STATIC OPTIONS
+========================================================= */
 
 const options = {
   series: [
@@ -219,16 +384,10 @@ const options = {
   documents: [
     "Любые",
     "Красная книга",
-    "Синяя книга",
-    "Тех паспорт",
-    "Договор аренды",
+    "Техпаспорт",
     "Договор купли-продажи",
     "Договор долевого участия",
     "Акт приема-передачи",
-    "Акт на земельный участок",
-    "ДДУ",
-    "Свидетельство о наследстве",
-    "Дарственная",
   ],
 
   furniture: ["Полностью меблирована", "Частично меблирована", "Без мебели"],
@@ -258,28 +417,6 @@ const options = {
   water: ["Любая", "Центральная", "Скважина", "Возможно подведение", "Нет"],
 
   electricity: ["Любое", "Есть", "Возможно подведение", "Нет"],
-
-  amenities: [
-    "Любые",
-    "Балкон/Лоджия",
-    "Нет балкона/лоджии",
-    "Бронированные двери",
-    "Бытовая техника",
-    "Видеонаблюдение",
-    "Вид на горы",
-    "Животные не проживали",
-    "Закрытая территория",
-    "Не затапливалась",
-    "Не сдавалась квартирантам",
-    "Не угловая",
-    "Раздельный санузел",
-    "Совместные санузел",
-    "Угловая квартира",
-    "Не угловая квартира",
-    "Лифт",
-    "Охрана",
-    "Парковка",
-  ],
 
   purpose: [
     "ИЖС",
@@ -327,7 +464,7 @@ const options = {
     "Трехфазное питание",
     "Приточно-вытяжная вентиляция",
     "Кондиционирование",
-    "Охранная/Пожарная сигнализация",
+    "Охранная / пожарная сигнализация",
   ],
 
   firstLine: ["Да", "Нет", "Не важно"],
@@ -361,18 +498,17 @@ const options = {
   ],
 };
 
-const categoryDescriptions = {
-  apartment: "Квартиры и апартаменты",
-  house: "Частные дома, коттеджи и дачи",
-  land: "Земельные участки",
-  room: "Отдельные комнаты",
-  commercial: "Офисы, магазины и другие помещения",
-  parking: "Гаражи и парковочные места",
-};
+/* =========================================================
+   HELPERS
+========================================================= */
 
-function getFieldOptions(field) {
-  return options[field] || [];
+function getFieldOptions(field, dynamicOptions) {
+  return dynamicOptions[field] || options[field] || [];
 }
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export default function StepCategory({
   form,
@@ -382,23 +518,79 @@ export default function StepCategory({
   onSubmit,
   isLoading,
 }) {
+  const [dynamicOptions, setDynamicOptions] = useState({});
+  const [apiError, setApiError] = useState(false);
+
+  /* =======================================================
+     LOAD CONSTANTS
+  ======================================================= */
+
+  useEffect(() => {
+    getConstants()
+      .then((res) => {
+        const data = res?.data || res;
+
+        if (!data?.amenities) {
+          throw new Error("No amenities data returned");
+        }
+
+        setDynamicOptions({
+          apiAmenities: [
+            ...(data.amenities.general || []),
+            ...(data.amenities.resort || []),
+          ],
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to fetch constants:", err);
+        setApiError(true);
+      });
+  }, []);
+
+  /* =======================================================
+     REGION
+  ======================================================= */
+
+  const isIssykKul =
+    form.region === "ISSYK_KUL" ||
+    form.region === "issykKul" ||
+    form.region === "ISSYK-KUL" ||
+    form.region === "issyk-kul" ||
+    form.region === "issyk_kul" ||
+    form.region === "Иссык-Кульская область";
+
+  /* =======================================================
+     CATEGORY
+  ======================================================= */
+
+  const visibleCategories = Object.entries(categories).filter(
+    ([key]) => key !== "cottage" || isIssykKul,
+  );
+
   const category = categories[form.category];
+
   const CategoryIcon = categoryIcons[form.category];
 
   const isLand = form.category === "land";
 
-  /*
-   * Проверяем именно регион.
-   *
-   * Здесь учитываем разные варианты значения,
-   * которые могут приходить из формы/API.
-   */
-  const isIssykKul =
-    form.region === "ISSYK_KUL" ||
-    form.region === "issykKul" ||
-    form.region === "issyk-kul" ||
-    form.region === "issyk_kul" ||
-    form.region === "Иссык-Кульская область";
+  /* =======================================================
+     RESET COTTAGE WHEN REGION CHANGES
+  ======================================================= */
+
+  useEffect(() => {
+    if (!isIssykKul && form.category === "cottage") {
+      updateForm({
+        category: "",
+        beachDistanceFrom: "",
+        beachDistanceTo: "",
+        amenities: [],
+      });
+    }
+  }, [isIssykKul, form.category]);
+
+  /* =======================================================
+     FIELD UPDATE
+  ======================================================= */
 
   function updateField(name, value) {
     updateForm({
@@ -406,41 +598,91 @@ export default function StepCategory({
     });
   }
 
+  /* =======================================================
+     CATEGORY SELECT
+  ======================================================= */
+
+  function selectCategory(key) {
+    updateForm({
+      category: key,
+      amenities: [],
+    });
+  }
+
+  /* =======================================================
+     AMENITIES
+  ======================================================= */
+
+  const selectedAmenities = Array.isArray(form.amenities) ? form.amenities : [];
+
+  const categoryAmenities = category?.amenities || [];
+
+  function toggleAmenity(amenity) {
+    const exists = selectedAmenities.includes(amenity);
+
+    const nextAmenities = exists
+      ? selectedAmenities.filter((item) => item !== amenity)
+      : [...selectedAmenities, amenity];
+
+    updateForm({
+      amenities: nextAmenities,
+    });
+  }
+
+  /* =======================================================
+     SUBMIT SEARCH
+  ======================================================= */
+
   function handleSubmit() {
+    if (!form.dealType) {
+      return;
+    }
+
     const searchData = {
-      // Местоположение
+      /* LOCATION */
+
       country: form.country || "",
       region: form.region || "",
       city: form.city || "",
       settlement: form.settlement || "",
       district: form.district || "",
 
-      // Сделка
+      /* DEAL */
+
       dealType: form.dealType || "",
       rentalPeriod: form.rentalPeriod || "",
 
-      // Категория
+      /* CATEGORY */
+
       category: form.category || "",
 
-      // Цена
+      /* PRICE RANGE */
+
       priceFrom: form.priceFrom || "",
       priceTo: form.priceTo || "",
 
-      // Площадь
+      /* AREA RANGE */
+
       areaFrom: form.areaFrom || "",
       areaTo: form.areaTo || "",
 
-      // Расстояние до пляжа
+      /* BEACH DISTANCE */
+
       beachDistanceFrom: isIssykKul ? form.beachDistanceFrom || "" : "",
 
       beachDistanceTo: isIssykKul ? form.beachDistanceTo || "" : "",
 
-      // Характеристики категории
+      /* CATEGORY FIELDS */
+
       ...(category?.fields
         ? Object.fromEntries(
             category.fields.map(([name]) => [name, form[name] || ""]),
           )
         : {}),
+
+      /* AMENITIES */
+
+      amenities: selectedAmenities,
     };
 
     console.log("🔎 Данные поиска:", searchData);
@@ -452,39 +694,67 @@ export default function StepCategory({
 
   return (
     <div className={styles.step}>
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
       <div className={styles.header}>
+        <div className={styles.stepBadge}>
+          <span className={styles.stepDot} />
+          Шаг 4 из 6
+        </div>
+
         <h1>Параметры объекта</h1>
 
-        <p>Укажите основные характеристики недвижимости, которую ищите.</p>
+        <p>
+          Укажите характеристики недвижимости, которую ищете — мы подберём
+          подходящие объявления.
+        </p>
       </div>
 
-      {/* CATEGORY */}
+      {/* =====================================================
+          API ERROR
+      ===================================================== */}
+
+      {apiError && (
+        <div className={styles.apiError}>
+          Не удалось загрузить дополнительные данные. Основные характеристики
+          доступны.
+        </div>
+      )}
+
+      {/* =====================================================
+          CATEGORY
+      ===================================================== */}
+
       {!category && (
         <div className={styles.categorySection}>
           <div className={styles.sectionTitle}>
             <div>
               <span>01</span>
+
               <h2>Выберите категорию</h2>
             </div>
 
-            <p>Это поможет подобрать нужные параметры.</p>
+            <p>
+              {isIssykKul
+                ? "Для Иссык-Куля доступны дополнительные категории."
+                : "Это поможет подобрать нужные параметры."}
+            </p>
           </div>
 
           <div className={styles.categoryGrid}>
-            {Object.entries(categories).map(([key, item]) => {
+            {visibleCategories.map(([key, item]) => {
               const Icon = categoryIcons[key];
 
               return (
                 <button
                   type="button"
                   key={key}
-                  className={styles.categoryCard}
-                  onClick={() =>
-                    updateForm({
-                      category: key,
-                    })
-                  }
+                  className={`${styles.categoryCard} ${
+                    key === "cottage" ? styles.cottageCard : ""
+                  }`}
+                  onClick={() => selectCategory(key)}
                 >
                   <div className={styles.categoryIcon}>
                     <Icon size={25} strokeWidth={2.1} />
@@ -493,7 +763,7 @@ export default function StepCategory({
                   <div className={styles.categoryContent}>
                     <strong>{item.title}</strong>
 
-                    <span>{categoryDescriptions[key]}</span>
+                    <span>{item.description}</span>
                   </div>
 
                   <ArrowRight className={styles.categoryArrow} size={19} />
@@ -504,7 +774,10 @@ export default function StepCategory({
         </div>
       )}
 
-      {/* SELECTED CATEGORY */}
+      {/* =====================================================
+          SELECTED CATEGORY
+      ===================================================== */}
+
       {category && (
         <>
           <div className={styles.selectedCategory}>
@@ -525,6 +798,7 @@ export default function StepCategory({
               onClick={() =>
                 updateForm({
                   category: "",
+                  amenities: [],
                 })
               }
             >
@@ -533,7 +807,10 @@ export default function StepCategory({
             </button>
           </div>
 
-          {/* PRICE + AREA */}
+          {/* =================================================
+              PRICE / AREA
+          ================================================= */}
+
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
@@ -547,6 +824,7 @@ export default function StepCategory({
 
             <div className={styles.priceGrid}>
               {/* PRICE */}
+
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
                   <DollarSign size={19} />
@@ -584,6 +862,7 @@ export default function StepCategory({
               </div>
 
               {/* AREA */}
+
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
                   <Maximize size={18} />
@@ -624,7 +903,10 @@ export default function StepCategory({
             </div>
           </div>
 
-          {/* ISSYK-KUL BEACH DISTANCE */}
+          {/* =================================================
+              ISSYK KUL — BEACH DISTANCE
+          ================================================= */}
+
           {isIssykKul && (
             <div className={styles.sectionBlock}>
               <div className={styles.sectionTitle}>
@@ -634,12 +916,14 @@ export default function StepCategory({
                   <h2>Расстояние до пляжа</h2>
                 </div>
 
-                <p>Насколько далеко объект может находиться от озера</p>
+                <p>
+                  Укажите желаемое расстояние от объекта до ближайшего пляжа
+                </p>
               </div>
 
               <div className={styles.beachDistanceCard}>
                 <div className={styles.beachDistanceIcon}>
-                  <Map size={20} strokeWidth={2.1} />
+                  <MapPin size={20} strokeWidth={2.1} />
                 </div>
 
                 <div className={styles.beachDistanceContent}>
@@ -683,7 +967,10 @@ export default function StepCategory({
             </div>
           )}
 
-          {/* CHARACTERISTICS */}
+          {/* =================================================
+              CHARACTERISTICS
+          ================================================= */}
+
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
@@ -697,7 +984,7 @@ export default function StepCategory({
 
             <div className={styles.fieldsGrid}>
               {category.fields.map(([name, label]) => {
-                const fieldOptions = getFieldOptions(name);
+                const fieldOptions = getFieldOptions(name, dynamicOptions);
 
                 const Icon = fieldIcons[name] || Tag;
 
@@ -736,7 +1023,57 @@ export default function StepCategory({
             </div>
           </div>
 
-          {/* ACTIONS */}
+          {/* =================================================
+              AMENITIES
+          ================================================= */}
+
+          {categoryAmenities.length > 0 && (
+            <div className={styles.sectionBlock}>
+              <div className={styles.sectionTitle}>
+                <div>
+                  <span>{isIssykKul ? "05" : "04"}</span>
+
+                  <h2>Удобства</h2>
+                </div>
+
+                <p>Можно выбрать несколько вариантов</p>
+              </div>
+
+              <div className={styles.amenitiesGrid}>
+                {categoryAmenities.map((amenity) => {
+                  const isSelected = selectedAmenities.includes(amenity);
+
+                  return (
+                    <button
+                      key={amenity}
+                      type="button"
+                      className={`${styles.amenityCard} ${
+                        isSelected ? styles.amenitySelected : ""
+                      }`}
+                      onClick={() => toggleAmenity(amenity)}
+                    >
+                      <span className={styles.amenityCheckbox}>
+                        {isSelected && <Check size={14} strokeWidth={3} />}
+                      </span>
+
+                      <span>{amenity}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedAmenities.length > 0 && (
+                <div className={styles.amenitiesSelectedCount}>
+                  Выбрано удобств: <strong>{selectedAmenities.length}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* =================================================
+              ACTIONS
+          ================================================= */}
+
           <div className={styles.actions}>
             <button
               type="button"
