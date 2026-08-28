@@ -1,0 +1,1124 @@
+.page {
+  --bg: #07070a;
+  --card: #101015;
+  --card-2: #14141a;
+
+  --text: #f5f5f7;
+  --muted: #858590;
+
+  --purple: #8b5cf6;
+  --purple-light: #a78bfa;
+  --purple-dark: #6d28d9;
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 30px;
+
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(124, 58, 237, 0.12),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 90% 100%,
+      rgba(139, 92, 246, 0.07),
+      transparent 30%
+    ),
+    #08080b;
+
+  color: var(--text);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+
+.mapWrapper {
+  position: relative;
+
+  width: 100%;
+  max-width: 1600px;
+
+  height: calc(100vh - 60px);
+  min-height: 650px;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  background: #0b0b0f;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(139, 92, 246, 0.04);
+
+  isolation: isolate;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topPanel {
+  position: absolute;
+
+  z-index: 1000;
+
+  top: 22px;
+  left: 22px;
+  right: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  pointer-events: none;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 10px 15px 10px 10px;
+
+  border-radius: 16px;
+
+  background: rgba(10, 10, 14, 0.86);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.headingIcon {
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.25),
+    rgba(124, 58, 237, 0.08)
+  );
+
+  border: 1px solid rgba(167, 139, 250, 0.25);
+
+  color: var(--purple-light);
+}
+
+.headingIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.heading span {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: var(--purple-light);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.5px;
+}
+
+.heading h1 {
+  margin: 0;
+
+  font-size: 18px;
+
+  line-height: 1.2;
+
+  font-weight: 900;
+
+  letter-spacing: -0.3px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.searchBox {
+  width: 380px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 0 14px;
+
+  pointer-events: auto;
+
+  border-radius: 15px;
+
+  background: rgba(10, 10, 14, 0.88);
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.searchBox:focus-within {
+  border-color: rgba(139, 92, 246, 0.5);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 3px rgba(139, 92, 246, 0.08);
+}
+
+.searchBox > svg {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+
+  color: #777783;
+}
+
+.searchBox input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+}
+
+.searchBox input::placeholder {
+  color: #62626d;
+}
+
+.clearSearch {
+  width: 28px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: #888893;
+
+  cursor: pointer;
+}
+
+.clearSearch:hover {
+  background: rgba(139, 92, 246, 0.15);
+
+  color: #fff;
+}
+
+.clearSearch svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* =========================================================
+   MAP
+========================================================= */
+
+.mapArea {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.map {
+  position: absolute !important;
+
+  inset: 0;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  background: #d8d8d8;
+
+  z-index: 1;
+}
+
+/*
+  КРИТИЧЕСКОЕ:
+  Leaflet иногда начинает рендерить тайлы
+  отдельными неправильными кусками, если img
+  получает сторонние глобальные стили.
+*/
+
+.map :global(.leaflet-container) {
+  width: 100% !important;
+  height: 100% !important;
+
+  font-family: inherit;
+}
+
+.map :global(.leaflet-tile) {
+  width: 256px !important;
+  height: 256px !important;
+
+  max-width: none !important;
+
+  display: block !important;
+}
+
+.map :global(.leaflet-tile-container) {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.map :global(.leaflet-pane) {
+  z-index: auto;
+}
+
+.map :global(.leaflet-map-pane) {
+  z-index: 1;
+}
+
+.map :global(.leaflet-control-container) {
+  z-index: 500;
+}
+
+.map :global(.leaflet-top) {
+  top: 90px;
+}
+
+.map :global(.leaflet-right) {
+  right: 16px;
+}
+
+.map :global(.leaflet-bottom) {
+  bottom: 12px;
+}
+
+.map :global(.leaflet-control-zoom) {
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+  border-radius: 12px !important;
+
+  background: rgba(10, 10, 14, 0.88) !important;
+
+  backdrop-filter: blur(12px);
+}
+
+.map :global(.leaflet-control-zoom a) {
+  width: 38px !important;
+  height: 38px !important;
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent !important;
+
+  border: 0 !important;
+
+  color: #ddd !important;
+
+  font-size: 20px !important;
+}
+
+.map :global(.leaflet-control-zoom a:hover) {
+  background: rgba(139, 92, 246, 0.15) !important;
+
+  color: #fff !important;
+}
+
+.map :global(.leaflet-control-attribution) {
+  padding: 4px 8px !important;
+
+  border-radius: 7px 0 0 0;
+
+  background: rgba(5, 5, 7, 0.7) !important;
+
+  color: #888 !important;
+
+  backdrop-filter: blur(8px);
+}
+
+.map :global(.leaflet-control-attribution a) {
+  color: #a78bfa !important;
+}
+
+/* =========================================================
+   MARKER
+========================================================= */
+
+.customMarker {
+  background: transparent !important;
+
+  border: 0 !important;
+}
+
+.markerInner {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+}
+
+.markerGlow {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 42px;
+  height: 42px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(139, 92, 246, 0.4);
+
+  filter: blur(13px);
+
+  opacity: 0.7;
+}
+
+.markerPin {
+  position: absolute;
+
+  left: 4px;
+  top: 4px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50% 50% 50% 8px;
+
+  transform: rotate(-45deg);
+
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+
+  border: 3px solid #fff;
+
+  color: #fff;
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+.markerPin svg {
+  transform: rotate(45deg);
+
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================================================
+   DRAWING
+========================================================= */
+
+.drawingIndicator {
+  position: absolute;
+
+  z-index: 1000;
+
+  left: 50%;
+  top: 90px;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 11px 16px;
+
+  border-radius: 12px;
+
+  background: rgba(8, 8, 11, 0.9);
+
+  border: 1px solid rgba(167, 139, 250, 0.3);
+
+  color: #d9d1ef;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  pointer-events: none;
+
+  backdrop-filter: blur(15px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.drawingIndicator svg {
+  width: 17px;
+  height: 17px;
+
+  color: var(--purple-light);
+}
+
+/* =========================================================
+   DRAW HINT
+========================================================= */
+
+.drawHint {
+  position: absolute;
+
+  z-index: 900;
+
+  left: 24px;
+  bottom: 24px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 11px 15px 11px 11px;
+
+  border-radius: 14px;
+
+  background: rgba(8, 8, 11, 0.88);
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  backdrop-filter: blur(16px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+
+  pointer-events: none;
+}
+
+.drawHintIcon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: rgba(139, 92, 246, 0.12);
+
+  color: var(--purple-light);
+}
+
+.drawHintIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.drawHint div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.drawHint strong {
+  color: #eee;
+
+  font-size: 13px;
+}
+
+.drawHint span {
+  color: #6f6f7a;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+.selectionPanel {
+  position: absolute;
+
+  z-index: 1000;
+
+  left: 50%;
+  bottom: 24px;
+
+  transform: translateX(-50%);
+
+  min-width: 300px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 10px;
+
+  border-radius: 15px;
+
+  background: rgba(8, 8, 11, 0.92);
+
+  border: 1px solid rgba(139, 92, 246, 0.3);
+
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.06);
+}
+
+.selectionIcon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.13);
+
+  color: var(--purple-light);
+}
+
+.selectionIcon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.selectionText {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  flex: 1;
+}
+
+.selectionText strong {
+  color: #eee;
+
+  font-size: 13px;
+}
+
+.selectionText span {
+  color: #777782;
+
+  font-size: 11px;
+}
+
+.selectionText b {
+  color: var(--purple-light);
+}
+
+.resetButton {
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 0 11px;
+
+  border-radius: 9px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #9999a3;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  background: rgba(139, 92, 246, 0.12);
+
+  border-color: rgba(139, 92, 246, 0.25);
+
+  color: #fff;
+}
+
+.resetButton svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* =========================================================
+   OBJECT PREVIEW
+========================================================= */
+
+.objectPreview {
+  position: absolute;
+
+  z-index: 1100;
+
+  top: 50%;
+  right: 24px;
+
+  width: 300px;
+
+  overflow: hidden;
+
+  transform: translateY(-50%);
+
+  border-radius: 19px;
+
+  background: rgba(10, 10, 14, 0.94);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.5),
+    0 0 35px rgba(139, 92, 246, 0.07);
+
+  animation: previewIn 0.2s ease;
+}
+
+@keyframes previewIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.previewImage {
+  position: relative;
+
+  height: 155px;
+
+  overflow: hidden;
+}
+
+.previewImage::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(to top, rgba(8, 8, 11, 0.7), transparent 65%);
+}
+
+.previewImage img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.previewType {
+  position: absolute;
+
+  z-index: 2;
+
+  top: 11px;
+  left: 11px;
+
+  padding: 6px 9px;
+
+  border-radius: 8px;
+
+  background: rgba(8, 8, 11, 0.8);
+
+  border: 1px solid rgba(167, 139, 250, 0.25);
+
+  color: #c4b5fd;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.7px;
+
+  backdrop-filter: blur(8px);
+}
+
+.previewContent {
+  padding: 15px;
+}
+
+.previewContent h3 {
+  margin: 0;
+
+  color: #eee;
+
+  font-size: 16px;
+
+  font-weight: 900;
+
+  line-height: 1.25;
+}
+
+.previewContent p {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 6px;
+
+  margin: 8px 0 0;
+
+  color: #73737e;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+.previewContent p svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+
+  color: var(--purple-light);
+}
+
+.previewContent > strong {
+  display: block;
+
+  margin-top: 12px;
+
+  color: var(--purple-light);
+
+  font-size: 16px;
+
+  font-weight: 900;
+}
+
+.previewContent button {
+  width: 100%;
+  height: 38px;
+
+  margin-top: 13px;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: #c4b5fd;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.previewContent button:hover {
+  background: rgba(139, 92, 246, 0.2);
+
+  border-color: rgba(139, 92, 246, 0.4);
+
+  color: #fff;
+}
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.resultCount {
+  position: absolute;
+
+  z-index: 900;
+
+  top: 92px;
+  left: 24px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 8px 11px;
+
+  border-radius: 9px;
+
+  background: rgba(8, 8, 11, 0.78);
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  color: #aaaab4;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  backdrop-filter: blur(12px);
+
+  pointer-events: none;
+}
+
+.resultDot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #8b5cf6;
+
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 15px;
+  }
+
+  .mapWrapper {
+    height: calc(100vh - 30px);
+
+    min-height: 600px;
+
+    border-radius: 22px;
+  }
+
+  .topPanel {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .heading {
+    width: max-content;
+  }
+
+  .searchBox {
+    width: 100%;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 155px;
+  }
+
+  .resultCount {
+    top: 215px;
+  }
+
+  .objectPreview {
+    right: 15px;
+    left: 15px;
+
+    width: auto;
+
+    top: auto;
+    bottom: 15px;
+
+    transform: none;
+  }
+
+  @keyframes previewIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .selectionPanel {
+    bottom: 15px;
+
+    max-width: calc(100% - 30px);
+  }
+
+  .drawHint {
+    bottom: 15px;
+    left: 15px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 0;
+  }
+
+  .mapWrapper {
+    width: 100%;
+
+    height: 100vh;
+    min-height: 100vh;
+
+    border-radius: 0;
+
+    border: 0;
+  }
+
+  .topPanel {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .heading {
+    padding: 8px 12px 8px 8px;
+  }
+
+  .headingIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .heading h1 {
+    font-size: 15px;
+  }
+
+  .heading span {
+    font-size: 8px;
+  }
+
+  .searchBox {
+    height: 48px;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 125px;
+  }
+
+  .resultCount {
+    top: 178px;
+    left: 12px;
+  }
+
+  .drawHint {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .selectionPanel {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+
+    min-width: 0;
+    max-width: none;
+
+    transform: none;
+  }
+
+  .selectionText {
+    overflow: hidden;
+  }
+
+  .resetButton {
+    padding: 0 9px;
+  }
+
+  .resetButton svg {
+    width: 13px;
+  }
+
+  .resetButton {
+    font-size: 0;
+  }
+
+  .resetButton svg {
+    margin: 0;
+  }
+
+  .objectPreview {
+    right: 12px;
+    left: 12px;
+
+    bottom: 12px;
+  }
+
+  .previewImage {
+    height: 135px;
+  }
+}
