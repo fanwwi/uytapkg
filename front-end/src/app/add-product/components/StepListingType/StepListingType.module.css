@@ -190,7 +190,7 @@
   box-sizing: border-box;
 
   padding: 0 70px 0 18px;
-  
+
   border: none !important;
 
   outline: none !important;
@@ -954,4 +954,86 @@
     animation: none;
     transition: none;
   }
+}
+
+.descriptionField {
+  width: 100%;
+}
+
+.textareaWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.textareaWrapper textarea {
+  width: 100%;
+  min-height: 170px;
+
+  padding: 20px 20px 45px;
+
+  resize: vertical;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  outline: none;
+
+  background: #fff !important;
+
+  color: #211d25 !important;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.textareaWrapper textarea::placeholder {
+  color: #66646f;
+}
+
+.textareaWrapper textarea:focus {
+  border-color: rgba(139, 92, 246, 0.55);
+
+  background: rgba(139, 92, 246, 0.035);
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+}
+
+.textareaWrapper textarea::-webkit-scrollbar {
+  width: 5px;
+}
+
+.textareaWrapper textarea::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.descriptionCounter {
+  position: absolute;
+
+  right: 16px;
+  bottom: 13px;
+
+  color: #62616c;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.summaryDescription {
+  display: -webkit-box;
+
+  overflow: hidden;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+
+  white-space: normal;
+
+  line-height: 1.5;
 }

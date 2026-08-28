@@ -17,12 +17,17 @@ import {
   DollarSign,
   Maximize,
   ChevronRight,
+  Check,
 } from "lucide-react";
 
 import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepCategory.module.css";
+
+/* =========================================================
+   ICONS
+========================================================= */
 
 const fieldIcons = {
   series: Tag,
@@ -33,7 +38,6 @@ const fieldIcons = {
   heating: Tag,
   documents: Tag,
   furniture: House,
-  amenities: Tag,
   offerType: Tag,
 
   houseType: House,
@@ -68,6 +72,10 @@ const fieldIcons = {
   gateType: DoorOpen,
 };
 
+/* =========================================================
+   CATEGORY ICONS
+========================================================= */
+
 const categoryIcons = {
   apartment: Building2,
   house: House,
@@ -78,10 +86,13 @@ const categoryIcons = {
   parking: CarFront,
 };
 
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
 const categories = {
   apartment: {
     title: "Квартира",
-
     description: "Квартиры и апартаменты",
 
     fields: [
@@ -89,23 +100,40 @@ const categories = {
       ["rooms", "Количество комнат"],
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
       ["documents", "Документы"],
       ["furniture", "Мебель"],
-      ["amenities", "Удобства"],
       ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Балкон / лоджия",
+      "Лифт",
+      "Раздельный санузел",
+      "Совмещенный санузел",
+      "Встроенная кухня",
+      "Бытовая техника",
+      "Видеонаблюдение",
+      "Охрана",
+      "Парковка",
+      "Закрытая территория",
+      "Вид на горы",
+      "Не угловая",
+      "Не затапливалась",
+      "Не сдавалась квартирантам",
+      "Бронированные двери",
     ],
   },
 
   house: {
     title: "Дом",
-
     description: "Частные дома и особняки",
 
     fields: [
       ["houseType", "Тип дома"],
       ["floors", "Этажность"],
+      ["rooms", "Количество комнат"],
       ["heating", "Отопление"],
       ["sewerage", "Канализация"],
       ["water", "Питьевая вода"],
@@ -113,11 +141,67 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Гараж",
+      "Парковка",
+      "Баня",
+      "Сауна",
+      "Бассейн",
+      "Терраса",
+      "Балкон",
+      "Подвал",
+      "Погреб",
+      "Мебель",
+      "Бытовая техника",
+      "Охрана",
+      "Видеонаблюдение",
+      "Закрытая территория",
+      "Сад",
+      "Огород",
+      "Вид на горы",
+    ],
+  },
+
+  cottage: {
+    title: "Коттедж",
+    description: "Коттеджи и загородные дома",
+
+    fields: [
+      ["houseType", "Тип объекта"],
+      ["floors", "Этажность"],
+      ["rooms", "Количество комнат"],
+      ["heating", "Отопление"],
+      ["sewerage", "Канализация"],
+      ["water", "Питьевая вода"],
+      ["electricity", "Электричество"],
+      ["documents", "Документы"],
+      ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Бассейн",
+      "Сауна",
+      "Баня",
+      "Терраса",
+      "Балкон",
+      "Гараж",
+      "Парковка",
+      "Сад",
+      "Беседка",
+      "Мангал",
+      "Вид на горы",
+      "Первая линия",
+      "Закрытая территория",
+      "Охрана",
+      "Видеонаблюдение",
+      "Мебель",
+      "Бытовая техника",
+    ],
   },
 
   land: {
     title: "Участок",
-
     description: "Земельные участки",
 
     fields: [
@@ -129,11 +213,24 @@ const categories = {
       ["terrain", "Рельеф"],
       ["communications", "Коммуникации"],
     ],
+
+    amenities: [
+      "Электричество",
+      "Газ",
+      "Вода",
+      "Канализация",
+      "Интернет",
+      "Отопление",
+      "Подъездная дорога",
+      "Огороженная территория",
+      "Сад",
+      "Плодовые деревья",
+      "Вид на горы",
+    ],
   },
 
   room: {
     title: "Комната",
-
     description: "Отдельные комнаты",
 
     fields: [
@@ -141,24 +238,35 @@ const categories = {
       ["roomsInApartment", "Комнат в квартире"],
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
-      ["amenities", "Удобства"],
       ["privateBathroom", "Свой санузел"],
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
+    ],
+
+    amenities: [
+      "Мебель",
+      "Бытовая техника",
+      "Балкон / лоджия",
+      "Лифт",
+      "Интернет",
+      "Видеонаблюдение",
+      "Охрана",
+      "Парковка",
+      "Закрытая территория",
+      "Вид на горы",
     ],
   },
 
   commercial: {
     title: "Коммерция",
-
     description: "Офисы, магазины и другие помещения",
 
     fields: [
       ["floor", "Этаж"],
       ["condition", "Состояние"],
-      ["walls", "Стены"],
+      ["walls", "Материал стен"],
       ["heating", "Отопление"],
       ["premisesType", "Тип помещения"],
       ["technicalParameters", "Технические параметры"],
@@ -167,11 +275,27 @@ const categories = {
       ["rentalBusiness", "Готовый арендный бизнес"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Парковка",
+      "Отдельный вход",
+      "Первая линия",
+      "Витринные окна",
+      "Охрана",
+      "Видеонаблюдение",
+      "Пожарная сигнализация",
+      "Кондиционер",
+      "Вентиляция",
+      "Интернет",
+      "Мебель",
+      "Готовый ремонт",
+      "Грузовой вход",
+      "Санузел",
+    ],
   },
 
   parking: {
     title: "Паркинг / гараж",
-
     description: "Гаражи и парковочные места",
 
     fields: [
@@ -188,8 +312,25 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
+
+    amenities: [
+      "Освещение",
+      "Электричество",
+      "Отопление",
+      "Видеонаблюдение",
+      "Охрана",
+      "Автоматические ворота",
+      "Смотровая яма",
+      "Погреб",
+      "Вода",
+      "Удобный заезд",
+    ],
   },
 };
+
+/* =========================================================
+   OPTIONS
+========================================================= */
 
 const options = {
   series: [
@@ -242,15 +383,13 @@ const options = {
   documents: [
     "Любые",
     "Красная книга",
-    "Тех паспорт",
+    "Техпаспорт",
     "Договор купли-продажи",
     "Договор долевого участия",
     "Акт приема-передачи",
   ],
 
   furniture: ["Полностью меблирована", "Частично меблирована", "Без мебели"],
-
-  yesNo: ["Да", "Нет"],
 
   offerType: [
     "Любой",
@@ -277,28 +416,6 @@ const options = {
   water: ["Любая", "Центральная", "Скважина", "Возможно подведение", "Нет"],
 
   electricity: ["Любое", "Есть", "Возможно подведение", "Нет"],
-
-  amenities: [
-    "Любые",
-    "Балкон/Лоджия",
-    "Нет балкона/лоджии",
-    "Бронированные двери",
-    "Бытовая техника",
-    "Видеонаблюдение",
-    "Вид на горы",
-    "Животные не проживали",
-    "Закрытая территория",
-    "Не затапливалась",
-    "Не сдавалась квартирантам",
-    "Не угловая",
-    "Раздельный санузел",
-    "Совместные санузел",
-    "Угловая квартира",
-    "Не угловая квартира",
-    "Лифт",
-    "Охрана",
-    "Парковка",
-  ],
 
   purpose: [
     "ИЖС",
@@ -346,7 +463,7 @@ const options = {
     "Трехфазное питание",
     "Приточно-вытяжная вентиляция",
     "Кондиционирование",
-    "Охранная/Пожарная сигнализация",
+    "Охранная / пожарная сигнализация",
   ],
 
   firstLine: ["Да", "Нет", "Не важно"],
@@ -380,6 +497,10 @@ const options = {
   ],
 };
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
 function getFieldOptions(field, dynamicOptions) {
   return dynamicOptions[field] || options[field] || [];
 }
@@ -397,43 +518,34 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
           throw new Error("No data returned");
         }
 
-        const combinedAmenities = [
-          "Любые",
-          ...new Set([
-            ...(data.amenities.general || []),
-            ...(data.amenities.resort || []),
-          ]),
-        ];
-
         setDynamicOptions((prev) => ({
           ...prev,
-          amenities: combinedAmenities,
+          apiAmenities: [
+            ...(data.amenities.general || []),
+            ...(data.amenities.resort || []),
+          ],
         }));
       })
       .catch((err) => {
         console.error("Failed to fetch constants", err);
-
         setApiError(true);
-
-        setDynamicOptions((prev) => ({
-          ...prev,
-          amenities: options.amenities,
-        }));
       });
   }, []);
 
-  /*
-   * Иссык-Куль может приходить в разных форматах
-   */
+  /* =========================================================
+     REGION
+  ========================================================= */
+
   const isIssykKul =
     form.region === "ISSYK_KUL" ||
     form.region === "issykKul" ||
     form.region === "ISSYK-KUL" ||
     form.region === "issyk-kul";
 
-  /*
-   * Показываем категорию "Коттедж" только на Иссык-Куле.
-   */
+  /* =========================================================
+     CATEGORY
+  ========================================================= */
+
   const visibleCategories = Object.entries(categories).filter(
     ([key]) => key !== "cottage" || isIssykKul,
   );
@@ -443,18 +555,23 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
   const isLand = form.category === "land";
 
-  /*
-   * Если пользователь поменял Иссык-Куль на другой регион,
-   * автоматически сбрасываем коттедж.
-   */
+  /* =========================================================
+     RESET COTTAGE
+  ========================================================= */
+
   useEffect(() => {
     if (!isIssykKul && form.category === "cottage") {
       updateForm({
         category: "",
         beachDistance: "",
+        amenities: [],
       });
     }
   }, [isIssykKul, form.category]);
+
+  /* =========================================================
+     UPDATE FIELD
+  ========================================================= */
 
   function updateField(name, value) {
     updateForm({
@@ -462,17 +579,42 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
     });
   }
 
+  /* =========================================================
+     CATEGORY SELECT
+  ========================================================= */
+
   function selectCategory(key) {
     updateForm({
       category: key,
+      amenities: [],
+    });
+  }
+
+  /* =========================================================
+     AMENITIES
+  ========================================================= */
+
+  const selectedAmenities = Array.isArray(form.amenities) ? form.amenities : [];
+
+  const categoryAmenities = category?.amenities || [];
+
+  function toggleAmenity(amenity) {
+    const exists = selectedAmenities.includes(amenity);
+
+    const nextAmenities = exists
+      ? selectedAmenities.filter((item) => item !== amenity)
+      : [...selectedAmenities, amenity];
+
+    updateForm({
+      amenities: nextAmenities,
     });
   }
 
   return (
     <div className={styles.step}>
-      {/* =========================
+      {/* =====================================================
           HEADER
-      ========================= */}
+      ===================================================== */}
 
       <div className={styles.header}>
         <div className={styles.stepBadge}>
@@ -483,25 +625,25 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         <h1>Параметры объекта</h1>
 
         <p>
-          Укажите основные характеристики недвижимости — остальное можно будет
-          добавить позже.
+          Укажите основные характеристики недвижимости — это поможет покупателям
+          быстрее понять, подходит ли им объект.
         </p>
       </div>
 
-      {/* =========================
+      {/* =====================================================
           API ERROR
-      ========================= */}
+      ===================================================== */}
 
       {apiError && (
         <div className={styles.apiError}>
-          Не удалось загрузить актуальный список удобств. Попробуйте обновить
-          страницу.
+          Не удалось загрузить дополнительные данные. Основные характеристики
+          доступны.
         </div>
       )}
 
-      {/* =========================
+      {/* =====================================================
           CATEGORY
-      ========================= */}
+      ===================================================== */}
 
       {!category && (
         <div className={styles.categorySection}>
@@ -537,7 +679,6 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
                   <div className={styles.categoryContent}>
                     <strong>{item.title}</strong>
-
                     <span>{item.description}</span>
                   </div>
 
@@ -549,9 +690,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         </div>
       )}
 
-      {/* =========================
+      {/* =====================================================
           SELECTED CATEGORY
-      ========================= */}
+      ===================================================== */}
 
       {category && (
         <>
@@ -563,7 +704,6 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
               <div className={styles.selectedCategoryInfo}>
                 <span>Вы выбрали</span>
-
                 <strong>{category.title}</strong>
               </div>
             </div>
@@ -573,6 +713,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               onClick={() =>
                 updateForm({
                   category: "",
+                  amenities: [],
                 })
               }
             >
@@ -581,15 +722,14 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </button>
           </div>
 
-          {/* =========================
+          {/* =================================================
               PRICE / AREA
-          ========================= */}
+          ================================================= */}
 
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
                 <span>02</span>
-
                 <h2>Цена и площадь</h2>
               </div>
 
@@ -597,8 +737,6 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
 
             <div className={styles.priceGrid}>
-              {/* PRICE */}
-
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
                   <DollarSign size={19} />
@@ -620,8 +758,6 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   />
                 </div>
               </div>
-
-              {/* AREA */}
 
               <div className={styles.inputCard}>
                 <div className={styles.inputIcon}>
@@ -648,21 +784,21 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           </div>
 
-          {/* =========================
-              ISSYK-KUL
-              BEACH DISTANCE
-          ========================= */}
+          {/* =================================================
+              ISSYK KUL — BEACH DISTANCE
+          ================================================= */}
 
           {isIssykKul && (
             <div className={styles.sectionBlock}>
               <div className={styles.sectionTitle}>
                 <div>
                   <span>03</span>
-
                   <h2>Расстояние до пляжа</h2>
                 </div>
 
-                <p>Укажите фактическое расстояние от объекта до пляжа</p>
+                <p>
+                  Укажите примерное расстояние от объекта до ближайшего пляжа
+                </p>
               </div>
 
               <div className={styles.beachDistanceGrid}>
@@ -692,15 +828,14 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           )}
 
-          {/* =========================
+          {/* =================================================
               CHARACTERISTICS
-          ========================= */}
+          ================================================= */}
 
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
                 <span>{isIssykKul ? "04" : "03"}</span>
-
                 <h2>Характеристики</h2>
               </div>
 
@@ -748,9 +883,56 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           </div>
 
-          {/* =========================
+          {/* =================================================
+              AMENITIES
+          ================================================= */}
+
+          {categoryAmenities.length > 0 && (
+            <div className={styles.sectionBlock}>
+              <div className={styles.sectionTitle}>
+                <div>
+                  <span>{isIssykKul ? "05" : "04"}</span>
+
+                  <h2>Удобства</h2>
+                </div>
+
+                <p>Можно выбрать несколько вариантов</p>
+              </div>
+
+              <div className={styles.amenitiesGrid}>
+                {categoryAmenities.map((amenity) => {
+                  const isSelected = selectedAmenities.includes(amenity);
+
+                  return (
+                    <button
+                      key={amenity}
+                      type="button"
+                      className={`${styles.amenityCard} ${
+                        isSelected ? styles.amenitySelected : ""
+                      }`}
+                      onClick={() => toggleAmenity(amenity)}
+                    >
+                      <span className={styles.amenityCheckbox}>
+                        {isSelected && <Check size={14} strokeWidth={3} />}
+                      </span>
+
+                      <span>{amenity}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedAmenities.length > 0 && (
+                <div className={styles.amenitiesSelectedCount}>
+                  Выбрано удобств: <strong>{selectedAmenities.length}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* =================================================
               ACTIONS
-          ========================= */}
+          ================================================= */}
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondary} onClick={onBack}>

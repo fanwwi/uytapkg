@@ -90,15 +90,23 @@ export default function StepListingType({
   isSubmitting,
 }) {
   const title = form.title || "";
+  const description = form.description || "";
 
   const isTitleValid = title.trim().length > 0;
+  const isDescriptionValid = description.trim().length > 0;
   const isListingTypeValid = Boolean(form.listingType);
 
-  const isReady = isTitleValid && isListingTypeValid;
+  const isReady = isTitleValid && isDescriptionValid && isListingTypeValid;
 
   const handleTitleChange = (event) => {
     updateForm({
       title: event.target.value,
+    });
+  };
+
+  const handleDescriptionChange = (event) => {
+    updateForm({
+      description: event.target.value,
     });
   };
 
@@ -138,7 +146,8 @@ export default function StepListingType({
         <h1>Завершите публикацию</h1>
 
         <p>
-          Добавьте название объявления и выберите подходящий вариант размещения.
+          Добавьте название и описание объявления, а затем выберите подходящий
+          вариант размещения.
         </p>
       </div>
 
@@ -186,12 +195,60 @@ export default function StepListingType({
       </section>
 
       {/* =========================
-          02 — LISTING TYPE
+          02 — DESCRIPTION
       ========================= */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
           <span>02</span>
+
+          <div>
+            <strong>Описание объявления</strong>
+            <small>Расскажите подробнее об объекте</small>
+          </div>
+        </div>
+
+        <div className={styles.descriptionField}>
+          <div
+            className={`${styles.textareaWrapper} ${
+              !isDescriptionValid && description.length > 0
+                ? styles.inputWrapperError
+                : ""
+            }`}
+          >
+            <textarea
+              value={description}
+              onChange={handleDescriptionChange}
+              placeholder="Например: Светлая двухкомнатная квартира в центре города. Рядом магазины, школы и остановки общественного транспорта..."
+              maxLength={2000}
+              rows={7}
+            />
+
+            <span className={styles.descriptionCounter}>
+              {description.length}/2000
+            </span>
+          </div>
+
+          <div className={styles.titleFooter}>
+            <span>
+              Укажите площадь, состояние, расположение, инфраструктуру и другие
+              важные детали.
+            </span>
+
+            {!isDescriptionValid && (
+              <strong className={styles.required}>Обязательное поле</strong>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================
+          03 — LISTING TYPE
+      ========================= */}
+
+      <section className={styles.section}>
+        <div className={styles.sectionLabel}>
+          <span>03</span>
 
           <div>
             <strong>Тип размещения</strong>
@@ -248,13 +305,13 @@ export default function StepListingType({
       </section>
 
       {/* =========================
-          03 — SUMMARY
+          04 — SUMMARY
       ========================= */}
 
       <section className={styles.summary}>
         <div className={styles.summaryHeader}>
           <div className={styles.summaryTitle}>
-            <span className={styles.summaryEyebrow}>03</span>
+            <span className={styles.summaryEyebrow}>04</span>
 
             <div>
               <h3>Проверьте объявление</h3>
@@ -279,6 +336,14 @@ export default function StepListingType({
             <span>Название</span>
 
             <strong>{title.trim() || "Не указано"}</strong>
+          </div>
+
+          <div className={styles.summaryItemWide}>
+            <span>Описание</span>
+
+            <strong className={styles.summaryDescription}>
+              {description.trim() || "Не указано"}
+            </strong>
           </div>
 
           <div className={styles.summaryItem}>

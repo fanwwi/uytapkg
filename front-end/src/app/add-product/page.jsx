@@ -19,6 +19,7 @@ import Link from "next/link";
 
 const initialForm = {
   title: "",
+
   // =========================
   // ФОТО
   // =========================
@@ -50,18 +51,88 @@ const initialForm = {
   // =========================
   priceFrom: "",
   priceTo: "",
+  price: "",
 
   // =========================
   // ПЛОЩАДЬ
   // =========================
   areaFrom: "",
   areaTo: "",
+  area: "",
 
   // =========================
-  // ДОПОЛНИТЕЛЬНЫЕ ФИЛЬТРЫ
+  // ИССЫК-КУЛЬ
   // =========================
   beachDistance: "",
+
+  // =========================
+  // ЗАСТРОЙЩИК / ЖК
+  // =========================
   developerOrComplex: "",
+
+  // =========================
+  // ХАРАКТЕРИСТИКИ
+  // =========================
+  series: "",
+  rooms: "",
+  floor: "",
+  condition: "",
+  walls: "",
+  heating: "",
+  documents: "",
+  furniture: "",
+
+  houseType: "",
+  floors: "",
+  sewerage: "",
+  water: "",
+  electricity: "",
+
+  purpose: "",
+  fence: "",
+  terrain: "",
+  communications: "",
+
+  roomsInApartment: "",
+  privateBathroom: "",
+
+  premisesType: "",
+  technicalParameters: "",
+  firstLine: "",
+  separateEntrance: "",
+  rentalBusiness: "",
+
+  ceilingHeight: "",
+  parkingType: "",
+  material: "",
+  security: "",
+  gates: "",
+  inspectionPit: "",
+  basement: "",
+  truckAccess: "",
+  gateType: "",
+
+  offerType: "",
+
+  // =========================
+  // УДОБСТВА
+  // МУЛЬТИВЫБОР
+  // =========================
+  amenities: [],
+
+  // =========================
+  // ДОПОЛНИТЕЛЬНЫЕ
+  // =========================
+  wifi: "",
+  pool: "",
+  bath: "",
+  view: "",
+  parking: "",
+  beach: "",
+  pets: "",
+  children: "",
+  buildingType: "",
+  repair: "",
 
   // =========================
   // АДРЕС
@@ -74,17 +145,23 @@ const initialForm = {
   // ТИП РАЗМЕЩЕНИЯ
   // =========================
   listingType: "",
+
+  // =========================
+  // ОПИСАНИЕ
+  // =========================
+  description: "",
 };
 
 export default function AddProductPage() {
   const router = useRouter();
+
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
 
-  // У тебя реально 6 шагов:
+  // У тебя 6 шагов:
   //
   // 1. Фотографии
   // 2. Местоположение
@@ -126,6 +203,10 @@ export default function AddProductPage() {
         return;
       }
 
+      // =========================
+      // ВАЛИДАЦИЯ
+      // =========================
+
       if (!form.title?.trim()) {
         throw new Error("Введите название объявления");
       }
@@ -142,49 +223,54 @@ export default function AddProductPage() {
         throw new Error("Выберите тип сделки");
       }
 
-      // дальше твой код...
-
       // =========================
       // ЦЕНА
       // =========================
 
       const price = Number(form.price);
-      let derivedPrice = 100000;
 
-      if (price > 0) {
-        derivedPrice = price;
-      }
+      const derivedPrice = price > 0 ? price : 100000;
+
+      // =========================
+      // ПЛОЩАДЬ
+      // =========================
+
+      const area = Number(form.area);
+
+      const derivedArea = area > 0 ? area : null;
 
       // =========================
       // РАССТОЯНИЕ ДО ПЛЯЖА
+      // ТОЛЬКО ДЛЯ ИССЫК-КУЛЯ
       // =========================
-      // Поле "Расстояние до пляжа" на шаге характеристик хранится в
-      // form.beachDistance (одно значение), а не в form.beachDistanceFrom/To —
-      // те поля никогда не заполняются ни одним компонентом формы.
+
+      const isIssykKul =
+        form.region === "ISSYK_KUL" ||
+        form.region === "issykKul" ||
+        form.region === "ISSYK-KUL" ||
+        form.region === "issyk-kul";
+
       const beachDistanceValue =
-        Number(form.beachDistance) > 0 ? Number(form.beachDistance) : null;
+        isIssykKul && Number(form.beachDistance) > 0
+          ? Number(form.beachDistance)
+          : null;
 
       // =========================
-      // НАЗВАНИЕ
+      // НАЗВАНИЕ КАТЕГОРИИ
       // =========================
-
-      const dealTitle =
-        form.dealType === "sale"
-          ? "Продажа"
-          : form.dealType === "rent"
-            ? "Аренда"
-            : "Недвижимость";
 
       const categoryTitles = {
         apartment: "квартиры",
         house: "дома",
+        cottage: "коттеджа",
         land: "участка",
         room: "комнаты",
         commercial: "коммерческого помещения",
         parking: "паркинга",
       };
 
-      const categoryTitle = categoryTitles[form.category] || "недвижимости";
+      const categoryTitle =
+        categoryTitles[form.category] || "объекта недвижимости";
 
       // =========================
       // ОПИСАНИЕ
@@ -197,7 +283,7 @@ export default function AddProductPage() {
         form.region ||
         "Кыргызстан";
 
-      const derivedDescription = [
+      const generatedDescription = [
         `Объект: ${categoryTitle}.`,
         `Местоположение: ${locationText}.`,
         form.district ? `Район: ${form.district}.` : "",
@@ -209,20 +295,27 @@ export default function AddProductPage() {
         .filter(Boolean)
         .join(" ");
 
+      const description = form.description?.trim() || generatedDescription;
+
       // =========================
       // ФОТО
       // =========================
 
       const photos = [];
+
       for (const img of form.images || []) {
         if (img.file) {
           try {
             const uploadedUrl = await uploadImage(img.file);
+
             photos.push(uploadedUrl);
           } catch (e) {
             console.error("Failed to upload image:", img.file.name, e);
+
             throw new Error(
-              `Не удалось загрузить фотографию ${img.file.name}: ${e.message}`,
+              `Не удалось загрузить фотографию ${img.file.name}: ${
+                e.message || "неизвестная ошибка"
+              }`,
             );
           }
         } else if (img.url && !img.url.startsWith("blob:")) {
@@ -231,30 +324,145 @@ export default function AddProductPage() {
       }
 
       // =========================
+      // УДОБСТВА
+      // =========================
+      //
+      // Теперь amenities — массив.
+      //
+      // Например:
+      // [
+      //   "Балкон/Лоджия",
+      //   "Лифт",
+      //   "Парковка"
+      // ]
+      //
+      const selectedAmenities = Array.isArray(form.amenities)
+        ? form.amenities.filter((item) => item && item !== "Любые")
+        : form.amenities && form.amenities !== "Любые"
+          ? [form.amenities]
+          : [];
+
+      // =========================
+      // CONSTANTS
+      // =========================
+
+      let resortAmenities = [];
+
+      try {
+        const constants = await getConstants();
+
+        const data = constants?.data || constants;
+
+        resortAmenities = data?.amenities?.resort || [];
+      } catch (e) {
+        console.error("Failed to fetch constants for amenities split", e);
+      }
+
+      // Разделяем выбранные удобства:
+      //
+      // resortAmenities → курортные удобства
+      // остальные → обычные
+      //
+      const resortSelectedAmenities = selectedAmenities.filter((amenity) =>
+        resortAmenities.includes(amenity),
+      );
+
+      const generalSelectedAmenities = selectedAmenities.filter(
+        (amenity) => !resortAmenities.includes(amenity),
+      );
+
+      // =========================
+      // FEATURES
+      // =========================
+
+      const features = {
+        // Общие характеристики
+        series: form.series || null,
+        rooms: form.rooms ? Number(form.rooms) : null,
+        floor: form.floor || null,
+        condition: form.condition || null,
+        walls: form.walls || null,
+        heating: form.heating || null,
+        documents: form.documents || null,
+        furniture: form.furniture || null,
+        offerType: form.offerType || null,
+
+        // Дом
+        houseType: form.houseType || null,
+        floors: form.floors || null,
+        sewerage: form.sewerage || null,
+        water: form.water || null,
+        electricity: form.electricity || null,
+
+        // Участок
+        purpose: form.purpose || null,
+        fence: form.fence || null,
+        location: form.location || null,
+        terrain: form.terrain || null,
+        communications: form.communications || null,
+
+        // Комната
+        roomsInApartment: form.roomsInApartment
+          ? Number(form.roomsInApartment)
+          : null,
+
+        privateBathroom: form.privateBathroom || null,
+
+        // Коммерция
+        premisesType: form.premisesType || null,
+        technicalParameters: form.technicalParameters || null,
+        firstLine: form.firstLine || null,
+        separateEntrance: form.separateEntrance || null,
+        rentalBusiness: form.rentalBusiness || null,
+
+        // Паркинг / гараж
+        ceilingHeight: form.ceilingHeight || null,
+        parkingType: form.parkingType || null,
+        material: form.material || null,
+        security: form.security || null,
+        gates: form.gates || null,
+        inspectionPit: form.inspectionPit || null,
+        basement: form.basement || null,
+        truckAccess: form.truckAccess || null,
+        gateType: form.gateType || null,
+
+        // Дополнительные
+        wifi: form.wifi || null,
+        pool: form.pool || null,
+        bath: form.bath || null,
+        view: form.view || null,
+        parking: form.parking || null,
+        beach: form.beach || null,
+        pets: form.pets || null,
+        children: form.children || null,
+        buildingType: form.buildingType || null,
+        repair: form.repair || null,
+
+        // Все выбранные общие удобства
+        amenities: generalSelectedAmenities,
+      };
+
+      // =========================
       // PAYLOAD
       // =========================
 
-      // Разделение amenities на resort и general
-      let isResortAmenity = false;
-      if (form.amenities && form.amenities !== "Любые") {
-        try {
-          const constants = await getConstants();
-          const resortList = constants?.amenities?.resort || [];
-          isResortAmenity = resortList.includes(form.amenities);
-        } catch (e) {
-          console.error("Failed to fetch constants for amenities split", e);
-        }
-      }
-
       const payload = {
-        title: form.title.trim(),
-        description: derivedDescription,
+        // =========================
+        // ОСНОВНОЕ
+        // =========================
 
-        // Категория
+        title: form.title.trim(),
+
+        description,
+
         propertyType: form.category,
 
-        // Сделка
+        // =========================
+        // СДЕЛКА
+        // =========================
+
         dealType: form.dealType,
+
         rentPeriod:
           form.dealType === "rent"
             ? form.rentalPeriod === "longTerm"
@@ -264,105 +472,146 @@ export default function AddProductPage() {
                 : form.rentalPeriod || null
             : null,
 
-        // Местоположение
+        // =========================
+        // МЕСТОПОЛОЖЕНИЕ
+        // =========================
+
         country: form.country || "Кыргызстан",
+
         region: form.country === "turkey" ? "TURKEY" : form.region || "BISHKEK",
+
         city:
           (form.country === "turkey"
             ? form.city
             : form.region === "BISHKEK" || form.region === "bishkek"
               ? "Бишкек"
               : form.settlement || form.city || form.location) || null,
+
         district: form.district || null,
 
-        // Адрес
+        // =========================
+        // АДРЕС
+        // =========================
+
         address: form.address || null,
+
         latitude: form.latitude ?? null,
+
         longitude: form.longitude ?? null,
 
-        // Цена
+        // =========================
+        // ЦЕНА
+        // =========================
+
         price: derivedPrice,
+
         priceFrom: price > 0 ? price : null,
+
         priceTo: price > 0 ? price : null,
+
         currency: "USD",
 
-        // Площадь
-        area: form.area ? Number(form.area) : null,
-        areaFrom: form.area ? Number(form.area) : null,
-        areaTo: form.area ? Number(form.area) : null,
+        // =========================
+        // ПЛОЩАДЬ
+        // =========================
 
-        // Расстояние до пляжа
+        area: derivedArea,
+
+        areaFrom: derivedArea,
+
+        areaTo: derivedArea,
+
+        // =========================
+        // ИССЫК-КУЛЬ
+        // =========================
+
         beachDistanceFrom: beachDistanceValue,
+
         beachDistanceTo: beachDistanceValue,
 
-        // Застройщик / ЖК
+        // =========================
+        // ЗАСТРОЙЩИК / ЖК
+        // =========================
+
         developerOrComplex: form.developerOrComplex || null,
 
-        // Тип объявления
+        // =========================
+        // ТИП РАЗМЕЩЕНИЯ
+        // =========================
+
         listingType: form.listingType || "standard",
 
-        // Фотографии
+        // =========================
+        // ФОТО
+        // =========================
+
         photos,
 
-        // Дополнительные параметры
+        // =========================
+        // ОСНОВНЫЕ ПАРАМЕТРЫ
+        // =========================
+
         rooms: form.rooms ? Number(form.rooms) : null,
+
         floor: form.floor ? Number(form.floor) : null,
+
         totalFloors: form.floors ? Number(form.floors) : null,
 
-        // Resort
-        isResort: true,
+        // =========================
+        // FEATURES
+        // =========================
+
+        features,
+
+        // =========================
+        // RESORT
+        // =========================
+
+        isResort: isIssykKul,
 
         resortFilters: {
           beachDistanceFrom: beachDistanceValue,
+
           beachDistanceTo: beachDistanceValue,
 
           developerOrComplex: form.developerOrComplex || null,
 
-          amenities: isResortAmenity ? [form.amenities] : [],
-        },
-
-        // Остальные характеристики
-        features: {
-          ...form,
-          wifi: form.wifi || null,
-          pool: form.pool || null,
-          bath: form.bath || null,
-          view: form.view || null,
-          parking: form.parking || null,
-          beach: form.beach || null,
-          pets: form.pets || null,
-          children: form.children || null,
-          furniture: form.furniture || null,
-          documents: form.documents || null,
-          offerType: form.offerType || null,
-          ceilingHeight: form.ceilingHeight || null,
-          buildingType: form.buildingType || null,
-          repair: form.repair || null,
-          heating: form.heating || null,
-          amenities:
-            !isResortAmenity && form.amenities && form.amenities !== "Любые"
-              ? [form.amenities]
-              : [],
+          amenities: resortSelectedAmenities,
         },
       };
 
       console.log("📦 Данные объявления:", payload);
 
+      // =========================
+      // СОЗДАНИЕ ОБЪЯВЛЕНИЯ
+      // =========================
+
       const result = await createListing(token, payload);
 
       setSubmitMessage(result?.message || "Объявление успешно опубликовано");
 
-      // Очищаем blob URL после успешной отправки
+      // =========================
+      // ОЧИСТКА BLOB URL
+      // =========================
+
       form.images?.forEach((image) => {
         if (image?.url?.startsWith("blob:")) {
           URL.revokeObjectURL(image.url);
         }
       });
 
+      // =========================
+      // RESET
+      // =========================
+
       setForm(initialForm);
+
       setStep(1);
 
-      // Перенаправляем пользователя в мои объявления
+      // =========================
+      // REDIRECT
+      // =========================
+
       router.push("/profile/ads");
     } catch (error) {
       console.error("Ошибка публикации:", error);
