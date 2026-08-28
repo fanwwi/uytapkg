@@ -10,29 +10,37 @@ import {
   Rectangle,
 } from "react-leaflet";
 import L from "leaflet";
+import { useRouter } from "next/navigation";
+
+import { getListings, getComplexes } from "@/utils/api";
+
+import { mapListingData } from "@/utils/mapListingData";
+import { mapComplexData } from "@/utils/mapComplexData";
+
 import {
   Search,
   MapPin,
-  Building2,
-  Home,
   X,
   RotateCcw,
   MousePointer2,
+  ArrowUpRight,
 } from "lucide-react";
 
 import "leaflet/dist/leaflet.css";
 import styles from "./Map.module.css";
 
 /* =========================================================
-   FIX LEAFLET MARKER ICON
+   LEAFLET MARKER
 ========================================================= */
 
 const createIcon = () =>
   L.divIcon({
     className: styles.customMarker,
+
     html: `
       <div class="${styles.markerInner}">
         <div class="${styles.markerGlow}"></div>
+
         <div class="${styles.markerPin}">
           <svg
             width="18"
@@ -50,6 +58,7 @@ const createIcon = () =>
         </div>
       </div>
     `,
+
     iconSize: [42, 42],
     iconAnchor: [21, 42],
   });
@@ -106,7 +115,7 @@ function MapController({ selectedBounds }) {
    AREA DRAWER
 ========================================================= */
 
-function AreaDrawer({ onComplete, onStart, drawing }) {
+function AreaDrawer({ onComplete, onStart }) {
   const map = useMap();
 
   const startPoint = useRef(null);
@@ -168,138 +177,454 @@ function AreaDrawer({ onComplete, onStart, drawing }) {
 }
 
 /* =========================================================
-   DATA
+   HELPERS
 ========================================================= */
 
-const DEFAULT_OBJECTS = [
-  {
-    id: 1,
-    type: "apartment",
-    name: "3-комнатная квартира",
-    address: "ул. Токтогула, 125",
-    price: "8 500 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85",
-    position: [42.8746, 74.6122],
-  },
-  {
-    id: 2,
-    type: "complex",
-    name: "ЖК Central Park",
-    address: "ул. Киевская, 168",
-    price: "от 6 900 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=85",
-    position: [42.8769, 74.6065],
-  },
-  {
-    id: 3,
-    type: "house",
-    name: "Современный дом",
-    address: "мкр. Асанбай",
-    price: "15 500 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85",
-    position: [42.8238, 74.6318],
-  },
-  {
-    id: 4,
-    type: "apartment",
-    name: "2-комнатная квартира",
-    address: "ул. Исанова, 44",
-    price: "5 800 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85",
-    position: [42.8659, 74.5964],
-  },
-  {
-    id: 5,
-    type: "complex",
-    name: "ЖК Южные Ворота",
-    address: "Южная магистраль",
-    price: "от 7 200 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=85",
-    position: [42.8325, 74.615],
-  },
-  {
-    id: 6,
-    type: "apartment",
-    name: "1-комнатная квартира",
-    address: "ул. Манаса, 32",
-    price: "4 300 000 сом",
-    image:
-      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=85",
-    position: [42.8669, 74.595],
-  },
-];
+function getObjectTypeLabel(object) {
+  if (object.objectType === "complex") {
+    return "ЖК";
+  }
+
+  if (object.type === "house") {
+    return "Дом";
+  }
+
+  if (object.type === "land") {
+    return "Участок";
+  }
+
+  if (object.type === "commercial") {
+    return "Коммерция";
+  }
+
+  if (object.type === "parking") {
+    return "Паркинг";
+  }
+
+  if (object.type === "room") {
+    return "Комната";
+  }
+
+  return "Квартира";
+}
 
 /* =========================================================
-   MAIN COMPONENT
+   NORMALIZE LISTING
+========================================================= */
+
+function normalizeListing(item) {
+  if (!item) return null;
+
+  let mapped;
+
+  try {
+    mapped = mapListingData(item);
+  } catch (error) {
+    console.error("Ошибка mapListingData:", item, error);
+
+    return null;
+  }
+
+  const latitude = Number(
+    mapped.latitude ??
+      mapped.lat ??
+      item.latitude ??
+      item.lat ??
+      item.location?.latitude ??
+      item.location?.lat,
+  );
+
+  const longitude = Number(
+    mapped.longitude ??
+      mapped.lng ??
+      mapped.lon ??
+      item.longitude ??
+      item.lng ??
+      item.lon ??
+      item.location?.longitude ??
+      item.location?.lng,
+  );
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    console.warn("Объявление пропущено: нет координат", item);
+
+    return null;
+  }
+
+  return {
+    ...mapped,
+
+    id: item.id ?? mapped.id,
+
+    objectType: "listing",
+
+    type: mapped.type || item.category || "apartment",
+
+    name: mapped.title || item.title || "Объявление",
+
+    address:
+      mapped.address || mapped.location || item.address || "Адрес не указан",
+
+    price:
+      mapped.priceFormatted || mapped.price || item.price || "Цена не указана",
+
+    image:
+      mapped.image ||
+      mapped.images?.[0] ||
+      item.cover_photo ||
+      item.images?.[0] ||
+      null,
+
+    latitude,
+    longitude,
+
+    position: [latitude, longitude],
+  };
+}
+
+/* =========================================================
+   NORMALIZE COMPLEX
+========================================================= */
+
+function normalizeComplex(item) {
+  if (!item) return null;
+
+  let mapped;
+
+  try {
+    mapped = mapComplexData(item);
+  } catch (error) {
+    console.error("Ошибка mapComplexData:", item, error);
+
+    return null;
+  }
+
+  const latitude = Number(
+    mapped.latitude ??
+      mapped.lat ??
+      item.latitude ??
+      item.lat ??
+      item.location?.latitude ??
+      item.location?.lat,
+  );
+
+  const longitude = Number(
+    mapped.longitude ??
+      mapped.lng ??
+      mapped.lon ??
+      item.longitude ??
+      item.lng ??
+      item.lon ??
+      item.location?.longitude ??
+      item.location?.lng,
+  );
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    console.warn("ЖК пропущен: нет координат", item);
+
+    return null;
+  }
+
+  let price = "Цена не указана";
+
+  if (mapped.priceFrom !== null && mapped.priceFrom !== undefined) {
+    if (
+      mapped.priceTo !== null &&
+      mapped.priceTo !== undefined &&
+      mapped.priceFrom !== mapped.priceTo
+    ) {
+      price = `от ${mapped.priceFrom} до ${mapped.priceTo} сом`;
+    } else {
+      price = `от ${mapped.priceFrom} сом`;
+    }
+  }
+
+  return {
+    ...mapped,
+
+    id: item.id ?? mapped.id,
+
+    objectType: "complex",
+
+    type: "complex",
+
+    name: mapped.name || item.name || "Жилой комплекс",
+
+    address: mapped.address || item.address || "Адрес не указан",
+
+    price,
+
+    image: mapped.image || mapped.images?.[0] || item.cover_photo || null,
+
+    latitude,
+    longitude,
+
+    position: [latitude, longitude],
+  };
+}
+
+/* =========================================================
+   MAIN
 ========================================================= */
 
 export default function Map() {
-  const [objects] = useState(DEFAULT_OBJECTS);
+  const router = useRouter();
+
+  /* =========================================================
+     REAL DATA
+  ========================================================= */
+
+  const [listings, setListings] = useState([]);
+  const [complexes, setComplexes] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
+  /* =========================================================
+     UI
+  ========================================================= */
 
   const [search, setSearch] = useState("");
+
   const [selectedBounds, setSelectedBounds] = useState(null);
+
   const [tempBounds, setTempBounds] = useState(null);
 
   const [isDrawing, setIsDrawing] = useState(false);
+
   const [hasSelection, setHasSelection] = useState(false);
 
-  const [hoveredObject, setHoveredObject] = useState(null);
+  /*
+    Только выбранный объект.
+
+    Hover полностью убран.
+
+    Поэтому карточка не исчезнет,
+    когда курсор уйдёт с маркера.
+  */
+  const [selectedObject, setSelectedObject] = useState(null);
+
+  /* =========================================================
+     LOAD REAL DATA
+  ========================================================= */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadData() {
+      try {
+        setLoading(true);
+        setLoadError("");
+
+        const [listingsResponse, complexesResponse] = await Promise.all([
+          getListings({
+            page: 1,
+            limit: 100,
+          }),
+
+          getComplexes(),
+        ]);
+
+        if (cancelled) return;
+
+        /* =========================
+           LISTINGS
+        ========================= */
+
+        if (listingsResponse?.success && Array.isArray(listingsResponse.data)) {
+          const mappedListings = listingsResponse.data
+            .map(normalizeListing)
+            .filter(Boolean);
+
+          setListings(mappedListings);
+        } else {
+          setListings([]);
+        }
+
+        /* =========================
+           COMPLEXES
+        ========================= */
+
+        if (
+          complexesResponse?.success &&
+          Array.isArray(complexesResponse.data)
+        ) {
+          const mappedComplexes = complexesResponse.data
+            .map(normalizeComplex)
+            .filter(Boolean);
+
+          setComplexes(mappedComplexes);
+        } else {
+          setComplexes([]);
+        }
+      } catch (error) {
+        console.error("Ошибка загрузки объектов карты:", error);
+
+        if (!cancelled) {
+          setLoadError(error?.message || "Не удалось загрузить объекты");
+
+          setListings([]);
+          setComplexes([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /* =========================================================
+     ALL OBJECTS
+  ========================================================= */
+
+  const objects = useMemo(() => {
+    return [...listings, ...complexes];
+  }, [listings, complexes]);
+
+  /* =========================================================
+     FILTER
+  ========================================================= */
 
   const filteredObjects = useMemo(() => {
     let result = objects;
 
+    /* =========================
+       AREA
+    ========================= */
+
     if (selectedBounds) {
-      result = result.filter((object) =>
-        selectedBounds.contains(L.latLng(object.position)),
-      );
+      result = result.filter((object) => {
+        return selectedBounds.contains(L.latLng(object.position));
+      });
     }
 
-    if (search.trim()) {
-      const query = search.toLowerCase();
+    /* =========================
+       SEARCH
+    ========================= */
 
-      result = result.filter(
-        (object) =>
-          object.name.toLowerCase().includes(query) ||
-          object.address.toLowerCase().includes(query),
-      );
+    const query = search.trim().toLowerCase();
+
+    if (query) {
+      result = result.filter((object) => {
+        const name = String(object.name || "").toLowerCase();
+
+        const address = String(object.address || "").toLowerCase();
+
+        const description = String(object.description || "").toLowerCase();
+
+        const developer = String(object.developer || "").toLowerCase();
+
+        return (
+          name.includes(query) ||
+          address.includes(query) ||
+          description.includes(query) ||
+          developer.includes(query)
+        );
+      });
     }
 
     return result;
   }, [objects, selectedBounds, search]);
 
+  /* =========================================================
+     AREA DRAW
+  ========================================================= */
+
   function handleBounds(bounds, finished) {
     setTempBounds(bounds);
 
-    if (finished) {
-      const north = bounds.getNorth();
-      const south = bounds.getSouth();
-      const east = bounds.getEast();
-      const west = bounds.getWest();
+    if (!finished) return;
 
-      const isTiny =
-        Math.abs(north - south) < 0.0005 || Math.abs(east - west) < 0.0005;
+    const north = bounds.getNorth();
+    const south = bounds.getSouth();
 
-      if (isTiny) {
-        setTempBounds(null);
-        return;
+    const east = bounds.getEast();
+    const west = bounds.getWest();
+
+    const isTiny =
+      Math.abs(north - south) < 0.0005 || Math.abs(east - west) < 0.0005;
+
+    if (isTiny) {
+      setTempBounds(null);
+      return;
+    }
+
+    setSelectedBounds(bounds);
+    setTempBounds(null);
+    setHasSelection(true);
+
+    /*
+      Если выбранный объект
+      оказался за пределами области —
+      закрываем карточку.
+    */
+
+    setSelectedObject((current) => {
+      if (!current) return null;
+
+      if (bounds.contains(L.latLng(current.position))) {
+        return current;
       }
 
-      setSelectedBounds(bounds);
-      setTempBounds(null);
-      setHasSelection(true);
-    }
+      return null;
+    });
   }
+
+  /* =========================================================
+     CLEAR AREA
+  ========================================================= */
 
   function clearSelection() {
     setSelectedBounds(null);
     setTempBounds(null);
     setHasSelection(false);
+    setSelectedObject(null);
   }
+
+  /* =========================================================
+     SELECT OBJECT
+  ========================================================= */
+
+  function handleObjectClick(object) {
+    if (!object) return;
+
+    setSelectedObject(object);
+  }
+
+  /* =========================================================
+     DETAILS
+  ========================================================= */
+
+  function handleDetails(object) {
+    if (!object?.id) return;
+
+    if (object.objectType === "complex") {
+      router.push(`/complexes/${object.id}`);
+
+      return;
+    }
+
+    router.push(`/all-products/${object.id}`);
+  }
+
+  /* =========================================================
+     CLOSE CARD
+  ========================================================= */
+
+  function closeObjectPreview() {
+    setSelectedObject(null);
+  }
+
+  /* =========================================================
+     RENDER
+  ========================================================= */
 
   return (
     <main className={styles.page}>
@@ -316,6 +641,7 @@ export default function Map() {
 
             <div>
               <span>UYTap MAP</span>
+
               <h1>Недвижимость на карте</h1>
             </div>
           </div>
@@ -366,10 +692,14 @@ export default function Map() {
             <MapController selectedBounds={selectedBounds} />
 
             <AreaDrawer
-              drawing={isDrawing}
               onStart={() => {
                 setIsDrawing(true);
-                setHoveredObject(null);
+
+                /*
+                  При начале нового выделения
+                  закрываем карточку.
+                */
+                setSelectedObject(null);
               }}
               onComplete={(bounds, finished) => {
                 handleBounds(bounds, finished);
@@ -381,7 +711,7 @@ export default function Map() {
             />
 
             {/* =================================================
-                TEMPORARY DRAWING RECTANGLE
+                TEMP RECTANGLE
             ================================================= */}
 
             {tempBounds && (
@@ -399,7 +729,7 @@ export default function Map() {
             )}
 
             {/* =================================================
-                FINAL SELECTED AREA
+                SELECTED RECTANGLE
             ================================================= */}
 
             {selectedBounds && (
@@ -418,21 +748,49 @@ export default function Map() {
             )}
 
             {/* =================================================
-                OBJECTS
+                REAL OBJECTS
             ================================================= */}
 
             {filteredObjects.map((object) => (
               <Marker
-                key={object.id}
+                key={`${object.objectType}-${object.id}`}
                 position={object.position}
                 icon={markerIcon}
                 eventHandlers={{
-                  mouseover: () => setHoveredObject(object),
-                  mouseout: () => setHoveredObject(null),
+                  /*
+                      ТОЛЬКО КЛИК.
+
+                      Никакого mouseover /
+                      mouseout больше нет.
+                    */
+
+                  click: () => handleObjectClick(object),
                 }}
               />
             ))}
           </MapContainer>
+
+          {/* =================================================
+              LOADING
+          ================================================= */}
+
+          {loading && (
+            <div className={styles.mapStatus}>
+              <div className={styles.loadingSpinner} />
+
+              <span>Загружаем объекты...</span>
+            </div>
+          )}
+
+          {/* =================================================
+              ERROR
+          ================================================= */}
+
+          {!loading && loadError && (
+            <div className={styles.mapStatus}>
+              <span>Не удалось загрузить объекты</span>
+            </div>
+          )}
 
           {/* =================================================
               DRAWING INDICATOR
@@ -441,12 +799,13 @@ export default function Map() {
           {isDrawing && (
             <div className={styles.drawingIndicator}>
               <MousePointer2 />
+
               <span>Отпустите мышь, чтобы выбрать область</span>
             </div>
           )}
 
           {/* =================================================
-              DRAW BUTTON
+              DRAW HINT
           ================================================= */}
 
           {!isDrawing && !hasSelection && (
@@ -457,6 +816,7 @@ export default function Map() {
 
               <div>
                 <strong>Выделите область</strong>
+
                 <span>Зажмите мышь и протяните по карте</span>
               </div>
             </div>
@@ -474,6 +834,7 @@ export default function Map() {
 
               <div className={styles.selectionText}>
                 <strong>Область выбрана</strong>
+
                 <span>
                   Найдено объектов: <b>{filteredObjects.length}</b>
                 </span>
@@ -491,37 +852,66 @@ export default function Map() {
           )}
 
           {/* =================================================
-              HOVER CARD
+              OBJECT PREVIEW
+              
+              ВАЖНО:
+              Только selectedObject.
+
+              Поэтому карточка появляется
+              ТОЛЬКО ПО КЛИКУ.
           ================================================= */}
 
-          {hoveredObject && (
-            <div
-              className={styles.objectPreview}
-              onMouseEnter={() => setHoveredObject(hoveredObject)}
-            >
+          {selectedObject && (
+            <div className={styles.objectPreview}>
+              {/* CLOSE */}
+
+              <button
+                type="button"
+                className={styles.previewClose}
+                onClick={closeObjectPreview}
+                aria-label="Закрыть"
+              >
+                <X />
+              </button>
+
+              {/* IMAGE */}
+
               <div className={styles.previewImage}>
-                <img src={hoveredObject.image} alt={hoveredObject.name} />
+                {selectedObject.image ? (
+                  <img src={selectedObject.image} alt={selectedObject.name} />
+                ) : (
+                  <div className={styles.previewNoImage}>
+                    <MapPin />
+                  </div>
+                )}
 
                 <span className={styles.previewType}>
-                  {hoveredObject.type === "complex"
-                    ? "ЖК"
-                    : hoveredObject.type === "house"
-                      ? "Дом"
-                      : "Квартира"}
+                  {getObjectTypeLabel(selectedObject)}
                 </span>
               </div>
 
+              {/* CONTENT */}
+
               <div className={styles.previewContent}>
-                <h3>{hoveredObject.name}</h3>
+                <h3>{selectedObject.name}</h3>
 
                 <p>
                   <MapPin />
-                  {hoveredObject.address}
+
+                  {selectedObject.address}
                 </p>
 
-                <strong>{hoveredObject.price}</strong>
+                <strong>{selectedObject.price}</strong>
 
-                <button type="button">Подробнее</button>
+                <button
+                  type="button"
+                  className={styles.detailsButton}
+                  onClick={() => handleDetails(selectedObject)}
+                >
+                  <span>Подробнее</span>
+
+                  <ArrowUpRight />
+                </button>
               </div>
             </div>
           )}
