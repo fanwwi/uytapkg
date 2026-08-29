@@ -327,6 +327,28 @@
   line-height: 0;
 }
 
+.qr img {
+  display: block;
+
+  width: 250px;
+  height: 250px;
+}
+
+.qrSkeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 250px;
+  height: 250px;
+
+  color: var(--purple-dark);
+}
+
+.qrSkeleton svg {
+  animation: spin 1s linear infinite;
+}
+
 .amount {
   margin-top: 25px;
 
@@ -382,7 +404,7 @@
   }
 }
 
-.mockButton {
+.actionButton {
   width: 100%;
 
   max-width: 360px;
@@ -390,6 +412,11 @@
   height: 48px;
 
   margin-top: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   border: none;
   border-radius: 13px;
@@ -401,18 +428,20 @@
   font-size: 14px;
   font-weight: 800;
 
+  text-decoration: none;
+
   cursor: pointer;
 
   transition: 0.25s;
 }
 
-.mockButton:hover {
+.actionButton:hover {
   background: var(--purple-light);
 
   transform: translateY(-2px);
 }
 
-.mockButton:disabled {
+.actionButton:disabled {
   opacity: 0.7;
 
   cursor: wait;
@@ -420,7 +449,31 @@
   transform: none;
 }
 
-.mockHint {
+.cancelLink {
+  width: 100%;
+
+  max-width: 360px;
+
+  margin-top: 10px;
+
+  background: none;
+  border: none;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.cancelLink:hover {
+  color: white;
+}
+
+.hint {
   max-width: 400px;
 
   margin: 13px auto 0;
@@ -432,6 +485,12 @@
   line-height: 1.5;
 
   text-align: center;
+}
+
+.errorHint {
+  composes: hint;
+
+  color: #f87171;
 }
 
 /* SUMMARY */
@@ -960,7 +1019,8 @@
     padding: 12px;
   }
 
-  .qr svg {
+  .qr img,
+  .qrSkeleton {
     width: 210px;
     height: 210px;
   }

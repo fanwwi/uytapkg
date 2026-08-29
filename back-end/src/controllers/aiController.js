@@ -24,7 +24,7 @@ const parseJsonFromText = (rawText) => {
 };
 
 const buildSearchPrompt = (prompt) => {
-  return `Проанализируй текст запроса пользователя и верни только JSON, без пояснений и без markdown. Ответ должен иметь формат:\n{\n  "region": "Бишкек" или "Иссык-Кульская область" или null,\n  "district": "название района или улицы" или null,\n  "propertyType": "apartment" | "house" | "land" | "commercial" | "garage" | null,\n  "dealType": "sale" | "rent" | null,\n  "rooms": число или null,\n  "maxPrice": число или null,\n  "currency": "KGS" | "USD" | null\n}\nТекст запроса: "${prompt}"`;
+  return `Проанализируй текст запроса пользователя и верни только JSON, без пояснений и без markdown. Ответ должен иметь формат:\n{\n  "country": "Турция" или "Кыргызстан" или null,\n  "region": "Бишкек" или "Иссык-Кульская область" или "Турция" или null,\n  "city": "Аланья" или "Анталия" или "Стамбул" или "Ош" или "Бишкек" или null,\n  "district": "название района или улицы" или null,\n  "propertyType": "apartment" | "house" | "land" | "commercial" | "garage" | null,\n  "dealType": "sale" | "rent" | null,\n  "rooms": число или null,\n  "maxPrice": число или null,\n  "currency": "KGS" | "USD" | null\n}\nТекст запроса: "${prompt}"`;
 };
 
 const callGemini = async (prompt) => {
@@ -57,8 +57,30 @@ const callGemini = async (prompt) => {
 
 const fallbackParse = (prompt) => {
   const lower = prompt.toLowerCase();
+  const isTurkey = lower.includes("турци") || lower.includes("turkey") || lower.includes("алань") || lower.includes("антал") || lower.includes("стамбул") || lower.includes("мерсин") || lower.includes("измир");
+  const isIssykKul = lower.includes("иссык") || lower.includes("чолпон") || lower.includes("бостери") || lower.includes("каракол");
+  const isOsh = lower.includes("ош");
+
+  let region = "Бишкек";
+  let country = "Кыргызстан";
+  let city = null;
+
+  if (isTurkey) {
+    country = "Турция";
+    region = "Турция";
+    city = lower.includes("алань") ? "Аланья" : lower.includes("антал") ? "Анталия" : lower.includes("стамбул") ? "Стамбул" : lower.includes("мерсин") ? "Мерсин" : "Турция";
+  } else if (isIssykKul) {
+    region = "Иссык-Кульская область";
+    city = "Иссык-Куль";
+  } else if (isOsh) {
+    region = "Ошская область";
+    city = "Ош";
+  }
+
   return {
-    region: lower.includes("иссык") || lower.includes("чолпон") ? "Иссык-Кульская область" : "Бишкек",
+    country,
+    region,
+    city,
     district: lower.includes("акунк") ? "Ахунбаева" : lower.includes("центр") ? "Центр" : null,
     propertyType: lower.includes("дом") ? "house" : lower.includes("участок") ? "land" : lower.includes("коммерц") ? "commercial" : lower.includes("гараж") ? "garage" : lower.includes("комната") ? "room" : "apartment",
     dealType: lower.includes("аренд") || lower.includes("снять") ? "rent" : lower.includes("куп") || lower.includes("прод") ? "sale" : null,
@@ -66,7 +88,7 @@ const fallbackParse = (prompt) => {
     maxPrice: lower.match(/(\d+[\s]?0000|\d+[\s]?000|\d+)/g)
       ? Number((lower.match(/(\d+[\s]?0000|\d+[\s]?000|\d+)/g) || [])[0].replace(/\s/g, ""))
       : null,
-    currency: lower.includes("$") || lower.includes("доллар") ? "USD" : "KGS",
+    currency: lower.includes("$") || lower.includes("доллар") || isTurkey ? "USD" : "KGS",
   };
 };
 

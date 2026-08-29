@@ -8,6 +8,7 @@ import { removeImageFromStorage } from "../utils/storage.js";
 export const getListings = async (req, res) => {
   try {
     const {
+      country,
       region,
       city,
       district,
@@ -32,9 +33,22 @@ export const getListings = async (req, res) => {
       `, { count: "exact" })
       .eq("status", "active");
 
-    // Фильтрация по региону / городу / району
-    if (region) query = query.ilike("region", `%${region}%`);
-    if (city) query = query.ilike("city", `%${city}%`);
+    // Фильтрация по региону / городу / району / стране
+    if (country) {
+      const cLower = String(country).toLowerCase();
+      if (cLower === "turkey" || cLower === "турция") {
+        query = query.or("region.ilike.%TURKEY%,region.ilike.%Турция%,city.ilike.%Турция%,city.ilike.%Turkey%");
+      }
+    } else if (region) {
+      const rLower = String(region).toLowerCase();
+      if (rLower === "turkey" || rLower === "турция") {
+        query = query.or("region.ilike.%TURKEY%,region.ilike.%Турция%,city.ilike.%Турция%,city.ilike.%Turkey%");
+      } else {
+        query = query.ilike("region", `%${region}%`);
+      }
+    }
+
+    if (city && city !== "Все") query = query.ilike("city", `%${city}%`);
     if (district) query = query.ilike("district", `%${district}%`);
 
     // Фильтрация по типу недвижимости и сделки

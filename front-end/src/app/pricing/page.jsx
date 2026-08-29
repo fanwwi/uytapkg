@@ -29,6 +29,7 @@ export default function Pricing() {
 
   const tariffs = [
     {
+      id: "free",
       title: "Частный",
       price: 0,
       icon: User,
@@ -41,6 +42,7 @@ export default function Pricing() {
       ],
     },
     {
+      id: "start",
       title: "СТАРТ",
       price: 390,
       icon: Rocket,
@@ -53,6 +55,7 @@ export default function Pricing() {
       ],
     },
     {
+      id: "optimal",
       title: "ОПТИМАЛЬНЫЙ",
       price: 790,
       icon: Crown,
@@ -67,6 +70,7 @@ export default function Pricing() {
       ],
     },
     {
+      id: "business",
       title: "БИЗНЕС",
       price: 1890,
       icon: Building2,
@@ -80,6 +84,7 @@ export default function Pricing() {
       ],
     },
     {
+      id: "developer",
       title: "ЗАСТРОЙЩИК",
       price: null,
       icon: Sparkles,
@@ -160,15 +165,28 @@ export default function Pricing() {
   };
 
   const handleTariffClick = (tariff) => {
-    const currentPrice = getPrice(tariff.price);
-    const total = getTotal(tariff.price);
+    // Бесплатный тариф активен по умолчанию — платить не нужно
+    if (tariff.price === 0) {
+      router.push("/profile");
+      return;
+    }
+
+    // Индивидуальный тариф для застройщиков оформляется не через онлайн-оплату
+    if (tariff.price === null) {
+      router.push("/profile");
+      return;
+    }
+
+    const token = localStorage.getItem("uytap_token");
+
+    if (!token) {
+      router.push("/auth-required");
+      return;
+    }
 
     const params = new URLSearchParams({
-      tariff: tariff.title,
-      price: String(currentPrice ?? 0),
+      tariffId: tariff.id,
       months: String(months),
-      discount: String(discountPercent),
-      total: String(total ?? 0),
     });
 
     router.push(`/payment?${params.toString()}`);
