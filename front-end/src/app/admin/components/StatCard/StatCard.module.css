@@ -1,0 +1,57 @@
+.card {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: #101014;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(139, 92, 246, 0.12);
+  color: #a78bfa;
+}
+
+.icon svg {
+  width: 18px;
+}
+
+.top > svg {
+  width: 14px;
+  color: #55555f;
+}
+
+.title {
+  display: block;
+  margin-top: 16px;
+  color: #777782;
+  font-size: 11px;
+}
+
+.bottom {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.bottom strong {
+  font-size: 23px;
+}
+
+.bottom span {
+  margin-bottom: 3px;
+  color: #8b5cf6;
+  font-size: 10px;
+  font-weight: 800;
+}
