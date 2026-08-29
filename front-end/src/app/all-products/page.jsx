@@ -109,11 +109,13 @@ export default function AllProducts() {
     // а не название города, иначе фильтр по городу ломается.
     const urlCity = searchParams.get("city") || searchParams.get("settlement");
     const urlRegion = searchParams.get("region");
+    const urlCountry = searchParams.get("country");
 
     if (urlCity) {
       if (urlCity === "BISHKEK" || urlCity === "bishkek") setCity("Бишкек");
       else if (urlCity === "ISSYK_KUL" || urlCity === "issyk_kul" || urlCity === "issykKul" || urlCity === "issyk") setCity("Иссык-Куль");
       else if (urlCity === "OSH" || urlCity === "osh") setCity("Ош");
+      else if (urlCity === "TURKEY" || urlCity === "turkey" || urlCity === "Турция") setCity("Турция");
       else setCity(urlCity);
     } else if (urlRegion) {
       const normalizedRegion = urlRegion.toLowerCase();
@@ -130,8 +132,17 @@ export default function AllProducts() {
         setCity("Иссык-Куль");
       } else if (normalizedRegion === "osh") {
         setCity("Ош");
+      } else if (normalizedRegion === "turkey" || normalizedRegion === "турция") {
+        setCity("Турция");
       } else {
         setCity(urlRegion);
+      }
+    } else if (urlCountry) {
+      const normalizedCountry = urlCountry.toLowerCase();
+      if (normalizedCountry === "turkey" || normalizedCountry === "турция") {
+        setCity("Турция");
+      } else {
+        setCity(urlCountry);
       }
     } else {
       setCity("Все");
@@ -348,10 +359,29 @@ export default function AllProducts() {
           }
 
           const itemLocation = String(item.location || "").toLowerCase();
-
           const itemRegion = String(item.region || "").toLowerCase();
+          const itemAddress = String(item.address || "").toLowerCase();
+          const itemCountry = String(item.country || item.features?.country || "").toLowerCase();
 
           const selectedCity = String(city).toLowerCase();
+
+          if (selectedCity === "турция" || selectedCity === "turkey") {
+            return (
+              itemLocation.includes("турци") ||
+              itemLocation.includes("turkey") ||
+              itemLocation.includes("алань") ||
+              itemLocation.includes("антал") ||
+              itemLocation.includes("стамбул") ||
+              itemLocation.includes("мерсин") ||
+              itemLocation.includes("измир") ||
+              itemRegion.includes("turkey") ||
+              itemRegion.includes("турци") ||
+              itemCountry.includes("turkey") ||
+              itemCountry.includes("турци") ||
+              itemAddress.includes("турци") ||
+              itemAddress.includes("turkey")
+            );
+          }
 
           if (selectedCity === "иссык-куль") {
             // Название населенного пункта — самый надежный признак:
@@ -391,7 +421,9 @@ export default function AllProducts() {
 
           return (
             itemLocation.includes(selectedCity) ||
-            itemRegion.includes(selectedCity)
+            itemRegion.includes(selectedCity) ||
+            itemCountry.includes(selectedCity) ||
+            itemAddress.includes(selectedCity)
           );
         })();
 

@@ -384,3 +384,49 @@ export async function deleteListing(token, id) {
   });
   return response.json();
 }
+
+// 10. Оплата тарифов (O!Dengi)
+export async function createPayment(token, { tariffId, months }) {
+  const response = await fetch(`${API_URL}/payments/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ tariffId, months }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка создания платежа");
+  }
+
+  return data.data;
+}
+
+export async function getPaymentStatus(token, orderId) {
+  const response = await fetch(`${API_URL}/payments/${orderId}/status`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения статуса платежа");
+  }
+
+  return data.data;
+}
+
+export async function cancelPayment(token, orderId) {
+  const response = await fetch(`${API_URL}/payments/${orderId}/cancel`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}

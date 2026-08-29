@@ -142,12 +142,18 @@ export default function SmartSearch({ form, updateForm, onNext }) {
           "Джалал-Абадская область": "JALAL_ABAD",
           "Баткенская область": "BATKEN",
           "Нарынская область": "NARYN",
-          "Таласская область": "TALAS"
+          "Таласская область": "TALAS",
+          "Турция": "TURKEY",
+          "TURKEY": "TURKEY"
         };
 
         const mapped = {};
         const f = data.filters;
-        if (f.region) {
+        if (f.country === "Турция" || f.country === "turkey" || f.region === "Турция" || f.region === "TURKEY") {
+          mapped.country = "turkey";
+          mapped.region = "TURKEY";
+          mapped.city = f.city || "Турция";
+        } else if (f.region) {
           const mappedReg = regionMapping[f.region] || f.region;
           mapped.region = mappedReg;
           if (mappedReg === "ISSYK_KUL") {
@@ -156,6 +162,9 @@ export default function SmartSearch({ form, updateForm, onNext }) {
             mapped.city = "Бишкек";
           } else if (mappedReg === "OSH") {
             mapped.city = "Ош";
+          } else if (mappedReg === "TURKEY") {
+            mapped.country = "turkey";
+            mapped.city = f.city || "Турция";
           }
         }
         if (f.city) {

@@ -9,6 +9,7 @@ import aiRoutes from "./routes/aiRoutes.js";
 import constantsRoutes from "./routes/constantsRoutes.js";
 import favoritesRoutes from "./routes/favoritesRoutes.js";
 import developersRoutes from "./routes/developersRoutes.js";
+import paymentsRoutes from "./routes/paymentsRoutes.js";
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/constants", constantsRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/developers", developersRoutes);
+app.use("/api/payments", paymentsRoutes);
 
 // Глобальный обработчик ошибок (включая Multer)
 app.use((err, req, res, next) => {
