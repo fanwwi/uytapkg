@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
   TrendingUp,
+  Camera,
 } from "lucide-react";
 
 import styles from "./StepListingType.module.css";
@@ -39,6 +40,13 @@ const types = [
     description:
       "Поднимите объявление выше других и получите больше просмотров.",
     icon: TrendingUp,
+  },
+  {
+    id: "instagram",
+    title: "Поделиться в Instagram",
+    description:
+      "Поделитесь объявлением в Instagram и привлеките дополнительную аудиторию.",
+    icon: Camera,
   },
 ];
 
@@ -131,11 +139,11 @@ export default function StepListingType({
 
   const categoryName = categoryLabels[form.category] || "Не указана";
 
+  const isInstagramSelected = form.listingType === "instagram";
+
   return (
     <div className={styles.step}>
-      {/* =========================
-          HEADER
-      ========================= */}
+      {/* HEADER */}
 
       <div className={styles.header}>
         <span className={styles.stepBadge}>
@@ -151,9 +159,7 @@ export default function StepListingType({
         </p>
       </div>
 
-      {/* =========================
-          01 — TITLE
-      ========================= */}
+      {/* 01 — TITLE */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -194,9 +200,7 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* =========================
-          02 — DESCRIPTION
-      ========================= */}
+      {/* 02 — DESCRIPTION */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -242,9 +246,7 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* =========================
-          03 — LISTING TYPE
-      ========================= */}
+      {/* 03 — LISTING TYPE */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -259,7 +261,6 @@ export default function StepListingType({
         <div className={styles.typeGrid}>
           {types.map((item) => {
             const isSelected = form.listingType === item.id;
-
             const Icon = item.icon;
 
             return (
@@ -289,7 +290,6 @@ export default function StepListingType({
 
                 <div className={styles.cardContent}>
                   <strong>{item.title}</strong>
-
                   <span>{item.description}</span>
                 </div>
 
@@ -302,11 +302,35 @@ export default function StepListingType({
             );
           })}
         </div>
+
+        {/* Instagram info */}
+
+        {isInstagramSelected && (
+          <div className={styles.instagramInfo}>
+            <div className={styles.instagramInfoIcon}>
+              <Camera size={20} strokeWidth={2.2} />
+            </div>
+
+            <div className={styles.instagramInfoContent}>
+              <strong>Поделиться объявлением в Instagram</strong>
+
+              <p>
+                После публикации вы сможете поделиться карточкой объявления в
+                Instagram, чтобы привлечь дополнительную аудиторию и получить
+                больше просмотров.
+              </p>
+            </div>
+
+            <Check
+              size={20}
+              strokeWidth={2.5}
+              className={styles.instagramInfoCheck}
+            />
+          </div>
+        )}
       </section>
 
-      {/* =========================
-          04 — SUMMARY
-      ========================= */}
+      {/* 04 — SUMMARY */}
 
       <section className={styles.summary}>
         <div className={styles.summaryHeader}>
@@ -315,7 +339,6 @@ export default function StepListingType({
 
             <div>
               <h3>Проверьте объявление</h3>
-
               <p>Основная информация перед публикацией</p>
             </div>
           </div>
@@ -326,7 +349,6 @@ export default function StepListingType({
             }`}
           >
             <span />
-
             {isReady ? "Готово" : "Не заполнено"}
           </div>
         </div>
@@ -334,7 +356,6 @@ export default function StepListingType({
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItemWide}>
             <span>Название</span>
-
             <strong>{title.trim() || "Не указано"}</strong>
           </div>
 
@@ -348,45 +369,57 @@ export default function StepListingType({
 
           <div className={styles.summaryItem}>
             <span>Страна</span>
-
             <strong>{countryName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Регион</span>
-
             <strong>{regionName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Тип сделки</span>
-
             <strong>{dealName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Категория</span>
-
             <strong>{categoryName}</strong>
           </div>
 
           <div className={styles.summaryItemWide}>
             <span>Адрес</span>
-
             <strong>{form.address || "Не указан"}</strong>
           </div>
 
-          <div className={styles.summaryItemWide}>
-            <span>Размещение</span>
+          <div
+            className={`${styles.summaryItemWide} ${
+              isInstagramSelected ? styles.instagramSummary : ""
+            }`}
+          >
+            {isInstagramSelected && (
+              <div className={styles.instagramSummaryIcon}>
+                <Camera size={18} strokeWidth={2.2} />
+              </div>
+            )}
 
-            <strong>{selectedType?.title || "Не выбрано"}</strong>
+            <div>
+              <span>Размещение</span>
+              <strong>{selectedType?.title || "Не выбрано"}</strong>
+            </div>
+
+            {isInstagramSelected && (
+              <Check
+                size={19}
+                strokeWidth={2.5}
+                className={styles.instagramSummaryCheck}
+              />
+            )}
           </div>
         </div>
       </section>
 
-      {/* =========================
-          ACTIONS
-      ========================= */}
+      {/* ACTIONS */}
 
       <div className={styles.actions}>
         <button

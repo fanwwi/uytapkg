@@ -784,7 +784,7 @@
   .categoryArrow,
   .inputCard,
   .primary,
-  .secondary,
+  .secondary, 
   .residentialComplexCard {
     transition: none;
   }
