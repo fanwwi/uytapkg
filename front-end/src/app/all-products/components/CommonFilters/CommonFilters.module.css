@@ -1,0 +1,92 @@
+.wrapper {
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.range {
+  min-width: 0;
+
+  min-height: 54px;
+
+  padding: 9px 12px;
+
+  border: 1px solid #292632;
+  border-radius: 14px;
+
+  background: #111014;
+}
+
+.rangeTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 7px;
+
+  color: #77727f;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.rangeTitle svg {
+  width: 16px;
+  height: 16px;
+
+  color: #8b5cf6;
+}
+
+.inputs {
+  display: flex;
+  gap: 6px;
+}
+
+.inputs input {
+  width: 50%;
+  height: 27px;
+
+  min-width: 0;
+
+  padding: 0 8px;
+
+  border: 1px solid #292632;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #18171d;
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.inputs input:focus {
+  border-color: #8b5cf6;
+}
+
+.inputs input::placeholder {
+  color: #62606a;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
