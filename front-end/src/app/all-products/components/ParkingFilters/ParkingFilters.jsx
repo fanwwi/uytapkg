@@ -13,11 +13,11 @@ import {
   CreditCard,
 } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 
 import styles from "./ParkingFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const ceilingHeight = ["Любая", "До 2.5 м", "2.5–3 м", "3–4 м", "4+ м"];
 
@@ -80,7 +80,7 @@ const amenities = [
 export default function ParkingFilters({ filters, updateFilter }) {
   return (
     <div className={styles.grid}>
-      <CustomSelectBlack
+      <CustomSelect
         icon={Ruler}
         title="Высота потолка"
         options={ceilingHeight}
@@ -88,7 +88,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("ceilingHeight", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Car}
         title="Тип"
         options={parkingTypes}
@@ -96,7 +96,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("parkingType", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={BrickWall}
         title="Материал"
         options={materials}
@@ -104,7 +104,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("material", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={ShieldCheck}
         title="Охрана"
         options={yesNo}
@@ -112,7 +112,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("security", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={DoorOpen}
         title="Ворота"
         options={yesNo}
@@ -120,7 +120,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("gates", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Warehouse}
         title="Смотровая яма"
         options={yesNo}
@@ -128,7 +128,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("inspectionPit", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Warehouse}
         title="Подвал"
         options={yesNo}
@@ -136,7 +136,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("basement", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Zap}
         title="Электричество"
         options={electricity}
@@ -144,7 +144,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("electricity", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Truck}
         title="Заезд грузовых"
         options={truckAccess}
@@ -152,7 +152,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("truckAccess", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={DoorOpen}
         title="Тип ворот"
         options={gateTypes}
@@ -160,7 +160,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("gateType", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={FileText}
         title="Документы"
         options={documents}
@@ -168,7 +168,7 @@ export default function ParkingFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("documents", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={CreditCard}
         title="Оплата"
         options={offerTypes}

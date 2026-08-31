@@ -4,9 +4,7 @@
 
 .wrapper {
   position: relative;
-
   width: 100%;
-
   z-index: 30;
 }
 
@@ -26,18 +24,16 @@
 
   padding: 0 17px;
 
-  border: 1px solid #e5e1e9;
+  border: 1px solid #dfe4e1;
   border-radius: 17px;
 
-  background: linear-gradient(145deg, #ffffff 0%, #fcfbfd 100%);
+  background: #ffffff;
 
-  color: #18151d;
+  color: #1f2421;
 
   cursor: pointer;
 
-  box-shadow:
-    0 5px 18px rgba(35, 25, 45, 0.035),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: 0 5px 18px rgba(31, 36, 33, 0.04);
 
   transition:
     border-color 0.22s ease,
@@ -47,21 +43,21 @@
 }
 
 .select:hover {
-  border-color: rgba(124, 58, 237, 0.35);
+  border-color: rgba(72, 61, 246, 0.4);
 
   box-shadow:
-    0 8px 25px rgba(35, 25, 45, 0.055),
-    0 0 0 3px rgba(124, 58, 237, 0.035);
+    0 8px 25px rgba(31, 36, 33, 0.055),
+    0 0 0 3px rgba(72, 61, 246, 0.05);
 }
 
 .selectOpen {
-  border-color: rgba(124, 58, 237, 0.55);
+  border-color: #483df6;
 
-  background: linear-gradient(145deg, #ffffff 0%, #fbf9ff 100%);
+  background: #ffffff;
 
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.07),
-    0 12px 30px rgba(124, 58, 237, 0.09);
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 12px 30px rgba(31, 36, 33, 0.07);
 }
 
 .select:active {
@@ -91,9 +87,7 @@
 
   flex-shrink: 0;
 
-  color: #7c3aed;
-
-  filter: drop-shadow(0 3px 7px rgba(124, 58, 237, 0.15));
+  color: #483df6;
 }
 
 /* =========================
@@ -109,7 +103,7 @@
 }
 
 .left small {
-  color: #99939f;
+  color: #737c76;
 
   font-size: 10px;
   line-height: 1.2;
@@ -124,7 +118,7 @@
 
   margin-top: 4px;
 
-  color: #24202a;
+  color: #252a27;
 
   font-size: 14px;
   line-height: 1.2;
@@ -146,7 +140,7 @@
 
   flex-shrink: 0;
 
-  color: #9c96a3;
+  color: #8a928d;
 
   transition:
     transform 0.25s ease,
@@ -154,13 +148,13 @@
 }
 
 .select:hover .arrow {
-  color: #7c3aed;
+  color: #483df6;
 }
 
 .rotate {
   transform: rotate(180deg);
 
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -177,23 +171,19 @@
 
   padding: 7px;
 
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  border: 1px solid #dfe4e1;
   border-radius: 17px;
 
-  background: rgba(255, 255, 255, 0.98);
+  background: #ffffff;
 
   box-shadow:
-    0 25px 60px rgba(30, 20, 45, 0.14),
-    0 8px 25px rgba(124, 58, 237, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+    0 20px 50px rgba(31, 36, 33, 0.12),
+    0 5px 18px rgba(31, 36, 33, 0.05);
 
   scroll-behavior: smooth;
 
   scrollbar-width: thin;
-  scrollbar-color: #c4a8f5 transparent;
+  scrollbar-color: #b9bdf5 transparent;
 
   animation: dropdownAppear 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -213,13 +203,13 @@
 }
 
 .dropdown::-webkit-scrollbar-thumb {
-  background: #cbb5f4;
+  background: #b9bdf5;
 
   border-radius: 999px;
 }
 
 .dropdown::-webkit-scrollbar-thumb:hover {
-  background: #8b5cf6;
+  background: #483df6;
 }
 
 .dropdown::-webkit-scrollbar-button {
@@ -253,7 +243,7 @@
 
   background: transparent;
 
-  color: #413b49;
+  color: #454d48;
 
   font-family: inherit;
 
@@ -273,9 +263,9 @@
 }
 
 .option:hover {
-  background: #f5f0ff;
+  background: #f2f1ff;
 
-  color: #6d28d9;
+  color: #483df6;
 }
 
 .option:active {
@@ -287,13 +277,9 @@
 ========================= */
 
 .optionSelected {
-  background: linear-gradient(
-    135deg,
-    rgba(124, 58, 237, 0.11),
-    rgba(139, 92, 246, 0.06)
-  );
+  background: rgba(72, 61, 246, 0.08);
 
-  color: #6d28d9;
+  color: #483df6;
 
   font-weight: 750;
 }
@@ -308,7 +294,7 @@
 
   border-radius: 999px;
 
-  background: #7c3aed;
+  background: #483df6;
 }
 
 /* =========================
@@ -318,7 +304,7 @@
 .empty {
   padding: 20px 14px;
 
-  color: #99939f;
+  color: #8a928d;
 
   font-size: 13px;
 
@@ -332,13 +318,11 @@
 @keyframes dropdownAppear {
   from {
     opacity: 0;
-
     transform: translateY(-6px) scale(0.985);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0) scale(1);
   }
 }
@@ -349,7 +333,7 @@
 
 .select:focus-visible,
 .option:focus-visible {
-  outline: 3px solid rgba(124, 58, 237, 0.15);
+  outline: 3px solid rgba(72, 61, 246, 0.15);
 
   outline-offset: 2px;
 }

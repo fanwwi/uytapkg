@@ -15,8 +15,8 @@ import {
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./IssykKulProducts.module.css";
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 const categories = [
   { value: "Все", label: "Все" },
@@ -739,7 +739,7 @@ export default function IssykKulProducts() {
 
         <div className={styles.advancedFilters}>
           <div className={styles.advancedGrid}>
-            <CustomSelectBlack
+            <CustomSelect
               icon={MapPin}
               title="Город / Район"
               options={cityOptions}
@@ -747,7 +747,7 @@ export default function IssykKulProducts() {
               setValue={setCity}
             />
 
-            <CustomSelectBlack
+            <CustomSelect
               icon={DoorOpen}
               title="Количество комнат"
               options={roomOptions}
@@ -873,7 +873,7 @@ export default function IssykKulProducts() {
           {filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
-                <ListingCardBlack
+                <ListingCard
                   key={item.id}
                   item={item}
                   isFavorite={favIds.has(String(item.id))}

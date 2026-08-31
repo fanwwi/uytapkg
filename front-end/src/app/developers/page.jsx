@@ -8,6 +8,7 @@ import { getDevelopers } from "@/utils/api";
 
 import styles from "./Developers.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
+import Header from "@/components/pageComponents/header/Header";
 
 export default function Developers() {
   const router = useRouter();
@@ -83,15 +84,6 @@ export default function Developers() {
           <h2>Ошибка загрузки застройщиков</h2>
 
           <p>{error}</p>
-
-          <button
-            type="button"
-            className={styles.homeButton}
-            onClick={() => router.push("/")}
-          >
-            <ArrowLeft />
-            На главную
-          </button>
         </div>
       </main>
     );
@@ -99,7 +91,7 @@ export default function Developers() {
 
   return (
     <main className={styles.page}>
-      {/* HERO */}
+      <Header />
 
       <section className={styles.header}>
         <div className={styles.headerGlow} />
@@ -107,15 +99,6 @@ export default function Developers() {
         <div className={styles.headerContent}>
           <div className={styles.headerMain}>
             <div className={styles.btns}>
-              <button
-                type="button"
-                className={styles.homeButton}
-                onClick={() => router.push("/")}
-              >
-                <ArrowLeft />
-                На главную
-              </button>
-
               <span className={styles.eyebrow}>
                 <Building2 />
                 Застройщики Кыргызстана
@@ -194,70 +177,47 @@ export default function Developers() {
           <section className={styles.grid}>
             {filtered.map((item) => (
               <article key={item.id} className={styles.card}>
-                {/* TOP */}
-
-                <div className={styles.cardTop}>
+                <div className={styles.cardMain}>
                   <div className={styles.logoBox}>
-                    <div className={styles.logoInner}>
-                      {item.logo ? (
-                        <Image
-                          src={item.logo}
-                          width={85}
-                          height={85}
-                          alt={item.nameEn}
-                        />
-                      ) : (
-                        <Building2 />
-                      )}
-                    </div>
+                    {item.logo ? (
+                      <Image
+                        src={item.logo}
+                        fill
+                        sizes="64px"
+                        alt={item.nameEn}
+                        className={styles.logoImage}
+                      />
+                    ) : (
+                      <Building2 />
+                    )}
                   </div>
 
                   <div className={styles.cardTitle}>
-                    <span className={styles.companyType}>
-                      <i />
-                      Застройщик
-                    </span>
-
                     <h2>{item.nameEn}</h2>
 
-                    <p>{item.nameRu}</p>
+                    {item.nameRu !== item.nameEn && <p>{item.nameRu}</p>}
                   </div>
                 </div>
 
-                {/* PROJECTS INFO */}
-
-                <div className={styles.cardInfo}>
-                  <div className={styles.infoIcon}>
-                    <Home />
-                  </div>
-
-                  <div className={styles.infoText}>
-                    <span>Жилые проекты</span>
-
-                    <strong>
-                      {item.objects}{" "}
-                      {item.objects === 1
-                        ? "проект"
-                        : item.objects >= 2 && item.objects <= 4
-                          ? "проекта"
-                          : "проектов"}
-                    </strong>
-                  </div>
-                </div>
-
-                {/* BUTTON */}
-
-                <button 
-                  type="button" 
-                  className={styles.projects}
-                  onClick={() => router.push(`/public-profile/${item.id}`)}
-                >
-                  <span>Смотреть профиль</span>
-
-                  <span className={styles.arrow}>
-                    <ArrowRight />
+                <div className={styles.cardBottom}>
+                  <span>
+                    {item.objects}{" "}
+                    {item.objects === 1
+                      ? "жилой проект"
+                      : item.objects >= 2 && item.objects <= 4
+                        ? "жилых проекта"
+                        : "жилых проектов"}
                   </span>
-                </button>
+
+                  <button
+                    type="button"
+                    className={styles.projects}
+                    onClick={() => router.push(`/public-profile/${item.id}`)}
+                    aria-label={`Открыть профиль ${item.nameEn}`}
+                  >
+                    <ArrowRight />
+                  </button>
+                </div>
               </article>
             ))}
           </section>

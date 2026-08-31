@@ -40,7 +40,7 @@
     rgba(139, 92, 246, 0.04)
   );
 
-  color: #7c3aed;
+  color: #483df6;
 
   font-size: 12px;
   font-weight: 750;
@@ -52,7 +52,7 @@
 
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.9);
+  background: #483df6;
 
   box-shadow:
     0 0 0 4px rgba(139, 92, 246, 0.1),
@@ -120,7 +120,7 @@
     ),
     linear-gradient(145deg, rgba(139, 92, 246, 0.13), rgba(139, 92, 246, 0.035));
 
-  color: #8b5cf6;
+  color: #483df6;
 
   box-shadow:
     0 8px 25px rgba(139, 92, 246, 0.07),
@@ -248,7 +248,7 @@
 
   border-radius: 22px;
 
-  background: linear-gradient(145deg, #7c3aed, #8b5cf6 55%, #a78bfa);
+  background: linear-gradient(145deg, #483df6, #483df6 55%, #8ba5fa);
 
   color: #ffffff;
 
@@ -302,7 +302,7 @@
 }
 
 .uploadContent b {
-  color: #8b5cf6;
+  color: #483df6;
 
   font-weight: 750;
 }
@@ -355,7 +355,7 @@
 }
 
 .uploadButton:hover {
-  background: #8b5cf6;
+  background: #483df6;
 
   transform: translateY(-2px);
 
@@ -411,7 +411,7 @@
 
   background: rgba(139, 92, 246, 0.07);
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .counterLeft > div:last-child {
@@ -451,7 +451,7 @@
 
   border-radius: inherit;
 
-  background: linear-gradient(90deg, #7c3aed, #8b5cf6, #a78bfa);
+  background: linear-gradient(90deg, #483df6, #483df6, #a78bfa);
 
   box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
 
@@ -499,7 +499,7 @@
 
   background: rgba(139, 92, 246, 0.07);
 
-  color: #7c3aed;
+  color: #483df6;
 
   font-size: 12px;
   font-weight: 750;
@@ -631,7 +631,7 @@
 
   border-radius: 9px;
 
-  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #ffffff;
 
@@ -682,7 +682,7 @@
 }
 
 .makeMain:hover {
-  background: #8b5cf6;
+  background: #483df6;
 }
 
 /* =========================
@@ -748,7 +748,7 @@
 }
 
 .photoInfo .mainText {
-  color: #8b5cf6;
+  color: #483df6;
 
   font-size: 10px;
   font-weight: 800;
@@ -793,7 +793,7 @@
 
   background: linear-gradient(145deg, #ffffff, #faf8ff);
 
-  color: #8b5cf6;
+  color: #483df6;
 
   transform: translateY(-3px);
 
@@ -816,7 +816,7 @@
 
   background: #ffffff;
 
-  color: #8b5cf6;
+  color: #483df6;
 
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
@@ -871,7 +871,7 @@
 
   background: rgba(139, 92, 246, 0.07);
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .empty > div:last-child {
@@ -924,7 +924,7 @@
   border: 0;
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+  background: linear-gradient(135deg, #483df6 0%, #483df6 50%, #a78bfa 100%);
 
   color: #ffffff;
 

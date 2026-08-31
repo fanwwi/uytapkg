@@ -1,17 +1,17 @@
 .header {
   position: fixed;
-
   top: 0;
   left: 0;
-
   width: 100%;
   z-index: 1000;
 
+  color: #202027;
+
   transition:
-    background 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease,
-    backdrop-filter 0.35s ease;
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    backdrop-filter 0.3s ease;
 }
 
 /* =========================================================
@@ -19,18 +19,16 @@
 ========================================================= */
 
 .scrolled {
-  background: rgba(24, 24, 27, 0.94);
+  background: rgba(255, 255, 255, 0.94);
 
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-  color: #f2f2f5;
+  color: #202027;
 
-  border-bottom: 1px solid rgba(112, 72, 255, 0.16);
+  border-bottom: 1px solid rgba(32, 32, 39, 0.08);
 
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.28),
-    0 0 30px rgba(112, 72, 255, 0.04);
+  box-shadow: 0 8px 30px rgba(32, 32, 39, 0.06);
 }
 
 /* =========================================================
@@ -65,9 +63,7 @@
 .logo img {
   object-fit: contain;
 
-  transition:
-    filter 0.3s ease,
-    transform 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
 .logo:hover img {
@@ -93,7 +89,7 @@
   border: none;
   background: transparent;
 
-  color: #d7d7dc;
+  color: #f2f2f5;
 
   text-decoration: none;
 
@@ -105,30 +101,26 @@
   gap: 8px;
 
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
 
   white-space: nowrap;
 
   transition:
-    color 0.25s ease,
-    transform 0.25s ease,
-    text-shadow 0.25s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .scrolled .nav button,
 .scrolled .nav a {
-  color: #d7d7dc;
+  color: #38383f;
 }
 
 .nav button:hover,
 .nav a:hover,
 .scrolled .nav button:hover,
 .scrolled .nav a:hover {
-  color: #8b73ff;
-
+  color: #483df6;
   transform: translateY(-1px);
-
-  text-shadow: 0 0 14px rgba(112, 72, 255, 0.28);
 }
 
 .nav svg {
@@ -138,15 +130,13 @@
   stroke-width: 2;
 
   transition:
-    color 0.25s ease,
-    filter 0.25s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .nav button:hover svg,
 .nav a:hover svg {
-  color: #8b73ff;
-
-  filter: drop-shadow(0 0 6px rgba(112, 72, 255, 0.35));
+  color: #483df6;
 }
 
 /* =========================================================
@@ -162,7 +152,7 @@
 }
 
 .dropdown svg:last-child {
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
 }
 
 .dropdown:hover svg:last-child {
@@ -181,59 +171,51 @@
 
   min-width: 230px;
 
-  padding: 9px;
+  padding: 8px;
 
-  background: #242429;
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(32, 32, 39, 0.08);
 
-  border-radius: 18px;
+  border-radius: 14px;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.42),
-    0 0 30px rgba(112, 72, 255, 0.06);
+    0 18px 45px rgba(32, 32, 39, 0.1),
+    0 4px 12px rgba(32, 32, 39, 0.04);
 
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-
-  animation: dropdown 0.22s ease;
+  animation: dropdown 0.18s ease;
 }
 
 @keyframes dropdown {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(6px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 .menu a {
-  padding: 13px 15px;
+  padding: 12px 14px;
 
-  border-radius: 12px;
+  border-radius: 9px;
 
-  color: #d2d2d7;
+  color: #44444c;
 
-  font-size: 15px;
+  font-size: 14px;
 
   transition:
     background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+    color 0.2s ease;
 }
 
 .menu a:hover {
-  background: rgba(112, 72, 255, 0.12);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: #a58fff;
-
-  box-shadow:
-    inset 0 0 0 1px rgba(112, 72, 255, 0.12),
-    0 0 18px rgba(112, 72, 255, 0.06);
+  color: #483df6;
 
   transform: none;
 }
@@ -246,7 +228,7 @@
   display: flex;
   align-items: center;
 
-  gap: 12px;
+  gap: 10px;
 
   flex-shrink: 0;
 }
@@ -258,11 +240,11 @@
 .add,
 .free,
 .login {
-  height: 48px;
+  height: 46px;
 
-  padding: 0 18px;
+  padding: 0 17px;
 
-  border-radius: 15px;
+  border-radius: 11px;
 
   display: flex;
   align-items: center;
@@ -270,105 +252,97 @@
 
   gap: 8px;
 
+  font-family: inherit;
+
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 750;
 
   white-space: nowrap;
 
   cursor: pointer;
 
   transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    color 0.3s ease;
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
 }
 
 /* =========================================================
-   ADD BUTTON — GRAPHITE
+   ADD BUTTON
 ========================================================= */
 
 .add {
-  color: #e8e8ed;
+  color: #483df6;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(72, 61, 246, 0.2);
 
-  background: #25252a;
+  background: #ffffff;
 
-  box-shadow:
-    0 5px 18px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: none;
 }
 
 .add:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   color: #ffffff;
 
-  background: #7048ff;
+  background: #483df6;
 
-  border-color: #7048ff;
+  border-color: #483df6;
 
-  box-shadow:
-    0 12px 30px rgba(112, 72, 255, 0.3),
-    0 0 22px rgba(112, 72, 255, 0.12);
+  box-shadow: 0 8px 22px rgba(72, 61, 246, 0.18);
 }
 
 /* =========================================================
-   FREE BUTTON — VIOLET
+   FREE BUTTON
 ========================================================= */
 
 .free {
   color: #ffffff;
 
-  background: #7048ff;
+  background: #483df6;
 
-  border: 1px solid #7048ff;
+  border: 1px solid #483df6;
 
-  box-shadow: 0 8px 25px rgba(112, 72, 255, 0.25);
+  box-shadow: 0 7px 20px rgba(72, 61, 246, 0.18);
 }
 
 .free:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
-  background: #8060ff;
+  background: #392fe0;
 
-  border-color: #8060ff;
+  border-color: #392fe0;
 
-  box-shadow:
-    0 15px 40px rgba(112, 72, 255, 0.38),
-    0 0 28px rgba(112, 72, 255, 0.16);
+  box-shadow: 0 10px 26px rgba(72, 61, 246, 0.25);
 }
 
 /* =========================================================
-   LOGIN — GRAPHITE
+   LOGIN
 ========================================================= */
 
 .login {
-  color: #eeeef2;
+  color: #303039;
 
-  background: #25252a;
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(32, 32, 39, 0.1);
 
-  box-shadow:
-    0 5px 18px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: none;
 }
 
 .login:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   color: #ffffff;
 
-  background: #7048ff;
+  background: #483df6;
 
-  border-color: #7048ff;
+  border-color: #483df6;
 
-  box-shadow:
-    0 10px 30px rgba(112, 72, 255, 0.3),
-    0 0 20px rgba(112, 72, 255, 0.12);
+  box-shadow: 0 8px 22px rgba(72, 61, 246, 0.18);
 }
 
 /* =========================================================
@@ -386,17 +360,18 @@
 
 .favorite svg {
   transition:
-    color 0.25s ease,
-    transform 0.25s ease,
-    filter 0.25s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.favorite:hover {
+  color: #483df6;
 }
 
 .favorite:hover svg {
-  color: #8b73ff;
+  color: #483df6;
 
-  transform: scale(1.08);
-
-  filter: drop-shadow(0 0 7px rgba(112, 72, 255, 0.38));
+  transform: scale(1.06);
 }
 
 /* =========================================================
@@ -408,10 +383,22 @@
   height: 19px;
 
   stroke-width: 2;
+}
 
-  transition:
-    color 0.25s ease,
-    filter 0.25s ease;
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.nav button:focus-visible,
+.nav a:focus-visible,
+.favorite:focus-visible,
+.add:focus-visible,
+.free:focus-visible,
+.login:focus-visible {
+  outline: 2px solid rgba(72, 61, 246, 0.4);
+  outline-offset: 3px;
+
+  border-radius: 8px;
 }
 
 /* =========================================================
@@ -475,6 +462,6 @@
 
     padding: 0;
 
-    border-radius: 14px;
+    border-radius: 11px;
   }
 }

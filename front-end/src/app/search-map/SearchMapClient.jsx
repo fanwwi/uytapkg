@@ -17,7 +17,6 @@ import { getListings, getComplexes } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 import { mapComplexData } from "@/utils/mapComplexData";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 
 import {
   Search,
@@ -34,6 +33,7 @@ import {
 
 import "leaflet/dist/leaflet.css";
 import styles from "./Map.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 /* =========================================================
    FILTER OPTIONS
@@ -1156,7 +1156,7 @@ export default function SearchMapClient() {
           <div className={styles.filtersGrid}>
             {/* DEAL */}
 
-            <CustomSelectBlack
+            <CustomSelect
               icon={Tag}
               title="Тип сделки"
               options={DEAL_OPTIONS}
@@ -1166,7 +1166,7 @@ export default function SearchMapClient() {
 
             {/* PROPERTY */}
 
-            <CustomSelectBlack
+            <CustomSelect
               icon={Building2}
               title="Тип недвижимости"
               options={PROPERTY_OPTIONS}
@@ -1176,7 +1176,7 @@ export default function SearchMapClient() {
 
             {/* LOCATION */}
 
-            <CustomSelectBlack
+            <CustomSelect
               icon={MapPin}
               title="Локация"
               options={LOCATION_OPTIONS}

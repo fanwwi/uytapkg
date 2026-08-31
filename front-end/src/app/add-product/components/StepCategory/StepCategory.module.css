@@ -32,7 +32,7 @@
   border: 1px solid rgba(124, 58, 237, 0.14);
   border-radius: 999px;
   background: linear-gradient(135deg, #f5f0ff, #eee7ff);
-  color: #7c3aed;
+  color: #483df6;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -43,7 +43,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #7c3aed;
+  background: #483df6;
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.1),
     0 0 12px rgba(124, 58, 237, 0.35);
@@ -51,7 +51,7 @@
 
 .header h1 {
   margin: 0;
-  color: #7c3aed;
+  color: #483df6;
   font-size: 36px;
   line-height: 1.1;
   letter-spacing: -0.035em;
@@ -95,7 +95,7 @@
   width: 29px;
   height: 29px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
   color: #fff;
   font-size: 11px;
   font-weight: 800;
@@ -170,7 +170,7 @@
   justify-content: center;
   border-radius: 16px;
   background: linear-gradient(145deg, #f5efff, #ece3ff);
-  color: #7c3aed;
+  color: #483df6;
   box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.06);
   transition:
     transform 0.25s ease,
@@ -181,7 +181,7 @@
 
 .categoryCard:hover .categoryIcon {
   transform: scale(1.08) rotate(-3deg);
-  background: linear-gradient(145deg, #7c3aed, #9b6aff);
+  background: linear-gradient(145deg, #483df6, #483df6);
   color: #fff;
   box-shadow: 0 9px 22px rgba(124, 58, 237, 0.25);
 }
@@ -216,7 +216,7 @@
 
 .categoryCard:hover .categoryArrow {
   transform: translateX(4px);
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -268,7 +268,7 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 14px;
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
   color: #fff;
   box-shadow: 0 8px 18px rgba(124, 58, 237, 0.22);
 }
@@ -298,7 +298,7 @@
   margin-left: auto;
   border: 0;
   background: transparent;
-  color: #7c3aed;
+  color: #483df6;
   cursor: pointer;
   font-family: inherit;
   font-size: 12px;
@@ -356,7 +356,7 @@
   flex-shrink: 0;
   border-radius: 12px;
   background: linear-gradient(145deg, #f5efff, #ebe2ff);
-  color: #7c3aed;
+  color: #483df6;
 }
 
 .field {
@@ -548,7 +548,7 @@
 .primary {
   margin-left: auto;
   border: 0;
-  background: linear-gradient(135deg, #7c3aed, #9b5cf6);
+  background: linear-gradient(135deg, #483df6, #9b5cf6);
   color: #fff;
   box-shadow:
     0 10px 24px rgba(124, 58, 237, 0.2),
@@ -576,7 +576,7 @@
   transform: translateY(-2px);
   border-color: #cdb8ef;
   background: #faf7ff;
-  color: #7c3aed;
+  color: #483df6;
   box-shadow: 0 8px 20px rgba(124, 58, 237, 0.07);
 }
 
@@ -643,7 +643,7 @@
   transform: translateY(-2px);
   border-color: #cdb8ef;
   background: #faf7ff;
-  color: #7c3aed;
+  color: #483df6;
   box-shadow: 0 7px 18px rgba(124, 58, 237, 0.06);
 }
 
@@ -673,8 +673,8 @@
 }
 
 .amenitySelected .amenityCheckbox {
-  border-color: #7c3aed;
-  background: #7c3aed;
+  border-color: #483df6;
+  background: #483df6;
 }
 
 .amenitiesSelectedCount {
@@ -684,7 +684,7 @@
 }
 
 .amenitiesSelectedCount strong {
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -784,7 +784,7 @@
   .categoryArrow,
   .inputCard,
   .primary,
-  .secondary, 
+  .secondary,
   .residentialComplexCard {
     transition: none;
   }

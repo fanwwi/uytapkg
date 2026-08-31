@@ -13,11 +13,11 @@ import {
   CreditCard,
 } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 
 import styles from "./CommercialFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const floors = [
   "Любой",
@@ -115,7 +115,7 @@ const amenities = [
 export default function CommercialFilters({ filters, updateFilter }) {
   return (
     <div className={styles.grid}>
-      <CustomSelectBlack
+      <CustomSelect
         icon={Layers3}
         title="Этаж"
         options={floors}
@@ -123,7 +123,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("floor", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Paintbrush}
         title="Состояние"
         options={conditions}
@@ -131,7 +131,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("condition", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={BrickWall}
         title="Стены"
         options={walls}
@@ -139,7 +139,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("walls", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Flame}
         title="Отопление"
         options={heating}
@@ -147,7 +147,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Store}
         title="Тип помещения"
         options={premisesTypes}
@@ -155,7 +155,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("premisesType", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={ShieldCheck}
         title="Первая линия"
         options={yesNoAny}
@@ -163,7 +163,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("firstLine", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={DoorOpen}
         title="Отдельный вход"
         options={yesNoAny}
@@ -171,7 +171,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("separateEntrance", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={BriefcaseBusiness}
         title="Готовый бизнес"
         options={rentalBusiness}
@@ -179,7 +179,7 @@ export default function CommercialFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("rentalBusiness", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={CreditCard}
         title="Оплата"
         options={offerTypes}

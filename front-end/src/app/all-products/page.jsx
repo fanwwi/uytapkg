@@ -14,8 +14,6 @@ import {
 
 import { mapListingData } from "@/utils/mapListingData";
 
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
-
 import CommonFilters from "./components/CommonFilters/CommonFilters";
 
 import ApartmentFilters from "./components/ApartmentFilters/ApartmentFilters";
@@ -30,6 +28,7 @@ import SearchModeSlider from "./components/SearchModeSlider/SearchModeSlider";
 import SmartSearch from "./components/SmartSearch/SmartSearch";
 
 import styles from "./AllProducts.module.css";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 /* =========================================================
    CATEGORIES
@@ -1556,7 +1555,7 @@ export default function AllProducts() {
           (filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
-                <ListingCardBlack
+                <ListingCard
                   key={item.id}
                   item={item}
                   isFavorite={favIds.has(String(item.id))}

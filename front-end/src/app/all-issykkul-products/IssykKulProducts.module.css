@@ -10,21 +10,18 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  background:
-    radial-gradient(circle at 8% 5%, rgba(139, 92, 246, 0.16), transparent 42%),
-    radial-gradient(
-      circle at 92% 88%,
-      rgba(124, 58, 237, 0.13),
-      transparent 48%
-    ),
-    linear-gradient(135deg, #050507 0%, #08080b 38%, #0b0910 68%, #050507 100%);
+  background: #f7f8f7;
 
-  color: #f5f3ff;
+  color: #1f2421;
 }
 
 .page * {
   box-sizing: border-box;
 }
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
 
 .backgroundGlow {
   position: absolute;
@@ -38,9 +35,11 @@
 
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.09);
+  background: #483df6;
 
-  filter: blur(110px);
+  opacity: 0.035;
+
+  filter: blur(120px);
 
   pointer-events: none;
 }
@@ -59,7 +58,9 @@
 
   border-radius: 50%;
 
-  background: rgba(124, 58, 237, 0.07);
+  background: #483df6;
+
+  opacity: 0.025;
 
   filter: blur(120px);
 
@@ -113,13 +114,15 @@
 }
 
 .homeButton {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e1e5e2;
 
-  background: rgba(255, 255, 255, 0.045);
+  background: #ffffff;
 
-  color: rgba(255, 255, 255, 0.82);
+  color: #3f4541;
 
   cursor: pointer;
+
+  box-shadow: 0 3px 12px rgba(31, 36, 33, 0.04);
 
   transition:
     background 0.2s ease,
@@ -130,11 +133,13 @@
 }
 
 .homeButton:hover {
-  background: rgba(139, 92, 246, 0.1);
-  border-color: rgba(139, 92, 246, 0.4);
-  color: #fff;
+  background: #f7f8f7;
 
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  border-color: #483df6;
+
+  color: #483df6;
+
+  box-shadow: 0 7px 20px rgba(31, 36, 33, 0.07);
 
   transform: translateY(-1px);
 }
@@ -144,17 +149,19 @@
 }
 
 .regionBadge {
-  border: 1px solid rgba(139, 92, 246, 0.24);
+  border: 1px solid rgba(72, 61, 246, 0.3);
 
-  background: rgba(139, 92, 246, 0.08);
+  background: #ffffff;
 
-  color: #a78bfa;
+  color: #483df6;
+
+  box-shadow: 0 3px 12px rgba(31, 36, 33, 0.03);
 }
 
 .header h1 {
   margin: 0;
 
-  color: #fff;
+  color: #1f2421;
 
   font-size: clamp(36px, 5vw, 62px);
   line-height: 1.02;
@@ -165,9 +172,7 @@
 }
 
 .header h1 span {
-  color: #8b5cf6;
-
-  text-shadow: 0 0 35px rgba(139, 92, 246, 0.2);
+  color: #483df6;
 }
 
 .header p {
@@ -175,7 +180,7 @@
 
   margin: 19px 0 0;
 
-  color: rgba(255, 255, 255, 0.53);
+  color: #69716c;
 
   font-size: 15px;
   line-height: 1.7;
@@ -209,16 +214,16 @@
 
   padding: 0 17px;
 
-  border: 1px solid #25252d;
+  border: 1px solid #dfe4e1;
   border-radius: 15px;
 
-  background: #111116;
+  background: #ffffff;
 
-  color: #73737d;
+  color: #7a827d;
 
   box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    0 8px 28px rgba(31, 36, 33, 0.055),
+    inset 0 1px 0 #ffffff;
 
   transition:
     border-color 0.2s ease,
@@ -227,20 +232,14 @@
 }
 
 .search:focus-within {
-  border-color: rgba(139, 92, 246, 0.55);
+  border-color: #483df6;
 
-  background: #131219;
+  background: #ffffff;
 
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 3px rgba(139, 92, 246, 0.07);
+    0 10px 30px rgba(31, 36, 33, 0.07),
+    0 0 0 3px rgba(72, 61, 246, 0.08);
 }
-
-/*
- * IMPORTANT:
- * Убираем любую браузерную внутреннюю обводку
- * непосредственно вокруг текста input.
- */
 
 .search input,
 .search input:hover,
@@ -257,7 +256,7 @@
 
   background: transparent;
 
-  color: #f5f3ff;
+  color: #252a27;
 
   font-family: inherit;
   font-size: 14px;
@@ -269,12 +268,12 @@
 }
 
 .search input::selection {
-  background: rgba(139, 92, 246, 0.35);
-  color: #fff;
+  background: #483df6;
+  color: #ffffff;
 }
 
 .search input::placeholder {
-  color: #65656f;
+  color: #9aa19d;
 }
 
 .search input::-webkit-search-decoration,
@@ -303,9 +302,9 @@
   border: none;
   border-radius: 50%;
 
-  background: #25252d;
+  background: #eef0ef;
 
-  color: #a0a0aa;
+  color: #707873;
 
   cursor: pointer;
 
@@ -316,14 +315,15 @@
 }
 
 .clearSearch:hover {
-  background: #34343e;
-  color: #fff;
+  background: #483df6;
+
+  color: #ffffff;
 
   transform: rotate(90deg);
 }
 
 /* =========================================================
-   BUTTON
+   PRIMARY BUTTON
 ========================================================= */
 
 .filterButton {
@@ -338,12 +338,12 @@
 
   padding: 0 20px;
 
-  border: 1px solid rgba(139, 92, 246, 0.5);
+  border: 1px solid #483df6;
   border-radius: 15px;
 
-  background: #8b5cf6;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
   font-size: 14px;
@@ -351,7 +351,7 @@
 
   cursor: pointer;
 
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.15);
 
   transition:
     background 0.2s ease,
@@ -362,12 +362,13 @@
 }
 
 .filterButton:hover:not(:disabled) {
-  background: #7c3aed;
-  border-color: #7c3aed;
+  background: #483df6;
+
+  border-color: #483df6;
 
   box-shadow:
-    0 10px 30px rgba(139, 92, 246, 0.25),
-    0 0 25px rgba(139, 92, 246, 0.08);
+    0 10px 28px rgba(72, 61, 246, 0.22),
+    0 0 20px rgba(72, 61, 246, 0.08);
 
   transform: translateY(-1px);
 }
@@ -398,18 +399,14 @@
 
   padding: 26px;
 
-  border: 1px solid #24242c;
+  border: 1px solid #e0e5e2;
   border-radius: 20px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(20, 20, 26, 0.98),
-    rgba(13, 13, 17, 0.98)
-  );
+  background: #ffffff;
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    0 15px 45px rgba(31, 36, 33, 0.06),
+    inset 0 1px 0 #ffffff;
 }
 
 .filterBlock + .filterBlock {
@@ -422,7 +419,7 @@
 
   margin-bottom: 12px;
 
-  color: #dedbe8;
+  color: #555e58;
 
   font-size: 12px;
   font-weight: 750;
@@ -445,12 +442,12 @@
 
   padding: 0 15px;
 
-  border: 1px solid #2d2d36;
+  border: 1px solid #dfe4e1;
   border-radius: 10px;
 
-  background: #17171d;
+  background: #f8f9f8;
 
-  color: #aaa8b3;
+  color: #68716b;
 
   font-family: inherit;
   font-size: 13px;
@@ -467,28 +464,28 @@
 
 .categories button:hover,
 .dealTypes button:hover {
-  border-color: rgba(139, 92, 246, 0.55);
+  border-color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: #ffffff;
 
-  color: #c4b5fd;
+  color: #483df6;
 
   transform: translateY(-1px);
 }
 
 .categories .categoryActive,
 .dealTypes .dealActive {
-  border-color: #8b5cf6;
+  border-color: #483df6;
 
-  background: #8b5cf6;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
-  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.16);
+  box-shadow: 0 6px 18px rgba(72, 61, 246, 0.14);
 }
 
 /* =========================================================
-   ADVANCED
+   ADVANCED FILTERS
 ========================================================= */
 
 .advancedFilters {
@@ -496,7 +493,7 @@
 
   padding-top: 25px;
 
-  border-top: 1px solid #24242b;
+  border-top: 1px solid #e8ebe9;
 }
 
 .advancedGrid {
@@ -517,7 +514,7 @@
 }
 
 .rangeField label {
-  color: #8f8d99;
+  color: #737c76;
 
   font-size: 11px;
   font-weight: 750;
@@ -542,14 +539,14 @@
 
   padding: 0 12px;
 
-  border: 1px solid #2d2d36;
+  border: 1px solid #dfe4e1;
   border-radius: 10px;
 
   outline: none;
 
-  background: #17171d;
+  background: #f8f9f8;
 
-  color: #f4f1ff;
+  color: #252a27;
 
   font-family: inherit;
   font-size: 13px;
@@ -566,21 +563,21 @@
 }
 
 .rangeInputs input:hover {
-  border-color: #3a3945;
+  border-color: #c8cfca;
 }
 
 .rangeInputs input:focus {
-  border-color: #8b5cf6;
+  border-color: #483df6;
 
-  background: #1a1921;
+  background: #ffffff;
 
   outline: none;
 
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+  box-shadow: 0 0 0 3px rgba(72, 61, 246, 0.08);
 }
 
 .rangeInputs input::placeholder {
-  color: #666670;
+  color: #9aa19d;
 }
 
 .rangeInputs input::-webkit-inner-spin-button,
@@ -602,7 +599,7 @@
   margin-top: 26px;
   padding-top: 22px;
 
-  border-top: 1px solid #24242b;
+  border-top: 1px solid #e8ebe9;
 }
 
 .filtersActions .filterButton {
@@ -629,12 +626,12 @@
 
   padding: 0 12px;
 
-  border: 1px solid #2b2b34;
+  border: 1px solid #dfe4e1;
   border-radius: 9px;
 
-  background: rgba(255, 255, 255, 0.035);
+  background: #f8f9f8;
 
-  color: #9b99a5;
+  color: #737c76;
 
   font-family: inherit;
   font-size: 12px;
@@ -650,11 +647,11 @@
 }
 
 .resetButton:hover {
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: #ffffff;
 
-  color: #a78bfa;
+  color: #483df6;
 
   transform: translateY(-1px);
 }
@@ -684,13 +681,13 @@
 
   gap: 7px;
 
-  color: rgba(255, 255, 255, 0.48);
+  color: #727b75;
 
   font-size: 14px;
 }
 
 .result strong {
-  color: #fff;
+  color: #1f2421;
 
   font-size: 21px;
   font-weight: 800;
@@ -713,7 +710,7 @@
 
   min-height: 320px;
 
-  color: #777680;
+  color: #7a827d;
 
   font-size: 14px;
 }
@@ -722,8 +719,8 @@
   width: 36px;
   height: 36px;
 
-  border: 3px solid rgba(255, 255, 255, 0.08);
-  border-top-color: #8b5cf6;
+  border: 3px solid #e3e7e4;
+  border-top-color: #483df6;
 
   border-radius: 50%;
 
@@ -756,12 +753,12 @@
 
   padding: 16px;
 
-  border: 1px solid rgba(248, 113, 113, 0.18);
+  border: 1px solid rgba(72, 61, 246, 0.25);
   border-radius: 13px;
 
-  background: rgba(127, 29, 29, 0.12);
+  background: #ffffff;
 
-  color: #fca5a5;
+  color: #483df6;
 
   font-size: 14px;
 }
@@ -810,18 +807,20 @@
 
   margin: 0 auto 20px;
 
-  border: 1px solid rgba(139, 92, 246, 0.22);
+  border: 1px solid rgba(72, 61, 246, 0.25);
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: #ffffff;
 
-  color: #8b5cf6;
+  color: #483df6;
+
+  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.08);
 }
 
 .empty h2 {
   margin: 0 0 10px;
 
-  color: #fff;
+  color: #1f2421;
 
   font-size: 25px;
   font-weight: 800;
@@ -832,7 +831,7 @@
 
   margin: 0 auto 23px;
 
-  color: #6f6e79;
+  color: #737c76;
 
   font-size: 14px;
   line-height: 1.65;
@@ -843,12 +842,12 @@
 
   padding: 0 18px;
 
-  border: 1px solid #8b5cf6;
+  border: 1px solid #483df6;
   border-radius: 10px;
 
-  background: #8b5cf6;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
   font-size: 13px;
@@ -863,9 +862,9 @@
 }
 
 .empty button:hover {
-  background: #7c3aed;
+  background: #483df6;
 
-  box-shadow: 0 10px 28px rgba(139, 92, 246, 0.22);
+  box-shadow: 0 10px 28px rgba(72, 61, 246, 0.18);
 
   transform: translateY(-1px);
 }
@@ -881,14 +880,9 @@
 .dealTypes button:focus-visible,
 .resetButton:focus-visible,
 .empty button:focus-visible {
-  outline: 2px solid rgba(139, 92, 246, 0.65);
+  outline: 2px solid #483df6;
   outline-offset: 2px;
 }
-
-/*
- * У input НЕТ отдельной focus-обводки.
- * Фокус показывается только на контейнере .search.
- */
 
 .search input:focus-visible,
 .search input:focus {
@@ -921,27 +915,33 @@
 
   .header h1 {
     font-size: 38px;
+
     letter-spacing: -1.6px;
   }
 
   .header p {
     margin-top: 15px;
+
     font-size: 14px;
   }
 
   .toolbar {
     grid-template-columns: 1fr;
+
     gap: 9px;
   }
 
   .toolbar .filterButton {
     width: 100%;
+
     min-height: 50px;
+
     border-radius: 13px;
   }
 
   .filtersContainer {
     padding: 19px;
+
     border-radius: 16px;
   }
 
@@ -951,6 +951,7 @@
 
   .filtersActions {
     align-items: stretch;
+
     flex-direction: column;
 
     margin-top: 22px;
@@ -972,11 +973,13 @@
 
   .grid {
     grid-template-columns: 1fr;
+
     gap: 16px;
   }
 
   .resultsHeader {
     align-items: flex-start;
+
     flex-direction: column;
 
     margin-bottom: 16px;
@@ -990,29 +993,36 @@
 
   .topActions {
     gap: 7px;
+
     margin-bottom: 20px;
   }
 
   .homeButton,
   .regionBadge {
     min-height: 37px;
+
     padding: 0 11px;
+
     font-size: 11px;
   }
 
   .header h1 {
     font-size: 31px;
+
     letter-spacing: -1.2px;
   }
 
   .header p {
     font-size: 13px;
+
     line-height: 1.6;
   }
 
   .search {
     min-height: 52px;
+
     padding: 0 14px;
+
     border-radius: 13px;
   }
 
@@ -1022,12 +1032,15 @@
 
   .toolbar .filterButton {
     min-height: 48px;
+
     border-radius: 12px;
+
     font-size: 13px;
   }
 
   .filtersContainer {
     padding: 15px;
+
     border-radius: 15px;
   }
 
@@ -1043,12 +1056,15 @@
   .categories button,
   .dealTypes button {
     min-height: 36px;
+
     padding: 0 11px;
+
     font-size: 12px;
   }
 
   .advancedFilters {
     margin-top: 21px;
+
     padding-top: 21px;
   }
 
@@ -1058,24 +1074,30 @@
 
   .rangeInputs input {
     height: 42px;
+
     padding: 0 10px;
+
     font-size: 12px;
   }
 
   .filtersActions {
     gap: 8px;
+
     margin-top: 20px;
     padding-top: 18px;
   }
 
   .filtersActions .filterButton {
     min-height: 48px;
+
     border-radius: 12px;
+
     font-size: 13px;
   }
 
   .filtersActions .resetButton {
     min-height: 43px;
+
     font-size: 12px;
   }
 
@@ -1116,6 +1138,7 @@
   .empty button,
   .spinner {
     animation: none;
+
     transition: none;
   }
 }

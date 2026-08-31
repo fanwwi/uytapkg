@@ -36,7 +36,7 @@
 
   background: #f5f1ff;
 
-  color: #6d28d9;
+  color: #483df6;
 
   font-size: 12px;
   font-weight: 700;
@@ -48,7 +48,7 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
   box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
 }
@@ -109,7 +109,7 @@
 
   background: #f5f1ff;
 
-  color: #7c3aed;
+  color: #483df6;
 
   box-shadow:
     0 6px 18px rgba(124, 58, 237, 0.06),
@@ -190,7 +190,7 @@
   width: 3px;
   height: 100%;
 
-  background: linear-gradient(180deg, #7c3aed, #a855f7);
+  background: linear-gradient(180deg, #483df6, #5580f7);
 
   opacity: 0;
 
@@ -308,7 +308,7 @@
 }
 
 .choiceCard:hover .cardArrow {
-  color: #7c3aed;
+  color: #483df6;
 
   transform: translateX(2px);
 }
@@ -333,7 +333,7 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
   color: #fff;
 
@@ -361,7 +361,7 @@
 ========================= */
 
 .choiceCard.selected {
-  border-color: #7c3aed;
+  border-color: #483df6;
 
   background: #faf8ff;
 
@@ -387,11 +387,11 @@
 }
 
 .choiceCard.selected .choiceContent strong {
-  color: #6d28d9;
+  color: #483df6;
 }
 
 .choiceCard.selected .cardArrow {
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -485,7 +485,7 @@
 
   border-radius: 12px;
 
-  background: #7c3aed;
+  background: #483df6;
 
   color: #fff;
 
@@ -554,7 +554,7 @@
   border: 0;
   border-radius: 14px;
 
-  background: #7c3aed;
+  background: #483df6;
 
   color: #ffffff;
 
@@ -576,7 +576,7 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: #6d28d9;
+  background: #483df6;
 
   transform: translateY(-2px);
 

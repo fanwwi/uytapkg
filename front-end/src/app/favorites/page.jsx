@@ -202,7 +202,7 @@ export default function Favorites() {
             style={{
               display: "inline-block",
               border: "3px solid rgba(255,255,255,0.1)",
-              borderTop: "3px solid #ff3d99",
+              borderTop: "3px solid #483df6",
               borderRadius: "50%",
               width: "30px",
               height: "30px",

@@ -1,5 +1,5 @@
 .hero {
-  height: 120vh;
+  height: 130vh;
   min-height: 700px;
 
   position: relative;
@@ -9,56 +9,27 @@
 
   overflow: hidden;
 
-  background-image: url("/assets/bishkek-hero.jpg");
+  background-image: url("/assets/bishkek.png");
   background-size: cover;
   background-position: center;
 
-  padding-top: 100px;
 }
 
-/* =========================
+/* =========================================================
    OVERLAY
-========================= */
+========================================================= */
 
 .overlay {
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    90deg,
-    rgba(13, 12, 17, 0.9) 0%,
-    rgba(20, 18, 27, 0.78) 35%,
-    rgba(22, 20, 29, 0.48) 68%,
-    rgba(13, 12, 17, 0.28) 100%
-  );
-
+  background-color: #01042a89;
   z-index: 1;
 }
 
-.overlay::after {
-  content: "";
-
-  position: absolute;
-
-  width: 650px;
-  height: 650px;
-
-  left: -280px;
-  bottom: -320px;
-
-  background: radial-gradient(
-    circle,
-    rgba(139, 92, 246, 0.18) 0%,
-    rgba(139, 92, 246, 0.08) 35%,
-    transparent 70%
-  );
-
-  pointer-events: none;
-}
-
-/* =========================
+/* =========================================================
    CONTENT
-========================= */
+========================================================= */
 
 .content {
   position: relative;
@@ -68,74 +39,57 @@
 
   margin-left: 80px;
 
-  color: #ffffff;
+  color: #17202a;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-========================= */
+========================================================= */
 
 .location {
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  gap: 9px;
 
   width: max-content;
 
-  padding: 11px 20px;
+  padding: 9px 16px;
 
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 
-  border-radius: 40px;
+  border-radius: 999px;
 
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 650;
 
-  color: #e9e3ff;
+  color: #483df6;
 
-  background: rgba(28, 25, 38, 0.82);
+  background: rgba(255, 255, 255, 0.86);
 
-  border: 1px solid rgba(167, 139, 250, 0.28);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 8px 25px rgba(25, 30, 50, 0.08);
 
-  box-shadow:
-    0 10px 35px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  transition:
-    border-color 0.3s ease,
-    background 0.3s ease,
-    transform 0.3s ease;
-}
-
-.location:hover {
-  background: rgba(34, 29, 46, 0.9);
-
-  border-color: rgba(167, 139, 250, 0.5);
-
-  transform: translateY(-2px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .location svg {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
 
-  color: #a78bfa;
-
-  stroke-width: 2.5;
-
-  filter: drop-shadow(0 0 7px rgba(139, 92, 246, 0.4));
+  stroke-width: 2.3;
 }
 
-/* =========================
+/* =========================================================
    TITLE
-========================= */
+========================================================= */
 
 .title {
-  margin: 0 0 30px;
+  margin: 0 0 28px;
+
+  max-width: 850px;
 
   font-size: 64px;
   line-height: 1.08;
@@ -144,248 +98,187 @@
 
   letter-spacing: -2.5px;
 
-  color: #ffffff;
+  color: #f0efff;
 }
 
-/* =========================
+/* =========================================================
    HIGHLIGHT
-========================= */
+========================================================= */
 
 .highlight {
-  position: relative;
-
-  background: linear-gradient(
-    105deg,
-    #8b5cf6 0%,
-    #a78bfa 30%,
-    #c4b5fd 50%,
-    #a78bfa 70%,
-    #8b5cf6 100%
-  );
-
-  background-size: 180% auto;
-
-  -webkit-background-clip: text;
-  background-clip: text;
-
-  color: transparent;
-
-  animation: purpleShine 7s ease-in-out infinite;
-
-  filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.16));
+  color: #669afb;
 }
 
-@keyframes purpleShine {
-  0% {
-    background-position: 180% center;
-  }
-
-  50% {
-    background-position: 50% center;
-  }
-
-  100% {
-    background-position: -20% center;
-  }
-}
-
-/* =========================
+/* =========================================================
    DESCRIPTION
-========================= */
+========================================================= */
 
 .description {
-  max-width: 720px;
+  max-width: 680px;
 
-  margin: 0 0 40px;
+  margin: 0 0 38px;
 
-  font-size: 22px;
-  line-height: 1.5;
+  font-size: 21px;
+  line-height: 1.55;
 
-  color: #d6d1df;
+  font-weight: 500;
 
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  color: #e1e4e8;
 }
 
-/* =========================
+/* =========================================================
    MAIN BUTTONS
-========================= */
+========================================================= */
 
 .buttons {
   display: flex;
   align-items: center;
 
-  gap: 20px;
+  gap: 14px;
 }
 
-/* =========================
+/* =========================================================
    PRIMARY
-========================= */
+========================================================= */
 
 .primary {
-  height: 62px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 28px;
+
+  border: 1px solid #483df6;
+
+  border-radius: 14px;
+
+  font-family: inherit;
+
+  font-size: 16px;
+  font-weight: 750;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  background: #483df6;
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.22);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.primary svg {
+  width: 19px;
+  height: 19px;
+
+  stroke-width: 2.4;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+
+  background: #3d32df;
+
+  box-shadow: 0 14px 30px rgba(72, 61, 246, 0.28);
+}
+
+/* =========================================================
+   SECONDARY
+========================================================= */
+
+.secondary {
+  height: 58px;
+
+  padding: 0 27px;
+
+  border-radius: 14px;
+
+  font-family: inherit;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  color: #303943;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border: 1px solid #e1e4e8;
+
+  box-shadow: 0 8px 25px rgba(25, 30, 50, 0.07);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.secondary:hover {
+  transform: translateY(-2px);
+
+  color: #483df6;
+
+  border-color: rgba(72, 61, 246, 0.3);
+
+  box-shadow: 0 12px 30px rgba(25, 30, 50, 0.1);
+}
+
+/* =========================================================
+   MAP BUTTON
+========================================================= */
+
+.mapButton {
+  margin-top: 20px;
 
   display: flex;
   align-items: center;
 
   gap: 12px;
 
-  padding: 0 35px;
-
-  border: 1px solid rgba(167, 139, 250, 0.4);
-  border-radius: 18px;
-
-  font-family: inherit;
-
-  font-size: 18px;
-  font-weight: 800;
-
-  color: #ffffff;
-
-  cursor: pointer;
-
-  background: linear-gradient(135deg, #8b5cf6 0%, #9b6ef7 50%, #7c4fe8 100%);
-
-  box-shadow:
-    0 12px 35px rgba(98, 64, 180, 0.32),
-    0 0 22px rgba(139, 92, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
-}
-
-.primary svg {
-  width: 21px;
-  height: 21px;
-
-  stroke-width: 2.5;
-}
-
-.primary:hover {
-  transform: translateY(-4px);
-
-  background: linear-gradient(135deg, #9f7aea 0%, #8b5cf6 55%, #7044d4 100%);
-
-  box-shadow:
-    0 18px 45px rgba(98, 64, 180, 0.42),
-    0 0 30px rgba(139, 92, 246, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
-}
-
-/* =========================
-   SECONDARY
-========================= */
-
-.secondary {
-  height: 62px;
-
-  padding: 0 35px;
-
-  border-radius: 18px;
-
-  font-family: inherit;
-
-  font-size: 18px;
-  font-weight: 800;
-
-  cursor: pointer;
-
-  color: #e9e5f2;
-
-  background: rgba(25, 23, 31, 0.86);
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 30px rgba(0, 0, 0, 0.3);
-
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.secondary:hover {
-  transform: translateY(-4px);
-
-  color: #ffffff;
-
-  background: rgba(48, 39, 67, 0.95);
-
-  border-color: rgba(167, 139, 250, 0.55);
-
-  box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.35),
-    0 0 25px rgba(139, 92, 246, 0.13);
-}
-
-/* =========================
-   MAP BUTTON
-========================= */
-
-.mapButton {
-  margin-top: 22px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 13px;
-
   width: max-content;
 
-  padding: 11px 15px 11px 11px;
+  padding: 10px 14px 10px 10px;
 
-  border-radius: 15px;
+  border-radius: 14px;
 
-  border: 1px solid rgba(167, 139, 250, 0.22);
+  border: 1px solid #e4e6eb;
 
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.13),
-    rgba(18, 17, 23, 0.72)
-  );
+  background: rgba(255, 255, 255, 0.88);
 
-  color: #ffffff;
+  color: #202832;
 
   cursor: pointer;
 
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 25px rgba(25, 30, 50, 0.07);
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    0 0 25px rgba(139, 92, 246, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
   transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .mapButton:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.2),
-    rgba(30, 27, 39, 0.9)
-  );
+  border-color: rgba(72, 61, 246, 0.28);
 
-  border-color: rgba(167, 139, 250, 0.48);
-
-  box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.32),
-    0 0 25px rgba(139, 92, 246, 0.13);
+  box-shadow: 0 12px 30px rgba(25, 30, 50, 0.1);
 }
 
 .mapIcon {
@@ -398,22 +291,18 @@
 
   flex-shrink: 0;
 
-  border-radius: 11px;
+  border-radius: 10px;
 
-  color: #c4b5fd;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.14);
-
-  border: 1px solid rgba(167, 139, 250, 0.22);
-
-  box-shadow: 0 0 18px rgba(139, 92, 246, 0.08);
+  background: #f0efff;
 }
 
 .mapIcon svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
 
-  stroke-width: 2;
+  stroke-width: 2.2;
 }
 
 .mapText {
@@ -428,87 +317,76 @@
 
 .mapText strong {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 750;
 
-  color: #ffffff;
+  color: #202832;
 }
 
 .mapText small {
   font-size: 12px;
   font-weight: 500;
 
-  color: #aaa4b6;
+  color: #7a838d;
 }
 
 .mapArrow {
   width: 16px;
   height: 16px;
 
-  margin-left: 7px;
+  margin-left: 8px;
 
-  color: #8f899d;
+  color: #483df6;
 
-  transition:
-    transform 0.3s ease,
-    color 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
 .mapButton:hover .mapArrow {
-  color: #c4b5fd;
-
   transform: translate(2px, -2px);
 }
 
-/* =========================
+/* =========================================================
    SAFETY BUTTON
-========================= */
+========================================================= */
 
 .safetyButton {
-  margin-top: 12px;
+  margin-top: 10px;
 
   display: flex;
   align-items: center;
 
-  gap: 13px;
+  gap: 12px;
 
   width: max-content;
 
-  padding: 11px 15px 11px 11px;
+  padding: 10px 14px 10px 10px;
 
-  border-radius: 15px;
+  border-radius: 14px;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid #e4e6eb;
 
-  background: rgba(18, 17, 23, 0.72);
+  background: rgba(255, 255, 255, 0.82);
 
-  color: #ffffff;
+  color: #202832;
 
   cursor: pointer;
 
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 25px rgba(25, 30, 50, 0.06);
 
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
   transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .safetyButton:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
-  background: rgba(30, 27, 39, 0.9);
+  border-color: rgba(72, 61, 246, 0.25);
 
-  border-color: rgba(167, 139, 250, 0.42);
-
-  box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.32),
-    0 0 20px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 12px 30px rgba(25, 30, 50, 0.09);
 }
 
 .safetyIcon {
@@ -521,20 +399,18 @@
 
   flex-shrink: 0;
 
-  border-radius: 11px;
+  border-radius: 10px;
 
-  color: #c4b5fd;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.14);
-
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  background: #f0efff;
 }
 
 .safetyIcon svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
 
-  stroke-width: 2;
+  stroke-width: 2.2;
 }
 
 .safetyText {
@@ -551,9 +427,9 @@
 .safetyText strong {
   font-size: 14px;
 
-  font-weight: 800;
+  font-weight: 750;
 
-  color: #ffffff;
+  color: #202832;
 }
 
 .safetyText small {
@@ -561,31 +437,27 @@
 
   font-weight: 500;
 
-  color: #aaa4b6;
+  color: #7a838d;
 }
 
 .safetyArrow {
   width: 16px;
   height: 16px;
 
-  margin-left: 7px;
+  margin-left: 8px;
 
-  color: #8f899d;
+  color: #483df6;
 
-  transition:
-    transform 0.3s ease,
-    color 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
 .safetyButton:hover .safetyArrow {
-  color: #c4b5fd;
-
   transform: translate(2px, -2px);
 }
 
-/* =========================
+/* =========================================================
    TABLET
-========================= */
+========================================================= */
 
 @media (max-width: 1000px) {
   .content {
@@ -593,7 +465,7 @@
   }
 
   .title {
-    font-size: 44px;
+    font-size: 46px;
   }
 
   .description {
@@ -601,9 +473,9 @@
   }
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 600px) {
   .hero {
@@ -615,9 +487,9 @@
   .overlay {
     background: linear-gradient(
       180deg,
-      rgba(13, 12, 17, 0.5) 0%,
-      rgba(13, 12, 17, 0.75) 48%,
-      rgba(13, 12, 17, 0.94) 100%
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.86) 48%,
+      rgba(255, 255, 255, 0.97) 100%
     );
   }
 
@@ -632,11 +504,13 @@
   .location {
     font-size: 14px;
 
-    padding: 9px 15px;
+    padding: 8px 14px;
   }
 
   .title {
     font-size: 36px;
+
+    line-height: 1.08;
 
     letter-spacing: -1.5px;
   }
@@ -644,13 +518,13 @@
   .description {
     font-size: 17px;
 
-    color: #d6d1df;
+    color: #606a75;
   }
 
   .buttons {
     flex-direction: column;
 
-    gap: 12px;
+    gap: 10px;
 
     width: 100%;
   }
@@ -670,13 +544,13 @@
   .mapButton {
     margin-top: 18px;
 
-    padding: 11px 13px;
+    padding: 10px 12px;
   }
 
   .safetyButton {
     margin-top: 10px;
 
-    padding: 11px 13px;
+    padding: 10px 12px;
   }
 
   .mapText,

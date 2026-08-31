@@ -10,11 +10,11 @@ import {
   CreditCard,
 } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 
 import styles from "./HouseFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const houseTypes = [
   "Любой",
@@ -95,7 +95,7 @@ const amenities = [
 export default function HouseFilters({ filters, updateFilter }) {
   return (
     <div className={styles.grid}>
-      <CustomSelectBlack
+      <CustomSelect
         icon={Home}
         title="Тип дома"
         options={houseTypes}
@@ -103,7 +103,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("houseType", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Layers3}
         title="Этажность"
         options={floors}
@@ -111,7 +111,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("floors", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Flame}
         title="Отопление"
         options={heating}
@@ -119,7 +119,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Droplets}
         title="Канализация"
         options={sewerage}
@@ -127,7 +127,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("sewerage", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Droplets}
         title="Вода"
         options={water}
@@ -135,7 +135,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("water", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Zap}
         title="Электричество"
         options={electricity}
@@ -143,7 +143,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("electricity", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={FileText}
         title="Документы"
         options={documents}
@@ -151,7 +151,7 @@ export default function HouseFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("documents", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={CreditCard}
         title="Способ оплаты"
         options={offerTypes}

@@ -80,9 +80,9 @@
 }
 
 .active .progressCircle {
-  border-color: rgba(139, 92, 246, 0.7);
+  border-color: #483df6;
 
-  background: #8b5cf6;
+  background: #483df6;
 
   color: #ffffff;
 
@@ -98,7 +98,7 @@
 ========================= */
 
 .progressItem:hover {
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .progressItem:hover .progressCircle {
@@ -106,15 +106,15 @@
 
   background: rgba(139, 92, 246, 0.06);
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 /* Don't override active state on hover */
 
 .progressItem.active:hover .progressCircle {
-  border-color: rgba(139, 92, 246, 0.7);
+  border-color: #483df6;
 
-  background: #8b5cf6;
+  background: #483df6;
 
   color: #ffffff;
 }

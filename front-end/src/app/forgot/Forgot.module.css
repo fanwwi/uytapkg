@@ -1,3 +1,7 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   min-height: 100vh;
 
@@ -11,19 +15,15 @@
   padding: 20px;
 
   background:
-    radial-gradient(
-      circle at 15% 10%,
-      rgba(124, 58, 237, 0.16),
-      transparent 32%
-    ),
+    radial-gradient(circle at 15% 10%, rgba(72, 61, 246, 0.1), transparent 32%),
     radial-gradient(
       circle at 90% 85%,
-      rgba(139, 92, 246, 0.1),
+      rgba(72, 61, 246, 0.07),
       transparent 30%
     ),
-    #09090b;
+    #f8f9fc;
 
-  color: #f5f5f7;
+  color: #171923;
 }
 
 /* =========================================================
@@ -38,22 +38,16 @@
 
   padding: 45px 40px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #e7e9f0;
   border-radius: 28px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.018)
-    ),
-    #111114;
+  background: rgba(255, 255, 255, 0.96);
 
   backdrop-filter: blur(30px);
 
   box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.55),
-    0 0 70px rgba(124, 58, 237, 0.12);
+    0 30px 80px rgba(23, 25, 35, 0.08),
+    0 0 60px rgba(72, 61, 246, 0.06);
 }
 
 /* =========================================================
@@ -70,7 +64,7 @@
 
   margin-bottom: 28px;
 
-  color: #777780;
+  color: #737789;
 
   font-size: 14px;
   font-weight: 700;
@@ -88,7 +82,7 @@
 }
 
 .back:hover {
-  color: #a78bfa;
+  color: #483df6;
 
   transform: translateX(-4px);
 }
@@ -98,7 +92,7 @@
 ========================================================= */
 
 .brand {
-  color: #a78bfa;
+  color: #483df6;
 
   font-size: 16px;
 
@@ -116,7 +110,7 @@
 .title {
   margin: 14px 0 10px;
 
-  color: #ffffff;
+  color: #171923;
 
   font-size: 40px;
 
@@ -130,7 +124,7 @@
 .subtitle {
   margin: 0 0 30px;
 
-  color: #8f8f98;
+  color: #737789;
 
   font-size: 15px;
 
@@ -163,10 +157,10 @@
 
   padding: 0 18px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #dfe2eb;
   border-radius: 16px;
 
-  background: #151519;
+  background: #f8f9fc;
 
   transition:
     border-color 0.2s ease,
@@ -175,19 +169,19 @@
 }
 
 .inputBox:hover {
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: rgba(72, 61, 246, 0.35);
 
-  background: #17171c;
+  background: #ffffff;
 }
 
 .inputBox:focus-within {
-  border-color: rgba(139, 92, 246, 0.7);
+  border-color: rgba(72, 61, 246, 0.65);
 
-  background: #17171c;
+  background: #ffffff;
 
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.1),
-    0 10px 30px rgba(0, 0, 0, 0.25);
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 10px 30px rgba(72, 61, 246, 0.06);
 }
 
 .inputBox > svg {
@@ -196,7 +190,7 @@
 
   flex-shrink: 0;
 
-  color: #a78bfa;
+  color: #483df6;
 }
 
 .inputBox input {
@@ -210,14 +204,14 @@
 
   background: transparent;
 
-  color: #fff;
+  color: #171923;
 
   font-family: inherit;
   font-size: 16px;
 }
 
 .inputBox input::placeholder {
-  color: #5f5f68;
+  color: #9a9eac;
 }
 
 /* =========================================================
@@ -235,7 +229,7 @@
 
   background: transparent;
 
-  color: #777780;
+  color: #8b8f9e;
 
   cursor: pointer;
 
@@ -250,7 +244,7 @@
 }
 
 .eye:hover {
-  color: #a78bfa;
+  color: #483df6;
 
   transform: scale(1.08);
 }
@@ -262,12 +256,12 @@
 .submit {
   height: 62px;
 
-  border: 1px solid rgba(139, 92, 246, 0.5);
+  border: 1px solid #483df6;
   border-radius: 16px;
 
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
   font-size: 16px;
@@ -275,20 +269,20 @@
 
   cursor: pointer;
 
-  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.2);
 
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    filter 0.2s ease;
+    background 0.2s ease;
 }
 
 .submit:hover {
   transform: translateY(-2px);
 
-  filter: brightness(1.08);
+  background: #3d32e8;
 
-  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 18px 40px rgba(72, 61, 246, 0.27);
 }
 
 .submit:active {
@@ -312,7 +306,7 @@
 .error {
   margin: -5px 0;
 
-  color: #fb7185;
+  color: #e5485d;
 
   font-size: 13px;
 
@@ -328,7 +322,7 @@
 
   text-align: center;
 
-  color: #686871;
+  color: #7b7f8f;
 
   font-size: 14px;
 }
@@ -336,7 +330,7 @@
 .bottom a {
   margin-left: 7px;
 
-  color: #a78bfa;
+  color: #483df6;
 
   font-weight: 800;
 
@@ -346,7 +340,7 @@
 }
 
 .bottom a:hover {
-  color: #c4b5fd;
+  color: #3529d9;
 }
 
 /* =========================================================
@@ -366,21 +360,21 @@
 
   pointer-events: none;
 
-  opacity: 0.35;
+  opacity: 0.16;
 }
 
 .glowOne {
   top: -250px;
   left: -250px;
 
-  background: #7c3aed;
+  background: #483df6;
 }
 
 .glowTwo {
   right: -250px;
   bottom: -250px;
 
-  background: #8b5cf6;
+  background: #483df6;
 }
 
 /* =========================================================
