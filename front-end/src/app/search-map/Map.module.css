@@ -1,136 +1,259 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   --bg: #07070a;
-  --card: #101015;
-  --card-2: #14141a;
+  --bg-soft: #0b0b0f;
 
-  --text: #f5f5f7;
-  --muted: #858590;
+  --card: rgba(14, 14, 19, 0.94);
+  --card-light: rgba(18, 18, 24, 0.96);
+
+  --border: rgba(255, 255, 255, 0.09);
+  --border-soft: rgba(255, 255, 255, 0.06);
+
+  --text: #f7f5fa;
+  --muted: #8a8793;
+  --muted-dark: #686570;
 
   --purple: #8b5cf6;
   --purple-light: #a78bfa;
   --purple-dark: #6d28d9;
 
+  position: relative;
+
   width: 100%;
   min-height: 100vh;
 
-  padding: 30px;
+  padding: 24px;
+
+  overflow: hidden;
+  box-sizing: border-box;
 
   background:
     radial-gradient(
-      circle at 15% 0%,
-      rgba(124, 58, 237, 0.12),
-      transparent 32%
+      circle at 10% 0%,
+      rgba(139, 92, 246, 0.12),
+      transparent 30%
     ),
     radial-gradient(
       circle at 90% 100%,
-      rgba(139, 92, 246, 0.07),
+      rgba(124, 58, 237, 0.08),
       transparent 30%
     ),
-    #08080b;
+    linear-gradient(135deg, #050507 0%, #08080b 45%, #0b0910 72%, #050507 100%);
 
   color: var(--text);
+}
 
+.page * {
   box-sizing: border-box;
 }
 
 /* =========================================================
-   WRAPPER
+   MAP WRAPPER
 ========================================================= */
 
 .mapWrapper {
   position: relative;
 
   width: 100%;
-  max-width: 1600px;
+  max-width: 1680px;
 
-  height: calc(100vh - 60px);
+  height: calc(100vh - 48px);
   min-height: 650px;
 
   margin: 0 auto;
 
   overflow: hidden;
 
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 28px;
 
-  background: #0b0b0f;
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0a0a0d;
 
   box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.6),
-    0 0 80px rgba(139, 92, 246, 0.04);
+    0 40px 120px rgba(0, 0, 0, 0.55),
+    0 0 90px rgba(139, 92, 246, 0.04);
 
   isolation: isolate;
 }
 
 /* =========================================================
-   HEADER
+   TOP PANEL
 ========================================================= */
 
 .topPanel {
   position: absolute;
 
-  z-index: 1000;
+  z-index: 2000;
 
-  top: 22px;
-  left: 22px;
-  right: 22px;
+  top: 18px;
+  left: 18px;
+  right: 18px;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
-  gap: 25px;
+  gap: 10px;
 
   pointer-events: none;
 }
 
-.heading {
-  display: flex;
+/* =========================================================
+   HOME BUTTON
+========================================================= */
+
+.homeButton {
+  position: relative;
+
+  flex-shrink: 0;
+
+  height: 50px;
+
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 13px;
+  gap: 8px;
 
-  padding: 10px 15px 10px 10px;
+  padding: 0 16px;
 
-  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
 
-  background: rgba(10, 10, 14, 0.86);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.07),
+      rgba(255, 255, 255, 0.025)
+    ),
+    rgba(9, 9, 13, 0.9);
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d6d3dc;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  pointer-events: auto;
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
   box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 14px 35px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.homeButton svg {
+  width: 17px;
+  height: 17px;
+
+  color: var(--purple-light);
+}
+
+.homeButton:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.12),
+      rgba(255, 255, 255, 0.025)
+    ),
+    rgba(10, 10, 14, 0.94);
+
+  color: #fff;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 0 25px rgba(139, 92, 246, 0.08);
+}
+
+.homeButton:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.heading {
+  min-width: 240px;
+
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 6px 14px 6px 7px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    ),
+    rgba(9, 9, 13, 0.88);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .headingIcon {
-  width: 43px;
-  height: 43px;
+  width: 38px;
+  height: 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 11px;
 
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 246, 0.25),
-    rgba(124, 58, 237, 0.08)
+    rgba(139, 92, 246, 0.2),
+    rgba(109, 40, 217, 0.08)
   );
 
-  border: 1px solid rgba(167, 139, 250, 0.25);
-
   color: var(--purple-light);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(139, 92, 246, 0.04),
+    0 0 20px rgba(139, 92, 246, 0.06);
 }
 
 .headingIcon svg {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
+}
+
+.heading > div:last-child {
+  min-width: 0;
 }
 
 .heading span {
@@ -140,23 +263,27 @@
 
   color: var(--purple-light);
 
-  font-size: 10px;
+  font-size: 8px;
+  line-height: 1;
 
   font-weight: 900;
 
-  letter-spacing: 1.5px;
+  letter-spacing: 1.4px;
 }
 
 .heading h1 {
   margin: 0;
 
-  font-size: 18px;
+  color: #f4f1f8;
 
-  line-height: 1.2;
+  font-size: 14px;
+  line-height: 1.15;
 
-  font-weight: 900;
+  font-weight: 850;
 
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
+
+  white-space: nowrap;
 }
 
 /* =========================================================
@@ -164,96 +291,154 @@
 ========================================================= */
 
 .searchBox {
-  width: 380px;
-  height: 54px;
+  position: relative;
+
+  flex: 1;
+
+  min-width: 180px;
+  max-width: 470px;
+
+  height: 50px;
 
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 10px;
 
-  padding: 0 14px;
-
-  pointer-events: auto;
-
-  border-radius: 15px;
-
-  background: rgba(10, 10, 14, 0.88);
+  padding: 0 13px;
 
   border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    ),
+    rgba(9, 9, 13, 0.9);
+
+  pointer-events: auto;
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
   box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 14px 35px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .searchBox:focus-within {
-  border-color: rgba(139, 92, 246, 0.5);
+  border-color: rgba(139, 92, 246, 0.58);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.08),
+      rgba(255, 255, 255, 0.02)
+    ),
+    rgba(10, 10, 14, 0.94);
 
   box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.35),
-    0 0 0 3px rgba(139, 92, 246, 0.08);
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 3px rgba(139, 92, 246, 0.06),
+    0 0 30px rgba(139, 92, 246, 0.07);
 }
 
 .searchBox > svg {
-  width: 19px;
-  height: 19px;
-
   flex-shrink: 0;
 
-  color: #777783;
+  width: 18px;
+  height: 18px;
+
+  color: #77737f;
 }
 
 .searchBox input {
   width: 100%;
+  min-width: 0;
 
-  border: 0;
-  outline: 0;
+  height: 100%;
 
-  background: transparent;
+  padding: 0 !important;
+  margin: 0 !important;
 
-  color: #fff;
+  border: 0 !important;
+  outline: 0 !important;
+
+  background: transparent !important;
+
+  color: #f7f5fa !important;
 
   font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
 
-  font-size: 14px;
+  box-shadow: none !important;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.searchBox input:hover,
+.searchBox input:focus,
+.searchBox input:focus-visible,
+.searchBox input:active {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 .searchBox input::placeholder {
-  color: #62626d;
+  color: #66636d;
 }
 
-.clearSearch {
-  width: 28px;
-  height: 28px;
+/* =========================================================
+   CLEAR SEARCH
+========================================================= */
 
-  flex-shrink: 0;
+.clearSearch {
+  width: 29px;
+  height: 29px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 0;
-  border-radius: 8px;
+  flex-shrink: 0;
 
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0;
 
-  color: #888893;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #85818d;
 
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .clearSearch:hover {
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(139, 92, 246, 0.12);
+
+  border-color: rgba(139, 92, 246, 0.2);
 
   color: #fff;
+
+  transform: scale(1.04);
 }
 
 .clearSearch svg {
@@ -262,7 +447,292 @@
 }
 
 /* =========================================================
-   MAP
+   TOP ACTIONS
+========================================================= */
+
+.topActions {
+  display: contents;
+}
+
+/* =========================================================
+   FILTER TOGGLE
+========================================================= */
+
+.filtersToggle {
+  height: 50px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.018)
+    ),
+    rgba(9, 9, 13, 0.9);
+
+  color: #aaa6b0;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filtersToggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+.filtersToggle > b {
+  min-width: 19px;
+  height: 19px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--purple);
+
+  color: #fff;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+.filtersToggle:hover {
+  border-color: rgba(139, 92, 246, 0.42);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.1),
+      rgba(255, 255, 255, 0.018)
+    ),
+    rgba(10, 10, 14, 0.95);
+
+  color: #fff;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 0 25px rgba(139, 92, 246, 0.06);
+}
+
+.filtersToggleActive {
+  border-color: rgba(139, 92, 246, 0.52);
+
+  color: #c5b5ff;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.14),
+      rgba(139, 92, 246, 0.035)
+    ),
+    rgba(10, 10, 14, 0.95);
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================
+   FILTER PANEL
+========================================================= */
+
+.filtersPanel {
+  position: absolute;
+
+  z-index: 1900;
+
+  top: 78px;
+  right: 18px;
+
+  width: min(720px, calc(100% - 36px));
+
+  padding: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.055), transparent 45%),
+    rgba(11, 11, 15, 0.95);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    0 0 45px rgba(139, 92, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-8px) scale(0.985);
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
+}
+
+.filtersPanelOpen {
+  opacity: 1;
+
+  visibility: visible;
+
+  transform: translateY(0) scale(1);
+
+  pointer-events: auto;
+}
+
+/* =========================================================
+   FILTERS HEADER
+========================================================= */
+
+.filtersHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin-bottom: 14px;
+  padding: 2px 2px 13px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.filtersHeader > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.filtersHeader strong {
+  color: #f4f1f8;
+
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.filtersHeader span {
+  color: #716d79;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.clearFilters {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  height: 34px;
+
+  flex-shrink: 0;
+
+  padding: 0 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #8d8995;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.clearFilters svg {
+  width: 13px;
+  height: 13px;
+}
+
+.clearFilters:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #b9a7ff;
+}
+
+/* =========================================================
+   FILTER GRID
+========================================================= */
+
+.filtersGrid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 10px;
+
+  position: relative;
+  z-index: 20;
+}
+
+.filtersGrid > * {
+  min-width: 0;
+}
+
+/* =========================================================
+   MAP AREA
 ========================================================= */
 
 .mapArea {
@@ -276,6 +746,10 @@
   overflow: hidden;
 }
 
+/* =========================================================
+   MAP
+========================================================= */
+
 .map {
   position: absolute !important;
 
@@ -284,37 +758,33 @@
   width: 100% !important;
   height: 100% !important;
 
-  background: #d8d8d8;
-
   z-index: 1;
-}
 
-/*
-  КРИТИЧЕСКОЕ:
-  Leaflet иногда начинает рендерить тайлы
-  отдельными неправильными кусками, если img
-  получает сторонние глобальные стили.
-*/
+  background: #d5d5d5;
+}
 
 .map :global(.leaflet-container) {
   width: 100% !important;
   height: 100% !important;
 
   font-family: inherit;
+
+  background: #d5d5d5;
 }
 
+/*
+  ВАЖНО:
+  Не задаём width/height самим tile-элементам
+  сверх того, что ожидает Leaflet.
+*/
+
 .map :global(.leaflet-tile) {
-  width: 256px !important;
-  height: 256px !important;
+  display: block !important;
 
   max-width: none !important;
 
-  display: block !important;
-}
-
-.map :global(.leaflet-tile-container) {
-  width: 0 !important;
-  height: 0 !important;
+  width: 256px;
+  height: 256px;
 }
 
 .map :global(.leaflet-pane) {
@@ -330,44 +800,52 @@
 }
 
 .map :global(.leaflet-top) {
-  top: 90px;
+  top: 88px;
 }
 
 .map :global(.leaflet-right) {
-  right: 16px;
+  right: 15px;
 }
 
 .map :global(.leaflet-bottom) {
-  bottom: 12px;
+  bottom: 10px;
 }
 
 .map :global(.leaflet-control-zoom) {
   overflow: hidden;
 
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
 
   border-radius: 12px !important;
 
-  background: rgba(10, 10, 14, 0.88) !important;
+  background: rgba(8, 8, 11, 0.85) !important;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   backdrop-filter: blur(12px);
 }
 
 .map :global(.leaflet-control-zoom a) {
-  width: 38px !important;
-  height: 38px !important;
+  width: 37px !important;
+  height: 37px !important;
 
   display: flex !important;
   align-items: center;
   justify-content: center;
 
-  background: transparent !important;
-
   border: 0 !important;
 
-  color: #ddd !important;
+  background: transparent !important;
 
-  font-size: 20px !important;
+  color: #ddd8e6 !important;
+
+  font-size: 19px !important;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .map :global(.leaflet-control-zoom a:hover) {
@@ -381,11 +859,13 @@
 
   border-radius: 7px 0 0 0;
 
-  background: rgba(5, 5, 7, 0.7) !important;
+  background: rgba(5, 5, 7, 0.72) !important;
 
-  color: #888 !important;
+  color: #7c7883 !important;
 
-  backdrop-filter: blur(8px);
+  font-size: 9px;
+
+  backdrop-filter: blur(9px);
 }
 
 .map :global(.leaflet-control-attribution a) {
@@ -397,9 +877,9 @@
 ========================================================= */
 
 .customMarker {
-  background: transparent !important;
-
   border: 0 !important;
+
+  background: transparent !important;
 }
 
 .markerInner {
@@ -415,14 +895,14 @@
   left: 50%;
   top: 50%;
 
-  width: 42px;
-  height: 42px;
+  width: 43px;
+  height: 43px;
 
   transform: translate(-50%, -50%);
 
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.4);
+  background: rgba(139, 92, 246, 0.42);
 
   filter: blur(13px);
 
@@ -442,71 +922,131 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 50% 50% 50% 8px;
-
   transform: rotate(-45deg);
 
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
-
   border: 3px solid #fff;
+  border-radius: 50% 50% 50% 8px;
+
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
 
   color: #fff;
 
   box-shadow:
     0 7px 20px rgba(0, 0, 0, 0.35),
-    0 0 20px rgba(139, 92, 246, 0.5);
+    0 0 22px rgba(139, 92, 246, 0.45);
 }
 
 .markerPin svg {
-  transform: rotate(45deg);
+  width: 16px;
+  height: 16px;
 
-  width: 17px;
-  height: 17px;
+  transform: rotate(45deg);
 }
 
 /* =========================================================
-   DRAWING
+   MAP STATUS
+========================================================= */
+
+.mapStatus {
+  position: absolute;
+
+  z-index: 1200;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  min-width: 210px;
+
+  padding: 13px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+
+  background: rgba(8, 8, 11, 0.9);
+
+  color: #aaa6b1;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(139, 92, 246, 0.04);
+}
+
+.loadingSpinner {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
+  border: 2px solid rgba(139, 92, 246, 0.18);
+  border-top-color: var(--purple);
+
+  border-radius: 50%;
+
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   DRAWING INDICATOR
 ========================================================= */
 
 .drawingIndicator {
   position: absolute;
 
-  z-index: 1000;
+  z-index: 1300;
 
+  top: 91px;
   left: 50%;
-  top: 90px;
 
   transform: translateX(-50%);
 
   display: flex;
   align-items: center;
 
-  gap: 9px;
+  gap: 8px;
 
-  padding: 11px 16px;
+  padding: 10px 14px;
 
-  border-radius: 12px;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  border-radius: 11px;
 
   background: rgba(8, 8, 11, 0.9);
 
-  border: 1px solid rgba(167, 139, 250, 0.3);
+  color: #d7cef0;
 
-  color: #d9d1ef;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  pointer-events: none;
+  font-size: 11px;
+  font-weight: 800;
 
   backdrop-filter: blur(15px);
 
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(139, 92, 246, 0.05);
+
+  pointer-events: none;
 }
 
 .drawingIndicator svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
 
   color: var(--purple-light);
 }
@@ -518,38 +1058,41 @@
 .drawHint {
   position: absolute;
 
-  z-index: 900;
+  z-index: 1100;
 
-  left: 24px;
-  bottom: 24px;
+  left: 20px;
+  bottom: 20px;
 
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 10px;
 
-  padding: 11px 15px 11px 11px;
+  padding: 9px 13px 9px 9px;
 
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
 
-  background: rgba(8, 8, 11, 0.88);
-
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(8, 8, 11, 0.87);
 
   backdrop-filter: blur(16px);
 
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
 
   pointer-events: none;
 }
 
 .drawHintIcon {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
 
   border-radius: 10px;
 
@@ -559,8 +1102,8 @@
 }
 
 .drawHintIcon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .drawHint div:last-child {
@@ -571,64 +1114,65 @@
 }
 
 .drawHint strong {
-  color: #eee;
+  color: #e9e6ee;
 
-  font-size: 13px;
+  font-size: 11px;
+
+  font-weight: 800;
 }
 
 .drawHint span {
-  color: #6f6f7a;
+  color: #706c77;
 
-  font-size: 11px;
+  font-size: 9px;
 }
 
 /* =========================================================
-   SELECTION
+   SELECTION PANEL
 ========================================================= */
 
 .selectionPanel {
   position: absolute;
 
-  z-index: 1000;
+  z-index: 1400;
 
   left: 50%;
-  bottom: 24px;
+  bottom: 20px;
 
   transform: translateX(-50%);
 
-  min-width: 300px;
+  min-width: 295px;
 
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 10px;
 
-  padding: 10px;
+  padding: 9px;
 
-  border-radius: 15px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 14px;
 
   background: rgba(8, 8, 11, 0.92);
-
-  border: 1px solid rgba(139, 92, 246, 0.3);
 
   backdrop-filter: blur(18px);
 
   box-shadow:
-    0 20px 45px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(139, 92, 246, 0.06);
+    0 22px 55px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.05);
 }
 
 .selectionIcon {
-  width: 40px;
-  height: 40px;
-
-  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 11px;
+  flex-shrink: 0;
+
+  border-radius: 10px;
 
   background: rgba(139, 92, 246, 0.13);
 
@@ -636,31 +1180,32 @@
 }
 
 .selectionIcon svg {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
 }
 
 .selectionText {
   min-width: 0;
 
+  flex: 1;
+
   display: flex;
   flex-direction: column;
 
   gap: 3px;
-
-  flex: 1;
 }
 
 .selectionText strong {
-  color: #eee;
+  color: #ebe7f0;
 
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 850;
 }
 
 .selectionText span {
-  color: #777782;
+  color: #6f6b76;
 
-  font-size: 11px;
+  font-size: 9px;
 }
 
 .selectionText b {
@@ -668,43 +1213,48 @@
 }
 
 .resetButton {
-  height: 38px;
+  height: 36px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 6px;
+  gap: 5px;
 
-  padding: 0 11px;
+  flex-shrink: 0;
 
-  border-radius: 9px;
+  padding: 0 10px;
 
   border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
 
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.035);
 
-  color: #9999a3;
+  color: #918c97;
 
   font-family: inherit;
-
-  font-size: 11px;
-
+  font-size: 9px;
   font-weight: 800;
 
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .resetButton:hover {
-  background: rgba(139, 92, 246, 0.12);
+  border-color: rgba(139, 92, 246, 0.28);
 
-  border-color: rgba(139, 92, 246, 0.25);
+  background: rgba(139, 92, 246, 0.1);
 
   color: #fff;
 }
 
 .resetButton svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
 }
 
 /* =========================================================
@@ -714,56 +1264,50 @@
 .objectPreview {
   position: absolute;
 
-  z-index: 1100;
+  z-index: 1600;
 
   top: 50%;
-  right: 24px;
+  right: 20px;
 
-  width: 300px;
+  width: 310px;
 
   overflow: hidden;
 
   transform: translateY(-50%);
 
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 19px;
 
-  background: rgba(10, 10, 14, 0.96);
-
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(9, 9, 13, 0.96);
 
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.5),
-    0 0 35px rgba(139, 92, 246, 0.07);
+    0 35px 85px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(139, 92, 246, 0.05);
 
-  animation: previewIn 0.2s ease;
-
-  /*
-    Карточка должна принимать мышь.
-
-    Поэтому теперь пользователь спокойно
-    может перевести курсор с маркера
-    на кнопку "Подробнее".
-  */
   pointer-events: auto;
+
+  animation: previewIn 0.22s ease;
 }
 
 @keyframes previewIn {
   from {
     opacity: 0;
-    transform: translateY(-50%) translateX(10px);
+
+    transform: translateY(-50%) translateX(12px) scale(0.98);
   }
 
   to {
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
+
+    transform: translateY(-50%) translateX(0) scale(1);
   }
 }
 
 /* =========================================================
-   CLOSE BUTTON
+   PREVIEW CLOSE
 ========================================================= */
 
 .previewClose {
@@ -774,20 +1318,21 @@
   top: 10px;
   right: 10px;
 
-  width: 32px;
-  height: 32px;
+  width: 31px;
+  height: 31px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0;
 
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9px;
 
-  background: rgba(8, 8, 11, 0.72);
+  background: rgba(7, 7, 10, 0.72);
 
-  color: #fff;
+  color: #efedf3;
 
   cursor: pointer;
 
@@ -800,28 +1345,36 @@
 }
 
 .previewClose:hover {
-  background: rgba(139, 92, 246, 0.3);
-
   border-color: rgba(167, 139, 250, 0.35);
 
-  transform: scale(1.05);
+  background: rgba(139, 92, 246, 0.25);
+
+  transform: scale(1.04);
 }
 
 .previewClose svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
 }
 
 /* =========================================================
-   IMAGE
+   PREVIEW IMAGE
 ========================================================= */
 
 .previewImage {
   position: relative;
 
-  height: 155px;
+  height: 170px;
 
   overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(139, 92, 246, 0.12),
+      transparent 55%
+    ),
+    #101015;
 }
 
 .previewImage::after {
@@ -831,7 +1384,11 @@
 
   inset: 0;
 
-  background: linear-gradient(to top, rgba(8, 8, 11, 0.78), transparent 65%);
+  background: linear-gradient(
+    to top,
+    rgba(7, 7, 10, 0.9),
+    rgba(7, 7, 10, 0.06) 68%
+  );
 }
 
 .previewImage img {
@@ -842,48 +1399,62 @@
 
   object-fit: cover;
 
-  transition: transform 0.4s ease;
+  transition: transform 0.35s ease;
 }
 
 .objectPreview:hover .previewImage img {
-  transform: scale(1.03);
+  transform: scale(1.035);
+}
+
+.previewNoImage {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(167, 139, 250, 0.45);
+}
+
+.previewNoImage svg {
+  width: 36px;
+  height: 36px;
 }
 
 /* =========================================================
-   TYPE
+   PREVIEW TYPE
 ========================================================= */
 
 .previewType {
   position: absolute;
 
-  z-index: 2;
+  z-index: 4;
 
-  top: 11px;
   left: 11px;
+  top: 11px;
 
-  padding: 6px 9px;
+  padding: 6px 8px;
 
+  border: 1px solid rgba(167, 139, 250, 0.22);
   border-radius: 8px;
 
-  background: rgba(8, 8, 11, 0.8);
+  background: rgba(7, 7, 10, 0.78);
 
-  border: 1px solid rgba(167, 139, 250, 0.25);
+  color: #c5b4ff;
 
-  color: #c4b5fd;
-
-  font-size: 10px;
+  font-size: 8px;
 
   font-weight: 900;
 
   text-transform: uppercase;
-
-  letter-spacing: 0.7px;
+  letter-spacing: 0.75px;
 
   backdrop-filter: blur(8px);
 }
 
 /* =========================================================
-   CONTENT
+   PREVIEW CONTENT
 ========================================================= */
 
 .previewContent {
@@ -893,15 +1464,16 @@
 .previewContent h3 {
   margin: 0;
 
-  padding-right: 30px;
+  padding-right: 25px;
 
-  color: #eee;
+  color: #eeeaf4;
 
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 1.3;
 
   font-weight: 900;
 
-  line-height: 1.25;
+  letter-spacing: -0.2px;
 }
 
 .previewContent p {
@@ -912,16 +1484,15 @@
 
   margin: 8px 0 0;
 
-  color: #73737e;
+  color: #77737e;
 
-  font-size: 12px;
-
-  line-height: 1.4;
+  font-size: 10px;
+  line-height: 1.45;
 }
 
 .previewContent p svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
 
   flex-shrink: 0;
 
@@ -933,9 +1504,10 @@
 
   margin-top: 12px;
 
-  color: var(--purple-light);
+  color: #c0aaff;
 
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 1.2;
 
   font-weight: 900;
 }
@@ -948,29 +1520,28 @@
   width: 100%;
   height: 40px;
 
-  margin-top: 13px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  gap: 7px;
+  gap: 6px;
 
-  border-radius: 10px;
+  margin-top: 13px;
 
   border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: 10px;
 
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 246, 0.16),
-    rgba(109, 40, 217, 0.08)
+    rgba(139, 92, 246, 0.14),
+    rgba(109, 40, 217, 0.06)
   );
 
-  color: #c4b5fd;
+  color: #c6b6ff;
 
   font-family: inherit;
 
-  font-size: 12px;
+  font-size: 10px;
 
   font-weight: 850;
 
@@ -979,22 +1550,25 @@
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
+    color 0.2s ease,
     transform 0.2s ease,
-    color 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .detailsButton:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+
   background: linear-gradient(
     135deg,
-    rgba(139, 92, 246, 0.3),
-    rgba(109, 40, 217, 0.16)
+    rgba(139, 92, 246, 0.28),
+    rgba(109, 40, 217, 0.13)
   );
-
-  border-color: rgba(139, 92, 246, 0.45);
 
   color: #fff;
 
   transform: translateY(-1px);
+
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
 }
 
 .detailsButton:active {
@@ -1002,8 +1576,8 @@
 }
 
 .detailsButton svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
 
   transition: transform 0.2s ease;
 }
@@ -1013,35 +1587,36 @@
 }
 
 /* =========================================================
-   RESULT
+   RESULT COUNT
 ========================================================= */
 
 .resultCount {
   position: absolute;
 
-  z-index: 900;
+  z-index: 1100;
 
-  top: 92px;
-  left: 24px;
+  top: 88px;
+  left: 20px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
 
   gap: 7px;
 
-  padding: 8px 11px;
+  min-height: 28px;
 
-  border-radius: 9px;
-
-  background: rgba(8, 8, 11, 0.78);
+  padding: 0 10px;
 
   border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
 
-  color: #aaaab4;
+  background: rgba(7, 7, 10, 0.76);
 
-  font-size: 11px;
+  color: #aaa6b1;
 
-  font-weight: 700;
+  font-size: 9px;
+
+  font-weight: 750;
 
   backdrop-filter: blur(12px);
 
@@ -1054,22 +1629,52 @@
 
   border-radius: 50%;
 
-  background: #8b5cf6;
+  background: var(--purple);
 
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+  box-shadow:
+    0 0 8px rgba(139, 92, 246, 0.65),
+    0 0 15px rgba(139, 92, 246, 0.25);
+}
+
+/* =========================================================
+   LEAFLET MARKER HOVER
+========================================================= */
+
+.map :global(.leaflet-marker-icon) {
+  transition: filter 0.2s ease;
+}
+
+.map :global(.leaflet-marker-icon:hover) {
+  filter: brightness(1.08);
+}
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.homeButton:focus-visible,
+.filtersToggle:focus-visible,
+.clearSearch:focus-visible,
+.clearFilters:focus-visible,
+.resetButton:focus-visible,
+.previewClose:focus-visible,
+.detailsButton:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.65);
+
+  outline-offset: 2px;
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .page {
-    padding: 15px;
+    padding: 16px;
   }
 
   .mapWrapper {
-    height: calc(100vh - 30px);
+    height: calc(100vh - 32px);
 
     min-height: 600px;
 
@@ -1077,37 +1682,177 @@
   }
 
   .topPanel {
-    flex-direction: column;
-
-    align-items: stretch;
-
-    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .heading {
-    width: max-content;
+    order: 1;
+  }
+
+  .homeButton {
+    order: 0;
   }
 
   .searchBox {
-    width: 100%;
+    order: 2;
+
+    max-width: none;
+
+    flex: 1 1 100%;
+  }
+
+  .filtersToggle {
+    order: 1;
+
+    margin-left: auto;
+  }
+
+  .filtersPanel {
+    top: 136px;
+
+    right: 18px;
+
+    width: min(700px, calc(100% - 36px));
   }
 
   .map :global(.leaflet-top) {
-    top: 155px;
+    top: 145px;
   }
 
   .resultCount {
-    top: 215px;
+    top: 145px;
+  }
+}
+
+/* =========================================================
+   TABLET SMALL
+========================================================= */
+
+@media (max-width: 760px) {
+  .page {
+    padding: 10px;
   }
 
-  .objectPreview {
-    right: 15px;
-    left: 15px;
+  .mapWrapper {
+    height: calc(100vh - 20px);
+
+    min-height: 580px;
+
+    border-radius: 18px;
+  }
+
+  .topPanel {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    gap: 8px;
+  }
+
+  .homeButton {
+    height: 46px;
+
+    padding: 0 13px;
+
+    border-radius: 12px;
+  }
+
+  .homeButton span {
+    display: none;
+  }
+
+  .heading {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 46px;
+
+    border-radius: 12px;
+  }
+
+  .headingIcon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+  }
+
+  .heading h1 {
+    font-size: 13px;
+  }
+
+  .heading span {
+    font-size: 7px;
+  }
+
+  .filtersToggle {
+    height: 46px;
+
+    padding: 0 12px;
+
+    border-radius: 12px;
+  }
+
+  .filtersToggle span {
+    display: none;
+  }
+
+  .searchBox {
+    flex: 1 1 100%;
+
+    height: 46px;
+
+    border-radius: 12px;
+  }
+
+  .filtersPanel {
+    top: 114px;
+    left: 12px;
+    right: 12px;
 
     width: auto;
 
+    max-height: calc(100vh - 140px);
+
+    overflow-y: auto;
+  }
+
+  .filtersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 125px;
+  }
+
+  .resultCount {
+    top: 125px;
+    left: 12px;
+  }
+
+  .drawHint {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .selectionPanel {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+
+    min-width: 0;
+
+    transform: none;
+  }
+
+  .objectPreview {
     top: auto;
-    bottom: 15px;
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+
+    width: auto;
 
     transform: none;
   }
@@ -1115,7 +1860,7 @@
   @keyframes previewIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(12px);
     }
 
     to {
@@ -1124,15 +1869,8 @@
     }
   }
 
-  .selectionPanel {
-    bottom: 15px;
-
-    max-width: calc(100% - 30px);
-  }
-
-  .drawHint {
-    bottom: 15px;
-    left: 15px;
+  .previewImage {
+    height: 145px;
   }
 }
 
@@ -1147,96 +1885,301 @@
 
   .mapWrapper {
     width: 100%;
-
     height: 100vh;
     min-height: 100vh;
 
-    border-radius: 0;
-
     border: 0;
+    border-radius: 0;
   }
 
   .topPanel {
-    top: 12px;
-    left: 12px;
-    right: 12px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .homeButton {
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border-radius: 12px;
+  }
+
+  .homeButton svg {
+    width: 17px;
+    height: 17px;
   }
 
   .heading {
-    padding: 8px 12px 8px 8px;
+    height: 44px;
+
+    padding-right: 9px;
   }
 
   .headingIcon {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
   }
 
   .heading h1 {
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .heading span {
+    font-size: 6px;
+
+    letter-spacing: 1px;
+  }
+
+  .filtersToggle {
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border-radius: 12px;
+  }
+
+  .filtersToggle svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .filtersToggle > b {
+    position: absolute;
+
+    top: -4px;
+    right: -4px;
+
+    width: 17px;
+    height: 17px;
+
+    min-width: 17px;
+
     font-size: 8px;
   }
 
   .searchBox {
-    height: 48px;
+    height: 44px;
+
+    border-radius: 12px;
+
+    padding: 0 12px;
+  }
+
+  .searchBox input {
+    font-size: 12px;
+  }
+
+  .clearSearch {
+    width: 27px;
+    height: 27px;
+  }
+
+  .filtersPanel {
+    top: 114px;
+    left: 10px;
+    right: 10px;
+
+    width: auto;
+
+    padding: 13px;
+
+    border-radius: 16px;
+  }
+
+  .filtersHeader {
+    align-items: flex-start;
+  }
+
+  .filtersHeader strong {
+    font-size: 12px;
+  }
+
+  .filtersHeader span {
+    font-size: 9px;
+  }
+
+  .clearFilters {
+    height: 32px;
+
+    padding: 0 8px;
+
+    font-size: 9px;
   }
 
   .map :global(.leaflet-top) {
-    top: 125px;
+    top: 112px;
+  }
+
+  .map :global(.leaflet-right) {
+    right: 10px;
+  }
+
+  .map :global(.leaflet-control-zoom a) {
+    width: 34px !important;
+    height: 34px !important;
   }
 
   .resultCount {
-    top: 178px;
-    left: 12px;
+    top: 111px;
+    left: 10px;
+
+    min-height: 26px;
+
+    font-size: 8px;
+  }
+
+  .drawingIndicator {
+    top: 155px;
+
+    max-width: calc(100% - 30px);
+
+    text-align: center;
   }
 
   .drawHint {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    padding-right: 12px;
+  }
+
+  .drawHintIcon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .drawHint strong {
+    font-size: 10px;
+  }
+
+  .drawHint span {
+    font-size: 8px;
   }
 
   .selectionPanel {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
 
-    min-width: 0;
-    max-width: none;
+    gap: 8px;
 
-    transform: none;
+    padding: 8px;
+
+    border-radius: 13px;
   }
 
-  .selectionText {
-    overflow: hidden;
+  .selectionIcon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .selectionText strong {
+    font-size: 10px;
+  }
+
+  .selectionText span {
+    font-size: 8px;
   }
 
   .resetButton {
-    padding: 0 9px;
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
   }
 
-  .resetButton svg {
-    width: 13px;
-  }
-
-  .resetButton {
-    font-size: 0;
-  }
-
-  .resetButton svg {
-    margin: 0;
+  .resetButton span {
+    display: none;
   }
 
   .objectPreview {
-    right: 12px;
-    left: 12px;
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
 
-    bottom: 12px;
+    border-radius: 16px;
   }
 
   .previewImage {
     height: 135px;
+  }
+
+  .previewContent {
+    padding: 13px;
+  }
+
+  .previewContent h3 {
+    font-size: 14px;
+  }
+
+  .previewContent p {
+    font-size: 9px;
+  }
+
+  .previewContent > strong {
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+  .heading h1 {
+    max-width: 125px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  .filtersPanel {
+    padding: 11px;
+  }
+
+  .filtersHeader {
+    gap: 8px;
+  }
+
+  .clearFilters {
+    font-size: 0;
+  }
+
+  .clearFilters svg {
+    margin: 0;
+
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .homeButton,
+  .filtersToggle,
+  .searchBox,
+  .clearSearch,
+  .filtersPanel,
+  .clearFilters,
+  .resetButton,
+  .detailsButton,
+  .previewClose,
+  .markerPin,
+  .previewImage img {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .loadingSpinner {
+    animation: none !important;
   }
 }
