@@ -1,80 +1,98 @@
 .wrapper {
   width: 100%;
+
   height: 62px;
 
   display: flex;
+
   align-items: center;
+
   gap: 14px;
 
   padding: 0 20px;
+
   box-sizing: border-box;
 
-  background: #17151f;
+  background: #f8f8fc;
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid #e4e4ee;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
   transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
-/* HOVER */
+/* =========================================
+   HOVER
+========================================= */
 
 .wrapper:hover {
-  background: #1a1823;
+  background: #ffffff;
 
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: rgba(72, 61, 246, 0.25);
 
   transform: translateY(-1px);
+
+  box-shadow: 0 6px 18px rgba(30, 35, 70, 0.05);
 }
 
-/* FOCUS */
+/* =========================================
+   FOCUS
+========================================= */
 
 .wrapper:focus-within {
-  background: #191722;
+  background: #ffffff;
 
-  border-color: #8b5cf6;
+  border-color: #483df6;
 
   box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.08),
-    0 0 25px rgba(139, 92, 246, 0.3),
-    0 0 50px rgba(139, 92, 246, 0.08);
+    0 0 0 4px rgba(72, 61, 246, 0.08),
+    0 10px 30px rgba(72, 61, 246, 0.08);
 }
 
-/* ICON */
+/* =========================================
+   ICON
+========================================= */
 
 .icon {
   width: 21px;
+
   height: 21px;
 
-  color: #a855f7;
+  color: #483df6;
 
   flex-shrink: 0;
 
+  stroke-width: 2.2;
+
   transition:
-    color 0.3s ease,
-    filter 0.3s ease,
-    transform 0.3s ease;
+    color 0.25s ease,
+    filter 0.25s ease,
+    transform 0.25s ease;
 }
 
 .wrapper:focus-within .icon {
-  color: #c084fc;
+  color: #483df6;
 
-  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.7));
+  filter: drop-shadow(0 0 6px rgba(72, 61, 246, 0.2));
 
   transform: scale(1.05);
 }
 
-/* INPUT */
+/* =========================================
+   INPUT
+========================================= */
 
 .wrapper input {
   flex: 1;
 
   min-width: 0;
+
+  height: 100%;
 
   border: none;
 
@@ -84,20 +102,24 @@
 
   font-size: 14px;
 
-  color: #ffffff;
+  font-family: inherit;
+
+  color: #17182b;
 }
 
 .wrapper input::placeholder {
-  color: #777281;
+  color: #999bac;
 
-  transition: color 0.3s ease;
+  transition: color 0.25s ease;
 }
 
 .wrapper:focus-within input::placeholder {
-  color: #8d8798;
+  color: #a7a9b8;
 }
 
-/* PASSWORD EYE */
+/* =========================================
+   PASSWORD EYE
+========================================= */
 
 .eye {
   border: none;
@@ -112,25 +134,28 @@
 
   justify-content: center;
 
-  padding: 4px;
+  padding: 5px;
 
-  color: #777281;
+  border-radius: 8px;
+
+  color: #999bac;
 
   transition:
-    color 0.3s ease,
-    transform 0.3s ease,
-    filter 0.3s ease;
+    color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .eye:hover {
-  color: #a855f7;
+  color: #483df6;
+
+  background: rgba(72, 61, 246, 0.08);
 
   transform: scale(1.08);
-
-  filter: drop-shadow(0 0 7px rgba(168, 85, 247, 0.6));
 }
 
 .eye svg {
   width: 20px;
+
   height: 20px;
 }

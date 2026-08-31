@@ -8,7 +8,6 @@ import { getComplexById, getListings } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
 import { mapListingData } from "@/utils/mapListingData";
 
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 import {
   ArrowLeft,
@@ -36,6 +35,7 @@ import {
 } from "lucide-react";
 
 import styles from "./ComplexDetail.module.css";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 const MINSTROY_URL = "https://minstroy.gov.kg/ru/map";
 
@@ -886,7 +886,7 @@ export default function ComplexDetails() {
 
               <div className={styles.apartmentsGrid}>
                 {apartments.map((apartment) => (
-                  <ListingCardBlack
+                  <ListingCard
                     key={apartment.id}
                     item={apartment}
                     isFavorite={false}

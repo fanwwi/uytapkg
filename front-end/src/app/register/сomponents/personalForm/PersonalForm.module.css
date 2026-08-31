@@ -25,11 +25,11 @@
 
   border-radius: 14px;
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.15);
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.06);
 
-  color: #aaa3b8;
+  color: #64748b;
 
   font-size: 14px;
 
@@ -42,8 +42,6 @@
     border-color 0.3s ease,
     color 0.3s ease,
     transform 0.3s ease;
-
-  backdrop-filter: blur(10px);
 }
 
 .changeType svg {
@@ -51,17 +49,19 @@
 
   height: 18px;
 
-  color: #a855f7;
+  color: #483df6;
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
 .changeType:hover {
-  color: #c084fc;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.14);
+  background: rgba(72, 61, 246, 0.1);
 
-  border-color: rgba(168, 85, 247, 0.4);
+  border-color: rgba(72, 61, 246, 0.3);
 
   transform: translateX(-3px);
 }
@@ -69,7 +69,7 @@
 .changeType:hover svg {
   transform: translateX(-4px);
 
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5));
+  filter: drop-shadow(0 0 6px rgba(72, 61, 246, 0.35));
 }
 
 /* =========================
@@ -85,9 +85,9 @@
 
   border-radius: 20px;
 
-  background: linear-gradient(135deg, #7c3aed, #9333ea, #a855f7);
+  background: linear-gradient(135deg, #483df6, #5b52f7);
 
-  color: white;
+  color: #ffffff;
 
   font-size: 16px;
 
@@ -96,8 +96,8 @@
   cursor: pointer;
 
   box-shadow:
-    0 15px 35px rgba(124, 58, 237, 0.35),
-    0 0 20px rgba(168, 85, 247, 0.08);
+    0 12px 30px rgba(72, 61, 246, 0.2),
+    0 0 20px rgba(72, 61, 246, 0.05);
 
   transition:
     transform 0.3s ease,
@@ -108,11 +108,11 @@
 .submit:hover {
   transform: translateY(-3px);
 
-  filter: brightness(1.08);
+  filter: brightness(1.05);
 
   box-shadow:
-    0 20px 45px rgba(124, 58, 237, 0.5),
-    0 0 30px rgba(168, 85, 247, 0.15);
+    0 18px 40px rgba(72, 61, 246, 0.3),
+    0 0 30px rgba(72, 61, 246, 0.1);
 }
 
 .submit:active {
@@ -127,4 +127,62 @@
   transform: none;
 
   box-shadow: none;
+}
+
+/* =========================
+   ERROR / SUCCESS
+========================= */
+
+.form > div[style*="ef4444"] {
+  padding: 11px 14px;
+
+  border-radius: 12px;
+
+  background: rgba(239, 68, 68, 0.06);
+
+  border: 1px solid rgba(239, 68, 68, 0.14);
+
+  color: #dc2626 !important;
+
+  line-height: 1.5;
+}
+
+.form > div[style*="10b981"] {
+  padding: 11px 14px;
+
+  border-radius: 12px;
+
+  background: rgba(16, 185, 129, 0.06);
+
+  border: 1px solid rgba(16, 185, 129, 0.14);
+
+  color: #059669 !important;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .form {
+    gap: 13px;
+  }
+
+  .submit {
+    height: 56px;
+
+    border-radius: 17px;
+
+    font-size: 15px;
+  }
+
+  .changeType {
+    padding: 9px 14px;
+
+    font-size: 13px;
+
+    border-radius: 13px;
+  }
 }

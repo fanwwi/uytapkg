@@ -14,7 +14,6 @@ import {
 import { mapComplexData } from "@/utils/mapComplexData";
 import { mapListingData } from "@/utils/mapListingData";
 
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 import {
   ArrowLeft,
@@ -35,6 +34,7 @@ import styles from "./MycomplexDetails.module.css";
 
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 import EditResidentialComplexModal from "../EditResidentialComplexModal/EditResidentialComplexModal";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 const FALLBACK_IMAGE =
   "https://storage.googleapis.com/bd-kg-02/buildings-v2/800x630/2336.jpg";
@@ -1037,7 +1037,7 @@ export default function MyComplexDetail() {
 
               <div className={styles.apartmentsGrid}>
                 {apartments.map((apartment) => (
-                  <ListingCardBlack
+                  <ListingCard
                     key={apartment.id}
                     item={apartment}
                     isFavorite={false}

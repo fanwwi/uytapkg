@@ -23,8 +23,10 @@ import {
   Plus,
   CalendarDays,
   Layers3,
-  CheckCircle2,
   CheckCircle2Icon,
+  ShieldCheck,
+  AlertCircle,
+  ChevronRight,
 } from "lucide-react";
 
 import styles from "./DeveloperProfile.module.css";
@@ -38,29 +40,12 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
   const [dbProjects, setDbProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
 
-  if (!user) return null;
-
-  const profile = user.profile || {};
-
-  const company =
-    profile.company_name || profile.company || "Строительная компания";
-
-  const firstName = profile.first_name || "";
-  const lastName = profile.last_name || "";
-
-  const fullName =
-    `${firstName} ${lastName}`.trim() || "Представитель компании";
-
-  const avatar =
-    profile.avatar_url ||
-    profile.avatar ||
-    user.avatar_url ||
-    user.avatar ||
-    "/assets/DeveloperImage.png";
-
-  const whatsapp = user.phone?.replace(/\D/g, "") || "";
-
   useEffect(() => {
+    if (!user) {
+      setLoadingProjects(false);
+      return;
+    }
+
     const token = localStorage.getItem("uytap_token");
 
     if (!token) {
@@ -90,7 +75,42 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
         console.error("Error fetching developer profile projects:", err),
       )
       .finally(() => setLoadingProjects(false));
-  }, []);
+  }, [user]);
+
+  if (!user) return null;
+
+  const profile = user.profile || {};
+
+  const company =
+    profile.company_name || profile.company || "Строительная компания";
+
+  const firstName = profile.first_name || "";
+  const lastName = profile.last_name || "";
+
+  const fullName =
+    `${firstName} ${lastName}`.trim() || "Представитель компании";
+
+  const avatar =
+    profile.avatar_url ||
+    profile.avatar ||
+    user.avatar_url ||
+    user.avatar ||
+    "/assets/DeveloperImage.png";
+
+  const whatsapp = user.phone?.replace(/\D/g, "") || "";
+
+  /*
+   * Проверяем статус подтверждения профиля.
+   *
+   * Поддерживаются разные варианты названий поля,
+   * чтобы не ломать текущую структуру API.
+   */
+  const isVerified =
+    profile.is_verified === true ||
+    profile.verified === true ||
+    profile.profile_verified === true ||
+    user.is_verified === true ||
+    user.verified === true;
 
   const projects =
     dbProjects.length > 0
@@ -107,6 +127,10 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
     document.cookie = "uytap_token=; path=/; max-age=0";
 
     window.location.href = "/login";
+  }
+
+  function openVerification() {
+    router.push("/verify");
   }
 
   function getProjectName(project) {
@@ -178,9 +202,14 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             <div className={styles.titleRow}>
               <h1>{company}</h1>
 
-              <div className={styles.verifiedBadge} title="Профиль подтверждён">
-                <CheckCircle2Icon />
-              </div>
+              {isVerified && (
+                <div
+                  className={styles.verifiedBadge}
+                  title="Профиль подтверждён"
+                >
+                  <CheckCircle2Icon />
+                </div>
+              )}
             </div>
 
             <p className={styles.person}>
@@ -209,6 +238,47 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             <Pencil />
           </button>
         </div>
+
+        {/* ===================================================
+            VERIFICATION
+        =================================================== */}
+
+        {!isVerified && (
+          <div className={styles.verificationBanner}>
+            <div className={styles.verificationIcon}>
+              <ShieldCheck />
+            </div>
+
+            <div className={styles.verificationContent}>
+              <div className={styles.verificationTitle}>
+                <AlertCircle />
+                Подтвердите профиль застройщика
+              </div>
+
+              <p>
+                Чтобы покупатели могли видеть вашу компанию и жилые комплексы,
+                необходимо подтвердить профиль. После подтверждения ваши ЖК и
+                объявления будут доступны пользователям UyTap.
+              </p>
+
+              <span className={styles.verificationWarning}>
+                <AlertCircle />
+                Если профиль не будет подтверждён, он и ваши ЖК не будут
+                отображаться покупателям.
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className={styles.verificationButton}
+              onClick={openVerification}
+            >
+              <ShieldCheck />
+              Подтвердить профиль
+              <ChevronRight />
+            </button>
+          </div>
+        )}
 
         {/* ===================================================
             CONTACTS
@@ -331,6 +401,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
           <div>
             <strong>{profile.projects_count || projects.length || 0}</strong>
+
             <span>ЖК</span>
           </div>
         </div>

@@ -7,16 +7,16 @@
 
   overflow: hidden;
 
-  color: #ffffff;
+  color: #17171c;
 
   background:
+    radial-gradient(circle at 85% 0%, rgba(72, 61, 246, 0.09), transparent 30%),
     radial-gradient(
-      circle at 85% 0%,
-      rgba(124, 58, 237, 0.16),
-      transparent 30%
+      circle at 5% 70%,
+      rgba(72, 61, 246, 0.045),
+      transparent 28%
     ),
-    radial-gradient(circle at 5% 70%, rgba(91, 33, 182, 0.08), transparent 28%),
-    linear-gradient(180deg, #07070a 0%, #0a0a0f 48%, #07070a 100%);
+    linear-gradient(180deg, #f8f9fc 0%, #f5f6fa 48%, #f8f9fc 100%);
 }
 
 .container {
@@ -50,14 +50,14 @@
   top: -300px;
   right: -180px;
 
-  background: rgba(124, 58, 237, 0.13);
+  background: rgba(72, 61, 246, 0.08);
 }
 
 .backgroundGlowSecondary {
   bottom: -320px;
   left: -260px;
 
-  background: rgba(109, 40, 217, 0.07);
+  background: rgba(72, 61, 246, 0.045);
 }
 
 /* =========================================================
@@ -73,17 +73,19 @@
   margin-bottom: 18px;
   padding: 11px 15px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e5e7ee;
   border-radius: 12px;
 
-  background: rgba(15, 15, 20, 0.75);
+  background: rgba(255, 255, 255, 0.85);
 
-  color: #9d9da8;
+  color: #6b6d78;
 
   font-size: 13px;
   font-weight: 700;
 
   text-decoration: none;
+
+  box-shadow: 0 4px 15px rgba(20, 20, 40, 0.035);
 
   backdrop-filter: blur(18px);
 
@@ -91,21 +93,24 @@
     transform 0.2s ease,
     color 0.2s ease,
     border-color 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .backButton:hover {
-  color: #ffffff;
+  color: #17171c;
 
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: rgba(72, 61, 246, 0.25);
 
-  background: #15151b;
+  background: #ffffff;
 
   transform: translateX(-3px);
+
+  box-shadow: 0 8px 22px rgba(20, 20, 40, 0.07);
 }
 
 .backButton svg {
-  color: #a855f7;
+  color: #483df6;
 }
 
 /* =========================================================
@@ -119,20 +124,19 @@
 
   padding: 34px;
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid #e4e6ed;
   border-radius: 28px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.012)
-    ),
-    #101015;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(250, 250, 253, 0.98)
+  );
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.5),
-    inset 0 1px rgba(255, 255, 255, 0.035);
+    0 25px 70px rgba(20, 20, 40, 0.07),
+    0 2px 8px rgba(20, 20, 40, 0.025),
+    inset 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .hero::before {
@@ -144,16 +148,11 @@
   left: 8%;
   right: 8%;
 
-  height: 1px;
+  height: 2px;
 
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(139, 92, 246, 0.9),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, #483df6, transparent);
 
-  box-shadow: 0 0 28px rgba(139, 92, 246, 0.55);
+  box-shadow: 0 0 22px rgba(72, 61, 246, 0.22);
 }
 
 .heroGlow {
@@ -167,7 +166,7 @@
 
   border-radius: 50%;
 
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(72, 61, 246, 0.065);
 
   filter: blur(80px);
 
@@ -211,19 +210,19 @@
 }
 
 .heroLabel {
-  color: #c084fc;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.07);
 
-  border: 1px solid rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(72, 61, 246, 0.14);
 }
 
 .verified {
-  color: #a5e8bf;
+  color: #16845a;
 
-  background: rgba(52, 211, 153, 0.07);
+  background: rgba(22, 163, 74, 0.07);
 
-  border: 1px solid rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(22, 163, 74, 0.13);
 }
 
 /* =========================================================
@@ -262,11 +261,11 @@
 
   border-radius: 25px;
 
-  background: linear-gradient(145deg, #a855f7 0%, #7c3aed 48%, #2e1065 100%);
+  background: linear-gradient(145deg, #7169ff 0%, #483df6 52%, #3027bd 100%);
 
   box-shadow:
-    0 20px 55px rgba(124, 58, 237, 0.2),
-    0 0 0 1px rgba(168, 85, 247, 0.12);
+    0 18px 45px rgba(72, 61, 246, 0.16),
+    0 0 0 1px rgba(72, 61, 246, 0.08);
 }
 
 .logo {
@@ -279,13 +278,13 @@
 
   border-radius: 21px;
 
-  background: #15151b;
+  background: #f5f6fa;
 }
 
 .logoCaption {
   margin-top: 10px;
 
-  color: #454550;
+  color: #a0a2ac;
 
   font-size: 9px;
   font-weight: 900;
@@ -308,7 +307,7 @@
 
   margin: 0;
 
-  color: #ffffff;
+  color: #17171c;
 
   font-size: clamp(38px, 5vw, 62px);
 
@@ -327,7 +326,7 @@
 
   margin-top: 18px;
 
-  color: #70707b;
+  color: #858792;
 
   font-size: 13px;
 }
@@ -340,21 +339,21 @@
   align-items: center;
   justify-content: center;
 
-  color: #a855f7;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.07);
 
-  border: 1px solid rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(72, 61, 246, 0.13);
 
   border-radius: 8px;
 }
 
 .directorLabel {
-  color: #575761;
+  color: #92949e;
 }
 
 .director strong {
-  color: #d8d8df;
+  color: #3a3b43;
 
   font-weight: 800;
 }
@@ -364,7 +363,7 @@
 
   margin: 18px 0 0;
 
-  color: #7c7c87;
+  color: #747681;
 
   font-size: 14px;
 
@@ -415,37 +414,43 @@
 .primaryButton {
   color: #ffffff;
 
-  background: #7c3aed;
+  background: #483df6;
 
-  border: 1px solid #8b5cf6;
+  border: 1px solid #483df6;
 
-  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.18);
 }
 
 .primaryButton:hover {
-  background: #8b5cf6;
+  background: #3d33e7;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 14px 30px rgba(124, 58, 237, 0.28);
+  box-shadow: 0 14px 30px rgba(72, 61, 246, 0.25);
 }
 
 .secondaryButton {
-  color: #a9a9b4;
+  color: #555762;
 
-  background: #18181e;
+  background: #ffffff;
 
-  border: 1px solid #2b2b33;
+  border: 1px solid #e2e4eb;
 }
 
 .secondaryButton:hover {
-  color: #ffffff;
+  color: #202126;
 
-  background: #1e1e26;
+  background: #fafaff;
 
-  border-color: rgba(139, 92, 246, 0.38);
+  border-color: rgba(72, 61, 246, 0.28);
 
   transform: translateY(-2px);
+
+  box-shadow: 0 7px 18px rgba(20, 20, 40, 0.05);
+}
+
+.secondaryButton svg {
+  color: #483df6;
 }
 
 /* =========================================================
@@ -462,7 +467,7 @@
   margin-top: 34px;
   padding-top: 23px;
 
-  border-top: 1px solid #25252d;
+  border-top: 1px solid #e9eaf0;
 }
 
 .heroStat {
@@ -482,11 +487,11 @@
   align-items: center;
   justify-content: center;
 
-  color: #a855f7;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.065);
 
-  border: 1px solid rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(72, 61, 246, 0.12);
 
   border-radius: 10px;
 }
@@ -500,7 +505,7 @@
 }
 
 .heroStat strong {
-  color: #ffffff;
+  color: #17171c;
 
   font-size: 22px;
   line-height: 1;
@@ -509,7 +514,7 @@
 }
 
 .heroStat span {
-  color: #60606b;
+  color: #9698a2;
 
   font-size: 9px;
   font-weight: 850;
@@ -524,7 +529,7 @@
 
   margin: 0 24px;
 
-  background: #292930;
+  background: #e6e7ed;
 }
 
 .heroStatLocation {
@@ -535,7 +540,7 @@
 
   min-width: 0;
 
-  color: #a855f7;
+  color: #483df6;
 }
 
 .heroStatLocation > div {
@@ -543,7 +548,7 @@
 }
 
 .heroStatLocation span {
-  color: #60606b;
+  color: #9698a2;
 
   font-size: 9px;
   font-weight: 850;
@@ -557,7 +562,7 @@
 
   overflow: hidden;
 
-  color: #c4c4cc;
+  color: #555762;
 
   font-size: 12px;
   font-weight: 750;
@@ -592,26 +597,31 @@
 
   color: inherit;
 
-  background: #101015;
+  background: #ffffff;
 
-  border: 1px solid #24242c;
+  border: 1px solid #e4e6ed;
 
   border-radius: 15px;
 
   text-decoration: none;
 
+  box-shadow: 0 5px 18px rgba(20, 20, 40, 0.035);
+
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .detailCard:hover {
-  background: #16161d;
+  background: #ffffff;
 
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(72, 61, 246, 0.25);
 
   transform: translateY(-2px);
+
+  box-shadow: 0 10px 25px rgba(20, 20, 40, 0.07);
 }
 
 .detailIcon {
@@ -624,11 +634,11 @@
   align-items: center;
   justify-content: center;
 
-  color: #a855f7;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.065);
 
-  border: 1px solid rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(72, 61, 246, 0.12);
 
   border-radius: 10px;
 }
@@ -643,7 +653,7 @@
 }
 
 .detailCard span {
-  color: #53535e;
+  color: #999ba5;
 
   font-size: 9px;
   font-weight: 900;
@@ -655,7 +665,7 @@
 .detailCard strong {
   overflow: hidden;
 
-  color: #c8c8d0;
+  color: #555762;
 
   font-size: 12px;
   font-weight: 750;
@@ -669,7 +679,7 @@
 
   flex-shrink: 0;
 
-  color: #5b5b67;
+  color: #9a9ca6;
 }
 
 /* =========================================================
@@ -695,7 +705,7 @@
 
   margin-bottom: 7px;
 
-  color: #a855f7;
+  color: #483df6;
 
   font-size: 10px;
   font-weight: 950;
@@ -706,7 +716,7 @@
 .listingsHeading h2 {
   margin: 0;
 
-  color: #ffffff;
+  color: #17171c;
 
   font-size: 30px;
 
@@ -720,7 +730,7 @@
 .listingsHeading p {
   margin: 7px 0 0;
 
-  color: #62626d;
+  color: #858792;
 
   font-size: 12px;
 }
@@ -733,11 +743,11 @@
 
   padding: 8px 11px;
 
-  color: #c084fc;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.07);
+  background: rgba(72, 61, 246, 0.065);
 
-  border: 1px solid rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(72, 61, 246, 0.13);
 
   border-radius: 9px;
 
@@ -746,7 +756,7 @@
 }
 
 .count small {
-  color: #686873;
+  color: #858792;
 
   font-size: 9px;
   font-weight: 750;
@@ -776,11 +786,13 @@
 
   text-align: center;
 
-  background: #101015;
+  background: #ffffff;
 
-  border: 1px dashed #2c2c35;
+  border: 1px dashed #dfe1e8;
 
   border-radius: 20px;
+
+  box-shadow: 0 8px 25px rgba(20, 20, 40, 0.035);
 }
 
 .emptyIcon {
@@ -793,11 +805,11 @@
 
   margin-bottom: 14px;
 
-  color: #a855f7;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.065);
 
-  border: 1px solid rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(72, 61, 246, 0.13);
 
   border-radius: 14px;
 }
@@ -805,7 +817,7 @@
 .empty h3 {
   margin: 0;
 
-  color: #d4d4dc;
+  color: #3d3e46;
 
   font-size: 16px;
   font-weight: 850;
@@ -814,7 +826,7 @@
 .empty p {
   margin: 7px 0 0;
 
-  color: #62626d;
+  color: #8d8f99;
 
   font-size: 12px;
 }

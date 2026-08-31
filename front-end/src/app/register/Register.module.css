@@ -1,4 +1,20 @@
 .page {
+  --primary: #483df6;
+  --primary-hover: #3d32e8;
+  --primary-soft: rgba(72, 61, 246, 0.08);
+  --primary-border: rgba(72, 61, 246, 0.18);
+
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --card-soft: #f8f8fc;
+
+  --text: #171722;
+  --text-secondary: #5f5f6d;
+  --text-muted: #8b8b98;
+
+  --border: #e7e7ef;
+  --border-hover: rgba(72, 61, 246, 0.45);
+
   min-height: 100vh;
 
   display: flex;
@@ -8,24 +24,28 @@
   position: relative;
   overflow: hidden;
 
-  padding: 20px;
+  padding: 30px 20px;
 
   background:
     radial-gradient(
-      circle at 15% 10%,
-      rgba(124, 58, 237, 0.12),
-      transparent 30%
+      circle at 10% 10%,
+      rgba(72, 61, 246, 0.08),
+      transparent 28%
     ),
     radial-gradient(
-      circle at 85% 90%,
-      rgba(139, 92, 246, 0.1),
+      circle at 90% 90%,
+      rgba(72, 61, 246, 0.06),
       transparent 30%
     ),
-    linear-gradient(145deg, #050506 0%, #0a090d 45%, #07070a 100%);
+    linear-gradient(145deg, #fafaff 0%, #f5f6fa 50%, #f8f8fc 100%);
 
-  color: #f5f3ff;
+  color: var(--text);
 
   font-size: 18px;
+}
+
+.page * {
+  box-sizing: border-box;
 }
 
 /* =========================================
@@ -33,30 +53,48 @@
 ========================================= */
 
 .card {
+  position: relative;
+
   width: 460px;
+  max-width: 100%;
 
   padding: 50px;
 
-  border-radius: 35px;
+  border-radius: 30px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(24, 21, 31, 0.94),
-    rgba(12, 11, 16, 0.96)
-  );
+  background: rgba(255, 255, 255, 0.96);
 
-  backdrop-filter: blur(28px);
-
-  border: 1px solid rgba(167, 139, 250, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 
   box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 0 80px rgba(124, 58, 237, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    0 25px 70px rgba(31, 31, 52, 0.1),
+    0 5px 20px rgba(31, 31, 52, 0.04);
 
-  color: #fff;
+  backdrop-filter: blur(25px);
+
+  color: var(--text);
 
   z-index: 2;
+}
+
+/* subtle top accent */
+
+.card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 12%;
+  right: 12%;
+
+  height: 2px;
+
+  border-radius: 0 0 10px 10px;
+
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+
+  opacity: 0.7;
 }
 
 /* =========================================
@@ -64,19 +102,17 @@
 ========================================= */
 
 .brand {
-  color: #a78bfa;
+  color: var(--primary);
 
   font-size: 18px;
 
-  font-weight: 800;
+  font-weight: 850;
 
-  letter-spacing: 3px;
+  letter-spacing: 2.5px;
 
   text-transform: uppercase;
 
   text-align: center;
-
-  text-shadow: 0 0 25px rgba(167, 139, 250, 0.25);
 }
 
 /* =========================================
@@ -84,11 +120,13 @@
 ========================================= */
 
 .title {
-  font-size: 44px;
+  margin: 15px 0 10px;
 
-  margin: 15px 0;
+  color: var(--text);
 
-  color: #ffffff;
+  font-size: 42px;
+
+  line-height: 1.1;
 
   text-align: center;
 
@@ -98,13 +136,13 @@
 }
 
 .subtitle {
-  font-size: 18px;
+  margin: 0 0 32px;
 
-  color: #96919f;
+  color: var(--text-secondary);
 
-  line-height: 1.5;
+  font-size: 16px;
 
-  margin-bottom: 35px;
+  line-height: 1.55;
 
   text-align: center;
 }
@@ -118,26 +156,26 @@
 
   gap: 8px;
 
-  background: #0d0c11;
-
   padding: 6px;
-
-  border-radius: 20px;
 
   margin-bottom: 25px;
 
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #f3f3f8;
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
 }
 
 .method,
 .activeMethod {
   flex: 1;
 
-  height: 55px;
+  height: 52px;
 
   border: 0;
 
-  border-radius: 16px;
+  border-radius: 14px;
 
   display: flex;
 
@@ -145,327 +183,9 @@
 
   justify-content: center;
 
-  gap: 10px;
+  gap: 9px;
 
-  font-size: 18px;
-
-  cursor: pointer;
-
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.2s ease;
-}
-
-.method {
-  background: transparent;
-
-  color: #77727f;
-}
-
-.method:hover {
-  color: #c4bdd0;
-
-  background: rgba(167, 139, 250, 0.05);
-}
-
-.activeMethod {
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-
-  color: #fff;
-
-  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.25);
-}
-
-/* =========================================
-   FORM
-========================================= */
-
-.form {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 18px;
-}
-
-.inputBox {
-  height: 60px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 15px;
-
-  padding: 0 20px;
-
-  background: rgba(10, 9, 13, 0.9);
-
-  border-radius: 20px;
-
-  border: 1px solid rgba(255, 255, 255, 0.075);
-
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease;
-}
-
-.inputBox:focus-within {
-  border-color: rgba(139, 92, 246, 0.55);
-
-  background: rgba(15, 13, 20, 0.95);
-
-  box-shadow:
-    0 0 25px rgba(139, 92, 246, 0.15),
-    inset 0 0 15px rgba(139, 92, 246, 0.025);
-}
-
-.inputBox svg {
-  width: 24px;
-
-  height: 24px;
-
-  color: #9b7bea;
-
-  flex-shrink: 0;
-}
-
-.inputBox input {
-  flex: 1;
-
-  min-width: 0;
-
-  background: none;
-
-  border: 0;
-
-  outline: none;
-
-  color: #fff;
-
-  font-size: 18px;
-}
-
-.inputBox input::placeholder {
-  color: #625d69;
-}
-
-/* =========================================
-   REMEMBER
-========================================= */
-
-.remember {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  font-size: 18px;
-
-  color: #96919f;
-
-  cursor: pointer;
-}
-
-.remember input {
-  display: none;
-}
-
-.check {
-  width: 22px;
-
-  height: 22px;
-
-  border-radius: 7px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  background: #111016;
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.check svg {
-  width: 16px;
-
-  color: #a78bfa;
-}
-
-/* =========================================
-   SUBMIT
-========================================= */
-
-.submit {
-  height: 60px;
-
-  border: 0;
-
-  border-radius: 22px;
-
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-
-  color: #fff;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    filter 0.25s ease;
-
-  box-shadow: 0 10px 30px rgba(109, 40, 217, 0.2);
-}
-
-.submit:hover {
-  transform: translateY(-3px);
-
-  filter: brightness(1.08);
-
-  box-shadow: 0 15px 40px rgba(124, 58, 237, 0.35);
-}
-
-.submit:active {
-  transform: translateY(-1px);
-}
-
-/* =========================================
-   BOTTOM
-========================================= */
-
-.bottom {
-  margin-top: 30px;
-
-  text-align: center;
-
-  font-size: 15px;
-
-  color: #77727f;
-}
-
-.bottom a {
-  color: #a78bfa;
-
-  margin-left: 8px;
-
-  text-decoration: none;
-
-  font-weight: 700;
-
-  transition: color 0.2s ease;
-}
-
-.bottom a:hover {
-  color: #c4b5fd;
-}
-
-/* =========================================
-   BACKGROUND GLOWS
-========================================= */
-
-.glowOne,
-.glowTwo {
-  position: absolute;
-
-  width: 400px;
-
-  height: 400px;
-
-  border-radius: 50%;
-
-  filter: blur(140px);
-
-  pointer-events: none;
-}
-
-.glowOne {
-  background: rgba(124, 58, 237, 0.2);
-
-  top: -200px;
-
-  left: -200px;
-}
-
-.glowTwo {
-  background: rgba(139, 92, 246, 0.16);
-
-  bottom: -200px;
-
-  right: -200px;
-}
-
-/* =========================================
-   PASSWORD EYE
-========================================= */
-
-.eye {
-  background: none;
-
-  border: 0;
-
-  color: #9b7bea;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  cursor: pointer;
-
-  padding: 0;
-
-  transition: color 0.2s ease;
-}
-
-.eye:hover {
-  color: #c4b5fd;
-}
-
-.eye svg {
-  width: 24px;
-
-  height: 24px;
-
-  transition: transform 0.3s ease;
-}
-
-.eye:hover svg {
-  transform: scale(1.15);
-}
-
-/* =========================================
-   CHANGE ACCOUNT TYPE
-========================================= */
-
-.changeType {
-  margin-bottom: 20px;
-
-  height: 45px;
-
-  padding: 0 20px;
-
-  border-radius: 16px;
-
-  border: 1px solid rgba(139, 92, 246, 0.22);
-
-  background: rgba(124, 58, 237, 0.08);
-
-  color: #a78bfa;
+  font-size: 16px;
 
   font-weight: 700;
 
@@ -478,14 +198,385 @@
     box-shadow 0.25s ease;
 }
 
+.method {
+  background: transparent;
+
+  color: var(--text-muted);
+}
+
+.method:hover {
+  color: var(--primary);
+
+  background: rgba(72, 61, 246, 0.05);
+}
+
+.activeMethod {
+  color: #fff;
+
+  background: var(--primary);
+
+  box-shadow: 0 7px 18px rgba(72, 61, 246, 0.2);
+}
+
+.activeMethod:hover {
+  background: var(--primary-hover);
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+.form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+/* =========================================
+   INPUT
+========================================= */
+
+.inputBox {
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 0 18px;
+
+  background: #fafafd;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.inputBox:hover {
+  border-color: #d8d8e4;
+}
+
+.inputBox:focus-within {
+  background: #fff;
+
+  border-color: var(--primary);
+
+  box-shadow: 0 0 0 4px rgba(72, 61, 246, 0.08);
+}
+
+.inputBox svg {
+  width: 21px;
+
+  height: 21px;
+
+  flex-shrink: 0;
+
+  color: var(--primary);
+}
+
+.inputBox input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: 0;
+
+  outline: none;
+
+  color: var(--text);
+
+  font-size: 16px;
+
+  font-family: inherit;
+}
+
+.inputBox input::placeholder {
+  color: #a3a3af;
+}
+
+/* =========================================
+   REMEMBER
+========================================= */
+
+.remember {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: var(--text-secondary);
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.remember input {
+  display: none;
+}
+
+.check {
+  width: 21px;
+
+  height: 21px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 6px;
+
+  background: #fff;
+
+  border: 1px solid #d8d8e2;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.check svg {
+  width: 14px;
+
+  height: 14px;
+
+  color: #fff;
+}
+
+/* Если checkbox отмечен через родительскую структуру */
+
+.remember input:checked + .check {
+  background: var(--primary);
+
+  border-color: var(--primary);
+
+  box-shadow: 0 4px 10px rgba(72, 61, 246, 0.18);
+}
+
+/* =========================================
+   SUBMIT
+========================================= */
+
+.submit {
+  width: 100%;
+
+  height: 58px;
+
+  margin-top: 2px;
+
+  border: 0;
+
+  border-radius: 16px;
+
+  background: var(--primary);
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.submit:hover {
+  background: var(--primary-hover);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 25px rgba(72, 61, 246, 0.22);
+}
+
+.submit:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   BOTTOM
+========================================= */
+
+.bottom {
+  margin-top: 28px;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+.bottom a {
+  margin-left: 6px;
+
+  color: var(--primary);
+
+  text-decoration: none;
+
+  font-weight: 750;
+
+  transition: color 0.2s ease;
+}
+
+.bottom a:hover {
+  color: var(--primary-hover);
+
+  text-decoration: underline;
+}
+
+/* =========================================
+   BACKGROUND GLOWS
+========================================= */
+
+.glowOne,
+.glowTwo {
+  position: absolute;
+
+  width: 420px;
+
+  height: 420px;
+
+  border-radius: 50%;
+
+  filter: blur(120px);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+.glowOne {
+  top: -220px;
+
+  left: -220px;
+
+  background: rgba(72, 61, 246, 0.1);
+}
+
+.glowTwo {
+  right: -220px;
+
+  bottom: -220px;
+
+  background: rgba(72, 61, 246, 0.07);
+}
+
+/* =========================================
+   PASSWORD EYE
+========================================= */
+
+.eye {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 0;
+
+  background: transparent;
+
+  border: 0;
+
+  color: #92929e;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.eye:hover {
+  color: var(--primary);
+
+  transform: scale(1.05);
+}
+
+.eye svg {
+  width: 21px;
+
+  height: 21px;
+}
+
+/* =========================================
+   CHANGE ACCOUNT TYPE
+========================================= */
+
+.changeType {
+  height: 44px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  padding: 0 16px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--primary-border);
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
 .changeType:hover {
-  background: #7c3aed;
+  background: var(--primary);
+
+  border-color: var(--primary);
 
   color: #fff;
 
   transform: translateX(-3px);
 
-  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 8px 20px rgba(72, 61, 246, 0.18);
 }
 
 /* =========================================
@@ -494,30 +585,134 @@
 
 @media (max-width: 520px) {
   .page {
-    padding: 15px;
+    min-height: 100svh;
+
+    padding: 20px 14px;
+
+    align-items: flex-start;
   }
 
   .card {
     width: 100%;
 
-    padding: 30px 24px;
+    margin-top: 20px;
 
-    border-radius: 27px;
+    padding: 34px 22px;
+
+    border-radius: 24px;
+  }
+
+  .brand {
+    font-size: 16px;
+
+    letter-spacing: 2px;
   }
 
   .title {
     font-size: 34px;
+
+    letter-spacing: -1px;
   }
 
   .subtitle {
-    font-size: 16px;
+    font-size: 14px;
+
+    margin-bottom: 27px;
+  }
+
+  .methods {
+    border-radius: 15px;
+  }
+
+  .method,
+  .activeMethod {
+    height: 48px;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+  }
+
+  .inputBox {
+    min-height: 55px;
+
+    padding: 0 15px;
+
+    border-radius: 14px;
   }
 
   .inputBox input {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .remember {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .submit {
+    height: 55px;
+
+    border-radius: 14px;
+
+    font-size: 15px;
+  }
+
+  .bottom {
+    margin-top: 24px;
+
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding: 12px 9px;
+  }
+
+  .card {
+    margin-top: 10px;
+
+    padding: 28px 16px;
+
+    border-radius: 21px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .inputBox {
+    min-height: 53px;
+  }
+
+  .changeType {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .glowOne,
+  .glowTwo {
+    display: none;
+  }
+
+  .card,
+  .submit,
+  .changeType,
+  .method,
+  .activeMethod {
+    transition: none;
   }
 }

@@ -49,7 +49,7 @@ export default function Hero() {
             type="button"
             className={styles.primary}
             onClick={() => {
-              window.location.href = "/#search";
+              window.location.href = "/all-products";
             }}
           >
             <Search />

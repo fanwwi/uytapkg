@@ -13,32 +13,34 @@
   background:
     radial-gradient(
       700px 500px at 50% -10%,
-      rgba(139, 92, 246, 0.18),
+      rgba(72, 61, 246, 0.1),
       transparent 65%
     ),
     radial-gradient(
       500px 400px at 10% 100%,
-      rgba(124, 58, 237, 0.08),
+      rgba(72, 61, 246, 0.06),
       transparent 65%
     ),
-    #07070a;
+    #f7f8fc;
 }
 
-/* Дополнительное мягкое свечение */
+/* =========================
+   SOFT BACKGROUND GLOW
+========================= */
 
 .page::before {
   content: "";
 
   position: absolute;
 
-  width: 500px;
-  height: 500px;
+  width: 550px;
+  height: 550px;
 
   border-radius: 50%;
 
-  background: rgba(139, 92, 246, 0.07);
+  background: rgba(72, 61, 246, 0.06);
 
-  filter: blur(120px);
+  filter: blur(130px);
 
   pointer-events: none;
 }
@@ -61,19 +63,19 @@
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(139, 92, 246, 0.08),
+      rgba(72, 61, 246, 0.045),
       transparent 55%
     ),
-    linear-gradient(145deg, #111014, #0c0c10);
+    #ffffff;
 
-  border-radius: 40px;
+  border-radius: 32px;
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.12);
 
   box-shadow:
-    0 35px 90px rgba(0, 0, 0, 0.55),
-    0 0 60px rgba(139, 92, 246, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 30px 80px rgba(31, 35, 55, 0.1),
+    0 0 50px rgba(72, 61, 246, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   animation: show 0.4s ease;
 }
@@ -107,17 +109,17 @@
   justify-content: center;
 
   background:
-    radial-gradient(circle at 35% 25%, #c084fc, transparent 50%),
-    linear-gradient(135deg, #8b5cf6, #6d28d9);
+    radial-gradient(circle at 35% 25%, #827bff, transparent 50%),
+    linear-gradient(135deg, #483df6, #5b50f7);
 
-  color: white;
+  color: #ffffff;
 
-  border: 1px solid rgba(216, 180, 254, 0.25);
+  border: 1px solid rgba(72, 61, 246, 0.2);
 
   box-shadow:
-    0 20px 45px rgba(124, 58, 237, 0.35),
-    0 0 40px rgba(139, 92, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 18px 40px rgba(72, 61, 246, 0.22),
+    0 0 35px rgba(72, 61, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
 
   animation: iconAppear 0.5s ease 0.1s both;
 }
@@ -138,7 +140,7 @@
   width: 45px;
   height: 45px;
 
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12));
 }
 
 /* =========================
@@ -152,7 +154,7 @@
 
   font-weight: 900;
 
-  color: #ffffff;
+  color: #171923;
 
   letter-spacing: -1px;
 }
@@ -160,7 +162,7 @@
 .card p {
   margin: 0;
 
-  color: #85838d;
+  color: #686d7c;
 
   font-size: 16px;
 
@@ -183,7 +185,7 @@
 .actions a {
   height: 55px;
 
-  border-radius: 18px;
+  border-radius: 17px;
 
   display: flex;
   align-items: center;
@@ -212,25 +214,25 @@
 ========================= */
 
 .login {
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  background: linear-gradient(135deg, #483df6, #5b50f7);
 
-  color: white;
+  color: #ffffff;
 
-  border: 1px solid rgba(216, 180, 254, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.15);
 
   box-shadow:
-    0 15px 35px rgba(124, 58, 237, 0.3),
-    0 0 30px rgba(139, 92, 246, 0.1);
+    0 15px 30px rgba(72, 61, 246, 0.2),
+    0 0 25px rgba(72, 61, 246, 0.06);
 }
 
 .login:hover {
   transform: translateY(-3px);
 
   box-shadow:
-    0 22px 45px rgba(124, 58, 237, 0.4),
-    0 0 35px rgba(139, 92, 246, 0.2);
+    0 20px 40px rgba(72, 61, 246, 0.28),
+    0 0 30px rgba(72, 61, 246, 0.1);
 
-  background: linear-gradient(135deg, #b36af8, #8b5cf6);
+  background: linear-gradient(135deg, #4035e8, #5348f2);
 }
 
 /* =========================
@@ -238,21 +240,21 @@
 ========================= */
 
 .home {
-  background: #17151c;
+  background: #f5f6fa;
 
-  color: #b7b4bf;
+  color: #555b6b;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e5e7ef;
 }
 
 .home:hover {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(72, 61, 246, 0.06);
 
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(72, 61, 246, 0.22);
 
-  color: #c084fc;
+  color: #483df6;
 
-  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.08);
 
   transform: translateY(-2px);
 }
@@ -269,7 +271,7 @@
   .card {
     padding: 40px 25px;
 
-    border-radius: 30px;
+    border-radius: 28px;
   }
 
   .icon {

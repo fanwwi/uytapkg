@@ -7,7 +7,7 @@ import { getFavorites, removeFavorite as removeFavoriteApi } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./Favorites.module.css";
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 const categories = [
   "Все",
@@ -242,7 +242,7 @@ export default function Favorites() {
       ) : filteredFavorites.length > 0 ? (
         <section className={styles.grid}>
           {filteredFavorites.map((item) => (
-            <ListingCardBlack
+            <ListingCard
               key={item.id}
               item={item}
               isFavorite={true}
