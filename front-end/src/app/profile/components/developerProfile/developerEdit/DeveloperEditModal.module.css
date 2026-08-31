@@ -14,20 +14,11 @@
   padding: 20px;
 
   background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(124, 58, 237, 0.16),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 100% 100%,
-      rgba(168, 85, 247, 0.06),
-      transparent 35%
-    ),
-    rgba(2, 2, 5, 0.92);
+    radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.1), transparent 38%),
+    rgba(15, 23, 42, 0.42);
 
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   animation: overlayIn 0.2s ease;
 }
@@ -59,24 +50,19 @@
   background:
     radial-gradient(
       circle at 100% 0%,
-      rgba(124, 58, 237, 0.11),
+      rgba(72, 61, 246, 0.055),
       transparent 30%
     ),
-    radial-gradient(
-      circle at 0% 100%,
-      rgba(168, 85, 247, 0.045),
-      transparent 35%
-    ),
-    linear-gradient(145deg, #18181c 0%, #111114 48%, #09090b 100%);
+    linear-gradient(145deg, #ffffff 0%, #fafaff 55%, #f7f7fc 100%);
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(15, 23, 42, 0.08);
 
-  color: #f4f4f6;
+  color: #172033;
 
   box-shadow:
-    0 45px 120px rgba(0, 0, 0, 0.82),
-    0 0 90px rgba(124, 58, 237, 0.11),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    0 35px 90px rgba(15, 23, 42, 0.18),
+    0 10px 35px rgba(15, 23, 42, 0.08),
+    0 0 70px rgba(72, 61, 246, 0.07);
 
   animation: modalIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -89,17 +75,17 @@
   left: 12%;
   right: 12%;
 
-  height: 1px;
+  height: 2px;
 
   background: linear-gradient(
     90deg,
     transparent,
-    #8b5cf6,
-    #a855f7,
+    #483df6,
+    #655cff,
     transparent
   );
 
-  box-shadow: 0 0 28px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 20px rgba(72, 61, 246, 0.35);
 
   pointer-events: none;
 }
@@ -134,12 +120,12 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid #e7e8f0;
   border-radius: 12px;
 
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(255, 255, 255, 0.85);
 
-  color: #77777f;
+  color: #7b8190;
 
   cursor: pointer;
 
@@ -147,15 +133,18 @@
     color 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .close:hover:not(:disabled) {
-  color: #c084fc;
+  color: #483df6;
 
-  background: rgba(124, 58, 237, 0.11);
+  background: #f3f2ff;
 
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  box-shadow: 0 5px 18px rgba(72, 61, 246, 0.1);
 
   transform: rotate(5deg);
 }
@@ -177,7 +166,7 @@
   padding: 34px;
 
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.45) transparent;
+  scrollbar-color: rgba(72, 61, 246, 0.3) transparent;
 }
 
 .scroll::-webkit-scrollbar {
@@ -189,8 +178,12 @@
 }
 
 .scroll::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.45);
+  background: rgba(72, 61, 246, 0.3);
   border-radius: 20px;
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(72, 61, 246, 0.5);
 }
 
 /* =========================================================
@@ -214,11 +207,11 @@
 
   border-radius: 8px;
 
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(72, 61, 246, 0.075);
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.15);
 
-  color: #c084fc;
+  color: #483df6;
 
   font-size: 12px;
   font-weight: 900;
@@ -235,7 +228,7 @@
 .header h2 {
   margin: 0;
 
-  color: #f7f7f9;
+  color: #171b2b;
 
   font-size: 29px;
   line-height: 1.15;
@@ -250,7 +243,7 @@
 
   margin: 8px 0 0;
 
-  color: #696970;
+  color: #7b8190;
 
   font-size: 15px;
   line-height: 1.6;
@@ -275,11 +268,15 @@
 
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.045),
-    rgba(255, 255, 255, 0.018)
+    rgba(72, 61, 246, 0.035),
+    rgba(255, 255, 255, 0.9)
   );
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid #e8e9f1;
+
+  box-shadow:
+    0 5px 18px rgba(15, 23, 42, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .logoSection::after {
@@ -296,9 +293,9 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
-  opacity: 0.11;
+  opacity: 0.07;
 
   filter: blur(45px);
 
@@ -324,19 +321,13 @@
 
   border-radius: 24px;
 
-  background: radial-gradient(
-    circle at 30% 20%,
-    #a855f7,
-    #7c3aed 52%,
-    #281047 100%
-  );
+  background: linear-gradient(145deg, #6d64ff 0%, #483df6 55%, #372dcc 100%);
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(72, 61, 246, 0.15);
 
   box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(139, 92, 246, 0.25),
-    0 0 35px rgba(124, 58, 237, 0.12);
+    0 15px 35px rgba(72, 61, 246, 0.18),
+    0 0 0 1px rgba(72, 61, 246, 0.08);
 }
 
 .logo img {
@@ -352,7 +343,7 @@
   width: 42px;
   height: 42px;
 
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .logoCamera {
@@ -370,13 +361,15 @@
 
   border-radius: 11px;
 
-  background: #151517;
+  background: #ffffff;
 
-  border: 1px solid rgba(139, 92, 246, 0.4);
+  border: 1px solid #dddff0;
 
-  color: #c084fc;
+  color: #483df6;
 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 7px 18px rgba(15, 23, 42, 0.15),
+    0 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
 .logoCamera svg {
@@ -395,14 +388,14 @@
 }
 
 .logoInfo strong {
-  color: #eeeef1;
+  color: #202437;
 
   font-size: 20px;
   font-weight: 900;
 }
 
 .logoInfo > span {
-  color: #68686f;
+  color: #858b99;
 
   font-size: 13px;
 }
@@ -440,41 +433,48 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .uploadButton {
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  background: linear-gradient(135deg, #5d54ff 0%, #483df6 55%, #3c32d5 100%);
 
-  border: 1px solid #a855f7;
+  border: 1px solid #483df6;
 
   color: #fff;
 
-  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.22);
+  box-shadow:
+    0 8px 20px rgba(72, 61, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .uploadButton:hover {
   transform: translateY(-1px);
 
-  background: linear-gradient(135deg, #b36aff, #8b5cf6);
+  background: linear-gradient(135deg, #6d65ff, #5349f7);
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.25);
 }
 
 .removeButton {
-  background: rgba(255, 255, 255, 0.025);
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e4e5ec;
 
-  color: #77777e;
+  color: #777e8d;
 }
 
 .removeButton:hover {
   transform: translateY(-1px);
 
-  background: rgba(124, 58, 237, 0.08);
+  background: #f7f6ff;
 
-  border-color: rgba(139, 92, 246, 0.25);
+  border-color: rgba(72, 61, 246, 0.2);
 
-  color: #c084fc;
+  color: #483df6;
+
+  box-shadow: 0 5px 15px rgba(72, 61, 246, 0.07);
 }
 
 .uploadButton svg,
@@ -494,9 +494,13 @@
 
   border-radius: 18px;
 
-  background: rgba(255, 255, 255, 0.018);
+  background: rgba(255, 255, 255, 0.8);
 
-  border: 1px solid rgba(255, 255, 255, 0.055);
+  border: 1px solid #e8e9f0;
+
+  box-shadow:
+    0 4px 15px rgba(15, 23, 42, 0.025),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .sectionTitle {
@@ -512,7 +516,7 @@
   width: 18px;
   height: 18px;
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .sectionTitle div {
@@ -523,14 +527,14 @@
 }
 
 .sectionTitle strong {
-  color: #e7e7ea;
+  color: #252a3b;
 
   font-size: 17px;
   font-weight: 900;
 }
 
 .sectionTitle span {
-  color: #5e5e65;
+  color: #858b99;
 
   font-size: 13px;
 }
@@ -564,7 +568,7 @@
 .fieldLabel {
   padding-left: 3px;
 
-  color: #68686f;
+  color: #747b8b;
 
   font-size: 12px;
   font-weight: 850;
@@ -585,9 +589,9 @@
 
   border-radius: 12px;
 
-  background: #0e0e11;
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid #e1e3eb;
 
   transition:
     border-color 0.2s ease,
@@ -596,19 +600,19 @@
 }
 
 .inputBox:hover {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: #d2d5e0;
 
-  background: #111115;
+  background: #ffffff;
 }
 
 .inputBox:focus-within {
-  border-color: rgba(139, 92, 246, 0.55);
+  border-color: rgba(72, 61, 246, 0.55);
 
-  background: #110e16;
+  background: #ffffff;
 
   box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.065),
-    0 8px 25px rgba(124, 58, 237, 0.045);
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 7px 22px rgba(72, 61, 246, 0.055);
 }
 
 .inputBox > svg {
@@ -617,13 +621,13 @@
 
   flex-shrink: 0;
 
-  color: #5e5e65;
+  color: #969baa;
 
   transition: color 0.2s ease;
 }
 
 .inputBox:focus-within > svg {
-  color: #a855f7;
+  color: #483df6;
 }
 
 .inputBox input {
@@ -637,7 +641,7 @@
 
   background: transparent;
 
-  color: #eeeef1;
+  color: #252a3b;
 
   font-family: inherit;
 
@@ -646,7 +650,7 @@
 }
 
 .inputBox input::placeholder {
-  color: #505057;
+  color: #a4a9b5;
 }
 
 .inputBox input:disabled {
@@ -672,9 +676,9 @@
 
   border-radius: 12px;
 
-  background: #0e0e11;
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid #e1e3eb;
 
   transition:
     border-color 0.2s ease,
@@ -682,12 +686,18 @@
     box-shadow 0.2s ease;
 }
 
+.textareaBox:hover {
+  border-color: #d2d5e0;
+}
+
 .textareaBox:focus-within {
-  border-color: rgba(139, 92, 246, 0.55);
+  border-color: rgba(72, 61, 246, 0.55);
 
-  background: #110e16;
+  background: #ffffff;
 
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.065);
+  box-shadow:
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 7px 22px rgba(72, 61, 246, 0.045);
 }
 
 .textareaBox > svg {
@@ -696,11 +706,13 @@
 
   flex-shrink: 0;
 
-  color: #5e5e65;
+  color: #969baa;
+
+  transition: color 0.2s ease;
 }
 
 .textareaBox:focus-within > svg {
-  color: #a855f7;
+  color: #483df6;
 }
 
 .textareaBox textarea {
@@ -717,7 +729,7 @@
 
   background: transparent;
 
-  color: #eeeef1;
+  color: #252a3b;
 
   font-family: inherit;
 
@@ -726,7 +738,7 @@
 }
 
 .textareaBox textarea::placeholder {
-  color: #505057;
+  color: #a4a9b5;
 }
 
 .textareaBox > span {
@@ -735,7 +747,7 @@
   right: 13px;
   bottom: 10px;
 
-  color: #4f4f56;
+  color: #9ca1ad;
 
   font-size: 12px;
 }
@@ -782,39 +794,43 @@
 }
 
 .cancel {
-  background: rgba(255, 255, 255, 0.025);
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e1e3eb;
 
-  color: #77777e;
+  color: #747b8b;
 }
 
 .cancel:hover:not(:disabled) {
   transform: translateY(-1px);
 
-  color: #d5d5d8;
+  color: #34394a;
 
-  background: rgba(255, 255, 255, 0.045);
+  background: #fafaff;
+
+  border-color: #d4d6e0;
+
+  box-shadow: 0 5px 15px rgba(15, 23, 42, 0.05);
 }
 
 .save {
-  border: 1px solid #a855f7;
+  border: 1px solid #483df6;
 
-  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 45%, #6d28d9 100%);
+  background: linear-gradient(135deg, #5e55ff 0%, #483df6 48%, #3d32d7 100%);
 
   color: #fff;
 
   box-shadow:
-    0 12px 30px rgba(124, 58, 237, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    0 12px 28px rgba(72, 61, 246, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .save:hover:not(:disabled) {
   transform: translateY(-2px);
 
   box-shadow:
-    0 17px 38px rgba(124, 58, 237, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.17);
+    0 17px 35px rgba(72, 61, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .save svg {
@@ -824,7 +840,7 @@
 
 .cancel:disabled,
 .save:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -836,15 +852,19 @@
 @media (max-width: 650px) {
   .overlay {
     padding: 8px;
+
+    background: rgba(15, 23, 42, 0.48);
   }
 
   .modal {
     max-height: calc(100vh - 16px);
+
     border-radius: 22px;
   }
 
   .scroll {
     max-height: calc(100vh - 16px);
+
     padding: 25px 16px;
   }
 
@@ -862,6 +882,10 @@
 
   .header h2 {
     font-size: 24px;
+  }
+
+  .header p {
+    font-size: 14px;
   }
 
   .logoSection {
@@ -907,6 +931,10 @@
   }
 }
 
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
 @media (max-width: 380px) {
   .scroll {
     padding: 22px 12px;
@@ -919,5 +947,9 @@
   .logo {
     width: 100px;
     height: 100px;
+  }
+
+  .header h2 {
+    font-size: 22px;
   }
 }

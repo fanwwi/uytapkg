@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import styles from "./AdsEditModal.module.css";
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const typeOptions = [
   "Дом",
@@ -165,7 +165,7 @@ export default function AdsEditModal({
               <div className={styles.field}>
                 <label>Тип объекта</label>
 
-                <CustomSelectBlack
+                <CustomSelect
                   value={form.type}
                   options={typeOptions}
                   title="Тип объекта"
@@ -183,7 +183,7 @@ export default function AdsEditModal({
               <div className={styles.field}>
                 <label>Тип предложения</label>
 
-                <CustomSelectBlack
+                <CustomSelect
                   value={form.dealType}
                   options={dealOptions}
                   title="Тип предложения"
