@@ -430,3 +430,106 @@ export async function cancelPayment(token, orderId) {
   });
   return response.json();
 }
+
+// 11. Админка
+export async function getAdminPayments(token) {
+  const response = await fetch(`${API_URL}/admin/payments`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения списка платежей");
+  }
+
+  return data;
+}
+
+// 12. Юристы
+
+// Публичный список — только активные (страница /lawyers)
+export async function getLawyers() {
+  const response = await fetch(`${API_URL}/lawyers`);
+  return response.json();
+}
+
+// Список для админки — все юристы, включая выключенных
+export async function getAdminLawyers(token) {
+  const response = await fetch(`${API_URL}/admin/lawyers`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения списка юристов");
+  }
+
+  return data.data;
+}
+
+export async function createLawyer(token, payload) {
+  const response = await fetch(`${API_URL}/admin/lawyers`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    const errorMsg = Array.isArray(data.errors)
+      ? data.errors.join(", ")
+      : data.message || "Ошибка добавления юриста";
+    throw new Error(errorMsg);
+  }
+
+  return data.data;
+}
+
+export async function updateLawyer(token, id, payload) {
+  const response = await fetch(`${API_URL}/admin/lawyers/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    const errorMsg = Array.isArray(data.errors)
+      ? data.errors.join(", ")
+      : data.message || "Ошибка обновления юриста";
+    throw new Error(errorMsg);
+  }
+
+  return data.data;
+}
+
+export async function deleteLawyer(token, id) {
+  const response = await fetch(`${API_URL}/admin/lawyers/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка удаления юриста");
+  }
+
+  return data;
+}

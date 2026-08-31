@@ -874,6 +874,52 @@
   background: #7c3aed;
 }
 
+.cancelButton:disabled,
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.saveButton:disabled:hover {
+  background: #8b5cf6;
+}
+
+.submitError {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  padding: 10px 12px;
+
+  margin-bottom: 4px;
+
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+
+  background: rgba(239, 68, 68, 0.08);
+
+  color: #f28b8b;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.submitError svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.spin {
+  animation: lawyersSpin 1s linear infinite;
+}
+
+@keyframes lawyersSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

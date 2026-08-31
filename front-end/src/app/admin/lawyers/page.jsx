@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Pencil,
@@ -10,6 +10,8 @@ import {
   Phone,
   X,
   UserRound,
+  LoaderCircle,
+  AlertCircle,
 } from "lucide-react";
 
 import Header from "../components/Header/Header";
@@ -17,48 +19,12 @@ import Sidebar from "../components/Sidebar/Sidebar";
 
 import styles from "./Lawyers.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
-
-const INITIAL_LAWYERS = [
-  {
-    id: 1,
-    lastName: "Абдрахманова",
-    firstName: "Айгуль",
-    middleName: "Талгатовна",
-    specialization: "Недвижимость и земельное право",
-    experience: "8 лет",
-    phone: "+996 555 123 456",
-    whatsapp: "+996 555 123 456",
-    description:
-      "Сопровождение сделок с недвижимостью, проверка документов и юридическая консультация.",
-    active: true,
-  },
-  {
-    id: 2,
-    lastName: "Иванов",
-    firstName: "Дмитрий",
-    middleName: "Александрович",
-    specialization: "Гражданское право",
-    experience: "12 лет",
-    phone: "+996 700 456 789",
-    whatsapp: "+996 700 456 789",
-    description:
-      "Представительство интересов клиентов, договорная работа и решение гражданско-правовых споров.",
-    active: true,
-  },
-  {
-    id: 3,
-    lastName: "Садыкова",
-    firstName: "Мадина",
-    middleName: "Эркиновна",
-    specialization: "Семейное право",
-    experience: "6 лет",
-    phone: "+996 777 987 321",
-    whatsapp: "+996 777 987 321",
-    description:
-      "Консультации по вопросам брака, развода, алиментов и раздела имущества.",
-    active: false,
-  },
-];
+import {
+  getAdminLawyers,
+  createLawyer as createLawyerRequest,
+  updateLawyer as updateLawyerRequest,
+  deleteLawyer as deleteLawyerRequest,
+} from "@/utils/api";
 
 const EMPTY_FORM = {
   lastName: "",
@@ -73,16 +39,32 @@ const EMPTY_FORM = {
 };
 
 export default function Lawyers() {
-  const [lawyers, setLawyers] = useState(INITIAL_LAWYERS);
+  const [lawyers, setLawyers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLawyer, setEditingLawyer] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [isSaving, setIsSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [lawyerToDelete, setLawyerToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+
+    getAdminLawyers(token)
+      .then(setLawyers)
+      .catch((err) => {
+        console.error("Ошибка загрузки юристов:", err);
+        setLoadError(err.message || "Не удалось загрузить юристов");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const filteredLawyers = lawyers.filter((lawyer) => {
     const query = search.toLowerCase().trim();
@@ -103,6 +85,7 @@ export default function Lawyers() {
   function openCreateModal() {
     setEditingLawyer(null);
     setForm({ ...EMPTY_FORM });
+    setSubmitError("");
     setIsModalOpen(true);
   }
 
@@ -121,13 +104,17 @@ export default function Lawyers() {
       active: lawyer.active ?? true,
     });
 
+    setSubmitError("");
     setIsModalOpen(true);
   }
 
   function closeModal() {
+    if (isSaving) return;
+
     setIsModalOpen(false);
     setEditingLawyer(null);
     setForm({ ...EMPTY_FORM });
+    setSubmitError("");
   }
 
   function handleChange(event) {
@@ -139,7 +126,7 @@ export default function Lawyers() {
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (!form.lastName.trim()) {
@@ -162,49 +149,60 @@ export default function Lawyers() {
       return;
     }
 
-    if (editingLawyer) {
-      setLawyers((current) =>
-        current.map((lawyer) =>
-          lawyer.id === editingLawyer.id
-            ? {
-                ...lawyer,
-                ...form,
-              }
-            : lawyer,
-        ),
-      );
-    } else {
-      setLawyers((current) => [
-        ...current,
-        {
-          id: Date.now(),
-          ...form,
-        },
-      ]);
-    }
+    const token = localStorage.getItem("uytap_token");
 
-    closeModal();
+    setSubmitError("");
+    setIsSaving(true);
+
+    try {
+      if (editingLawyer) {
+        const updated = await updateLawyerRequest(token, editingLawyer.id, form);
+
+        setLawyers((current) =>
+          current.map((lawyer) =>
+            lawyer.id === editingLawyer.id ? updated : lawyer,
+          ),
+        );
+      } else {
+        const created = await createLawyerRequest(token, form);
+
+        setLawyers((current) => [created, ...current]);
+      }
+
+      closeModal();
+    } catch (error) {
+      console.error("Ошибка сохранения юриста:", error);
+      setSubmitError(error.message || "Не удалось сохранить юриста");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  function toggleLawyer(id) {
+  async function toggleLawyer(lawyer) {
+    const token = localStorage.getItem("uytap_token");
+    const nextActive = !lawyer.active;
+
+    // Оптимистичное обновление — сразу переключаем в UI
     setLawyers((current) =>
-      current.map((lawyer) =>
-        lawyer.id === id
-          ? {
-              ...lawyer,
-              active: !lawyer.active,
-            }
-          : lawyer,
+      current.map((item) =>
+        item.id === lawyer.id ? { ...item, active: nextActive } : item,
       ),
     );
 
-    /*
-      TODO: API
+    try {
+      await updateLawyerRequest(token, lawyer.id, { active: nextActive });
+    } catch (error) {
+      console.error("Ошибка обновления статуса юриста:", error);
 
-      await updateLawyer(id, {
-        active: !lawyer.active,
-      });
-    */
+      // Откатываем при ошибке
+      setLawyers((current) =>
+        current.map((item) =>
+          item.id === lawyer.id ? { ...item, active: lawyer.active } : item,
+        ),
+      );
+
+      alert("Не удалось изменить статус юриста. Попробуйте ещё раз.");
+    }
   }
 
   function openDeleteModal(lawyer) {
@@ -222,14 +220,12 @@ export default function Lawyers() {
   async function handleDelete() {
     if (!lawyerToDelete || deleteLoading) return;
 
+    const token = localStorage.getItem("uytap_token");
+
     setDeleteLoading(true);
 
     try {
-      /*
-        TODO: API
-
-        await deleteLawyer(lawyerToDelete.id);
-      */
+      await deleteLawyerRequest(token, lawyerToDelete.id);
 
       setLawyers((current) =>
         current.filter((lawyer) => lawyer.id !== lawyerToDelete.id),
@@ -240,7 +236,7 @@ export default function Lawyers() {
     } catch (error) {
       console.error(error);
 
-      alert("Не удалось удалить юриста.");
+      alert(error.message || "Не удалось удалить юриста.");
     } finally {
       setDeleteLoading(false);
     }
@@ -324,7 +320,18 @@ export default function Lawyers() {
               <span>Действия</span>
             </div>
 
-            {filteredLawyers.length > 0 ? (
+            {loading ? (
+              <div className={styles.empty}>
+                <LoaderCircle className={styles.spin} />
+                <strong>Загружаем юристов...</strong>
+              </div>
+            ) : loadError ? (
+              <div className={styles.empty}>
+                <AlertCircle />
+                <strong>Не удалось загрузить юристов</strong>
+                <span>{loadError}</span>
+              </div>
+            ) : filteredLawyers.length > 0 ? (
               filteredLawyers.map((lawyer) => (
                 <div
                   key={lawyer.id}
@@ -396,7 +403,7 @@ export default function Lawyers() {
                       className={`${styles.switch} ${
                         lawyer.active ? styles.switchActive : ""
                       }`}
-                      onClick={() => toggleLawyer(lawyer.id)}
+                      onClick={() => toggleLawyer(lawyer)}
                       aria-label={
                         lawyer.active
                           ? "Выключить юриста"
@@ -439,7 +446,11 @@ export default function Lawyers() {
 
                 <strong>Юристы не найдены</strong>
 
-                <span>Попробуйте изменить поисковый запрос.</span>
+                <span>
+                  {lawyers.length === 0
+                    ? "Пока не добавлено ни одного юриста."
+                    : "Попробуйте изменить поисковый запрос."}
+                </span>
               </div>
             )}
           </section>
@@ -482,6 +493,13 @@ export default function Lawyers() {
 
             <form onSubmit={handleSubmit}>
               <div className={styles.formBody}>
+                {submitError && (
+                  <div className={styles.submitError}>
+                    <AlertCircle size={16} />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 {/* LAST NAME */}
 
                 <div className={styles.field}>
@@ -621,14 +639,23 @@ export default function Lawyers() {
                   type="button"
                   className={styles.cancelButton}
                   onClick={closeModal}
+                  disabled={isSaving}
                 >
                   Отмена
                 </button>
 
-                <button type="submit" className={styles.saveButton}>
-                  {editingLawyer
-                    ? "Сохранить изменения"
-                    : "Добавить юриста"}
+                <button
+                  type="submit"
+                  className={styles.saveButton}
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <LoaderCircle size={16} className={styles.spin} />
+                  ) : editingLawyer ? (
+                    "Сохранить изменения"
+                  ) : (
+                    "Добавить юриста"
+                  )}
                 </button>
               </div>
             </form>

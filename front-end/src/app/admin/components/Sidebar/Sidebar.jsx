@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Building2,
@@ -51,6 +51,14 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("uytap_token");
+    localStorage.removeItem("uytap_user");
+    document.cookie = "uytap_token=; path=/; max-age=0";
+    router.push("/admin/login");
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -93,7 +101,7 @@ export default function Sidebar() {
           Сайт
         </Link>
 
-        <button className={styles.logout}>
+        <button type="button" className={styles.logout} onClick={handleLogout}>
           <LogOut />
           Выйти
         </button>

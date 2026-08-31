@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Scale,
   ShieldCheck,
@@ -17,39 +18,7 @@ import {
 import styles from "./Lawyers.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
-
-const lawyers = [
-  {
-    id: 1,
-    name: "Айбек Маратов",
-    description:
-      "Специалист по проверке сделок с недвижимостью, правоустанавливающих документов и юридических рисков.",
-    experience: "8 лет опыта",
-    specialization: "Недвижимость и сделки",
-    phone: "+996 555 123 456",
-    whatsapp: "https://wa.me/996555123456",
-  },
-  {
-    id: 2,
-    name: "Алина Садыкова",
-    description:
-      "Практикующий юрист по вопросам недвижимости, договоров купли-продажи и проверки объектов.",
-    experience: "6 лет опыта",
-    specialization: "Недвижимость и договоры",
-    phone: "+996 700 456 789",
-    whatsapp: "https://wa.me/996700456789",
-  },
-  {
-    id: 3,
-    name: "Нурбек Абдрахманов",
-    description:
-      "Проводит юридический анализ объектов недвижимости и помогает выявить возможные ограничения и риски.",
-    experience: "10 лет опыта",
-    specialization: "Юридическая экспертиза",
-    phone: "+996 777 987 654",
-    whatsapp: "https://wa.me/996777987654",
-  },
-];
+import { getLawyers } from "@/utils/api";
 
 const benefits = [
   {
@@ -70,6 +39,18 @@ const benefits = [
 ];
 
 export default function Lawyers() {
+  const [lawyers, setLawyers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getLawyers()
+      .then((res) => {
+        if (res.success) setLawyers(res.data || []);
+      })
+      .catch((err) => console.error("Ошибка загрузки юристов:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <main className={styles.page}>
       <Header />
@@ -234,64 +215,80 @@ export default function Lawyers() {
             </div>
           </div>
 
-          <div className={styles.lawyersGrid}>
-            {lawyers.map((lawyer) => (
-              <article className={styles.lawyerCard} key={lawyer.id}>
-                <div className={styles.lawyerTop}>
-                  <div className={styles.avatar}>
-                    {lawyer.name
-                      .split(" ")
-                      .map((word) => word[0])
-                      .join("")
-                      .slice(0, 2)}
-                  </div>
+          {loading ? (
+            <p className={styles.stateMessage}>Загружаем юристов...</p>
+          ) : lawyers.length === 0 ? (
+            <p className={styles.stateMessage}>
+              Пока нет доступных юристов. Загляните позже.
+            </p>
+          ) : (
+            <div className={styles.lawyersGrid}>
+              {lawyers.map((lawyer) => {
+                const fullName = [lawyer.lastName, lawyer.firstName]
+                  .filter(Boolean)
+                  .join(" ");
 
-                  <div className={styles.verified}>
-                    <BadgeCheck />
-                    Проверен
-                  </div>
-                </div>
+                const initials = `${lawyer.firstName?.[0] || ""}${
+                  lawyer.lastName?.[0] || ""
+                }`;
 
-                <div className={styles.lawyerInfo}>
-                  <h3>{lawyer.name}</h3>
+                return (
+                  <article className={styles.lawyerCard} key={lawyer.id}>
+                    <div className={styles.lawyerTop}>
+                      <div className={styles.avatar}>{initials}</div>
 
-                  <div className={styles.specialization}>
-                    <Scale />
-                    {lawyer.specialization}
-                  </div>
+                      <div className={styles.verified}>
+                        <BadgeCheck />
+                        Проверен
+                      </div>
+                    </div>
 
-                  <p>{lawyer.description}</p>
-                </div>
+                    <div className={styles.lawyerInfo}>
+                      <h3>{fullName}</h3>
 
-                <div className={styles.lawyerMeta}>
-                  <div>
-                    <Clock3 />
-                    {lawyer.experience}
-                  </div>
-                </div>
+                      <div className={styles.specialization}>
+                        <Scale />
+                        {lawyer.specialization}
+                      </div>
 
-                <div className={styles.contacts}>
-                  <a
-                    href={`tel:${lawyer.phone.replace(/\s/g, "")}`}
-                    className={styles.phone}
-                  >
-                    <Phone />
-                    Позвонить
-                  </a>
+                      {lawyer.description && <p>{lawyer.description}</p>}
+                    </div>
 
-                  <a
-                    href={lawyer.whatsapp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.whatsapp}
-                  >
-                    <MessageCircle />
-                    WhatsApp
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
+                    <div className={styles.lawyerMeta}>
+                      <div>
+                        <Clock3 />
+                        {lawyer.experience}
+                      </div>
+                    </div>
+
+                    <div className={styles.contacts}>
+                      {lawyer.phone && (
+                        <a
+                          href={`tel:${lawyer.phone.replace(/\s/g, "")}`}
+                          className={styles.phone}
+                        >
+                          <Phone />
+                          Позвонить
+                        </a>
+                      )}
+
+                      {lawyer.whatsapp && (
+                        <a
+                          href={`https://wa.me/${lawyer.whatsapp.replace(/\D/g, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.whatsapp}
+                        >
+                          <MessageCircle />
+                          WhatsApp
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* CTA */}

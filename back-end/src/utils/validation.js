@@ -284,4 +284,22 @@ export const createComplexSchema = z
 // Схема обновления Жилого Комплекса (PUT /api/complexes/:id)
 export const updateComplexSchema = createComplexSchema.partial();
 
+// Схема добавления юриста (POST /api/admin/lawyers)
+export const createLawyerSchema = z.object({
+  lastName: z.string({ required_error: "Укажите фамилию" }).min(1, "Укажите фамилию"),
+  firstName: z.string({ required_error: "Укажите имя" }).min(1, "Укажите имя"),
+  middleName: z.string().optional().nullable(),
+  specialization: z
+    .string({ required_error: "Укажите специализацию" })
+    .min(1, "Укажите специализацию"),
+  experience: z.string({ required_error: "Укажите опыт работы" }).min(1, "Укажите опыт работы"),
+  phone: z.string().optional().nullable(),
+  whatsapp: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  active: z.boolean().optional(),
+});
+
+// Схема обновления юриста (PUT /api/admin/lawyers/:id)
+export const updateLawyerSchema = createLawyerSchema.partial();
+
 

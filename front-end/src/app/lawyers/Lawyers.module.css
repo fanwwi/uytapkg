@@ -525,6 +525,16 @@
   gap: 17px;
 }
 
+.stateMessage {
+  padding: 60px 20px;
+
+  text-align: center;
+
+  color: var(--text-muted);
+
+  font-size: 14px;
+}
+
 .lawyerCard {
   padding: 25px;
 

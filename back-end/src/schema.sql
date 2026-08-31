@@ -196,6 +196,24 @@ CREATE TABLE IF NOT EXISTS payments (
 CREATE INDEX IF NOT EXISTS idx_payments_user_id ON payments(user_id);
 CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
 
+-- 14. Юристы (раздел «Юристы», управляется из админ-панели)
+CREATE TABLE IF NOT EXISTS lawyers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    last_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100),
+    specialization VARCHAR(255) NOT NULL,
+    experience VARCHAR(50) NOT NULL,
+    phone VARCHAR(50),
+    whatsapp VARCHAR(50),
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_lawyers_is_active ON lawyers(is_active);
+
 -- 11. Индексы для сверхбыстрого поиска
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);

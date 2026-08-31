@@ -328,7 +328,7 @@ export const getMe = async (req, res) => {
 
     const { data: user, error: userError } = await supabase
       .from("users")
-      .select("id, account_type, email, phone, is_verified, created_at")
+      .select("id, account_type, email, phone, is_verified, role, created_at")
       .eq("id", userId)
       .single();
 
@@ -353,6 +353,7 @@ export const getMe = async (req, res) => {
         email: user.email,
         phone: user.phone,
         isVerified: user.is_verified,
+        role: user.role || "user",
         profile: formatProfileWithMetadata(profile),
       },
     });
