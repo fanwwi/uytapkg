@@ -1412,3 +1412,843 @@
     transition: none;
   }
 }
+
+/* =========================================================
+   PRICING BUTTON
+========================================================= */
+
+.pricingButton {
+  height: 46px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(139, 92, 246, 0.25);
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.12),
+      rgba(139, 92, 246, 0.045)
+    ),
+    #111116;
+
+  color: #c4b5fd;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.pricingButton:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(139, 92, 246, 0.45);
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.17), rgba(139, 92, 246, 0.07)),
+    #15151b;
+
+  color: #fff;
+
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.12);
+}
+
+/* =========================================================
+   HEADER LAYOUT
+========================================================= */
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 30px;
+}
+
+/* =========================================================
+   PRICING OVERVIEW
+========================================================= */
+
+.pricingOverview {
+  margin-bottom: 24px;
+
+  padding: 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.08),
+      transparent 40%
+    ),
+    #101015;
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.pricingOverviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 18px;
+}
+
+.pricingOverviewHeader > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.pricingOverviewHeader span {
+  color: #77727f;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.4px;
+}
+
+.pricingOverviewHeader h2 {
+  margin: 0;
+
+  color: #f3f1f7;
+
+  font-size: 17px;
+
+  font-weight: 850;
+}
+
+.pricingEditSmall {
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0 11px;
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+
+  border-radius: 9px;
+
+  background: rgba(139, 92, 246, 0.06);
+
+  color: #a78bfa;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.pricingEditSmall:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+
+  background: rgba(139, 92, 246, 0.11);
+
+  color: #c4b5fd;
+}
+
+.pricingOverviewGrid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.pricingOverviewGrid > div,
+.servicesOverview > div {
+  min-width: 0;
+
+  padding: 13px 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.045);
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pricingOverviewGrid span,
+.servicesOverview span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #66636e;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+}
+
+.pricingOverviewGrid strong,
+.servicesOverview strong {
+  display: block;
+
+  color: #e7e4ec;
+
+  font-size: 13px;
+
+  font-weight: 850;
+
+  overflow-wrap: anywhere;
+}
+
+.servicesOverview {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .pricingOverviewGrid,
+  .servicesOverview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .pageHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .pricingButton {
+    width: 100%;
+  }
+
+  .pricingOverview {
+    padding: 18px;
+  }
+
+  .pricingOverviewGrid,
+  .servicesOverview {
+    grid-template-columns: 1fr;
+  }
+
+  .pricingOverviewHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .pricingEditSmall {
+    width: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+  .pricingOverview {
+    padding: 15px;
+  }
+}
+
+/* =========================================================
+   PRICING SETTINGS BUTTON
+========================================================= */
+
+.pricingButton {
+  height: 46px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 12px;
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.14), rgba(139, 92, 246, 0.04)),
+    #111116;
+
+  color: #c4b5fd;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.pricingButton:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(139, 92, 246, 0.5);
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.07)),
+    #15151b;
+
+  color: #fff;
+
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.14);
+}
+
+.pricingButton:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   PRICING PANEL
+========================================================= */
+
+.pricingPanel {
+  position: relative;
+
+  margin-bottom: 24px;
+
+  padding: 23px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+
+  border-radius: 21px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.1),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(124, 58, 237, 0.045),
+      transparent 30%
+    ),
+    #101015;
+
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.24);
+}
+
+.pricingPanel::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(90deg, #6d28d9, #a855f7, transparent);
+
+  opacity: 0.8;
+}
+
+/* =========================================================
+   PRICING HEADER
+========================================================= */
+
+.pricingPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+}
+
+.pricingPanelTitle {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-width: 0;
+}
+
+.pricingPanelIcon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.18);
+
+  border-radius: 13px;
+
+  background: rgba(139, 92, 246, 0.09);
+
+  color: #a78bfa;
+}
+
+.pricingPanelTitle > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.pricingPanelTitle span {
+  color: #6f6b76;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.4px;
+}
+
+.pricingPanelTitle h2 {
+  margin: 0;
+
+  color: #f0edf5;
+
+  font-size: 19px;
+
+  font-weight: 900;
+
+  letter-spacing: -0.3px;
+}
+
+.pricingPanelTitle p {
+  margin: 0;
+
+  color: #72707c;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.pricingEditButton {
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.13),
+    rgba(139, 92, 246, 0.05)
+  );
+
+  color: #c4b5fd;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.pricingEditButton:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(139, 92, 246, 0.48);
+
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(139, 92, 246, 0.08)
+  );
+
+  color: #fff;
+
+  box-shadow: 0 9px 24px rgba(139, 92, 246, 0.12);
+}
+
+/* =========================================================
+   GROUP TITLE
+========================================================= */
+
+.pricingGroupTitle {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 12px;
+}
+
+.pricingGroupTitle > span {
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: rgba(139, 92, 246, 0.12);
+
+  color: #a78bfa;
+
+  font-size: 9px;
+
+  font-weight: 900;
+}
+
+.pricingGroupTitle > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.pricingGroupTitle strong {
+  color: #dfdce5;
+
+  font-size: 12px;
+
+  font-weight: 850;
+}
+
+.pricingGroupTitle small {
+  color: #65616c;
+
+  font-size: 10px;
+}
+
+.servicesTitle {
+  margin-top: 24px;
+}
+
+/* =========================================================
+   PRICE CARDS
+========================================================= */
+
+.currentPricingGrid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.currentPriceCard {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.055);
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    ),
+    #0d0d12;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.currentPriceCard:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(139, 92, 246, 0.2);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.06),
+      rgba(255, 255, 255, 0.01)
+    ),
+    #101015;
+
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.currentPriceIcon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(139, 92, 246, 0.15);
+
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #a78bfa;
+}
+
+.currentPriceContent {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.currentPriceContent span {
+  color: #65616d;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+}
+
+.currentPriceContent strong {
+  color: #eeeaf4;
+
+  font-size: 16px;
+
+  line-height: 1.15;
+
+  font-weight: 900;
+
+  overflow-wrap: anywhere;
+}
+
+.currentPriceContent small {
+  color: #5d5964;
+
+  font-size: 9px;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   PANEL FOOTER
+========================================================= */
+
+.pricingPanelFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 17px;
+  padding-top: 15px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.pricingPanelFooter > span {
+  color: #5e5a65;
+
+  font-size: 10px;
+}
+
+.pricingInlineButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #9d87dc;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pricingInlineButton:hover {
+  color: #c4b5fd;
+
+  transform: translateX(2px);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .currentPricingGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .pageHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .pricingButton {
+    width: 100%;
+  }
+
+  .pricingPanel {
+    padding: 19px;
+  }
+
+  .pricingPanelHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .pricingEditButton {
+    width: 100%;
+  }
+
+  .currentPricingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricingPanelFooter {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .pricingInlineButton {
+    width: 100%;
+
+    min-height: 35px;
+
+    border: 1px solid rgba(139, 92, 246, 0.15);
+
+    border-radius: 8px;
+
+    background: rgba(139, 92, 246, 0.05);
+  }
+}
+
+@media (max-width: 450px) {
+  .pricingPanel {
+    padding: 15px;
+
+    border-radius: 17px;
+  }
+
+  .pricingPanelTitle h2 {
+    font-size: 17px;
+  }
+
+  .currentPriceCard {
+    padding: 13px;
+  }
+
+  .currentPriceContent strong {
+    font-size: 15px;
+  }
+}

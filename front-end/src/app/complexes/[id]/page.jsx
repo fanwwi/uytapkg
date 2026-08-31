@@ -4,8 +4,11 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { getComplexById } from "@/utils/api";
+import { getComplexById, getListings } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
+import { mapListingData } from "@/utils/mapListingData";
+
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 import {
   ArrowLeft,
@@ -20,10 +23,6 @@ import {
   ShieldCheck,
   Sparkles,
   Trees,
-  Dumbbell,
-  Waves,
-  DoorOpen,
-  Flame,
   Zap,
   Camera,
   CheckCircle2,
@@ -34,8 +33,6 @@ import {
   Home,
   Maximize,
   Grid3X3,
-  Landmark,
-  BadgeDollarSign,
 } from "lucide-react";
 
 import styles from "./ComplexDetail.module.css";
@@ -88,7 +85,12 @@ const EMPTY_COMPLEX = {
 };
 
 const formatValue = (value, suffix = "") => {
-  if (value === null || value === undefined || value === "" || value === 0) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === "" ||
+    Number(value) === 0
+  ) {
     return "Не указано";
   }
 
@@ -138,6 +140,173 @@ const getLayoutValue = (layout, keys) => {
   return null;
 };
 
+/* =========================================================
+   COMPLEX RELATION
+========================================================= */
+
+function getComplexReference(listing) {
+  if (!listing) return null;
+
+  const directIds = [
+    listing.complexId,
+    listing.complex_id,
+    listing.residentialComplexId,
+    listing.residential_complex_id,
+    listing.projectId,
+    listing.project_id,
+    listing.complexID,
+    listing.projectID,
+  ];
+
+  for (const value of directIds) {
+    if (
+      value !== null &&
+      value !== undefined &&
+      value !== "" &&
+      Number.isFinite(Number(value))
+    ) {
+      return String(value);
+    }
+
+    if (value !== null && value !== undefined && value !== "") {
+      return String(value);
+    }
+  }
+
+  const nestedIds = [
+    listing.complex?.id,
+    listing.complex?.complexId,
+    listing.residentialComplex?.id,
+    listing.residential_complex?.id,
+    listing.project?.id,
+    listing.project?.projectId,
+  ];
+
+  for (const value of nestedIds) {
+    if (value !== null && value !== undefined && value !== "") {
+      return String(value);
+    }
+  }
+
+  return null;
+}
+
+/* =========================================================
+   CHECK AVAILABLE LISTING
+========================================================= */
+
+function isListingAvailable(item) {
+  if (!item) return false;
+
+  const booleanAvailability = [
+    item.available,
+    item.isAvailable,
+    item.is_available,
+    item.active,
+    item.isActive,
+    item.is_active,
+    item.published,
+    item.isPublished,
+    item.is_published,
+  ];
+
+  const explicitBoolean = booleanAvailability.find(
+    (value) => typeof value === "boolean",
+  );
+
+  if (explicitBoolean === false) {
+    return false;
+  }
+
+  const status = String(
+    item.availabilityStatus ??
+      item.availability_status ??
+      item.statusName ??
+      item.listingStatus ??
+      item.listing_status ??
+      item.saleStatus ??
+      item.sale_status ??
+      item.status ??
+      "",
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    status.includes("продан") ||
+    status.includes("sold") ||
+    status.includes("архив") ||
+    status.includes("archive") ||
+    status.includes("закрыт") ||
+    status.includes("closed") ||
+    status.includes("недоступ")
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+/* =========================================================
+   NORMALIZE LISTING
+========================================================= */
+
+function normalizeApartmentListing(item) {
+  if (!item) return null;
+
+  try {
+    const mapped = mapListingData(item);
+
+    return {
+      ...mapped,
+
+      id: item.id ?? mapped.id,
+
+      title:
+        mapped.title || item.title || item.name || "Квартира в жилом комплексе",
+
+      image:
+        mapped.image ||
+        mapped.images?.[0] ||
+        item.cover_photo ||
+        item.coverPhoto ||
+        item.images?.[0] ||
+        item.image ||
+        null,
+
+      location:
+        mapped.location ||
+        mapped.address ||
+        item.address ||
+        item.city ||
+        "Адрес не указан",
+
+      type:
+        mapped.type ||
+        item.type ||
+        item.category ||
+        item.propertyType ||
+        "Квартира",
+
+      description: mapped.description || item.description || "",
+
+      rawComplexId: getComplexReference({
+        ...item,
+        ...mapped,
+      }),
+
+      isAvailable: isListingAvailable({
+        ...item,
+        ...mapped,
+      }),
+    };
+  } catch (error) {
+    console.error("Ошибка mapListingData для квартиры:", error, item);
+
+    return null;
+  }
+}
+
 export default function ComplexDetails() {
   const router = useRouter();
   const params = useParams();
@@ -145,45 +314,126 @@ export default function ComplexDetails() {
   const complexId = params?.id;
 
   const [complex, setComplex] = useState(EMPTY_COMPLEX);
+
+  const [apartments, setApartments] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [apartmentsLoading, setApartmentsLoading] = useState(true);
+
   const [error, setError] = useState("");
+  const [apartmentsError, setApartmentsError] = useState("");
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  /* =========================================================
+     LOAD COMPLEX + APARTMENTS
+  ========================================================= */
+
   useEffect(() => {
     if (!complexId) return;
 
-    async function loadComplex() {
+    let cancelled = false;
+
+    async function loadData() {
+      setLoading(true);
+      setApartmentsLoading(true);
+      setError("");
+      setApartmentsError("");
+
       try {
-        setLoading(true);
-        setError("");
+        const [complexResponse, listingsResponse] = await Promise.all([
+          getComplexById(complexId),
+          getListings({
+            page: 1,
+            limit: 200,
+          }),
+        ]);
 
-        const response = await getComplexById(complexId);
+        if (cancelled) return;
 
-        if (!response?.success || !response?.data) {
-          throw new Error(response?.message || "Жилой комплекс не найден");
+        /* =========================
+           COMPLEX
+        ========================= */
+
+        if (!complexResponse?.success || !complexResponse?.data) {
+          throw new Error(
+            complexResponse?.message || "Жилой комплекс не найден",
+          );
         }
 
-        const mapped = mapComplexData(response.data);
+        const mappedComplex = mapComplexData(complexResponse.data);
 
         setComplex({
           ...EMPTY_COMPLEX,
-          ...mapped,
+          ...mappedComplex,
         });
 
         setCurrentImage(0);
+
+        /* =========================
+           APARTMENTS
+        ========================= */
+
+        if (listingsResponse?.success && Array.isArray(listingsResponse.data)) {
+          const currentComplexId = String(complexId);
+
+          const mappedApartments = listingsResponse.data
+            .map(normalizeApartmentListing)
+            .filter(Boolean)
+            .filter((item) => {
+              const propertyType = String(
+                item.type || item.category || item.propertyType || "",
+              )
+                .trim()
+                .toLowerCase();
+
+              const isApartment =
+                propertyType.includes("apartment") ||
+                propertyType.includes("квартир") ||
+                propertyType === "flat";
+
+              if (!isApartment) {
+                return false;
+              }
+
+              if (!item.isAvailable) {
+                return false;
+              }
+
+              return item.rawComplexId === currentComplexId;
+            });
+
+          setApartments(mappedApartments);
+        } else {
+          setApartments([]);
+        }
       } catch (err) {
         console.error("Failed to load complex detail:", err);
 
-        setError(err?.message || "Ошибка загрузки жилого комплекса");
+        if (!cancelled) {
+          setError(err?.message || "Ошибка загрузки жилого комплекса");
+
+          setApartments([]);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setApartmentsLoading(false);
+        }
       }
     }
 
-    loadComplex();
+    loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [complexId]);
+
+  /* =========================================================
+     IMAGES
+  ========================================================= */
 
   const images = useMemo(() => {
     if (complex.images?.length) {
@@ -201,11 +451,19 @@ export default function ComplexDetails() {
     setCurrentImage((prev) => (prev <= 0 ? images.length - 1 : prev - 1));
   };
 
+  /* =========================================================
+     DOCUMENTS
+  ========================================================= */
+
   const openMinstroy = () => {
     const url = complex.documentsUrl || MINSTROY_URL;
 
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
+  /* =========================================================
+     PRICE
+  ========================================================= */
 
   const priceText = useMemo(() => {
     const from = formatPrice(complex.priceFrom);
@@ -221,6 +479,10 @@ export default function ComplexDetails() {
 
     return "Цена по запросу";
   }, [complex.priceFrom, complex.priceTo]);
+
+  /* =========================================================
+     DETAIL ITEMS
+  ========================================================= */
 
   const detailItems = [
     {
@@ -269,9 +531,13 @@ export default function ComplexDetails() {
     },
   ];
 
+  /* =========================================================
+     ENGINEERING
+  ========================================================= */
+
   const engineeringItems = [
     {
-      icon: Flame,
+      icon: Zap,
       title: "Отопление",
       value: complex.heating,
     },
@@ -295,6 +561,10 @@ export default function ComplexDetails() {
       item.value !== null && item.value !== undefined && item.value !== "",
   );
 
+  /* =========================================================
+     LOADING
+  ========================================================= */
+
   if (loading) {
     return (
       <main className={styles.page}>
@@ -307,6 +577,10 @@ export default function ComplexDetails() {
       </main>
     );
   }
+
+  /* =========================================================
+     ERROR
+  ========================================================= */
 
   if (error) {
     return (
@@ -342,7 +616,9 @@ export default function ComplexDetails() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* BACK */}
+        {/* =====================================================
+            BACK
+        ===================================================== */}
 
         <button
           type="button"
@@ -353,7 +629,9 @@ export default function ComplexDetails() {
           Вернуться к объявлениям
         </button>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
 
         <section className={styles.hero}>
           {/* GALLERY */}
@@ -471,15 +749,11 @@ export default function ComplexDetails() {
 
             <div className={styles.heroDivider} />
 
-            {/* PRICE */}
-
             <div className={styles.priceBlock}>
               <span>СТОИМОСТЬ КВАРТИР</span>
 
               <strong>{priceText}</strong>
             </div>
-
-            {/* DEVELOPER */}
 
             <div className={styles.developer}>
               <div className={styles.developerIcon}>
@@ -495,8 +769,6 @@ export default function ComplexDetails() {
                 <strong>{complex.developer}</strong>
               </div>
             </div>
-
-            {/* HERO STATS */}
 
             <div className={styles.heroStats}>
               <div>
@@ -526,8 +798,6 @@ export default function ComplexDetails() {
                 </span>
               </div>
             </div>
-
-            {/* COMPLETION */}
 
             <div className={styles.completion}>
               <div className={styles.completionIcon}>
@@ -560,7 +830,94 @@ export default function ComplexDetails() {
           </div>
         </section>
 
-        {/* ABOUT */}
+        {/* =====================================================
+            AVAILABLE APARTMENTS
+        ===================================================== */}
+
+        <section
+          className={`${styles.section} ${styles.apartmentsSection}`}
+          id="apartments"
+        >
+          <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon}>
+              <Home />
+            </div>
+
+            <div>
+              <span>ДОСТУПНЫЕ КВАРТИРЫ</span>
+
+              <h2>Квартиры в {complex.name}</h2>
+            </div>
+          </div>
+
+          {apartmentsLoading ? (
+            <div className={styles.apartmentsLoading}>
+              <div className={styles.loadingSpinner} />
+
+              <span>Загружаем доступные квартиры...</span>
+            </div>
+          ) : apartments.length > 0 ? (
+            <>
+              <div className={styles.apartmentsHeader}>
+                <div>
+                  <strong>{apartments.length}</strong>
+
+                  <span>
+                    {apartments.length === 1
+                      ? "доступная квартира"
+                      : apartments.length < 5
+                        ? "доступные квартиры"
+                        : "доступных квартир"}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    document.getElementById("apartments")?.scrollIntoView({
+                      behavior: "smooth",
+                    })
+                  }
+                >
+                  Все квартиры
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+
+              <div className={styles.apartmentsGrid}>
+                {apartments.map((apartment) => (
+                  <ListingCardBlack
+                    key={apartment.id}
+                    item={apartment}
+                    isFavorite={false}
+                    onFavoriteClick={() => {}}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className={styles.noApartments}>
+              <div className={styles.noApartmentsIcon}>
+                <Home />
+              </div>
+
+              <h3>Свободных квартир пока нет</h3>
+
+              <p>
+                Сейчас в этом жилом комплексе нет доступных объявлений о продаже
+                квартир.
+              </p>
+            </div>
+          )}
+
+          {apartmentsError && (
+            <div className={styles.apartmentsError}>{apartmentsError}</div>
+          )}
+        </section>
+
+        {/* =====================================================
+            ABOUT
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -592,7 +949,9 @@ export default function ComplexDetails() {
           </div>
         </section>
 
-        {/* PROJECT DETAILS */}
+        {/* =====================================================
+            PROJECT DETAILS
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -618,6 +977,7 @@ export default function ComplexDetails() {
 
                   <div>
                     <span>{item.label}</span>
+
                     <strong>{item.value}</strong>
                   </div>
                 </div>
@@ -626,7 +986,9 @@ export default function ComplexDetails() {
           </div>
         </section>
 
-        {/* ENGINEERING */}
+        {/* =====================================================
+            ENGINEERING
+        ===================================================== */}
 
         {engineeringItems.length > 0 && (
           <section className={styles.section}>
@@ -651,7 +1013,6 @@ export default function ComplexDetails() {
 
                     <div>
                       <span>{item.title}</span>
-
                       <strong>{item.value}</strong>
                     </div>
                   </div>
@@ -661,7 +1022,9 @@ export default function ComplexDetails() {
           </section>
         )}
 
-        {/* AMENITIES */}
+        {/* =====================================================
+            AMENITIES
+        ===================================================== */}
 
         {complex.amenities?.length > 0 && (
           <section className={styles.section}>
@@ -699,7 +1062,9 @@ export default function ComplexDetails() {
           </section>
         )}
 
-        {/* LOCATION */}
+        {/* =====================================================
+            LOCATION
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -724,18 +1089,20 @@ export default function ComplexDetails() {
           </div>
         </section>
 
-        {/* APARTMENT LAYOUTS */}
+        {/* =====================================================
+            APARTMENT LAYOUTS
+        ===================================================== */}
 
         {complex.layouts?.length > 0 && (
-          <section className={styles.section} id="apartments">
+          <section className={styles.section}>
             <div className={styles.sectionHeader}>
               <div className={styles.sectionIcon}>
                 <Home />
               </div>
 
               <div>
-                <span>КВАРТИРЫ</span>
-                <h2>Планировки и цены</h2>
+                <span>ПЛАНИРОВКИ</span>
+                <h2>Планировки</h2>
               </div>
             </div>
 
@@ -820,7 +1187,9 @@ export default function ComplexDetails() {
           </section>
         )}
 
-        {/* DOCUMENTS */}
+        {/* =====================================================
+            DOCUMENTS
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -842,12 +1211,11 @@ export default function ComplexDetails() {
               </div>
 
               <div className={styles.ministryText}>
-                <strong>Проверьте информацию о строительстве</strong>
+                <strong>Официальные документы</strong>
 
                 <p>
-                  Перейдите на официальный ресурс Министерства строительства и
-                  проверьте паспорт строительного объекта и доступную информацию
-                  о жилом комплексе.
+                  Здесь можно проверить доступную официальную информацию о жилом
+                  комплексе и строительном объекте.
                 </p>
               </div>
             </div>
@@ -864,7 +1232,9 @@ export default function ComplexDetails() {
           </div>
         </section>
 
-        {/* CTA */}
+        {/* =====================================================
+            CTA
+        ===================================================== */}
 
         <section className={styles.apartmentsCta}>
           <div>
@@ -873,13 +1243,12 @@ export default function ComplexDetails() {
             <h2>Найдите своё пространство</h2>
 
             <p>
-              Посмотрите доступные планировки, характеристики квартир и цены в{" "}
-              {complex.name}.
+              Посмотрите доступные квартиры, планировки и цены в {complex.name}.
             </p>
           </div>
 
           <div className={styles.ctaActions}>
-            {complex.layouts?.length > 0 && (
+            {apartments.length > 0 && (
               <button
                 type="button"
                 onClick={() =>
@@ -888,26 +1257,26 @@ export default function ComplexDetails() {
                   })
                 }
               >
-                Смотреть планировки
+                Смотреть квартиры
                 <ArrowRight size={18} />
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={() => {
-                if (complex.developerId) {
-                  router.push(`/public-profile/${complex.developerId}`);
+            {complex.developerId && (
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/public-profile/${complex.developerId}`)
                 }
-              }}
-            >
-              Профиль застройщика
-              <ArrowRight size={18} />
-            </button>
+              >
+                Профиль застройщика
+                <ArrowRight size={18} />
+              </button>
+            )}
 
             <button type="button" onClick={openMinstroy}>
               <FileCheck size={18} />
-              Документы Минстроя
+              Документы
               <ExternalLink size={16} />
             </button>
           </div>

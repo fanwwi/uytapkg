@@ -6,11 +6,15 @@ import { useRouter, useParams } from "next/navigation";
 
 import {
   getComplexById,
+  getListings,
   updateComplex as updateComplexApi,
   deleteComplex as deleteComplexApi,
 } from "@/utils/api";
 
 import { mapComplexData } from "@/utils/mapComplexData";
+import { mapListingData } from "@/utils/mapListingData";
+
+import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
 import {
   ArrowLeft,
@@ -18,13 +22,13 @@ import {
   Building2,
   Ruler,
   Layers3,
-  CalendarDays,
-  CarFront,
-  Trees,
   Pencil,
   Trash2,
   FileCheck,
   ExternalLink,
+  Home,
+  ArrowRight,
+  Trees,
 } from "lucide-react";
 
 import styles from "./MycomplexDetails.module.css";
@@ -107,6 +111,163 @@ const getDateLabel = (date) => {
   });
 };
 
+/* =========================================================
+   GET COMPLEX REFERENCE FROM LISTING
+========================================================= */
+
+function getComplexReference(listing) {
+  if (!listing) return null;
+
+  const directIds = [
+    listing.complexId,
+    listing.complex_id,
+    listing.residentialComplexId,
+    listing.residential_complex_id,
+    listing.projectId,
+    listing.project_id,
+    listing.complexID,
+    listing.projectID,
+  ];
+
+  for (const value of directIds) {
+    if (value !== undefined && value !== null && value !== "") {
+      return String(value);
+    }
+  }
+
+  const nestedIds = [
+    listing.complex?.id,
+    listing.complex?.complexId,
+    listing.residentialComplex?.id,
+    listing.residential_complex?.id,
+    listing.project?.id,
+    listing.project?.projectId,
+  ];
+
+  for (const value of nestedIds) {
+    if (value !== undefined && value !== null && value !== "") {
+      return String(value);
+    }
+  }
+
+  return null;
+}
+
+/* =========================================================
+   CHECK LISTING AVAILABILITY
+========================================================= */
+
+function isListingAvailable(item) {
+  if (!item) return false;
+
+  const booleanValues = [
+    item.available,
+    item.isAvailable,
+    item.is_available,
+    item.active,
+    item.isActive,
+    item.is_active,
+    item.published,
+    item.isPublished,
+    item.is_published,
+  ];
+
+  const explicitBoolean = booleanValues.find(
+    (value) => typeof value === "boolean",
+  );
+
+  if (explicitBoolean === false) {
+    return false;
+  }
+
+  const status = String(
+    item.availabilityStatus ??
+      item.availability_status ??
+      item.listingStatus ??
+      item.listing_status ??
+      item.saleStatus ??
+      item.sale_status ??
+      item.statusName ??
+      item.status ??
+      "",
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    status.includes("продан") ||
+    status.includes("sold") ||
+    status.includes("архив") ||
+    status.includes("archive") ||
+    status.includes("закрыт") ||
+    status.includes("closed") ||
+    status.includes("недоступ")
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+/* =========================================================
+   NORMALIZE APARTMENT
+========================================================= */
+
+function normalizeApartmentListing(item) {
+  if (!item) return null;
+
+  try {
+    const mapped = mapListingData(item);
+
+    const merged = {
+      ...item,
+      ...mapped,
+    };
+
+    return {
+      ...mapped,
+
+      id: item.id ?? mapped.id,
+
+      title:
+        mapped.title || item.title || item.name || "Квартира в жилом комплексе",
+
+      image:
+        mapped.image ||
+        mapped.images?.[0] ||
+        item.cover_photo ||
+        item.coverPhoto ||
+        item.images?.[0] ||
+        item.image ||
+        null,
+
+      location:
+        mapped.location ||
+        mapped.address ||
+        item.address ||
+        item.city ||
+        "Адрес не указан",
+
+      type:
+        mapped.type ||
+        item.type ||
+        item.category ||
+        item.propertyType ||
+        "Квартира",
+
+      description: mapped.description || item.description || "",
+
+      rawComplexId: getComplexReference(merged),
+
+      isAvailable: isListingAvailable(merged),
+    };
+  } catch (error) {
+    console.error("Ошибка mapListingData для квартиры:", item, error);
+
+    return null;
+  }
+}
+
 export default function MyComplexDetail() {
   const router = useRouter();
   const params = useParams();
@@ -114,6 +275,11 @@ export default function MyComplexDetail() {
   const complexId = params?.id;
 
   const [residentialComplex, setResidentialComplex] = useState(null);
+
+  const [apartments, setApartments] = useState([]);
+  const [apartmentsLoading, setApartmentsLoading] = useState(true);
+  const [apartmentsError, setApartmentsError] = useState("");
+
   const [currentImage, setCurrentImage] = useState(0);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -122,31 +288,43 @@ export default function MyComplexDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /*
-   * =========================================================
-   * LOAD COMPLEX
-   * =========================================================
-   */
+  /* =========================================================
+     LOAD COMPLEX + APARTMENTS
+  ========================================================= */
 
   useEffect(() => {
     if (!complexId) return;
 
     let cancelled = false;
 
-    const loadComplex = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
+        setApartmentsLoading(true);
+
         setError("");
+        setApartmentsError("");
 
-        const response = await getComplexById(complexId);
+        const [complexResponse, listingsResponse] = await Promise.all([
+          getComplexById(complexId),
 
-        if (!response?.success || !response?.data) {
-          throw new Error("Жилой комплекс не найден");
-        }
+          getListings({
+            page: 1,
+            limit: 200,
+          }),
+        ]);
 
         if (cancelled) return;
 
-        const raw = response.data;
+        /* =====================================================
+           COMPLEX
+        ===================================================== */
+
+        if (!complexResponse?.success || !complexResponse?.data) {
+          throw new Error("Жилой комплекс не найден");
+        }
+
+        const raw = complexResponse.data;
         const mapped = mapComplexData(raw);
 
         if (!mapped) {
@@ -228,6 +406,44 @@ export default function MyComplexDetail() {
         });
 
         setCurrentImage(0);
+
+        /* =====================================================
+           APARTMENTS
+        ===================================================== */
+
+        if (listingsResponse?.success && Array.isArray(listingsResponse.data)) {
+          const currentComplexId = String(complexId);
+
+          const complexApartments = listingsResponse.data
+            .map(normalizeApartmentListing)
+            .filter(Boolean)
+            .filter((item) => {
+              const propertyType = String(
+                item.type || item.category || item.propertyType || "",
+              )
+                .trim()
+                .toLowerCase();
+
+              const isApartment =
+                propertyType.includes("apartment") ||
+                propertyType.includes("квартир") ||
+                propertyType === "flat";
+
+              if (!isApartment) {
+                return false;
+              }
+
+              if (!item.isAvailable) {
+                return false;
+              }
+
+              return item.rawComplexId === currentComplexId;
+            });
+
+          setApartments(complexApartments);
+        } else {
+          setApartments([]);
+        }
       } catch (err) {
         console.error("Failed to load complex detail:", err);
 
@@ -237,26 +453,27 @@ export default function MyComplexDetail() {
               ? err.message
               : "Ошибка загрузки жилого комплекса",
           );
+
+          setApartments([]);
         }
       } finally {
         if (!cancelled) {
           setLoading(false);
+          setApartmentsLoading(false);
         }
       }
     };
 
-    loadComplex();
+    loadData();
 
     return () => {
       cancelled = true;
     };
   }, [complexId]);
 
-  /*
-   * =========================================================
-   * IMAGES
-   * =========================================================
-   */
+  /* =========================================================
+     IMAGES
+  ========================================================= */
 
   const images = useMemo(() => {
     if (!residentialComplex) {
@@ -287,11 +504,9 @@ export default function MyComplexDetail() {
     setCurrentImage((prev) => (prev <= 0 ? images.length - 1 : prev - 1));
   };
 
-  /*
-   * =========================================================
-   * EDIT
-   * =========================================================
-   */
+  /* =========================================================
+     EDIT
+  ========================================================= */
 
   const handleEdit = () => {
     if (!residentialComplex) return;
@@ -299,11 +514,9 @@ export default function MyComplexDetail() {
     setShowEditModal(true);
   };
 
-  /*
-   * =========================================================
-   * SAVE
-   * =========================================================
-   */
+  /* =========================================================
+     SAVE
+  ========================================================= */
 
   const handleSave = async (updatedComplex) => {
     if (!residentialComplex) return;
@@ -331,8 +544,11 @@ export default function MyComplexDetail() {
 
       const payload = {
         name: updatedComplex.name,
+
         address: updatedComplex.address,
+
         status: updatedComplex.status,
+
         class: updatedComplex.class,
 
         construction:
@@ -378,7 +594,9 @@ export default function MyComplexDetail() {
       }
 
       const raw = refreshed.data;
+
       const mapped = mapComplexData(raw);
+
       const features = raw.features || {};
 
       const refreshedImages =
@@ -393,7 +611,7 @@ export default function MyComplexDetail() {
 
         id: raw.id,
 
-        name: mapped?.name || raw.name || prev.name,
+        name: mapped?.name || raw?.name || prev.name,
 
         subtitle:
           mapped?.housingClass && mapped?.address
@@ -468,11 +686,9 @@ export default function MyComplexDetail() {
     }
   };
 
-  /*
-   * =========================================================
-   * DELETE
-   * =========================================================
-   */
+  /* =========================================================
+     DELETE
+  ========================================================= */
 
   const handleDelete = async () => {
     if (!residentialComplex) return;
@@ -500,21 +716,17 @@ export default function MyComplexDetail() {
     }
   };
 
-  /*
-   * =========================================================
-   * MINISTRY
-   * =========================================================
-   */
+  /* =========================================================
+     MINSTROY
+  ========================================================= */
 
   const openMinstroy = () => {
     window.open("https://minstroy.gov.kg/", "_blank", "noopener,noreferrer");
   };
 
-  /*
-   * =========================================================
-   * LOADING
-   * =========================================================
-   */
+  /* =========================================================
+     LOADING
+  ========================================================= */
 
   if (loading) {
     return (
@@ -530,11 +742,9 @@ export default function MyComplexDetail() {
     );
   }
 
-  /*
-   * =========================================================
-   * ERROR
-   * =========================================================
-   */
+  /* =========================================================
+     ERROR
+  ========================================================= */
 
   if (error || !residentialComplex) {
     return (
@@ -558,6 +768,7 @@ export default function MyComplexDetail() {
 
             <button
               type="button"
+              className={styles.errorButton}
               onClick={() => router.push("/profile/projects")}
             >
               Вернуться к моим ЖК
@@ -568,16 +779,16 @@ export default function MyComplexDetail() {
     );
   }
 
-  /*
-   * =========================================================
-   * RENDER
-   * =========================================================
-   */
+  /* =========================================================
+     RENDER
+  ========================================================= */
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* TOP BAR */}
+        {/* =====================================================
+            TOP BAR
+        ===================================================== */}
 
         <div className={styles.topBar}>
           <button
@@ -595,7 +806,9 @@ export default function MyComplexDetail() {
           </div>
         </div>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
 
         <section className={styles.hero}>
           {/* GALLERY */}
@@ -648,7 +861,7 @@ export default function MyComplexDetail() {
                     onClick={nextImage}
                     aria-label="Следующее изображение"
                   >
-                    <ArrowLeft style={{ transform: "rotate(180deg)" }} />
+                    <ArrowRight />
                   </button>
                 </>
               )}
@@ -780,7 +993,79 @@ export default function MyComplexDetail() {
           </div>
         </section>
 
-        {/* ABOUT */}
+        {/* =====================================================
+            AVAILABLE APARTMENTS
+        ===================================================== */}
+
+        <section
+          className={`${styles.section} ${styles.apartmentsSection}`}
+          id="apartments"
+        >
+          <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon}>
+              <Home />
+            </div>
+
+            <div>
+              <span>ДОСТУПНЫЕ КВАРТИРЫ</span>
+
+              <h2>Квартиры в {residentialComplex.name}</h2>
+            </div>
+          </div>
+
+          {apartmentsLoading ? (
+            <div className={styles.apartmentsLoading}>
+              <span className={styles.loader} />
+
+              <span>Загружаем доступные квартиры...</span>
+            </div>
+          ) : apartments.length > 0 ? (
+            <>
+              <div className={styles.apartmentsHeader}>
+                <div>
+                  <strong>{apartments.length}</strong>
+
+                  <span>
+                    {apartments.length === 1
+                      ? "доступная квартира"
+                      : apartments.length < 5
+                        ? "доступные квартиры"
+                        : "доступных квартир"}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.apartmentsGrid}>
+                {apartments.map((apartment) => (
+                  <ListingCardBlack
+                    key={apartment.id}
+                    item={apartment}
+                    isFavorite={false}
+                    onFavoriteClick={() => {}}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className={styles.noApartments}>
+              <div className={styles.noApartmentsIcon}>
+                <Home />
+              </div>
+
+              <h3>Свободных квартир пока нет</h3>
+
+              <p>В этом ЖК пока нет доступных объявлений о продаже квартир.</p>
+            </div>
+          )}
+
+          {apartmentsError && (
+            <div className={styles.apartmentsError}>{apartmentsError}</div>
+          )}
+        </section>
+
+        {/* =====================================================
+            ABOUT
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -790,6 +1075,7 @@ export default function MyComplexDetail() {
 
             <div>
               <span>О ПРОЕКТЕ</span>
+
               <h2>О жилом комплексе</h2>
             </div>
           </div>
@@ -801,7 +1087,9 @@ export default function MyComplexDetail() {
           </div>
         </section>
 
-        {/* DETAILS */}
+        {/* =====================================================
+            DETAILS
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -811,6 +1099,7 @@ export default function MyComplexDetail() {
 
             <div>
               <span>ОСНОВНЫЕ ПАРАМЕТРЫ</span>
+
               <h2>Характеристики ЖК</h2>
             </div>
           </div>
@@ -823,42 +1112,51 @@ export default function MyComplexDetail() {
 
             <div>
               <span>Количество квартир</span>
+
               <strong>{residentialComplex.apartments}</strong>
             </div>
 
             <div>
               <span>Этажность</span>
+
               <strong>{residentialComplex.floors}</strong>
             </div>
 
             <div>
               <span>Количество блоков</span>
+
               <strong>{residentialComplex.blocks}</strong>
             </div>
 
             <div>
               <span>Площадь территории</span>
+
               <strong>{residentialComplex.landArea}</strong>
             </div>
 
             <div>
               <span>Высота потолков</span>
+
               <strong>{residentialComplex.ceilingHeight}</strong>
             </div>
 
             <div>
               <span>Конструкция</span>
+
               <strong>{residentialComplex.constructionType}</strong>
             </div>
 
             <div>
               <span>Паркинг</span>
+
               <strong>{residentialComplex.parking}</strong>
             </div>
           </div>
         </section>
 
-        {/* INFRASTRUCTURE */}
+        {/* =====================================================
+            INFRASTRUCTURE
+        ===================================================== */}
 
         {residentialComplex.amenities?.length > 0 && (
           <section className={styles.section}>
@@ -869,13 +1167,17 @@ export default function MyComplexDetail() {
 
               <div>
                 <span>ТЕРРИТОРИЯ</span>
+
                 <h2>Инфраструктура комплекса</h2>
               </div>
             </div>
 
             <div className={styles.infrastructure}>
               {residentialComplex.amenities.map((item, index) => (
-                <div className={styles.infrastructureItem} key={index}>
+                <div
+                  className={styles.infrastructureItem}
+                  key={`${item}-${index}`}
+                >
                   {item}
                 </div>
               ))}
@@ -883,7 +1185,9 @@ export default function MyComplexDetail() {
           </section>
         )}
 
-        {/* LOCATION */}
+        {/* =====================================================
+            LOCATION
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -893,6 +1197,7 @@ export default function MyComplexDetail() {
 
             <div>
               <span>ЛОКАЦИЯ</span>
+
               <h2>Расположение</h2>
             </div>
           </div>
@@ -904,7 +1209,9 @@ export default function MyComplexDetail() {
           </div>
         </section>
 
-        {/* DOCUMENTS */}
+        {/* =====================================================
+            DOCUMENTS
+        ===================================================== */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
@@ -914,6 +1221,7 @@ export default function MyComplexDetail() {
 
             <div>
               <span>ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ</span>
+
               <h2>Документы о жилом комплексе</h2>
             </div>
           </div>
@@ -929,8 +1237,7 @@ export default function MyComplexDetail() {
 
                 <p>
                   Перейдите на официальный ресурс Министерства строительства,
-                  чтобы проверить паспорт строительного объекта и доступную
-                  информацию о жилом комплексе.
+                  чтобы проверить доступную информацию о строительном объекте.
                 </p>
               </div>
             </div>
@@ -948,7 +1255,9 @@ export default function MyComplexDetail() {
         </section>
       </div>
 
-      {/* DELETE MODAL */}
+      {/* =====================================================
+          DELETE MODAL
+      ===================================================== */}
 
       <DeleteModal
         isOpen={showDeleteModal}
@@ -958,7 +1267,9 @@ export default function MyComplexDetail() {
         description={`Вы действительно хотите удалить «${residentialComplex.name}»? Это действие нельзя будет отменить.`}
       />
 
-      {/* EDIT MODAL */}
+      {/* =====================================================
+          EDIT MODAL
+      ===================================================== */}
 
       <EditResidentialComplexModal
         complex={showEditModal ? residentialComplex : null}
