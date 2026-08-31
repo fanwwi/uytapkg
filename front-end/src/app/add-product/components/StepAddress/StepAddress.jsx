@@ -25,7 +25,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
   useEffect(() => {
     const query = form.address?.trim();
 
-    if (!query || query.length < 3) {
+    if (!query || query.length < 2) {
       setSuggestions([]);
       return;
     }

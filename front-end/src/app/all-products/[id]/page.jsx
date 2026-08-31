@@ -38,7 +38,6 @@ import {
   FileCheck,
   CalendarDays,
   KeyRound,
-  Maximize,
   Map,
   CircleDollarSign,
   Trees,
@@ -50,8 +49,6 @@ import {
   DoorOpen,
   Compass,
   LandPlot,
-  Factory,
-  ParkingSquare,
 } from "lucide-react";
 
 import styles from "./ProductDetails.module.css";
@@ -61,6 +58,30 @@ const FALLBACK_AMENITIES = [
   "Закрытая территория",
   "Видеонаблюдение",
 ];
+
+/*
+ * Комнаты имеют смысл только для этих типов недвижимости.
+ *
+ * Все остальные типы, например:
+ * - Паркинг
+ * - Коммерция
+ * - Гараж
+ *
+ * не должны показывать количество комнат.
+ */
+const ROOM_TYPES = ["квартира", "дом", "коттедж", "комната"];
+
+function normalizeType(value) {
+  if (!value) return "";
+
+  return String(value).trim().toLowerCase().replace(/ё/g, "е");
+}
+
+function canShowRooms(product) {
+  const type = normalizeType(getRawValue(product, "type", "category"));
+
+  return ROOM_TYPES.some((allowedType) => type.includes(allowedType));
+}
 
 function formatValue(value) {
   if (value === null || value === undefined || value === "") {
@@ -228,6 +249,12 @@ export default function ProductDetails() {
     );
   };
 
+  /*
+   * ========================================================
+   * ХАРАКТЕРИСТИКИ
+   * ========================================================
+   */
+
   const characteristics = useMemo(() => {
     if (!product) return [];
 
@@ -246,16 +273,14 @@ export default function ProductDetails() {
     };
 
     /*
-     * ОСНОВНЫЕ ХАРАКТЕРИСТИКИ
+     * Количество комнат добавляем только для:
+     * квартира / дом / коттедж / комната
      */
+    if (canShowRooms(product)) {
+      add(BedDouble, "Количество комнат", getRawValue(product, "rooms"));
+    }
 
-    add(BedDouble, "Количество комнат", getRawValue(product, "rooms"));
-    add(
-      Ruler,
-      "Площадь",
-      getRawValue(product, "area", "areaFrom"),
-      formatArea,
-    );
+    add(Ruler, "Площадь", getRawValue(product, "area", "areaFrom"), formatArea);
 
     add(
       LandPlot,
@@ -264,52 +289,32 @@ export default function ProductDetails() {
       formatArea,
     );
 
-    add(
-      Layers3,
-      "Этаж",
-      getRawValue(product, "floor", "currentFloor"),
-    );
+    add(Layers3, "Этаж", getRawValue(product, "floor", "currentFloor"));
 
-    add(
-      Building2,
-      "Этажность",
-      getRawValue(product, "floors", "totalFloors"),
-    );
+    add(Building2, "Этажность", getRawValue(product, "floors", "totalFloors"));
 
     add(Home, "Тип объекта", getRawValue(product, "type", "category"));
 
-    add(
-      Tag,
-      "Категория",
-      getRawValue(product, "category", "type"),
-    );
+    add(Tag, "Категория", getRawValue(product, "category", "type"));
 
-    add(
-      CircleDollarSign,
-      "Тип сделки",
-      getRawValue(product, "dealType"),
-    );
+    add(CircleDollarSign, "Тип сделки", getRawValue(product, "dealType"));
 
-    add(
-      CalendarDays,
-      "Период аренды",
-      getRawValue(product, "rentalPeriod"),
-    );
+    add(CalendarDays, "Период аренды", getRawValue(product, "rentalPeriod"));
 
-    add(
-      KeyRound,
-      "Тип объявления",
-      getRawValue(product, "listingType"),
-    );
+    add(KeyRound, "Тип объявления", getRawValue(product, "listingType"));
 
     /*
      * ЛОКАЦИЯ
      */
 
     add(Map, "Страна", getRawValue(product, "country"));
+
     add(MapPin, "Область / регион", getRawValue(product, "region"));
+
     add(MapPin, "Город", getRawValue(product, "city"));
+
     add(MapPin, "Населённый пункт", getRawValue(product, "settlement"));
+
     add(MapPin, "Район", getRawValue(product, "district"));
 
     /*
@@ -317,10 +322,15 @@ export default function ProductDetails() {
      */
 
     add(Flame, "Отопление", getRawValue(product, "heating"));
+
     add(Droplets, "Канализация", getRawValue(product, "sewerage"));
+
     add(Zap, "Электричество", getRawValue(product, "electricity"));
+
     add(FileCheck, "Документы", getRawValue(product, "documents"));
+
     add(CarFront, "Парковка", getRawValue(product, "parking"));
+
     add(
       Ruler,
       "Высота потолков",
@@ -334,17 +344,9 @@ export default function ProductDetails() {
       },
     );
 
-    add(
-      Building2,
-      "Тип дома",
-      getRawValue(product, "buildingType"),
-    );
+    add(Building2, "Тип дома", getRawValue(product, "buildingType"));
 
-    add(
-      Sparkles,
-      "Ремонт",
-      getRawValue(product, "repair"),
-    );
+    add(Sparkles, "Ремонт", getRawValue(product, "repair"));
 
     add(
       Building2,
@@ -373,11 +375,7 @@ export default function ProductDetails() {
       getRawValue(product, "construction", "constructionType"),
     );
 
-    add(
-      Compass,
-      "Вид",
-      getRawValue(product, "view"),
-    );
+    add(Compass, "Вид", getRawValue(product, "view"));
 
     add(
       Trees,
@@ -388,25 +386,28 @@ export default function ProductDetails() {
 
         if (!formatted) return null;
 
-        return formatted.includes("м")
-          ? formatted
-          : `${formatted} м`;
+        return formatted.includes("м") ? formatted : `${formatted} м`;
       },
     );
 
     add(Bath, "Санузел", getRawValue(product, "bathroom", "bathrooms"));
+
     add(Sofa, "Мебель", getRawValue(product, "furniture"));
+
     add(Wifi, "Интернет", getRawValue(product, "internet", "wifi"));
+
     add(Wind, "Кондиционер", getRawValue(product, "airConditioning"));
 
-    add(
-      DoorOpen,
-      "Балкон",
-      getRawValue(product, "balcony"),
-    );
+    add(DoorOpen, "Балкон", getRawValue(product, "balcony"));
 
     return result;
   }, [product]);
+
+  /*
+   * ========================================================
+   * УДОБСТВА
+   * ========================================================
+   */
 
   const amenities = useMemo(() => {
     if (!product) return [];
@@ -424,42 +425,56 @@ export default function ProductDetails() {
     return FALLBACK_AMENITIES;
   }, [product]);
 
+  /*
+   * ========================================================
+   * ЛОКАЦИЯ
+   * ========================================================
+   */
+
   const locationParts = useMemo(() => {
     if (!product) return [];
 
-    const values = [
-      getRawValue(product, "country"),
-      getRawValue(product, "region"),
-      getRawValue(product, "city"),
-      getRawValue(product, "settlement"),
-      getRawValue(product, "district"),
-    ];
+    const values = [product.country, product.city].filter(
+      (value) =>
+        value !== null && value !== undefined && String(value).trim() !== "",
+    );
 
-    return [...new Set(values.filter(Boolean))];
+    return [...new Set(values.map(String))];
   }, [product]);
+
+  /*
+   * ========================================================
+   * QUICK INFO
+   * ========================================================
+   */
 
   const quickInfo = useMemo(() => {
     if (!product) return [];
 
     const result = [];
 
-    const rooms = getRawValue(product, "rooms");
-    const area = getRawValue(product, "area");
-    const floor = getRawValue(product, "floor");
-    const floors = getRawValue(product, "floors");
-    const landArea = getRawValue(
-      product,
-      "landArea",
-      "areaSotka",
-    );
+    /*
+     * Комнаты показываем только разрешённым типам.
+     */
+    if (canShowRooms(product)) {
+      const rooms = getRawValue(product, "rooms");
 
-    if (rooms !== null && Number(rooms) > 0) {
-      result.push({
-        icon: BedDouble,
-        value: rooms,
-        label: "комнат",
-      });
+      if (rooms !== null && Number(rooms) > 0) {
+        result.push({
+          icon: BedDouble,
+          value: rooms,
+          label: "комнат",
+        });
+      }
     }
+
+    const area = getRawValue(product, "area");
+
+    const floor = getRawValue(product, "floor");
+
+    const floors = getRawValue(product, "floors");
+
+    const landArea = getRawValue(product, "landArea", "areaSotka");
 
     if (area) {
       result.push({
@@ -480,18 +495,12 @@ export default function ProductDetails() {
     if (floor) {
       result.push({
         icon: Layers3,
-        value:
-          floors
-            ? `${floor} / ${floors}`
-            : floor,
+        value: floors ? `${floor} / ${floors}` : floor,
         label: floors ? "этаж" : "",
       });
     }
 
-    const beachDistance = getRawValue(
-      product,
-      "beachDistance",
-    );
+    const beachDistance = getRawValue(product, "beachDistance");
 
     if (beachDistance) {
       result.push({
@@ -504,17 +513,31 @@ export default function ProductDetails() {
     return result.slice(0, 5);
   }, [product]);
 
+  /*
+   * ========================================================
+   * LOADING
+   * ========================================================
+   */
+
   if (loading) {
     return (
       <main className={styles.page}>
         <div className={styles.loadingState}>
           <div className={styles.loadingSpinner} />
+
           <h2>Загрузка объявления...</h2>
+
           <p>Получаем информацию об объекте</p>
         </div>
       </main>
     );
   }
+
+  /*
+   * ========================================================
+   * ERROR
+   * ========================================================
+   */
 
   if (error || !product) {
     return (
@@ -548,13 +571,9 @@ export default function ProductDetails() {
 
   const currentImageSrc = images[currentImage] || images[0];
 
-  const price =
-    product.price ||
-    formatPrice(getRawValue(product, "price"));
+  const price = product.price || formatPrice(getRawValue(product, "price"));
 
-  const address =
-    product.address ||
-    locationParts.join(", ");
+  const address = product.address || locationParts.join(", ");
 
   return (
     <main className={styles.page}>
@@ -603,9 +622,7 @@ export default function ProductDetails() {
                 )}
 
                 {product.type && (
-                  <span className={styles.categoryBadge}>
-                    {product.type}
-                  </span>
+                  <span className={styles.categoryBadge}>{product.type}</span>
                 )}
               </div>
 
@@ -618,10 +635,7 @@ export default function ProductDetails() {
                 disabled={isFavoriteLoading}
                 aria-label="Добавить в избранное"
               >
-                <Heart
-                  size={23}
-                  fill={isFavorite ? "currentColor" : "none"}
-                />
+                <Heart size={23} fill={isFavorite ? "currentColor" : "none"} />
               </button>
 
               {images.length > 1 && (
@@ -659,9 +673,7 @@ export default function ProductDetails() {
                       key={`${image}-${index}`}
                       type="button"
                       className={`${styles.thumbnail} ${
-                        index === currentImage
-                          ? styles.thumbnailActive
-                          : ""
+                        index === currentImage ? styles.thumbnailActive : ""
                       }`}
                       onClick={() => setCurrentImage(index)}
                     >
@@ -681,9 +693,7 @@ export default function ProductDetails() {
                       key={index}
                       type="button"
                       className={`${styles.dot} ${
-                        index === currentImage
-                          ? styles.dotActive
-                          : ""
+                        index === currentImage ? styles.dotActive : ""
                       }`}
                       onClick={() => setCurrentImage(index)}
                       aria-label={`Фото ${index + 1}`}
@@ -700,9 +710,7 @@ export default function ProductDetails() {
             <div className={styles.summaryTop}>
               <div className={styles.summaryLabels}>
                 {product.dealType && (
-                  <span className={styles.deal}>
-                    {product.dealType}
-                  </span>
+                  <span className={styles.deal}>{product.dealType}</span>
                 )}
 
                 {product.listingType && (
@@ -713,42 +721,30 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            <h1>
-              {product.title || "Объект недвижимости"}
-            </h1>
+            <h1>{product.title || "Объект недвижимости"}</h1>
 
             <div className={styles.location}>
               <MapPin size={20} />
 
               <div>
                 {locationParts.length > 0 ? (
-                  <strong>
-                    {locationParts.join(", ")}
-                  </strong>
+                  <strong>{locationParts.join(", ")}</strong>
                 ) : (
-                  <strong>
-                    Местоположение не указано
-                  </strong>
+                  <strong>Местоположение не указано</strong>
                 )}
 
-                {product.address && (
-                  <span>{product.address}</span>
-                )}
+                {product.address && <span>{product.address}</span>}
               </div>
             </div>
 
-            {price && (
-              <div className={styles.price}>
-                {price}
-              </div>
-            )}
+            {price && <div className={styles.price}>{price}</div>}
 
             {product.rentalPeriod && (
               <div className={styles.rentalInfo}>
                 <CalendarDays size={16} />
+
                 <span>
-                  Период аренды:{" "}
-                  <strong>{product.rentalPeriod}</strong>
+                  Период аренды: <strong>{product.rentalPeriod}</strong>
                 </span>
               </div>
             )}
@@ -756,9 +752,7 @@ export default function ProductDetails() {
             {quickInfo.length > 0 && (
               <div
                 className={`${styles.quickInfo} ${
-                  quickInfo.length === 1
-                    ? styles.quickInfoOne
-                    : ""
+                  quickInfo.length === 1 ? styles.quickInfoOne : ""
                 }`}
               >
                 {quickInfo.map((item, index) => {
@@ -771,9 +765,7 @@ export default function ProductDetails() {
                       <span>
                         <b>{item.value}</b>
 
-                        {item.label && (
-                          <small>{item.label}</small>
-                        )}
+                        {item.label && <small>{item.label}</small>}
                       </span>
                     </div>
                   );
@@ -789,8 +781,7 @@ export default function ProductDetails() {
           <div className={styles.mainContent}>
             {/* ABOUT */}
 
-            {(product.description ||
-              product.title) && (
+            {(product.description || product.title) && (
               <section className={styles.section}>
                 <div className={styles.sectionHeader}>
                   <div className={styles.sectionIcon}>
@@ -799,13 +790,13 @@ export default function ProductDetails() {
 
                   <div>
                     <span>ОБ ОБЪЕКТЕ</span>
+
                     <h2>Описание</h2>
                   </div>
                 </div>
 
                 <p className={styles.description}>
-                  {product.description ||
-                    "Описание объекта не указано."}
+                  {product.description || "Описание объекта не указано."}
                 </p>
               </section>
             )}
@@ -820,6 +811,7 @@ export default function ProductDetails() {
 
                 <div>
                   <span>ПОДРОБНОСТИ</span>
+
                   <h2>Характеристики объекта</h2>
                 </div>
               </div>
@@ -840,6 +832,7 @@ export default function ProductDetails() {
 
                         <div>
                           <span>{item.label}</span>
+
                           <strong>{item.value}</strong>
                         </div>
                       </div>
@@ -849,9 +842,8 @@ export default function ProductDetails() {
               ) : (
                 <div className={styles.emptyBlock}>
                   <CheckCircle2 size={20} />
-                  <span>
-                    Дополнительные характеристики не указаны.
-                  </span>
+
+                  <span>Дополнительные характеристики не указаны.</span>
                 </div>
               )}
             </section>
@@ -867,17 +859,16 @@ export default function ProductDetails() {
 
                   <div>
                     <span>ДОПОЛНИТЕЛЬНО</span>
+
                     <h2>Удобства</h2>
                   </div>
                 </div>
 
                 <div className={styles.amenities}>
                   {amenities.map((item, index) => (
-                    <div
-                      className={styles.amenity}
-                      key={`${item}-${index}`}
-                    >
+                    <div className={styles.amenity} key={`${item}-${index}`}>
                       <ShieldCheck size={17} />
+
                       <span>{item}</span>
                     </div>
                   ))}
@@ -895,6 +886,7 @@ export default function ProductDetails() {
 
                 <div>
                   <span>РАСПОЛОЖЕНИЕ</span>
+
                   <h2>Адрес объекта</h2>
                 </div>
               </div>
@@ -911,17 +903,14 @@ export default function ProductDetails() {
                       : "Местоположение не указано"}
                   </strong>
 
-                  {address && (
-                    <p>{address}</p>
-                  )}
+                  {address && <p>{address}</p>}
 
-                  {product.latitude &&
-                    product.longitude && (
-                      <div className={styles.coordinates}>
-                        <Compass size={14} />
-                        Координаты объекта указаны
-                      </div>
-                    )}
+                  {product.latitude && product.longitude && (
+                    <div className={styles.coordinates}>
+                      <Compass size={14} />
+                      Координаты объекта указаны
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
@@ -941,6 +930,7 @@ export default function ProductDetails() {
               {product.category && (
                 <div className={styles.sideRow}>
                   <span>Категория</span>
+
                   <strong>{product.category}</strong>
                 </div>
               )}
@@ -948,6 +938,7 @@ export default function ProductDetails() {
               {product.type && (
                 <div className={styles.sideRow}>
                   <span>Тип объекта</span>
+
                   <strong>{product.type}</strong>
                 </div>
               )}
@@ -955,6 +946,7 @@ export default function ProductDetails() {
               {product.dealType && (
                 <div className={styles.sideRow}>
                   <span>Тип сделки</span>
+
                   <strong>{product.dealType}</strong>
                 </div>
               )}
@@ -962,6 +954,7 @@ export default function ProductDetails() {
               {product.rentalPeriod && (
                 <div className={styles.sideRow}>
                   <span>Период аренды</span>
+
                   <strong>{product.rentalPeriod}</strong>
                 </div>
               )}
@@ -969,6 +962,7 @@ export default function ProductDetails() {
               {product.listingType && (
                 <div className={styles.sideRow}>
                   <span>Тип объявления</span>
+
                   <strong>{product.listingType}</strong>
                 </div>
               )}
@@ -976,6 +970,7 @@ export default function ProductDetails() {
               {product.createdAt && (
                 <div className={styles.sideRow}>
                   <span>Дата публикации</span>
+
                   <strong>{product.createdAt}</strong>
                 </div>
               )}
@@ -983,9 +978,8 @@ export default function ProductDetails() {
               {product.beachDistance && (
                 <div className={styles.sideRow}>
                   <span>До пляжа</span>
-                  <strong>
-                    {product.beachDistance} м
-                  </strong>
+
+                  <strong>{product.beachDistance} м</strong>
                 </div>
               )}
             </div>
@@ -1002,45 +996,40 @@ export default function ProductDetails() {
                 {getRawValue(product, "country") && (
                   <div className={styles.sideRow}>
                     <span>Страна</span>
-                    <strong>
-                      {getRawValue(product, "country")}
-                    </strong>
+
+                    <strong>{getRawValue(product, "country")}</strong>
                   </div>
                 )}
 
                 {getRawValue(product, "region") && (
                   <div className={styles.sideRow}>
                     <span>Регион</span>
-                    <strong>
-                      {getRawValue(product, "region")}
-                    </strong>
+
+                    <strong>{getRawValue(product, "region")}</strong>
                   </div>
                 )}
 
                 {getRawValue(product, "city") && (
                   <div className={styles.sideRow}>
                     <span>Город</span>
-                    <strong>
-                      {getRawValue(product, "city")}
-                    </strong>
+
+                    <strong>{getRawValue(product, "city")}</strong>
                   </div>
                 )}
 
                 {getRawValue(product, "settlement") && (
                   <div className={styles.sideRow}>
                     <span>Населённый пункт</span>
-                    <strong>
-                      {getRawValue(product, "settlement")}
-                    </strong>
+
+                    <strong>{getRawValue(product, "settlement")}</strong>
                   </div>
                 )}
 
                 {getRawValue(product, "district") && (
                   <div className={styles.sideRow}>
                     <span>Район</span>
-                    <strong>
-                      {getRawValue(product, "district")}
-                    </strong>
+
+                    <strong>{getRawValue(product, "district")}</strong>
                   </div>
                 )}
               </div>
@@ -1058,28 +1047,17 @@ export default function ProductDetails() {
                 <div className={styles.ownerSideProfile}>
                   <div className={styles.ownerSideAvatar}>
                     <Image
-                      src={
-                        product.owner.avatar ||
-                        "/default-avatar.png"
-                      }
-                      alt={
-                        product.owner.name ||
-                        "Владелец"
-                      }
+                      src={product.owner.avatar || "/default-avatar.png"}
+                      alt={product.owner.name || "Владелец"}
                       fill
                       sizes="55px"
                     />
                   </div>
 
                   <div>
-                    <strong>
-                      {product.owner.name}
-                    </strong>
+                    <strong>{product.owner.name}</strong>
 
-                    <span>
-                      {product.owner.role ||
-                        "Владелец объявления"}
-                    </span>
+                    <span>{product.owner.role || "Владелец объявления"}</span>
                   </div>
                 </div>
 
@@ -1097,9 +1075,7 @@ export default function ProductDetails() {
                   <button
                     type="button"
                     onClick={() =>
-                      router.push(
-                        `/public-profile/${product.owner.id}`,
-                      )
+                      router.push(`/public-profile/${product.owner.id}`)
                     }
                   >
                     Связаться с владельцем
@@ -1120,9 +1096,8 @@ export default function ProductDetails() {
                 <strong>Проверка у юриста</strong>
 
                 <p>
-                  Хотите убедиться в юридической чистоте
-                  объекта? Запросите проверку объявления
-                  у юриста.
+                  Хотите убедиться в юридической чистоте объекта? Запросите
+                  проверку объявления у юриста.
                 </p>
               </div>
 

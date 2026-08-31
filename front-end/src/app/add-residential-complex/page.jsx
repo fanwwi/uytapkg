@@ -20,7 +20,6 @@ import {
   Maximize,
   Blocks,
   FileCheck,
-  ExternalLink,
   AlignLeft,
 } from "lucide-react";
 
@@ -176,14 +175,16 @@ export default function AddResidentialComplex() {
 
       if (!form.documentsUrl.trim()) {
         throw new Error(
-          "Добавьте ссылку на официальный паспорт или документы ЖК.",
+          "Добавьте ссылку на официальную информацию о жилом комплексе.",
         );
       }
 
       try {
         new URL(form.documentsUrl);
       } catch {
-        throw new Error("Ссылка на документы должна быть корректным URL.");
+        throw new Error(
+          "Ссылка на официальную информацию должна быть корректным URL.",
+        );
       }
 
       /* =========================
@@ -289,7 +290,7 @@ export default function AddResidentialComplex() {
 
             <p>
               Заполните информацию о жилом комплексе, добавьте характеристики,
-              инфраструктуру, фотографии и официальные документы.
+              инфраструктуру, фотографии и официальную информацию.
             </p>
           </div>
         </header>
@@ -772,7 +773,7 @@ export default function AddResidentialComplex() {
           </section>
 
           {/* =========================
-              05 — ДОКУМЕНТЫ
+              05 — ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ
           ========================= */}
 
           <section className={styles.card}>
@@ -787,8 +788,8 @@ export default function AddResidentialComplex() {
                 <h2>Официальная информация</h2>
 
                 <p>
-                  Добавьте ссылку на официальный паспорт или документы
-                  строительного объекта.
+                  Добавьте ссылку на официальный источник с информацией о жилом
+                  комплексе.
                 </p>
               </div>
             </div>
@@ -796,8 +797,8 @@ export default function AddResidentialComplex() {
             <div className={styles.documentForm}>
               <div className={styles.field}>
                 <label htmlFor="complex-documents">
-                  Ссылка на официальный паспорт / документы ЖК
-                  <span>*</span>
+                  Ссылка на официальную информацию о ЖК
+                  {/* <span>*</span> */}
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -815,8 +816,9 @@ export default function AddResidentialComplex() {
                 </div>
 
                 <small className={styles.fieldHint}>
-                  Укажите ссылку на официальный ресурс Министерства
-                  строительства КР или другой официальный источник.
+                  Укажите ссылку на официальный источник: сайт застройщика,
+                  официальный сайт ЖК, паспорт, проектную документацию или
+                  другой подтверждающий ресурс.
                 </small>
               </div>
             </div>

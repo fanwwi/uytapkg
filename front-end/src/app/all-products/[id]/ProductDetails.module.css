@@ -133,7 +133,9 @@
 
 .top {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(380px, 0.85fr);
+  grid-template-columns:
+    minmax(0, 1.55fr)
+    minmax(380px, 0.85fr);
   gap: 28px;
 }
 
@@ -553,7 +555,9 @@
 
 .contentGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
+  grid-template-columns:
+    minmax(0, 1fr)
+    330px;
   gap: 25px;
   margin-top: 28px;
 }
@@ -1174,6 +1178,10 @@
     padding: 20px;
   }
 }
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
 
 @media (max-width: 420px) {
   .page {

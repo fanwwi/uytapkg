@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  SlidersHorizontal,
-  Search,
-  X,
-  Home,
-  MapPin,
-  Building2,
-  DoorOpen,
-} from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { Home, Search, X } from "lucide-react";
+
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -19,150 +12,808 @@ import {
   removeFavorite,
 } from "@/utils/api";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import { mapListingData } from "@/utils/mapListingData";
 
-import styles from "./AllProducts.module.css";
 import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 
+import CommonFilters from "./components/CommonFilters/CommonFilters";
+
+import ApartmentFilters from "./components/ApartmentFilters/ApartmentFilters";
+import HouseFilters from "./components/HouseFilters/HouseFilters";
+import CottageFilters from "./components/CottageFilters/CottageFilters";
+import LandFilters from "./components/LandFilters/LandFilters";
+import RoomFilters from "./components/RoomFilters/RoomFilters";
+import CommercialFilters from "./components/CommercialFilters/CommercialFilters";
+import ParkingFilters from "./components/ParkingFilters/ParkingFilters";
+
+import SearchModeSlider from "./components/SearchModeSlider/SearchModeSlider";
+import SmartSearch from "./components/SmartSearch/SmartSearch";
+
+import styles from "./AllProducts.module.css";
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
 const categories = [
-  { value: "Все", label: "Все" },
-  { value: "Дом", label: "Дома" },
-  { value: "Квартира", label: "Квартиры" },
-  { value: "Коттедж", label: "Коттеджи" },
-  { value: "Участок", label: "Участки" },
-  { value: "Коммерция", label: "Коммерция" },
-  { value: "Паркинг/гараж", label: "Паркинг" },
-  { value: "Комнаты", label: "Комнаты" },
+  {
+    value: "apartment",
+    label: "Квартиры",
+  },
+  {
+    value: "house",
+    label: "Дома",
+  },
+  {
+    value: "cottage",
+    label: "Коттеджи",
+  },
+  {
+    value: "land",
+    label: "Участки",
+  },
+  {
+    value: "room",
+    label: "Комнаты",
+  },
+  {
+    value: "commercial",
+    label: "Коммерция",
+  },
+  {
+    value: "parking",
+    label: "Паркинг / гараж",
+  },
 ];
 
-const dealTypes = [
-  { value: "Все", label: "Все объявления" },
-  { value: "Продажа", label: "Продажа" },
-  { value: "Сниму в аренду", label: "Сниму в аренду" },
+const deals = [
+  {
+    value: "sale",
+    label: "Продажа",
+  },
+  {
+    value: "rent",
+    label: "Аренда",
+  },
 ];
 
-const cityOptions = ["Все", "Бишкек", "Ош", "Иссык-Куль", "Турция"];
+/* =========================================================
+   CATEGORY COMPONENTS
+========================================================= */
 
-const roomOptions = ["Все", "1", "2", "3", "4+"];
+const categoryComponents = {
+  apartment: ApartmentFilters,
+  house: HouseFilters,
+  cottage: CottageFilters,
+  land: LandFilters,
+  room: RoomFilters,
+  commercial: CommercialFilters,
+  parking: ParkingFilters,
+};
+
+const categoryLabels = {
+  apartment: "Квартиры",
+  house: "Дома",
+  cottage: "Коттеджи",
+  land: "Участки",
+  room: "Комнаты",
+  commercial: "Коммерция",
+  parking: "Паркинг / гараж",
+};
+
+/* =========================================================
+   API MAPS
+========================================================= */
+
+const categoryApiMap = {
+  apartment: "Квартира",
+  house: "Дом",
+  cottage: "Коттедж",
+  land: "Участок",
+  room: "Комнаты",
+  commercial: "Коммерция",
+  parking: "Паркинг/гараж",
+};
+
+const dealApiMap = {
+  sale: "Продажа",
+  rent: "Сниму в аренду",
+};
+
+/* =========================================================
+   DEFAULT FILTERS
+========================================================= */
+
+const DEFAULT_FILTERS = {
+  propertyType: "apartment",
+  dealType: "sale",
+
+  city: "Все",
+  region: "",
+  country: "",
+  district: "",
+
+  currency: "USD",
+
+  priceFrom: "",
+  priceTo: "",
+
+  areaFrom: "",
+  areaTo: "",
+
+  rooms: "Все",
+
+  beachDistanceFrom: "",
+  beachDistanceTo: "",
+
+  amenities: [],
+  communications: [],
+  technicalParameters: [],
+};
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const featureKeys = [
+  "series",
+  "floor",
+  "condition",
+  "walls",
+  "heating",
+  "documents",
+  "furniture",
+  "offerType",
+
+  "houseType",
+  "floors",
+  "sewerage",
+  "water",
+  "electricity",
+
+  "purpose",
+  "fence",
+  "location",
+  "terrain",
+
+  "roomsInApartment",
+  "privateBathroom",
+
+  "premisesType",
+  "firstLine",
+  "separateEntrance",
+  "rentalBusiness",
+
+  "ceilingHeight",
+  "parkingType",
+  "material",
+  "security",
+  "gates",
+  "inspectionPit",
+  "basement",
+  "truckAccess",
+  "gateType",
+];
+
+const arrayFilterKeys = ["amenities", "communications", "technicalParameters"];
+
+const ignoredUrlKeys = [
+  "propertyType",
+  "category",
+  "dealType",
+  "city",
+  "settlement",
+  "region",
+  "country",
+  "district",
+  "currency",
+  "priceFrom",
+  "priceTo",
+  "areaFrom",
+  "areaTo",
+  "rooms",
+  "beachDistanceFrom",
+  "beachDistanceTo",
+  "amenities",
+  "communications",
+  "technicalParameters",
+];
+
+/* =========================================================
+   ISSYK-KUL HELPERS
+========================================================= */
+
+/**
+ * Все известные населённые пункты Иссык-Кульской области.
+ *
+ * Проверка нужна для случаев, когда API передаёт город,
+ * но region ещё не выбран/не передан в URL.
+ */
+
+const ISSYK_KUL_CITIES = [
+  "каракол",
+  "чолпон-ата",
+  "чолпоната",
+  "бостери",
+  "тамчы",
+  "чон-сары-ой",
+  "чон сары ой",
+  "чоң-сары-ой",
+  "сары-ой",
+  "сары ой",
+  "боконбаево",
+  "барскоон",
+  "барскоон",
+  "тамга",
+  "каджи-сай",
+  "каджисай",
+  "тосор",
+  "ананьево",
+  "пристань-пржевальск",
+  "рыбачье",
+  "балыкчы",
+  "иссык-куль",
+  "иссыккуль",
+  "семеновка",
+  "семеновское",
+  "григорьевка",
+  "курменты",
+  "каракуль",
+  "дархан",
+  "тюп",
+  "кызыл-суу",
+  "покровка",
+];
+
+/**
+ * Нормализация строки для географии.
+ */
+function normalizeLocationValue(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/ё/g, "е")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ");
+}
+
+/**
+ * Проверяет, является ли значение Иссык-Кулем.
+ *
+ * Поддерживаются:
+ * - ISSYK_KUL
+ * - ISSYK-KUL
+ * - ISSYK KUL
+ * - Иссык-Куль
+ * - Иссык-Кульская область
+ * - Иссыккуль
+ * и т.д.
+ */
+function isIssykKulValue(value) {
+  const normalized = normalizeLocationValue(value);
+
+  if (!normalized) {
+    return false;
+  }
+
+  /* API CODE */
+
+  if (
+    normalized === "issyk kul" ||
+    normalized === "issyk kul oblast" ||
+    normalized === "issyk kul region" ||
+    normalized.includes("issyk kul")
+  ) {
+    return true;
+  }
+
+  /* RUSSIAN */
+
+  if (normalized.includes("иссык куль") || normalized.includes("иссыккуль")) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Главная проверка выбранной локации.
+ *
+ * ВАЖНО:
+ * Не зависит от propertyType.
+ *
+ * Поэтому:
+ * apartment + Каракол -> true
+ * house + Каракол -> true
+ * cottage + Бостери -> true
+ * land + Чолпон-Ата -> true
+ * commercial + Тамчы -> true
+ * parking + Балыкчы -> true
+ */
+function isIssykKulLocation(filters) {
+  const city = normalizeLocationValue(filters?.city);
+  const region = normalizeLocationValue(filters?.region);
+  const country = normalizeLocationValue(filters?.country);
+  const district = normalizeLocationValue(filters?.district);
+
+  /* REGION */
+
+  if (isIssykKulValue(region)) {
+    return true;
+  }
+
+  /* CITY / SETTLEMENT */
+
+  if (isIssykKulValue(city)) {
+    return true;
+  }
+
+  /* KNOWN ISSYK-KUL CITIES */
+
+  if (
+    city &&
+    ISSYK_KUL_CITIES.some((name) => {
+      const normalizedName = normalizeLocationValue(name);
+
+      return (
+        city === normalizedName ||
+        city.includes(normalizedName) ||
+        normalizedName.includes(city)
+      );
+    })
+  ) {
+    return true;
+  }
+
+  /* DISTRICT */
+
+  if (isIssykKulValue(district)) {
+    return true;
+  }
+
+  /* COUNTRY */
+
+  if (isIssykKulValue(country)) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Проверка самого объявления.
+ *
+ * Используется дополнительно для фильтра расстояния,
+ * чтобы любой объект Иссык-Куля мог иметь beachDistance.
+ */
+function isIssykKulListing(item) {
+  const values = [
+    item?.city,
+    item?.region,
+    item?.district,
+    item?.location,
+    item?.address,
+    item?.country,
+
+    item?.rawCity,
+    item?.rawRegion,
+    item?.rawDistrict,
+
+    item?.location?.city,
+    item?.location?.region,
+  ]
+    .filter(Boolean)
+    .map(normalizeLocationValue);
+
+  return values.some((value) => {
+    if (isIssykKulValue(value)) {
+      return true;
+    }
+
+    return ISSYK_KUL_CITIES.some((city) => {
+      const normalizedCity = normalizeLocationValue(city);
+
+      return value === normalizedCity || value.includes(normalizedCity);
+    });
+  });
+}
+
+/* =========================================================
+   CATEGORY NORMALIZER
+========================================================= */
+
+function normalizePropertyType(value) {
+  if (!value) {
+    return "apartment";
+  }
+
+  if (categoryComponents[value]) {
+    return value;
+  }
+
+  const found = Object.keys(categoryApiMap).find(
+    (key) =>
+      String(categoryApiMap[key]).toLowerCase() === String(value).toLowerCase(),
+  );
+
+  return found || "apartment";
+}
+
+/* =========================================================
+   DEAL NORMALIZER
+========================================================= */
+
+function normalizeDealType(value) {
+  if (!value) {
+    return "sale";
+  }
+
+  if (value === "Продажа") {
+    return "sale";
+  }
+
+  if (value === "Сниму в аренду") {
+    return "rent";
+  }
+
+  return value === "rent" ? "rent" : "sale";
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export default function AllProducts() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Все");
-  const [dealType, setDealType] = useState("Все");
+  const [searchMode, setSearchMode] = useState("filters");
 
-  const [city, setCity] = useState("Все");
-  const [rooms, setRooms] = useState("Все");
-
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-
-  const [areaFrom, setAreaFrom] = useState("");
-  const [areaTo, setAreaTo] = useState("");
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const [listingsList, setListingsList] = useState([]);
+
   const [favIds, setFavIds] = useState(new Set());
 
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
 
-  /*
-   * =========================
-   * URL → FILTERS
-   * =========================
-   */
+  /* =======================================================
+     URL → FILTERS
+  ======================================================= */
 
   useEffect(() => {
-    const urlCategory = searchParams.get("category");
-
-    const categoryMapping = {
-      house: "Дом",
-      apartment: "Квартира",
-      cottage: "Коттедж",
-      land: "Участок",
-      commercial: "Коммерция",
-      garage: "Паркинг/гараж",
-      room: "Комнаты",
-    };
-
-    setActiveCategory(
-      urlCategory ? categoryMapping[urlCategory] || urlCategory : "Все",
+    const propertyType = normalizePropertyType(
+      searchParams.get("propertyType") || searchParams.get("category"),
     );
 
-    const urlDeal = searchParams.get("dealType");
+    const dealType = normalizeDealType(searchParams.get("dealType"));
 
-    const dealMapping = {
-      sale: "Продажа",
-      rent: "Сниму в аренду",
+    const nextFilters = {
+      ...DEFAULT_FILTERS,
+
+      propertyType,
+
+      dealType,
+
+      city: searchParams.get("city") || searchParams.get("settlement") || "Все",
+
+      region: searchParams.get("region") || "",
+
+      country: searchParams.get("country") || "",
+
+      district: searchParams.get("district") || "",
+
+      currency: searchParams.get("currency") || "USD",
+
+      priceFrom: searchParams.get("priceFrom") || "",
+
+      priceTo: searchParams.get("priceTo") || "",
+
+      areaFrom: searchParams.get("areaFrom") || "",
+
+      areaTo: searchParams.get("areaTo") || "",
+
+      rooms: searchParams.get("rooms") || "Все",
+
+      beachDistanceFrom: searchParams.get("beachDistanceFrom") || "",
+
+      beachDistanceTo: searchParams.get("beachDistanceTo") || "",
+
+      amenities:
+        searchParams.get("amenities")?.split(",").filter(Boolean) || [],
+
+      communications:
+        searchParams.get("communications")?.split(",").filter(Boolean) || [],
+
+      technicalParameters:
+        searchParams.get("technicalParameters")?.split(",").filter(Boolean) ||
+        [],
     };
 
-    setDealType(urlDeal ? dealMapping[urlDeal] || urlDeal : "Все");
-
-    const urlSearch = searchParams.get("search");
-    setSearch(urlSearch || "");
-
-    // ВАЖНО: "location" сюда намеренно не включаем — это отдельная
-    // характеристика для участков/комнат ("В городе"/"За городом" и т.д.),
-    // а не название города, иначе фильтр по городу ломается.
-    const urlCity = searchParams.get("city") || searchParams.get("settlement");
-    const urlRegion = searchParams.get("region");
-    const urlCountry = searchParams.get("country");
-
-    if (urlCity) {
-      if (urlCity === "BISHKEK" || urlCity === "bishkek") setCity("Бишкек");
-      else if (urlCity === "ISSYK_KUL" || urlCity === "issyk_kul" || urlCity === "issykKul" || urlCity === "issyk") setCity("Иссык-Куль");
-      else if (urlCity === "OSH" || urlCity === "osh") setCity("Ош");
-      else if (urlCity === "TURKEY" || urlCity === "turkey" || urlCity === "Турция") setCity("Турция");
-      else setCity(urlCity);
-    } else if (urlRegion) {
-      const normalizedRegion = urlRegion.toLowerCase();
-
-      if (
-        normalizedRegion === "bishkek" ||
-        normalizedRegion === "BISHKEK".toLowerCase()
-      ) {
-        setCity("Бишкек");
-      } else if (
-        normalizedRegion === "issyk_kul" ||
-        normalizedRegion === "issyk-kul"
-      ) {
-        setCity("Иссык-Куль");
-      } else if (normalizedRegion === "osh") {
-        setCity("Ош");
-      } else if (normalizedRegion === "turkey" || normalizedRegion === "турция") {
-        setCity("Турция");
-      } else {
-        setCity(urlRegion);
+    for (const [key, value] of searchParams.entries()) {
+      if (ignoredUrlKeys.includes(key)) {
+        continue;
       }
-    } else if (urlCountry) {
-      const normalizedCountry = urlCountry.toLowerCase();
-      if (normalizedCountry === "turkey" || normalizedCountry === "турция") {
-        setCity("Турция");
-      } else {
-        setCity(urlCountry);
+
+      if (!value) {
+        continue;
       }
-    } else {
-      setCity("Все");
+
+      nextFilters[key] = value;
     }
 
-    const urlRooms = searchParams.get("rooms");
-    setRooms(urlRooms || "Все");
-
-    setPriceFrom(searchParams.get("priceFrom") || "");
-    setPriceTo(searchParams.get("priceTo") || "");
-
-    setAreaFrom(searchParams.get("areaFrom") || "");
-    setAreaTo(searchParams.get("areaTo") || "");
+    setFilters(nextFilters);
   }, [searchParams]);
 
-  /*
-   * =========================
-   * LOAD DATA
-   * =========================
-   */
+  /* =======================================================
+     UPDATE FILTER
+  ======================================================= */
+
+  function updateFilter(key, value) {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
+  /* =======================================================
+     UPDATE URL
+  ======================================================= */
+
+  function updateUrl(nextFilters) {
+    const params = new URLSearchParams();
+
+    if (nextFilters.propertyType) {
+      params.set("propertyType", nextFilters.propertyType);
+    }
+
+    if (nextFilters.dealType) {
+      params.set("dealType", nextFilters.dealType);
+    }
+
+    if (nextFilters.city && nextFilters.city !== "Все") {
+      params.set("city", nextFilters.city);
+    }
+
+    if (nextFilters.region) {
+      params.set("region", nextFilters.region);
+    }
+
+    if (nextFilters.country) {
+      params.set("country", nextFilters.country);
+    }
+
+    if (nextFilters.district) {
+      params.set("district", nextFilters.district);
+    }
+
+    if (nextFilters.currency) {
+      params.set("currency", nextFilters.currency);
+    }
+
+    const simpleKeys = [
+      "priceFrom",
+      "priceTo",
+      "areaFrom",
+      "areaTo",
+      "rooms",
+
+      "beachDistanceFrom",
+      "beachDistanceTo",
+
+      ...featureKeys,
+    ];
+
+    for (const key of simpleKeys) {
+      const value = nextFilters[key];
+
+      if (
+        value &&
+        value !== "Все" &&
+        value !== "Любой" &&
+        value !== "Любая" &&
+        value !== "Любые" &&
+        value !== "Любое"
+      ) {
+        params.set(key, String(value));
+      }
+    }
+
+    for (const key of arrayFilterKeys) {
+      const value = nextFilters[key];
+
+      if (Array.isArray(value) && value.length > 0) {
+        params.set(key, value.join(","));
+      }
+    }
+
+    const query = params.toString();
+
+    router.replace(query ? `/all-products?${query}` : "/all-products", {
+      scroll: false,
+    });
+  }
+
+  /* =======================================================
+     SMART SEARCH
+  ======================================================= */
+
+  async function handleSmartSearch(data) {
+    if (!data) {
+      return;
+    }
+
+    const parsed = data.filters || data;
+
+    const next = {
+      ...filters,
+    };
+
+    /* =======================================================
+     PROPERTY TYPE
+  ======================================================= */
+
+    if (parsed.propertyType) {
+      next.propertyType = normalizePropertyType(parsed.propertyType);
+    }
+
+    /* =======================================================
+     DEAL
+  ======================================================= */
+
+    if (parsed.dealType) {
+      next.dealType = normalizeDealType(parsed.dealType);
+    }
+
+    /* =======================================================
+     LOCATION
+  ======================================================= */
+
+    if (parsed.region) {
+      next.region = parsed.region;
+    }
+
+    if (parsed.city) {
+      next.city = parsed.city;
+    }
+
+    if (parsed.country) {
+      next.country = parsed.country;
+    }
+
+    if (parsed.district) {
+      next.district = parsed.district;
+    }
+
+    /*
+     * Иссык-Куль всегда приводим
+     * к единому состоянию.
+     */
+
+    const cityText = String(next.city || "").toLowerCase();
+    const regionText = String(next.region || "").toLowerCase();
+
+    const isIssykKul =
+      regionText === "issyk_kul" ||
+      (cityText.includes("иссык") && cityText.includes("куль"));
+
+    if (isIssykKul) {
+      next.region = "ISSYK_KUL";
+      next.city = "Иссык-Куль";
+    }
+
+    /* =======================================================
+     PRICE
+  ======================================================= */
+
+    if (parsed.priceFrom !== undefined && parsed.priceFrom !== null) {
+      next.priceFrom = String(parsed.priceFrom);
+    }
+
+    if (parsed.priceTo !== undefined && parsed.priceTo !== null) {
+      next.priceTo = String(parsed.priceTo);
+    }
+
+    /*
+     * На случай если API вернул minPrice/maxPrice.
+     */
+
+    if (parsed.minPrice !== undefined && parsed.minPrice !== null) {
+      next.priceFrom = String(parsed.minPrice);
+    }
+
+    if (parsed.maxPrice !== undefined && parsed.maxPrice !== null) {
+      next.priceTo = String(parsed.maxPrice);
+    }
+
+    /* =======================================================
+     AREA
+  ======================================================= */
+
+    if (parsed.areaFrom !== undefined && parsed.areaFrom !== null) {
+      next.areaFrom = String(parsed.areaFrom);
+    }
+
+    if (parsed.areaTo !== undefined && parsed.areaTo !== null) {
+      next.areaTo = String(parsed.areaTo);
+    }
+
+    if (parsed.minArea !== undefined && parsed.minArea !== null) {
+      next.areaFrom = String(parsed.minArea);
+    }
+
+    if (parsed.maxArea !== undefined && parsed.maxArea !== null) {
+      next.areaTo = String(parsed.maxArea);
+    }
+
+    /* =======================================================
+     ROOMS
+  ======================================================= */
+
+    if (parsed.rooms !== undefined && parsed.rooms !== null) {
+      const rooms = Number(parsed.rooms);
+
+      if (!Number.isNaN(rooms)) {
+        next.rooms = rooms >= 4 ? "4+" : String(rooms);
+      } else {
+        next.rooms = String(parsed.rooms);
+      }
+    }
+
+    /* =======================================================
+     BEACH
+  ======================================================= */
+
+    if (
+      parsed.beachDistanceFrom !== undefined &&
+      parsed.beachDistanceFrom !== null
+    ) {
+      next.beachDistanceFrom = String(parsed.beachDistanceFrom);
+    }
+
+    if (
+      parsed.beachDistanceTo !== undefined &&
+      parsed.beachDistanceTo !== null
+    ) {
+      next.beachDistanceTo = String(parsed.beachDistanceTo);
+    }
+
+    /* =======================================================
+     FEATURES
+  ======================================================= */
+
+    for (const key of featureKeys) {
+      if (
+        parsed[key] !== undefined &&
+        parsed[key] !== null &&
+        parsed[key] !== ""
+      ) {
+        next[key] = parsed[key];
+      }
+    }
+
+    /* =======================================================
+     ARRAYS
+  ======================================================= */
+
+    for (const key of arrayFilterKeys) {
+      if (parsed[key] !== undefined && parsed[key] !== null) {
+        next[key] = Array.isArray(parsed[key]) ? parsed[key] : [parsed[key]];
+      }
+    }
+
+    console.log("SMART SEARCH RESULT:", next);
+
+    setFilters(next);
+
+    updateUrl(next);
+  }
+
+  /* =======================================================
+     LOAD LISTINGS
+  ======================================================= */
 
   useEffect(() => {
     let cancelled = false;
@@ -172,7 +823,10 @@ export default function AllProducts() {
         setLoading(true);
         setError("");
 
-        const token = localStorage.getItem("uytap_token");
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("uytap_token")
+            : null;
 
         const [listingsResponse, favoritesResponse] = await Promise.all([
           getListings({
@@ -183,7 +837,9 @@ export default function AllProducts() {
           token ? getFavorites(token) : Promise.resolve(null),
         ]);
 
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
 
         if (!listingsResponse?.success) {
           throw new Error(
@@ -206,10 +862,11 @@ export default function AllProducts() {
           setFavIds(new Set());
         }
       } catch (err) {
-        console.error("Failed to load listings:", err);
+        console.error(err);
 
         if (!cancelled) {
           setError(err?.message || "Ошибка соединения с сервером");
+
           setListingsList([]);
         }
       } finally {
@@ -226,11 +883,9 @@ export default function AllProducts() {
     };
   }, []);
 
-  /*
-   * =========================
-   * MAP DATA
-   * =========================
-   */
+  /* =======================================================
+     MAP LISTINGS
+  ======================================================= */
 
   const mappedListings = useMemo(() => {
     return listingsList
@@ -238,7 +893,7 @@ export default function AllProducts() {
         try {
           return mapListingData(item);
         } catch (err) {
-          console.error("Ошибка преобразования объявления:", item, err);
+          console.error("Ошибка mapListingData:", err);
 
           return null;
         }
@@ -246,21 +901,23 @@ export default function AllProducts() {
       .filter(Boolean);
   }, [listingsList]);
 
-  /*
-   * =========================
-   * FAVORITES
-   * =========================
-   */
+  /* =======================================================
+     FAVORITES
+  ======================================================= */
 
-  const handleFavoriteClick = async (clickedItem) => {
-    const token = localStorage.getItem("uytap_token");
+  async function handleFavoriteClick(item) {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("uytap_token")
+        : null;
 
     if (!token) {
       router.push("/login");
       return;
     }
 
-    const id = String(clickedItem.id);
+    const id = String(item.id);
+
     const isFavorite = favIds.has(id);
 
     try {
@@ -270,7 +927,9 @@ export default function AllProducts() {
         if (response?.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
+
             next.delete(id);
+
             return next;
           });
         }
@@ -280,368 +939,419 @@ export default function AllProducts() {
         if (response?.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
+
             next.add(id);
+
             return next;
           });
         }
       }
     } catch (err) {
-      console.error("Favorite toggle error:", err);
+      console.error("Favorite error:", err);
     }
-  };
+  }
 
-  /*
-   * =========================
-   * FILTERING
-   * =========================
-   */
+  /* =======================================================
+     FILTER LISTINGS
+  ======================================================= */
 
   const filteredListings = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    return (
+      mappedListings
+        .filter((item) => {
+          /* ---------------------------------------------
+           CATEGORY
+        --------------------------------------------- */
 
-    return mappedListings
-      .filter((item) => {
-        /*
-         * SEARCH
-         */
+          const selectedType = categoryApiMap[filters.propertyType];
 
-        const title = String(item.title || "").toLowerCase();
+          const itemType = String(item.type || "")
+            .trim()
+            .toLowerCase();
 
-        const location = String(item.location || "").toLowerCase();
+          const matchesCategory =
+            !selectedType || itemType === selectedType.toLowerCase();
 
-        const address = String(item.address || "").toLowerCase();
+          /* ---------------------------------------------
+           DEAL
+        --------------------------------------------- */
 
-        const description = String(item.description || "").toLowerCase();
+          const selectedDeal = dealApiMap[filters.dealType];
 
-        const matchesSearch =
-          !query ||
-          title.includes(query) ||
-          location.includes(query) ||
-          address.includes(query) ||
-          description.includes(query);
+          const itemDeal = String(item.dealType || "")
+            .trim()
+            .toLowerCase();
 
-        /*
-         * CATEGORY
-         */
+          const matchesDeal =
+            !selectedDeal || itemDeal === selectedDeal.toLowerCase();
 
-        const itemType = String(item.type || "")
-          .trim()
-          .toLowerCase();
+          /* ---------------------------------------------
+           CITY / LOCATION
+        --------------------------------------------- */
 
-        const selectedType = String(activeCategory || "")
-          .trim()
-          .toLowerCase();
-
-        const matchesCategory =
-          activeCategory === "Все" || itemType === selectedType;
-
-        /*
-         * DEAL
-         */
-
-        const itemDeal = String(item.dealType || "")
-          .trim()
-          .toLowerCase();
-
-        const selectedDeal = String(dealType || "")
-          .trim()
-          .toLowerCase();
-
-        const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
-
-        /*
-         * CITY
-         */
-
-        const matchesCity = (() => {
-          if (city === "Все") {
-            return true;
-          }
-
-          const itemLocation = String(item.location || "").toLowerCase();
-          const itemRegion = String(item.region || "").toLowerCase();
-          const itemAddress = String(item.address || "").toLowerCase();
-          const itemCountry = String(item.country || item.features?.country || "").toLowerCase();
-
-          const selectedCity = String(city).toLowerCase();
-
-          if (selectedCity === "турция" || selectedCity === "turkey") {
-            return (
-              itemLocation.includes("турци") ||
-              itemLocation.includes("turkey") ||
-              itemLocation.includes("алань") ||
-              itemLocation.includes("антал") ||
-              itemLocation.includes("стамбул") ||
-              itemLocation.includes("мерсин") ||
-              itemLocation.includes("измир") ||
-              itemRegion.includes("turkey") ||
-              itemRegion.includes("турци") ||
-              itemCountry.includes("turkey") ||
-              itemCountry.includes("турци") ||
-              itemAddress.includes("турци") ||
-              itemAddress.includes("turkey")
-            );
-          }
-
-          if (selectedCity === "иссык-куль") {
-            // Название населенного пункта — самый надежный признак:
-            // у некоторых объявлений "region" в БД рассинхронизирован с
-            // реальным городом (например, city="Бишкек" при region="ISSYK_KUL"),
-            // поэтому нельзя засчитывать совпадение только по region.
-            const isIssykKulSettlement =
-              itemLocation.includes("куль") ||
-              itemLocation.includes("каракол") ||
-              itemLocation.includes("чолпон") ||
-              itemLocation.includes("бостери") ||
-              itemLocation.includes("каджи-сай") ||
-              itemLocation.includes("тамчы") ||
-              itemLocation.includes("боконбаево") ||
-              itemLocation.includes("григорьев") ||
-              itemLocation.includes("ананьево") ||
-              itemLocation.includes("барскоон") ||
-              itemLocation.includes("тюп") ||
-              itemLocation.includes("жыргалан") ||
-              itemLocation.includes("балыкчы");
-
-            if (isIssykKulSettlement) {
+          const matchesCity = (() => {
+            if (!filters.city || filters.city === "Все") {
               return true;
             }
 
-            // Регион как резерв — только если сам город явно не указывает
-            // на другое место (иначе неверный/тестовый region перетянет
-            // сюда объявления из других городов).
-            const cityLooksUnspecified =
-              !itemLocation || itemLocation === "кыргызстан";
+            const selected = normalizeLocationValue(filters.city);
 
-            return (
-              cityLooksUnspecified &&
-              (itemRegion.includes("issyk") || itemRegion.includes("issykkul"))
-            );
-          }
+            const values = [
+              item.location,
+              item.city,
+              item.region,
+              item.address,
+              item.country,
+              item.district,
+            ]
+              .filter(Boolean)
+              .map(normalizeLocationValue);
 
-          return (
-            itemLocation.includes(selectedCity) ||
-            itemRegion.includes(selectedCity) ||
-            itemCountry.includes(selectedCity) ||
-            itemAddress.includes(selectedCity)
-          );
-        })();
+            /* ИССЫК-КУЛЬ */
 
-        /*
-         * ROOMS
-         */
+            if (
+              isIssykKulValue(selected) ||
+              ISSYK_KUL_CITIES.some(
+                (city) =>
+                  selected === normalizeLocationValue(city) ||
+                  selected.includes(normalizeLocationValue(city)),
+              )
+            ) {
+              return values.some((value) => {
+                if (isIssykKulValue(value)) {
+                  return true;
+                }
 
-        const matchesRooms = (() => {
-          if (rooms === "Все") {
+                return ISSYK_KUL_CITIES.some((city) => {
+                  const normalizedCity = normalizeLocationValue(city);
+
+                  return (
+                    value === normalizedCity || value.includes(normalizedCity)
+                  );
+                });
+              });
+            }
+
+            /* ТУРЦИЯ */
+
+            if (selected === "турция") {
+              return values.some(
+                (value) =>
+                  value.includes("турци") ||
+                  value.includes("turkey") ||
+                  value.includes("алань") ||
+                  value.includes("антал") ||
+                  value.includes("стамбул") ||
+                  value.includes("мерсин") ||
+                  value.includes("измир"),
+              );
+            }
+
+            return values.some((value) => value.includes(selected));
+          })();
+
+          /* ---------------------------------------------
+           ROOMS
+        --------------------------------------------- */
+
+          const matchesRooms = (() => {
+            if (!filters.rooms || filters.rooms === "Все") {
+              return true;
+            }
+
+            const itemRooms = Number(item.rooms);
+
+            if (filters.rooms === "4+") {
+              return itemRooms >= 4;
+            }
+
+            return itemRooms === Number(filters.rooms);
+          })();
+
+          /* ---------------------------------------------
+           PRICE
+        --------------------------------------------- */
+
+          const matchesPrice = (() => {
+            const price = Number(item.rawPrice);
+
+            const min = filters.priceFrom ? Number(filters.priceFrom) : null;
+
+            const max = filters.priceTo ? Number(filters.priceTo) : null;
+
+            if (min !== null && !Number.isNaN(min) && price < min) {
+              return false;
+            }
+
+            if (max !== null && !Number.isNaN(max) && price > max) {
+              return false;
+            }
+
             return true;
-          }
+          })();
 
-          const itemRooms = Number(item.rooms);
+          /* ---------------------------------------------
+           AREA
+        --------------------------------------------- */
 
-          if (rooms === "4+") {
-            return itemRooms >= 4;
-          }
+          const matchesArea = (() => {
+            const area = Number(item.rawArea);
 
-          return itemRooms === Number(rooms);
-        })();
+            const min = filters.areaFrom ? Number(filters.areaFrom) : null;
 
-        /*
-         * PRICE
-         */
+            const max = filters.areaTo ? Number(filters.areaTo) : null;
 
-        const matchesPrice = (() => {
-          const min = priceFrom ? Number(priceFrom) : null;
+            if (min !== null && !Number.isNaN(min) && area < min) {
+              return false;
+            }
 
-          const max = priceTo ? Number(priceTo) : null;
+            if (max !== null && !Number.isNaN(max) && area > max) {
+              return false;
+            }
 
-          const price = Number(item.rawPrice);
+            return true;
+          })();
 
-          if (min !== null && !Number.isNaN(min) && price < min) {
-            return false;
-          }
+          /* ---------------------------------------------
+           BEACH DISTANCE
+        --------------------------------------------- */
 
-          if (max !== null && !Number.isNaN(max) && price > max) {
-            return false;
-          }
+          const matchesBeach = (() => {
+            /**
+             * Фильтр не выбран.
+             */
+            if (!filters.beachDistanceFrom && !filters.beachDistanceTo) {
+              return true;
+            }
 
-          return true;
-        })();
+            /**
+             * Расстояние может лежать
+             * в разных местах объекта.
+             */
+            const rawDistance =
+              item.beachDistanceFrom ??
+              item.beachDistance ??
+              item.beach_distance ??
+              item.distanceToBeach ??
+              item.distance_to_beach ??
+              item.features?.beachDistance ??
+              item.features?.beach_distance ??
+              item.features?.distanceToBeach ??
+              item.features?.distance_to_beach;
 
-        /*
-         * AREA
-         */
+            const distance = Number(rawDistance);
 
-        const matchesArea = (() => {
-          const min = areaFrom ? Number(areaFrom) : null;
+            /**
+             * Если расстояние отсутствует,
+             * не убираем объявление из выдачи.
+             */
+            if (
+              rawDistance === undefined ||
+              rawDistance === null ||
+              rawDistance === ""
+            ) {
+              return true;
+            }
 
-          const max = areaTo ? Number(areaTo) : null;
+            if (Number.isNaN(distance)) {
+              return true;
+            }
 
-          const area = Number(item.rawArea);
+            const min = filters.beachDistanceFrom
+              ? Number(filters.beachDistanceFrom)
+              : null;
 
-          if (min !== null && !Number.isNaN(min) && area < min) {
-            return false;
-          }
+            const max = filters.beachDistanceTo
+              ? Number(filters.beachDistanceTo)
+              : null;
 
-          if (max !== null && !Number.isNaN(max) && area > max) {
-            return false;
-          }
+            if (min !== null && !Number.isNaN(min) && distance < min) {
+              return false;
+            }
 
-          return true;
-        })();
+            if (max !== null && !Number.isNaN(max) && distance > max) {
+              return false;
+            }
 
-        /*
-         * DISTRICT
-         */
+            return true;
+          })();
 
-        const matchesDistrict = (() => {
-          const district = searchParams.get("district");
-          if (!district) return true;
+          /* ---------------------------------------------
+           CATEGORY FEATURES
+        --------------------------------------------- */
 
-          const value = district.toLowerCase();
-          const itemDistrict = String(item.district || "").toLowerCase();
-          const itemLocationText = String(item.location || "").toLowerCase();
+          for (const key of featureKeys) {
+            const selected = filters[key];
 
-          // AI-поиск и другие источники иногда кладут в "district" название
-          // населенного пункта (например "Чолпон-Ата"), которое в БД хранится
-          // в "city", а не в "district" (там null для не-бишкекских объектов).
-          // Поэтому проверяем оба поля.
-          return (
-            itemDistrict.includes(value) || itemLocationText.includes(value)
-          );
-        })();
+            if (
+              !selected ||
+              selected === "Любой" ||
+              selected === "Любая" ||
+              selected === "Любые" ||
+              selected === "Любое"
+            ) {
+              continue;
+            }
 
-        /*
-         * BEACH DISTANCE (диапазон, не точное совпадение)
-         */
+            const itemValue = item[key] ?? item.features?.[key];
 
-        const matchesBeachDistance = (() => {
-          const fromParam = searchParams.get("beachDistanceFrom");
-          const toParam = searchParams.get("beachDistanceTo");
-          if (!fromParam && !toParam) return true;
+            if (itemValue === undefined || itemValue === null) {
+              return false;
+            }
 
-          const min = fromParam ? Number(fromParam) : null;
-          const max = toParam ? Number(toParam) : null;
-          const distance = Number(item.beachDistanceFrom ?? item.beachDistance);
-
-          if (Number.isNaN(distance)) return true;
-
-          if (min !== null && !Number.isNaN(min) && distance < min) {
-            return false;
-          }
-
-          if (max !== null && !Number.isNaN(max) && distance > max) {
-            return false;
-          }
-
-          return true;
-        })();
-
-        // Все остальные динамические параметры из URL (фильтры шагов)
-        for (const [key, value] of searchParams.entries()) {
-          if ([
-            "category", "propertyType", "dealType", "search", "query", "city", "region",
-            "rooms", "priceFrom", "priceTo", "areaFrom", "areaTo",
-            "page", "limit", "searchMode", "location", "district",
-            "beachDistanceFrom", "beachDistanceTo",
-            "country", "settlement", "rentalPeriod", "address", "latitude", "longitude", "listingType"
-          ].includes(key)) {
-            continue;
-          }
-
-          if (value && value !== "" && value !== "Все" && value !== "Любой" && value !== "Любое" && value !== "Любые") {
-            const itemValue = String(item[key] || "").toLowerCase();
-            const filterValue = String(value).toLowerCase();
-            if (itemValue !== filterValue && !itemValue.includes(filterValue)) {
+            if (
+              !String(itemValue)
+                .toLowerCase()
+                .includes(String(selected).toLowerCase())
+            ) {
               return false;
             }
           }
-        }
 
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesDeal &&
-          matchesCity &&
-          matchesRooms &&
-          matchesPrice &&
-          matchesArea &&
-          matchesDistrict &&
-          matchesBeachDistance
-        );
-      })
-      .sort((a, b) => {
-        const priority = {
-          vip: 0,
-          urgent: 1,
-          top: 2,
-          regular: 3,
-          null: 3,
-        };
+          /* ---------------------------------------------
+           ARRAY FEATURES
+        --------------------------------------------- */
 
-        const aStatus = a.status ?? "regular";
-        const bStatus = b.status ?? "regular";
+          const matchesArrayFilter = (key) => {
+            const selected = filters[key];
 
-        return (priority[aStatus] ?? 3) - (priority[bStatus] ?? 3);
-      });
-  }, [
-    mappedListings,
-    search,
-    activeCategory,
-    dealType,
-    city,
-    rooms,
-    priceFrom,
-    priceTo,
-    areaFrom,
-    areaTo,
-    // searchParams меняется при каждом переходе с новыми фильтрами
-    // (district, beachDistance и характеристики категорий читаются
-    // напрямую из searchParams внутри фильтра выше)
-    searchParams,
-  ]);
+            if (!Array.isArray(selected) || selected.length === 0) {
+              return true;
+            }
 
-  /*
-   * =========================
-   * RESET
-   * =========================
+            const itemValue = item[key] ?? item.features?.[key];
+
+            if (!Array.isArray(itemValue)) {
+              return false;
+            }
+
+            const normalized = itemValue.map((value) =>
+              String(value).toLowerCase(),
+            );
+
+            return selected.every((value) =>
+              normalized.includes(String(value).toLowerCase()),
+            );
+          };
+
+          /* ---------------------------------------------
+           FINAL
+        --------------------------------------------- */
+
+          return (
+            matchesCategory &&
+            matchesDeal &&
+            matchesCity &&
+            matchesRooms &&
+            matchesPrice &&
+            matchesArea &&
+            matchesBeach &&
+            matchesArrayFilter("amenities") &&
+            matchesArrayFilter("communications") &&
+            matchesArrayFilter("technicalParameters")
+          );
+        })
+
+        /* -----------------------------------------------
+         PRIORITY
+      ----------------------------------------------- */
+
+        .sort((a, b) => {
+          const priority = {
+            vip: 0,
+            urgent: 1,
+            top: 2,
+            regular: 3,
+          };
+
+          return (priority[a.status] ?? 3) - (priority[b.status] ?? 3);
+        })
+    );
+  }, [mappedListings, filters]);
+
+  /* =======================================================
+     CATEGORY FILTER COMPONENT
+  ======================================================= */
+
+  const CategoryFilters =
+    categoryComponents[filters.propertyType] || ApartmentFilters;
+
+  /* =======================================================
+     ISSYK-KUL STATE
+  ======================================================= */
+
+  /**
+   * Расстояние до пляжа доступно
+   * для ЛЮБОГО типа недвижимости,
+   * если выбрана локация Иссык-Куль.
+   *
+   * apartment -> true
+   * house -> true
+   * cottage -> true
+   * land -> true
+   * room -> true
+   * commercial -> true
+   * parking -> true
    */
+  const showBeachDistance = useMemo(() => {
+    return isIssykKulLocation(filters);
+  }, [filters.city, filters.region, filters.country, filters.district]);
 
-  const resetFilters = () => {
-    setSearch("");
-    setActiveCategory("Все");
-    setDealType("Все");
-    setCity("Все");
-    setRooms("Все");
-    setPriceFrom("");
-    setPriceTo("");
-    setAreaFrom("");
-    setAreaTo("");
+  /* =======================================================
+     RESET
+  ======================================================= */
 
-    router.replace("/all-products");
-  };
+  function resetFilters() {
+    setFilters(DEFAULT_FILTERS);
+
+    router.replace("/all-products", {
+      scroll: false,
+    });
+  }
+
+  /* =======================================================
+     HAS FILTERS
+  ======================================================= */
 
   const hasFilters =
-    search.trim() !== "" ||
-    activeCategory !== "Все" ||
-    dealType !== "Все" ||
-    city !== "Все" ||
-    rooms !== "Все" ||
-    priceFrom !== "" ||
-    priceTo !== "" ||
-    areaFrom !== "" ||
-    areaTo !== "";
+    filters.propertyType !== "apartment" ||
+    filters.dealType !== "sale" ||
+    filters.city !== "Все" ||
+    Boolean(filters.priceFrom) ||
+    Boolean(filters.priceTo) ||
+    Boolean(filters.areaFrom) ||
+    Boolean(filters.areaTo) ||
+    Boolean(filters.beachDistanceFrom) ||
+    Boolean(filters.beachDistanceTo) ||
+    Object.entries(filters).some(
+      ([key, value]) =>
+        ![
+          "propertyType",
+          "dealType",
+          "city",
+          "currency",
+          "priceFrom",
+          "priceTo",
+          "areaFrom",
+          "areaTo",
+          "beachDistanceFrom",
+          "beachDistanceTo",
+        ].includes(key) &&
+        value &&
+        (Array.isArray(value) ? value.length > 0 : true),
+    );
 
-  /*
-   * =========================
-   * UI
-   * =========================
-   */
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
     <main className={styles.page}>
-      <div className={styles.backgroundGlow} />
+      <div className={styles.glow} />
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <header className={styles.header}>
         <div className={styles.headerTop}>
@@ -650,12 +1360,12 @@ export default function AllProducts() {
             className={styles.homeButton}
             onClick={() => router.push("/")}
           >
-            <Home size={18} />
-            <span>На главную</span>
+            <Home size={17} />
+            На главную
           </button>
 
-          <div className={styles.headerBadge}>
-            <span className={styles.badgeDot} />
+          <div className={styles.badge}>
+            <span />
             Все объявления
           </div>
         </div>
@@ -666,220 +1376,184 @@ export default function AllProducts() {
         </h1>
 
         <p>
-          Дома, квартиры, участки и другие объекты недвижимости в Кыргызстане.
+          Используйте точные фильтры или просто расскажите умному поиску, что
+          именно вы ищете.
         </p>
       </header>
 
-      {/* SEARCH */}
+      <div className={styles.container}>
+        {/* =================================================
+            SEARCH MODE
+        ================================================= */}
 
-      <section className={styles.toolbar}>
-        <div className={styles.search}>
-          <Search size={21} />
+        <SearchModeSlider value={searchMode} onChange={setSearchMode} />
 
-          <input
-            type="text"
-            placeholder="Поиск по названию, адресу или городу..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
+        {/* =================================================
+            SMART SEARCH
+        ================================================= */}
 
-          {search && (
+        {searchMode === "smart" && (
+          <SmartSearch onFiltersDetected={handleSmartSearch} />
+        )}
+
+        {/* =================================================
+            FILTER SEARCH
+        ================================================= */}
+
+        {searchMode === "filters" && (
+          <section id="filters" className={styles.filters}>
+            <div className={styles.filterHeader}>
+              <div>
+                <span>ФИЛЬТРЫ</span>
+
+                <h2>Настройте поиск</h2>
+              </div>
+
+              {hasFilters && (
+                <button
+                  type="button"
+                  className={styles.reset}
+                  onClick={resetFilters}
+                >
+                  <X size={14} />
+                  Сбросить
+                </button>
+              )}
+            </div>
+
+            {/* =================================================
+                PROPERTY TYPE
+            ================================================= */}
+
+            <div className={styles.section}>
+              <label>Тип недвижимости</label>
+
+              <div className={styles.categoryList}>
+                {categories.map((category) => {
+                  const active = filters.propertyType === category.value;
+
+                  return (
+                    <button
+                      key={category.value}
+                      type="button"
+                      className={active ? styles.categoryActive : ""}
+                      onClick={() =>
+                        updateFilter("propertyType", category.value)
+                      }
+                    >
+                      {category.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* =================================================
+                DEAL
+            ================================================= */}
+
+            <div className={styles.section}>
+              <label>Тип сделки</label>
+
+              <div className={styles.dealList}>
+                {deals.map((deal) => (
+                  <button
+                    key={deal.value}
+                    type="button"
+                    className={
+                      filters.dealType === deal.value ? styles.dealActive : ""
+                    }
+                    onClick={() => updateFilter("dealType", deal.value)}
+                  >
+                    {deal.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* =================================================
+                COMMON FILTERS
+            ================================================= */}
+
+            <div className={styles.section}>
+              <label>Основные параметры</label>
+
+              <CommonFilters
+                filters={filters}
+                updateFilter={updateFilter}
+                showBeachDistance={showBeachDistance}
+              />
+            </div>
+
+            {/* =================================================
+                CATEGORY FILTERS
+            ================================================= */}
+
+            <div className={styles.categoryFilters}>
+              <div className={styles.categoryTitle}>
+                <div>
+                  <span>ХАРАКТЕРИСТИКИ</span>
+
+                  <h3>{categoryLabels[filters.propertyType]}</h3>
+                </div>
+              </div>
+
+              <CategoryFilters filters={filters} updateFilter={updateFilter} />
+            </div>
+
+            {/* =================================================
+                APPLY
+            ================================================= */}
+
             <button
               type="button"
-              className={styles.clearSearch}
-              onClick={() => setSearch("")}
-              aria-label="Очистить поиск"
+              className={styles.apply}
+              onClick={() => updateUrl(filters)}
             >
-              <X size={16} />
+              <Search size={17} />
+              Показать объявления
             </button>
-          )}
-        </div>
-
-        <button
-          type="button"
-          className={styles.filterButton}
-          onClick={() => {
-            document.getElementById("filters")?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }}
-        >
-          <SlidersHorizontal size={19} />
-          <span>Фильтры</span>
-        </button>
-      </section>
-
-      {/* FILTERS */}
-
-      <section id="filters" className={styles.filtersContainer}>
-        {/* CATEGORY */}
-
-        <div className={styles.filterBlock}>
-          <div className={styles.filterHeading}>
-            <span>Тип недвижимости</span>
-          </div>
-
-          <div className={styles.categories}>
-            {categories.map((category) => {
-              const active = activeCategory === category.value;
-
-              return (
-                <button
-                  key={category.value}
-                  type="button"
-                  className={active ? styles.categoryActive : ""}
-                  onClick={() => setActiveCategory(category.value)}
-                >
-                  {category.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* DEAL */}
-
-        <div className={styles.filterBlock}>
-          <div className={styles.filterHeading}>
-            <span>Тип сделки</span>
-          </div>
-
-          <div className={styles.dealTypes}>
-            {dealTypes.map((deal) => {
-              const active = dealType === deal.value;
-
-              return (
-                <button
-                  key={deal.value}
-                  type="button"
-                  className={active ? styles.dealActive : ""}
-                  onClick={() => setDealType(deal.value)}
-                >
-                  {deal.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ADVANCED */}
-
-        <div className={styles.advancedFilters}>
-          <div className={styles.advancedGrid}>
-            {/* CITY */}
-
-            <CustomSelectBlack
-              icon={MapPin}
-              title="Город / Регион"
-              options={cityOptions}
-              value={city}
-              setValue={setCity}
-            />
-
-            {/* ROOMS */}
-
-            <CustomSelectBlack
-              icon={DoorOpen}
-              title="Количество комнат"
-              options={roomOptions}
-              value={rooms}
-              setValue={setRooms}
-            />
-
-            {/* PRICE */}
-
-            <div className={styles.rangeField}>
-              <label>Цена ($)</label>
-
-              <div className={styles.rangeInputs}>
-                <input
-                  type="number"
-                  placeholder="От"
-                  value={priceFrom}
-                  onChange={(event) => setPriceFrom(event.target.value)}
-                />
-
-                <input
-                  type="number"
-                  placeholder="До"
-                  value={priceTo}
-                  onChange={(event) => setPriceTo(event.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* AREA */}
-
-            <div className={styles.rangeField}>
-              <label>Площадь (м²)</label>
-
-              <div className={styles.rangeInputs}>
-                <input
-                  type="number"
-                  placeholder="От"
-                  value={areaFrom}
-                  onChange={(event) => setAreaFrom(event.target.value)}
-                />
-
-                <input
-                  type="number"
-                  placeholder="До"
-                  value={areaTo}
-                  onChange={(event) => setAreaTo(event.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* RESULTS HEADER */}
-
-      <div className={styles.resultsHeader}>
-        <div className={styles.result}>
-          <span>Найдено</span>
-
-          <strong>{loading ? "..." : filteredListings.length}</strong>
-
-          <span>объявлений</span>
-        </div>
-
-        {hasFilters && !loading && (
-          <button
-            type="button"
-            className={styles.resetButton}
-            onClick={resetFilters}
-          >
-            <X size={15} />
-            Сбросить
-          </button>
+          </section>
         )}
-      </div>
 
-      {/* LOADING */}
+        {/* =================================================
+            RESULTS HEADER
+        ================================================= */}
 
-      {loading && (
-        <div className={styles.loading}>
-          <div className={styles.spinner} />
-          <span>Загружаем объявления...</span>
+        <div className={styles.resultsHeader}>
+          <div>
+            <span>РЕЗУЛЬТАТЫ ПОИСКА</span>
+
+            <strong>{loading ? "..." : filteredListings.length}</strong>
+
+            <small>объявлений</small>
+          </div>
         </div>
-      )}
 
-      {/* ERROR */}
+        {/* =================================================
+            LOADING
+        ================================================= */}
 
-      {!loading && error && (
-        <div className={styles.error}>
-          <X size={20} />
-          <span>{error}</span>
-        </div>
-      )}
+        {loading && (
+          <div className={styles.loading}>
+            <div />
+            Загружаем объявления...
+          </div>
+        )}
 
-      {/* RESULTS */}
+        {/* =================================================
+            ERROR
+        ================================================= */}
 
-      {!loading && !error && (
-        <>
-          {filteredListings.length > 0 ? (
+        {!loading && error && <div className={styles.error}>{error}</div>}
+
+        {/* =================================================
+            RESULTS
+        ================================================= */}
+
+        {!loading &&
+          !error &&
+          (filteredListings.length > 0 ? (
             <section className={styles.grid}>
               {filteredListings.map((item) => (
                 <ListingCardBlack
@@ -893,15 +1567,12 @@ export default function AllProducts() {
           ) : (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>
-                <Search size={30} />
+                <Search size={27} />
               </div>
 
               <h2>Ничего не найдено</h2>
 
-              <p>
-                По вашему запросу нет подходящих объявлений. Попробуйте изменить
-                параметры поиска.
-              </p>
+              <p>Попробуйте изменить параметры поиска.</p>
 
               {hasFilters && (
                 <button type="button" onClick={resetFilters}>
@@ -909,9 +1580,8 @@ export default function AllProducts() {
                 </button>
               )}
             </div>
-          )}
-        </>
-      )}
+          ))}
+      </div>
     </main>
   );
 }

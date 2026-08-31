@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Wallet,
   Zap,
+  Camera,
 } from "lucide-react";
 
 import styles from "./Pricing.module.css";
@@ -33,7 +34,7 @@ export default function Pricing() {
       title: "Частный",
       price: 0,
       icon: User,
-      desc: "Для собственников, которые продают или сдают свою недвижимость",
+      desc: "Только для собственников, которые продают или сдают свою недвижимость",
       features: [
         "1 бесплатное объявление",
         "Срок размещения 45 дней",
@@ -43,10 +44,10 @@ export default function Pricing() {
     },
     {
       id: "start",
-      title: "СТАРТ",
+      title: "Старт",
       price: 390,
       icon: Rocket,
-      desc: "Для начинающих риелторов и частных специалистов",
+      desc: "Только для риелторов и частных специалистов",
       features: [
         "До 10 активных объявлений",
         "3 авто-UP в месяц",
@@ -56,11 +57,11 @@ export default function Pricing() {
     },
     {
       id: "optimal",
-      title: "ОПТИМАЛЬНЫЙ",
+      title: "Оптимальный",
       price: 790,
       icon: Crown,
       popular: true,
-      desc: "Лучший выбор для активных специалистов",
+      desc: "Только для риелторов и частных специалистов. Лучший выбор для активных специалистов",
       features: [
         "До 20 активных объявлений",
         "5 авто-UP в месяц",
@@ -71,10 +72,10 @@ export default function Pricing() {
     },
     {
       id: "business",
-      title: "БИЗНЕС",
+      title: "Для агентства",
       price: 1890,
       icon: Building2,
-      desc: "Для агентств недвижимости и команд",
+      desc: "Только для агентств недвижимости и команд",
       features: [
         "До 40 активных объявлений",
         "Официальная страница агентства",
@@ -85,11 +86,11 @@ export default function Pricing() {
     },
     {
       id: "developer",
-      title: "ЗАСТРОЙЩИК",
+      title: "Индивидуальный",
       price: null,
       icon: Sparkles,
       developer: true,
-      desc: "Для строительных компаний и жилых комплексов",
+      desc: "Только для строительных компаний",
       features: [
         "Карточки жилых комплексов",
         "Интерактивные шахматки квартир",
@@ -470,31 +471,123 @@ export default function Pricing() {
           </div>
 
           <p>
-            Дополнительные инструменты, чтобы ваши объявления получили больше
-            внимания.
+            Инструменты продвижения, которые помогают быстрее привлечь внимание
+            покупателей и увеличить количество обращений.
           </p>
         </div>
 
         <div className={styles.promoGrid}>
           <div className={styles.promoCard}>
-            <Crown />
-            <span>01</span>
-            <h3>VIP</h3>
-            <p>290 сом / день</p>
-          </div>
+            <div className={styles.promoIcon}>
+              <Rocket size={22} />
+            </div>
 
-          <div className={styles.promoCard}>
-            <Rocket />
-            <span>02</span>
+            <span className={styles.promoIndex}>01</span>
+
             <h3>ТОП</h3>
-            <p>190 сом / день</p>
+
+            <strong>190 сом / день</strong>
+
+            <p>
+              Подъем и закрепление объявления выше стандартных бесплатных
+              карточек.
+            </p>
           </div>
 
           <div className={styles.promoCard}>
-            <Sparkles />
-            <span>03</span>
-            <h3>Авто-UP</h3>
-            <p>290 сом / 30 дней</p>
+            <div
+              className={styles.promoIcon}
+              style={{ borderColor: "#9a9a0b7f" }}
+            >
+              <Crown size={22} color="#9a9a0b" />
+            </div>
+
+            <span className={styles.promoIndex}>02</span>
+
+            <h3>VIP</h3>
+
+            <strong style={{ color: "#9a9a0b" }}>290 сом / день</strong>
+
+            <p>
+              Закрепление в самом верху каталога + выделение яркой золотой
+              рамкой.
+            </p>
+          </div>
+
+          <div className={`${styles.promoCard} ${styles.urgentCard}`}>
+            <div className={styles.promoIcon}>
+              <Zap size={22} />
+            </div>
+
+            <span className={styles.promoIndex}>03</span>
+
+            <h3>Срочно</h3>
+
+            <strong>70 сом / день</strong>
+
+            <p>
+              Красный бейдж на карточке + автоматическое попадание в специальный
+              фильтр «Срочные продажи».
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.smmModule}>
+          <div className={styles.smmVisual}>
+            <div
+              className={styles.smmIcon}
+              style={{ borderColor: "#eb23ac6a" }}
+            >
+              <Camera size={23} color="#eb23ab" />
+            </div>
+
+            <span className={styles.smmNumber}>05.2</span>
+          </div>
+
+          <div className={styles.smmContent}>
+            <div className={styles.smmTop}>
+              <span className={styles.smmLabel}>
+                Автоматизированный SMM-модуль
+              </span>
+
+              <span className={styles.smmPlatforms}>
+                Instagram · Telegram · Meta Ads
+              </span>
+            </div>
+
+            <h3>Instagram Пост + Сторис</h3>
+
+            <div className={styles.smmPrice} style={{ color: "#eb23ab" }}>
+              390 сом
+            </div>
+
+            <p>
+              Возможность сделать ваше объявление еще заметнее через публикацию
+              и размещении в сторис на официальной Instagram-странице
+              <strong> @uytap.kg</strong> и дублирование в Telegram-канал.
+            </p>
+
+            <div className={styles.smmFeatures}>
+              <span>
+                <Check size={12} />
+                Автогенерация макета
+              </span>
+
+              <span>
+                <Check size={12} />
+                Instagram Post + Story
+              </span>
+
+              <span>
+                <Check size={12} />
+                Дублирование в Telegram
+              </span>
+
+              <span>
+                <Check size={12} />
+                Instagram Graph API
+              </span>
+            </div>
           </div>
         </div>
       </section>

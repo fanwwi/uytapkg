@@ -70,6 +70,8 @@ const fieldIcons = {
   basement: Building2,
   truckAccess: CarFront,
   gateType: DoorOpen,
+
+  residentialComplex: Building2,
 };
 
 /* =========================================================
@@ -339,10 +341,14 @@ const options = {
     "102 серия",
     "104 серия",
     "105 серия",
-    "106 серия",
+    "106 обычная",
+    "106 улучшенная",
+    "107 обычная",
+    "107 улучшенная",
     "Сталинка",
     "Хрущевка",
     "Элитка",
+    "Индивидуалка",
     "Пентхаус",
   ],
 
@@ -498,6 +504,20 @@ const options = {
 };
 
 /* =========================================================
+   ЖК — SERIES WHERE FIELD IS AVAILABLE
+========================================================= */
+
+const residentialComplexSeries = [
+  "Новостройка",
+  "106 обычная",
+  "106 улучшенная",
+  "107 обычная",
+  "107 улучшенная",
+  "Элитка",
+  "Индивидуалка",
+];
+
+/* =========================================================
    HELPERS
 ========================================================= */
 
@@ -508,6 +528,10 @@ function getFieldOptions(field, dynamicOptions) {
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
   const [dynamicOptions, setDynamicOptions] = useState({});
   const [apiError, setApiError] = useState(false);
+
+  /* =========================================================
+     LOAD CONSTANTS
+  ========================================================= */
 
   useEffect(() => {
     getConstants()
@@ -556,6 +580,14 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   const isLand = form.category === "land";
 
   /* =========================================================
+     ЖК VISIBILITY
+  ========================================================= */
+
+  const showResidentialComplex =
+    form.category === "apartment" &&
+    residentialComplexSeries.includes(form.series);
+
+  /* =========================================================
      RESET COTTAGE
   ========================================================= */
 
@@ -568,6 +600,18 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       });
     }
   }, [isIssykKul, form.category]);
+
+  /* =========================================================
+     RESET ЖК
+  ========================================================= */
+
+  useEffect(() => {
+    if (!showResidentialComplex && form.residentialComplex) {
+      updateForm({
+        residentialComplex: "",
+      });
+    }
+  }, [showResidentialComplex, form.residentialComplex]);
 
   /* =========================================================
      UPDATE FIELD
@@ -587,6 +631,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
     updateForm({
       category: key,
       amenities: [],
+      residentialComplex: "",
     });
   }
 
@@ -714,6 +759,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 updateForm({
                   category: "",
                   amenities: [],
+                  residentialComplex: "",
                 })
               }
             >
@@ -881,6 +927,41 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 );
               })}
             </div>
+
+            {/* =================================================
+                RESIDENTIAL COMPLEX
+            ================================================= */}
+
+            {showResidentialComplex && (
+              <div className={styles.residentialComplexWrapper}>
+                <div className={styles.residentialComplexCard}>
+                  <div className={styles.inputIcon}>
+                    <Building2 size={19} />
+                  </div>
+
+                  <div className={styles.field}>
+                    <label>Жилой комплекс</label>
+
+                    <input
+                      type="text"
+                      value={form.residentialComplex || ""}
+                      onChange={(e) =>
+                        updateForm({
+                          residentialComplex: e.target.value,
+                        })
+                      }
+                      placeholder="Например ЖК Авангард"
+                      maxLength={120}
+                    />
+
+                    <span className={styles.fieldHint}>
+                      Укажите название ЖК, если объект находится в жилом
+                      комплексе
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* =================================================

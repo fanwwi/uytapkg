@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  MapPin,
-  Search,
-  X,
-  Home,
-  SlidersHorizontal,
-  DoorOpen,
-} from "lucide-react";
+import { MapPin, Search, X, Home, DoorOpen } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
@@ -24,12 +17,6 @@ import { mapListingData } from "@/utils/mapListingData";
 import styles from "./IssykKulProducts.module.css";
 import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
-
-/*
- * =========================
- * FILTER OPTIONS
- * =========================
- */
 
 const categories = [
   { value: "Все", label: "Все" },
@@ -59,28 +46,74 @@ const cityOptions = [
 
 const roomOptions = ["Все", "1", "2", "3", "4+"];
 
-/*
- * =========================
- * COMPONENT
- * =========================
- */
+const normalize = (value) =>
+  String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+const normalizeCategory = (value) => {
+  const normalized = normalize(value);
+
+  const aliases = {
+    дом: "дом",
+    дома: "дом",
+
+    квартира: "квартира",
+    квартиры: "квартира",
+
+    коттедж: "коттедж",
+    коттеджи: "коттедж",
+
+    участок: "участок",
+    участки: "участок",
+
+    коммерция: "коммерция",
+
+    "паркинг/гараж": "паркинг/гараж",
+    паркинг: "паркинг/гараж",
+    гараж: "паркинг/гараж",
+
+    комнаты: "комнаты",
+    комната: "комнаты",
+  };
+
+  return aliases[normalized] || normalized;
+};
+
+const normalizeDeal = (value) => {
+  const normalized = normalize(value);
+
+  if (
+    normalized === "продажа" ||
+    normalized === "продам" ||
+    normalized === "куплю"
+  ) {
+    return "продажа";
+  }
+
+  if (
+    normalized === "сниму в аренду" ||
+    normalized === "аренда" ||
+    normalized === "сниму" ||
+    normalized === "сдам"
+  ) {
+    return "сниму в аренду";
+  }
+
+  return normalized;
+};
 
 export default function IssykKulProducts() {
   const router = useRouter();
 
   /*
-   * =========================
-   * SEARCH
-   * =========================
+   * =========================================================
+   * DRAFT FILTERS
+   * =========================================================
    */
 
   const [search, setSearch] = useState("");
-
-  /*
-   * =========================
-   * FILTERS
-   * =========================
-   */
 
   const [activeCategory, setActiveCategory] = useState("Все");
   const [dealType, setDealType] = useState("Все");
@@ -95,9 +128,27 @@ export default function IssykKulProducts() {
   const [areaTo, setAreaTo] = useState("");
 
   /*
-   * =========================
+   * =========================================================
+   * APPLIED FILTERS
+   * =========================================================
+   */
+
+  const [appliedFilters, setAppliedFilters] = useState({
+    search: "",
+    activeCategory: "Все",
+    dealType: "Все",
+    city: "Все",
+    rooms: "Все",
+    priceFrom: "",
+    priceTo: "",
+    areaFrom: "",
+    areaTo: "",
+  });
+
+  /*
+   * =========================================================
    * DATA
-   * =========================
+   * =========================================================
    */
 
   const [listingsList, setListingsList] = useState([]);
@@ -107,9 +158,9 @@ export default function IssykKulProducts() {
   const [error, setError] = useState("");
 
   /*
-   * =========================
+   * =========================================================
    * LOAD DATA
-   * =========================
+   * =========================================================
    */
 
   useEffect(() => {
@@ -159,7 +210,6 @@ export default function IssykKulProducts() {
 
         if (!cancelled) {
           setError(err?.message || "Ошибка соединения с сервером");
-
           setListingsList([]);
         }
       } finally {
@@ -177,9 +227,9 @@ export default function IssykKulProducts() {
   }, []);
 
   /*
-   * =========================
+   * =========================================================
    * MAP DATA
-   * =========================
+   * =========================================================
    */
 
   const mappedListings = useMemo(() => {
@@ -189,7 +239,6 @@ export default function IssykKulProducts() {
           return mapListingData(item);
         } catch (err) {
           console.error("Listing mapping error:", err, item);
-
           return null;
         }
       })
@@ -197,9 +246,9 @@ export default function IssykKulProducts() {
   }, [listingsList]);
 
   /*
-   * =========================
+   * =========================================================
    * FAVORITES
-   * =========================
+   * =========================================================
    */
 
   const handleFavoriteClick = async (clickedItem) => {
@@ -241,27 +290,88 @@ export default function IssykKulProducts() {
   };
 
   /*
-   * =========================
+   * =========================================================
+   * APPLY FILTERS
+   * =========================================================
+   */
+
+  const handleSearch = () => {
+    setAppliedFilters({
+      search: search.trim(),
+      activeCategory,
+      dealType,
+      city,
+      rooms,
+      priceFrom,
+      priceTo,
+      areaFrom,
+      areaTo,
+    });
+
+    requestAnimationFrame(() => {
+      document.getElementById("results")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
+
+  /*
+   * =========================================================
+   * ENTER = SEARCH
+   * =========================================================
+   */
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch();
+    }
+  };
+
+  /*
+   * =========================================================
    * FILTERING
-   * =========================
+   * =========================================================
    */
 
   const filteredListings = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query = normalize(appliedFilters.search);
+
+    const selectedCategory = normalizeCategory(appliedFilters.activeCategory);
+
+    const selectedDeal = normalizeDeal(appliedFilters.dealType);
+
+    const selectedCity = normalize(appliedFilters.city);
+
+    const minPrice = appliedFilters.priceFrom
+      ? Number(appliedFilters.priceFrom)
+      : null;
+
+    const maxPrice = appliedFilters.priceTo
+      ? Number(appliedFilters.priceTo)
+      : null;
+
+    const minArea = appliedFilters.areaFrom
+      ? Number(appliedFilters.areaFrom)
+      : null;
+
+    const maxArea = appliedFilters.areaTo
+      ? Number(appliedFilters.areaTo)
+      : null;
 
     return mappedListings
       .filter((item) => {
         /*
-         * =========================
+         * =====================================================
          * ONLY ISSYK-KUL
-         * =========================
+         * =====================================================
          */
 
-        const region = String(item.region || "").toLowerCase();
-
-        const location = String(item.location || "").toLowerCase();
-
-        const cityValue = String(item.city || "").toLowerCase();
+        const region = normalize(item.region);
+        const location = normalize(item.location);
+        const cityValue = normalize(item.city);
+        const address = normalize(item.address);
 
         const isIssykKul =
           region === "issyk_kul" ||
@@ -270,162 +380,158 @@ export default function IssykKulProducts() {
           region.includes("issyk") ||
           region.includes("иссык") ||
           location.includes("иссык") ||
+          cityValue.includes("иссык") ||
           location.includes("каракол") ||
           location.includes("чолпон") ||
           cityValue.includes("каракол") ||
-          cityValue.includes("чолпон");
+          cityValue.includes("чолпон") ||
+          address.includes("каракол") ||
+          address.includes("чолпон");
 
         if (!isIssykKul) {
           return false;
         }
 
         /*
-         * =========================
+         * =====================================================
          * SEARCH
-         * =========================
+         * =====================================================
          */
 
-        const title = String(item.title || "").toLowerCase();
-
-        const address = String(item.address || "").toLowerCase();
-
-        const description = String(item.description || "").toLowerCase();
+        const title = normalize(item.title);
+        const description = normalize(item.description);
 
         const matchesSearch =
           !query ||
           title.includes(query) ||
           location.includes(query) ||
+          cityValue.includes(query) ||
           address.includes(query) ||
           description.includes(query);
 
+        if (!matchesSearch) {
+          return false;
+        }
+
         /*
-         * =========================
+         * =====================================================
          * CATEGORY
-         * =========================
+         * =====================================================
          */
 
-        const itemType = String(item.type || "")
-          .trim()
-          .toLowerCase();
-
-        const selectedType = String(activeCategory || "")
-          .trim()
-          .toLowerCase();
+        const itemType = normalizeCategory(item.type);
 
         const matchesCategory =
-          activeCategory === "Все" || itemType === selectedType;
+          appliedFilters.activeCategory === "Все" ||
+          itemType === selectedCategory;
+
+        if (!matchesCategory) {
+          return false;
+        }
 
         /*
-         * =========================
+         * =====================================================
          * DEAL TYPE
-         * =========================
+         * =====================================================
          */
 
-        const itemDeal = String(item.dealType || "")
-          .trim()
-          .toLowerCase();
+        const itemDeal = normalizeDeal(item.dealType);
 
-        const selectedDeal = String(dealType || "")
-          .trim()
-          .toLowerCase();
+        const matchesDeal =
+          appliedFilters.dealType === "Все" || itemDeal === selectedDeal;
 
-        const matchesDeal = dealType === "Все" || itemDeal === selectedDeal;
+        if (!matchesDeal) {
+          return false;
+        }
 
         /*
-         * =========================
+         * =====================================================
          * CITY
-         * =========================
+         * =====================================================
          */
 
-        const matchesCity = (() => {
-          if (city === "Все") {
-            return true;
-          }
+        const matchesCity =
+          appliedFilters.city === "Все" ||
+          location.includes(selectedCity) ||
+          cityValue.includes(selectedCity) ||
+          address.includes(selectedCity);
 
-          const selectedCity = city.toLowerCase().trim();
-
-          return (
-            location.includes(selectedCity) || cityValue.includes(selectedCity)
-          );
-        })();
+        if (!matchesCity) {
+          return false;
+        }
 
         /*
-         * =========================
+         * =====================================================
          * ROOMS
-         * =========================
+         * =====================================================
          */
 
-        const matchesRooms = (() => {
-          if (rooms === "Все") {
-            return true;
-          }
+        let matchesRooms = true;
 
+        if (appliedFilters.rooms !== "Все") {
           const itemRooms = Number(item.rooms);
 
-          if (rooms === "4+") {
-            return itemRooms >= 4;
+          if (Number.isNaN(itemRooms)) {
+            matchesRooms = false;
+          } else if (appliedFilters.rooms === "4+") {
+            matchesRooms = itemRooms >= 4;
+          } else {
+            matchesRooms = itemRooms === Number(appliedFilters.rooms);
           }
+        }
 
-          return itemRooms === Number(rooms);
-        })();
+        if (!matchesRooms) {
+          return false;
+        }
 
         /*
-         * =========================
+         * =====================================================
          * PRICE
-         * =========================
+         * =====================================================
          */
 
-        const matchesPrice = (() => {
-          const min = priceFrom ? Number(priceFrom) : null;
+        const price = Number(item.rawPrice);
 
-          const max = priceTo ? Number(priceTo) : null;
+        if (
+          minPrice !== null &&
+          !Number.isNaN(minPrice) &&
+          !Number.isNaN(price) &&
+          price < minPrice
+        ) {
+          return false;
+        }
 
-          const price = Number(item.rawPrice);
-
-          if (min !== null && !Number.isNaN(min) && price < min) {
-            return false;
-          }
-
-          if (max !== null && !Number.isNaN(max) && price > max) {
-            return false;
-          }
-
-          return true;
-        })();
+        if (maxPrice !== null && !Number.isNaN(maxPrice) && price > maxPrice) {
+          return false;
+        }
 
         /*
-         * =========================
+         * =====================================================
          * AREA
-         * =========================
+         * =====================================================
          */
 
-        const matchesArea = (() => {
-          const min = areaFrom ? Number(areaFrom) : null;
+        const area = Number(item.rawArea);
 
-          const max = areaTo ? Number(areaTo) : null;
+        if (
+          minArea !== null &&
+          !Number.isNaN(minArea) &&
+          !Number.isNaN(area) &&
+          area < minArea
+        ) {
+          return false;
+        }
 
-          const area = Number(item.rawArea);
+        if (
+          maxArea !== null &&
+          !Number.isNaN(maxArea) &&
+          !Number.isNaN(area) &&
+          area > maxArea
+        ) {
+          return false;
+        }
 
-          if (min !== null && !Number.isNaN(min) && area < min) {
-            return false;
-          }
-
-          if (max !== null && !Number.isNaN(max) && area > max) {
-            return false;
-          }
-
-          return true;
-        })();
-
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesDeal &&
-          matchesCity &&
-          matchesRooms &&
-          matchesPrice &&
-          matchesArea
-        );
+        return true;
       })
       .sort((a, b) => {
         const priority = {
@@ -441,48 +547,45 @@ export default function IssykKulProducts() {
 
         return (priority[aStatus] ?? 3) - (priority[bStatus] ?? 3);
       });
-  }, [
-    mappedListings,
-    search,
-    activeCategory,
-    dealType,
-    city,
-    rooms,
-    priceFrom,
-    priceTo,
-    areaFrom,
-    areaTo,
-  ]);
+  }, [mappedListings, appliedFilters]);
 
   /*
-   * =========================
-   * RESET FILTERS
-   * =========================
+   * =========================================================
+   * RESET
+   * =========================================================
    */
 
   const resetFilters = () => {
     setSearch("");
-
     setActiveCategory("Все");
     setDealType("Все");
-
     setCity("Все");
     setRooms("Все");
-
     setPriceFrom("");
     setPriceTo("");
-
     setAreaFrom("");
     setAreaTo("");
+
+    setAppliedFilters({
+      search: "",
+      activeCategory: "Все",
+      dealType: "Все",
+      city: "Все",
+      rooms: "Все",
+      priceFrom: "",
+      priceTo: "",
+      areaFrom: "",
+      areaTo: "",
+    });
   };
 
   /*
-   * =========================
-   * CHECK FILTERS
-   * =========================
+   * =========================================================
+   * HAS FILTERS
+   * =========================================================
    */
 
-  const hasFilters =
+  const hasDraftFilters =
     search.trim() !== "" ||
     activeCategory !== "Все" ||
     dealType !== "Все" ||
@@ -493,19 +596,28 @@ export default function IssykKulProducts() {
     areaFrom !== "" ||
     areaTo !== "";
 
+  const hasAppliedFilters =
+    appliedFilters.search !== "" ||
+    appliedFilters.activeCategory !== "Все" ||
+    appliedFilters.dealType !== "Все" ||
+    appliedFilters.city !== "Все" ||
+    appliedFilters.rooms !== "Все" ||
+    appliedFilters.priceFrom !== "" ||
+    appliedFilters.priceTo !== "" ||
+    appliedFilters.areaFrom !== "" ||
+    appliedFilters.areaTo !== "";
+
   /*
-   * =========================
+   * =========================================================
    * UI
-   * =========================
+   * =========================================================
    */
 
   return (
     <main className={styles.page}>
       <div className={styles.backgroundGlow} />
 
-      {/* =========================
-          HEADER
-      ========================= */}
+      {/* HEADER */}
 
       <header className={styles.header}>
         <div className={styles.headerText}>
@@ -537,9 +649,7 @@ export default function IssykKulProducts() {
         </div>
       </header>
 
-      {/* =========================
-          SEARCH
-      ========================= */}
+      {/* SEARCH */}
 
       <section className={styles.toolbar}>
         <div className={styles.search}>
@@ -550,6 +660,9 @@ export default function IssykKulProducts() {
             placeholder="Поиск по названию, адресу или городу..."
             value={search}
             onChange={(event) => setSearch(event.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            autoComplete="off"
+            spellCheck={false}
           />
 
           {search && (
@@ -567,25 +680,17 @@ export default function IssykKulProducts() {
         <button
           type="button"
           className={styles.filterButton}
-          onClick={() => {
-            document.getElementById("filters")?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }}
+          onClick={handleSearch}
+          disabled={loading}
         >
-          <SlidersHorizontal size={19} />
-          <span>Фильтры</span>
+          <Search size={19} />
+          <span>Искать</span>
         </button>
       </section>
 
-      {/* =========================
-          FILTERS
-      ========================= */}
+      {/* FILTERS */}
 
       <section id="filters" className={styles.filtersContainer}>
-        {/* CATEGORY */}
-
         <div className={styles.filterBlock}>
           <div className={styles.filterHeading}>
             <span>Тип недвижимости</span>
@@ -608,8 +713,6 @@ export default function IssykKulProducts() {
             })}
           </div>
         </div>
-
-        {/* DEAL */}
 
         <div className={styles.filterBlock}>
           <div className={styles.filterHeading}>
@@ -634,12 +737,8 @@ export default function IssykKulProducts() {
           </div>
         </div>
 
-        {/* ADVANCED */}
-
         <div className={styles.advancedFilters}>
           <div className={styles.advancedGrid}>
-            {/* CITY */}
-
             <CustomSelectBlack
               icon={MapPin}
               title="Город / Район"
@@ -647,8 +746,6 @@ export default function IssykKulProducts() {
               value={city}
               setValue={setCity}
             />
-
-            {/* ROOMS */}
 
             <CustomSelectBlack
               icon={DoorOpen}
@@ -658,14 +755,13 @@ export default function IssykKulProducts() {
               setValue={setRooms}
             />
 
-            {/* PRICE */}
-
             <div className={styles.rangeField}>
               <label>Цена ($)</label>
 
               <div className={styles.rangeInputs}>
                 <input
                   type="number"
+                  min="0"
                   placeholder="От"
                   value={priceFrom}
                   onChange={(event) => setPriceFrom(event.target.value)}
@@ -673,6 +769,7 @@ export default function IssykKulProducts() {
 
                 <input
                   type="number"
+                  min="0"
                   placeholder="До"
                   value={priceTo}
                   onChange={(event) => setPriceTo(event.target.value)}
@@ -680,14 +777,13 @@ export default function IssykKulProducts() {
               </div>
             </div>
 
-            {/* AREA */}
-
             <div className={styles.rangeField}>
               <label>Площадь (м²)</label>
 
               <div className={styles.rangeInputs}>
                 <input
                   type="number"
+                  min="0"
                   placeholder="От"
                   value={areaFrom}
                   onChange={(event) => setAreaFrom(event.target.value)}
@@ -695,6 +791,7 @@ export default function IssykKulProducts() {
 
                 <input
                   type="number"
+                  min="0"
                   placeholder="До"
                   value={areaTo}
                   onChange={(event) => setAreaTo(event.target.value)}
@@ -703,13 +800,34 @@ export default function IssykKulProducts() {
             </div>
           </div>
         </div>
+
+        <div className={styles.filtersActions}>
+          <button
+            type="button"
+            className={styles.filterButton}
+            onClick={handleSearch}
+            disabled={loading}
+          >
+            <Search size={19} />
+            Искать
+          </button>
+
+          {hasDraftFilters && (
+            <button
+              type="button"
+              className={styles.resetButton}
+              onClick={resetFilters}
+            >
+              <X size={15} />
+              Сбросить
+            </button>
+          )}
+        </div>
       </section>
 
-      {/* =========================
-          RESULTS HEADER
-      ========================= */}
+      {/* RESULTS */}
 
-      <div className={styles.resultsHeader}>
+      <div id="results" className={styles.resultsHeader}>
         <div className={styles.result}>
           <span>Объявления Иссык-Куля</span>
 
@@ -718,7 +836,7 @@ export default function IssykKulProducts() {
           <span>объявлений</span>
         </div>
 
-        {hasFilters && !loading && (
+        {hasAppliedFilters && !loading && (
           <button
             type="button"
             className={styles.resetButton}
@@ -730,21 +848,16 @@ export default function IssykKulProducts() {
         )}
       </div>
 
-      {/* =========================
-          LOADING
-      ========================= */}
+      {/* LOADING */}
 
       {loading && (
         <div className={styles.loading}>
           <div className={styles.spinner} />
-
           <span>Загружаем объявления...</span>
         </div>
       )}
 
-      {/* =========================
-          ERROR
-      ========================= */}
+      {/* ERROR */}
 
       {!loading && error && (
         <div className={styles.error}>
@@ -753,9 +866,7 @@ export default function IssykKulProducts() {
         </div>
       )}
 
-      {/* =========================
-          RESULTS
-      ========================= */}
+      {/* RESULTS */}
 
       {!loading && !error && (
         <>
@@ -783,7 +894,7 @@ export default function IssykKulProducts() {
                 выбранным параметрам.
               </p>
 
-              {hasFilters && (
+              {hasAppliedFilters && (
                 <button type="button" onClick={resetFilters}>
                   Сбросить фильтры
                 </button>
