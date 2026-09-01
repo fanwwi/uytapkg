@@ -6,6 +6,16 @@
   color: #f5f5f7;
 }
 
+.spinIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .content {
   min-height: 100vh;
 

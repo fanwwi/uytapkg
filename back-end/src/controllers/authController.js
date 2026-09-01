@@ -5,7 +5,11 @@ import { generateToken } from "../middleware/auth.js";
 import {
   uploadAvatarToStorage,
   removeImageFromStorage,
+  uploadVerificationDocumentToStorage,
+  getVerificationDocumentSignedUrl,
 } from "../utils/storage.js";
+
+const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
 
 async function syncDeveloperRecord(userId, accountType, profile, phone, email) {
   try {
@@ -522,6 +526,19 @@ export const updateMe = async (req, res) => {
       region: data.region !== undefined ? data.region : (existingMetadata.region || ""),
     };
 
+    // Верификация застройщика хранится в этом же JSON — сохраняем эти поля,
+    // иначе обычное редактирование профиля (сайт, соцсети и т.п.) стирало бы
+    // статус/документы поданной заявки.
+    if (existingMetadata.verificationStatus !== undefined) {
+      metadata.verificationStatus = existingMetadata.verificationStatus;
+    }
+    if (existingMetadata.verificationDocs !== undefined) {
+      metadata.verificationDocs = existingMetadata.verificationDocs;
+    }
+    if (existingMetadata.rejectionReason !== undefined) {
+      metadata.rejectionReason = existingMetadata.rejectionReason;
+    }
+
     const hasExtraUpdates =
       data.about !== undefined ||
       data.actualAddress !== undefined ||
@@ -887,6 +904,197 @@ export const getUserPublicProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Ошибка сервера при получении публичного профиля",
+    });
+  }
+};
+
+// =======================================================
+// 10. Загрузка, подача и статус заявки на верификацию застройщика
+// =======================================================
+
+// 10a. Загрузка одного документа верификации (POST /api/auth/verify-documents)
+// Документы — чувствительные данные (паспорт, регистрационные бумаги),
+// поэтому эндпоинт защищён авторизацией и хранит файлы в приватном бакете
+// (в отличие от публичного /api/upload, который отдаёт открытые ссылки).
+export const uploadVerificationDocument = async (req, res) => {
+  try {
+    if (req.user.account_type !== "developer") {
+      return res.status(403).json({
+        success: false,
+        message: "Загрузка документов верификации доступна только застройщикам",
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Файл не передан. Ожидается поле формы `document`.",
+      });
+    }
+
+    const { objectPath } = await uploadVerificationDocumentToStorage(req.user.id, req.file);
+    const signedUrl = await getVerificationDocumentSignedUrl(objectPath);
+
+    return res.json({
+      success: true,
+      path: objectPath,
+      previewUrl: signedUrl,
+    });
+  } catch (error) {
+    console.error("Upload Verification Document Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Ошибка сервера при загрузке документа",
+    });
+  }
+};
+
+// 10b. Подача заявки на верификацию (POST /api/auth/verify-request)
+export const submitVerificationRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (req.user.account_type !== "developer") {
+      return res.status(403).json({
+        success: false,
+        message: "Верификация доступна только аккаунтам застройщика",
+      });
+    }
+
+    const { documents } = req.body;
+
+    if (!documents || typeof documents !== "object" || Array.isArray(documents)) {
+      return res.status(400).json({
+        success: false,
+        message: "Необходимо передать загруженные документы для проверки",
+      });
+    }
+
+    // Принимаем только ожидаемые ключи, и только пути, которые
+    // uploadVerificationDocument выдал именно этому пользователю —
+    // это не даёт подставить чужой документ или произвольную ссылку.
+    const sanitizedDocuments = {};
+    for (const key of VERIFICATION_DOC_KEYS) {
+      const value = documents[key];
+      if (typeof value !== "string" || !value.startsWith(`${userId}/`)) {
+        return res.status(400).json({
+          success: false,
+          message: "Все документы должны быть загружены через /verify-documents перед отправкой заявки",
+        });
+      }
+      sanitizedDocuments[key] = value;
+    }
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    let aboutMeta = {};
+    if (profile?.about && profile.about.startsWith("{") && profile.about.endsWith("}")) {
+      try {
+        aboutMeta = JSON.parse(profile.about);
+      } catch (e) {}
+    } else if (profile?.about) {
+      aboutMeta = { bio: profile.about };
+    }
+
+    aboutMeta.verificationStatus = "pending";
+    aboutMeta.verificationDocs = sanitizedDocuments;
+    aboutMeta.rejectionReason = "";
+
+    const updatedAbout = JSON.stringify(aboutMeta);
+
+    if (profile) {
+      await supabase
+        .from("user_profiles")
+        .update({ about: updatedAbout })
+        .eq("id", profile.id);
+    } else {
+      await supabase
+        .from("user_profiles")
+        .insert([{ user_id: userId, about: updatedAbout }]);
+    }
+
+    await supabase
+      .from("users")
+      .update({ is_verified: false })
+      .eq("id", userId);
+
+    return res.json({
+      success: true,
+      message: "Заявка на верификацию успешно отправлена на рассмотрение",
+      status: "pending",
+    });
+  } catch (error) {
+    console.error("Submit Verification Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при отправке заявки на верификацию",
+    });
+  }
+};
+
+export const getVerificationStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { data: user } = await supabase
+      .from("users")
+      .select("id, is_verified")
+      .eq("id", userId)
+      .single();
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("about")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    let aboutMeta = {};
+    if (profile?.about && profile.about.startsWith("{") && profile.about.endsWith("}")) {
+      try {
+        aboutMeta = JSON.parse(profile.about);
+      } catch (e) {}
+    }
+
+    let status = aboutMeta.verificationStatus || (user?.is_verified ? "approved" : "none");
+    if (user?.is_verified) {
+      status = "approved";
+    }
+
+    // `documents` содержит пути хранилища (нужны, чтобы повторно отправить
+    // заявку без переза­грузки файлов — путь сам по себе не даёт доступа,
+    // бакет приватный). `previewUrls` — временные подписанные ссылки для
+    // просмотра владельцем.
+    let documents = null;
+    let previewUrls = null;
+    if (aboutMeta.verificationDocs && typeof aboutMeta.verificationDocs === "object") {
+      documents = {};
+      previewUrls = {};
+      for (const key of VERIFICATION_DOC_KEYS) {
+        const path = aboutMeta.verificationDocs[key];
+        if (path) {
+          documents[key] = path;
+          previewUrls[key] = await getVerificationDocumentSignedUrl(path);
+        }
+      }
+    }
+
+    return res.json({
+      success: true,
+      isVerified: Boolean(user?.is_verified),
+      status,
+      documents,
+      previewUrls,
+      rejectionReason: aboutMeta.rejectionReason || "",
+    });
+  } catch (error) {
+    console.error("Get Verification Status Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при получении статуса верификации",
     });
   }
 };

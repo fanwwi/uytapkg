@@ -171,6 +171,11 @@ function AreaDrawer({ onComplete, onStart }) {
     mousedown(event) {
       if (event.originalEvent.button !== 0) return;
 
+      // Без модификатора — это обычное перетаскивание карты (панорамирование).
+      // Область выделяется только с зажатым Shift, иначе обычный drag
+      // карты был бы невозможен: каждый клик+протяжка стартовали бы рисование.
+      if (!event.originalEvent.shiftKey) return;
+
       isDrawing.current = true;
       startPoint.current = event.latlng;
 
@@ -1318,7 +1323,7 @@ export default function SearchMapClient() {
               <div>
                 <strong>Выделите область</strong>
 
-                <span>Зажмите мышь и протяните по карте</span>
+                <span>Удерживайте Shift и протяните по карте мышью</span>
               </div>
             </div>
           )}

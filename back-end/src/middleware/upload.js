@@ -11,6 +11,7 @@ export const getImageExtension = (file) => {
     "image/png": "png",
     "image/webp": "webp",
     "image/gif": "gif",
+    "application/pdf": "pdf",
   };
   if (fromMime[file.mimetype]) return fromMime[file.mimetype];
   const ext = path.extname(file.originalname || "").replace(".", "").toLowerCase();
@@ -68,3 +69,21 @@ export const uploadImageFile = multer({
   ),
   limits: { fileSize: 8 * 1024 * 1024 },
 }).single("file");
+
+/** POST /api/auth/verify-documents — поле `document`, до 10 МБ, PDF/JPEG/PNG/WebP */
+const VERIFICATION_DOC_MIME = new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+]);
+
+export const uploadVerificationDocument = multer({
+  storage,
+  fileFilter: createImageFilter(
+    VERIFICATION_DOC_MIME,
+    "Допустимы только файлы PDF, JPEG, PNG или WebP"
+  ),
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).single("document");

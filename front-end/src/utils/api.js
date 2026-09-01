@@ -533,3 +533,73 @@ export async function deleteLawyer(token, id) {
 
   return data;
 }
+
+// 12. Верификация застройщиков
+export async function getVerificationStatus(token) {
+  const response = await fetch(`${API_URL}/auth/verification-status`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+}
+
+export async function uploadVerificationDocument(token, file) {
+  const form = new FormData();
+  form.append("document", file);
+
+  const response = await fetch(`${API_URL}/auth/verify-documents`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке документа");
+  }
+  return data;
+}
+
+export async function submitVerificationRequest(token, documents) {
+  const response = await fetch(`${API_URL}/auth/verify-request`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ documents }),
+  });
+  return response.json();
+}
+
+export async function getAdminDevelopers(token) {
+  const response = await fetch(`${API_URL}/admin/developers`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке списка застройщиков");
+  }
+  return data.data;
+}
+
+export async function verifyDeveloperAdmin(token, id, isVerified, rejectionReason = "") {
+  const response = await fetch(`${API_URL}/admin/developers/${id}/verify`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ isVerified, rejectionReason }),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при верификации застройщика");
+  }
+  return data;
+}

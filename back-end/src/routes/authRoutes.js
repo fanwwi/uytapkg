@@ -10,9 +10,12 @@ import {
   sendOtp,
   verifyOtp,
   getUserPublicProfile,
+  getVerificationStatus,
+  submitVerificationRequest,
+  uploadVerificationDocument,
 } from "../controllers/authController.js";
 import { authenticateToken } from "../middleware/auth.js";
-import { uploadAvatar } from "../middleware/upload.js";
+import { uploadAvatar, uploadVerificationDocument as uploadVerificationDocumentFile } from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -36,6 +39,30 @@ router.get("/users/:id", getUserPublicProfile);
 // Защищенные эндпоинты
 router.get("/me", authenticateToken, getMe);
 router.put("/me", authenticateToken, updateMe);
+
+// Верификация профиля застройщика
+router.get("/verification-status", authenticateToken, getVerificationStatus);
+router.post("/verify-request", authenticateToken, submitVerificationRequest);
+router.post(
+  "/verify-documents",
+  authenticateToken,
+  authLimiter,
+  (req, res, next) => {
+    uploadVerificationDocumentFile(req, res, (err) => {
+      if (err) {
+        const isLimit = err.code === "LIMIT_FILE_SIZE";
+        return res.status(400).json({
+          success: false,
+          message: isLimit
+            ? "Размер файла не должен превышать 10 МБ"
+            : err.message || "Ошибка загрузки файла",
+        });
+      }
+      next();
+    });
+  },
+  uploadVerificationDocument
+);
 
 // Аватар: multipart/form-data, поле `avatar`
 router.post(

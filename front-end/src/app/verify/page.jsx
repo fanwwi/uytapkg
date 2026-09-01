@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   FileText,
@@ -11,9 +11,23 @@ import {
   X,
   Clock3,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
-
+import {
+  getVerificationStatus,
+  submitVerificationRequest,
+  uploadVerificationDocument,
+} from "@/utils/api";
 import styles from "./Verify.module.css";
+
+const ACCEPTED_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export default function VerifyPage() {
   const [documents, setDocuments] = useState({
@@ -22,30 +36,87 @@ export default function VerifyPage() {
     document3: null,
   });
 
+  const [documentUrls, setDocumentUrls] = useState({
+    document1: "",
+    document2: "",
+    document3: "",
+  });
+
   const [showModal, setShowModal] = useState(false);
+  const [status, setStatus] = useState("none"); // none | pending | approved | rejected
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploadingKey, setUploadingKey] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [status] = useState("pending");
-  // Возможные статусы:
-  // pending   — заявка рассматривается
-  // approved  — профиль подтверждён
-  // rejected  — отказ
+  useEffect(() => {
+    async function loadStatus() {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await getVerificationStatus(token);
+        if (res.success) {
+          setStatus(res.status || (res.isVerified ? "approved" : "none"));
+          setRejectionReason(res.rejectionReason || "");
+          if (res.documents) {
+            setDocumentUrls(res.documents);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading verification status:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStatus();
+  }, []);
 
-  const [rejectionReason] = useState("");
-
-  const handleFileChange = (key, event) => {
+  const handleFileChange = async (key, event) => {
     const file = event.target.files?.[0];
-
+    event.target.value = "";
     if (!file) return;
 
-    if (file.type !== "application/pdf") {
-      alert("Можно загрузить только PDF-файл.");
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      setErrorMsg("Допустимые форматы: PDF, JPEG, PNG или WebP.");
       return;
     }
 
-    setDocuments((prev) => ({
-      ...prev,
-      [key]: file,
-    }));
+    if (file.size > MAX_FILE_SIZE) {
+      setErrorMsg("Размер файла не должен превышать 10 МБ.");
+      return;
+    }
+
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      setErrorMsg("Требуется авторизация. Войдите в аккаунт застройщика.");
+      return;
+    }
+
+    setUploadingKey(key);
+    setErrorMsg("");
+
+    try {
+      const uploadRes = await uploadVerificationDocument(token, file);
+
+      setDocuments((prev) => ({
+        ...prev,
+        [key]: file,
+      }));
+
+      setDocumentUrls((prev) => ({
+        ...prev,
+        [key]: uploadRes.path,
+      }));
+    } catch (err) {
+      console.error("Document upload error:", err);
+      setErrorMsg(err.message || "Не удалось загрузить файл. Попробуйте еще раз.");
+    } finally {
+      setUploadingKey(null);
+    }
   };
 
   const removeFile = (key) => {
@@ -53,19 +124,54 @@ export default function VerifyPage() {
       ...prev,
       [key]: null,
     }));
+    setDocumentUrls((prev) => ({
+      ...prev,
+      [key]: "",
+    }));
   };
 
   const allDocumentsUploaded =
-    documents.document1 && documents.document2 && documents.document3;
+    Boolean(documentUrls.document1) &&
+    Boolean(documentUrls.document2) &&
+    Boolean(documentUrls.document3);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!allDocumentsUploaded) return;
 
-    // Здесь позже подключается API отправки документов.
-    console.log("Verification documents:", documents);
+    setSubmitting(true);
+    setErrorMsg("");
 
-    setShowModal(true);
+    try {
+      const token = localStorage.getItem("uytap_token");
+      if (!token) {
+        setErrorMsg("Требуется авторизация");
+        return;
+      }
+
+      const res = await submitVerificationRequest(token, documentUrls);
+      if (res.success) {
+        setStatus("pending");
+        setShowModal(true);
+      } else {
+        setErrorMsg(res.message || "Ошибка отправки документов");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      setErrorMsg(err.message || "Ошибка сети при отправке");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <main className={styles.page}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
+          <Loader2 size={32} className={styles.spinIcon} style={{ color: "#483df6" }} />
+        </div>
+      </main>
+    );
+  }
 
   if (status === "approved") {
     return (
@@ -111,10 +217,17 @@ export default function VerifyPage() {
             </div>
           )}
 
-          <a href="/verify" className={styles.primaryButton}>
+          <button
+            type="button"
+            className={styles.primaryButton}
+            onClick={() => {
+              setStatus("none");
+              setErrorMsg("");
+            }}
+          >
             Подать заявку повторно
             <ArrowUpRight />
-          </a>
+          </button>
         </section>
       </main>
     );
@@ -176,11 +289,11 @@ export default function VerifyPage() {
               <span>Шаг 1</span>
               <h2>Загрузите документы</h2>
               <p>
-                Для проверки необходимо предоставить 3 документа в формате PDF.
+                Для проверки необходимо предоставить 3 документа в формате PDF, JPEG или PNG.
               </p>
             </div>
 
-            <div className={styles.pdfBadge}>PDF</div>
+            <div className={styles.pdfBadge}>PDF / JPG / PNG</div>
           </div>
 
           <div className={styles.documents}>
@@ -189,6 +302,8 @@ export default function VerifyPage() {
               title="Документ о регистрации компании"
               description="Подтверждает официальную регистрацию организации."
               file={documents.document1}
+              uploaded={Boolean(documentUrls.document1)}
+              uploading={uploadingKey === "document1"}
               onChange={(event) => handleFileChange("document1", event)}
               onRemove={() => removeFile("document1")}
             />
@@ -198,6 +313,8 @@ export default function VerifyPage() {
               title="Документ, подтверждающий деятельность"
               description="Документ, подтверждающий деятельность компании в сфере недвижимости."
               file={documents.document2}
+              uploaded={Boolean(documentUrls.document2)}
+              uploading={uploadingKey === "document2"}
               onChange={(event) => handleFileChange("document2", event)}
               onRemove={() => removeFile("document2")}
             />
@@ -207,10 +324,16 @@ export default function VerifyPage() {
               title="Документ представителя компании"
               description="Документ, подтверждающий полномочия представителя компании(ID-card/passport)"
               file={documents.document3}
+              uploaded={Boolean(documentUrls.document3)}
+              uploading={uploadingKey === "document3"}
               onChange={(event) => handleFileChange("document3", event)}
               onRemove={() => removeFile("document3")}
             />
           </div>
+
+          {errorMsg && (
+            <p style={{ color: "#e05252", fontSize: 13, marginTop: 14 }}>{errorMsg}</p>
+          )}
         </section>
 
         {/* REQUIREMENTS */}
@@ -224,7 +347,7 @@ export default function VerifyPage() {
             <strong>Требования к документам</strong>
 
             <ul>
-              <li>Только формат PDF</li>
+              <li>PDF, JPEG, PNG или WebP, до 10 МБ</li>
               <li>Документы должны быть читаемыми</li>
               <li>Документы должны быть актуальными</li>
               <li>
@@ -317,15 +440,17 @@ function DocumentUpload({
   title,
   description,
   file,
+  uploaded,
+  uploading,
   onChange,
   onRemove,
 }) {
   return (
-    <div className={`${styles.documentCard} ${file ? styles.uploaded : ""}`}>
+    <div className={`${styles.documentCard} ${uploaded ? styles.uploaded : ""}`}>
       <div className={styles.documentTop}>
         <div className={styles.documentNumber}>{number}</div>
 
-        {file && <CheckCircle className={styles.uploadedIcon} />}
+        {uploaded && <CheckCircle className={styles.uploadedIcon} />}
       </div>
 
       <div className={styles.documentInfo}>
@@ -334,33 +459,35 @@ function DocumentUpload({
         <p>{description}</p>
       </div>
 
-      {file ? (
+      {uploaded ? (
         <div className={styles.filePreview}>
           <div className={styles.fileIcon}>
             <FileText />
           </div>
 
           <div className={styles.fileName}>
-            <strong>{file.name}</strong>
-            <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            <strong>{file ? file.name : "Документ загружен"}</strong>
+            {file && <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>}
           </div>
 
           <button
             type="button"
             className={styles.removeFile}
             onClick={onRemove}
+            disabled={uploading}
           >
             <X />
           </button>
         </div>
       ) : (
-        <label className={styles.uploadButton}>
-          <Upload />
-          Загрузить PDF
+        <label className={styles.uploadButton} aria-disabled={uploading}>
+          {uploading ? <Loader2 className={styles.spinIcon} /> : <Upload />}
+          {uploading ? "Загрузка..." : "Загрузить файл"}
           <input
             type="file"
-            accept="application/pdf,.pdf"
+            accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
             onChange={onChange}
+            disabled={uploading}
             hidden
           />
         </label>

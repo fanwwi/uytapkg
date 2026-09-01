@@ -106,6 +106,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
    * чтобы не ломать текущую структуру API.
    */
   const isVerified =
+    user.isVerified === true ||
     profile.is_verified === true ||
     profile.verified === true ||
     profile.profile_verified === true ||

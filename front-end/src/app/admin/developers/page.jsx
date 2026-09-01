@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Building2,
   Check,
@@ -8,93 +8,45 @@ import {
   X,
   ExternalLink,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
-
+import { getAdminDevelopers, verifyDeveloperAdmin } from "@/utils/api";
 import Header from "../components/Header/Header";
 import Sidebar from "../components/Sidebar/Sidebar";
 import styles from "./Developers.module.css";
 
-const developers = [
-  {
-    id: 1,
-    name: "ОсОО СтройДом",
-    representative: "Айбек Абдрахманов",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80",
-
-    documents: {
-      registration: {
-        title: "Документ о регистрации",
-        file: "/documents/registration.pdf",
-      },
-
-      construction: {
-        title: "Документ на строительную деятельность",
-        file: "/documents/construction.pdf",
-      },
-
-      representativeId: {
-        title: "ID Card представителя",
-        file: "/documents/representative-id.pdf",
-      },
-    },
-  },
-
-  {
-    id: 2,
-    name: "ОсОО Бишкек Девелопмент",
-    representative: "Руслан Исмаилов",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=500&q=80",
-
-    documents: {
-      registration: {
-        title: "Документ о регистрации",
-        file: "/documents/registration.pdf",
-      },
-
-      construction: {
-        title: "Документ на строительную деятельность",
-        file: "/documents/construction.pdf",
-      },
-
-      representativeId: {
-        title: "ID Card представителя",
-        file: "/documents/representative-id.pdf",
-      },
-    },
-  },
-
-  {
-    id: 3,
-    name: "ОсОО Nova Construction",
-    representative: "Данияр Токтогулов",
-    image:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=500&q=80",
-
-    documents: {
-      registration: {
-        title: "Документ о регистрации",
-        file: "/documents/registration.pdf",
-      },
-
-      construction: {
-        title: "Документ на строительную деятельность",
-        file: "/documents/construction.pdf",
-      },
-
-      representativeId: {
-        title: "ID Card представителя",
-        file: "/documents/representative-id.pdf",
-      },
-    },
-  },
-];
-
 export default function DevelopersPage() {
+  const [developers, setDevelopers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [selectedDeveloper, setSelectedDeveloper] = useState(null);
   const [rejectMode, setRejectMode] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+
+  useEffect(() => {
+    loadDevelopers();
+  }, []);
+
+  async function loadDevelopers() {
+    setLoading(true);
+    setError("");
+    const token = localStorage.getItem("uytap_token");
+    if (!token) {
+      setError("Требуется авторизация администратора");
+      setLoading(false);
+      return;
+    }
+    try {
+      const data = await getAdminDevelopers(token);
+      setDevelopers(data || []);
+    } catch (err) {
+      console.error("Error loading admin developers:", err);
+      setError(err.message || "Ошибка загрузки застройщиков");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function openDeveloper(developer) {
     setSelectedDeveloper(developer);
@@ -108,40 +60,38 @@ export default function DevelopersPage() {
     setRejectReason("");
   }
 
-  function approveDeveloper() {
+  async function approveDeveloper() {
     if (!selectedDeveloper) return;
-
-    // TODO:
-    // Здесь позже будет API:
-    // POST /admin/developers/:id/approve
-
-    console.log("Developer approved:", selectedDeveloper.id);
-
-    closeModal();
+    setActionLoading(true);
+    try {
+      const token = localStorage.getItem("uytap_token");
+      await verifyDeveloperAdmin(token, selectedDeveloper.id, true);
+      await loadDevelopers();
+      closeModal();
+    } catch (err) {
+      alert(err.message || "Ошибка верификации");
+    } finally {
+      setActionLoading(false);
+    }
   }
 
   function openRejectMode() {
     setRejectMode(true);
   }
 
-  function rejectDeveloper() {
-    if (!selectedDeveloper) return;
-
-    if (!rejectReason.trim()) return;
-
-    // TODO:
-    // Здесь позже будет API:
-    // POST /admin/developers/:id/reject
-    // {
-    //   reason: rejectReason
-    // }
-
-    console.log("Developer rejected:", {
-      id: selectedDeveloper.id,
-      reason: rejectReason,
-    });
-
-    closeModal();
+  async function rejectDeveloper() {
+    if (!selectedDeveloper || !rejectReason.trim()) return;
+    setActionLoading(true);
+    try {
+      const token = localStorage.getItem("uytap_token");
+      await verifyDeveloperAdmin(token, selectedDeveloper.id, false, rejectReason);
+      await loadDevelopers();
+      closeModal();
+    } catch (err) {
+      alert(err.message || "Ошибка отклонения заявки");
+    } finally {
+      setActionLoading(false);
+    }
   }
 
   return (
@@ -174,39 +124,61 @@ export default function DevelopersPage() {
 
           {/* LIST */}
 
-          <div className={styles.list}>
-            {developers.map((developer) => (
-              <article key={developer.id} className={styles.developerCard}>
-                <div className={styles.developerImage}>
-                  <img src={developer.image} alt={developer.name} />
-                </div>
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center", padding: "40px 0" }}>
+              <Loader2 className={styles.spinIcon} size={32} style={{ color: "#6d28d9" }} />
+            </div>
+          ) : error ? (
+            <div style={{ padding: "20px", color: "#e53e3e", background: "#fed7d7", borderRadius: "10px" }}>
+              {error}
+            </div>
+          ) : developers.length === 0 ? (
+            <div style={{ padding: "40px", textAlign: "center", color: "#718096" }}>
+              Заявок на верификацию застройщиков пока нет.
+            </div>
+          ) : (
+            <div className={styles.list}>
+              {developers.map((developer) => {
+                const docCount = developer.documents ? Object.keys(developer.documents).length : 0;
+                const isApproved = developer.isVerified || developer.verificationStatus === "approved";
+                const isRejected = developer.verificationStatus === "rejected";
 
-                <div className={styles.developerInfo}>
-                  <div className={styles.status}>На проверке</div>
+                return (
+                  <article key={developer.id} className={styles.developerCard}>
+                    <div className={styles.developerImage}>
+                      <img src={developer.image} alt={developer.name} />
+                    </div>
 
-                  <h3>{developer.name}</h3>
+                    <div className={styles.developerInfo}>
+                      <div className={`${styles.status} ${isApproved ? styles.approved : isRejected ? styles.rejected : ""}`}>
+                        {isApproved ? "Подтверждён" : isRejected ? "Отклонён" : "На проверке"}
+                      </div>
 
-                  <p>
-                    Представитель: <strong>{developer.representative}</strong>
-                  </p>
+                      <h3>{developer.name}</h3>
 
-                  <div className={styles.documentsCount}>
-                    <FileText />
-                    <span>3 документа</span>
-                  </div>
-                </div>
+                      <p>
+                        Представитель: <strong>{developer.representative}</strong>
+                      </p>
 
-                <button
-                  type="button"
-                  className={styles.reviewButton}
-                  onClick={() => openDeveloper(developer)}
-                >
-                  Рассмотреть
-                  <ExternalLink />
-                </button>
-              </article>
-            ))}
-          </div>
+                      <div className={styles.documentsCount}>
+                        <FileText />
+                        <span>{docCount} {docCount === 1 ? "документ" : docCount >= 2 && docCount <= 4 ? "документа" : "документов"}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={styles.reviewButton}
+                      onClick={() => openDeveloper(developer)}
+                    >
+                      Рассмотреть
+                      <ExternalLink />
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </main>
       </div>
 
@@ -274,20 +246,53 @@ export default function DevelopersPage() {
               </div>
 
               <div className={styles.documentList}>
-                <DocumentItem
-                  number="01"
-                  document={selectedDeveloper.documents.registration}
-                />
+                {selectedDeveloper.documents?.document1 ? (
+                  <DocumentItem
+                    number="01"
+                    title="Документ о государственной регистрации"
+                    file={selectedDeveloper.documents.document1}
+                  />
+                ) : selectedDeveloper.documents?.registration ? (
+                  <DocumentItem
+                    number="01"
+                    title={selectedDeveloper.documents.registration.title || "Документ о регистрации"}
+                    file={selectedDeveloper.documents.registration.file}
+                  />
+                ) : null}
 
-                <DocumentItem
-                  number="02"
-                  document={selectedDeveloper.documents.construction}
-                />
+                {selectedDeveloper.documents?.document2 ? (
+                  <DocumentItem
+                    number="02"
+                    title="Лицензия на строительную деятельность"
+                    file={selectedDeveloper.documents.document2}
+                  />
+                ) : selectedDeveloper.documents?.construction ? (
+                  <DocumentItem
+                    number="02"
+                    title={selectedDeveloper.documents.construction.title || "Документ на строительство"}
+                    file={selectedDeveloper.documents.construction.file}
+                  />
+                ) : null}
 
-                <DocumentItem
-                  number="03"
-                  document={selectedDeveloper.documents.representativeId}
-                />
+                {selectedDeveloper.documents?.document3 ? (
+                  <DocumentItem
+                    number="03"
+                    title="Паспорт / ID представителя"
+                    file={selectedDeveloper.documents.document3}
+                  />
+                ) : selectedDeveloper.documents?.representativeId ? (
+                  <DocumentItem
+                    number="03"
+                    title={selectedDeveloper.documents.representativeId.title || "ID Card представителя"}
+                    file={selectedDeveloper.documents.representativeId.file}
+                  />
+                ) : null}
+
+                {!selectedDeveloper.documents && (
+                  <div style={{ padding: "15px", color: "#718096", fontSize: "14px" }}>
+                    Документы не загружены
+                  </div>
+                )}
               </div>
             </div>
 
@@ -326,10 +331,10 @@ export default function DevelopersPage() {
                   <button
                     type="button"
                     className={styles.confirmReject}
-                    disabled={!rejectReason.trim()}
+                    disabled={!rejectReason.trim() || actionLoading}
                     onClick={rejectDeveloper}
                   >
-                    Подтвердить отказ
+                    {actionLoading ? "Сохранение..." : "Подтвердить отказ"}
                   </button>
                 </div>
               </div>
@@ -343,6 +348,7 @@ export default function DevelopersPage() {
                   type="button"
                   className={styles.rejectButton}
                   onClick={openRejectMode}
+                  disabled={actionLoading}
                 >
                   <X />
                   Отказать
@@ -352,9 +358,10 @@ export default function DevelopersPage() {
                   type="button"
                   className={styles.approveButton}
                   onClick={approveDeveloper}
+                  disabled={actionLoading}
                 >
                   <Check />
-                  Одобрить верификацию
+                  {actionLoading ? "Сохранение..." : "Одобрить верификацию"}
                 </button>
               </div>
             )}
@@ -369,7 +376,10 @@ export default function DevelopersPage() {
    DOCUMENT ITEM
 ========================================================= */
 
-function DocumentItem({ number, document }) {
+function DocumentItem({ number, title, file, document }) {
+  const docTitle = title || document?.title || "Документ";
+  const docFile = file || document?.file || "#";
+
   return (
     <div className={styles.document}>
       <div className={styles.documentNumber}>{number}</div>
@@ -379,12 +389,12 @@ function DocumentItem({ number, document }) {
       </div>
 
       <div className={styles.documentInfo}>
-        <strong>{document.title}</strong>
-        <span>PDF документ</span>
+        <strong>{docTitle}</strong>
+        <span>Файл документа</span>
       </div>
 
       <a
-        href={document.file}
+        href={docFile}
         target="_blank"
         rel="noopener noreferrer"
         className={styles.openDocument}

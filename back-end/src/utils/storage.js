@@ -60,3 +60,57 @@ export const removeImageFromStorage = async (imageUrl) => {
     console.warn("Не удалось удалить файл из Storage:", error.message);
   }
 };
+
+/**
+ * Приватный бакет для документов верификации застройщиков (паспорта,
+ * регистрационные документы и т.п.). Создать вручную в Supabase Dashboard
+ * БЕЗ публичного доступа — в отличие от `avatars`, файлы отсюда должны
+ * открываться только через подписанные ссылки (createSignedUrl).
+ */
+export const VERIFICATION_DOCS_BUCKET = "verification-docs";
+
+/** Загружает документ верификации в приватный бакет: `{userId}/{uuid}.{ext}` */
+export const uploadVerificationDocumentToStorage = async (userId, file) => {
+  const ext = getImageExtension(file);
+  const objectPath = `${userId}/${randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from(VERIFICATION_DOCS_BUCKET)
+    .upload(objectPath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false,
+      cacheControl: "3600",
+    });
+
+  if (error) {
+    throw new Error(error.message || "Не удалось загрузить документ в хранилище");
+  }
+
+  return { objectPath };
+};
+
+/** Подписанная временная ссылка для просмотра документа верификации (владелец/админ). */
+export const getVerificationDocumentSignedUrl = async (objectPath, expiresInSeconds = 600) => {
+  if (!objectPath || typeof objectPath !== "string") return null;
+
+  const { data, error } = await supabase.storage
+    .from(VERIFICATION_DOCS_BUCKET)
+    .createSignedUrl(objectPath, expiresInSeconds);
+
+  if (error) {
+    console.warn("Не удалось создать подписанную ссылку на документ верификации:", error.message);
+    return null;
+  }
+
+  return data?.signedUrl || null;
+};
+
+/** Удаляет документ верификации из приватного бакета по пути объекта. */
+export const removeVerificationDocumentFromStorage = async (objectPath) => {
+  if (!objectPath || typeof objectPath !== "string") return;
+
+  const { error } = await supabase.storage.from(VERIFICATION_DOCS_BUCKET).remove([objectPath]);
+  if (error) {
+    console.warn("Не удалось удалить документ верификации из Storage:", error.message);
+  }
+};

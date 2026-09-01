@@ -60,6 +60,12 @@ export function mapComplexData(item) {
 
     region: item.region || null,
 
+    // В residential_complexes нет колонок latitude/longitude — координаты
+    // хранятся внутри features (см. complexesController.js).
+    latitude: item.latitude ?? features.latitude ?? null,
+
+    longitude: item.longitude ?? features.longitude ?? null,
+
     description: item.description || "Описание жилого комплекса отсутствует.",
 
     housingClass: item.housing_class || "Класс не указан",

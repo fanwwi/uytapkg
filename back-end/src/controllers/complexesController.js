@@ -163,6 +163,8 @@ export const createComplex = async (req, res) => {
       region,
       city,
       address,
+      latitude,
+      longitude,
       status,
       class: housingClass,
       completionDate,
@@ -202,6 +204,10 @@ export const createComplex = async (req, res) => {
       cover_photo,
       features: {
         ...(features || {}),
+        // В таблице residential_complexes нет колонок latitude/longitude —
+        // храним координаты внутри features, как и остальные доп. поля.
+        latitude: latitude ?? (features && features.latitude) ?? null,
+        longitude: longitude ?? (features && features.longitude) ?? null,
         floors: floors || null,
         blocks: blocks || null,
         apartments: apartments || null,
@@ -310,6 +316,8 @@ export const updateComplex = async (req, res) => {
       region,
       city,
       address,
+      latitude,
+      longitude,
       status,
       class: housingClass,
       completionDate,
@@ -347,6 +355,8 @@ export const updateComplex = async (req, res) => {
       housing_class: housingClass || complex.housing_class,
       features: {
         ...(complex.features || {}),
+        latitude: latitude !== undefined ? latitude : complex.features?.latitude,
+        longitude: longitude !== undefined ? longitude : complex.features?.longitude,
         floors: floors !== undefined ? floors : complex.features?.floors,
         blocks: blocks !== undefined ? blocks : complex.features?.blocks,
         apartments: apartments !== undefined ? apartments : complex.features?.apartments,

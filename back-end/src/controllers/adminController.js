@@ -2,6 +2,10 @@ import { supabase } from "../config/db.js";
 import { getTariff, calculateTariffTotal } from "../constants/tariffs.js";
 import { createLawyerSchema, updateLawyerSchema } from "../utils/validation.js";
 import { toPublicLawyer } from "./lawyersController.js";
+import { getVerificationDocumentSignedUrl } from "../utils/storage.js";
+
+const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
+const MAX_REJECTION_REASON_LENGTH = 1000;
 
 // =======================================================
 // Список платежей для админ-панели (GET /api/admin/payments)
@@ -255,6 +259,184 @@ export const deleteLawyer = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Ошибка сервера при удалении юриста",
+    });
+  }
+};
+
+// =======================================================
+// Управление верификацией застройщиков (Админка)
+// =======================================================
+
+// 1. Получить список всех застройщиков с их документами (GET /api/admin/developers)
+export const listDevelopersAdmin = async (req, res) => {
+  try {
+    const { data: users, error: usersError } = await supabase
+      .from("users")
+      .select("id, email, phone, account_type, is_verified, created_at")
+      .eq("account_type", "developer")
+      .order("created_at", { ascending: false });
+
+    if (usersError) {
+      console.error("Admin List Developers Error:", usersError);
+      return res.status(500).json({
+        success: false,
+        message: "Ошибка при получении списка застройщиков",
+      });
+    }
+
+    const userIds = (users || []).map((u) => u.id);
+
+    const { data: profiles } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .in("user_id", userIds.length > 0 ? userIds : ["00000000-0000-0000-0000-000000000000"]);
+
+    const profilesMap = new Map((profiles || []).map((p) => [p.user_id, p]));
+
+    const developersList = await Promise.all(
+      (users || []).map(async (user) => {
+        const profile = profilesMap.get(user.id) || {};
+        let aboutMeta = {};
+        if (profile.about && profile.about.startsWith("{") && profile.about.endsWith("}")) {
+          try {
+            aboutMeta = JSON.parse(profile.about);
+          } catch (e) {}
+        }
+
+        const name = profile.company_name || profile.first_name || user.email;
+
+        // Документы лежат в приватном бакете как пути — для админки отдаём
+        // временные подписанные ссылки, по которым можно их открыть.
+        let documents = null;
+        if (aboutMeta.verificationDocs && typeof aboutMeta.verificationDocs === "object") {
+          documents = {};
+          for (const key of VERIFICATION_DOC_KEYS) {
+            const path = aboutMeta.verificationDocs[key];
+            if (path) {
+              documents[key] = await getVerificationDocumentSignedUrl(path, 900);
+            }
+          }
+        }
+
+        return {
+          id: user.id,
+          name,
+          companyName: profile.company_name || name,
+          representative: profile.first_name ? `${profile.first_name} ${profile.last_name || ""}`.trim() : "Представитель",
+          email: user.email,
+          phone: user.phone || profile.phone,
+          image: profile.avatar_url || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=80",
+          isVerified: user.is_verified,
+          verificationStatus: aboutMeta.verificationStatus || (user.is_verified ? "approved" : "none"),
+          documents,
+          rejectionReason: aboutMeta.rejectionReason || "",
+          createdAt: user.created_at,
+        };
+      })
+    );
+
+    return res.json({
+      success: true,
+      data: developersList,
+    });
+  } catch (error) {
+    console.error("Admin List Developers Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при получении застройщиков",
+    });
+  }
+};
+
+// 2. Подтвердить или отклонить верификацию застройщика (PUT /api/admin/developers/:id/verify)
+export const verifyDeveloperAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isVerified, rejectionReason } = req.body;
+
+    if (typeof isVerified !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "Поле isVerified обязательно и должно быть true или false",
+      });
+    }
+
+    if (!isVerified && (typeof rejectionReason !== "string" || !rejectionReason.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: "При отклонении заявки необходимо указать причину отказа",
+      });
+    }
+
+    if (rejectionReason && rejectionReason.length > MAX_REJECTION_REASON_LENGTH) {
+      return res.status(400).json({
+        success: false,
+        message: `Причина отказа не должна превышать ${MAX_REJECTION_REASON_LENGTH} символов`,
+      });
+    }
+
+    const { data: targetUser } = await supabase
+      .from("users")
+      .select("id, account_type")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (!targetUser || targetUser.account_type !== "developer") {
+      return res.status(404).json({
+        success: false,
+        message: "Застройщик не найден",
+      });
+    }
+
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .update({ is_verified: isVerified })
+      .eq("id", id)
+      .select()
+      .maybeSingle();
+
+    if (userError || !user) {
+      return res.status(404).json({
+        success: false,
+        message: "Пользователь не найден",
+      });
+    }
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", id)
+      .maybeSingle();
+
+    if (profile) {
+      let aboutMeta = {};
+      if (profile.about && profile.about.startsWith("{") && profile.about.endsWith("}")) {
+        try {
+          aboutMeta = JSON.parse(profile.about);
+        } catch (e) {}
+      } else if (profile.about) {
+        aboutMeta = { bio: profile.about };
+      }
+
+      aboutMeta.verificationStatus = isVerified ? "approved" : "rejected";
+      aboutMeta.rejectionReason = isVerified ? "" : rejectionReason.trim();
+
+      await supabase
+        .from("user_profiles")
+        .update({ about: JSON.stringify(aboutMeta) })
+        .eq("id", profile.id);
+    }
+
+    return res.json({
+      success: true,
+      message: isVerified ? "Профиль застройщика успешно подтверждён" : "Заявка отклонена",
+      isVerified: user.is_verified,
+    });
+  } catch (error) {
+    console.error("Admin Verify Developer Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при верификации застройщика",
     });
   }
 };

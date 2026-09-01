@@ -261,6 +261,8 @@ export const createComplexSchema = z
     region: z.string().optional().nullable(),
     city: z.string().optional().nullable(),
     address: z.string().optional().nullable(),
+    latitude: z.number().optional().nullable(),
+    longitude: z.number().optional().nullable(),
     status: z.string().optional().nullable(),
     class: z.string().optional().nullable(),
     construction: z.string().optional().nullable(),
