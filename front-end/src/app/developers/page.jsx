@@ -30,7 +30,7 @@ export default function Developers() {
             nameRu: dev.company_name,
             nameEn: dev.company_name,
             objects: dev.residential_complexes?.length || 0,
-            logo: dev.logo_url || null,
+            logo: dev.logo_url || "/assets/DeveloperImage.png",
           }));
 
           setDevelopersList(mapped);

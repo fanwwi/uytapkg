@@ -3,7 +3,7 @@ export function mapComplexData(item) {
 
   const developerName = item.developers?.company_name || "Застройщик не указан";
 
-  const developerLogo = item.developers?.logo_url || null;
+  const developerLogo = item.developers?.logo_url || "/assets/DeveloperImage.png";
 
   const features = item.features || {};
 
@@ -77,7 +77,10 @@ export function mapComplexData(item) {
 
     priceTo,
 
-    image: item.cover_photo || features.images?.[0] || null,
+    image:
+      item.cover_photo ||
+      features.images?.[0] ||
+      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800",
 
     images: features.images?.length
       ? features.images

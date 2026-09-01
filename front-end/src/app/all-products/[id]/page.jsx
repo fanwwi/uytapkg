@@ -567,7 +567,7 @@ export default function ProductDetails() {
   const images =
     Array.isArray(product.images) && product.images.length
       ? product.images
-      : ["/placeholder-property.jpg"];
+      : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800"];
 
   const currentImageSrc = images[currentImage] || images[0];
 
@@ -1047,7 +1047,7 @@ export default function ProductDetails() {
                 <div className={styles.ownerSideProfile}>
                   <div className={styles.ownerSideAvatar}>
                     <Image
-                      src={product.owner.avatar || "/default-avatar.png"}
+                      src={product.owner.avatar || "https://i.pravatar.cc/150?img=12"}
                       alt={product.owner.name || "Владелец"}
                       fill
                       sizes="55px"
