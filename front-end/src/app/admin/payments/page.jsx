@@ -13,14 +13,22 @@ import {
   Download,
   LoaderCircle,
   CalendarDays,
+  Settings2,
+  Crown,
+  Zap,
+  Rocket,
+  Building2,
+  Sparkles,
+  Camera,
 } from "lucide-react";
 
 import styles from "./Payments.module.css";
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { getAdminPayments } from "@/utils/api";
 import { generateReceiptPdf } from "@/utils/generateReceiptPdf";
 import ReceiptDocument from "@/app/payment/PaymentReceiptModal/ReceiptDocument";
+import PricingEditModal from "./PricingModal/PricingModal";
 
 const TARIFF_OPTIONS = ["Все тарифы", "СТАРТ", "ОПТИМАЛЬНЫЙ", "БИЗНЕС"];
 
@@ -41,6 +49,10 @@ const formatDate = (value) => {
   return new Date(value).toLocaleDateString("ru-RU");
 };
 
+const formatServicePrice = (price, suffix) => {
+  return `${Number(price).toLocaleString("ru-RU")} сом ${suffix}`;
+};
+
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([]);
   const [stats, setStats] = useState({ totalRevenue: 0, paidCount: 0 });
@@ -49,6 +61,7 @@ export default function PaymentsPage() {
 
   const [search, setSearch] = useState("");
   const [tariffFilter, setTariffFilter] = useState("Все тарифы");
+
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -68,6 +81,44 @@ export default function PaymentsPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+
+  /*
+   * =========================================================
+   * CURRENT PRICING
+   *
+   * Пока хранится локально.
+   * После подключения backend эти значения
+   * можно загружать через API.
+   * =========================================================
+   */
+
+  const [pricing, setPricing] = useState({
+    tariffs: {
+      start: 390,
+      optimal: 790,
+      business: 1890,
+
+      developer: {
+        mode: "individual",
+        value: "",
+      },
+    },
+
+    services: {
+      vip: 290,
+      urgent: 70,
+      top: 190,
+      instagram: 390,
+    },
+  });
+
+  /*
+   * =========================================================
+   * FILTER PAYMENTS
+   * =========================================================
+   */
 
   const filteredPayments = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -111,13 +162,47 @@ export default function PaymentsPage() {
     }
   };
 
+  /*
+   * =========================================================
+   * SAVE PRICING
+   * =========================================================
+   */
+
+  const handleSavePricing = (nextPricing) => {
+    setPricing(nextPricing);
+
+    console.log("UPDATED PRICING:", nextPricing);
+
+    /*
+     * Здесь потом можно подключить API:
+     *
+     * await updatePricing(token, nextPricing);
+     */
+  };
+
+  /*
+   * =========================================================
+   * DEVELOPER PRICE
+   * =========================================================
+   */
+
+  const developerPrice =
+    pricing.tariffs.developer.mode === "individual"
+      ? "Индивидуально"
+      : `${Number(pricing.tariffs.developer.value).toLocaleString(
+          "ru-RU",
+        )} сом`;
+
   return (
     <div className={styles.layout}>
       <Sidebar />
 
       <div className={styles.content}>
         <main className={styles.page}>
-          {/* HEADER */}
+          {/* =====================================================
+              HEADER
+          ===================================================== */}
+
           <div className={styles.pageHeader}>
             <div className={styles.titleRow}>
               <div className={styles.titleIcon}>
@@ -126,12 +211,26 @@ export default function PaymentsPage() {
 
               <div>
                 <h1>Оплаты</h1>
-                <p>Управление платежами и чеками</p>
+
+                <p>Управление платежами, тарифами и услугами</p>
               </div>
             </div>
+
+            <button
+              type="button"
+              className={styles.pricingButton}
+              onClick={() => setIsPricingModalOpen(true)}
+            >
+              <Settings2 size={17} />
+
+              <span>Изменить цены</span>
+            </button>
           </div>
 
-          {/* STATS */}
+          {/* =====================================================
+              STATS
+          ===================================================== */}
+
           <section className={styles.stats}>
             <div className={styles.statCard}>
               <div className={styles.statTop}>
@@ -162,7 +261,212 @@ export default function PaymentsPage() {
             </div>
           </section>
 
-          {/* TABLE */}
+          {/* =====================================================
+              CURRENT PRICES
+          ===================================================== */}
+
+          <section className={styles.pricingPanel}>
+            <div className={styles.pricingPanelHeader}>
+              <div className={styles.pricingPanelTitle}>
+                <div className={styles.pricingPanelIcon}>
+                  <Settings2 size={18} />
+                </div>
+
+                <div>
+                  <span>НАСТРОЙКИ СИСТЕМЫ</span>
+
+                  <h2>Текущие цены</h2>
+
+                  <p>Стоимость тарифов и дополнительных услуг UyTap</p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className={styles.pricingEditButton}
+                onClick={() => setIsPricingModalOpen(true)}
+              >
+                <Settings2 size={16} />
+                Изменить цены
+              </button>
+            </div>
+
+            {/* =================================================
+                TARIFFS
+            ================================================= */}
+
+            <div className={styles.pricingGroupTitle}>
+              <span>01</span>
+
+              <div>
+                <strong>Тарифы</strong>
+
+                <small>Ежемесячная стоимость</small>
+              </div>
+            </div>
+
+            <div className={styles.currentPricingGrid}>
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Rocket size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>СТАРТ</span>
+
+                  <strong>
+                    {Number(pricing.tariffs.start).toLocaleString("ru-RU")} сом
+                  </strong>
+
+                  <small>в месяц</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Crown size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>ОПТИМАЛЬНЫЙ</span>
+
+                  <strong>
+                    {Number(pricing.tariffs.optimal).toLocaleString("ru-RU")}{" "}
+                    сом
+                  </strong>
+
+                  <small>в месяц</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Building2 size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>БИЗНЕС</span>
+
+                  <strong>
+                    {Number(pricing.tariffs.business).toLocaleString("ru-RU")}{" "}
+                    сом
+                  </strong>
+
+                  <small>в месяц</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Sparkles size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>ЗАСТРОЙЩИК</span>
+
+                  <strong>{developerPrice}</strong>
+
+                  <small>
+                    {pricing.tariffs.developer.mode === "individual"
+                      ? "особые условия"
+                      : "в месяц"}
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            {/* =================================================
+                SERVICES
+            ================================================= */}
+
+            <div
+              className={`${styles.pricingGroupTitle} ${styles.servicesTitle}`}
+            >
+              <span>02</span>
+
+              <div>
+                <strong>Дополнительные услуги</strong>
+
+                <small>Продвижение и SMM</small>
+              </div>
+            </div>
+
+            <div className={styles.currentPricingGrid}>
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Crown size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>VIP</span>
+
+                  <strong>{formatServicePrice(pricing.services.vip, "")}</strong>
+
+                  <small>в день</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Zap size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>СРОЧНО</span>
+
+                  <strong>{formatServicePrice(pricing.services.urgent, "")}</strong>
+
+                  <small>в день</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Rocket size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>ТОП</span>
+
+                  <strong>{formatServicePrice(pricing.services.top, "")}</strong>
+
+                  <small>в день</small>
+                </div>
+              </div>
+
+              <div className={styles.currentPriceCard}>
+                <div className={styles.currentPriceIcon}>
+                  <Camera size={18} />
+                </div>
+
+                <div className={styles.currentPriceContent}>
+                  <span>INSTAGRAM</span>
+
+                  <strong>{formatServicePrice(pricing.services.instagram, "")}</strong>
+
+                  <small>за публикацию</small>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.pricingPanelFooter}>
+              <span>Цены применяются к новым покупкам и услугам.</span>
+
+              <button
+                type="button"
+                className={styles.pricingInlineButton}
+                onClick={() => setIsPricingModalOpen(true)}
+              >
+                Настроить
+                <Settings2 size={14} />
+              </button>
+            </div>
+          </section>
+
+          {/* =====================================================
+              PAYMENT HISTORY
+          ===================================================== */}
+
           <section className={styles.card}>
             <div className={styles.cardHeader}>
               <div>
@@ -175,6 +479,7 @@ export default function PaymentsPage() {
             </div>
 
             {/* FILTERS */}
+
             <div className={styles.filters}>
               <div className={styles.search}>
                 <Search />
@@ -187,7 +492,7 @@ export default function PaymentsPage() {
               </div>
 
               <div className={styles.customSelect}>
-                <CustomSelectBlack
+                <CustomSelect
                   icon={Filter}
                   title="Тариф"
                   options={TARIFF_OPTIONS}
@@ -198,6 +503,7 @@ export default function PaymentsPage() {
             </div>
 
             {/* TABLE */}
+
             <div className={styles.tableWrapper}>
               {loading ? (
                 <div className={styles.empty}>
@@ -326,7 +632,10 @@ export default function PaymentsPage() {
             </div>
           </section>
 
-          {/* MODAL */}
+          {/* =====================================================
+              PAYMENT DETAILS MODAL
+          ===================================================== */}
+
           {selectedPayment && (
             <div
               className={styles.overlay}
@@ -354,7 +663,6 @@ export default function PaymentsPage() {
                 </div>
 
                 <div className={styles.modalBody}>
-                  {/* USER */}
                   <div className={styles.modalUser}>
                     <div className={styles.modalAvatar}>
                       {(selectedPayment.userEmail || "?").charAt(0).toUpperCase()}
@@ -366,7 +674,6 @@ export default function PaymentsPage() {
                     </div>
                   </div>
 
-                  {/* DETAILS */}
                   <div className={styles.detailsGrid}>
                     <div>
                       <span>Тариф</span>
@@ -451,6 +758,17 @@ export default function PaymentsPage() {
               <ReceiptDocument ref={receiptRef} paymentData={receiptData} />
             </div>
           )}
+
+          {/* =====================================================
+              PRICING EDIT MODAL
+          ===================================================== */}
+
+          <PricingEditModal
+            isOpen={isPricingModalOpen}
+            onClose={() => setIsPricingModalOpen(false)}
+            values={pricing}
+            onSave={handleSavePricing}
+          />
         </main>
       </div>
     </div>

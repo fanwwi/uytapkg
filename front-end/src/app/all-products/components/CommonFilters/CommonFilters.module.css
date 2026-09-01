@@ -17,10 +17,10 @@
 
   padding: 9px 12px;
 
-  border: 1px solid #292632;
+  border: 1px solid #483df6;
   border-radius: 14px;
 
-  background: #111014;
+  background: #ffff;
 }
 
 .rangeTitle {
@@ -43,7 +43,7 @@
   width: 16px;
   height: 16px;
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .inputs {
@@ -59,20 +59,20 @@
 
   padding: 0 8px;
 
-  border: 1px solid #292632;
+  border: 1px solid #483df6;
   border-radius: 8px;
 
   outline: none;
 
-  background: #18171d;
-  color: #fff;
+  background: #ffff;
+  color: #483df6;
 
   font-family: inherit;
   font-size: 11px;
 }
 
 .inputs input:focus {
-  border-color: #8b5cf6;
+  border-color: #483df6;
 }
 
 .inputs input::placeholder {

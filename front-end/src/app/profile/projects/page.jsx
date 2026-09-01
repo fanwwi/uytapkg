@@ -27,10 +27,10 @@ import {
 } from "@/utils/api";
 
 import styles from "./ResidentialComplexes.module.css";
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 import { ImProfile } from "react-icons/im";
 import { RiProfileFill } from "react-icons/ri";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const initialComplexes = [
   {
@@ -483,7 +483,7 @@ export default function ResidentialComplexes() {
           </div>
 
           <div className={styles.statusSelect}>
-            <CustomSelectBlack
+            <CustomSelect
               icon={TrendingUp}
               title="Статус"
               options={statusOptions}
@@ -803,7 +803,7 @@ export default function ResidentialComplexes() {
                   <div className={styles.editField}>
                     <label>Статус</label>
 
-                    <CustomSelectBlack
+                    <CustomSelect
                       icon={TrendingUp}
                       title="Статус"
                       options={editStatusOptions}
@@ -817,7 +817,7 @@ export default function ResidentialComplexes() {
                   <div className={styles.editField}>
                     <label>Класс жилья</label>
 
-                    <CustomSelectBlack
+                    <CustomSelect
                       icon={Building2}
                       title="Класс"
                       options={classOptions}

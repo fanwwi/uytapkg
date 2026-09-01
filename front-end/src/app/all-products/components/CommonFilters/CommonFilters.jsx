@@ -9,9 +9,9 @@ import {
   FileText,
 } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 
 import styles from "./CommonFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const cityOptions = ["Все", "Бишкек", "Ош", "Иссык-Куль", "Турция"];
 
@@ -127,7 +127,7 @@ export default function CommonFilters({ filters, updateFilter }) {
             CITY / REGION
         ================================================= */}
 
-        <CustomSelectBlack
+        <CustomSelect
           icon={MapPin}
           title="Город / регион"
           options={cityOptions}
@@ -155,7 +155,7 @@ export default function CommonFilters({ filters, updateFilter }) {
             CURRENCY
         ================================================= */}
 
-        <CustomSelectBlack
+        <CustomSelect
           icon={FileText}
           title="Валюта"
           options={currencyOptions}
@@ -230,7 +230,7 @@ export default function CommonFilters({ filters, updateFilter }) {
         {["apartment", "house", "cottage", "room"].includes(
           filters.propertyType,
         ) && (
-          <CustomSelectBlack
+          <CustomSelect
             icon={DoorOpen}
             title="Комнаты"
             options={roomsOptions}

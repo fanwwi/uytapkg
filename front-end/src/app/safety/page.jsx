@@ -2,7 +2,6 @@
 
 import {
   AlertTriangle,
-  ArrowLeft,
   Banknote,
   BadgeCheck,
   Building2,
@@ -11,7 +10,6 @@ import {
   FileCheck,
   Info,
   KeyRound,
-  MapPin,
   Phone,
   Search,
   ShieldAlert,
@@ -138,18 +136,50 @@ const redFlags = [
   "Общение ведётся только через анонимный аккаунт.",
 ];
 
+const steps = [
+  {
+    number: "01",
+    title: "Проверьте объявление",
+    text: "Адрес, фотографии, описание, цену и историю общения с продавцом.",
+  },
+  {
+    number: "02",
+    title: "Установите личность",
+    text: "Убедитесь, что человек действительно является собственником или имеет право представлять собственника.",
+  },
+  {
+    number: "03",
+    title: "Проверьте документы",
+    text: "Сверьте данные человека, объекта и документы на недвижимость.",
+  },
+  {
+    number: "04",
+    title: "Осмотрите объект",
+    text: "Посетите квартиру или дом лично. Не принимайте решение только по фотографиям.",
+  },
+  {
+    number: "05",
+    title: "Изучите договор",
+    text: "Не подписывайте документы, которые не прочитали и не понимаете.",
+  },
+  {
+    number: "06",
+    title: "Только после проверки — оплата",
+    text: "Передача денег должна происходить после проверки всех ключевых условий сделки.",
+  },
+];
+
 export default function Safety() {
   const router = useRouter();
 
   return (
     <main className={styles.page}>
       <Header />
+
       <div className={styles.backgroundGlow} />
       <div className={styles.backgroundGlowTwo} />
 
       <div className={styles.container}>
-        {/* HEADER */}
-
         <header className={styles.header}>
           <div className={styles.headerBadge}>
             <ShieldCheck size={17} />
@@ -166,8 +196,6 @@ export default function Safety() {
             схемы используют мошенники и как защитить свои деньги и документы.
           </p>
         </header>
-
-        {/* IMPORTANT */}
 
         <section className={styles.important}>
           <div className={styles.importantIcon}>
@@ -188,8 +216,6 @@ export default function Safety() {
             </p>
           </div>
         </section>
-
-        {/* QUICK RULES */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeading}>
@@ -222,8 +248,6 @@ export default function Safety() {
             })}
           </div>
         </section>
-
-        {/* SCAMS */}
 
         <section className={styles.section}>
           <div className={styles.sectionHeading}>
@@ -278,8 +302,6 @@ export default function Safety() {
           </div>
         </section>
 
-        {/* RED FLAGS */}
-
         <section className={styles.section}>
           <div className={styles.sectionHeading}>
             <div className={styles.headingIcon}>
@@ -317,8 +339,6 @@ export default function Safety() {
           </div>
         </section>
 
-        {/* TRANSACTION */}
-
         <section className={styles.section}>
           <div className={styles.sectionHeading}>
             <div className={styles.headingIcon}>
@@ -332,74 +352,18 @@ export default function Safety() {
           </div>
 
           <div className={styles.steps}>
-            <div className={styles.step}>
-              <span>01</span>
-              <div>
-                <h3>Проверьте объявление</h3>
-                <p>
-                  Адрес, фотографии, описание, цену и историю общения с
-                  продавцом.
-                </p>
-              </div>
-            </div>
+            {steps.map((step) => (
+              <div className={styles.step} key={step.number}>
+                <span>{step.number}</span>
 
-            <div className={styles.step}>
-              <span>02</span>
-              <div>
-                <h3>Установите личность</h3>
-                <p>
-                  Убедитесь, что человек действительно является собственником
-                  или имеет право представлять собственника.
-                </p>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
               </div>
-            </div>
-
-            <div className={styles.step}>
-              <span>03</span>
-              <div>
-                <h3>Проверьте документы</h3>
-                <p>
-                  Сверьте данные человека, объекта и документы на недвижимость.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.step}>
-              <span>04</span>
-              <div>
-                <h3>Осмотрите объект</h3>
-                <p>
-                  Посетите квартиру или дом лично. Не принимайте решение только
-                  по фотографиям.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.step}>
-              <span>05</span>
-              <div>
-                <h3>Изучите договор</h3>
-                <p>
-                  Не подписывайте документы, которые не прочитали и не
-                  понимаете.
-                </p>
-              </div>
-            </div>
-
-            <div className={styles.step}>
-              <span>06</span>
-              <div>
-                <h3>Только после проверки — оплата</h3>
-                <p>
-                  Передача денег должна происходить после проверки всех ключевых
-                  условий сделки.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
-
-        {/* PERSONAL DATA */}
 
         <section className={styles.dataCard}>
           <div className={styles.dataIcon}>
@@ -443,8 +407,6 @@ export default function Safety() {
           </div>
         </section>
 
-        {/* IF SCAM */}
-
         <section className={styles.ifScam}>
           <div className={styles.ifScamIcon}>
             <Info />
@@ -486,8 +448,6 @@ export default function Safety() {
           </div>
         </section>
 
-        {/* FOOTER NOTE */}
-
         <section className={styles.bottomNote}>
           <ShieldCheck size={22} />
 
@@ -501,6 +461,7 @@ export default function Safety() {
           </div>
         </section>
       </div>
+
       <Footer />
     </main>
   );

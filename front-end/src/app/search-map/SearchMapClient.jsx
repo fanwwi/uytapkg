@@ -17,6 +17,7 @@ import { getListings, getComplexes } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 import { mapComplexData } from "@/utils/mapComplexData";
 
+
 import {
   Search,
   MapPin,
@@ -24,10 +25,46 @@ import {
   RotateCcw,
   MousePointer2,
   ArrowUpRight,
+  Home,
+  SlidersHorizontal,
+  Building2,
+  Tag,
 } from "lucide-react";
 
 import "leaflet/dist/leaflet.css";
 import styles from "./Map.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+
+/* =========================================================
+   FILTER OPTIONS
+========================================================= */
+
+const DEAL_OPTIONS = ["Все", "Купить", "Снять"];
+
+const PROPERTY_OPTIONS = [
+  "Все",
+  "Квартира",
+  "Дом",
+  "Коттедж",
+  "Участок",
+  "Коммерция",
+  "Паркинг",
+  "Комната",
+  "ЖК",
+];
+
+const LOCATION_OPTIONS = [
+  "Все",
+  "Бишкек",
+  "Чуйская область",
+  "Ошская область",
+  "Джалал-Абадская область",
+  "Иссык-Кульская область",
+  "Нарынская область",
+  "Таласская область",
+  "Баткенская область",
+  "Турция",
+];
 
 /* =========================================================
    LEAFLET MARKER
@@ -186,7 +223,7 @@ function AreaDrawer({ onComplete, onStart }) {
 }
 
 /* =========================================================
-   HELPERS
+   OBJECT TYPE LABEL
 ========================================================= */
 
 function getObjectTypeLabel(object) {
@@ -194,27 +231,237 @@ function getObjectTypeLabel(object) {
     return "ЖК";
   }
 
-  if (object.type === "house") {
-    return "Дом";
+  switch (object.propertyType) {
+    case "house":
+      return "Дом";
+
+    case "cottage":
+      return "Коттедж";
+
+    case "land":
+      return "Участок";
+
+    case "commercial":
+      return "Коммерция";
+
+    case "parking":
+      return "Паркинг";
+
+    case "room":
+      return "Комната";
+
+    default:
+      return "Квартира";
+  }
+}
+
+/* =========================================================
+   NORMALIZE DEAL TYPE
+========================================================= */
+
+function normalizeDealType(object) {
+  if (!object) return "";
+
+  const raw = String(
+    object.dealType ??
+      object.deal_type ??
+      object.transactionType ??
+      object.transaction_type ??
+      object.operationType ??
+      object.operation_type ??
+      object.deal ??
+      object.operation ??
+      object.typeDeal ??
+      "",
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    raw.includes("rent") ||
+    raw.includes("аренд") ||
+    raw.includes("сним") ||
+    raw.includes("найм") ||
+    raw.includes("lease")
+  ) {
+    return "rent";
   }
 
-  if (object.type === "land") {
-    return "Участок";
+  if (
+    raw.includes("buy") ||
+    raw.includes("продаж") ||
+    raw.includes("куп") ||
+    raw.includes("sale")
+  ) {
+    return "buy";
   }
 
-  if (object.type === "commercial") {
-    return "Коммерция";
+  return "";
+}
+
+/* =========================================================
+   NORMALIZE PROPERTY TYPE
+========================================================= */
+
+function normalizePropertyType(object) {
+  if (!object) return "";
+
+  if (object.objectType === "complex") {
+    return "complex";
   }
 
-  if (object.type === "parking") {
-    return "Паркинг";
+  const raw = String(
+    object.type ??
+      object.category ??
+      object.categoryType ??
+      object.propertyType ??
+      "",
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    raw.includes("apartment") ||
+    raw.includes("квартир") ||
+    raw.includes("flat")
+  ) {
+    return "apartment";
   }
 
-  if (object.type === "room") {
-    return "Комната";
+  if (raw.includes("cottage") || raw.includes("коттедж")) {
+    return "cottage";
   }
 
-  return "Квартира";
+  if (raw.includes("house") || raw.includes("дом")) {
+    return "house";
+  }
+
+  if (
+    raw.includes("land") ||
+    raw.includes("зем") ||
+    raw.includes("участ") ||
+    raw.includes("plot")
+  ) {
+    return "land";
+  }
+
+  if (
+    raw.includes("commercial") ||
+    raw.includes("коммер") ||
+    raw.includes("офис") ||
+    raw.includes("магазин")
+  ) {
+    return "commercial";
+  }
+
+  if (
+    raw.includes("parking") ||
+    raw.includes("паркинг") ||
+    raw.includes("гараж")
+  ) {
+    return "parking";
+  }
+
+  if (raw.includes("room") || raw.includes("комнат")) {
+    return "room";
+  }
+
+  return raw;
+}
+
+/* =========================================================
+   LOCATION TEXT
+========================================================= */
+
+function getLocationText(object) {
+  if (!object) return "";
+
+  return [
+    object.country,
+    object.city,
+    object.region,
+    object.district,
+    object.address,
+    object.fullAddress,
+    object.location,
+    object.street,
+  ]
+    .filter(Boolean)
+    .map((value) => String(value).trim())
+    .join(" ")
+    .toLowerCase();
+}
+
+/* =========================================================
+   NORMALIZE LOCATION
+========================================================= */
+
+function normalizeLocation(object) {
+  if (!object) return "";
+
+  const text = getLocationText(object);
+
+  if (
+    text.includes("турци") ||
+    text.includes("turkey") ||
+    text.includes("istanbul") ||
+    text.includes("стамбул") ||
+    text.includes("ankara") ||
+    text.includes("анкара") ||
+    text.includes("antalya") ||
+    text.includes("анталь")
+  ) {
+    return "turkey";
+  }
+
+  if (text.includes("бишкек") || text.includes("bishkek")) {
+    return "bishkek";
+  }
+
+  if (text.includes("чуйск") || text.includes("чүй") || text.includes("chuy")) {
+    return "chuy";
+  }
+
+  if (
+    text.includes("ошск") ||
+    text.includes("ошская") ||
+    text.includes("ош ") ||
+    text.includes("osh")
+  ) {
+    return "osh";
+  }
+
+  if (text.includes("джалал") || text.includes("jalal")) {
+    return "jalal_abad";
+  }
+
+  if (
+    text.includes("иссык") ||
+    text.includes("иссык-куль") ||
+    text.includes("иссык куль") ||
+    text.includes("каракол") ||
+    text.includes("чолпон") ||
+    text.includes("бостери") ||
+    text.includes("тамчы") ||
+    text.includes("балыкчы") ||
+    text.includes("боконбаево")
+  ) {
+    return "issyk_kul";
+  }
+
+  if (text.includes("нарын") || text.includes("naryn")) {
+    return "naryn";
+  }
+
+  if (text.includes("талас") || text.includes("talas")) {
+    return "talas";
+  }
+
+  if (text.includes("баткен") || text.includes("batken")) {
+    return "batken";
+  }
+
+  return "";
 }
 
 /* =========================================================
@@ -260,19 +507,23 @@ function normalizeListing(item) {
     return null;
   }
 
-  return {
+  const object = {
     ...mapped,
 
     id: item.id ?? mapped.id,
 
     objectType: "listing",
 
-    type: mapped.type || item.category || "apartment",
+    type: mapped.type || item.category || item.propertyType || "apartment",
 
     name: mapped.title || item.title || "Объявление",
 
     address:
-      mapped.address || mapped.location || item.address || "Адрес не указан",
+      mapped.address ||
+      mapped.location ||
+      item.address ||
+      item.fullAddress ||
+      "Адрес не указан",
 
     price:
       mapped.priceFormatted || mapped.price || item.price || "Цена не указана",
@@ -288,6 +539,25 @@ function normalizeListing(item) {
     longitude,
 
     position: [latitude, longitude],
+  };
+
+  const combined = {
+    ...item,
+    ...mapped,
+
+    address: object.address,
+  };
+
+  return {
+    ...object,
+
+    dealType: normalizeDealType(combined),
+
+    propertyType: normalizePropertyType(combined),
+
+    locationType: normalizeLocation(combined),
+
+    locationText: getLocationText(combined),
   };
 }
 
@@ -348,7 +618,7 @@ function normalizeComplex(item) {
     }
   }
 
-  return {
+  const object = {
     ...mapped,
 
     id: item.id ?? mapped.id,
@@ -359,7 +629,8 @@ function normalizeComplex(item) {
 
     name: mapped.name || item.name || "Жилой комплекс",
 
-    address: mapped.address || item.address || "Адрес не указан",
+    address:
+      mapped.address || item.address || item.fullAddress || "Адрес не указан",
 
     price,
 
@@ -370,17 +641,36 @@ function normalizeComplex(item) {
 
     position: [latitude, longitude],
   };
+
+  const combined = {
+    ...item,
+    ...mapped,
+
+    address: object.address,
+  };
+
+  return {
+    ...object,
+
+    dealType: normalizeDealType(combined),
+
+    propertyType: "complex",
+
+    locationType: normalizeLocation(combined),
+
+    locationText: getLocationText(combined),
+  };
 }
 
 /* =========================================================
-   MAIN CLIENT COMPONENT
+   MAIN COMPONENT
 ========================================================= */
 
 export default function SearchMapClient() {
   const router = useRouter();
 
   /* =========================================================
-     REAL DATA
+     DATA
   ========================================================= */
 
   const [listings, setListings] = useState([]);
@@ -390,10 +680,26 @@ export default function SearchMapClient() {
   const [loadError, setLoadError] = useState("");
 
   /* =========================================================
-     UI
+     SEARCH
   ========================================================= */
 
   const [search, setSearch] = useState("");
+
+  /* =========================================================
+     FILTERS
+  ========================================================= */
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [dealFilter, setDealFilter] = useState("Все");
+
+  const [propertyFilter, setPropertyFilter] = useState("Все");
+
+  const [locationFilter, setLocationFilter] = useState("Все");
+
+  /* =========================================================
+     AREA
+  ========================================================= */
 
   const [selectedBounds, setSelectedBounds] = useState(null);
 
@@ -406,7 +712,7 @@ export default function SearchMapClient() {
   const [selectedObject, setSelectedObject] = useState(null);
 
   /* =========================================================
-     LOAD REAL DATA
+     LOAD DATA
   ========================================================= */
 
   useEffect(() => {
@@ -420,7 +726,7 @@ export default function SearchMapClient() {
         const [listingsResponse, complexesResponse] = await Promise.all([
           getListings({
             page: 1,
-            limit: 100,
+            limit: 500,
           }),
 
           getComplexes(),
@@ -473,18 +779,111 @@ export default function SearchMapClient() {
     };
   }, []);
 
+  /* =========================================================
+     ALL OBJECTS
+  ========================================================= */
+
   const objects = useMemo(() => {
     return [...listings, ...complexes];
   }, [listings, complexes]);
 
+  /* =========================================================
+     ACTIVE FILTER COUNT
+  ========================================================= */
+
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+
+    if (dealFilter !== "Все") {
+      count += 1;
+    }
+
+    if (propertyFilter !== "Все") {
+      count += 1;
+    }
+
+    if (locationFilter !== "Все") {
+      count += 1;
+    }
+
+    return count;
+  }, [dealFilter, propertyFilter, locationFilter]);
+
+  /* =========================================================
+     DEAL VALUE
+  ========================================================= */
+
+  function getDealValue(object) {
+    if (object?.dealType === "buy") {
+      return "Купить";
+    }
+
+    if (object?.dealType === "rent") {
+      return "Снять";
+    }
+
+    return "";
+  }
+
+  /* =========================================================
+     PROPERTY LABEL
+  ========================================================= */
+
+  function getPropertyLabel(value) {
+    const labels = {
+      apartment: "Квартира",
+      house: "Дом",
+      cottage: "Коттедж",
+      land: "Участок",
+      commercial: "Коммерция",
+      parking: "Паркинг",
+      room: "Комната",
+      complex: "ЖК",
+    };
+
+    return labels[value] || "";
+  }
+
+  /* =========================================================
+     LOCATION VALUE
+  ========================================================= */
+
+  function getLocationFilterValue(object) {
+    const values = {
+      bishkek: "Бишкек",
+      chuy: "Чуйская область",
+      osh: "Ошская область",
+      jalal_abad: "Джалал-Абадская область",
+      issyk_kul: "Иссык-Кульская область",
+      naryn: "Нарынская область",
+      talas: "Таласская область",
+      batken: "Баткенская область",
+      turkey: "Турция",
+    };
+
+    return values[object.locationType] || "";
+  }
+
+  /* =========================================================
+     FILTERED OBJECTS
+  ========================================================= */
+
   const filteredObjects = useMemo(() => {
     let result = objects;
+
+    /* =======================================================
+       AREA
+    ======================================================= */
 
     if (selectedBounds) {
       result = result.filter((object) => {
         return selectedBounds.contains(L.latLng(object.position));
       });
     }
+
+    /* =======================================================
+       SEARCH
+    ======================================================= */
 
     const query = search.trim().toLowerCase();
 
@@ -498,17 +897,61 @@ export default function SearchMapClient() {
 
         const developer = String(object.developer || "").toLowerCase();
 
+        const locationText = String(object.locationText || "").toLowerCase();
+
         return (
           name.includes(query) ||
           address.includes(query) ||
           description.includes(query) ||
-          developer.includes(query)
+          developer.includes(query) ||
+          locationText.includes(query)
         );
       });
     }
 
+    /* =======================================================
+       DEAL
+    ======================================================= */
+
+    if (dealFilter !== "Все") {
+      result = result.filter((object) => {
+        return getDealValue(object) === dealFilter;
+      });
+    }
+
+    /* =======================================================
+       PROPERTY
+    ======================================================= */
+
+    if (propertyFilter !== "Все") {
+      result = result.filter((object) => {
+        return getPropertyLabel(object.propertyType) === propertyFilter;
+      });
+    }
+
+    /* =======================================================
+       LOCATION
+    ======================================================= */
+
+    if (locationFilter !== "Все") {
+      result = result.filter((object) => {
+        return getLocationFilterValue(object) === locationFilter;
+      });
+    }
+
     return result;
-  }, [objects, selectedBounds, search]);
+  }, [
+    objects,
+    selectedBounds,
+    search,
+    dealFilter,
+    propertyFilter,
+    locationFilter,
+  ]);
+
+  /* =========================================================
+     AREA
+  ========================================================= */
 
   function handleBounds(bounds, finished) {
     setTempBounds(bounds);
@@ -530,7 +973,9 @@ export default function SearchMapClient() {
     }
 
     setSelectedBounds(bounds);
+
     setTempBounds(null);
+
     setHasSelection(true);
 
     setSelectedObject((current) => {
@@ -544,6 +989,10 @@ export default function SearchMapClient() {
     });
   }
 
+  /* =========================================================
+     CLEAR AREA
+  ========================================================= */
+
   function clearSelection() {
     setSelectedBounds(null);
     setTempBounds(null);
@@ -551,11 +1000,29 @@ export default function SearchMapClient() {
     setSelectedObject(null);
   }
 
+  /* =========================================================
+     CLEAR FILTERS
+  ========================================================= */
+
+  function clearFilters() {
+    setDealFilter("Все");
+    setPropertyFilter("Все");
+    setLocationFilter("Все");
+  }
+
+  /* =========================================================
+     OBJECT CLICK
+  ========================================================= */
+
   function handleObjectClick(object) {
     if (!object) return;
 
     setSelectedObject(object);
   }
+
+  /* =========================================================
+     DETAILS
+  ========================================================= */
 
   function handleDetails(object) {
     if (!object?.id) return;
@@ -569,25 +1036,54 @@ export default function SearchMapClient() {
     router.push(`/all-products/${object.id}`);
   }
 
+  /* =========================================================
+     CLOSE PREVIEW
+  ========================================================= */
+
   function closeObjectPreview() {
     setSelectedObject(null);
   }
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <main className={styles.page}>
       <section className={styles.mapWrapper}>
+        {/* ===================================================
+            TOP CONTROLS
+        =================================================== */}
+
         <div className={styles.topPanel}>
+          {/* HOME */}
+
+          <button
+            type="button"
+            className={styles.homeButton}
+            onClick={() => router.push("/")}
+            aria-label="На главную"
+          >
+            <Home size={18} />
+
+            <span>Главная</span>
+          </button>
+
+          {/* HEADING */}
+
           <div className={styles.heading}>
             <div className={styles.headingIcon}>
               <MapPin />
             </div>
 
             <div>
-              <span>UYTap MAP</span>
+              <span>UYTAP MAP</span>
 
               <h1>Недвижимость на карте</h1>
             </div>
           </div>
+
+          {/* SEARCH */}
 
           <div className={styles.searchBox}>
             <Search />
@@ -603,18 +1099,102 @@ export default function SearchMapClient() {
                 type="button"
                 onClick={() => setSearch("")}
                 className={styles.clearSearch}
+                aria-label="Очистить поиск"
               >
                 <X />
               </button>
             )}
           </div>
+
+          {/* FILTER TOGGLE */}
+
+          <button
+            type="button"
+            className={`${styles.filtersToggle} ${
+              showFilters || activeFilterCount > 0
+                ? styles.filtersToggleActive
+                : ""
+            }`}
+            onClick={() => setShowFilters((prev) => !prev)}
+          >
+            <SlidersHorizontal />
+
+            <span>Фильтры</span>
+
+            {activeFilterCount > 0 && <b>{activeFilterCount}</b>}
+          </button>
         </div>
+
+        {/* ===================================================
+            FILTER PANEL
+        =================================================== */}
+
+        <div
+          className={`${styles.filtersPanel} ${
+            showFilters ? styles.filtersPanelOpen : ""
+          }`}
+        >
+          <div className={styles.filtersHeader}>
+            <div>
+              <strong>Фильтры поиска</strong>
+
+              <span>Настройте отображение объектов на карте</span>
+            </div>
+
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                className={styles.clearFilters}
+                onClick={clearFilters}
+              >
+                <RotateCcw size={14} />
+                Сбросить
+              </button>
+            )}
+          </div>
+
+          <div className={styles.filtersGrid}>
+            {/* DEAL */}
+
+            <CustomSelect
+              icon={Tag}
+              title="Тип сделки"
+              options={DEAL_OPTIONS}
+              value={dealFilter}
+              setValue={setDealFilter}
+            />
+
+            {/* PROPERTY */}
+
+            <CustomSelect
+              icon={Building2}
+              title="Тип недвижимости"
+              options={PROPERTY_OPTIONS}
+              value={propertyFilter}
+              setValue={setPropertyFilter}
+            />
+
+            {/* LOCATION */}
+
+            <CustomSelect
+              icon={MapPin}
+              title="Локация"
+              options={LOCATION_OPTIONS}
+              value={locationFilter}
+              setValue={setLocationFilter}
+            />
+          </div>
+        </div>
+
+        {/* ===================================================
+            MAP
+        =================================================== */}
 
         <div className={styles.mapArea}>
           <MapContainer
             center={[42.8746, 74.6122]}
             zoom={12}
-            minZoom={10}
+            minZoom={5}
             maxZoom={18}
             zoomControl={true}
             scrollWheelZoom={true}
@@ -644,6 +1224,8 @@ export default function SearchMapClient() {
               }}
             />
 
+            {/* TEMP AREA */}
+
             {tempBounds && (
               <Rectangle
                 bounds={tempBounds}
@@ -657,6 +1239,8 @@ export default function SearchMapClient() {
                 }}
               />
             )}
+
+            {/* SELECTED AREA */}
 
             {selectedBounds && (
               <Rectangle
@@ -673,6 +1257,8 @@ export default function SearchMapClient() {
               />
             )}
 
+            {/* MARKERS */}
+
             {filteredObjects.map((object) => (
               <Marker
                 key={`${object.objectType}-${object.id}`}
@@ -685,6 +1271,10 @@ export default function SearchMapClient() {
             ))}
           </MapContainer>
 
+          {/* =================================================
+              LOADING
+          ================================================= */}
+
           {loading && (
             <div className={styles.mapStatus}>
               <div className={styles.loadingSpinner} />
@@ -693,11 +1283,19 @@ export default function SearchMapClient() {
             </div>
           )}
 
+          {/* =================================================
+              ERROR
+          ================================================= */}
+
           {!loading && loadError && (
             <div className={styles.mapStatus}>
               <span>Не удалось загрузить объекты</span>
             </div>
           )}
+
+          {/* =================================================
+              DRAWING
+          ================================================= */}
 
           {isDrawing && (
             <div className={styles.drawingIndicator}>
@@ -706,6 +1304,10 @@ export default function SearchMapClient() {
               <span>Отпустите мышь, чтобы выбрать область</span>
             </div>
           )}
+
+          {/* =================================================
+              DRAW HINT
+          ================================================= */}
 
           {!isDrawing && !hasSelection && (
             <div className={styles.drawHint}>
@@ -720,6 +1322,10 @@ export default function SearchMapClient() {
               </div>
             </div>
           )}
+
+          {/* =================================================
+              SELECTION PANEL
+          ================================================= */}
 
           {hasSelection && (
             <div className={styles.selectionPanel}>
@@ -741,10 +1347,15 @@ export default function SearchMapClient() {
                 onClick={clearSelection}
               >
                 <RotateCcw />
-                Сбросить
+
+                <span>Сбросить</span>
               </button>
             </div>
           )}
+
+          {/* =================================================
+              OBJECT PREVIEW
+          ================================================= */}
 
           {selectedObject && (
             <div className={styles.objectPreview}>
@@ -794,6 +1405,10 @@ export default function SearchMapClient() {
               </div>
             </div>
           )}
+
+          {/* =================================================
+              RESULT COUNT
+          ================================================= */}
 
           <div className={styles.resultCount}>
             <span className={styles.resultDot} />

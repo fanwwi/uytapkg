@@ -1,15 +1,11 @@
 .wrapper {
   position: relative;
   padding: 28px;
-  border: 1px solid #292632;
+  border: 1px solid #e4e3ed;
   border-radius: 22px;
   background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(139, 92, 246, 0.08),
-      transparent 42%
-    ),
-    #0f0e12;
+    radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.07), transparent 42%),
+    #ffffff;
   overflow: hidden;
 }
 
@@ -21,7 +17,7 @@
   background: linear-gradient(
     120deg,
     transparent 25%,
-    rgba(139, 92, 246, 0.025),
+    rgba(72, 61, 246, 0.025),
     transparent 75%
   );
 }
@@ -46,10 +42,10 @@
   align-items: center;
   gap: 6px;
   padding: 7px 11px;
-  border: 1px solid rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(72, 61, 246, 0.18);
   border-radius: 999px;
-  background: rgba(139, 92, 246, 0.05);
-  color: #9f8acb;
+  background: rgba(72, 61, 246, 0.06);
+  color: #483df6;
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 1px;
@@ -57,7 +53,7 @@
 
 .titleBlock h2 {
   margin: 13px 0 0;
-  color: #f3f0f7;
+  color: #17162a;
   font-size: 25px;
   line-height: 1.2;
   font-weight: 850;
@@ -67,7 +63,7 @@
 .titleBlock p {
   max-width: 580px;
   margin: 10px auto 0;
-  color: #716b79;
+  color: #77758a;
   font-size: 12px;
   line-height: 1.65;
 }
@@ -87,28 +83,18 @@
   width: 100%;
   min-height: 145px;
   padding: 18px 18px 58px;
-
-  border: 1px solid #302c38;
+  border: 1px solid #dedde8;
   border-radius: 15px;
-
   background:
-    linear-gradient(
-      145deg,
-      rgba(139, 92, 246, 0.025),
-      rgba(255, 255, 255, 0.012)
-    ),
-    #121116;
-
-  color: #e5e0ea;
-
+    linear-gradient(145deg, rgba(72, 61, 246, 0.018), rgba(255, 255, 255, 0.8)),
+    #ffffff;
+  color: #242238;
   font-family: inherit;
   font-size: 13px;
   font-weight: 550;
   line-height: 1.6;
-
   resize: vertical;
   outline: none;
-
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -116,27 +102,25 @@
 }
 
 .searchBox textarea::placeholder {
-  color: #5e5966;
+  color: #aaa8b8;
 }
 
 .searchBox textarea:hover {
-  border-color: #393442;
+  border-color: #c9c7d8;
 }
 
 .searchBox textarea:focus {
-  border-color: rgba(139, 92, 246, 0.5);
-
+  border-color: rgba(72, 61, 246, 0.55);
   background:
     linear-gradient(
       145deg,
-      rgba(139, 92, 246, 0.04),
-      rgba(255, 255, 255, 0.012)
+      rgba(72, 61, 246, 0.025),
+      rgba(255, 255, 255, 0.95)
     ),
-    #121116;
-
+    #ffffff;
   box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.055),
-    0 12px 40px rgba(0, 0, 0, 0.2);
+    0 0 0 3px rgba(72, 61, 246, 0.07),
+    0 12px 40px rgba(72, 61, 246, 0.07);
 }
 
 .searchBox textarea:disabled {
@@ -152,7 +136,6 @@
   position: absolute;
   right: 12px;
   bottom: 12px;
-
   display: flex;
   align-items: center;
   gap: 7px;
@@ -163,15 +146,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border: 1px solid #302c38;
+  border: 1px solid #dedde8;
   border-radius: 10px;
-
-  background: rgba(255, 255, 255, 0.025);
-  color: #827b8b;
-
+  background: #ffffff;
+  color: #858296;
   cursor: pointer;
-
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -191,9 +170,9 @@
 
 .voiceButton:hover,
 .clearButton:hover {
-  border-color: rgba(139, 92, 246, 0.35);
-  background: rgba(139, 92, 246, 0.07);
-  color: #b69cff;
+  border-color: rgba(72, 61, 246, 0.35);
+  background: rgba(72, 61, 246, 0.06);
+  color: #483df6;
 }
 
 .voiceButton:active,
@@ -202,12 +181,12 @@
 }
 
 .voiceButton.listening {
-  border-color: rgba(139, 92, 246, 0.6);
-  background: rgba(139, 92, 246, 0.12);
-  color: #b69cff;
+  border-color: rgba(72, 61, 246, 0.6);
+  background: rgba(72, 61, 246, 0.09);
+  color: #483df6;
   box-shadow:
-    0 0 0 4px rgba(139, 92, 246, 0.06),
-    0 0 25px rgba(139, 92, 246, 0.12);
+    0 0 0 4px rgba(72, 61, 246, 0.06),
+    0 0 25px rgba(72, 61, 246, 0.12);
 }
 
 .voiceButton:disabled,
@@ -223,15 +202,12 @@
 .listeningStatus {
   position: relative;
   z-index: 1;
-
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   margin-top: 11px;
-
-  color: #938ba0;
+  color: #706d80;
   font-size: 11px;
   font-weight: 700;
 }
@@ -239,35 +215,31 @@
 .pulse {
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
-  background: #a78bfa;
-
+  background: #483df6;
   box-shadow:
-    0 0 0 0 rgba(167, 139, 250, 0.4),
-    0 0 12px rgba(167, 139, 250, 0.7);
-
+    0 0 0 0 rgba(72, 61, 246, 0.35),
+    0 0 12px rgba(72, 61, 246, 0.45);
   animation: pulse 1.2s infinite;
 }
 
 @keyframes pulse {
   0% {
     box-shadow:
-      0 0 0 0 rgba(167, 139, 250, 0.4),
-      0 0 12px rgba(167, 139, 250, 0.7);
+      0 0 0 0 rgba(72, 61, 246, 0.35),
+      0 0 12px rgba(72, 61, 246, 0.45);
   }
 
   70% {
     box-shadow:
-      0 0 0 7px rgba(167, 139, 250, 0),
-      0 0 16px rgba(167, 139, 250, 0.8);
+      0 0 0 7px rgba(72, 61, 246, 0),
+      0 0 16px rgba(72, 61, 246, 0.5);
   }
 
   100% {
     box-shadow:
-      0 0 0 0 rgba(167, 139, 250, 0),
-      0 0 12px rgba(167, 139, 250, 0.7);
+      0 0 0 0 rgba(72, 61, 246, 0),
+      0 0 12px rgba(72, 61, 246, 0.45);
   }
 }
 
@@ -278,34 +250,22 @@
 .searchButton {
   position: relative;
   z-index: 1;
-
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
-
   width: 100%;
   min-height: 48px;
-
   margin-top: 13px;
-
-  border: 1px solid rgba(139, 92, 246, 0.38);
+  border: 1px solid #483df6;
   border-radius: 12px;
-
-  background:
-    linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(93, 53, 176, 0.12)),
-    #15121c;
-
-  color: #dcd3eb;
-
+  background: linear-gradient(135deg, #483df6, #5a50f7);
+  color: #ffffff;
   font-family: inherit;
   font-size: 12px;
   font-weight: 800;
-
   cursor: pointer;
-
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-
+  box-shadow: 0 8px 24px rgba(72, 61, 246, 0.18);
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -315,14 +275,9 @@
 
 .searchButton:hover:not(:disabled) {
   transform: translateY(-1px);
-
-  border-color: rgba(139, 92, 246, 0.65);
-
-  background:
-    linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(93, 53, 176, 0.18)),
-    #17131f;
-
-  box-shadow: 0 10px 35px rgba(139, 92, 246, 0.1);
+  border-color: #3d32e8;
+  background: linear-gradient(135deg, #3d32e8, #5349f5);
+  box-shadow: 0 10px 30px rgba(72, 61, 246, 0.24);
 }
 
 .searchButton:active:not(:disabled) {
@@ -357,30 +312,24 @@
 .browserNotice {
   position: relative;
   z-index: 1;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   margin-top: 12px;
   padding: 11px 14px;
-
-  border: 1px solid rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.16);
   border-radius: 11px;
-
-  background: rgba(239, 68, 68, 0.035);
-
-  color: #bd8585;
-
+  background: rgba(239, 68, 68, 0.04);
+  color: #b44f4f;
   font-size: 11px;
   line-height: 1.5;
   text-align: center;
 }
 
 .browserNotice {
-  border-color: rgba(234, 179, 8, 0.15);
-  background: rgba(234, 179, 8, 0.035);
-  color: #b59b61;
+  border-color: rgba(234, 179, 8, 0.18);
+  background: rgba(234, 179, 8, 0.05);
+  color: #9d7e28;
 }
 
 /* =========================================================
@@ -390,21 +339,16 @@
 .examples {
   position: relative;
   z-index: 1;
-
   margin-top: 20px;
   padding-top: 18px;
-
-  border-top: 1px solid #211f28;
-
+  border-top: 1px solid #ebeaf1;
   text-align: center;
 }
 
 .examples > span {
-  color: #5f5967;
-
+  color: #9996a7;
   font-size: 9px;
   font-weight: 850;
-
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
@@ -413,28 +357,20 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-
   gap: 7px;
-
   margin-top: 10px;
 }
 
 .exampleList button {
   padding: 8px 11px;
-
-  border: 1px solid #282530;
+  border: 1px solid #dedde8;
   border-radius: 9px;
-
-  background: rgba(255, 255, 255, 0.018);
-
-  color: #716b79;
-
+  background: #fafafd;
+  color: #777487;
   font-family: inherit;
   font-size: 10px;
   font-weight: 650;
-
   cursor: pointer;
-
   transition:
     color 0.2s ease,
     border-color 0.2s ease,
@@ -444,12 +380,9 @@
 
 .exampleList button:hover {
   transform: translateY(-1px);
-
-  border-color: rgba(139, 92, 246, 0.3);
-
-  background: rgba(139, 92, 246, 0.04);
-
-  color: #a49bad;
+  border-color: rgba(72, 61, 246, 0.3);
+  background: rgba(72, 61, 246, 0.05);
+  color: #483df6;
 }
 
 /* =========================================================

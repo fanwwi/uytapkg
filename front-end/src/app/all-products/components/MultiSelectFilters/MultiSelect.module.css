@@ -14,21 +14,26 @@
 
   padding: 9px 14px;
 
-  border: 1px solid #292632;
+  border: 1px solid #e3e5eb;
   border-radius: 14px;
 
-  background: #111014;
-  color: #fff;
+  background: #ffffff;
+  color: #111827;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .select:hover,
 .selectOpen {
-  border-color: rgba(139, 92, 246, 0.7);
-  background: #151318;
+  border-color: rgba(72, 61, 246, 0.55);
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(72, 61, 246, 0.06);
 }
 
 .left {
@@ -45,7 +50,7 @@
 
   flex-shrink: 0;
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .content {
@@ -57,7 +62,7 @@
 }
 
 .content span {
-  color: #77727f;
+  color: #8b909b;
 
   font-size: 9px;
   font-weight: 800;
@@ -71,7 +76,7 @@
 
   margin-top: 4px;
 
-  color: #f1eef7;
+  color: #171923;
 
   font-size: 13px;
   font-weight: 700;
@@ -85,14 +90,16 @@
   width: 17px;
   height: 17px;
 
-  color: #77727f;
+  color: #8b909b;
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
 }
 
 .rotate {
   transform: rotate(180deg);
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .dropdown {
@@ -102,14 +109,14 @@
 
   padding: 6px;
 
-  border: 1px solid #302b3b;
+  border: 1px solid #e1e3e9;
   border-radius: 14px;
 
-  background: #111014;
+  background: #ffffff;
 
   box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.65),
-    0 0 30px rgba(139, 92, 246, 0.08);
+    0 20px 45px rgba(20, 24, 40, 0.14),
+    0 4px 12px rgba(20, 24, 40, 0.06);
 }
 
 .option {
@@ -126,7 +133,8 @@
   border-radius: 9px;
 
   background: transparent;
-  color: #c9c5d2;
+
+  color: #454957;
 
   font-family: inherit;
   font-size: 13px;
@@ -136,19 +144,21 @@
 
   cursor: pointer;
 
-  transition: 0.16s ease;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease;
 }
 
 .option:hover {
-  background: rgba(139, 92, 246, 0.1);
-  color: #b69cff;
+  background: rgba(72, 61, 246, 0.07);
+  color: #483df6;
 }
 
 .selected {
-  background: rgba(139, 92, 246, 0.13);
-  color: #b69cff;
+  background: rgba(72, 61, 246, 0.09);
+  color: #483df6;
 }
 
 .selected svg {
-  color: #8b5cf6;
+  color: #483df6;
 }

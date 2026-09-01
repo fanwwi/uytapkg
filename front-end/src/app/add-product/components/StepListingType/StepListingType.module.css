@@ -32,7 +32,7 @@
   border: 1px solid rgba(124, 58, 237, 0.14);
   border-radius: 999px;
   background: linear-gradient(135deg, #f5f0ff, #eee7ff);
-  color: #7c3aed;
+  color: #483df6;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -43,7 +43,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #7c3aed;
+  background: #483df6;
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.1),
     0 0 12px rgba(124, 58, 237, 0.35);
@@ -89,7 +89,7 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 10px;
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
   color: #fff;
   font-size: 10px;
   font-weight: 800;
@@ -142,7 +142,7 @@
 }
 
 .inputWrapper:focus-within {
-  border-color: #7c3aed;
+  border-color: #483df6;
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.07),
     0 10px 28px rgba(124, 58, 237, 0.06);
@@ -182,7 +182,7 @@
 }
 
 .inputWrapperError:focus-within {
-  border-color: #7c3aed;
+  border-color: #483df6;
 }
 
 .titleFooter {
@@ -382,7 +382,7 @@
 
   background: linear-gradient(145deg, #f5efff, #ebe2ff);
 
-  color: #7c3aed;
+  color: #483df6;
 
   box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.06);
 
@@ -396,7 +396,7 @@
 .typeCard:hover:not(:disabled) .typeIcon {
   transform: scale(1.08) rotate(-3deg);
 
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #fff;
 
@@ -462,7 +462,7 @@
   transform: translateX(4px);
 
   background: #ede5ff;
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -470,7 +470,7 @@
 ========================= */
 
 .typeCard.selected {
-  border-color: #7c3aed;
+  border-color: #483df6;
 
   background:
     radial-gradient(
@@ -486,7 +486,7 @@
 }
 
 .typeCard.selected .typeIcon {
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #fff;
 
@@ -508,7 +508,7 @@
   border-radius: 999px;
 
   background: #f1ebff;
-  color: #7c3aed;
+  color: #483df6;
 
   font-size: 10px;
   font-weight: 800;
@@ -641,7 +641,7 @@
 .type-top .typeIcon {
   background: linear-gradient(145deg, #eee7ff, #e2d8ff);
 
-  color: #7c3aed;
+  color: #483df6;
 }
 
 .type-top:hover:not(:disabled) {
@@ -649,7 +649,7 @@
 }
 
 .type-top.selected {
-  border-color: #7c3aed;
+  border-color: #483df6;
 
   background:
     radial-gradient(
@@ -698,7 +698,7 @@
 
 .type-instagram:hover:not(:disabled) .typeIcon,
 .type-instagram.selected .typeIcon {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #fff;
 
@@ -706,7 +706,7 @@
 }
 
 .type-instagram.selected {
-  border-color: #7c3aed;
+  border-color: #483df6;
 
   background:
     radial-gradient(
@@ -724,7 +724,7 @@
 .type-instagram.selected .selectedBadge {
   border-color: rgba(124, 58, 237, 0.16);
   background: #f1ebff;
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -781,7 +781,7 @@
 
   border-radius: 13px;
 
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #fff;
 
@@ -813,7 +813,7 @@
 .instagramInfoCheck {
   margin-left: auto;
   flex-shrink: 0;
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -861,7 +861,7 @@
   border-radius: 10px;
 
   background: #f0eaff;
-  color: #7c3aed;
+  color: #483df6;
 
   font-size: 10px;
   font-weight: 800;
@@ -891,7 +891,7 @@
   border-radius: 999px;
 
   background: #f4efff;
-  color: #7c3aed;
+  color: #483df6;
 
   font-size: 11px;
   font-weight: 800;
@@ -903,7 +903,7 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
@@ -1010,7 +1010,7 @@
 
   border-radius: 11px;
 
-  background: linear-gradient(135deg, #7c3aed, #9b6aff);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   color: #fff;
 }
@@ -1026,7 +1026,7 @@
 .instagramSummaryCheck {
   margin-left: auto;
   flex-shrink: 0;
-  color: #7c3aed;
+  color: #483df6;
 }
 
 /* =========================
@@ -1077,7 +1077,7 @@
 
   border: 0;
 
-  background: linear-gradient(135deg, #7c3aed, #9b5cf6);
+  background: linear-gradient(135deg, #483df6, #9b5cf6);
 
   color: #fff;
 
@@ -1116,7 +1116,7 @@
   border-color: #cdb8ef;
 
   background: #faf7ff;
-  color: #7c3aed;
+  color: #483df6;
 
   box-shadow: 0 8px 20px rgba(124, 58, 237, 0.07);
 }

@@ -10,13 +10,17 @@
 
   padding: 20px;
 
-  background: rgba(5, 4, 8, 0.78);
+  background: rgba(15, 18, 32, 0.42);
 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   animation: overlayIn 0.2s ease;
 }
+
+/* =========================
+   MODAL
+========================= */
 
 .modal {
   position: relative;
@@ -25,20 +29,16 @@
 
   padding: 34px;
 
-  border: 1px solid #302a3a;
+  border: 1px solid #e5e7eb;
   border-radius: 24px;
 
   background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(139, 92, 246, 0.13),
-      transparent 42%
-    ),
-    linear-gradient(145deg, #17141e, #0d0c11);
+    radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.07), transparent 45%),
+    #ffffff;
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.72),
-    0 0 60px rgba(109, 40, 217, 0.08);
+    0 30px 80px rgba(15, 23, 42, 0.14),
+    0 8px 30px rgba(15, 23, 42, 0.06);
 
   animation: modalIn 0.25s ease;
 }
@@ -60,12 +60,12 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid #302b39;
+  border: 1px solid #e5e7eb;
   border-radius: 11px;
 
-  background: rgba(255, 255, 255, 0.035);
+  background: #f8fafc;
 
-  color: #77727f;
+  color: #94a3b8;
 
   cursor: pointer;
 
@@ -77,17 +77,18 @@
 }
 
 .close:hover:not(:disabled) {
-  color: #ffffff;
+  color: #1e293b;
 
-  background: rgba(139, 92, 246, 0.1);
+  background: #f1f5f9;
 
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: #cbd5e1;
 
   transform: rotate(3deg);
 }
 
 .close:disabled {
   opacity: 0.4;
+
   cursor: not-allowed;
 }
 
@@ -110,16 +111,22 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(139, 92, 246, 0.28);
+  border: 1px solid rgba(72, 61, 246, 0.16);
   border-radius: 19px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(72, 61, 246, 0.12),
+      transparent 60%
+    ),
+    rgba(72, 61, 246, 0.07);
 
-  color: #a78bfa;
+  color: #483df6;
 
   box-shadow:
-    0 10px 35px rgba(109, 40, 217, 0.14),
-    inset 0 0 20px rgba(139, 92, 246, 0.04);
+    0 10px 30px rgba(72, 61, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 /* =========================
@@ -135,7 +142,7 @@
 
   margin-bottom: 8px;
 
-  color: #a78bfa;
+  color: #483df6;
 
   font-size: 9px;
   font-weight: 900;
@@ -146,10 +153,12 @@
 .content h2 {
   margin: 0 0 11px;
 
-  color: #f5f3f8;
+  color: #111827;
 
   font-size: 25px;
   line-height: 1.15;
+
+  font-weight: 850;
 
   letter-spacing: -0.8px;
 }
@@ -159,7 +168,7 @@
 
   margin: 0 auto;
 
-  color: #817b8b;
+  color: #64748b;
 
   font-size: 13px;
   line-height: 1.65;
@@ -191,6 +200,8 @@
 
   border-radius: 13px;
 
+  font-family: inherit;
+
   font-size: 12px;
   font-weight: 800;
 
@@ -203,44 +214,52 @@
     box-shadow 0.2s ease;
 }
 
-/* CANCEL */
+/* =========================
+   CANCEL
+========================= */
 
 .cancel {
-  border: 1px solid #302b39;
+  border: 1px solid #e2e8f0;
 
-  background: #15131a;
+  background: #f8fafc;
 
-  color: #a09aa9;
+  color: #64748b;
 }
 
 .cancel:hover:not(:disabled) {
-  color: #ffffff;
+  color: #1e293b;
 
-  background: #1c1923;
+  background: #f1f5f9;
 
-  border-color: #40384d;
+  border-color: #cbd5e1;
 
   transform: translateY(-1px);
 }
 
-/* DELETE */
+/* =========================
+   DELETE
+========================= */
 
 .delete {
-  border: 1px solid rgba(139, 92, 246, 0.38);
+  border: 1px solid rgba(72, 61, 246, 0.25);
 
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  background: linear-gradient(135deg, #5b52f7, #483df6);
 
   color: #ffffff;
 
-  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.2);
+  box-shadow:
+    0 8px 24px rgba(72, 61, 246, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .delete:hover:not(:disabled) {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: linear-gradient(135deg, #6b63f8, #5147f6);
 
-  border-color: rgba(167, 139, 250, 0.5);
+  border-color: rgba(72, 61, 246, 0.4);
 
-  box-shadow: 0 12px 32px rgba(109, 40, 217, 0.32);
+  box-shadow:
+    0 12px 32px rgba(72, 61, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 
   transform: translateY(-2px);
 }

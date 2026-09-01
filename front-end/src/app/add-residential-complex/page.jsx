@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 import styles from "./AddResidentialComplex.module.css";
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -445,7 +445,7 @@ export default function AddResidentialComplex() {
               <div className={styles.field}>
                 <label>Статус строительства</label>
 
-                <CustomSelectBlack
+                <CustomSelect
                   icon={Layers3}
                   title="Статус"
                   options={statuses}
@@ -459,7 +459,7 @@ export default function AddResidentialComplex() {
               <div className={styles.field}>
                 <label>Класс жилья</label>
 
-                <CustomSelectBlack
+                <CustomSelect
                   icon={Building2}
                   title="Класс"
                   options={classes}
@@ -473,7 +473,7 @@ export default function AddResidentialComplex() {
               <div className={styles.field}>
                 <label>Конструкция здания</label>
 
-                <CustomSelectBlack
+                <CustomSelect
                   icon={Building2}
                   title="Конструкция"
                   options={constructions}

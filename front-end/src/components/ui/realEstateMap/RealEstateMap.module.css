@@ -40,7 +40,7 @@
 
   border-radius: 50% 50% 50% 0;
 
-  background: linear-gradient(135deg, #7c3aed, #9b5cf6);
+  background: linear-gradient(135deg, #483df6, #483df6);
 
   transform: rotate(-45deg);
 
@@ -109,7 +109,7 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.1),
@@ -157,7 +157,7 @@
 
 .wrapper :global(.leaflet-control-zoom a:hover) {
   background: #f7f3ff !important;
-  color: #7c3aed !important;
+  color: #483df6 !important;
 }
 
 .wrapper :global(.leaflet-control-attribution) {
@@ -173,7 +173,7 @@
 }
 
 .wrapper :global(.leaflet-control-attribution a) {
-  color: #7c3aed !important;
+  color: #483df6 !important;
 }
 
 /* =========================

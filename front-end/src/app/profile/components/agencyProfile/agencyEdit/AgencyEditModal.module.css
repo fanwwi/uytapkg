@@ -14,15 +14,11 @@
   padding: 24px;
 
   background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(139, 92, 246, 0.16),
-      transparent 38%
-    ),
-    rgba(3, 3, 6, 0.88);
+    radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.12), transparent 38%),
+    rgba(15, 23, 42, 0.32);
 
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   animation: overlayIn 0.25s ease;
 }
@@ -51,27 +47,18 @@
 
   border-radius: 30px;
 
-  color: #fff;
+  color: #172033;
 
   background:
-    radial-gradient(
-      circle at 90% 0%,
-      rgba(139, 92, 246, 0.14),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 0% 100%,
-      rgba(124, 58, 237, 0.06),
-      transparent 35%
-    ),
-    linear-gradient(145deg, #19191e 0%, #111116 52%, #0a0a0d 100%);
+    radial-gradient(circle at 95% 0%, rgba(72, 61, 246, 0.07), transparent 30%),
+    linear-gradient(145deg, #ffffff 0%, #fbfbfe 55%, #f7f8fc 100%);
 
-  border: 1px solid rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(15, 23, 42, 0.08);
 
   box-shadow:
-    0 45px 130px rgba(0, 0, 0, 0.85),
-    0 0 100px rgba(124, 58, 237, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    0 35px 100px rgba(15, 23, 42, 0.22),
+    0 0 70px rgba(72, 61, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 
   animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -85,18 +72,18 @@
   left: 12%;
   right: 12%;
 
-  height: 1px;
+  height: 2px;
 
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(167, 139, 250, 0.95),
+    rgba(72, 61, 246, 0.9),
     transparent
   );
 
   box-shadow:
-    0 0 22px rgba(139, 92, 246, 0.65),
-    0 0 50px rgba(124, 58, 237, 0.25);
+    0 0 18px rgba(72, 61, 246, 0.35),
+    0 0 40px rgba(72, 61, 246, 0.12);
 
   pointer-events: none;
 }
@@ -134,12 +121,12 @@
 
   padding: 0;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #e4e7ee;
   border-radius: 13px;
 
-  background: rgba(255, 255, 255, 0.045);
+  background: rgba(248, 249, 252, 0.95);
 
-  color: #85858f;
+  color: #737b8c;
 
   cursor: pointer;
 
@@ -147,7 +134,8 @@
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .close svg {
@@ -156,11 +144,13 @@
 }
 
 .close:hover {
-  color: #c4b5fd;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.11);
+  background: rgba(72, 61, 246, 0.07);
 
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  box-shadow: 0 6px 18px rgba(72, 61, 246, 0.1);
 
   transform: rotate(5deg);
 }
@@ -186,7 +176,7 @@
   padding: 34px;
 
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.45) transparent;
+  scrollbar-color: rgba(72, 61, 246, 0.3) transparent;
 }
 
 .scroll::-webkit-scrollbar {
@@ -198,12 +188,12 @@
 }
 
 .scroll::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.4);
+  background: rgba(72, 61, 246, 0.25);
   border-radius: 20px;
 }
 
 .scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(167, 139, 250, 0.65);
+  background: rgba(72, 61, 246, 0.45);
 }
 
 /* =========================================================
@@ -218,7 +208,7 @@
 .header h2 {
   margin: 0;
 
-  color: #fff;
+  color: #111827;
 
   font-size: 26px;
   line-height: 1.2;
@@ -231,7 +221,7 @@
 .header p {
   margin: 8px 0 0;
 
-  color: #73737d;
+  color: #7b8495;
 
   font-size: 13px;
   line-height: 1.5;
@@ -256,17 +246,15 @@
 
   border-radius: 22px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(139, 92, 246, 0.055),
-    rgba(255, 255, 255, 0.018)
-  );
+  background:
+    radial-gradient(circle at 0% 50%, rgba(72, 61, 246, 0.07), transparent 45%),
+    linear-gradient(145deg, #f8f8ff, #f4f5fa);
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e4e6ef;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.025),
-    0 18px 45px rgba(0, 0, 0, 0.28);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 10px 30px rgba(15, 23, 42, 0.045);
 }
 
 .avatarBlock::before {
@@ -282,9 +270,9 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
-  opacity: 0.13;
+  opacity: 0.06;
 
   filter: blur(60px);
 
@@ -319,18 +307,17 @@
 
   background: radial-gradient(
     circle at 30% 20%,
-    #a78bfa 0%,
-    #7c3aed 42%,
-    #3b176f 100%
+    #8179ff 0%,
+    #483df6 48%,
+    #3027b8 100%
   );
 
-  border: 4px solid rgba(255, 255, 255, 0.08);
+  border: 4px solid #ffffff;
 
   box-shadow:
-    0 0 0 1px rgba(139, 92, 246, 0.4),
-    0 15px 50px rgba(124, 58, 237, 0.28),
-    0 0 35px rgba(139, 92, 246, 0.12),
-    inset 0 0 35px rgba(0, 0, 0, 0.28);
+    0 0 0 1px rgba(72, 61, 246, 0.25),
+    0 15px 40px rgba(72, 61, 246, 0.2),
+    0 0 25px rgba(72, 61, 246, 0.08);
 }
 
 .avatar::after {
@@ -343,9 +330,9 @@
 
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.18),
     transparent 35%,
-    rgba(0, 0, 0, 0.22)
+    rgba(0, 0, 0, 0.12)
   );
 
   pointer-events: none;
@@ -409,20 +396,22 @@
     box-shadow 0.2s ease;
 }
 
-/* PRIMARY */
+/* =========================================================
+   UPLOAD
+========================================================= */
 
 .upload {
   min-width: 165px;
 
-  color: #fff;
+  color: #ffffff;
 
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 45%, #6d28d9 100%);
+  background: linear-gradient(135deg, #5b52ff 0%, #483df6 55%, #3c32d6 100%);
 
-  border: 1px solid rgba(167, 139, 250, 0.45);
+  border: 1px solid rgba(72, 61, 246, 0.5);
 
   box-shadow:
-    0 10px 28px rgba(124, 58, 237, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 10px 25px rgba(72, 61, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .upload svg {
@@ -433,44 +422,48 @@
 .upload:hover {
   transform: translateY(-2px);
 
-  background: linear-gradient(135deg, #b49aff, #956af7, #7c3aed);
+  background: linear-gradient(135deg, #6860ff, #5146f7, #4237df);
 
   box-shadow:
-    0 14px 35px rgba(124, 58, 237, 0.38),
-    0 0 25px rgba(139, 92, 246, 0.15);
+    0 14px 32px rgba(72, 61, 246, 0.3),
+    0 0 22px rgba(72, 61, 246, 0.1);
 }
 
 .upload:active {
   transform: translateY(0);
 }
 
-/* REMOVE */
+/* =========================================================
+   REMOVE
+========================================================= */
 
 .remove {
   min-width: 155px;
 
-  color: #9999a3;
+  color: #697386;
 
-  background: rgba(255, 255, 255, 0.035);
+  background: #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #e0e3eb;
 }
 
 .remove svg {
   width: 17px;
   height: 17px;
 
-  color: #a78bfa;
+  color: #483df6;
 }
 
 .remove:hover {
   transform: translateY(-2px);
 
-  color: #c4b5fd;
+  color: #483df6;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.05);
 
-  border-color: rgba(139, 92, 246, 0.28);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  box-shadow: 0 8px 22px rgba(72, 61, 246, 0.08);
 }
 
 .remove:active {
@@ -514,9 +507,9 @@
 
   border-radius: 14px;
 
-  background: rgba(255, 255, 255, 0.032);
+  background: #f8f9fc;
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid #e1e4ec;
 
   transition:
     border-color 0.2s ease,
@@ -526,19 +519,19 @@
 }
 
 .inputBox:hover {
-  background: rgba(255, 255, 255, 0.045);
+  background: #ffffff;
 
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: #d5d9e3;
 }
 
 .inputBox:focus-within {
-  background: rgba(139, 92, 246, 0.045);
+  background: #ffffff;
 
-  border-color: rgba(139, 92, 246, 0.5);
+  border-color: rgba(72, 61, 246, 0.55);
 
   box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.075),
-    0 8px 30px rgba(124, 58, 237, 0.06);
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 8px 25px rgba(72, 61, 246, 0.05);
 }
 
 .inputBox > svg {
@@ -547,13 +540,13 @@
 
   flex-shrink: 0;
 
-  color: #696974;
+  color: #8a93a4;
 
   transition: color 0.2s ease;
 }
 
 .inputBox:focus-within > svg {
-  color: #a78bfa;
+  color: #483df6;
 }
 
 .inputBox input {
@@ -567,7 +560,7 @@
 
   background: transparent;
 
-  color: #fff;
+  color: #172033;
 
   font-family: inherit;
 
@@ -576,7 +569,7 @@
 }
 
 .inputBox input::placeholder {
-  color: #5f5f68;
+  color: #9aa2b1;
 }
 
 .inputBox input:disabled {
@@ -603,9 +596,9 @@
 
   border-radius: 14px;
 
-  background: rgba(255, 255, 255, 0.032);
+  background: #f8f9fc;
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid #e1e4ec;
 
   transition:
     border-color 0.2s ease,
@@ -614,19 +607,19 @@
 }
 
 .textarea:hover {
-  background: rgba(255, 255, 255, 0.045);
+  background: #ffffff;
 
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: #d5d9e3;
 }
 
 .textarea:focus-within {
-  background: rgba(139, 92, 246, 0.045);
+  background: #ffffff;
 
-  border-color: rgba(139, 92, 246, 0.5);
+  border-color: rgba(72, 61, 246, 0.55);
 
   box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.075),
-    0 8px 30px rgba(124, 58, 237, 0.06);
+    0 0 0 3px rgba(72, 61, 246, 0.08),
+    0 8px 25px rgba(72, 61, 246, 0.05);
 }
 
 .textarea > svg {
@@ -637,13 +630,13 @@
 
   margin-top: 2px;
 
-  color: #696974;
+  color: #8a93a4;
 
   transition: color 0.2s ease;
 }
 
 .textarea:focus-within > svg {
-  color: #a78bfa;
+  color: #483df6;
 }
 
 .textarea textarea {
@@ -659,7 +652,7 @@
 
   background: transparent;
 
-  color: #fff;
+  color: #172033;
 
   font-family: inherit;
 
@@ -672,7 +665,7 @@
 }
 
 .textarea textarea::placeholder {
-  color: #5f5f68;
+  color: #9aa2b1;
 }
 
 .textarea textarea:disabled {
@@ -699,12 +692,12 @@
 
   gap: 9px;
 
-  border: 1px solid rgba(167, 139, 250, 0.35);
+  border: 1px solid rgba(72, 61, 246, 0.35);
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 45%, #6d28d9 100%);
+  background: linear-gradient(135deg, #5b52ff 0%, #483df6 52%, #3b31d4 100%);
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
 
@@ -714,8 +707,8 @@
   cursor: pointer;
 
   box-shadow:
-    0 15px 35px rgba(124, 58, 237, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 12px 30px rgba(72, 61, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -737,7 +730,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.18),
     transparent
   );
 
@@ -758,11 +751,11 @@
 .save:hover:not(:disabled) {
   transform: translateY(-2px);
 
-  filter: brightness(1.08);
+  filter: brightness(1.05);
 
   box-shadow:
-    0 18px 45px rgba(124, 58, 237, 0.4),
-    0 0 30px rgba(139, 92, 246, 0.12);
+    0 17px 40px rgba(72, 61, 246, 0.3),
+    0 0 25px rgba(72, 61, 246, 0.1);
 }
 
 .save:active:not(:disabled) {

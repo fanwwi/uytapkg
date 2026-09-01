@@ -12,6 +12,7 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.overlay} />
+      <div className={styles.glow} />
 
       <motion.div
         className={styles.content}
@@ -27,14 +28,10 @@ export default function Hero() {
           duration: 0.8,
         }}
       >
-        {/* LOCATION */}
-
         <div className={styles.location}>
           <MapPin />
           Бишкек • Кыргызстан
         </div>
-
-        {/* TITLE */}
 
         <h1 className={styles.title}>
           UyTap.kg —
@@ -42,21 +39,17 @@ export default function Hero() {
           <br />в поиске недвижимости
         </h1>
 
-        {/* DESCRIPTION */}
-
         <p className={styles.description}>
           Находите квартиры, дома и коммерческую недвижимость от проверенных
           застройщиков, владельцев и риэлторов.
         </p>
-
-        {/* BUTTONS */}
 
         <div className={styles.buttons}>
           <button
             type="button"
             className={styles.primary}
             onClick={() => {
-              window.location.href = "/#search";
+              window.location.href = "/all-products";
             }}
           >
             <Search />
@@ -72,12 +65,11 @@ export default function Hero() {
           </button>
         </div>
 
-        {/* MAP BUTTON */}
-
         <button
           type="button"
           className={styles.mapButton}
           onClick={() => router.push("/search-map")}
+          aria-label="Искать объекты на карте"
         >
           <span className={styles.mapIcon}>
             <Map />
@@ -91,12 +83,11 @@ export default function Hero() {
           <ArrowUpRight className={styles.mapArrow} />
         </button>
 
-        {/* SAFETY */}
-
         <button
           type="button"
           className={styles.safetyButton}
           onClick={() => router.push("/safety")}
+          aria-label="Безопасность при покупке недвижимости"
         >
           <span className={styles.safetyIcon}>
             <ShieldCheck />

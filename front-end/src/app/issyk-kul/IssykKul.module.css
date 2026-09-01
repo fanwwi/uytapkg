@@ -4,8 +4,8 @@
   box-sizing: border-box;
   overflow-x: hidden;
 
-  background: #0b0b0f;
-  color: #f5f5f7;
+  background: #ffffff;
+  color: #171827;
 
   padding: 32px 48px 0;
 }
@@ -18,17 +18,15 @@
   position: relative;
 
   width: 100%;
-  height: 690px;
+  height: 650px;
 
   overflow: hidden;
 
-  border-radius: 30px;
+  border-radius: 28px;
 
   background: url("/assets/issykKul.webp") center / cover no-repeat;
 
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 50px rgba(30, 35, 60, 0.12);
 }
 
 .heroOverlay {
@@ -38,11 +36,11 @@
   background:
     linear-gradient(
       180deg,
-      rgba(7, 7, 10, 0.08) 0%,
-      rgba(7, 7, 10, 0.25) 38%,
-      rgba(7, 7, 10, 0.94) 100%
+      rgba(15, 18, 35, 0.05) 0%,
+      rgba(15, 18, 35, 0.12) 35%,
+      rgba(15, 18, 35, 0.72) 100%
     ),
-    linear-gradient(90deg, rgba(124, 58, 237, 0.12), transparent 55%);
+    linear-gradient(90deg, rgba(72, 61, 246, 0.18), transparent 65%);
 }
 
 .heroContent {
@@ -61,7 +59,7 @@
 
   text-align: center;
 
-  color: #fff;
+  color: #ffffff;
 }
 
 /* =========================================================
@@ -75,12 +73,12 @@
 
   padding: 9px 15px;
 
-  border: 1px solid rgba(167, 139, 250, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
 
-  background: rgba(10, 10, 14, 0.65);
+  background: rgba(255, 255, 255, 0.16);
 
-  color: #f5f3ff;
+  color: #ffffff;
 
   font-size: 11px;
   font-weight: 800;
@@ -88,17 +86,13 @@
   text-transform: uppercase;
 
   backdrop-filter: blur(12px);
-
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .badge svg {
   width: 16px;
   height: 16px;
 
-  color: #a855f7;
+  color: #ffffff;
 }
 
 /* =========================================================
@@ -108,17 +102,15 @@
 .hero h1 {
   margin: 27px 0 20px;
 
-  color: #fff;
+  color: #ffffff;
 
-  font-size: clamp(50px, 6vw, 82px);
-  line-height: 0.96;
+  font-size: clamp(50px, 6vw, 80px);
+  line-height: 0.98;
 
   font-weight: 900;
   letter-spacing: -4px;
 
-  text-shadow:
-    0 8px 35px rgba(0, 0, 0, 0.5),
-    0 0 50px rgba(124, 58, 237, 0.12);
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
 }
 
 .hero p {
@@ -126,7 +118,7 @@
 
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.86);
 
   font-size: 16px;
   line-height: 1.65;
@@ -170,50 +162,46 @@
 
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* PURPLE */
+/* PRIMARY */
 
 .mainButton {
-  border: none;
+  border: 1px solid #483df6;
 
-  background: #8b5cf6;
-  color: #fff;
+  background: #483df6;
+  color: #ffffff;
 
-  box-shadow:
-    0 10px 30px rgba(139, 92, 246, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.25);
 }
 
 .mainButton:hover {
   transform: translateY(-3px);
 
-  background: #a78bfa;
+  background: #3d32e8;
 
-  box-shadow:
-    0 16px 40px rgba(139, 92, 246, 0.4),
-    0 0 30px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 15px 32px rgba(72, 61, 246, 0.3);
 }
 
-/* DARK */
+/* SECONDARY */
 
 .whiteButton {
-  border: 1px solid #303038;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 
-  background: #15151b;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.92);
+  color: #171827;
 
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
 }
 
 .whiteButton:hover {
   transform: translateY(-3px);
 
-  background: #1d1d25;
-  border-color: #4b4b58;
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 .whiteButton span {
@@ -226,18 +214,18 @@
 
   border-radius: 8px;
 
-  background: #8b5cf6;
-  color: #fff;
+  background: #483df6;
+  color: #ffffff;
 }
 
-/* TRANSPARENT */
+/* HOME */
 
 .homeButton {
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 
-  background: rgba(10, 10, 14, 0.42);
+  background: rgba(255, 255, 255, 0.12);
 
-  color: #fff;
+  color: #ffffff;
 
   backdrop-filter: blur(10px);
 }
@@ -245,18 +233,18 @@
 .homeButton:hover {
   transform: translateY(-3px);
 
-  background: rgba(10, 10, 14, 0.68);
-  border-color: rgba(167, 139, 250, 0.55);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 /* =========================================================
-   COMMON
+   COMMON SECTIONS
 ========================================================= */
 
 .section,
 .intro,
 .benefitsSection {
-  margin: 105px auto 0;
+  margin: 100px auto 0;
 }
 
 .sectionHeading {
@@ -271,7 +259,7 @@
 
   margin-bottom: 10px;
 
-  color: #a855f7;
+  color: #483df6;
 
   font-size: 10px;
   font-weight: 900;
@@ -284,7 +272,7 @@
 
   margin: 0;
 
-  color: #f5f5f7;
+  color: #171827;
 
   font-size: 42px;
   line-height: 1.05;
@@ -298,7 +286,7 @@
 
   margin: 14px 0 0;
 
-  color: #92929c;
+  color: #727587;
 
   font-size: 15px;
   line-height: 1.7;
@@ -321,21 +309,17 @@
 
   box-sizing: border-box;
 
-  border-radius: 25px;
+  border-radius: 22px;
 
-  background: #121218;
+  background: #f7f8fc;
 
-  border: 1px solid #24242d;
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  border: 1px solid #e9eaf2;
 }
 
 .introText p {
   margin: 0 0 18px;
 
-  color: #a2a2ac;
+  color: #626778;
 
   font-size: 15px;
   line-height: 1.8;
@@ -353,7 +337,7 @@
 
   background: transparent;
 
-  color: #a855f7;
+  color: #483df6;
 
   font-family: inherit;
 
@@ -369,11 +353,11 @@
 
 .textButton:hover {
   gap: 12px;
-  color: #c084fc;
+  color: #3d32e8;
 }
 
 /* =========================================================
-   PURPLE FEATURE CARD
+   INTRO FEATURE
 ========================================================= */
 
 .introCard {
@@ -383,32 +367,19 @@
 
   box-sizing: border-box;
 
-  border-radius: 25px;
+  border-radius: 22px;
 
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(168, 85, 247, 0.35),
-      transparent 45%
-    ),
-    linear-gradient(145deg, #241638 0%, #17121f 48%, #101016 100%);
+  background: #eef0ff;
 
-  border: 1px solid rgba(168, 85, 247, 0.24);
+  border: 1px solid #dfe1ff;
 
-  color: #fff;
-
-  box-shadow:
-    0 20px 45px rgba(0, 0, 0, 0.25),
-    0 0 40px rgba(124, 58, 237, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: #171827;
 }
 
 .introCard svg {
   margin-bottom: 52px;
 
-  color: #a855f7;
-
-  filter: drop-shadow(0 5px 15px rgba(168, 85, 247, 0.4));
+  color: #483df6;
 }
 
 .introCard strong {
@@ -425,7 +396,7 @@
 
   margin: 0;
 
-  color: #aaa2b5;
+  color: #666b80;
 
   font-size: 14px;
   line-height: 1.65;
@@ -450,19 +421,16 @@
 
   box-sizing: border-box;
 
-  border-radius: 22px;
+  border-radius: 20px;
 
-  background: #121218;
+  background: #ffffff;
 
-  border: 1px solid #25252e;
+  border: 1px solid #e8e9ef;
 
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  box-shadow: 0 8px 25px rgba(35, 38, 65, 0.05);
 
   transition:
     transform 0.25s ease,
-    background 0.25s ease,
     border-color 0.25s ease,
     box-shadow 0.25s ease;
 }
@@ -470,13 +438,11 @@
 .propertyCard:hover {
   transform: translateY(-5px);
 
-  background: #17171f;
-
-  border-color: rgba(168, 85, 247, 0.4);
+  border-color: rgba(72, 61, 246, 0.35);
 
   box-shadow:
-    0 20px 45px rgba(0, 0, 0, 0.25),
-    0 0 25px rgba(139, 92, 246, 0.06);
+    0 18px 40px rgba(35, 38, 65, 0.09),
+    0 0 0 3px rgba(72, 61, 246, 0.04);
 }
 
 .cardIcon,
@@ -490,17 +456,17 @@
 
   border-radius: 12px;
 
-  background: #1d1528;
+  background: #eef0ff;
 
-  color: #a855f7;
+  color: #483df6;
 
-  border: 1px solid rgba(168, 85, 247, 0.16);
+  border: 1px solid #dfe1ff;
 }
 
 .propertyCard h3 {
   margin: 23px 0 9px;
 
-  color: #f5f5f7;
+  color: #171827;
 
   font-size: 18px;
   font-weight: 850;
@@ -511,7 +477,7 @@
 
   margin: 0 0 18px;
 
-  color: #858590;
+  color: #767b8d;
 
   font-size: 13px;
   line-height: 1.65;
@@ -528,7 +494,7 @@
 
   background: transparent;
 
-  color: #a855f7;
+  color: #483df6;
 
   font-family: inherit;
 
@@ -544,7 +510,7 @@
 
 .propertyCard button:hover {
   gap: 11px;
-  color: #c084fc;
+  color: #3d32e8;
 }
 
 /* =========================================================
@@ -556,31 +522,17 @@
 
   box-sizing: border-box;
 
-  border-radius: 30px;
+  border-radius: 26px;
 
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(124, 58, 237, 0.12),
-      transparent 35%
-    ),
-    #111116;
+  background: #f7f8fc;
 
-  color: #fff;
+  color: #171827;
 
-  border: 1px solid #24242d;
-
-  box-shadow:
-    0 25px 55px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  border: 1px solid #e8e9ef;
 }
 
 .benefitsSection .sectionHeading {
   margin-bottom: 34px;
-}
-
-.benefitsSection .sectionHeading h2 {
-  color: #fff;
 }
 
 .benefitsGrid {
@@ -600,40 +552,39 @@
 
   border-radius: 17px;
 
-  background: #18181f;
+  background: #ffffff;
 
-  border: 1px solid #292932;
+  border: 1px solid #e8e9ef;
 
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .benefit:hover {
   transform: translateY(-3px);
 
-  background: #1c1c25;
+  border-color: rgba(72, 61, 246, 0.25);
 
-  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 10px 25px rgba(35, 38, 65, 0.06);
 }
 
 .benefitIcon {
   flex-shrink: 0;
 
-  background: #8b5cf6;
-
-  color: #fff;
+  background: #483df6;
+  color: #ffffff;
 
   border-color: transparent;
 
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 18px rgba(72, 61, 246, 0.18);
 }
 
 .benefit h3 {
   margin: 2px 0 8px;
 
-  color: #fff;
+  color: #171827;
 
   font-size: 17px;
   font-weight: 850;
@@ -642,7 +593,7 @@
 .benefit p {
   margin: 0;
 
-  color: #92929c;
+  color: #777c8d;
 
   font-size: 13px;
   line-height: 1.65;
@@ -684,12 +635,12 @@
   border-radius: 22px;
 
   background:
-    linear-gradient(180deg, rgba(8, 8, 12, 0.05), rgba(8, 8, 12, 0.92)),
+    linear-gradient(180deg, rgba(20, 23, 40, 0.02), rgba(20, 23, 40, 0.72)),
     url("/assets/issykKul.webp") center / cover;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e3e5ed;
 
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 30px rgba(30, 35, 60, 0.1);
 
   transition:
     transform 0.25s ease,
@@ -700,11 +651,9 @@
 .locationCard:hover .locationImage {
   transform: translateY(-5px);
 
-  border-color: rgba(168, 85, 247, 0.45);
+  border-color: rgba(72, 61, 246, 0.35);
 
-  box-shadow:
-    0 25px 55px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(139, 92, 246, 0.08);
+  box-shadow: 0 20px 45px rgba(30, 35, 60, 0.15);
 }
 
 .locationOverlay {
@@ -713,8 +662,8 @@
 
   background: linear-gradient(
     180deg,
-    rgba(8, 8, 12, 0) 25%,
-    rgba(8, 8, 12, 0.9) 100%
+    rgba(20, 23, 40, 0) 25%,
+    rgba(20, 23, 40, 0.78) 100%
   );
 }
 
@@ -733,11 +682,11 @@
 
   border-radius: 12px;
 
-  background: rgba(10, 10, 14, 0.78);
+  background: rgba(255, 255, 255, 0.9);
 
-  color: #a855f7;
+  color: #483df6;
 
-  border: 1px solid rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 
   backdrop-filter: blur(10px);
 }
@@ -749,7 +698,7 @@
   right: 42px;
   bottom: 19px;
 
-  color: #fff;
+  color: #ffffff;
 }
 
 .locationInfo h3 {
@@ -762,7 +711,7 @@
 .locationInfo p {
   margin: 0;
 
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.75);
 
   font-size: 12px;
   line-height: 1.5;
@@ -774,13 +723,13 @@
   right: 18px;
   bottom: 21px;
 
-  color: #fff;
+  color: #ffffff;
 
   transition: 0.2s ease;
 }
 
 .locationCard:hover .locationArrow {
-  color: #a855f7;
+  color: #ffffff;
   transform: translateX(4px);
 }
 
@@ -791,41 +740,31 @@
 .investment {
   position: relative;
 
-  min-height: 420px;
+  min-height: 400px;
 
-  margin: 105px auto 0;
+  margin: 100px auto 0;
 
   overflow: hidden;
 
-  border-radius: 30px;
+  border-radius: 26px;
 
-  background:
-    linear-gradient(110deg, rgba(7, 7, 10, 0.96), rgba(7, 7, 10, 0.55)),
-    url("/assets/issykKul.webp") center / cover;
+  background: url("/assets/issykKul.webp") center / cover;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e3e5ed;
 
-  box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.4),
-    0 0 60px rgba(124, 58, 237, 0.06);
+  box-shadow: 0 18px 50px rgba(30, 35, 60, 0.12);
 }
 
 .investmentOverlay {
   position: absolute;
   inset: 0;
 
-  background:
-    linear-gradient(
-      90deg,
-      rgba(7, 7, 10, 0.98) 0%,
-      rgba(7, 7, 10, 0.58) 65%,
-      rgba(124, 58, 237, 0.18) 100%
-    ),
-    radial-gradient(
-      circle at 100% 50%,
-      rgba(168, 85, 247, 0.18),
-      transparent 40%
-    );
+  background: linear-gradient(
+    90deg,
+    rgba(17, 20, 35, 0.9) 0%,
+    rgba(17, 20, 35, 0.68) 55%,
+    rgba(72, 61, 246, 0.18) 100%
+  );
 }
 
 .investmentContent {
@@ -834,9 +773,9 @@
 
   max-width: 700px;
 
-  padding: 68px;
+  padding: 65px;
 
-  color: #fff;
+  color: #ffffff;
 }
 
 .investmentIcon {
@@ -851,23 +790,21 @@
 
   border-radius: 13px;
 
-  background: #8b5cf6;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
-  box-shadow:
-    0 12px 30px rgba(139, 92, 246, 0.3),
-    0 0 25px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.25);
 }
 
 .investmentContent > span {
-  color: #a855f7;
+  color: #a9a4ff;
 }
 
 .investmentContent h2 {
   margin: 0;
 
-  color: #fff;
+  color: #ffffff;
 
   font-size: 43px;
   line-height: 1.08;
@@ -879,7 +816,7 @@
 .investmentContent p {
   margin: 20px 0 30px;
 
-  color: #aaaab3;
+  color: rgba(255, 255, 255, 0.78);
 
   font-size: 15px;
   line-height: 1.7;
@@ -901,9 +838,9 @@
   border: none;
   border-radius: 13px;
 
-  background: #8b5cf6;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
 
@@ -912,7 +849,7 @@
 
   cursor: pointer;
 
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -925,9 +862,9 @@
 .addSection button:hover {
   transform: translateY(-3px);
 
-  background: #a78bfa;
+  background: #3d32e8;
 
-  box-shadow: 0 15px 35px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 15px 35px rgba(72, 61, 246, 0.28);
 }
 
 /* =========================================================
@@ -947,21 +884,13 @@
 
   box-sizing: border-box;
 
-  border-radius: 22px;
+  border-radius: 20px;
 
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(139, 92, 246, 0.15),
-      transparent 35%
-    ),
-    #15151c;
+  background: #f7f8fc;
 
-  border: 1px solid #292932;
+  border: 1px solid #e7e8ef;
 
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  box-shadow: 0 10px 30px rgba(35, 38, 65, 0.05);
 }
 
 .quickSearch > div {
@@ -983,11 +912,11 @@
 
   border-radius: 13px;
 
-  background: #241638;
+  background: #eef0ff;
 
-  color: #a855f7;
+  color: #483df6;
 
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  border: 1px solid #dfe1ff;
 }
 
 .quickSearch span {
@@ -997,7 +926,7 @@
 .quickSearch h2 {
   margin: 0;
 
-  color: #f5f5f7;
+  color: #171827;
 
   font-size: 21px;
   font-weight: 900;
@@ -1006,7 +935,7 @@
 .quickSearch p {
   margin: 6px 0 0;
 
-  color: #898993;
+  color: #777c8d;
 
   font-size: 13px;
 }
@@ -1028,31 +957,21 @@
 
   box-sizing: border-box;
 
-  border-radius: 25px;
+  border-radius: 22px;
 
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(139, 92, 246, 0.16),
-      transparent 35%
-    ),
-    #111116;
+  background: #eef0ff;
 
-  border: 1px solid #282831;
-
-  box-shadow:
-    0 25px 55px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  border: 1px solid #dfe1ff;
 }
 
 .addSection > div > span {
-  color: #a855f7;
+  color: #483df6;
 }
 
 .addSection h2 {
   margin: 0;
 
-  color: #fff;
+  color: #171827;
 
   font-size: 32px;
   font-weight: 900;
@@ -1065,7 +984,7 @@
 
   margin: 12px 0 0;
 
-  color: #8f8f99;
+  color: #666b80;
 
   font-size: 14px;
   line-height: 1.65;
@@ -1073,6 +992,16 @@
 
 .addSection button {
   flex-shrink: 0;
+}
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.25);
+  outline-offset: 3px;
 }
 
 /* =========================================================
@@ -1097,9 +1026,9 @@
 
   .hero {
     height: auto;
-    min-height: 650px;
+    min-height: 620px;
 
-    border-radius: 24px;
+    border-radius: 22px;
   }
 
   .heroContent {

@@ -2,11 +2,11 @@
 
 import { Map, Fence, FileText, CreditCard, Mountain } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 
 import styles from "./LandFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const purposes = [
   "Любое",
@@ -74,7 +74,7 @@ const amenities = [
 export default function LandFilters({ filters, updateFilter }) {
   return (
     <div className={styles.grid}>
-      <CustomSelectBlack
+      <CustomSelect
         icon={Map}
         title="Назначение"
         options={purposes}
@@ -82,7 +82,7 @@ export default function LandFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("purpose", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Fence}
         title="Забор"
         options={fence}
@@ -90,7 +90,7 @@ export default function LandFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("fence", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Map}
         title="Расположение"
         options={locations}
@@ -98,7 +98,7 @@ export default function LandFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("location", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Mountain}
         title="Рельеф"
         options={terrains}
@@ -106,7 +106,7 @@ export default function LandFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("terrain", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={FileText}
         title="Документы"
         options={documents}
@@ -114,7 +114,7 @@ export default function LandFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("documents", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={CreditCard}
         title="Оплата"
         options={offerTypes}

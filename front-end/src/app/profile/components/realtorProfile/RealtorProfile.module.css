@@ -1,7 +1,3 @@
-/* =========================================================
-   PAGE
-========================================================= */
-
 .page {
   min-height: 100vh;
   width: 100%;
@@ -15,15 +11,11 @@
   gap: 24px;
 
   background:
-    radial-gradient(
-      circle at 85% 5%,
-      rgba(124, 58, 237, 0.18),
-      transparent 30%
-    ),
-    radial-gradient(circle at 5% 50%, rgba(91, 33, 182, 0.12), transparent 32%),
-    linear-gradient(180deg, #07070a 0%, #0d0d12 45%, #08080b 100%);
+    radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.1), transparent 30%),
+    radial-gradient(circle at 5% 50%, rgba(72, 61, 246, 0.06), transparent 32%),
+    linear-gradient(180deg, #f8f9fc 0%, #f4f6fb 45%, #ffffff 100%);
 
-  color: #f7f7f8;
+  color: #171923;
 }
 
 /* =========================================================
@@ -43,25 +35,21 @@
   flex-direction: column;
 
   background:
-    radial-gradient(
-      circle at 90% 0%,
-      rgba(124, 58, 237, 0.09),
-      transparent 32%
-    ),
-    linear-gradient(145deg, rgba(29, 29, 35, 0.98), rgba(14, 14, 19, 0.98));
+    radial-gradient(circle at 90% 0%, rgba(72, 61, 246, 0.07), transparent 32%),
+    linear-gradient(145deg, #ffffff, #f9faff);
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(15, 23, 42, 0.07);
 
   border-radius: 32px;
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.55),
-    0 0 70px rgba(124, 58, 237, 0.045),
-    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    0 25px 70px rgba(30, 41, 59, 0.08),
+    0 0 50px rgba(72, 61, 246, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* =========================================================
-   BOTTOM PURPLE LINE
+   BOTTOM BLUE LINE
 ========================================================= */
 
 .profileCard::after {
@@ -78,7 +66,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(139, 92, 246, 0.65),
+    rgba(72, 61, 246, 0.55),
     transparent
   );
 
@@ -102,9 +90,9 @@
 
   border-radius: 50%;
 
-  background: #7c3aed;
+  background: #483df6;
 
-  opacity: 0.13;
+  opacity: 0.08;
 
   filter: blur(120px);
 
@@ -145,14 +133,14 @@
 
   border-radius: 50%;
 
-  background: linear-gradient(135deg, #241044, #7c3aed);
+  background: linear-gradient(135deg, #e9e7ff, #483df6);
 
-  border: 5px solid #202027;
+  border: 5px solid #ffffff;
 
   box-shadow:
-    0 0 0 1px rgba(139, 92, 246, 0.45),
-    0 20px 55px rgba(0, 0, 0, 0.55),
-    0 0 45px rgba(124, 58, 237, 0.18);
+    0 0 0 1px rgba(72, 61, 246, 0.25),
+    0 15px 40px rgba(30, 41, 59, 0.14),
+    0 0 35px rgba(72, 61, 246, 0.1);
 }
 
 .avatar img {
@@ -183,11 +171,11 @@
 
   border-radius: 999px;
 
-  background: rgba(124, 58, 237, 0.11);
+  background: rgba(72, 61, 246, 0.08);
 
-  border: 1px solid rgba(139, 92, 246, 0.22);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
-  color: #a78bfa;
+  color: #483df6;
 
   font-size: 11px;
   font-weight: 900;
@@ -211,7 +199,7 @@
 .nameRow h1 {
   margin: 0;
 
-  color: #fff;
+  color: #171923;
 
   font-size: 38px;
   line-height: 1.1;
@@ -229,9 +217,9 @@
 
   flex-shrink: 0;
 
-  color: #8b5cf6;
+  color: #483df6;
 
-  fill: rgba(139, 92, 246, 0.1);
+  fill: rgba(72, 61, 246, 0.08);
 }
 
 /* =========================================================
@@ -246,7 +234,7 @@
 
   margin-top: 12px;
 
-  color: #9a9aa2;
+  color: #626b7a;
 
   font-size: 14px;
 
@@ -259,7 +247,7 @@
 
   flex-shrink: 0;
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 /* =========================================================
@@ -271,7 +259,7 @@
 
   margin: 14px 0 0;
 
-  color: #77777f;
+  color: #7a8392;
 
   font-size: 14px;
 
@@ -297,13 +285,13 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(139, 92, 246, 0.28);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
   border-radius: 14px;
 
-  background: rgba(124, 58, 237, 0.11);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: #a78bfa;
+  color: #483df6;
 
   cursor: pointer;
 
@@ -321,15 +309,15 @@
 }
 
 .edit:hover {
-  background: #7c3aed;
+  background: #483df6;
 
-  border-color: #8b5cf6;
+  border-color: #483df6;
 
   color: #fff;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 12px 35px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 12px 35px rgba(72, 61, 246, 0.22);
 }
 
 /* =========================================================
@@ -368,13 +356,13 @@
 
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.045),
-    rgba(255, 255, 255, 0.018)
+    rgba(248, 249, 252, 0.95),
+    rgba(243, 245, 250, 0.9)
   );
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid rgba(15, 23, 42, 0.065);
 
-  color: #fff;
+  color: #171923;
 
   text-decoration: none;
 
@@ -390,15 +378,15 @@
 
   background: linear-gradient(
     145deg,
-    rgba(124, 58, 237, 0.08),
-    rgba(255, 255, 255, 0.02)
+    rgba(72, 61, 246, 0.055),
+    rgba(248, 249, 252, 0.95)
   );
 
-  border-color: rgba(139, 92, 246, 0.28);
+  border-color: rgba(72, 61, 246, 0.2);
 
   box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.28),
-    0 0 25px rgba(124, 58, 237, 0.04);
+    0 12px 35px rgba(30, 41, 59, 0.09),
+    0 0 25px rgba(72, 61, 246, 0.04);
 }
 
 .contactCard > svg {
@@ -407,7 +395,7 @@
 
   flex-shrink: 0;
 
-  color: #8b5cf6;
+  color: #483df6;
 }
 
 .contactCard div {
@@ -420,7 +408,7 @@
 }
 
 .contactCard small {
-  color: #64646c;
+  color: #8a93a2;
 
   font-size: 10px;
 
@@ -434,7 +422,7 @@
 .contactCard strong {
   overflow: hidden;
 
-  color: #d8d8dc;
+  color: #303746;
 
   font-size: 13px;
 
@@ -467,13 +455,13 @@
 
   gap: 9px;
 
-  background: rgba(37, 211, 102, 0.07);
+  background: rgba(37, 211, 102, 0.055);
 
-  border: 1px solid rgba(37, 211, 102, 0.15);
+  border: 1px solid rgba(37, 211, 102, 0.16);
 
   border-radius: 15px;
 
-  color: #6ee7a2;
+  color: #159447;
 
   text-decoration: none;
 
@@ -484,7 +472,8 @@
   transition:
     transform 0.25s ease,
     background 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .whatsapp svg {
@@ -495,9 +484,11 @@
 .whatsapp:hover {
   transform: translateY(-2px);
 
-  background: rgba(37, 211, 102, 0.13);
+  background: rgba(37, 211, 102, 0.1);
 
-  border-color: rgba(37, 211, 102, 0.3);
+  border-color: rgba(37, 211, 102, 0.28);
+
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.08);
 }
 
 /* =========================================================
@@ -527,30 +518,33 @@
   background:
     radial-gradient(
       circle at 100% 0%,
-      rgba(124, 58, 237, 0.06),
+      rgba(72, 61, 246, 0.045),
       transparent 45%
     ),
-    linear-gradient(145deg, rgba(24, 24, 29, 0.98), rgba(15, 15, 19, 0.98));
+    linear-gradient(145deg, #ffffff, #f8f9fc);
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid rgba(15, 23, 42, 0.065);
 
   border-radius: 23px;
 
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 15px 45px rgba(30, 41, 59, 0.06);
 
   transition:
     border-color 0.25s ease,
-    transform 0.25s ease;
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .stats > div:hover {
   transform: translateY(-3px);
 
-  border-color: rgba(139, 92, 246, 0.22);
+  border-color: rgba(72, 61, 246, 0.18);
+
+  box-shadow: 0 18px 45px rgba(30, 41, 59, 0.09);
 }
 
 .stats strong {
-  color: #fff;
+  color: #171923;
 
   font-size: 27px;
 
@@ -562,7 +556,7 @@
 .stats span {
   margin-top: 7px;
 
-  color: #707077;
+  color: #7d8695;
 
   font-size: 12px;
 
@@ -598,16 +592,16 @@
   background:
     radial-gradient(
       circle at 100% 0%,
-      rgba(124, 58, 237, 0.055),
+      rgba(72, 61, 246, 0.04),
       transparent 45%
     ),
-    linear-gradient(145deg, rgba(24, 24, 29, 0.98), rgba(15, 15, 19, 0.98));
+    linear-gradient(145deg, #ffffff, #f8f9fc);
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border: 1px solid rgba(15, 23, 42, 0.065);
 
   border-radius: 23px;
 
-  color: #fff;
+  color: #242936;
 
   text-decoration: none;
 
@@ -631,17 +625,13 @@
 .menu button:hover {
   transform: translateY(-5px);
 
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(72, 61, 246, 0.2);
 
-  background: linear-gradient(
-    145deg,
-    rgba(34, 27, 49, 0.98),
-    rgba(18, 16, 22, 0.98)
-  );
+  background: linear-gradient(145deg, rgba(72, 61, 246, 0.045), #ffffff);
 
   box-shadow:
-    0 20px 55px rgba(0, 0, 0, 0.45),
-    0 0 35px rgba(124, 58, 237, 0.07);
+    0 20px 55px rgba(30, 41, 59, 0.1),
+    0 0 35px rgba(72, 61, 246, 0.045);
 }
 
 .menu a svg,
@@ -651,9 +641,9 @@
 
   flex-shrink: 0;
 
-  color: #8b5cf6;
+  color: #483df6;
 
-  filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.3));
+  filter: drop-shadow(0 0 7px rgba(72, 61, 246, 0.16));
 }
 
 /* =========================================================
@@ -661,21 +651,21 @@
 ========================================================= */
 
 .menu button {
-  color: #d7d7db;
+  color: #4b5361;
 }
 
 .menu button svg {
-  color: #a7a7ad;
+  color: #7d8593;
 
   filter: none;
 }
 
 .menu button:hover {
-  border-color: rgba(139, 92, 246, 0.25);
+  border-color: rgba(72, 61, 246, 0.18);
 }
 
 .menu button:hover svg {
-  color: #a78bfa;
+  color: #483df6;
 }
 
 /* =========================================================

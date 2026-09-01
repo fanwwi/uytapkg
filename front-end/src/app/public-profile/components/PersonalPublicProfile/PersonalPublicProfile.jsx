@@ -15,7 +15,7 @@ import {
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./PersonalPublicProfile.module.css";
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 export default function PersonalPublicProfile({
   user,
@@ -163,7 +163,7 @@ export default function PersonalPublicProfile({
           {ads.length > 0 ? (
             <div className={styles.listingGrid}>
               {ads.map((item) => (
-                <ListingCardBlack
+                <ListingCard
                   key={item.id}
                   item={mapListingData(item)}
                   isFavorite={favIds.has(item.id)}

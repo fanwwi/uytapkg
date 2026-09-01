@@ -4,17 +4,17 @@
 
 .card {
   background: #ffffff;
-  color: #17131f;
+  color: #1f2421;
 
-  border: 1px solid #ece8f3;
-  border-radius: 28px;
+  border: 1px solid #e1e5e2;
+  border-radius: 22px;
 
   overflow: hidden;
   cursor: pointer;
 
   box-shadow:
-    0 10px 35px rgba(35, 20, 55, 0.07),
-    0 2px 8px rgba(35, 20, 55, 0.03);
+    0 8px 28px rgba(31, 36, 33, 0.055),
+    0 2px 7px rgba(31, 36, 33, 0.025);
 
   transition:
     transform 0.25s ease,
@@ -23,13 +23,13 @@
 }
 
 .card:hover {
-  transform: translateY(-7px);
+  transform: translateY(-5px);
 
-  border-color: #ddd2ec;
+  border-color: rgba(72, 61, 246, 0.28);
 
   box-shadow:
-    0 22px 55px rgba(70, 35, 110, 0.13),
-    0 5px 15px rgba(70, 35, 110, 0.05);
+    0 18px 42px rgba(31, 36, 33, 0.09),
+    0 4px 12px rgba(72, 61, 246, 0.06);
 }
 
 /* =========================
@@ -42,7 +42,7 @@
   position: relative;
   overflow: hidden;
 
-  background: #f1eef5;
+  background: #eef0ef;
 }
 
 .image img {
@@ -52,7 +52,7 @@
 }
 
 .card:hover .image img {
-  transform: scale(1.04);
+  transform: scale(1.035);
 }
 
 /* =========================
@@ -62,8 +62,8 @@
 .badges {
   position: absolute;
 
-  top: 18px;
-  left: 18px;
+  top: 16px;
+  left: 16px;
 
   z-index: 3;
 
@@ -83,7 +83,7 @@
 
   padding: 0 12px;
 
-  border-radius: 12px;
+  border-radius: 10px;
 
   display: flex;
   align-items: center;
@@ -92,11 +92,11 @@
   gap: 5px;
 
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 750;
 
   white-space: nowrap;
 
-  box-shadow: 0 5px 15px rgba(25, 15, 40, 0.15);
+  box-shadow: 0 5px 15px rgba(31, 36, 33, 0.12);
 
   backdrop-filter: blur(8px);
 }
@@ -106,11 +106,13 @@
 ========================= */
 
 .vip {
-  background: linear-gradient(135deg, #f0e7ff, #d7baff);
+  background: #f4f2ea;
 
-  color: #5b2a91;
+  color: #ffdd00;
 
-  border: 1px solid rgba(111, 63, 160, 0.12);
+  border: 1px solid #ffdd00;
+
+  box-shadow: 0 5px 15px rgba(31, 36, 33, 0.1);
 }
 
 .vip svg {
@@ -123,10 +125,13 @@
 ========================= */
 
 .urgent {
-  background: #6d28d9;
+  background: #483df6;
+
   color: #ffffff;
 
-  box-shadow: 0 6px 18px rgba(109, 40, 217, 0.28);
+  border: 1px solid #483df6;
+
+  box-shadow: 0 6px 18px rgba(72, 61, 246, 0.22);
 }
 
 .urgent svg {
@@ -139,11 +144,11 @@
 ========================= */
 
 .type {
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
 
-  color: #6d28d9;
+  color: #483df6;
 
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(72, 61, 246, 0.18);
 }
 
 /* =========================
@@ -153,28 +158,28 @@
 .favorite {
   position: absolute;
 
-  top: 16px;
-  right: 16px;
+  top: 14px;
+  right: 14px;
 
   z-index: 4;
 
   width: 42px;
   height: 42px;
 
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
 
-  color: #514b5b;
+  color: #68716b;
 
   cursor: pointer;
 
-  box-shadow: 0 6px 18px rgba(20, 10, 35, 0.12);
+  box-shadow: 0 6px 18px rgba(31, 36, 33, 0.12);
 
   backdrop-filter: blur(10px);
 
@@ -186,13 +191,13 @@
 }
 
 .favorite:hover {
-  background: #f1eaff;
+  background: #483df6;
 
-  color: #6d28d9;
+  color: #ffffff;
 
-  transform: scale(1.08);
+  transform: scale(1.07);
 
-  box-shadow: 0 8px 22px rgba(109, 40, 217, 0.16);
+  box-shadow: 0 8px 22px rgba(72, 61, 246, 0.22);
 }
 
 .favorite svg {
@@ -205,15 +210,15 @@
 ========================= */
 
 .content {
-  padding: 23px;
+  padding: 22px;
 }
 
 .content h2 {
   margin: 0;
 
-  color: #18131f;
+  color: #1f2421;
 
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.3;
 
   font-weight: 800;
@@ -224,16 +229,16 @@
 ========================= */
 
 .location {
-  margin-top: 13px;
+  margin-top: 12px;
 
   display: flex;
   align-items: center;
 
   gap: 7px;
 
-  color: #77717f;
+  color: #727b75;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .location svg {
@@ -242,7 +247,7 @@
 
   flex-shrink: 0;
 
-  color: #6d28d9;
+  color: #483df6;
 }
 
 /* =========================
@@ -250,28 +255,28 @@
 ========================= */
 
 .details {
-  margin-top: 18px;
+  margin-top: 17px;
 
   display: flex;
   align-items: center;
 
-  gap: 8px;
+  gap: 7px;
 
   flex-wrap: wrap;
 }
 
 .details span {
-  padding: 7px 11px;
+  padding: 7px 10px;
 
-  border: 1px solid #ebe6f0;
-  border-radius: 10px;
+  border: 1px solid #e1e5e2;
+  border-radius: 9px;
 
-  background: #f7f5f9;
+  background: #f7f8f7;
 
-  color: #68616f;
+  color: #68716b;
 
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 650;
 }
 
 /* =========================
@@ -280,9 +285,9 @@
 
 .bottom {
   margin-top: 20px;
-  padding-top: 18px;
+  padding-top: 17px;
 
-  border-top: 1px solid #eeeaf2;
+  border-top: 1px solid #e8ebe9;
 
   display: flex;
   align-items: center;
@@ -292,10 +297,10 @@
 }
 
 .bottom strong {
-  color: #17131f;
+  color: #1f2421;
 
-  font-size: 21px;
-  font-weight: 900;
+  font-size: 20px;
+  font-weight: 850;
 
   white-space: nowrap;
 }
@@ -309,14 +314,15 @@
 
   padding: 0 17px;
 
-  border: none;
-  border-radius: 13px;
+  border: 1px solid #483df6;
+  border-radius: 11px;
 
-  background: #6d28d9;
+  background: #483df6;
   color: #ffffff;
 
-  font-size: 14px;
-  font-weight: 800;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
 
   cursor: pointer;
 
@@ -324,16 +330,18 @@
 
   transition:
     background 0.2s ease,
+    border-color 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
 .more:hover {
-  background: #5b21b6;
+  background: #483df6;
+  border-color: #483df6;
 
   transform: translateY(-2px);
 
-  box-shadow: 0 8px 20px rgba(109, 40, 217, 0.24);
+  box-shadow: 0 8px 20px rgba(72, 61, 246, 0.2);
 }
 
 .more:active {
@@ -341,20 +349,42 @@
 }
 
 /* =========================
+   FOCUS
+========================= */
+
+.card:focus-within {
+  border-color: rgba(72, 61, 246, 0.35);
+}
+
+.favorite:focus-visible,
+.more:focus-visible {
+  outline: 2px solid #483df6;
+  outline-offset: 2px;
+}
+
+/* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 700px) {
+  .card {
+    border-radius: 18px;
+  }
+
   .image {
     height: 230px;
   }
 
   .content {
-    padding: 20px;
+    padding: 19px;
   }
 
   .content h2 {
-    font-size: 20px;
+    font-size: 19px;
+  }
+
+  .location {
+    font-size: 13px;
   }
 
   .bottom {
@@ -362,18 +392,20 @@
   }
 
   .bottom strong {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .more {
+    height: 40px;
+
     padding: 0 14px;
 
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .badges {
-    top: 14px;
-    left: 14px;
+    top: 13px;
+    left: 13px;
 
     gap: 6px;
 
@@ -390,10 +422,19 @@
   }
 
   .favorite {
-    top: 13px;
-    right: 13px;
+    top: 12px;
+    right: 12px;
 
     width: 40px;
     height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image img,
+  .favorite,
+  .more {
+    transition: none;
   }
 }

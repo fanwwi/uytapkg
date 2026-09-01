@@ -9,6 +9,7 @@ import styles from "./Complexes.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { getComplexes } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
+import Header from "@/components/pageComponents/header/Header";
 
 export default function Complexes() {
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function Complexes() {
 
   return (
     <main className={styles.page}>
-      {/* HERO */}
+    <Header />
 
       <section className={styles.hero}>
         <div className={styles.heroImage} />
@@ -81,14 +82,6 @@ export default function Complexes() {
 
             <span>PREMIUM REAL ESTATE · KYRGYZSTAN</span>
           </div>
-
-          <button
-            type="button"
-            className={styles.homeButton}
-            onClick={() => router.push("/")}
-          >
-            На главную
-          </button>
 
           <h1>
             Жилые комплексы,

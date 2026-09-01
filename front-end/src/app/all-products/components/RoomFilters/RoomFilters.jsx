@@ -11,11 +11,11 @@ import {
   CreditCard,
 } from "lucide-react";
 
-import CustomSelectBlack from "@/components/ui/customSelectBlack/CustomSelectBlack";
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 
 import styles from "./RoomFilters.module.css";
+import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const locations = [
   "Любое",
@@ -108,7 +108,7 @@ const amenities = [
 export default function RoomFilters({ filters, updateFilter }) {
   return (
     <div className={styles.grid}>
-      <CustomSelectBlack
+      <CustomSelect
         icon={MapPin}
         title="Расположение"
         options={locations}
@@ -116,7 +116,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("location", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={DoorOpen}
         title="Комнат в квартире"
         options={rooms}
@@ -124,7 +124,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("roomsInApartment", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Layers3}
         title="Этаж"
         options={floors}
@@ -132,7 +132,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("floor", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Paintbrush}
         title="Состояние"
         options={conditions}
@@ -140,7 +140,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("condition", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={BrickWall}
         title="Стены"
         options={walls}
@@ -148,7 +148,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("walls", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={Flame}
         title="Отопление"
         options={heating}
@@ -156,7 +156,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={DoorOpen}
         title="Санузел"
         options={bathroom}
@@ -164,7 +164,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("privateBathroom", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={FileText}
         title="Документы"
         options={documents}
@@ -172,7 +172,7 @@ export default function RoomFilters({ filters, updateFilter }) {
         setValue={(value) => updateFilter("documents", value)}
       />
 
-      <CustomSelectBlack
+      <CustomSelect
         icon={CreditCard}
         title="Оплата"
         options={offerTypes}

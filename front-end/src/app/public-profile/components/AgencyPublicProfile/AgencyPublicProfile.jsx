@@ -21,7 +21,7 @@ import {
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./AgencyPublicProfile.module.css";
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 export default function AgencyPublicProfile({
   profile,
@@ -305,7 +305,7 @@ export default function AgencyPublicProfile({
                   }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ListingCardBlack
+                  <ListingCard
                     item={mapListingData(item)}
                     isFavorite={favIds.has(item.id)}
                     onFavoriteClick={onFavoriteClick}

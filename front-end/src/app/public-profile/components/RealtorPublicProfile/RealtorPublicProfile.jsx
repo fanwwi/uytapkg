@@ -18,8 +18,8 @@ import {
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./RealtorPublicProfile.module.css";
-import ListingCardBlack from "@/components/ui/ListingCardBlack/ListingCardBlack";
 import Link from "next/link";
+import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 export default function RealtorPublicProfile({
   user,
@@ -263,7 +263,7 @@ export default function RealtorPublicProfile({
                     delay: 0.08 * index,
                   }}
                 >
-                  <ListingCardBlack
+                  <ListingCard
                     item={mapListingData(item)}
                     isFavorite={favIds.has(item.id)}
                     onFavoriteClick={onFavoriteClick}

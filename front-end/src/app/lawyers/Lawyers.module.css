@@ -1,19 +1,19 @@
 .page {
-  --bg: #08070c;
-  --card: #111019;
-  --card-2: #16131f;
-  --card-3: #1b1726;
+  --bg: #f7f8fc;
+  --card: #ffffff;
+  --card-2: #f4f5fb;
+  --card-3: #eef0f8;
 
-  --border: rgba(255, 255, 255, 0.09);
-  --border-hover: rgba(139, 92, 246, 0.45);
+  --border: #e5e7ef;
+  --border-hover: rgba(72, 61, 246, 0.4);
 
-  --text: #f7f5fb;
-  --text-secondary: #b7b1c5;
-  --text-muted: #777180;
+  --text: #171724;
+  --text-secondary: #5f6170;
+  --text-muted: #858795;
 
-  --purple: #8b5cf6;
-  --purple-light: #a78bfa;
-  --purple-dark: #6d28d9;
+  --purple: #483df6;
+  --purple-light: #6259f7;
+  --purple-dark: #352be0;
 
   min-height: 100vh;
 
@@ -21,19 +21,16 @@
   overflow: hidden;
 
   background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(124, 58, 237, 0.16),
-      transparent 32%
-    ),
+    radial-gradient(circle at 10% 0%, rgba(61, 76, 246, 0.773), transparent 32%),
     radial-gradient(
       circle at 95% 70%,
-      rgba(139, 92, 246, 0.09),
+      rgba(61, 107, 246, 0.055),
       transparent 30%
     ),
     var(--bg);
 
   color: var(--text);
+
   padding-top: 130px;
 }
 
@@ -42,6 +39,10 @@
 .page *::after {
   box-sizing: border-box;
 }
+
+/* =========================================================
+   GLOWS
+========================================================= */
 
 .glowOne,
 .glowTwo {
@@ -61,7 +62,7 @@
   top: -280px;
   left: -220px;
 
-  background: rgba(124, 58, 237, 0.18);
+  background: rgba(72, 61, 246, 0.11);
 }
 
 .glowTwo {
@@ -71,8 +72,12 @@
   right: -260px;
   bottom: -250px;
 
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(72, 61, 246, 0.08);
 }
+
+/* =========================================================
+   CONTAINER
+========================================================= */
 
 .container {
   position: relative;
@@ -115,12 +120,12 @@
 
   padding: 8px 13px;
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.16);
   border-radius: 100px;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(73, 61, 246, 0.919);
 
-  color: var(--purple-light);
+  color: var(--card);
 
   font-size: 12px;
   font-weight: 800;
@@ -137,6 +142,8 @@
 .hero h1 {
   margin: 20px 0 0;
 
+  color: var(--text);
+
   font-size: clamp(42px, 5vw, 68px);
 
   line-height: 1.02;
@@ -149,7 +156,7 @@
 .hero h1 span {
   display: block;
 
-  background: linear-gradient(135deg, #ffffff, var(--purple-light));
+  background: linear-gradient(135deg, #171724, var(--purple));
 
   -webkit-background-clip: text;
   background-clip: text;
@@ -192,22 +199,27 @@
 
   background: linear-gradient(135deg, var(--purple), var(--purple-dark));
 
-  color: white;
+  color: #ffffff;
 
   font-size: 14px;
   font-weight: 800;
 
   text-decoration: none;
 
-  box-shadow: 0 15px 40px rgba(109, 40, 217, 0.25);
+  box-shadow: 0 15px 40px rgba(72, 61, 246, 0.2);
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
 }
 
 .primaryButton:hover {
   transform: translateY(-3px);
 
-  box-shadow: 0 20px 50px rgba(109, 40, 217, 0.38);
+  filter: brightness(1.04);
+
+  box-shadow: 0 20px 50px rgba(72, 61, 246, 0.3);
 }
 
 .primaryButton svg {
@@ -228,7 +240,7 @@
 .trust svg {
   width: 19px;
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 /* =========================================================
@@ -245,10 +257,12 @@
   border-radius: 26px;
 
   background:
-    linear-gradient(145deg, rgba(139, 92, 246, 0.12), transparent 55%),
+    linear-gradient(145deg, rgba(72, 61, 246, 0.07), transparent 55%),
     var(--card);
 
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 20px 60px rgba(30, 32, 50, 0.08),
+    0 2px 8px rgba(30, 32, 50, 0.03);
 }
 
 .heroCardIcon {
@@ -261,11 +275,13 @@
 
   margin-bottom: 28px;
 
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
   border-radius: 17px;
 
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(72, 61, 246, 0.08);
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 .heroCardIcon svg {
@@ -274,7 +290,7 @@
 }
 
 .heroCardLabel {
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 10px;
   font-weight: 900;
@@ -284,6 +300,8 @@
 
 .heroCard h2 {
   margin: 10px 0 25px;
+
+  color: var(--text);
 
   font-size: 23px;
 
@@ -316,7 +334,7 @@
 
   flex-shrink: 0;
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 /* =========================================================
@@ -340,7 +358,7 @@
 .sectionHeading > span {
   padding-top: 4px;
 
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 11px;
   font-weight: 900;
@@ -351,7 +369,7 @@
 .sectionHeading h2 {
   margin: 0;
 
-  color: #fff;
+  color: var(--text);
 
   font-size: 30px;
 
@@ -396,13 +414,20 @@
 
   background: var(--card);
 
-  transition: 0.25s ease;
+  box-shadow: 0 8px 25px rgba(30, 32, 50, 0.035);
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .step:hover {
   border-color: var(--border-hover);
 
   transform: translateY(-3px);
+
+  box-shadow: 0 15px 35px rgba(72, 61, 246, 0.08);
 }
 
 .stepNumber {
@@ -415,11 +440,13 @@
   align-items: center;
   justify-content: center;
 
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
   border-radius: 11px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 10px;
   font-weight: 900;
@@ -427,6 +454,8 @@
 
 .step h3 {
   margin: 1px 0 8px;
+
+  color: var(--text);
 
   font-size: 16px;
   font-weight: 800;
@@ -463,15 +492,23 @@
 
   background: var(--card);
 
-  transition: 0.25s ease;
+  box-shadow: 0 8px 25px rgba(30, 32, 50, 0.035);
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .benefit:hover {
   border-color: var(--border-hover);
 
-  background: var(--card-2);
+  background: #ffffff;
 
   transform: translateY(-3px);
+
+  box-shadow: 0 15px 35px rgba(72, 61, 246, 0.08);
 }
 
 .benefitIcon {
@@ -484,11 +521,13 @@
 
   margin-bottom: 20px;
 
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
   border-radius: 14px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 .benefitIcon svg {
@@ -497,6 +536,8 @@
 
 .benefit h3 {
   margin: 0 0 9px;
+
+  color: var(--text);
 
   font-size: 17px;
 
@@ -543,8 +584,10 @@
   border-radius: 22px;
 
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 45%),
+    linear-gradient(145deg, rgba(72, 61, 246, 0.025), transparent 45%),
     var(--card);
+
+  box-shadow: 0 10px 30px rgba(30, 32, 50, 0.04);
 
   transition:
     border-color 0.25s ease,
@@ -557,7 +600,9 @@
 
   transform: translateY(-4px);
 
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    0 25px 60px rgba(30, 32, 50, 0.1),
+    0 8px 25px rgba(72, 61, 246, 0.06);
 }
 
 .lawyerTop {
@@ -582,12 +627,12 @@
 
   background: linear-gradient(135deg, var(--purple), var(--purple-dark));
 
-  color: white;
+  color: #ffffff;
 
   font-size: 17px;
   font-weight: 900;
 
-  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.25);
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.2);
 }
 
 .verified {
@@ -598,11 +643,13 @@
 
   padding: 6px 8px;
 
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
   border-radius: 8px;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.06);
 
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 10px;
 
@@ -615,6 +662,8 @@
 
 .lawyerInfo h3 {
   margin: 0;
+
+  color: var(--text);
 
   font-size: 19px;
 
@@ -629,7 +678,7 @@
 
   margin-top: 7px;
 
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 11px;
   font-weight: 750;
@@ -661,7 +710,6 @@
   padding: 15px 0;
 
   border-top: 1px solid var(--border);
-
   border-bottom: 1px solid var(--border);
 }
 
@@ -679,8 +727,12 @@
 .lawyerMeta svg {
   width: 15px;
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
+
+/* =========================================================
+   CONTACTS
+========================================================= */
 
 .contacts {
   display: grid;
@@ -708,7 +760,15 @@
 
   text-decoration: none;
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.contacts a:hover {
+  transform: translateY(-2px);
 }
 
 .contacts svg {
@@ -724,21 +784,25 @@
 }
 
 .phone:hover {
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(72, 61, 246, 0.2);
 
-  color: #fff;
+  background: #ffffff;
+
+  color: var(--text);
 }
 
 .whatsapp {
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
-  background: rgba(139, 92, 246, 0.09);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 .whatsapp:hover {
-  background: rgba(139, 92, 246, 0.16);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  background: rgba(72, 61, 246, 0.11);
 }
 
 /* =========================================================
@@ -756,17 +820,16 @@
 
   padding: 35px;
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
   border-radius: 25px;
 
   background:
-    radial-gradient(
-      circle at 0% 50%,
-      rgba(139, 92, 246, 0.12),
-      transparent 40%
-    ),
+    radial-gradient(circle at 0% 50%, rgba(72, 61, 246, 0.08), transparent 40%),
     var(--card);
+
+  box-shadow: 0 15px 45px rgba(30, 32, 50, 0.06);
+
   margin-bottom: 100px;
 }
 
@@ -778,11 +841,13 @@
   align-items: center;
   justify-content: center;
 
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
   border-radius: 17px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: var(--purple-light);
+  color: var(--purple);
 }
 
 .bottomCtaIcon svg {
@@ -790,7 +855,7 @@
 }
 
 .bottomCta span {
-  color: var(--purple-light);
+  color: var(--purple);
 
   font-size: 11px;
 
@@ -803,6 +868,8 @@
 
 .bottomCta h2 {
   margin: 7px 0;
+
+  color: var(--text);
 
   font-size: 23px;
 
@@ -834,7 +901,7 @@
 
   background: var(--purple);
 
-  color: white;
+  color: #ffffff;
 
   font-size: 13px;
   font-weight: 800;
@@ -843,13 +910,20 @@
 
   white-space: nowrap;
 
-  transition: 0.25s ease;
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.18);
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .ctaButton:hover {
-  background: var(--purple-light);
+  background: var(--purple-dark);
 
   transform: translateY(-2px);
+
+  box-shadow: 0 14px 30px rgba(72, 61, 246, 0.25);
 }
 
 .ctaButton svg {

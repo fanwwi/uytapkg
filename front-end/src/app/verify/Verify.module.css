@@ -1,19 +1,21 @@
 .page {
-  --black: #050507;
-  --graphite: #0d0d12;
-  --graphite-2: #111117;
-  --graphite-3: #17171f;
+  --white: #ffffff;
+  --background: #f6f7fb;
+  --background-soft: #f9faff;
 
-  --line: rgba(255, 255, 255, 0.07);
-  --line-soft: rgba(255, 255, 255, 0.045);
+  --text: #171822;
+  --text-dark: #20212b;
+  --text-soft: #626574;
+  --text-muted: #8c90a0;
 
-  --text: #f5f5f7;
-  --text-soft: #a6a6b1;
-  --text-muted: #686875;
+  --line: #e7e8ef;
+  --line-soft: #eef0f5;
 
-  --purple: #8b5cf6;
-  --purple-2: #7c3aed;
-  --purple-3: #a78bfa;
+  --primary: #483df6;
+  --primary-dark: #3d32e8;
+  --primary-light: #6f66ff;
+  --primary-soft: rgba(72, 61, 246, 0.08);
+  --primary-border: rgba(72, 61, 246, 0.16);
 
   min-height: 100vh;
 
@@ -21,21 +23,51 @@
 
   color: var(--text);
 
+  position: relative;
+  overflow: hidden;
+
   background:
     radial-gradient(
-      circle at 15% -5%,
-      rgba(124, 58, 237, 0.13),
-      transparent 32%
+      800px 550px at 50% -15%,
+      rgba(72, 61, 246, 0.09),
+      transparent 65%
     ),
     radial-gradient(
-      circle at 90% 10%,
-      rgba(139, 92, 246, 0.08),
-      transparent 28%
+      600px 450px at 0% 100%,
+      rgba(72, 61, 246, 0.045),
+      transparent 65%
     ),
-    #08080b;
+    #f6f7fb;
+}
+
+/* subtle background glow */
+
+.page::before {
+  content: "";
+
+  position: fixed;
+
+  width: 550px;
+  height: 550px;
+
+  top: 15%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(72, 61, 246, 0.045);
+
+  filter: blur(120px);
+
+  pointer-events: none;
 }
 
 .container {
+  position: relative;
+  z-index: 2;
+
   width: min(920px, 100%);
 
   margin: 0 auto;
@@ -51,20 +83,24 @@
 
   gap: 7px;
 
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 
-  color: #696974;
+  color: #777b8a;
 
   font-size: 13px;
   font-weight: 750;
 
   text-decoration: none;
 
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back:hover {
-  color: #b7b7c1;
+  color: var(--primary);
+
+  transform: translateX(-2px);
 }
 
 .back svg {
@@ -77,33 +113,72 @@
 ========================================================= */
 
 .hero {
+  position: relative;
+
   display: flex;
   align-items: flex-start;
 
   gap: 20px;
 
-  padding: 35px;
+  padding: 34px;
 
-  border-radius: 25px;
+  overflow: hidden;
+
+  border-radius: 28px;
 
   background:
     radial-gradient(
-      circle at 100% 0%,
-      rgba(139, 92, 246, 0.12),
-      transparent 35%
+      500px 300px at 100% 0%,
+      rgba(72, 61, 246, 0.08),
+      transparent 70%
     ),
-    linear-gradient(145deg, #121218, #0d0d12);
+    linear-gradient(145deg, #ffffff, #fafaff);
 
-  border: 1px solid var(--line);
+  border: 1px solid rgba(72, 61, 246, 0.12);
 
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 24px 70px rgba(34, 38, 66, 0.08),
+    0 4px 18px rgba(34, 38, 66, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  animation: heroAppear 0.45s ease both;
+}
+
+.hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -70px;
+  bottom: -100px;
+
+  border-radius: 50%;
+
+  background: rgba(72, 61, 246, 0.06);
+
+  filter: blur(50px);
+
+  pointer-events: none;
+}
+
+@keyframes heroAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .heroIcon {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
 
   flex-shrink: 0;
 
@@ -111,29 +186,39 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 16px;
+  border-radius: 17px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(111, 102, 255, 0.18),
+      transparent 55%
+    ),
+    rgba(72, 61, 246, 0.08);
 
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(72, 61, 246, 0.15);
 
-  color: var(--purple-3);
+  color: var(--primary);
+
+  box-shadow:
+    0 12px 30px rgba(72, 61, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .heroIcon svg {
-  width: 28px;
-  height: 28px;
+  width: 29px;
+  height: 29px;
 }
 
 .eyebrow {
   margin-bottom: 8px;
 
-  color: var(--purple-3);
+  color: var(--primary);
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
 
-  letter-spacing: 1.3px;
+  letter-spacing: 1.5px;
 
   text-transform: uppercase;
 }
@@ -141,26 +226,26 @@
 .hero h1 {
   margin: 0;
 
-  color: #f0f0f4;
+  color: #191a23;
 
   font-size: 31px;
   line-height: 1.15;
 
   font-weight: 950;
 
-  letter-spacing: -1px;
+  letter-spacing: -1.1px;
 }
 
 .hero p {
-  max-width: 690px;
+  max-width: 700px;
 
-  margin: 12px 0 0;
+  margin: 13px 0 0;
 
-  color: #777782;
+  color: #707483;
 
   font-size: 14px;
 
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 /* =========================================================
@@ -168,24 +253,34 @@
 ========================================================= */
 
 .infoCard {
+  position: relative;
+
   display: flex;
   align-items: flex-start;
 
-  gap: 15px;
+  gap: 14px;
 
   margin-top: 14px;
   padding: 20px;
 
-  border-radius: 18px;
+  border-radius: 19px;
 
-  background: rgba(139, 92, 246, 0.045);
+  background:
+    linear-gradient(135deg, rgba(72, 61, 246, 0.055), rgba(72, 61, 246, 0.018)),
+    #ffffff;
 
-  border: 1px solid rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(72, 61, 246, 0.11);
+
+  box-shadow:
+    0 10px 30px rgba(34, 38, 66, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  animation: fadeUp 0.45s ease 0.05s both;
 }
 
 .infoIcon {
-  width: 40px;
-  height: 40px;
+  width: 41px;
+  height: 41px;
 
   flex-shrink: 0;
 
@@ -193,11 +288,13 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 11px;
+  border-radius: 12px;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.08);
 
-  color: var(--purple-3);
+  border: 1px solid rgba(72, 61, 246, 0.1);
+
+  color: var(--primary);
 }
 
 .infoIcon svg {
@@ -208,7 +305,7 @@
 .infoCard h2 {
   margin: 1px 0 5px;
 
-  color: #dcdce2;
+  color: #292a34;
 
   font-size: 15px;
   font-weight: 900;
@@ -217,7 +314,7 @@
 .infoCard p {
   margin: 0;
 
-  color: #70707b;
+  color: #747887;
 
   font-size: 13px;
 
@@ -231,13 +328,26 @@
 .documentsSection {
   margin-top: 14px;
 
-  padding: 27px;
+  padding: 28px;
 
-  border-radius: 21px;
+  border-radius: 23px;
 
-  background: #0d0d12;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(72, 61, 246, 0.035),
+      transparent 50%
+    ),
+    #ffffff;
 
   border: 1px solid var(--line);
+
+  box-shadow:
+    0 20px 60px rgba(34, 38, 66, 0.055),
+    0 3px 15px rgba(34, 38, 66, 0.025),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  animation: fadeUp 0.45s ease 0.1s both;
 }
 
 .sectionHeading {
@@ -247,52 +357,56 @@
 
   gap: 20px;
 
-  margin-bottom: 20px;
+  margin-bottom: 21px;
 }
 
 .sectionHeading > div:first-child span {
-  color: var(--purple-3);
+  color: var(--primary);
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 900;
 
-  letter-spacing: 1px;
+  letter-spacing: 1.4px;
 
   text-transform: uppercase;
 }
 
 .sectionHeading h2 {
-  margin: 5px 0 5px;
+  margin: 6px 0 5px;
 
-  color: #e6e6eb;
+  color: #282934;
 
   font-size: 20px;
   font-weight: 900;
+
+  letter-spacing: -0.3px;
 }
 
 .sectionHeading p {
   margin: 0;
 
-  color: #666670;
+  color: #7b7f8d;
 
   font-size: 13px;
 }
 
 .pdfBadge {
-  padding: 7px 10px;
+  padding: 7px 11px;
 
   border-radius: 8px;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.07);
 
-  border: 1px solid rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(72, 61, 246, 0.14);
 
-  color: var(--purple-3);
+  color: var(--primary);
 
-  font-size: 13px;
-  font-weight: 900;
+  font-size: 12px;
+  font-weight: 950;
 
-  letter-spacing: 0.7px;
+  letter-spacing: 0.8px;
+
+  box-shadow: 0 5px 20px rgba(72, 61, 246, 0.05);
 }
 
 .documents {
@@ -300,35 +414,57 @@
 
   grid-template-columns: repeat(3, 1fr);
 
-  gap: 10px;
+  gap: 11px;
 }
+
+/* =========================================================
+   DOCUMENT CARD
+========================================================= */
 
 .documentCard {
   min-width: 0;
 
   padding: 17px;
 
-  border-radius: 16px;
+  border-radius: 17px;
 
-  background: #111117;
+  background: linear-gradient(145deg, #ffffff, #fafbfe);
 
-  border: 1px solid rgba(255, 255, 255, 0.055);
+  border: 1px solid #e8e9ef;
 
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .documentCard:hover {
-  border-color: rgba(139, 92, 246, 0.18);
+  transform: translateY(-2px);
 
-  background: #12121a;
+  border-color: rgba(72, 61, 246, 0.2);
+
+  background: linear-gradient(145deg, rgba(72, 61, 246, 0.025), #ffffff);
+
+  box-shadow:
+    0 14px 35px rgba(34, 38, 66, 0.08),
+    0 2px 8px rgba(72, 61, 246, 0.035);
 }
 
 .documentCard.uploaded {
-  border-color: rgba(139, 92, 246, 0.25);
+  border-color: rgba(72, 61, 246, 0.28);
 
-  background: linear-gradient(145deg, rgba(139, 92, 246, 0.055), #111117);
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(72, 61, 246, 0.07),
+      transparent 55%
+    ),
+    #ffffff;
+
+  box-shadow:
+    0 10px 35px rgba(72, 61, 246, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .documentTop {
@@ -338,23 +474,25 @@
 }
 
 .documentNumber {
-  color: #4f4f59;
+  color: #9a9daa;
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 950;
 
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 .uploadedIcon {
   width: 18px;
   height: 18px;
 
-  color: var(--purple-3);
+  color: var(--primary);
+
+  filter: drop-shadow(0 0 7px rgba(72, 61, 246, 0.2));
 }
 
 .documentInfo {
-  min-height: 105px;
+  min-height: 108px;
 
   margin-top: 17px;
 }
@@ -362,10 +500,10 @@
 .documentInfo h3 {
   margin: 0;
 
-  color: #d8d8df;
+  color: #2c2d37;
 
   font-size: 14px;
-  line-height: 1.35;
+  line-height: 1.4;
 
   font-weight: 850;
 }
@@ -373,15 +511,17 @@
 .documentInfo p {
   margin: 7px 0 0;
 
-  color: #64646e;
+  color: #777b89;
 
-  font-size: 14px;
+  font-size: 13px;
 
   line-height: 1.55;
 }
 
 .uploadButton {
-  height: 42px;
+  position: relative;
+
+  height: 43px;
 
   display: flex;
   align-items: center;
@@ -391,13 +531,13 @@
 
   border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.025);
+  background: #f8f8fb;
 
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border: 1px dashed #d8d9e2;
 
-  color: #898993;
+  color: #6f7381;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
 
   cursor: pointer;
@@ -405,21 +545,28 @@
   transition:
     color 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .uploadButton:hover {
-  color: var(--purple-3);
+  color: var(--primary);
 
-  background: rgba(139, 92, 246, 0.06);
+  background: rgba(72, 61, 246, 0.045);
 
-  border-color: rgba(139, 92, 246, 0.25);
+  border-color: rgba(72, 61, 246, 0.3);
+
+  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.06);
 }
 
 .uploadButton svg {
   width: 15px;
   height: 15px;
 }
+
+/* =========================================================
+   FILE PREVIEW
+========================================================= */
 
 .filePreview {
   min-width: 0;
@@ -429,15 +576,15 @@
 
   gap: 8px;
 
-  height: 42px;
+  height: 43px;
 
   padding: 0 8px;
 
   border-radius: 10px;
 
-  background: rgba(139, 92, 246, 0.06);
+  background: rgba(72, 61, 246, 0.055);
 
-  border: 1px solid rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(72, 61, 246, 0.13);
 }
 
 .fileIcon {
@@ -452,9 +599,9 @@
 
   border-radius: 7px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(72, 61, 246, 0.1);
 
-  color: var(--purple-3);
+  color: var(--primary);
 }
 
 .fileIcon svg {
@@ -476,9 +623,9 @@
 .fileName strong {
   overflow: hidden;
 
-  color: #bdbdc6;
+  color: #4b4d59;
 
-  font-size: 14px;
+  font-size: 12px;
 
   font-weight: 800;
 
@@ -488,9 +635,9 @@
 }
 
 .fileName span {
-  color: #595963;
+  color: #9295a1;
 
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .removeFile {
@@ -509,7 +656,7 @@
 
   background: transparent;
 
-  color: #666670;
+  color: #8b8e9a;
 
   cursor: pointer;
 
@@ -519,9 +666,9 @@
 }
 
 .removeFile:hover {
-  color: #fff;
+  color: #33343e;
 
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.055);
 }
 
 .removeFile svg {
@@ -542,16 +689,20 @@
   margin-top: 14px;
   padding: 18px 20px;
 
-  border-radius: 17px;
+  border-radius: 18px;
 
-  background: #0d0d12;
+  background: #ffffff;
 
   border: 1px solid var(--line);
+
+  box-shadow: 0 8px 25px rgba(34, 38, 66, 0.035);
+
+  animation: fadeUp 0.45s ease 0.15s both;
 }
 
 .requirementIcon {
-  width: 37px;
-  height: 37px;
+  width: 38px;
+  height: 38px;
 
   flex-shrink: 0;
 
@@ -561,9 +712,11 @@
 
   border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.035);
+  background: #f5f5f8;
 
-  color: #777782;
+  border: 1px solid #ececf1;
+
+  color: #777b88;
 }
 
 .requirementIcon svg {
@@ -572,7 +725,7 @@
 }
 
 .requirements strong {
-  color: #bdbdc6;
+  color: #484a56;
 
   font-size: 13px;
   font-weight: 850;
@@ -582,7 +735,7 @@
   display: flex;
   flex-wrap: wrap;
 
-  gap: 7px 20px;
+  gap: 7px 22px;
 
   margin: 8px 0 0;
   padding: 0;
@@ -591,9 +744,9 @@
 }
 
 .requirements li {
-  color: #62626c;
+  color: #777a87;
 
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .requirements li::before {
@@ -601,7 +754,7 @@
 
   margin-right: 6px;
 
-  color: var(--purple);
+  color: var(--primary);
 }
 
 /* =========================================================
@@ -618,15 +771,20 @@
   margin-top: 14px;
   padding: 20px;
 
-  border-radius: 18px;
+  border-radius: 19px;
 
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.07),
-    rgba(139, 92, 246, 0.025)
-  );
+  background:
+    radial-gradient(circle at 0% 50%, rgba(72, 61, 246, 0.06), transparent 45%),
+    linear-gradient(135deg, rgba(72, 61, 246, 0.055), rgba(72, 61, 246, 0.015)),
+    #ffffff;
 
-  border: 1px solid rgba(139, 92, 246, 0.13);
+  border: 1px solid rgba(72, 61, 246, 0.13);
+
+  box-shadow:
+    0 15px 45px rgba(34, 38, 66, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  animation: fadeUp 0.45s ease 0.2s both;
 }
 
 .submitText {
@@ -644,13 +802,15 @@
 
   margin-top: 2px;
 
-  color: var(--purple-3);
+  color: var(--primary);
+
+  filter: drop-shadow(0 0 7px rgba(72, 61, 246, 0.15));
 }
 
 .submitText strong {
   display: block;
 
-  color: #cfcfd6;
+  color: #464852;
 
   font-size: 13px;
   font-weight: 850;
@@ -661,17 +821,21 @@
 
   margin: 5px 0 0;
 
-  color: #686873;
+  color: #777b88;
 
-  font-size: 13px;
+  font-size: 12px;
 
-  line-height: 1.55;
+  line-height: 1.6;
 }
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 .submitButton,
 .primaryButton,
 .modalButton {
-  height: 44px;
+  height: 45px;
 
   display: inline-flex;
   align-items: center;
@@ -681,26 +845,28 @@
 
   flex-shrink: 0;
 
-  padding: 0 16px;
+  padding: 0 17px;
 
   border-radius: 11px;
 
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: linear-gradient(135deg, #5b51ff, #483df6);
 
-  border: 0;
+  border: 1px solid rgba(72, 61, 246, 0.2);
 
-  color: #fff;
+  color: #ffffff;
 
   font-family: inherit;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 850;
 
   text-decoration: none;
 
   cursor: pointer;
 
-  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+  box-shadow:
+    0 12px 30px rgba(72, 61, 246, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
   transition:
     transform 0.2s ease,
@@ -713,13 +879,22 @@
 .modalButton:hover {
   transform: translateY(-2px);
 
-  filter: brightness(1.08);
+  filter: brightness(1.05);
 
-  box-shadow: 0 14px 35px rgba(124, 58, 237, 0.3);
+  box-shadow:
+    0 18px 40px rgba(72, 61, 246, 0.28),
+    0 0 25px rgba(72, 61, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.submitButton:active:not(:disabled),
+.primaryButton:active,
+.modalButton:active {
+  transform: translateY(0);
 }
 
 .submitButton:disabled {
-  opacity: 0.35;
+  opacity: 0.4;
 
   cursor: not-allowed;
 
@@ -738,74 +913,122 @@
 ========================================================= */
 
 .statusCard {
+  position: relative;
+  z-index: 2;
+
   width: min(580px, 100%);
 
   margin: 80px auto;
 
-  padding: 45px 35px;
+  padding: 48px 38px;
 
   text-align: center;
 
-  border-radius: 25px;
+  border-radius: 28px;
 
-  background: #0d0d12;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(72, 61, 246, 0.075),
+      transparent 50%
+    ),
+    linear-gradient(145deg, #ffffff, #fafaff);
 
-  border: 1px solid var(--line);
+  border: 1px solid rgba(72, 61, 246, 0.12);
 
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 35px 100px rgba(34, 38, 66, 0.1),
+    0 0 60px rgba(72, 61, 246, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  animation: cardAppear 0.45s ease both;
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .statusIcon {
-  width: 68px;
-  height: 68px;
+  width: 74px;
+  height: 74px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin: 0 auto 20px;
+  margin: 0 auto 22px;
 
-  border-radius: 20px;
+  border-radius: 21px;
 
-  background: rgba(139, 92, 246, 0.1);
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(111, 102, 255, 0.16),
+      transparent 55%
+    ),
+    rgba(72, 61, 246, 0.08);
 
-  color: var(--purple-3);
+  border: 1px solid rgba(72, 61, 246, 0.16);
+
+  color: var(--primary);
+
+  box-shadow:
+    0 18px 45px rgba(72, 61, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .statusIcon svg {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
 }
 
 .statusIcon.success {
-  color: #a78bfa;
+  color: var(--primary);
 }
 
 .statusIcon.error {
-  color: #f87171;
+  color: #e05252;
 
-  background: rgba(239, 68, 68, 0.08);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(224, 82, 82, 0.1), transparent 55%),
+    rgba(224, 82, 82, 0.055);
+
+  border-color: rgba(224, 82, 82, 0.14);
+
+  box-shadow:
+    0 18px 45px rgba(224, 82, 82, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .statusCard h1 {
   margin: 0;
 
-  color: #e8e8ed;
+  color: #24252e;
 
-  font-size: 25px;
+  font-size: 27px;
   font-weight: 950;
+
+  letter-spacing: -0.7px;
 }
 
 .statusCard > p {
-  margin: 12px auto 25px;
+  margin: 13px auto 27px;
 
-  max-width: 460px;
+  max-width: 465px;
 
-  color: #70707b;
+  color: #747784;
 
-  font-size: 13px;
+  font-size: 14px;
 
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .reason {
@@ -815,25 +1038,26 @@
 
   text-align: left;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(224, 82, 82, 0.045);
 
-  border: 1px solid rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(224, 82, 82, 0.12);
 }
 
 .reason strong {
-  color: #e58b8b;
+  color: #c94d4d;
 
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .reason p {
   margin: 5px 0 0;
 
-  color: #888;
+  color: #777;
 
-  font-size: 14px;
+  font-size: 13px;
+
   line-height: 1.5;
 }
 
@@ -854,9 +1078,21 @@
 
   padding: 20px;
 
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(24, 25, 35, 0.42);
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+
+  animation: overlayAppear 0.2s ease both;
+}
+
+@keyframes overlayAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -864,23 +1100,40 @@
 
   width: min(480px, 100%);
 
-  padding: 34px;
+  padding: 36px;
 
   text-align: center;
 
-  border-radius: 24px;
+  border-radius: 26px;
 
   background:
     radial-gradient(
-      circle at 50% -20%,
-      rgba(139, 92, 246, 0.12),
-      transparent 40%
+      circle at 50% -15%,
+      rgba(72, 61, 246, 0.09),
+      transparent 45%
     ),
-    #111117;
+    #ffffff;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(72, 61, 246, 0.13);
 
-  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 40px 120px rgba(25, 27, 43, 0.2),
+    0 0 60px rgba(72, 61, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  animation: modalAppear 0.3s ease both;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modalClose {
@@ -896,25 +1149,28 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid #e9e9ee;
 
   border-radius: 9px;
 
-  background: rgba(255, 255, 255, 0.025);
+  background: #fafafd;
 
-  color: #686873;
+  color: #858894;
 
   cursor: pointer;
 
   transition:
     color 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .modalClose:hover {
-  color: #fff;
+  color: #33343e;
 
-  background: rgba(255, 255, 255, 0.07);
+  background: #f2f2f7;
+
+  border-color: #dedfe7;
 }
 
 .modalClose svg {
@@ -923,22 +1179,32 @@
 }
 
 .modalIcon {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin: 5px auto 15px;
+  margin: 4px auto 16px;
 
-  border-radius: 18px;
+  border-radius: 19px;
 
-  background: rgba(139, 92, 246, 0.09);
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(111, 102, 255, 0.13),
+      transparent 55%
+    ),
+    rgba(72, 61, 246, 0.07);
 
-  border: 1px solid rgba(139, 92, 246, 0.17);
+  border: 1px solid rgba(72, 61, 246, 0.16);
 
-  color: var(--purple-3);
+  color: var(--primary);
+
+  box-shadow:
+    0 14px 35px rgba(72, 61, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .modalIcon svg {
@@ -949,20 +1215,22 @@
 .modalBadge {
   width: fit-content;
 
-  margin: 0 auto 10px;
+  margin: 0 auto 11px;
 
-  padding: 5px 9px;
+  padding: 5px 10px;
 
   border-radius: 7px;
 
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(72, 61, 246, 0.07);
 
-  color: var(--purple-3);
+  border: 1px solid rgba(72, 61, 246, 0.1);
 
-  font-size: 14px;
-  font-weight: 900;
+  color: var(--primary);
 
-  letter-spacing: 0.8px;
+  font-size: 11px;
+  font-weight: 950;
+
+  letter-spacing: 1px;
 
   text-transform: uppercase;
 }
@@ -970,10 +1238,12 @@
 .modal h2 {
   margin: 0;
 
-  color: #e7e7ec;
+  color: #24252e;
 
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 950;
+
+  letter-spacing: -0.5px;
 }
 
 .modal > p {
@@ -981,11 +1251,11 @@
 
   margin: 9px auto 0;
 
-  color: #71717b;
+  color: #747784;
 
-  font-size: 14px;
+  font-size: 13px;
 
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 .modalNote {
@@ -994,17 +1264,17 @@
 
   gap: 9px;
 
-  margin-top: 20px;
+  margin-top: 21px;
 
-  padding: 12px;
+  padding: 13px;
 
   text-align: left;
 
-  border-radius: 11px;
+  border-radius: 12px;
 
-  background: rgba(255, 255, 255, 0.025);
+  background: #f8f8fb;
 
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid #ebecf1;
 }
 
 .modalNote svg {
@@ -1013,21 +1283,39 @@
 
   flex-shrink: 0;
 
-  color: var(--purple-3);
+  margin-top: 1px;
+
+  color: var(--primary);
 }
 
 .modalNote span {
-  color: #676771;
+  color: #6f7280;
 
-  font-size: 14px;
+  font-size: 12px;
 
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .modalButton {
   width: 100%;
 
   margin-top: 18px;
+}
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* =========================================================
@@ -1044,6 +1332,15 @@
 
     margin-bottom: 16px;
   }
+
+  .documentCard {
+    padding: 18px;
+  }
+
+  .uploadButton,
+  .filePreview {
+    height: 45px;
+  }
 }
 
 /* =========================================================
@@ -1055,45 +1352,111 @@
     padding: 25px 12px 60px;
   }
 
+  .container {
+    width: 100%;
+  }
+
+  .back {
+    margin-bottom: 18px;
+  }
+
   .hero {
     flex-direction: column;
 
-    padding: 24px 20px;
+    padding: 25px 20px;
+
+    border-radius: 23px;
   }
 
   .heroIcon {
-    width: 48px;
-    height: 48px;
+    width: 49px;
+    height: 49px;
+
+    border-radius: 14px;
+  }
+
+  .heroIcon svg {
+    width: 25px;
+    height: 25px;
   }
 
   .hero h1 {
     font-size: 25px;
+
+    letter-spacing: -0.8px;
   }
 
   .hero p {
+    margin-top: 11px;
+
     font-size: 13px;
+
+    line-height: 1.7;
   }
 
   .infoCard {
     padding: 17px;
+
+    border-radius: 17px;
+  }
+
+  .infoIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .infoCard p {
+    font-size: 12px;
   }
 
   .documentsSection {
-    padding: 20px 15px;
+    padding: 21px 15px;
+
+    border-radius: 20px;
   }
 
   .sectionHeading {
     align-items: center;
+
+    gap: 12px;
   }
 
-  .submitSection {
-    align-items: stretch;
-
-    flex-direction: column;
+  .sectionHeading h2 {
+    font-size: 18px;
   }
 
-  .submitButton {
-    width: 100%;
+  .sectionHeading p {
+    font-size: 12px;
+
+    line-height: 1.5;
+  }
+
+  .pdfBadge {
+    flex-shrink: 0;
+  }
+
+  .documentCard {
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .documentInfo {
+    margin-top: 14px;
+  }
+
+  .documentInfo h3 {
+    font-size: 14px;
+  }
+
+  .documentInfo p {
+    font-size: 12px;
+  }
+
+  .requirements {
+    padding: 16px;
+
+    border-radius: 16px;
   }
 
   .requirements ul {
@@ -1102,13 +1465,60 @@
     gap: 6px;
   }
 
+  .requirements li {
+    font-size: 12px;
+  }
+
+  .submitSection {
+    align-items: stretch;
+
+    flex-direction: column;
+
+    padding: 17px;
+
+    border-radius: 17px;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+
   .statusCard {
     margin: 40px auto;
 
-    padding: 35px 22px;
+    padding: 38px 22px;
+
+    border-radius: 23px;
+  }
+
+  .statusIcon {
+    width: 68px;
+    height: 68px;
+  }
+
+  .statusCard h1 {
+    font-size: 24px;
+  }
+
+  .statusCard > p {
+    font-size: 13px;
+  }
+
+  .modalOverlay {
+    padding: 14px;
   }
 
   .modal {
-    padding: 30px 20px;
+    padding: 31px 20px;
+
+    border-radius: 23px;
+  }
+
+  .modal h2 {
+    font-size: 22px;
+  }
+
+  .modal > p {
+    font-size: 13px;
   }
 }
