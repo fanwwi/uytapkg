@@ -1226,29 +1226,6 @@ export default function SearchMapClient() {
             </div>
           </div>
 
-          {/* SEARCH */}
-
-          <div className={styles.searchBox}>
-            <Search />
-
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Поиск по адресу или объекту..."
-            />
-
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className={styles.clearSearch}
-                aria-label="Очистить поиск"
-              >
-                <X />
-              </button>
-            )}
-          </div>
-
           {/* FILTER TOGGLE */}
 
           <button
