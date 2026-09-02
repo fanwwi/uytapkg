@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { createListing, getConstants, uploadImage } from "@/utils/api";
+import { createListing, getConstants, uploadListingPhoto } from "@/utils/api";
 
 import StepProgress from "./components/StepProgress/StepProgress";
 import StepImage from "./components/StepImage/StepImage";
@@ -306,7 +306,7 @@ export default function AddProductPage() {
       for (const img of form.images || []) {
         if (img.file) {
           try {
-            const uploadedUrl = await uploadImage(img.file);
+            const uploadedUrl = await uploadListingPhoto(token, img.file);
 
             photos.push(uploadedUrl);
           } catch (e) {

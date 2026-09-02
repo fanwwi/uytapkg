@@ -87,3 +87,20 @@ export const uploadVerificationDocument = multer({
   ),
   limits: { fileSize: 10 * 1024 * 1024 },
 }).single("document");
+
+/** POST /api/admin/banners/upload-image — поле `image`, до 5 МБ, JPEG/PNG/WebP */
+const BANNER_IMAGE_MIME = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+]);
+
+export const uploadBannerImage = multer({
+  storage,
+  fileFilter: createImageFilter(
+    BANNER_IMAGE_MIME,
+    "Допустимы только изображения: JPEG, PNG, WebP"
+  ),
+  limits: { fileSize: 5 * 1024 * 1024 },
+}).single("image");

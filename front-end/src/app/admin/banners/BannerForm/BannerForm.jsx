@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Upload, Link as LinkIcon, CalendarDays } from "lucide-react";
+import { X, Upload, Link as LinkIcon, CalendarDays, AlertCircle, LoaderCircle } from "lucide-react";
 
 import styles from "./BannerForm.module.css";
+import { uploadBannerImage } from "@/utils/api";
 
 const emptyForm = {
   title: "",
-  image: "",
+  imageUrl: "",
   link: "",
   startDate: "",
   endDate: "",
@@ -25,6 +26,10 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
   });
 
   const [isDragging, setIsDragging] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const dragRef = useRef({
     startX: 0,
@@ -42,7 +47,7 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
 
       setForm({
         title: initialData.title || "",
-        image: initialData.image || "",
+        imageUrl: initialData.imageUrl || "",
         link: initialData.link || "",
         startDate: initialData.startDate || "",
         endDate: initialData.endDate || "",
@@ -50,7 +55,7 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
         imagePositionY: y,
       });
 
-      setPreview(initialData.image || "");
+      setPreview(initialData.imageUrl || "");
 
       setPosition({
         x,
@@ -65,6 +70,11 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
         y: 50,
       });
     }
+
+    setUploadError("");
+    setSubmitError("");
+    setUploading(false);
+    setSaving(false);
   }, [initialData]);
 
   function handleChange(event) {
@@ -76,42 +86,59 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
     }));
   }
 
-  function handleImageUpload(event) {
+  async function handleImageUpload(event) {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Пожалуйста, выберите изображение.");
+      setUploadError("Пожалуйста, выберите изображение.");
       return;
     }
 
     const maxSize = 10 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      alert("Размер изображения не должен превышать 10 МБ.");
+      setUploadError("Размер изображения не должен превышать 10 МБ.");
       return;
     }
 
-    const imageUrl = URL.createObjectURL(file);
+    setUploadError("");
 
-    setPreview(imageUrl);
+    // Локальный blob — только для предпросмотра и позиционирования,
+    // на сервер он не отправляется.
+    const localPreview = URL.createObjectURL(file);
+    setPreview(localPreview);
 
-    setPosition({
-      x: 50,
-      y: 50,
-    });
-
+    setPosition({ x: 50, y: 50 });
     setForm((prev) => ({
       ...prev,
-      image: imageUrl,
+      imageUrl: "",
       imagePositionX: 50,
       imagePositionY: 50,
     }));
+
+    setUploading(true);
+
+    try {
+      const token = localStorage.getItem("uytap_token");
+      const { url } = await uploadBannerImage(token, file);
+
+      setForm((prev) => ({
+        ...prev,
+        imageUrl: url,
+      }));
+    } catch (error) {
+      setUploadError(error.message || "Не удалось загрузить изображение");
+      setPreview("");
+    } finally {
+      setUploading(false);
+    }
   }
 
   function removeImage() {
     setPreview("");
+    setUploadError("");
 
     setPosition({
       x: 50,
@@ -120,7 +147,7 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
 
     setForm((prev) => ({
       ...prev,
-      image: "",
+      imageUrl: "",
       imagePositionX: 50,
       imagePositionY: 50,
     }));
@@ -209,35 +236,50 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
     moveDrag(touch.clientX, touch.clientY);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
+    setSubmitError("");
+
     if (!form.title.trim()) {
-      alert("Введите название баннера");
+      setSubmitError("Введите название баннера");
       return;
     }
 
-    if (!form.image.trim()) {
-      alert("Добавьте изображение баннера");
+    if (uploading) {
+      setSubmitError("Дождитесь окончания загрузки изображения");
+      return;
+    }
+
+    if (!form.imageUrl.trim()) {
+      setSubmitError("Добавьте изображение баннера");
       return;
     }
 
     if (!form.startDate) {
-      alert("Выберите дату начала");
+      setSubmitError("Выберите дату начала");
       return;
     }
 
     if (form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
-      alert("Дата окончания не может быть раньше даты начала");
+      setSubmitError("Дата окончания не может быть раньше даты начала");
       return;
     }
 
-    onSubmit({
-      ...form,
-      imagePositionX: position.x,
-      imagePositionY: position.y,
-      endDate: form.endDate || null,
-    });
+    setSaving(true);
+
+    try {
+      await onSubmit({
+        ...form,
+        imagePositionX: position.x,
+        imagePositionY: position.y,
+        endDate: form.endDate || null,
+      });
+    } catch (error) {
+      setSubmitError(error.message || "Не удалось сохранить баннер");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -306,6 +348,13 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
                       }}
                     />
 
+                    {uploading && (
+                      <div className={styles.uploadingOverlay}>
+                        <LoaderCircle className={styles.spinIcon} />
+                        <span>Загружаем...</span>
+                      </div>
+                    )}
+
                     <div className={styles.dragOverlay}>
                       <span>Перетащите изображение</span>
                     </div>
@@ -341,7 +390,14 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
                 )}
               </div>
 
-              {preview && (
+              {uploadError && (
+                <div className={styles.fieldError}>
+                  <AlertCircle size={14} />
+                  {uploadError}
+                </div>
+              )}
+
+              {preview && !uploading && (
                 <div className={styles.imageInstruction}>
                   <span>
                     Зажмите изображение и перетащите его, чтобы выбрать нужную
@@ -381,12 +437,13 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
                   name="link"
                   value={form.link}
                   onChange={handleChange}
-                  placeholder="https://example.com или /complexes/1"
+                  placeholder="https://example.com или /complexes"
                 />
               </div>
 
               <small>
                 Пользователь перейдёт по этой ссылке при клике на баннер.
+                Допустимы только адреса, начинающиеся с / или http(s)://.
               </small>
             </div>
 
@@ -428,16 +485,28 @@ export default function BannerForm({ initialData, onSubmit, onCancel }) {
           </div>
 
           <div className={styles.footer}>
+            {submitError && (
+              <div className={styles.fieldError} style={{ marginRight: "auto" }}>
+                <AlertCircle size={14} />
+                {submitError}
+              </div>
+            )}
+
             <button
               type="button"
               className={styles.cancelButton}
               onClick={onCancel}
+              disabled={saving}
             >
               Отмена
             </button>
 
-            <button type="submit" className={styles.submitButton}>
-              {initialData ? "Сохранить изменения" : "Добавить баннер"}
+            <button type="submit" className={styles.submitButton} disabled={saving || uploading}>
+              {saving
+                ? "Сохраняем..."
+                : initialData
+                  ? "Сохранить изменения"
+                  : "Добавить баннер"}
             </button>
           </div>
         </form>

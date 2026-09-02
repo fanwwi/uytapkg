@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { supabase } from "../config/db.js";
 import { calculateTariffTotal } from "../constants/tariffs.js";
+import { getPricingSettings } from "../utils/pricingSettings.js";
 import * as odengi from "../services/odengiService.js";
 import { activateSubscription } from "../services/subscriptionsService.js";
 
@@ -39,8 +40,10 @@ export const createPayment = async (req, res) => {
       });
     }
 
-    // Сумма считается ТОЛЬКО на сервере — клиенту нельзя доверять цену
-    const calc = calculateTariffTotal(tariffId, months);
+    // Сумма считается ТОЛЬКО на сервере, по актуальным ценам из настроек —
+    // клиенту нельзя доверять цену
+    const pricing = await getPricingSettings();
+    const calc = calculateTariffTotal(tariffId, months, pricing);
 
     if (!calc || calc.total <= 0) {
       return res.status(400).json({

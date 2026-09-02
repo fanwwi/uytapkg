@@ -25,7 +25,7 @@ import {
 import styles from "./Payments.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import Sidebar from "../components/Sidebar/Sidebar";
-import { getAdminPayments } from "@/utils/api";
+import { getAdminPayments, getPricing, updatePricing } from "@/utils/api";
 import { generateReceiptPdf } from "@/utils/generateReceiptPdf";
 import ReceiptDocument from "@/app/payment/PaymentReceiptModal/ReceiptDocument";
 import PricingEditModal from "./PricingModal/PricingModal";
@@ -88,9 +88,9 @@ export default function PaymentsPage() {
    * =========================================================
    * CURRENT PRICING
    *
-   * Пока хранится локально.
-   * После подключения backend эти значения
-   * можно загружать через API.
+   * Загружается с бэкенда (GET /api/settings/pricing) — это
+   * публичный эндпоинт, отдающий актуальные цены, которые
+   * реально используются при расчёте суммы платежа на сервере.
    * =========================================================
    */
 
@@ -113,6 +113,12 @@ export default function PaymentsPage() {
       instagram: 390,
     },
   });
+
+  useEffect(() => {
+    getPricing()
+      .then((data) => setPricing(data))
+      .catch((err) => console.error("Ошибка загрузки цен:", err));
+  }, []);
 
   /*
    * =========================================================
@@ -168,16 +174,14 @@ export default function PaymentsPage() {
    * =========================================================
    */
 
-  const handleSavePricing = (nextPricing) => {
-    setPricing(nextPricing);
+  const handleSavePricing = async (nextPricing) => {
+    const token = localStorage.getItem("uytap_token");
 
-    console.log("UPDATED PRICING:", nextPricing);
-
-    /*
-     * Здесь потом можно подключить API:
-     *
-     * await updatePricing(token, nextPricing);
-     */
+    // Сумма к оплате пересчитывается на сервере, поэтому источником
+    // истины после сохранения считаем то, что вернул бэкенд (он же
+    // нормализует значения), а не то, что было отправлено из формы.
+    const saved = await updatePricing(token, nextPricing);
+    setPricing(saved);
   };
 
   /*

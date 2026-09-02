@@ -1,6 +1,7 @@
 import express from "express";
 import {
   listPayments,
+  updatePricing,
   listLawyers,
   createLawyer,
   updateLawyer,
@@ -8,12 +9,41 @@ import {
   listDevelopersAdmin,
   verifyDeveloperAdmin,
 } from "../controllers/adminController.js";
+import {
+  getAdminBanners,
+  uploadBannerImage,
+  createBanner,
+  updateBanner,
+  toggleBanner,
+  deleteBanner,
+} from "../controllers/bannersController.js";
 import { authenticateToken, requireAdmin } from "../middleware/auth.js";
+import { uploadBannerImage as uploadBannerImageFile } from "../middleware/upload.js";
 
 const router = express.Router();
 
+// multer-обёртка с человекочитаемыми ошибками — тот же паттерн, что и
+// у остальных загрузок файлов в проекте (см. authRoutes.js).
+const handleBannerImageUpload = (req, res, next) => {
+  uploadBannerImageFile(req, res, (err) => {
+    if (err) {
+      const isLimit = err.code === "LIMIT_FILE_SIZE";
+      return res.status(400).json({
+        success: false,
+        message: isLimit
+          ? "Размер изображения не должен превышать 5 МБ"
+          : err.message || "Ошибка загрузки файла",
+      });
+    }
+    next();
+  });
+};
+
 // Все роуты в этом файле — только для role='admin'.
 router.get("/payments", authenticateToken, requireAdmin, listPayments);
+
+// Изменение цен тарифов и услуг (чтение — публичное, /api/settings/pricing)
+router.put("/pricing", authenticateToken, requireAdmin, updatePricing);
 
 router.get("/lawyers", authenticateToken, requireAdmin, listLawyers);
 router.post("/lawyers", authenticateToken, requireAdmin, createLawyer);
@@ -23,5 +53,19 @@ router.delete("/lawyers/:id", authenticateToken, requireAdmin, deleteLawyer);
 // Управление верификацией застройщиков
 router.get("/developers", authenticateToken, requireAdmin, listDevelopersAdmin);
 router.put("/developers/:id/verify", authenticateToken, requireAdmin, verifyDeveloperAdmin);
+
+// Управление рекламными баннерами (публичное чтение — /api/banners)
+router.get("/banners", authenticateToken, requireAdmin, getAdminBanners);
+router.post(
+  "/banners/upload-image",
+  authenticateToken,
+  requireAdmin,
+  handleBannerImageUpload,
+  uploadBannerImage
+);
+router.post("/banners", authenticateToken, requireAdmin, createBanner);
+router.put("/banners/:id", authenticateToken, requireAdmin, updateBanner);
+router.patch("/banners/:id/toggle", authenticateToken, requireAdmin, toggleBanner);
+router.delete("/banners/:id", authenticateToken, requireAdmin, deleteBanner);
 
 export default router;

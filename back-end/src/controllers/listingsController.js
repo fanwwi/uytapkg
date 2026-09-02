@@ -407,6 +407,15 @@ export const updateListing = async (req, res) => {
     if (data.isResort !== undefined) updates.is_resort = data.isResort;
     if (data.resortFilters !== undefined) updates.resort_filters = data.resortFilters;
     if (data.features !== undefined) updates.features = data.features;
+
+    // TODO(security): сейчас статус/продвижение владелец может менять сам
+    // через этот эндпоинт (временно оставлено открытым для тестирования
+    // по просьбе пользователя, 2026-09-02). Как только появится платная
+    // покупка продвижения (VIP/ТОП/срочно) и реальный воркфлоу модерации,
+    // нужно вернуть проверку userRole === "admin" для status==="moderation",
+    // promotionStatus и isUrgent — иначе любой пользователь может бесплатно
+    // включить себе платное продвижение или снять объявление с модерации
+    // простым PUT-запросом.
     if (data.status !== undefined) updates.status = data.status;
     if (data.promotionStatus !== undefined) updates.promotion_status = data.promotionStatus;
     if (data.isUrgent !== undefined) updates.is_urgent = data.isUrgent;

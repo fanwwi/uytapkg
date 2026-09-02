@@ -219,6 +219,26 @@ export async function uploadImage(file) {
   return data.url;
 }
 
+// Фото объявлений — сервер всегда накладывает водяной знак (лого UyTap)
+export async function uploadListingPhoto(token, file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  const response = await fetch(`${API_URL}/upload/listing-photo`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке фотографии");
+  }
+  return data.url;
+}
+
 export async function uploadAvatar(token, file) {
   const form = new FormData();
   form.append("avatar", file);
@@ -448,6 +468,39 @@ export async function getAdminPayments(token) {
   return data;
 }
 
+// Текущие цены тарифов и услуг — публичный эндпоинт, без токена
+export async function getPricing() {
+  const response = await fetch(`${API_URL}/settings/pricing`);
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения цен");
+  }
+
+  return data.data;
+}
+
+// Изменение цен тарифов и услуг — только для админа
+export async function updatePricing(token, pricing) {
+  const response = await fetch(`${API_URL}/admin/pricing`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(pricing),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось сохранить цены");
+  }
+
+  return data.data;
+}
+
 // 12. Юристы
 
 // Публичный список — только активные (страница /lawyers)
@@ -600,6 +653,112 @@ export async function verifyDeveloperAdmin(token, id, isVerified, rejectionReaso
   const data = await response.json();
   if (!response.ok || !data.success) {
     throw new Error(data.message || "Ошибка при верификации застройщика");
+  }
+  return data;
+}
+
+// 13. Рекламные баннеры
+
+// Публичный список активных баннеров — без токена
+export async function getBanners() {
+  const response = await fetch(`${API_URL}/banners`);
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения баннеров");
+  }
+  return data.data;
+}
+
+// Список всех баннеров для админки
+export async function getAdminBanners(token) {
+  const response = await fetch(`${API_URL}/admin/banners`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения списка баннеров");
+  }
+  return data.data;
+}
+
+// Загрузка изображения баннера — возвращает { success, url }
+export async function uploadBannerImage(token, file) {
+  const form = new FormData();
+  form.append("image", file);
+
+  const response = await fetch(`${API_URL}/admin/banners/upload-image`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке изображения");
+  }
+  return data;
+}
+
+export async function createBanner(token, banner) {
+  const response = await fetch(`${API_URL}/admin/banners`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(banner),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось создать баннер");
+  }
+  return data.data;
+}
+
+export async function updateBanner(token, id, banner) {
+  const response = await fetch(`${API_URL}/admin/banners/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(banner),
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось сохранить баннер");
+  }
+  return data.data;
+}
+
+export async function toggleBanner(token, id) {
+  const response = await fetch(`${API_URL}/admin/banners/${id}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось изменить статус баннера");
+  }
+  return data.data;
+}
+
+export async function deleteBanner(token, id) {
+  const response = await fetch(`${API_URL}/admin/banners/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось удалить баннер");
   }
   return data;
 }

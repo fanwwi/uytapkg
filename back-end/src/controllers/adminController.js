@@ -1,8 +1,9 @@
 import { supabase } from "../config/db.js";
 import { getTariff, calculateTariffTotal } from "../constants/tariffs.js";
-import { createLawyerSchema, updateLawyerSchema } from "../utils/validation.js";
+import { createLawyerSchema, updateLawyerSchema, pricingSchema } from "../utils/validation.js";
 import { toPublicLawyer } from "./lawyersController.js";
 import { getVerificationDocumentSignedUrl } from "../utils/storage.js";
+import { getPricingSettings, savePricingSettings } from "../utils/pricingSettings.js";
 
 const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
 const MAX_REJECTION_REASON_LENGTH = 1000;
@@ -29,11 +30,16 @@ export const listPayments = async (req, res) => {
       });
     }
 
+    const pricing = await getPricingSettings();
+
     const payments = (data || []).map((payment) => {
-      const tariff = getTariff(payment.tariff_id);
+      const tariff = getTariff(payment.tariff_id, pricing);
       // Пересчитываем цену/мес и скидку по тем же правилам, что и при
-      // создании платежа — в БД хранится только итоговая сумма.
-      const calc = calculateTariffTotal(payment.tariff_id, payment.months);
+      // создании платежа — в БД хранится только итоговая сумма. Обрати
+      // внимание: если админ поменял цену тарифа ПОСЛЕ оплаты, здесь
+      // отобразится текущая (актуальная), а не историческая цена — это
+      // ожидаемо, т.к. фактическая сумма платежа берётся из payment.amount.
+      const calc = calculateTariffTotal(payment.tariff_id, payment.months, pricing);
 
       return {
         orderId: payment.order_id,
@@ -71,6 +77,56 @@ export const listPayments = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Ошибка сервера при получении списка платежей",
+    });
+  }
+};
+
+// =======================================================
+// Текущие цены тарифов и услуг (GET /api/settings/pricing)
+//
+// ПУБЛИЧНЫЙ эндпоинт (без авторизации) — цены не являются секретом,
+// их видят страницы /pricing и /payment. Изменение цен доступно
+// только через updatePricing ниже (требует роль admin).
+// =======================================================
+export const getPricing = async (req, res) => {
+  try {
+    const pricing = await getPricingSettings();
+    return res.json({ success: true, data: pricing });
+  } catch (error) {
+    console.error("Get Pricing Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Не удалось получить текущие цены",
+    });
+  }
+};
+
+// =======================================================
+// Изменение цен тарифов и услуг (PUT /api/admin/pricing)
+//
+// Доступ проверяется в роуте через authenticateToken + requireAdmin.
+// Тело запроса строго валидируется zod-схемой — админ не может записать
+// произвольные поля или отрицательные/нечисловые цены.
+// =======================================================
+export const updatePricing = async (req, res) => {
+  try {
+    const result = pricingSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        message: result.error.issues[0]?.message || "Некорректные данные цен",
+      });
+    }
+
+    const saved = await savePricingSettings(result.data);
+
+    return res.json({ success: true, data: saved });
+  } catch (error) {
+    console.error("Update Pricing Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Не удалось сохранить цены",
     });
   }
 };

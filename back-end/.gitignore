@@ -2,3 +2,4 @@
 schema.sql
 index.js
 back-end.env
+node_modules/

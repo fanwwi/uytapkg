@@ -96,12 +96,21 @@ const fallbackParse = (prompt) => {
 // Умный Поиск и Генерация Описания с Gemini AI
 // =======================================================
 
+const MAX_PROMPT_LENGTH = 300;
+
 export const aiSearch = async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    if (!prompt || !prompt.trim()) {
+    if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
       return res.status(400).json({ success: false, message: "Введите текстовый или голосовой запрос" });
+    }
+
+    if (prompt.length > MAX_PROMPT_LENGTH) {
+      return res.status(400).json({
+        success: false,
+        message: `Запрос слишком длинный (максимум ${MAX_PROMPT_LENGTH} символов)`,
+      });
     }
 
     let filters = null;
@@ -134,9 +143,23 @@ export const aiSearch = async (req, res) => {
   }
 };
 
+const MAX_DETAILS_LENGTH = 1000;
+
 export const aiGenerateDescription = async (req, res) => {
   try {
     const { details } = req.body;
+
+    if (!details || typeof details !== "string" || !details.trim()) {
+      return res.status(400).json({ success: false, message: "Укажите характеристики объекта" });
+    }
+
+    if (details.length > MAX_DETAILS_LENGTH) {
+      return res.status(400).json({
+        success: false,
+        message: `Слишком длинный текст (максимум ${MAX_DETAILS_LENGTH} символов)`,
+      });
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
 
     const prompt = `На основе кратких характеристик создай продающее описание недвижимости на русском и кыргызском языках. Верни в формате JSON {"ru": "...", "kg": "..."}. Характеристики: ${details}`;

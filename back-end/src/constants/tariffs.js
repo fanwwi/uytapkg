@@ -1,18 +1,13 @@
 // =======================================================
 // Тарифы UyTap PRO и их актуальные цены.
 //
-// Цены и скидки живут ТОЛЬКО здесь, на сервере. Клиент присылает
-// лишь tariffId/months — сумма к оплате всегда пересчитывается
-// на бэкенде, чтобы никто не мог подделать сумму платежа через
-// query-параметры или тело запроса.
+// Сами цены редактируются админом (см. utils/pricingSettings.js) и
+// хранятся на сервере — но пересчёт суммы к оплате всегда происходит
+// здесь же, на бэкенде, по актуальным ценам. Клиент присылает лишь
+// tariffId/months, сумма никогда не принимается от клиента напрямую,
+// чтобы никто не мог подделать её через query-параметры или тело
+// запроса.
 // =======================================================
-
-// price — стоимость тарифа за 1 месяц в сомах (KGS)
-export const TARIFFS = {
-  start: { id: "start", title: "СТАРТ", price: 390 },
-  optimal: { id: "optimal", title: "ОПТИМАЛЬНЫЙ", price: 790 },
-  business: { id: "business", title: "БИЗНЕС", price: 1890 },
-};
 
 // discountPercent за выбранный период оплаты (в месяцах)
 export const PERIOD_DISCOUNTS = {
@@ -22,13 +17,25 @@ export const PERIOD_DISCOUNTS = {
   12: 35,
 };
 
-export function getTariff(tariffId) {
-  return TARIFFS[tariffId] || null;
+// `pricing` — объект, полученный через getPricingSettings() (см.
+// utils/pricingSettings.js). Передаётся явно, чтобы вызывающий код мог
+// один раз получить актуальные цены и переиспользовать их (например, при
+// расчёте списка платежей в админке), не дёргая хранилище на каждую запись.
+export function getTariff(tariffId, pricing) {
+  if (!pricing) return null;
+
+  const map = {
+    start: { id: "start", title: "СТАРТ", price: pricing.tariffs.start },
+    optimal: { id: "optimal", title: "ОПТИМАЛЬНЫЙ", price: pricing.tariffs.optimal },
+    business: { id: "business", title: "БИЗНЕС", price: pricing.tariffs.business },
+  };
+
+  return map[tariffId] || null;
 }
 
 // Считает финальную сумму в сомах (не в копейках) с учётом скидки за период.
-export function calculateTariffTotal(tariffId, months) {
-  const tariff = getTariff(tariffId);
+export function calculateTariffTotal(tariffId, months, pricing) {
+  const tariff = getTariff(tariffId, pricing);
   if (!tariff) return null;
 
   const period = Number(months);

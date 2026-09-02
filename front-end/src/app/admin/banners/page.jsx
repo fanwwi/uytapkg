@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Image, Plus, Megaphone, CalendarDays } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Image, Plus, Megaphone, CalendarDays, AlertCircle, LoaderCircle } from "lucide-react";
 
 import Sidebar from "../components/Sidebar/Sidebar";
 import Header from "../components/Header/Header";
@@ -10,32 +10,18 @@ import styles from "./Banners.module.css";
 import BannerForm from "./BannerForm/BannerForm";
 import BannerCard from "./BannerCard/BannerCard";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
-
-const initialBanners = [
-  {
-    id: 1,
-    title: "Ипотека от Optima Bank",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1400&q=85",
-    link: "https://optimabank.kg",
-    startDate: "2026-08-01",
-    endDate: "2026-09-01",
-    active: true,
-  },
-  {
-    id: 2,
-    title: "Новые жилые комплексы",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1400&q=85",
-    link: "/complexes",
-    startDate: "2026-08-15",
-    endDate: null,
-    active: true,
-  },
-];
+import {
+  getAdminBanners,
+  createBanner,
+  updateBanner,
+  deleteBanner,
+  toggleBanner,
+} from "@/utils/api";
 
 export default function BannersPage() {
-  const [banners, setBanners] = useState(initialBanners);
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   const [showForm, setShowForm] = useState(false);
   const [editingBanner, setEditingBanner] = useState(null);
@@ -45,27 +31,50 @@ export default function BannersPage() {
   const [bannerToDelete, setBannerToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  function handleAddBanner(data) {
-    const newBanner = {
-      ...data,
-      id: Date.now(),
-      active: true,
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
 
-    setBanners((prev) => [newBanner, ...prev]);
+    getAdminBanners(token)
+      .then((data) => setBanners(data))
+      .catch((err) => {
+        console.error("Ошибка загрузки баннеров:", err);
+        setLoadError(err.message || "Не удалось загрузить баннеры");
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleAddBanner(data) {
+    const token = localStorage.getItem("uytap_token");
+
+    const created = await createBanner(token, {
+      title: data.title,
+      imageUrl: data.imageUrl,
+      link: data.link || null,
+      startDate: data.startDate,
+      endDate: data.endDate || null,
+      imagePositionX: data.imagePositionX,
+      imagePositionY: data.imagePositionY,
+    });
+
+    setBanners((prev) => [created, ...prev]);
     setShowForm(false);
   }
 
-  function handleEditBanner(data) {
+  async function handleEditBanner(data) {
+    const token = localStorage.getItem("uytap_token");
+
+    const updated = await updateBanner(token, editingBanner.id, {
+      title: data.title,
+      imageUrl: data.imageUrl,
+      link: data.link || null,
+      startDate: data.startDate,
+      endDate: data.endDate || null,
+      imagePositionX: data.imagePositionX,
+      imagePositionY: data.imagePositionY,
+    });
+
     setBanners((prev) =>
-      prev.map((banner) =>
-        banner.id === editingBanner.id
-          ? {
-              ...banner,
-              ...data,
-            }
-          : banner,
-      ),
+      prev.map((banner) => (banner.id === updated.id ? updated : banner)),
     );
 
     setEditingBanner(null);
@@ -73,8 +82,9 @@ export default function BannersPage() {
   }
 
   // ОТКРЫТЬ DELETE MODAL
-  function openDeleteModal(banner) {
-    setBannerToDelete(banner);
+  function openDeleteModal(id) {
+    const banner = banners.find((item) => item.id === id);
+    setBannerToDelete(banner || null);
     setDeleteModalOpen(true);
   }
 
@@ -93,11 +103,8 @@ export default function BannersPage() {
     setDeleteLoading(true);
 
     try {
-      /*
-        TODO: API
-
-        await deleteBanner(bannerToDelete.id);
-      */
+      const token = localStorage.getItem("uytap_token");
+      await deleteBanner(token, bannerToDelete.id);
 
       setBanners((prev) =>
         prev.filter((banner) => banner.id !== bannerToDelete.id),
@@ -108,23 +115,39 @@ export default function BannersPage() {
     } catch (error) {
       console.error(error);
 
-      alert("Не удалось удалить баннер.");
+      alert(error.message || "Не удалось удалить баннер.");
     } finally {
       setDeleteLoading(false);
     }
   }
 
-  function handleToggle(id) {
+  async function handleToggle(id) {
+    const token = localStorage.getItem("uytap_token");
+
+    // Оптимистично переключаем локально, откатываем при ошибке.
     setBanners((prev) =>
       prev.map((banner) =>
-        banner.id === id
-          ? {
-              ...banner,
-              active: !banner.active,
-            }
-          : banner,
+        banner.id === id ? { ...banner, active: !banner.active } : banner,
       ),
     );
+
+    try {
+      const updated = await toggleBanner(token, id);
+
+      setBanners((prev) =>
+        prev.map((banner) => (banner.id === id ? updated : banner)),
+      );
+    } catch (error) {
+      console.error(error);
+
+      setBanners((prev) =>
+        prev.map((banner) =>
+          banner.id === id ? { ...banner, active: !banner.active } : banner,
+        ),
+      );
+
+      alert(error.message || "Не удалось изменить статус баннера.");
+    }
   }
 
   function openEdit(banner) {
@@ -248,7 +271,18 @@ export default function BannersPage() {
               </div>
             </div>
 
-            {banners.length > 0 ? (
+            {loading ? (
+              <div className={styles.empty}>
+                <LoaderCircle className={styles.spin} />
+                <h3>Загружаем баннеры...</h3>
+              </div>
+            ) : loadError ? (
+              <div className={styles.empty}>
+                <AlertCircle />
+                <h3>Не удалось загрузить баннеры</h3>
+                <p>{loadError}</p>
+              </div>
+            ) : banners.length > 0 ? (
               <div className={styles.bannerGrid}>
                 {banners.map((banner) => (
                   <BannerCard

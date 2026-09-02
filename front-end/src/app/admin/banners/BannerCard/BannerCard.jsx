@@ -21,10 +21,10 @@ export default function BannerCard({ banner, onEdit, onDelete, onToggle }) {
     <article className={styles.card}>
       <div className={styles.imageWrapper}>
         <img
-          src={banner.image}
+          src={banner.imageUrl}
           alt={banner.title}
           style={{
-            objectPosition: banner.imagePosition || "center",
+            objectPosition: `${banner.imagePositionX ?? 50}% ${banner.imagePositionY ?? 50}%`,
           }}
         />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -23,10 +23,39 @@ import {
 import styles from "./Pricing.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
+import { getPricing } from "@/utils/api";
+
+const DEFAULT_PRICING = {
+  tariffs: {
+    start: 390,
+    optimal: 790,
+    business: 1890,
+    developer: { mode: "individual", value: null },
+  },
+  services: {
+    vip: 290,
+    urgent: 70,
+    top: 190,
+    instagram: 390,
+  },
+};
 
 export default function Pricing() {
   const router = useRouter();
   const [period, setPeriod] = useState("1");
+  const [pricing, setPricing] = useState(DEFAULT_PRICING);
+
+  useEffect(() => {
+    getPricing()
+      .then((data) => setPricing(data))
+      .catch((err) => console.error("Ошибка загрузки цен:", err));
+  }, []);
+
+  const developerPrice =
+    pricing.tariffs.developer.mode === "numeric" &&
+    Number.isFinite(pricing.tariffs.developer.value)
+      ? pricing.tariffs.developer.value
+      : null;
 
   const tariffs = [
     {
@@ -45,7 +74,7 @@ export default function Pricing() {
     {
       id: "start",
       title: "Старт",
-      price: 390,
+      price: pricing.tariffs.start,
       icon: Rocket,
       desc: "Только для риелторов и частных специалистов",
       features: [
@@ -58,7 +87,7 @@ export default function Pricing() {
     {
       id: "optimal",
       title: "Оптимальный",
-      price: 790,
+      price: pricing.tariffs.optimal,
       icon: Crown,
       popular: true,
       desc: "Только для риелторов и частных специалистов. Лучший выбор для активных специалистов",
@@ -73,7 +102,7 @@ export default function Pricing() {
     {
       id: "business",
       title: "Для агентства",
-      price: 1890,
+      price: pricing.tariffs.business,
       icon: Building2,
       desc: "Только для агентств недвижимости и команд",
       features: [
@@ -87,7 +116,7 @@ export default function Pricing() {
     {
       id: "developer",
       title: "Индивидуальный",
-      price: null,
+      price: developerPrice,
       icon: Sparkles,
       developer: true,
       desc: "Только для строительных компаний",
@@ -172,8 +201,10 @@ export default function Pricing() {
       return;
     }
 
-    // Индивидуальный тариф для застройщиков оформляется не через онлайн-оплату
-    if (tariff.price === null) {
+    // Тариф застройщика оформляется не через онлайн-оплату (backend не
+    // принимает его в /api/payments/create) — независимо от того, задал
+    // ли админ конкретную цену или оставил "Индивидуально".
+    if (tariff.developer) {
       router.push("/profile");
       return;
     }
@@ -486,7 +517,7 @@ export default function Pricing() {
 
             <h3>ТОП</h3>
 
-            <strong>190 сом / день</strong>
+            <strong>{pricing.services.top} сом / день</strong>
 
             <p>
               Подъем и закрепление объявления выше стандартных бесплатных
@@ -506,7 +537,7 @@ export default function Pricing() {
 
             <h3>VIP</h3>
 
-            <strong style={{ color: "#9a9a0b" }}>290 сом / день</strong>
+            <strong style={{ color: "#9a9a0b" }}>{pricing.services.vip} сом / день</strong>
 
             <p>
               Закрепление в самом верху каталога + выделение яркой золотой
@@ -523,7 +554,7 @@ export default function Pricing() {
 
             <h3>Срочно</h3>
 
-            <strong>70 сом / день</strong>
+            <strong>{pricing.services.urgent} сом / день</strong>
 
             <p>
               Красный бейдж на карточке + автоматическое попадание в специальный
@@ -558,7 +589,7 @@ export default function Pricing() {
             <h3>Instagram Пост + Сторис</h3>
 
             <div className={styles.smmPrice} style={{ color: "#eb23ab" }}>
-              390 сом
+              {pricing.services.instagram} сом
             </div>
 
             <p>

@@ -114,3 +114,38 @@ export const removeVerificationDocumentFromStorage = async (objectPath) => {
     console.warn("Не удалось удалить документ верификации из Storage:", error.message);
   }
 };
+
+/** Публичный бакет для изображений рекламных баннеров (создан программно). */
+export const BANNERS_BUCKET = "banners";
+
+/** Загружает изображение баннера: `{uuid}.{ext}`, возвращает публичный URL. */
+export const uploadBannerImageToStorage = async (file) => {
+  const ext = getImageExtension(file);
+  const objectPath = `${randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from(BANNERS_BUCKET)
+    .upload(objectPath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false,
+      cacheControl: "3600",
+    });
+
+  if (error) {
+    throw new Error(error.message || "Не удалось загрузить изображение баннера");
+  }
+
+  const { data } = supabase.storage.from(BANNERS_BUCKET).getPublicUrl(objectPath);
+  return { publicUrl: data.publicUrl, objectPath };
+};
+
+/** Удаляет изображение баннера из Storage, если URL принадлежит бакету `banners`. */
+export const removeBannerImageFromStorage = async (imageUrl) => {
+  const objectPath = extractStoragePath(imageUrl, BANNERS_BUCKET);
+  if (!objectPath) return;
+
+  const { error } = await supabase.storage.from(BANNERS_BUCKET).remove([objectPath]);
+  if (error) {
+    console.warn("Не удалось удалить изображение баннера из Storage:", error.message);
+  }
+};

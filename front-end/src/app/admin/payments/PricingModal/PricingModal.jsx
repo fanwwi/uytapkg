@@ -100,6 +100,8 @@ export default function PricingEditModal({ isOpen, onClose, values, onSave }) {
   const [form, setForm] = useState(DEFAULT_VALUES);
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -125,6 +127,8 @@ export default function PricingEditModal({ isOpen, onClose, values, onSave }) {
     });
 
     setErrors({});
+    setSubmitError("");
+    setSaving(false);
   }, [isOpen, values]);
 
   useEffect(() => {
@@ -258,7 +262,7 @@ export default function PricingEditModal({ isOpen, onClose, values, onSave }) {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
 
     const normalized = {
@@ -287,8 +291,17 @@ export default function PricingEditModal({ isOpen, onClose, values, onSave }) {
       },
     };
 
-    onSave(normalized);
-    onClose();
+    setSubmitError("");
+    setSaving(true);
+
+    try {
+      await onSave(normalized);
+      onClose();
+    } catch (error) {
+      setSubmitError(error?.message || "Не удалось сохранить цены");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const formatValue = (value) => {
@@ -542,13 +555,30 @@ export default function PricingEditModal({ isOpen, onClose, values, onSave }) {
         ===================================================== */}
 
         <div className={styles.footer}>
-          <button type="button" className={styles.cancel} onClick={onClose}>
+          {submitError && (
+            <div className={styles.fieldError} style={{ marginRight: "auto" }}>
+              <AlertCircle size={14} />
+              {submitError}
+            </div>
+          )}
+
+          <button
+            type="button"
+            className={styles.cancel}
+            onClick={onClose}
+            disabled={saving}
+          >
             Отмена
           </button>
 
-          <button type="button" className={styles.save} onClick={handleSubmit}>
+          <button
+            type="button"
+            className={styles.save}
+            onClick={handleSubmit}
+            disabled={saving}
+          >
             <Save size={17} />
-            Сохранить цены
+            {saving ? "Сохраняем..." : "Сохранить цены"}
           </button>
         </div>
       </div>

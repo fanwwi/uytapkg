@@ -1,4 +1,42 @@
+import "dotenv/config";
 import { z } from "zod";
+
+// =======================================================
+// Изображения (фото объявлений, ЖК, аватары/логотипы) обязаны быть
+// ссылками на наше собственное Storage — их всегда должен вернуть один
+// из наших /upload эндпоинтов, а не произвольная ссылка от клиента.
+//
+// Почему это важно: фото объявлений/ЖК/аватары рендерятся через
+// next/image, у которого в next.config.mjs разрешена оптимизация
+// изображений с любого хоста. Если бы сюда можно было записать
+// произвольный URL (например, http://169.254.169.254/... или адрес во
+// внутренней сети), сервер Next.js сам обратился бы по этому адресу при
+// оптимизации картинки — классический SSRF через image-оптимизатор.
+// Ограничивая допустимые ссылки только нашим Storage-доменом, мы
+// закрываем эту дыру на уровне данных, а не только в next.config.mjs.
+// =======================================================
+const TRUSTED_IMAGE_HOSTS = new Set(
+  [process.env.SUPABASE_URL].filter(Boolean).map((url) => {
+    try {
+      return new URL(url).host;
+    } catch {
+      return null;
+    }
+  }).filter(Boolean)
+);
+
+const isTrustedImageUrl = (value) => {
+  if (typeof value !== "string") return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && TRUSTED_IMAGE_HOSTS.has(url.host);
+  } catch {
+    return false;
+  }
+};
+
+const trustedImageUrl = (message = "Изображение должно быть загружено через форму загрузки") =>
+  z.string().refine(isTrustedImageUrl, { message });
 
 // Нормализация номера телефона (очистка от лишних символов)
 export const normalizePhone = (phone) => {
@@ -35,7 +73,7 @@ export const registerSchema = z.object({
 
   // Фото/лого профиля — общее поле для всех типов аккаунта
   // (для personal/realtor это аватар, для agency/developer — логотип компании)
-  avatarUrl: z.string().url("Некорректная ссылка на фото").optional().nullable(),
+  avatarUrl: trustedImageUrl("Некорректная ссылка на фото").optional().nullable(),
 });
 
 // Схема авторизации
@@ -51,7 +89,7 @@ export const updateMeSchema = z.object({
   phone: z.string().min(9, "Номер телефона должен содержать минимум 9 цифр").optional(),
   about: z.string().optional().nullable(),
   avatarUrl: z
-    .union([z.string().url("Некорректная ссылка на фото"), z.null()])
+    .union([trustedImageUrl("Некорректная ссылка на фото"), z.null()])
     .optional(),
   accountType: z.enum(["personal", "realtor", "agency", "developer"]).optional(),
   fullName: z.string().optional().nullable(),
@@ -139,7 +177,7 @@ export const createListingSchema = z
     isResort: z.boolean().optional(),
     resortFilters: z.record(z.any()).optional(),
     features: z.record(z.any()).optional(),
-    photos: z.array(z.string()).optional(),
+    photos: z.array(trustedImageUrl("Некорректная ссылка на фото объявления")).optional(),
   })
   .passthrough()
   .superRefine((data, ctx) => {
@@ -238,7 +276,7 @@ export const updateListingSchema = z
     isResort: z.boolean().optional(),
     resortFilters: z.record(z.any()).optional(),
     features: z.record(z.any()).optional(),
-    photos: z.array(z.string()).optional(),
+    photos: z.array(trustedImageUrl("Некорректная ссылка на фото объявления")).optional(),
     userId: z.any().optional(),
     user_id: z.any().optional(),
   })
@@ -278,7 +316,7 @@ export const createComplexSchema = z
       .string({ required_error: "Укажите ссылку на документы ЖК" })
       .min(1, "Укажите ссылку на документы ЖК"),
     amenities: z.array(z.string()).optional(),
-    images: z.array(z.string()).optional(),
+    images: z.array(trustedImageUrl("Некорректная ссылка на фото ЖК")).optional(),
     features: z.record(z.any()).optional(),
   })
   .passthrough();
@@ -303,5 +341,143 @@ export const createLawyerSchema = z.object({
 
 // Схема обновления юриста (PUT /api/admin/lawyers/:id)
 export const updateLawyerSchema = createLawyerSchema.partial();
+
+// Схема изменения цен тарифов и услуг (PUT /api/admin/pricing)
+//
+// Сумма к оплате всегда пересчитывается на сервере (см.
+// constants/tariffs.js) по цене, сохранённой этой схемой — поэтому здесь
+// строгая проверка чисел (никаких строк/NaN/отрицательных значений),
+// чтобы админ не мог случайно (или намеренно, если токен скомпрометирован)
+// записать в систему цен мусорные данные.
+const MAX_PRICE = 1_000_000;
+
+const priceField = (label) =>
+  z
+    .number({ invalid_type_error: `Цена «${label}» должна быть числом` })
+    .min(0, `Цена «${label}» не может быть отрицательной`)
+    .max(MAX_PRICE, `Цена «${label}» слишком велика`);
+
+// Схема рекламного баннера (POST/PUT /api/admin/banners)
+//
+// `link` рендерится на фронте как обычный <a href>, поэтому его протокол
+// строго ограничен: только относительный путь ("/complexes") или
+// http(s)-ссылка. Это блокирует javascript:/data:/vbscript: и другие
+// псевдо-протоколы, через которые баннер мог бы превратиться в XSS.
+const isSafeBannerLink = (value) => {
+  if (!value) return true; // необязательное поле
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
+  return /^https?:\/\//i.test(value);
+};
+
+const isoDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Некорректный формат даты (ожидается YYYY-MM-DD)");
+
+// Изображение баннера должно быть ссылкой, полученной через собственный
+// /api/admin/banners/upload-image — запрещаем data:/blob:/javascript: и
+// прочие псевдо-протоколы, которые z.string().url() иначе пропустил бы.
+const isHttpUrl = (value) => /^https:\/\/|^http:\/\//i.test(value);
+
+const bannerImageUrl = z
+  .string({ required_error: "Добавьте изображение баннера" })
+  .url("Некорректная ссылка на изображение")
+  .refine(isHttpUrl, { message: "Изображение должно быть загружено через форму баннера" });
+
+export const bannerSchema = z
+  .object({
+    title: z
+      .string({ required_error: "Укажите название баннера" })
+      .trim()
+      .min(1, "Укажите название баннера")
+      .max(200, "Название слишком длинное"),
+    imageUrl: bannerImageUrl,
+    imagePositionX: z.number().min(0).max(100).optional(),
+    imagePositionY: z.number().min(0).max(100).optional(),
+    link: z
+      .string()
+      .max(2048, "Ссылка слишком длинная")
+      .refine(isSafeBannerLink, {
+        message: "Ссылка должна начинаться с / или http(s)://",
+      })
+      .optional()
+      .nullable(),
+    startDate: isoDate,
+    endDate: isoDate.optional().nullable(),
+    active: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.endDate && data.endDate < data.startDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Дата окончания не может быть раньше даты начала",
+        path: ["endDate"],
+      });
+    }
+  });
+
+// Схема обновления баннера (PUT /api/admin/banners/:id) — все поля необязательны,
+// но там, где присутствуют оба, дата окончания всё равно проверяется.
+export const updateBannerSchema = z
+  .object({
+    title: z.string().trim().min(1, "Укажите название баннера").max(200).optional(),
+    imageUrl: bannerImageUrl.optional(),
+    imagePositionX: z.number().min(0).max(100).optional(),
+    imagePositionY: z.number().min(0).max(100).optional(),
+    link: z
+      .string()
+      .max(2048, "Ссылка слишком длинная")
+      .refine(isSafeBannerLink, {
+        message: "Ссылка должна начинаться с / или http(s)://",
+      })
+      .optional()
+      .nullable(),
+    startDate: isoDate.optional(),
+    endDate: isoDate.optional().nullable(),
+    active: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.startDate && data.endDate && data.endDate < data.startDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Дата окончания не может быть раньше даты начала",
+        path: ["endDate"],
+      });
+    }
+  });
+
+export const pricingSchema = z.object({
+  tariffs: z.object({
+    start: priceField("СТАРТ"),
+    optimal: priceField("ОПТИМАЛЬНЫЙ"),
+    business: priceField("БИЗНЕС"),
+    developer: z
+      .object({
+        mode: z.enum(["individual", "numeric"], {
+          errorMap: () => ({ message: "Некорректный режим тарифа застройщика" }),
+        }),
+        // Пустая строка приходит из формы, когда выбран режим
+        // "Индивидуально" — приводим её к null вместо ошибки валидации.
+        value: z.preprocess(
+          (v) => (v === "" || v === undefined ? null : v),
+          z.number().min(0).max(MAX_PRICE).nullable()
+        ),
+      })
+      .superRefine((data, ctx) => {
+        if (data.mode === "numeric" && (data.value === null || data.value === undefined)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Укажите цену для тарифа застройщика",
+            path: ["value"],
+          });
+        }
+      }),
+  }),
+  services: z.object({
+    vip: priceField("VIP"),
+    urgent: priceField("Срочно"),
+    top: priceField("ТОП"),
+    instagram: priceField("Instagram"),
+  }),
+});
 
 
