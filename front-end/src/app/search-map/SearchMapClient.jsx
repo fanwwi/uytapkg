@@ -12,11 +12,9 @@ import {
 import L from "leaflet";
 import { useRouter } from "next/navigation";
 
-import { getListings, getComplexes } from "@/utils/api";
-
+import { getListings, getComplexes, getListingById } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 import { mapComplexData } from "@/utils/mapComplexData";
-
 
 import {
   Search,
@@ -29,6 +27,7 @@ import {
   SlidersHorizontal,
   Building2,
   Tag,
+  Loader2,
 } from "lucide-react";
 
 import "leaflet/dist/leaflet.css";
@@ -171,9 +170,6 @@ function AreaDrawer({ onComplete, onStart }) {
     mousedown(event) {
       if (event.originalEvent.button !== 0) return;
 
-      // Без модификатора — это обычное перетаскивание карты (панорамирование).
-      // Область выделяется только с зажатым Shift, иначе обычный drag
-      // карты был бы невозможен: каждый клик+протяжка стартовали бы рисование.
       if (!event.originalEvent.shiftKey) return;
 
       isDrawing.current = true;
@@ -232,11 +228,11 @@ function AreaDrawer({ onComplete, onStart }) {
 ========================================================= */
 
 function getObjectTypeLabel(object) {
-  if (object.objectType === "complex") {
+  if (object?.objectType === "complex") {
     return "ЖК";
   }
 
-  switch (object.propertyType) {
+  switch (object?.propertyType) {
     case "house":
       return "Дом";
 
@@ -521,7 +517,8 @@ function normalizeListing(item) {
 
     type: mapped.type || item.category || item.propertyType || "apartment",
 
-    name: mapped.title || item.title || "Объявление",
+    name:
+      mapped.title || mapped.name || item.title || item.name || "Объявление",
 
     address:
       mapped.address ||
@@ -537,6 +534,7 @@ function normalizeListing(item) {
       mapped.image ||
       mapped.images?.[0] ||
       item.cover_photo ||
+      item.coverPhoto ||
       item.images?.[0] ||
       null,
 
@@ -549,7 +547,6 @@ function normalizeListing(item) {
   const combined = {
     ...item,
     ...mapped,
-
     address: object.address,
   };
 
@@ -639,7 +636,12 @@ function normalizeComplex(item) {
 
     price,
 
-    image: mapped.image || mapped.images?.[0] || item.cover_photo || null,
+    image:
+      mapped.image ||
+      mapped.images?.[0] ||
+      item.cover_photo ||
+      item.coverPhoto ||
+      null,
 
     latitude,
     longitude,
@@ -714,7 +716,17 @@ export default function SearchMapClient() {
 
   const [hasSelection, setHasSelection] = useState(false);
 
+  /* =========================================================
+     SELECTED OBJECT
+  ========================================================= */
+
   const [selectedObject, setSelectedObject] = useState(null);
+
+  const [selectedObjectDetails, setSelectedObjectDetails] = useState(null);
+
+  const [detailsLoading, setDetailsLoading] = useState(false);
+
+  const [detailsError, setDetailsError] = useState("");
 
   /* =========================================================
      LOAD DATA
@@ -876,9 +888,7 @@ export default function SearchMapClient() {
   const filteredObjects = useMemo(() => {
     let result = objects;
 
-    /* =======================================================
-       AREA
-    ======================================================= */
+    /* AREA */
 
     if (selectedBounds) {
       result = result.filter((object) => {
@@ -886,9 +896,7 @@ export default function SearchMapClient() {
       });
     }
 
-    /* =======================================================
-       SEARCH
-    ======================================================= */
+    /* SEARCH */
 
     const query = search.trim().toLowerCase();
 
@@ -914,9 +922,7 @@ export default function SearchMapClient() {
       });
     }
 
-    /* =======================================================
-       DEAL
-    ======================================================= */
+    /* DEAL */
 
     if (dealFilter !== "Все") {
       result = result.filter((object) => {
@@ -924,9 +930,7 @@ export default function SearchMapClient() {
       });
     }
 
-    /* =======================================================
-       PROPERTY
-    ======================================================= */
+    /* PROPERTY */
 
     if (propertyFilter !== "Все") {
       result = result.filter((object) => {
@@ -934,9 +938,7 @@ export default function SearchMapClient() {
       });
     }
 
-    /* =======================================================
-       LOCATION
-    ======================================================= */
+    /* LOCATION */
 
     if (locationFilter !== "Все") {
       result = result.filter((object) => {
@@ -1002,7 +1004,8 @@ export default function SearchMapClient() {
     setSelectedBounds(null);
     setTempBounds(null);
     setHasSelection(false);
-    setSelectedObject(null);
+
+    closeObjectPreview();
   }
 
   /* =========================================================
@@ -1019,10 +1022,115 @@ export default function SearchMapClient() {
      OBJECT CLICK
   ========================================================= */
 
-  function handleObjectClick(object) {
-    if (!object) return;
+  async function handleObjectClick(object) {
+    if (!object?.id) return;
+
+    /*
+      Сначала показываем карточку с информацией,
+      которая уже есть в карте.
+    */
 
     setSelectedObject(object);
+
+    setSelectedObjectDetails(object);
+
+    setDetailsError("");
+
+    /*
+      Для обычного объявления дополнительно
+      получаем полную информацию с API.
+    */
+
+    if (object.objectType !== "listing") {
+      return;
+    }
+
+    try {
+      setDetailsLoading(true);
+
+      const response = await getListingById(object.id);
+
+      /*
+        API может вернуть:
+
+        {
+          success: true,
+          data: {...}
+        }
+
+        либо сразу объект.
+      */
+
+      const rawData = response?.data ?? response?.listing ?? response;
+
+      if (!rawData) {
+        setDetailsError("Не удалось получить информацию об объекте");
+
+        return;
+      }
+
+      let mappedDetails = rawData;
+
+      try {
+        mappedDetails = mapListingData(rawData);
+      } catch (error) {
+        console.warn("Не удалось дополнительно замапить объявление:", error);
+
+        mappedDetails = rawData;
+      }
+
+      const mergedObject = {
+        ...object,
+        ...rawData,
+        ...mappedDetails,
+
+        id: rawData.id ?? mappedDetails.id ?? object.id,
+
+        objectType: "listing",
+
+        name:
+          mappedDetails.title ||
+          mappedDetails.name ||
+          rawData.title ||
+          rawData.name ||
+          object.name,
+
+        address:
+          mappedDetails.address ||
+          rawData.address ||
+          rawData.fullAddress ||
+          object.address,
+
+        image:
+          mappedDetails.image ||
+          mappedDetails.images?.[0] ||
+          rawData.cover_photo ||
+          rawData.coverPhoto ||
+          rawData.images?.[0] ||
+          object.image,
+
+        price:
+          mappedDetails.priceFormatted ||
+          mappedDetails.price ||
+          rawData.price ||
+          object.price,
+      };
+
+      setSelectedObjectDetails(mergedObject);
+    } catch (error) {
+      console.error("Ошибка получения объявления:", error);
+
+      setDetailsError("Не удалось загрузить дополнительную информацию");
+
+      /*
+        Даже если API упало, карточка продолжает
+        работать на основе данных карты.
+      */
+
+      setSelectedObjectDetails(object);
+    } finally {
+      setDetailsLoading(false);
+    }
   }
 
   /* =========================================================
@@ -1042,12 +1150,42 @@ export default function SearchMapClient() {
   }
 
   /* =========================================================
+     PREVIEW CLICK
+  ========================================================= */
+
+  function handlePreviewClick(event) {
+    /*
+      Не отправляем клик с кнопки Details
+      второй раз.
+    */
+
+    if (event.target.closest(`.${styles.detailsButton}`)) {
+      return;
+    }
+
+    if (!selectedObjectDetails?.id) {
+      return;
+    }
+
+    handleDetails(selectedObjectDetails);
+  }
+
+  /* =========================================================
      CLOSE PREVIEW
   ========================================================= */
 
   function closeObjectPreview() {
     setSelectedObject(null);
+    setSelectedObjectDetails(null);
+    setDetailsLoading(false);
+    setDetailsError("");
   }
+
+  /* =========================================================
+     PREVIEW OBJECT
+  ========================================================= */
+
+  const previewObject = selectedObjectDetails || selectedObject;
 
   /* =========================================================
      RENDER
@@ -1159,8 +1297,6 @@ export default function SearchMapClient() {
           </div>
 
           <div className={styles.filtersGrid}>
-            {/* DEAL */}
-
             <CustomSelect
               icon={Tag}
               title="Тип сделки"
@@ -1169,8 +1305,6 @@ export default function SearchMapClient() {
               setValue={setDealFilter}
             />
 
-            {/* PROPERTY */}
-
             <CustomSelect
               icon={Building2}
               title="Тип недвижимости"
@@ -1178,8 +1312,6 @@ export default function SearchMapClient() {
               value={propertyFilter}
               setValue={setPropertyFilter}
             />
-
-            {/* LOCATION */}
 
             <CustomSelect
               icon={MapPin}
@@ -1218,7 +1350,7 @@ export default function SearchMapClient() {
             <AreaDrawer
               onStart={() => {
                 setIsDrawing(true);
-                setSelectedObject(null);
+                closeObjectPreview();
               }}
               onComplete={(bounds, finished) => {
                 handleBounds(bounds, finished);
@@ -1362,20 +1494,41 @@ export default function SearchMapClient() {
               OBJECT PREVIEW
           ================================================= */}
 
-          {selectedObject && (
-            <div className={styles.objectPreview}>
+          {previewObject && (
+            <div
+              className={styles.objectPreview}
+              onClick={handlePreviewClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  handleDetails(previewObject);
+                }
+              }}
+            >
+              {/* CLOSE */}
+
               <button
                 type="button"
                 className={styles.previewClose}
-                onClick={closeObjectPreview}
+                onClick={(event) => {
+                  event.stopPropagation();
+
+                  closeObjectPreview();
+                }}
                 aria-label="Закрыть"
               >
                 <X />
               </button>
 
+              {/* IMAGE */}
+
               <div className={styles.previewImage}>
-                {selectedObject.image ? (
-                  <img src={selectedObject.image} alt={selectedObject.name} />
+                {previewObject.image ? (
+                  <img
+                    src={previewObject.image}
+                    alt={previewObject.name || "Объект недвижимости"}
+                  />
                 ) : (
                   <div className={styles.previewNoImage}>
                     <MapPin />
@@ -1383,25 +1536,49 @@ export default function SearchMapClient() {
                 )}
 
                 <span className={styles.previewType}>
-                  {getObjectTypeLabel(selectedObject)}
+                  {getObjectTypeLabel(previewObject)}
                 </span>
               </div>
 
+              {/* CONTENT */}
+
               <div className={styles.previewContent}>
-                <h3>{selectedObject.name}</h3>
+                <h3>{previewObject.name || "Объект недвижимости"}</h3>
 
                 <p>
                   <MapPin />
 
-                  {selectedObject.address}
+                  <span>{previewObject.address || "Адрес не указан"}</span>
                 </p>
 
-                <strong>{selectedObject.price}</strong>
+                <strong>{previewObject.price || "Цена не указана"}</strong>
+
+                {/* API LOADING */}
+
+                {detailsLoading && (
+                  <div className={styles.previewLoading}>
+                    <Loader2 size={16} className={styles.spinnerIcon} />
+
+                    <span>Загружаем информацию...</span>
+                  </div>
+                )}
+
+                {/* API ERROR */}
+
+                {!detailsLoading && detailsError && (
+                  <span className={styles.previewError}>{detailsError}</span>
+                )}
+
+                {/* DETAILS BUTTON */}
 
                 <button
                   type="button"
                   className={styles.detailsButton}
-                  onClick={() => handleDetails(selectedObject)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+
+                    handleDetails(previewObject);
+                  }}
                 >
                   <span>Подробнее</span>
 
