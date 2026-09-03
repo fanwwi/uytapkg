@@ -9,7 +9,9 @@ import {
   ArrowRight,
   TrendingUp,
   Camera,
+  CreditCard,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import styles from "./StepListingType.module.css";
 
@@ -19,6 +21,7 @@ const types = [
     title: "Обычное размещение",
     description: "Стандартная публикация объявления с базовым размещением.",
     icon: Sparkles,
+    paid: false,
   },
   {
     id: "vip",
@@ -26,6 +29,7 @@ const types = [
     description:
       "Более заметное размещение, чтобы объявление увидело больше людей.",
     icon: Crown,
+    paid: true,
   },
   {
     id: "urgent",
@@ -33,6 +37,7 @@ const types = [
     description:
       "Покажите покупателям, что объект нужно продать или сдать быстрее.",
     icon: Zap,
+    paid: true,
   },
   {
     id: "top",
@@ -40,15 +45,19 @@ const types = [
     description:
       "Поднимите объявление выше других и получите больше просмотров.",
     icon: TrendingUp,
+    paid: true,
   },
   {
     id: "instagram",
     title: "Поделиться в Instagram",
     description:
-      "Поделитесь объявлением в Instagram и привлеките дополнительную аудиторию.",
+      "Разместите объявление в Instagram UyTap и привлеките дополнительную аудиторию.",
     icon: Camera,
+    paid: true,
   },
 ];
+
+const paidListingTypes = ["vip", "urgent", "top", "instagram"];
 
 const regionNames = {
   BISHKEK: "Бишкек",
@@ -97,6 +106,8 @@ export default function StepListingType({
   onSubmit,
   isSubmitting,
 }) {
+  const router = useRouter();
+
   const title = form.title || "";
   const description = form.description || "";
 
@@ -105,6 +116,12 @@ export default function StepListingType({
   const isListingTypeValid = Boolean(form.listingType);
 
   const isReady = isTitleValid && isDescriptionValid && isListingTypeValid;
+
+  const isInstagramSelected = form.listingType === "instagram";
+
+  const isPaidSelected = paidListingTypes.includes(form.listingType);
+
+  const selectedType = types.find((item) => item.id === form.listingType);
 
   const handleTitleChange = (event) => {
     updateForm({
@@ -119,12 +136,39 @@ export default function StepListingType({
   };
 
   const handleSelectType = (typeId) => {
+    if (isSubmitting) return;
+
     updateForm({
       listingType: typeId,
     });
   };
 
-  const selectedType = types.find((item) => item.id === form.listingType);
+  const handlePublish = () => {
+    if (!isReady || isSubmitting) return;
+
+    /*
+     * Бесплатная публикация.
+     */
+    if (form.listingType === "standard") {
+      onSubmit();
+      return;
+    }
+
+    /*
+     * Все дополнительные услуги являются платными.
+     *
+     * В том числе Instagram:
+     * 1. Пользователь переходит на страницу оплаты.
+     * 2. Оплачивает услугу.
+     * 3. Получает чек.
+     * 4. Продолжает публикацию.
+     * 5. Для Instagram после публикации показывается
+     *    отдельная модалка с информацией об ожидании.
+     */
+    if (paidListingTypes.includes(form.listingType)) {
+      router.push(`/add-product/payment?service=${form.listingType}`);
+    }
+  };
 
   const countryName = form.country === "turkey" ? "Турция" : "Кыргызстан";
 
@@ -139,11 +183,35 @@ export default function StepListingType({
 
   const categoryName = categoryLabels[form.category] || "Не указана";
 
-  const isInstagramSelected = form.listingType === "instagram";
+  const getPrimaryButton = () => {
+    if (isSubmitting) {
+      return {
+        text: "Публикация...",
+        icon: ArrowRight,
+      };
+    }
+
+    if (isPaidSelected) {
+      return {
+        text: "Перейти к оплате",
+        icon: CreditCard,
+      };
+    }
+
+    return {
+      text: "Опубликовать",
+      icon: ArrowRight,
+    };
+  };
+
+  const primaryButton = getPrimaryButton();
+  const PrimaryIcon = primaryButton.icon;
 
   return (
     <div className={styles.step}>
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <div className={styles.header}>
         <span className={styles.stepBadge}>
@@ -159,7 +227,9 @@ export default function StepListingType({
         </p>
       </div>
 
-      {/* 01 — TITLE */}
+      {/* =====================================================
+          01 — TITLE
+      ===================================================== */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -167,6 +237,7 @@ export default function StepListingType({
 
           <div>
             <strong>Название объявления</strong>
+
             <small>Придумайте короткое и понятное название</small>
           </div>
         </div>
@@ -200,7 +271,9 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* 02 — DESCRIPTION */}
+      {/* =====================================================
+          02 — DESCRIPTION
+      ===================================================== */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -208,6 +281,7 @@ export default function StepListingType({
 
           <div>
             <strong>Описание объявления</strong>
+
             <small>Расскажите подробнее об объекте</small>
           </div>
         </div>
@@ -246,7 +320,9 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* 03 — LISTING TYPE */}
+      {/* =====================================================
+          03 — LISTING TYPE
+      ===================================================== */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
@@ -254,6 +330,7 @@ export default function StepListingType({
 
           <div>
             <strong>Тип размещения</strong>
+
             <small>Выберите один вариант</small>
           </div>
         </div>
@@ -261,6 +338,7 @@ export default function StepListingType({
         <div className={styles.typeGrid}>
           {types.map((item) => {
             const isSelected = form.listingType === item.id;
+
             const Icon = item.icon;
 
             return (
@@ -280,16 +358,14 @@ export default function StepListingType({
                     <Icon size={21} strokeWidth={2.2} />
                   </div>
 
-                  {isSelected && (
-                    <div className={styles.selectedBadge}>
-                      <Check size={13} strokeWidth={3} />
-                      Выбрано
-                    </div>
+                  {item.paid && (
+                    <span className={styles.paidBadge}>ПЛАТНО</span>
                   )}
                 </div>
 
                 <div className={styles.cardContent}>
                   <strong>{item.title}</strong>
+
                   <span>{item.description}</span>
                 </div>
 
@@ -298,12 +374,48 @@ export default function StepListingType({
                     <ArrowRight size={17} />
                   </div>
                 )}
+
+                {isSelected && (
+                  <div className={styles.selectedCheck}>
+                    <Check size={15} strokeWidth={3} />
+                  </div>
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Instagram info */}
+        {/* ===================================================
+            PAID SERVICE INFO
+        =================================================== */}
+
+        {isPaidSelected && !isInstagramSelected && (
+          <div className={styles.paymentInfo}>
+            <div className={styles.paymentInfoIcon}>
+              <CreditCard size={20} strokeWidth={2.2} />
+            </div>
+
+            <div className={styles.paymentInfoContent}>
+              <strong>Для этой услуги требуется оплата</strong>
+
+              <p>
+                После нажатия «Перейти к оплате» вы перейдёте на страницу
+                оплаты. После подтверждения платежа вы получите электронный чек
+                и сможете продолжить публикацию объявления.
+              </p>
+            </div>
+
+            <Check
+              size={20}
+              strokeWidth={2.5}
+              className={styles.paymentInfoCheck}
+            />
+          </div>
+        )}
+
+        {/* ===================================================
+            INSTAGRAM INFO
+        =================================================== */}
 
         {isInstagramSelected && (
           <div className={styles.instagramInfo}>
@@ -312,12 +424,16 @@ export default function StepListingType({
             </div>
 
             <div className={styles.instagramInfoContent}>
-              <strong>Поделиться объявлением в Instagram</strong>
+              <div className={styles.instagramTitleRow}>
+                <strong>Размещение в Instagram</strong>
+
+                <span className={styles.instagramPaidBadge}>ПЛАТНО</span>
+              </div>
 
               <p>
-                После публикации вы сможете поделиться карточкой объявления в
-                Instagram, чтобы привлечь дополнительную аудиторию и получить
-                больше просмотров.
+                После оплаты объявление будет передано на размещение в Instagram
+                UyTap. Обработка занимает до одного дня. После публикации
+                периодически проверяйте аккаунт UyTap.
               </p>
             </div>
 
@@ -330,7 +446,9 @@ export default function StepListingType({
         )}
       </section>
 
-      {/* 04 — SUMMARY */}
+      {/* =====================================================
+          04 — SUMMARY
+      ===================================================== */}
 
       <section className={styles.summary}>
         <div className={styles.summaryHeader}>
@@ -339,6 +457,7 @@ export default function StepListingType({
 
             <div>
               <h3>Проверьте объявление</h3>
+
               <p>Основная информация перед публикацией</p>
             </div>
           </div>
@@ -349,6 +468,7 @@ export default function StepListingType({
             }`}
           >
             <span />
+
             {isReady ? "Готово" : "Не заполнено"}
           </div>
         </div>
@@ -356,6 +476,7 @@ export default function StepListingType({
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItemWide}>
             <span>Название</span>
+
             <strong>{title.trim() || "Не указано"}</strong>
           </div>
 
@@ -369,26 +490,31 @@ export default function StepListingType({
 
           <div className={styles.summaryItem}>
             <span>Страна</span>
+
             <strong>{countryName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Регион</span>
+
             <strong>{regionName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Тип сделки</span>
+
             <strong>{dealName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
             <span>Категория</span>
+
             <strong>{categoryName}</strong>
           </div>
 
           <div className={styles.summaryItemWide}>
             <span>Адрес</span>
+
             <strong>{form.address || "Не указан"}</strong>
           </div>
 
@@ -405,8 +531,16 @@ export default function StepListingType({
 
             <div>
               <span>Размещение</span>
+
               <strong>{selectedType?.title || "Не выбрано"}</strong>
             </div>
+
+            {isPaidSelected && (
+              <span className={styles.summaryPaid}>
+                <CreditCard size={12} />
+                ПЛАТНО
+              </span>
+            )}
 
             {isInstagramSelected && (
               <Check
@@ -419,7 +553,9 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* ACTIONS */}
+      {/* =====================================================
+          ACTIONS
+      ===================================================== */}
 
       <div className={styles.actions}>
         <button
@@ -434,13 +570,15 @@ export default function StepListingType({
 
         <button
           type="button"
-          className={styles.primary}
+          className={`${styles.primary} ${
+            isPaidSelected ? styles.primaryPayment : ""
+          }`}
           disabled={!isReady || isSubmitting}
-          onClick={onSubmit}
+          onClick={handlePublish}
         >
-          {isSubmitting ? "Публикация..." : "Опубликовать"}
+          {primaryButton.text}
 
-          <ArrowRight size={17} />
+          <PrimaryIcon size={17} />
         </button>
       </div>
     </div>
