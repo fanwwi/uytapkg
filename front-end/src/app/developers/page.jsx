@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowRight, ArrowLeft, Building2, Home, Search } from "lucide-react";
+import { ArrowRight, Building2, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getDevelopers } from "@/utils/api";
 
@@ -19,38 +19,75 @@ export default function Developers() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    let mounted = true;
 
-    getDevelopers()
-      .then((res) => {
-        if (res.success && res.data) {
-          const mapped = res.data.map((dev) => ({
-            id: dev.user_id || dev.id,
-            nameRu: dev.company_name,
-            nameEn: dev.company_name,
-            objects: dev.residential_complexes?.length || 0,
-            logo: dev.logo_url || "/assets/DeveloperImage.png",
-          }));
+    const fetchDevelopers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await getDevelopers();
+
+        console.log("========== DEVELOPERS API ==========");
+        console.log("FULL RESPONSE:", res);
+        console.log("DATA:", res?.data);
+
+        if (!mounted) return;
+
+        if (res?.success && Array.isArray(res?.data)) {
+          const mapped = res.data
+            .map((dev) => {
+              console.log("DEVELOPER:", dev);
+              console.log("VERIFICATION STATUS:", dev?.verificationStatus);
+
+              return {
+                id: dev?.user_id || dev?.id,
+                nameRu: dev?.company_name || "Застройщик",
+                nameEn: dev?.company_name || "Застройщик",
+
+                objects: Array.isArray(dev?.residential_complexes)
+                  ? dev.residential_complexes.length
+                  : 0,
+
+                logo: dev?.logo_url || "/assets/DeveloperImage.png",
+
+                verificationStatus: dev?.verificationStatus,
+              };
+            })
+            .filter((dev) => dev.id);
+
+          console.log("MAPPED DEVELOPERS:", mapped);
 
           setDevelopersList(mapped);
         } else {
-          setError(res.message || "Ошибка загрузки застройщиков");
+          setError(res?.message || "Ошибка загрузки застройщиков");
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Fetch developers error:", err);
-        setError("Ошибка при получении списка застройщиков");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+        if (mounted) {
+          setError("Ошибка при получении списка застройщиков");
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchDevelopers();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    if (!query) return developersList;
+    if (!query) {
+      return developersList;
+    }
 
     return developersList.filter(
       (item) =>
@@ -127,12 +164,11 @@ export default function Developers() {
         </div>
       </section>
 
-      {/* CONTENT */}
-
       <section className={styles.container}>
         <div className={styles.toolbar}>
           <div className={styles.toolbarTitle}>
             <span>КАТАЛОГ</span>
+
             <h2>Застройщики</h2>
           </div>
 
@@ -199,6 +235,18 @@ export default function Developers() {
                   </div>
                 </div>
 
+                {/* ВРЕМЕННО ПОКАЗЫВАЕМ СТАТУС */}
+                <div
+                  style={{
+                    color: "#000",
+                    padding: "10px 0",
+                    fontSize: "14px",
+                  }}
+                >
+                  verificationStatus:{" "}
+                  <strong>{item.verificationStatus ?? "undefined"}</strong>
+                </div>
+
                 <div className={styles.cardBottom}>
                   <span>
                     {item.objects}{" "}
@@ -233,9 +281,11 @@ export default function Developers() {
 
             <p>Попробуйте изменить поисковый запрос.</p>
 
-            <button type="button" onClick={() => setSearch("")}>
-              Показать всех застройщиков
-            </button>
+            {search && (
+              <button type="button" onClick={() => setSearch("")}>
+                Показать всех застройщиков
+              </button>
+            )}
           </div>
         )}
       </section>

@@ -24,6 +24,7 @@ import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepCategory.module.css";
+import ResidentialComplexSelect from "../ResidentialComplexSelect/ResidentialComplexSelect";
 
 /* =========================================================
    ICONS
@@ -934,32 +935,18 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
             {showResidentialComplex && (
               <div className={styles.residentialComplexWrapper}>
-                <div className={styles.residentialComplexCard}>
-                  <div className={styles.inputIcon}>
-                    <Building2 size={19} />
-                  </div>
+                <ResidentialComplexSelect
+                  value={form.residentialComplex || ""}
+                  setValue={(value) =>
+                    updateForm({
+                      residentialComplex: value,
+                    })
+                  }
+                />
 
-                  <div className={styles.field}>
-                    <label>Жилой комплекс</label>
-
-                    <input
-                      type="text"
-                      value={form.residentialComplex || ""}
-                      onChange={(e) =>
-                        updateForm({
-                          residentialComplex: e.target.value,
-                        })
-                      }
-                      placeholder="Например ЖК Авангард"
-                      maxLength={120}
-                    />
-
-                    <span className={styles.fieldHint}>
-                      Укажите название ЖК, если объект находится в жилом
-                      комплексе
-                    </span>
-                  </div>
-                </div>
+                <span className={styles.fieldHint}>
+                  Выберите жилой комплекс из списка
+                </span>
               </div>
             )}
           </div>
