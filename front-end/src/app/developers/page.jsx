@@ -33,9 +33,9 @@ export default function Developers() {
         console.log("DATA:", res?.data);
 
         if (!mounted) return;
-
         if (res?.success && Array.isArray(res?.data)) {
           const mapped = res.data
+            .filter((dev) => dev?.verificationStatus === "approved")
             .map((dev) => ({
               id: dev?.user_id || dev?.id,
               nameRu: dev?.company_name || "Застройщик",
@@ -45,9 +45,10 @@ export default function Developers() {
                 ? dev.residential_complexes.length
                 : 0,
 
-              logo: dev?.avatarUrl || dev?.logo_url || "/assets/DeveloperImage.png",
+              logo:
+                dev?.avatarUrl || dev?.logo_url || "/assets/DeveloperImage.png",
 
-              isVerified: dev?.verificationStatus === "approved",
+              isVerified: true,
             }))
             .filter((dev) => dev.id);
 
@@ -228,7 +229,7 @@ export default function Developers() {
                       {item.isVerified && (
                         <CheckCircle2
                           className={styles.verifiedIcon}
-                          aria-label="Проверенный застройщик"
+                          aria-label="Проверенный застройщик" color="#0d00ff"
                         />
                       )}
                     </h2>
