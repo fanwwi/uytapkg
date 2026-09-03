@@ -721,7 +721,9 @@ export default function MyComplexDetail() {
   ========================================================= */
 
   const openMinstroy = () => {
-    window.open("https://minstroy.gov.kg/", "_blank", "noopener,noreferrer");
+    const url = residentialComplex?.documentsUrl || "https://minstroy.gov.kg/";
+
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   /* =========================================================
