@@ -1,5 +1,51 @@
 import { supabase } from "../config/db.js";
 
+// Реальный аватар застройщика загружается через редактирование профиля и
+// хранится в user_profiles.avatar_url — колонка developers.logo_url почти
+// всегда пустая (никто в коде её не заполняет), поэтому раньше каталог
+// показывал заглушку вместо загруженного лого. Верификация тоже считается
+// не по developers.is_verified (эта колонка нигде не обновляется), а по
+// users.is_verified + JSON-полю verificationStatus внутри user_profiles.about
+// — той же логике, что использует админка (см. adminController.js).
+async function attachProfileData(developers) {
+  const list = developers || [];
+  const userIds = list.map((d) => d.user_id).filter(Boolean);
+
+  if (userIds.length === 0) {
+    return list.map((d) => ({ ...d, avatarUrl: null, verificationStatus: "none" }));
+  }
+
+  const [{ data: users }, { data: profiles }] = await Promise.all([
+    supabase.from("users").select("id, is_verified").in("id", userIds),
+    supabase.from("user_profiles").select("user_id, avatar_url, about").in("user_id", userIds),
+  ]);
+
+  const usersMap = new Map((users || []).map((u) => [u.id, u]));
+  const profilesMap = new Map((profiles || []).map((p) => [p.user_id, p]));
+
+  return list.map((dev) => {
+    const user = usersMap.get(dev.user_id);
+    const profile = profilesMap.get(dev.user_id);
+
+    let aboutMeta = {};
+    if (profile?.about && profile.about.startsWith("{") && profile.about.endsWith("}")) {
+      try {
+        aboutMeta = JSON.parse(profile.about);
+      } catch (e) {}
+    }
+
+    const verificationStatus =
+      aboutMeta.verificationStatus || (user?.is_verified ? "approved" : "none");
+
+    return {
+      ...dev,
+      avatarUrl: profile?.avatar_url || null,
+      verificationStatus,
+      isVerified: Boolean(user?.is_verified),
+    };
+  });
+}
+
 // =======================================================
 // 1. Получить список всех застройщиков с их ЖК (GET /api/developers)
 // =======================================================
@@ -21,9 +67,11 @@ export const getDevelopers = async (req, res) => {
       });
     }
 
+    const enriched = await attachProfileData(data);
+
     return res.json({
       success: true,
-      data: data || [],
+      data: enriched,
     });
   } catch (error) {
     console.error("Get Developers Controller Error:", error);
@@ -65,9 +113,11 @@ export const getDeveloperById = async (req, res) => {
       });
     }
 
+    const [enriched] = await attachProfileData([data]);
+
     return res.json({
       success: true,
-      data: data,
+      data: enriched,
     });
   } catch (error) {
     console.error("Get Developer By Id Controller Error:", error);

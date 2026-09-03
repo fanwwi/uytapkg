@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowRight, Building2, Search } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getDevelopers } from "@/utils/api";
 
@@ -36,27 +36,20 @@ export default function Developers() {
 
         if (res?.success && Array.isArray(res?.data)) {
           const mapped = res.data
-            .map((dev) => {
-              console.log("DEVELOPER:", dev);
-              console.log("VERIFICATION STATUS:", dev?.verificationStatus);
+            .map((dev) => ({
+              id: dev?.user_id || dev?.id,
+              nameRu: dev?.company_name || "Застройщик",
+              nameEn: dev?.company_name || "Застройщик",
 
-              return {
-                id: dev?.user_id || dev?.id,
-                nameRu: dev?.company_name || "Застройщик",
-                nameEn: dev?.company_name || "Застройщик",
+              objects: Array.isArray(dev?.residential_complexes)
+                ? dev.residential_complexes.length
+                : 0,
 
-                objects: Array.isArray(dev?.residential_complexes)
-                  ? dev.residential_complexes.length
-                  : 0,
+              logo: dev?.avatarUrl || dev?.logo_url || "/assets/DeveloperImage.png",
 
-                logo: dev?.logo_url || "/assets/DeveloperImage.png",
-
-                verificationStatus: dev?.verificationStatus,
-              };
-            })
+              isVerified: dev?.verificationStatus === "approved",
+            }))
             .filter((dev) => dev.id);
-
-          console.log("MAPPED DEVELOPERS:", mapped);
 
           setDevelopersList(mapped);
         } else {
@@ -229,22 +222,19 @@ export default function Developers() {
                   </div>
 
                   <div className={styles.cardTitle}>
-                    <h2>{item.nameEn}</h2>
+                    <h2>
+                      {item.nameEn}
+
+                      {item.isVerified && (
+                        <CheckCircle2
+                          className={styles.verifiedIcon}
+                          aria-label="Проверенный застройщик"
+                        />
+                      )}
+                    </h2>
 
                     {item.nameRu !== item.nameEn && <p>{item.nameRu}</p>}
                   </div>
-                </div>
-
-                {/* ВРЕМЕННО ПОКАЗЫВАЕМ СТАТУС */}
-                <div
-                  style={{
-                    color: "#000",
-                    padding: "10px 0",
-                    fontSize: "14px",
-                  }}
-                >
-                  verificationStatus:{" "}
-                  <strong>{item.verificationStatus ?? "undefined"}</strong>
                 </div>
 
                 <div className={styles.cardBottom}>
