@@ -321,9 +321,37 @@ export const getMyListings = async (req, res) => {
         .json({ success: false, message: "Ошибка загрузки ваших объявлений" });
     }
 
+    // Реальное кол-во добавлений в избранное по каждому объявлению —
+    // раньше на фронте вместо этого ошибочно показывался views_count.
+    const listingIds = (listings || []).map((l) => l.id);
+    const favoritesCountMap = new Map();
+
+    if (listingIds.length > 0) {
+      const { data: favoriteRows, error: favoritesError } = await supabase
+        .from("favorites")
+        .select("listing_id")
+        .in("listing_id", listingIds);
+
+      if (favoritesError) {
+        console.error("Error fetching favorites counts:", favoritesError);
+      } else {
+        for (const row of favoriteRows || []) {
+          favoritesCountMap.set(
+            row.listing_id,
+            (favoritesCountMap.get(row.listing_id) || 0) + 1
+          );
+        }
+      }
+    }
+
+    const listingsWithFavorites = (listings || []).map((l) => ({
+      ...l,
+      favorites_count: favoritesCountMap.get(l.id) || 0,
+    }));
+
     return res.json({
       success: true,
-      data: listings || [],
+      data: listingsWithFavorites,
       pagination: {
         total: count || (listings ? listings.length : 0),
         page: Number(page),

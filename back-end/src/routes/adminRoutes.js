@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getDashboardStats,
   listPayments,
   updatePricing,
   listLawyers,
@@ -40,6 +41,8 @@ const handleBannerImageUpload = (req, res, next) => {
 };
 
 // Все роуты в этом файле — только для role='admin'.
+router.get("/stats", authenticateToken, requireAdmin, getDashboardStats);
+
 router.get("/payments", authenticateToken, requireAdmin, listPayments);
 
 // Изменение цен тарифов и услуг (чтение — публичное, /api/settings/pricing)

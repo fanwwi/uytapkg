@@ -1,35 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Users, CreditCard, Image, Scale, ArrowUpRight } from "lucide-react";
 
+import { getAdminStats } from "@/utils/api";
 import styles from "./Admin.module.css";
 import StatCard from "./components/StatCard/StatCard";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
-
-const stats = [
-  {
-    title: "Новые пользователи",
-    value: "1 284",
-    icon: Users,
-  },
-  {
-    title: "Оплаты",
-    value: "324",
-    icon: CreditCard,
-  },
-  {
-    title: "Баннеры",
-    value: "18",
-    icon: Image,
-  },
-  {
-    title: "Юристы",
-    value: "12",
-    icon: Scale,
-  },
-];
 
 const sections = [
   {
@@ -53,6 +32,44 @@ const sections = [
 ];
 
 export default function AdminPage() {
+  const [stats, setStats] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+    if (!token) return;
+
+    getAdminStats(token)
+      .then((res) => setStats(res.data))
+      .catch((err) => {
+        console.error("Error loading dashboard stats:", err);
+        setError(err.message || "Не удалось загрузить статистику");
+      });
+  }, []);
+
+  const statCards = [
+    {
+      title: "Новые пользователи",
+      value: stats ? stats.newUsersCount.toLocaleString("ru-RU") : "—",
+      icon: Users,
+    },
+    {
+      title: "Оплаты",
+      value: stats ? stats.paymentsCount.toLocaleString("ru-RU") : "—",
+      icon: CreditCard,
+    },
+    {
+      title: "Баннеры",
+      value: stats ? stats.bannersCount.toLocaleString("ru-RU") : "—",
+      icon: Image,
+    },
+    {
+      title: "Юристы",
+      value: stats ? stats.lawyersCount.toLocaleString("ru-RU") : "—",
+      icon: Scale,
+    },
+  ];
+
   return (
     <div className={styles.admin}>
       <Sidebar />
@@ -71,8 +88,10 @@ export default function AdminPage() {
             </div>
           </section>
 
+          {error && <p style={{ color: "#e53e3e" }}>{error}</p>}
+
           <section className={styles.stats}>
-            {stats.map((stat) => (
+            {statCards.map((stat) => (
               <StatCard key={stat.title} {...stat} />
             ))}
           </section>

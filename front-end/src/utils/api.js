@@ -452,6 +452,19 @@ export async function cancelPayment(token, orderId) {
 }
 
 // 11. Админка
+export async function getAdminStats(token) {
+  const response = await fetch(`${API_URL}/admin/stats`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения статистики дашборда");
+  }
+  return data;
+}
+
 export async function getAdminPayments(token) {
   const response = await fetch(`${API_URL}/admin/payments`, {
     headers: {

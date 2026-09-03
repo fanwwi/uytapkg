@@ -4,9 +4,70 @@ import { createLawyerSchema, updateLawyerSchema, pricingSchema } from "../utils/
 import { toPublicLawyer } from "./lawyersController.js";
 import { getVerificationDocumentSignedUrl } from "../utils/storage.js";
 import { getPricingSettings, savePricingSettings } from "../utils/pricingSettings.js";
+import { listAllBanners } from "../utils/bannersStore.js";
 
 const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
 const MAX_REJECTION_REASON_LENGTH = 1000;
+
+// =======================================================
+// Сводная статистика для главной страницы админки (GET /api/admin/stats)
+//
+// Все счётчики считаются на сервере из реальных данных — раньше на
+// дашборде были захардкожены фиктивные цифры. "Период" соответствует
+// подписи на дашборде ("последние 30 дней") и относится к новым
+// пользователям и оплатам; баннеры/юристы — это текущий инвентарь
+// админки, поэтому считаются целиком, без временного окна.
+// =======================================================
+export const getDashboardStats = async (req, res) => {
+  try {
+    const periodStart = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    const [
+      newUsersResult,
+      paymentsResult,
+      lawyersResult,
+      banners,
+    ] = await Promise.all([
+      supabase
+        .from("users")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", periodStart),
+      supabase
+        .from("payments")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "approved")
+        .gte("created_at", periodStart),
+      supabase.from("lawyers").select("id", { count: "exact", head: true }),
+      listAllBanners(),
+    ]);
+
+    if (newUsersResult.error) {
+      console.error("Dashboard Stats — users count error:", newUsersResult.error);
+    }
+    if (paymentsResult.error) {
+      console.error("Dashboard Stats — payments count error:", paymentsResult.error);
+    }
+    if (lawyersResult.error) {
+      console.error("Dashboard Stats — lawyers count error:", lawyersResult.error);
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        newUsersCount: newUsersResult.count || 0,
+        paymentsCount: paymentsResult.count || 0,
+        bannersCount: (banners || []).length,
+        lawyersCount: lawyersResult.count || 0,
+      },
+    });
+  } catch (error) {
+    console.error("Get Dashboard Stats Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Не удалось получить статистику дашборда",
+    });
+  }
+};
 
 // =======================================================
 // Список платежей для админ-панели (GET /api/admin/payments)

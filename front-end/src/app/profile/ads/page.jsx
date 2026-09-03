@@ -68,7 +68,7 @@ export default function Ads() {
         mainPhoto ||
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400",
       status: statusMapping[l.status] || "Активно",
-      likes: l.views_count || 0,
+      likes: l.favorites_count || 0,
       dealType: l.deal_type === "sale" ? "Продажа" : "Сдаю",
       area: l.area ? `${l.area} м²` : "",
       rooms: l.rooms,
