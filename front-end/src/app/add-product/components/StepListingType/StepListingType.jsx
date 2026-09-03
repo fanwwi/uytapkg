@@ -357,10 +357,6 @@ export default function StepListingType({
                   <div className={styles.typeIcon}>
                     <Icon size={21} strokeWidth={2.2} />
                   </div>
-
-                  {item.paid && (
-                    <span className={styles.paidBadge}>ПЛАТНО</span>
-                  )}
                 </div>
 
                 <div className={styles.cardContent}>
@@ -374,44 +370,10 @@ export default function StepListingType({
                     <ArrowRight size={17} />
                   </div>
                 )}
-
-                {isSelected && (
-                  <div className={styles.selectedCheck}>
-                    <Check size={15} strokeWidth={3} />
-                  </div>
-                )}
               </button>
             );
           })}
         </div>
-
-        {/* ===================================================
-            PAID SERVICE INFO
-        =================================================== */}
-
-        {isPaidSelected && !isInstagramSelected && (
-          <div className={styles.paymentInfo}>
-            <div className={styles.paymentInfoIcon}>
-              <CreditCard size={20} strokeWidth={2.2} />
-            </div>
-
-            <div className={styles.paymentInfoContent}>
-              <strong>Для этой услуги требуется оплата</strong>
-
-              <p>
-                После нажатия «Перейти к оплате» вы перейдёте на страницу
-                оплаты. После подтверждения платежа вы получите электронный чек
-                и сможете продолжить публикацию объявления.
-              </p>
-            </div>
-
-            <Check
-              size={20}
-              strokeWidth={2.5}
-              className={styles.paymentInfoCheck}
-            />
-          </div>
-        )}
 
         {/* ===================================================
             INSTAGRAM INFO
@@ -426,8 +388,6 @@ export default function StepListingType({
             <div className={styles.instagramInfoContent}>
               <div className={styles.instagramTitleRow}>
                 <strong>Размещение в Instagram</strong>
-
-                <span className={styles.instagramPaidBadge}>ПЛАТНО</span>
               </div>
 
               <p>
@@ -534,13 +494,6 @@ export default function StepListingType({
 
               <strong>{selectedType?.title || "Не выбрано"}</strong>
             </div>
-
-            {isPaidSelected && (
-              <span className={styles.summaryPaid}>
-                <CreditCard size={12} />
-                ПЛАТНО
-              </span>
-            )}
 
             {isInstagramSelected && (
               <Check
