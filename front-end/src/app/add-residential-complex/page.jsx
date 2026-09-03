@@ -95,6 +95,10 @@ export default function AddResidentialComplex() {
       ...prev,
       [name]: value,
     }));
+
+    if (error) {
+      setError("");
+    }
   };
 
   const setField = (name, value) => {
@@ -102,6 +106,10 @@ export default function AddResidentialComplex() {
       ...prev,
       [name]: value,
     }));
+
+    if (error) {
+      setError("");
+    }
   };
 
   const toggleAmenity = (item) => {
@@ -173,18 +181,18 @@ export default function AddResidentialComplex() {
         throw new Error("Введите адрес жилого комплекса.");
       }
 
-      if (!form.documentsUrl.trim()) {
-        throw new Error(
-          "Добавьте ссылку на официальную информацию о жилом комплексе.",
-        );
-      }
-
-      try {
-        new URL(form.documentsUrl);
-      } catch {
-        throw new Error(
-          "Ссылка на официальную информацию должна быть корректным URL.",
-        );
+      /*
+       * Ссылка на Минстрой НЕОБЯЗАТЕЛЬНА.
+       * Проверяем URL только если пользователь что-то ввёл.
+       */
+      if (form.documentsUrl.trim()) {
+        try {
+          new URL(form.documentsUrl.trim());
+        } catch {
+          throw new Error(
+            "Ссылка на официальную информацию должна быть корректным URL.",
+          );
+        }
       }
 
       /* =========================
@@ -237,7 +245,7 @@ export default function AddResidentialComplex() {
         amenities: selectedAmenities,
         images: uploadedUrls,
 
-        documentsUrl: form.documentsUrl.trim(),
+        documentsUrl: form.documentsUrl.trim() || null,
       };
 
       console.log("CREATE COMPLEX PAYLOAD:", payload);
@@ -788,8 +796,8 @@ export default function AddResidentialComplex() {
                 <h2>Официальная информация</h2>
 
                 <p>
-                  Добавьте ссылку на официальный источник с информацией о жилом
-                  комплексе.
+                  При наличии добавьте ссылку на официальный источник с
+                  информацией о жилом комплексе.
                 </p>
               </div>
             </div>
@@ -798,7 +806,6 @@ export default function AddResidentialComplex() {
               <div className={styles.field}>
                 <label htmlFor="complex-documents">
                   Ссылка на официальную информацию о ЖК
-                  {/* <span>*</span> */}
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -811,14 +818,14 @@ export default function AddResidentialComplex() {
                     value={form.documentsUrl}
                     onChange={handleChange}
                     placeholder="https://..."
-                    required
                   />
                 </div>
 
                 <small className={styles.fieldHint}>
-                  Укажите ссылку на официальный источник: сайт застройщика,
-                  официальный сайт ЖК, паспорт, проектную документацию или
-                  другой подтверждающий ресурс.
+                  Необязательно. Если у вас есть ссылка на официальный источник
+                  — сайт застройщика, официальный сайт ЖК, паспорт, проектную
+                  документацию или информацию на сайте Минстроя — укажите её
+                  здесь.
                 </small>
               </div>
             </div>
