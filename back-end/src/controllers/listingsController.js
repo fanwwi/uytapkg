@@ -1,6 +1,23 @@
 import { supabase } from "../config/db.js";
 import { createListingSchema, updateListingSchema } from "../utils/validation.js";
 import { removeImageFromStorage } from "../utils/storage.js";
+import { resolvePromotionExpiry } from "../services/promotionsService.js";
+
+// Купленное продвижение (VIP/ТОП/Срочно) действует ограниченный срок, но
+// в БД нет job'а, который бы его снимал по истечении — вместо cron'а
+// каждый read-путь маскирует уже истёкшее продвижение прямо в ответе (см.
+// resolvePromotionExpiry). Возвращает тот же объект, если ничего не
+// изменилось — лишний спред не нужен.
+function maskExpiredPromotion(listing) {
+  const resolved = resolvePromotionExpiry(listing);
+  if (!resolved.changed) return listing;
+
+  return {
+    ...listing,
+    promotion_status: resolved.promotionStatus,
+    is_urgent: resolved.isUrgent,
+  };
+}
 
 // =======================================================
 // 1. Получение списка объявлений с фильтрами
@@ -85,8 +102,13 @@ export const getListings = async (req, res) => {
       return 3;
     };
 
+    // Маскируем истёкшее продвижение ДО сортировки по приоритету — иначе
+    // объявление с уже закончившимся сроком VIP всё ещё показывалось бы
+    // первым.
+    const maskedListings = (listings || []).map(maskExpiredPromotion);
+
     // Точная сортировка объявлений по требуемому приоритету
-    let filteredListings = (listings || []).sort((a, b) => {
+    let filteredListings = maskedListings.sort((a, b) => {
       const prioA = getListingPriority(a);
       const prioB = getListingPriority(b);
       if (prioA !== prioB) return prioA - prioB;
@@ -145,7 +167,7 @@ export const getListingById = async (req, res) => {
       .update({ views_count: (listing.views_count || 0) + 1 })
       .eq("id", id);
 
-    return res.json({ success: true, data: listing });
+    return res.json({ success: true, data: maskExpiredPromotion(listing) });
   } catch (error) {
     console.error("Get Listing By ID Error:", error);
     return res.status(500).json({ success: false, message: "Ошибка сервера при получении объявления" });
@@ -195,6 +217,7 @@ export const createListing = async (req, res) => {
       beachDistanceFrom,
       beachDistanceTo,
       developerOrComplex,
+      residentialComplexId,
     } = validationResult.data;
 
     // Мапинг типа размещения (standard, vip, urgent, top)
@@ -216,6 +239,29 @@ export const createListing = async (req, res) => {
       beachDistanceTo: beachDistanceTo || resortFilters?.beachDistanceTo || null,
       developerOrComplex: developerOrComplex || resortFilters?.developerOrComplex || null,
     };
+
+    // Проверяем, что указанный ЖК реально существует — иначе через тело
+    // запроса можно было бы привязать объявление к произвольному/несуществующему
+    // ID и оно "подделанно" отображалось бы в чужом жилом комплексе. Значение
+    // берём только из проверенного результата, а не из сырого features
+    // клиента, чтобы его нельзя было подменить в обход этой проверки.
+    let verifiedComplexId = null;
+    if (residentialComplexId) {
+      const { data: complexRow } = await supabase
+        .from("residential_complexes")
+        .select("id")
+        .eq("id", residentialComplexId)
+        .maybeSingle();
+
+      if (!complexRow) {
+        return res.status(400).json({
+          success: false,
+          message: "Указанный жилой комплекс не найден",
+        });
+      }
+
+      verifiedComplexId = complexRow.id;
+    }
 
     const { data: newListing, error: createError } = await supabase
       .from("listings")
@@ -242,7 +288,7 @@ export const createListing = async (req, res) => {
           total_floors: totalFloors ? Number(totalFloors) : null,
           is_resort: Boolean(isResort),
           resort_filters: mergedResortFilters,
-          features: features || {},
+          features: { ...(features || {}), residentialComplexId: verifiedComplexId },
           status: "active",
           promotion_status,
           is_urgent,
@@ -344,7 +390,31 @@ export const getMyListings = async (req, res) => {
       }
     }
 
-    const listingsWithFavorites = (listings || []).map((l) => ({
+    // Маскируем истёкшее продвижение в ответе и заодно фиксируем это в БД:
+    // владелец регулярно открывает свои объявления, так что это удобное
+    // место, чтобы "самоисцелять" запись без отдельной cron-задачи (см.
+    // maskExpiredPromotion выше).
+    const expiredIds = [];
+    const maskedListings = (listings || []).map((l) => {
+      const masked = maskExpiredPromotion(l);
+      if (masked !== l) expiredIds.push(l.id);
+      return masked;
+    });
+
+    if (expiredIds.length > 0) {
+      Promise.all(
+        maskedListings
+          .filter((l) => expiredIds.includes(l.id))
+          .map((l) =>
+            supabase
+              .from("listings")
+              .update({ promotion_status: l.promotion_status, is_urgent: l.is_urgent })
+              .eq("id", l.id)
+          )
+      ).catch((err) => console.error("Downgrade expired promotion error:", err));
+    }
+
+    const listingsWithFavorites = maskedListings.map((l) => ({
       ...l,
       favorites_count: favoritesCountMap.get(l.id) || 0,
     }));
@@ -434,7 +504,44 @@ export const updateListing = async (req, res) => {
     if (data.totalFloors !== undefined) updates.total_floors = data.totalFloors;
     if (data.isResort !== undefined) updates.is_resort = data.isResort;
     if (data.resortFilters !== undefined) updates.resort_filters = data.resortFilters;
-    if (data.features !== undefined) updates.features = data.features;
+
+    // ЖК квартиры хранится внутри features.residentialComplexId — как и при
+    // создании, не доверяем сырому значению внутри присланного features (его
+    // легко подделать в обход проверки), а валидируем отдельное поле
+    // residentialComplexId и подставляем в features только проверенный ID.
+    if (data.features !== undefined || data.residentialComplexId !== undefined) {
+      const nextFeatures =
+        data.features !== undefined
+          ? { ...data.features }
+          : { ...(existingListing.features || {}) };
+
+      if (data.residentialComplexId !== undefined) {
+        if (data.residentialComplexId === null) {
+          nextFeatures.residentialComplexId = null;
+        } else {
+          const { data: complexRow } = await supabase
+            .from("residential_complexes")
+            .select("id")
+            .eq("id", data.residentialComplexId)
+            .maybeSingle();
+
+          if (!complexRow) {
+            return res.status(400).json({
+              success: false,
+              message: "Указанный жилой комплекс не найден",
+            });
+          }
+
+          nextFeatures.residentialComplexId = complexRow.id;
+        }
+      } else {
+        // Поле явно не передавали — сохраняем прежнюю привязку к ЖК, а не
+        // то, что клиент мог прислать внутри самого features.
+        nextFeatures.residentialComplexId = existingListing.features?.residentialComplexId ?? null;
+      }
+
+      updates.features = nextFeatures;
+    }
 
     // TODO(security): сейчас статус/продвижение владелец может менять сам
     // через этот эндпоинт (временно оставлено открытым для тестирования

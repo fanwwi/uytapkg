@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createComplex, uploadImage } from "@/utils/api";
+import { createComplex, uploadComplexPhoto } from "@/utils/api";
 
 import {
   ArrowLeft,
@@ -203,7 +203,7 @@ export default function AddResidentialComplex() {
 
       for (const image of images) {
         try {
-          const url = await uploadImage(image.file);
+          const url = await uploadComplexPhoto(token, image.file);
 
           if (url) {
             uploadedUrls.push(url);

@@ -1,6 +1,6 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import { uploadImage, uploadListingPhoto } from "../controllers/uploadController.js";
+import { uploadImage, uploadListingPhoto, uploadComplexPhoto } from "../controllers/uploadController.js";
 import { uploadImageFile } from "../middleware/upload.js";
 import { authenticateToken } from "../middleware/auth.js";
 
@@ -44,6 +44,17 @@ router.post(
   uploadLimiter,
   handleImageFileUpload,
   uploadListingPhoto
+);
+
+// Фото ЖК — по той же причине, что и фото объявлений, всегда с водяным
+// знаком; требует авторизации (форма создания ЖК доступна только
+// вошедшим застройщикам).
+router.post(
+  "/complex-photo",
+  authenticateToken,
+  uploadLimiter,
+  handleImageFileUpload,
+  uploadComplexPhoto
 );
 
 export default router;

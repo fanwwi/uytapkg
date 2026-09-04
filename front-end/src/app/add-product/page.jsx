@@ -74,6 +74,8 @@ const initialForm = {
   // ХАРАКТЕРИСТИКИ
   // =========================
   series: "",
+  residentialComplex: "",
+  residentialComplexId: "",
   rooms: "",
   floor: "",
   condition: "",
@@ -378,6 +380,7 @@ export default function AddProductPage() {
       const features = {
         // Общие характеристики
         series: form.series || null,
+        residentialComplexName: form.residentialComplex || null,
         rooms: form.rooms ? Number(form.rooms) : null,
         floor: form.floor || null,
         condition: form.condition || null,
@@ -534,6 +537,8 @@ export default function AddProductPage() {
         // =========================
 
         developerOrComplex: form.developerOrComplex || null,
+
+        residentialComplexId: form.residentialComplexId || null,
 
         // =========================
         // ТИП РАЗМЕЩЕНИЯ

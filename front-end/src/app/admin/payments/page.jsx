@@ -30,7 +30,16 @@ import { generateReceiptPdf } from "@/utils/generateReceiptPdf";
 import ReceiptDocument from "@/app/payment/PaymentReceiptModal/ReceiptDocument";
 import PricingEditModal from "./PricingModal/PricingModal";
 
-const TARIFF_OPTIONS = ["Все тарифы", "СТАРТ", "ОПТИМАЛЬНЫЙ", "БИЗНЕС"];
+const TARIFF_OPTIONS = [
+  "Все тарифы",
+  "СТАРТ",
+  "ОПТИМАЛЬНЫЙ",
+  "БИЗНЕС",
+  "VIP-размещение",
+  "Поднятие в ТОП",
+  "Срочная публикация",
+  "Instagram-продвижение",
+];
 
 const STATUS_CONFIG = {
   approved: { label: "Оплачено", icon: CheckCircle2, cls: "status_paid" },
@@ -562,6 +571,12 @@ export default function PaymentsPage() {
                             <span className={styles.tariff}>
                               {payment.tariffTitle}
                             </span>
+
+                            {payment.type === "promotion" && (
+                              <span className={styles.tariffSub}>
+                                {payment.listingTitle || "Объявление удалено"}
+                              </span>
+                            )}
                           </td>
 
                           {/* PRICE */}
@@ -574,7 +589,13 @@ export default function PaymentsPage() {
                           {/* PERIOD */}
                           <td>
                             <div className={styles.period}>
-                              <strong>{payment.months} мес.</strong>
+                              <strong>
+                                {payment.type === "promotion"
+                                  ? payment.serviceType === "instagram"
+                                    ? "разово"
+                                    : `${payment.days} дн.`
+                                  : `${payment.months} мес.`}
+                              </strong>
                             </div>
                           </td>
 
@@ -691,8 +712,37 @@ export default function PaymentsPage() {
 
                     <div>
                       <span>Период</span>
-                      <strong>{selectedPayment.months} мес.</strong>
+                      <strong>
+                        {selectedPayment.type === "promotion"
+                          ? selectedPayment.serviceType === "instagram"
+                            ? "разово"
+                            : `${selectedPayment.days} дн.`
+                          : `${selectedPayment.months} мес.`}
+                      </strong>
                     </div>
+
+                    {selectedPayment.type === "promotion" && (
+                      <div>
+                        <span>Объявление</span>
+                        <strong>
+                          {selectedPayment.listingTitle || "Объявление удалено"}
+                        </strong>
+                      </div>
+                    )}
+
+                    {selectedPayment.type === "promotion" &&
+                      selectedPayment.serviceType === "instagram" && (
+                        <div>
+                          <span>Публикация</span>
+                          <strong>
+                            {selectedPayment.fulfillmentStatus === "fulfillment_pending"
+                              ? "Ожидает публикации"
+                              : selectedPayment.fulfillmentStatus === "applied"
+                                ? "Опубликовано"
+                                : "—"}
+                          </strong>
+                        </div>
+                      )}
 
                     <div>
                       <span>ID платежа</span>

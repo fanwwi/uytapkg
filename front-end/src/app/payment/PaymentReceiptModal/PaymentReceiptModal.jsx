@@ -13,6 +13,8 @@ export default function PaymentReceiptModal({
   paymentData,
   onClose,
   onProfile,
+  description = "Ваш тариф успешно активирован. Ниже находится электронный чек.",
+  profileButtonLabel = "Перейти в личный кабинет",
 }) {
   const receiptRef = useRef(null);
 
@@ -56,9 +58,7 @@ export default function PaymentReceiptModal({
 
         <h2>Спасибо за оплату!</h2>
 
-        <p className={styles.modalDescription}>
-          Ваш тариф успешно активирован. Ниже находится электронный чек.
-        </p>
+        <p className={styles.modalDescription}>{description}</p>
 
         {/*
           Этот блок одновременно:
@@ -91,7 +91,7 @@ export default function PaymentReceiptModal({
           className={styles.profileButton}
           onClick={onProfile}
         >
-          Перейти в личный кабинет
+          {profileButtonLabel}
         </button>
       </div>
     </div>

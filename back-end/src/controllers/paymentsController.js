@@ -2,8 +2,25 @@ import crypto from "crypto";
 import { supabase } from "../config/db.js";
 import { calculateTariffTotal } from "../constants/tariffs.js";
 import { getPricingSettings } from "../utils/pricingSettings.js";
+import { createPromotionPaymentSchema } from "../utils/validation.js";
 import * as odengi from "../services/odengiService.js";
 import { activateSubscription } from "../services/subscriptionsService.js";
+import { applyPromotion } from "../services/promotionsService.js";
+import { createPromotionOrder, getPromotionOrderByOrderId } from "../utils/promotionOrders.js";
+
+// Разовые покупки продвижения объявления используют ту же таблицу
+// `payments`, что и подписки PRO, но с tariff_id вида "promo_<serviceType>"
+// (см. createPromotionPayment) — этим префиксом reconcilePaymentStatus
+// отличает, что делать после подтверждения оплаты: активировать подписку
+// или применить продвижение к конкретному объявлению.
+const PROMOTION_TARIFF_PREFIX = "promo_";
+
+const SERVICE_TITLES = {
+  vip: "VIP-размещение",
+  top: "Поднятие в ТОП",
+  urgent: "Срочная публикация",
+  instagram: "Instagram-продвижение",
+};
 
 function generateOrderId() {
   return `UT${Date.now()}${crypto.randomBytes(6).toString("hex")}`;
@@ -138,6 +155,162 @@ export const createPayment = async (req, res) => {
   }
 };
 
+// =======================================================
+// 1.1 Разовая покупка продвижения объявления
+//     (POST /api/payments/promotion/create)
+// =======================================================
+export const createPromotionPayment = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const validationResult = createPromotionPaymentSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: validationResult.error.issues[0]?.message || "Некорректные данные запроса",
+      });
+    }
+
+    const { listingId, serviceType } = validationResult.data;
+    // Instagram — фиксированная разовая услуга без срока; для остальных
+    // по умолчанию 1 день, если клиент не указал явно.
+    const days = serviceType === "instagram" ? 1 : validationResult.data.days || 1;
+
+    // Продвигать можно только своё объявление — иначе любой пользователь
+    // мог бы платно "прокачать" чужую карточку (или наоборот, оплатить и
+    // получить эффект не на том объявлении).
+    const { data: listing, error: listingError } = await supabase
+      .from("listings")
+      .select("id, user_id, title")
+      .eq("id", listingId)
+      .maybeSingle();
+
+    if (listingError || !listing) {
+      return res.status(404).json({
+        success: false,
+        message: "Объявление не найдено",
+      });
+    }
+
+    if (listing.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Вы можете продвигать только свои объявления",
+      });
+    }
+
+    // Сумма считается ТОЛЬКО на сервере, по актуальным ценам из настроек —
+    // клиенту нельзя доверять цену. vip/top/urgent — цена за день × дни;
+    // instagram — фиксированная разовая цена (см. /pricing на фронте).
+    const pricing = await getPricingSettings();
+    const pricePerUnit = Number(pricing.services?.[serviceType]);
+
+    if (!Number.isFinite(pricePerUnit) || pricePerUnit <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Неизвестная услуга продвижения",
+      });
+    }
+
+    const total = serviceType === "instagram" ? pricePerUnit : pricePerUnit * days;
+
+    const orderId = generateOrderId();
+    const amountKopecks = Math.round(total * 100);
+    const tariffId = `${PROMOTION_TARIFF_PREFIX}${serviceType}`;
+
+    const { data: payment, error: insertError } = await supabase
+      .from("payments")
+      .insert({
+        user_id: userId,
+        order_id: orderId,
+        tariff_id: tariffId,
+        months: days,
+        amount: amountKopecks,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error("Create Promotion Payment Insert Error:", insertError);
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось создать платёж",
+      });
+    }
+
+    // Записываем, к какому объявлению относится покупка, ДО создания счёта
+    // в O!Dengi — чтобы запись гарантированно уже существовала к моменту,
+    // когда реконсиляция статуса найдёт этот orderId.
+    await createPromotionOrder({ orderId, userId, listingId, serviceType, days });
+
+    let invoice;
+    try {
+      invoice = await odengi.createInvoice({
+        orderId,
+        description: `UyTap — ${SERVICE_TITLES[serviceType]}${
+          serviceType === "instagram" ? "" : `, ${days} дн.`
+        } — «${listing.title}»`,
+        amountKopecks,
+      });
+    } catch (providerError) {
+      console.error("O!Dengi createInvoice Error (promotion):", providerError);
+
+      await supabase
+        .from("payments")
+        .update({ status: "failed", updated_at: new Date().toISOString() })
+        .eq("id", payment.id);
+
+      return res.status(503).json({
+        success: false,
+        message: "Платёжный сервис временно недоступен. Попробуйте позже.",
+      });
+    }
+
+    const { data: updated, error: updateError } = await supabase
+      .from("payments")
+      .update({
+        invoice_id: invoice.invoice_id,
+        qr_url: invoice.qr || invoice.emv_qr || null,
+        paylink_url: invoice.paylink_url || null,
+        link_app: invoice.link_app || null,
+        provider_response: invoice,
+        status: "processing",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", payment.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error("Update Promotion Payment After Invoice Error:", updateError);
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось сохранить данные счёта",
+      });
+    }
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        ...toPublicPayment(updated),
+        serviceType,
+        serviceTitle: SERVICE_TITLES[serviceType],
+        listingId,
+        listingTitle: listing.title,
+        days,
+        pricePerUnit,
+      },
+    });
+  } catch (error) {
+    console.error("Create Promotion Payment Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при создании платежа",
+    });
+  }
+};
+
 // Сверяет статус платежа с O!Dengi и, если он только что подтверждён,
 // один раз активирует тариф пользователю. Используется и при опросе с
 // фронтенда, и при получении callback'а (resultUrl) — сам callback
@@ -179,7 +352,23 @@ async function reconcilePaymentStatus(payment) {
       .maybeSingle();
 
     if (claimed) {
-      await activateSubscription(payment.user_id, payment.tariff_id, payment.months);
+      if (claimed.tariff_id?.startsWith(PROMOTION_TARIFF_PREFIX)) {
+        try {
+          const order = await getPromotionOrderByOrderId(claimed.order_id);
+          if (order) {
+            await applyPromotion(order);
+          } else {
+            console.error("Reconcile: promotion order not found for", claimed.order_id);
+          }
+        } catch (applyError) {
+          // Платёж уже подтверждён и зафиксирован — ошибку применения
+          // логируем, но не роняем ответ клиенту; статус оплаты в любом
+          // случае "approved", несостыковку можно будет разобрать вручную.
+          console.error("Apply Promotion Error:", applyError);
+        }
+      } else {
+        await activateSubscription(payment.user_id, payment.tariff_id, payment.months);
+      }
       return claimed;
     }
   } else if (providerStatus === "canceled") {

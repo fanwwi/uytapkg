@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { getComplexById, getListings } from "@/utils/api";
+import { getComplexById, getComplexListings } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
 import { mapListingData } from "@/utils/mapListingData";
 
@@ -141,113 +141,6 @@ const getLayoutValue = (layout, keys) => {
 };
 
 /* =========================================================
-   COMPLEX RELATION
-========================================================= */
-
-function getComplexReference(listing) {
-  if (!listing) return null;
-
-  const directIds = [
-    listing.complexId,
-    listing.complex_id,
-    listing.residentialComplexId,
-    listing.residential_complex_id,
-    listing.projectId,
-    listing.project_id,
-    listing.complexID,
-    listing.projectID,
-  ];
-
-  for (const value of directIds) {
-    if (
-      value !== null &&
-      value !== undefined &&
-      value !== "" &&
-      Number.isFinite(Number(value))
-    ) {
-      return String(value);
-    }
-
-    if (value !== null && value !== undefined && value !== "") {
-      return String(value);
-    }
-  }
-
-  const nestedIds = [
-    listing.complex?.id,
-    listing.complex?.complexId,
-    listing.residentialComplex?.id,
-    listing.residential_complex?.id,
-    listing.project?.id,
-    listing.project?.projectId,
-  ];
-
-  for (const value of nestedIds) {
-    if (value !== null && value !== undefined && value !== "") {
-      return String(value);
-    }
-  }
-
-  return null;
-}
-
-/* =========================================================
-   CHECK AVAILABLE LISTING
-========================================================= */
-
-function isListingAvailable(item) {
-  if (!item) return false;
-
-  const booleanAvailability = [
-    item.available,
-    item.isAvailable,
-    item.is_available,
-    item.active,
-    item.isActive,
-    item.is_active,
-    item.published,
-    item.isPublished,
-    item.is_published,
-  ];
-
-  const explicitBoolean = booleanAvailability.find(
-    (value) => typeof value === "boolean",
-  );
-
-  if (explicitBoolean === false) {
-    return false;
-  }
-
-  const status = String(
-    item.availabilityStatus ??
-      item.availability_status ??
-      item.statusName ??
-      item.listingStatus ??
-      item.listing_status ??
-      item.saleStatus ??
-      item.sale_status ??
-      item.status ??
-      "",
-  )
-    .trim()
-    .toLowerCase();
-
-  if (
-    status.includes("продан") ||
-    status.includes("sold") ||
-    status.includes("архив") ||
-    status.includes("archive") ||
-    status.includes("закрыт") ||
-    status.includes("closed") ||
-    status.includes("недоступ")
-  ) {
-    return false;
-  }
-
-  return true;
-}
-
-/* =========================================================
    NORMALIZE LISTING
 ========================================================= */
 
@@ -289,16 +182,6 @@ function normalizeApartmentListing(item) {
         "Квартира",
 
       description: mapped.description || item.description || "",
-
-      rawComplexId: getComplexReference({
-        ...item,
-        ...mapped,
-      }),
-
-      isAvailable: isListingAvailable({
-        ...item,
-        ...mapped,
-      }),
     };
   } catch (error) {
     console.error("Ошибка mapListingData для квартиры:", error, item);
@@ -344,10 +227,7 @@ export default function ComplexDetails() {
       try {
         const [complexResponse, listingsResponse] = await Promise.all([
           getComplexById(complexId),
-          getListings({
-            page: 1,
-            limit: 200,
-          }),
+          getComplexListings(complexId),
         ]);
 
         if (cancelled) return;
@@ -376,37 +256,19 @@ export default function ComplexDetails() {
         ========================= */
 
         if (listingsResponse?.success && Array.isArray(listingsResponse.data)) {
-          const currentComplexId = String(complexId);
-
           const mappedApartments = listingsResponse.data
             .map(normalizeApartmentListing)
-            .filter(Boolean)
-            .filter((item) => {
-              const propertyType = String(
-                item.type || item.category || item.propertyType || "",
-              )
-                .trim()
-                .toLowerCase();
-
-              const isApartment =
-                propertyType.includes("apartment") ||
-                propertyType.includes("квартир") ||
-                propertyType === "flat";
-
-              if (!isApartment) {
-                return false;
-              }
-
-              if (!item.isAvailable) {
-                return false;
-              }
-
-              return item.rawComplexId === currentComplexId;
-            });
+            .filter(Boolean);
 
           setApartments(mappedApartments);
         } else {
           setApartments([]);
+
+          if (listingsResponse && !listingsResponse.success) {
+            setApartmentsError(
+              listingsResponse.message || "Не удалось загрузить квартиры этого ЖК",
+            );
+          }
         }
       } catch (err) {
         console.error("Failed to load complex detail:", err);

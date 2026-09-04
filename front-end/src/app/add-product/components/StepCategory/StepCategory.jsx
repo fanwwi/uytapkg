@@ -607,12 +607,13 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   ========================================================= */
 
   useEffect(() => {
-    if (!showResidentialComplex && form.residentialComplex) {
+    if (!showResidentialComplex && (form.residentialComplex || form.residentialComplexId)) {
       updateForm({
         residentialComplex: "",
+        residentialComplexId: "",
       });
     }
-  }, [showResidentialComplex, form.residentialComplex]);
+  }, [showResidentialComplex, form.residentialComplex, form.residentialComplexId]);
 
   /* =========================================================
      UPDATE FIELD
@@ -633,6 +634,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       category: key,
       amenities: [],
       residentialComplex: "",
+      residentialComplexId: "",
     });
   }
 
@@ -761,6 +763,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   category: "",
                   amenities: [],
                   residentialComplex: "",
+                  residentialComplexId: "",
                 })
               }
             >
@@ -937,9 +940,10 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               <div className={styles.residentialComplexWrapper}>
                 <ResidentialComplexSelect
                   value={form.residentialComplex || ""}
-                  setValue={(value) =>
+                  onSelect={(complex) =>
                     updateForm({
-                      residentialComplex: value,
+                      residentialComplex: complex.name,
+                      residentialComplexId: complex.id || "",
                     })
                   }
                 />

@@ -19,7 +19,12 @@ import {
 
 import styles from "./Payment.module.css";
 import PaymentReceiptModal from "./PaymentReceiptModal/PaymentReceiptModal";
-import { createPayment, getPaymentStatus, cancelPayment } from "@/utils/api";
+import {
+  createPayment,
+  createPromotionPayment,
+  getPaymentStatus,
+  cancelPayment,
+} from "@/utils/api";
 
 const POLL_INTERVAL_MS = 3000;
 
@@ -27,8 +32,17 @@ export default function PaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const type = searchParams.get("type") === "promotion" ? "promotion" : "tariff";
+
   const tariffId = searchParams.get("tariffId");
   const months = Number(searchParams.get("months") || 1);
+
+  const listingId = searchParams.get("listingId");
+  const serviceType = searchParams.get("serviceType");
+  const days = Number(searchParams.get("days") || 1);
+
+  const isPromotion = type === "promotion";
+  const backHref = isPromotion ? "/profile/ads" : "/pricing";
 
   // loading -> создаём счёт в O!Dengi | ready -> счёт создан, ждём/показываем оплату | error
   const [loadState, setLoadState] = useState("loading");
@@ -55,9 +69,13 @@ export default function PaymentPage() {
       return undefined;
     }
 
-    if (!tariffId || !months) {
+    if (isPromotion ? !listingId || !serviceType : !tariffId || !months) {
       setLoadState("error");
-      setErrorMessage("Не удалось определить тариф. Вернитесь на страницу тарифов.");
+      setErrorMessage(
+        isPromotion
+          ? "Не удалось определить объявление или услугу продвижения. Вернитесь в «Мои объявления»."
+          : "Не удалось определить тариф. Вернитесь на страницу тарифов.",
+      );
       return undefined;
     }
 
@@ -65,7 +83,9 @@ export default function PaymentPage() {
 
     const init = async () => {
       try {
-        const data = await createPayment(token, { tariffId, months });
+        const data = isPromotion
+          ? await createPromotionPayment(token, { listingId, serviceType, days })
+          : await createPayment(token, { tariffId, months });
 
         if (cancelled) return;
 
@@ -109,7 +129,7 @@ export default function PaymentPage() {
       cancelled = true;
       stopPolling();
     };
-  }, [tariffId, months, router, stopPolling]);
+  }, [isPromotion, tariffId, months, listingId, serviceType, days, router, stopPolling]);
 
   const copyPaymentId = async () => {
     if (!payment) return;
@@ -136,7 +156,7 @@ export default function PaymentPage() {
       console.error("Ошибка отмены платежа:", error);
     } finally {
       stopPolling();
-      router.push("/pricing");
+      router.push(backHref);
     }
   };
 
@@ -152,16 +172,42 @@ export default function PaymentPage() {
     return "месяцев";
   };
 
+  const pluralDays = (n) => {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return "день";
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "дня";
+    return "дней";
+  };
+
   const paymentData = payment
-    ? {
-        tariff: payment.tariffTitle || payment.tariffId,
-        price: payment.pricePerMonth ?? payment.amount,
-        months: payment.months,
-        discount: payment.discountPercent || 0,
-        total: payment.amount,
-        paymentId: payment.orderId,
-        date: payment.paidAt ? new Date(payment.paidAt) : new Date(),
-      }
+    ? isPromotion
+      ? {
+          heading: "Оплата продвижения",
+          tariffLabel: "Услуга",
+          tariff: `${payment.serviceTitle || payment.tariffId} — ${
+            payment.listingTitle || "объявление"
+          }`,
+          priceLabel: payment.serviceType === "instagram" ? "Стоимость" : "Стоимость / день",
+          price: payment.pricePerUnit ?? payment.amount,
+          periodLabel:
+            payment.serviceType === "instagram"
+              ? "разово"
+              : `${payment.days} ${pluralDays(payment.days || 1)}`,
+          discount: 0,
+          total: payment.amount,
+          paymentId: payment.orderId,
+          date: payment.paidAt ? new Date(payment.paidAt) : new Date(),
+        }
+      : {
+          tariff: payment.tariffTitle || payment.tariffId,
+          price: payment.pricePerMonth ?? payment.amount,
+          months: payment.months,
+          discount: payment.discountPercent || 0,
+          total: payment.amount,
+          paymentId: payment.orderId,
+          date: payment.paidAt ? new Date(payment.paidAt) : new Date(),
+        }
     : null;
 
   const isPending = payment && (payment.status === "pending" || payment.status === "processing");
@@ -222,9 +268,9 @@ export default function PaymentPage() {
             <button
               type="button"
               className={styles.actionButton}
-              onClick={() => router.push("/pricing")}
+              onClick={() => router.push(backHref)}
             >
-              Вернуться к тарифам
+              {isPromotion ? "Вернуться к объявлениям" : "Вернуться к тарифам"}
             </button>
           </div>
         )}
@@ -235,10 +281,10 @@ export default function PaymentPage() {
               <div>
                 <div className={styles.badge}>
                   <Sparkles size={13} />
-                  UyTap PRO
+                  {isPromotion ? "Продвижение UyTap" : "UyTap PRO"}
                 </div>
 
-                <h1>Оплата тарифа</h1>
+                <h1>{isPromotion ? "Оплата продвижения" : "Оплата тарифа"}</h1>
 
                 <p>
                   Отсканируйте QR-код через приложение вашего банка. Сумма уже
@@ -346,9 +392,9 @@ export default function PaymentPage() {
                   <button
                     type="button"
                     className={styles.actionButton}
-                    onClick={() => router.push("/pricing")}
+                    onClick={() => router.push(backHref)}
                   >
-                    Вернуться к тарифам
+                    {isPromotion ? "Вернуться к объявлениям" : "Вернуться к тарифам"}
                   </button>
                 )}
 
@@ -373,7 +419,7 @@ export default function PaymentPage() {
                   </div>
 
                   <div>
-                    <span>Тариф</span>
+                    <span>{paymentData.tariffLabel || "Тариф"}</span>
 
                     <strong>{paymentData.tariff}</strong>
                   </div>
@@ -381,7 +427,7 @@ export default function PaymentPage() {
 
                 <div className={styles.details}>
                   <div>
-                    <span>Стоимость / месяц</span>
+                    <span>{paymentData.priceLabel || "Стоимость / месяц"}</span>
 
                     <strong>{formatMoney(paymentData.price)}</strong>
                   </div>
@@ -390,7 +436,8 @@ export default function PaymentPage() {
                     <span>Период</span>
 
                     <strong>
-                      {paymentData.months} {getMonthsText(paymentData.months)}
+                      {paymentData.periodLabel ||
+                        `${paymentData.months} ${getMonthsText(paymentData.months)}`}
                     </strong>
                   </div>
 
@@ -415,8 +462,11 @@ export default function PaymentPage() {
                   <ShieldCheck size={17} />
 
                   <p>
-                    После подтверждения оплаты тариф будет активирован
-                    автоматически.
+                    {isPromotion
+                      ? payment.serviceType === "instagram"
+                        ? "После подтверждения оплаты заявка на публикацию поступит нашей команде."
+                        : "После подтверждения оплаты продвижение будет применено к объявлению автоматически."
+                      : "После подтверждения оплаты тариф будет активирован автоматически."}
                   </p>
                 </div>
               </aside>
@@ -430,7 +480,15 @@ export default function PaymentPage() {
           open={showReceipt}
           paymentData={paymentData}
           onClose={() => setShowReceipt(false)}
-          onProfile={() => router.push("/profile")}
+          onProfile={() => router.push(isPromotion ? "/profile/ads" : "/profile")}
+          description={
+            isPromotion
+              ? payment?.serviceType === "instagram"
+                ? "Оплата получена, заявка передана нашей команде на публикацию. Ниже находится электронный чек."
+                : "Продвижение успешно применено к объявлению. Ниже находится электронный чек."
+              : undefined
+          }
+          profileButtonLabel={isPromotion ? "К моим объявлениям" : undefined}
         />
       )}
     </main>

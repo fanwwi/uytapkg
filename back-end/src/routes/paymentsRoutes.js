@@ -2,6 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import {
   createPayment,
+  createPromotionPayment,
   getPaymentStatus,
   cancelPayment,
   handleResultUrl,
@@ -28,6 +29,12 @@ const statusLimiter = rateLimit({
 });
 
 router.post("/create", authenticateToken, createPaymentLimiter, createPayment);
+router.post(
+  "/promotion/create",
+  authenticateToken,
+  createPaymentLimiter,
+  createPromotionPayment
+);
 router.get("/:orderId/status", authenticateToken, statusLimiter, getPaymentStatus);
 router.post("/:orderId/cancel", authenticateToken, cancelPayment);
 

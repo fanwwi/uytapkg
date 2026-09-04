@@ -54,20 +54,20 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
       <div className={styles.receiptTitle}>
         <span>ЭЛЕКТРОННЫЙ ЧЕК</span>
 
-        <strong>Оплата тарифа</strong>
+        <strong>{paymentData.heading || "Оплата тарифа"}</strong>
       </div>
 
       <div className={styles.line} />
 
       <div className={styles.receiptRows}>
         <div className={styles.receiptRow}>
-          <span>Тариф</span>
+          <span>{paymentData.tariffLabel || "Тариф"}</span>
 
           <strong>{paymentData.tariff}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Стоимость / месяц</span>
+          <span>{paymentData.priceLabel || "Стоимость / месяц"}</span>
 
           <strong>{formatMoney(paymentData.price)}</strong>
         </div>
@@ -76,7 +76,8 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
           <span>Период</span>
 
           <strong>
-            {paymentData.months} {getMonthsText(paymentData.months)}
+            {paymentData.periodLabel ||
+              `${paymentData.months} ${getMonthsText(paymentData.months)}`}
           </strong>
         </div>
 

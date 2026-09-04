@@ -178,6 +178,15 @@ export const createListingSchema = z
     resortFilters: z.record(z.any()).optional(),
     features: z.record(z.any()).optional(),
     photos: z.array(trustedImageUrl("Некорректная ссылка на фото объявления")).optional(),
+    // ЖК, к которому относится квартира (только для серий вроде "Новостройка",
+    // "106 обычная" и т.п.) — валидируется как реальный UUID, а его
+    // существование дополнительно проверяется в контроллере, чтобы клиент
+    // не мог подставить квартиру в чужой/несуществующий ЖК.
+    residentialComplexId: z
+      .string()
+      .uuid("Некорректный ID жилого комплекса")
+      .optional()
+      .nullable(),
   })
   .passthrough()
   .superRefine((data, ctx) => {
@@ -277,6 +286,11 @@ export const updateListingSchema = z
     resortFilters: z.record(z.any()).optional(),
     features: z.record(z.any()).optional(),
     photos: z.array(trustedImageUrl("Некорректная ссылка на фото объявления")).optional(),
+    residentialComplexId: z
+      .string()
+      .uuid("Некорректный ID жилого комплекса")
+      .optional()
+      .nullable(),
     userId: z.any().optional(),
     user_id: z.any().optional(),
   })
@@ -478,6 +492,24 @@ export const pricingSchema = z.object({
     top: priceField("ТОП"),
     instagram: priceField("Instagram"),
   }),
+});
+
+// Разовая покупка продвижения объявления (POST /api/payments/promotion/create).
+// Сумма считается на сервере по актуальным ценам (см. createPromotionPayment) —
+// здесь только проверяем форму запроса.
+export const createPromotionPaymentSchema = z.object({
+  listingId: z.string().uuid("Некорректный ID объявления"),
+  serviceType: z.enum(["vip", "top", "urgent", "instagram"], {
+    errorMap: () => ({ message: "Некорректный тип продвижения" }),
+  }),
+  // Instagram — разовая услуга без срока, для неё days игнорируется на
+  // бэкенде; для vip/top/urgent — на сколько дней покупается продвижение.
+  days: z
+    .number({ invalid_type_error: "Количество дней должно быть числом" })
+    .int("Количество дней должно быть целым числом")
+    .min(1, "Минимум 1 день")
+    .max(90, "Максимум 90 дней")
+    .optional(),
 });
 
 

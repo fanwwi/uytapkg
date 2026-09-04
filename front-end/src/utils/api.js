@@ -239,6 +239,26 @@ export async function uploadListingPhoto(token, file) {
   return data.url;
 }
 
+// Фото ЖК — сервер всегда накладывает водяной знак (лого UyTap)
+export async function uploadComplexPhoto(token, file) {
+  const form = new FormData();
+  form.append("file", file);
+
+  const response = await fetch(`${API_URL}/upload/complex-photo`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: form,
+  });
+
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке фотографии ЖК");
+  }
+  return data.url;
+}
+
 export async function uploadAvatar(token, file) {
   const form = new FormData();
   form.append("avatar", file);
@@ -280,6 +300,11 @@ export async function getListingById(id) {
 
 export async function getComplexById(id) {
   const response = await fetch(`${API_URL}/complexes/${id}`);
+  return response.json();
+}
+
+export async function getComplexListings(id) {
+  const response = await fetch(`${API_URL}/complexes/${id}/listings`);
   return response.json();
 }
 
@@ -414,6 +439,25 @@ export async function createPayment(token, { tariffId, months }) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ tariffId, months }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка создания платежа");
+  }
+
+  return data.data;
+}
+
+export async function createPromotionPayment(token, { listingId, serviceType, days }) {
+  const response = await fetch(`${API_URL}/payments/promotion/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ listingId, serviceType, days }),
   });
 
   const data = await response.json();

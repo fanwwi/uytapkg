@@ -55,7 +55,64 @@ export const getComplexById = async (req, res) => {
 };
 
 // =======================================================
-// 3. Получение собственных ЖК застройщика (GET /api/complexes/my)
+// 3. Объявления квартир, привязанных к конкретному ЖК
+//    (GET /api/complexes/:id/listings)
+//
+// Привязка хранится в listings.features.residentialComplexId (в таблице
+// listings нет отдельной колонки под это — см. createListing/updateListing
+// в listingsController.js), поэтому фильтруем через JSON-путь Postgres.
+// Публичный эндпоинт — отдаём только активные объявления.
+// =======================================================
+export const getComplexListings = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: complex } = await supabase
+      .from("residential_complexes")
+      .select("id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (!complex) {
+      return res.status(404).json({
+        success: false,
+        message: "Жилой комплекс не найден",
+      });
+    }
+
+    const { data: listings, error } = await supabase
+      .from("listings")
+      .select(`
+        *,
+        listing_photos (id, url, is_main, display_order)
+      `)
+      .eq("status", "active")
+      .eq("features->>residentialComplexId", id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Get Complex Listings Error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Ошибка при получении квартир жилого комплекса",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: listings || [],
+    });
+  } catch (error) {
+    console.error("Get Complex Listings Controller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при получении квартир жилого комплекса",
+    });
+  }
+};
+
+// =======================================================
+// 4. Получение собственных ЖК застройщика (GET /api/complexes/my)
 // =======================================================
 export const getMyComplexes = async (req, res) => {
   try {
@@ -104,7 +161,7 @@ export const getMyComplexes = async (req, res) => {
 };
 
 // =======================================================
-// 4. Создание жилого комплекса (POST /api/complexes)
+// 5. Создание жилого комплекса (POST /api/complexes)
 // =======================================================
 export const createComplex = async (req, res) => {
   try {
@@ -251,7 +308,7 @@ export const createComplex = async (req, res) => {
 };
 
 // =======================================================
-// 5. Обновление жилого комплекса (PUT /api/complexes/:id)
+// 6. Обновление жилого комплекса (PUT /api/complexes/:id)
 // =======================================================
 export const updateComplex = async (req, res) => {
   try {
@@ -401,7 +458,7 @@ export const updateComplex = async (req, res) => {
 };
 
 // =======================================================
-// 6. Удаление жилого комплекса (DELETE /api/complexes/:id)
+// 7. Удаление жилого комплекса (DELETE /api/complexes/:id)
 // =======================================================
 export const deleteComplex = async (req, res) => {
   try {

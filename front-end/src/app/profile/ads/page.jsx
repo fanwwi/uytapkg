@@ -13,6 +13,7 @@ import {
   Clock3,
   Layers3,
   UserRoundArrowLeft,
+  Rocket,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +26,7 @@ import {
 import styles from "./Ads.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
 import AdsEditModal from "./AdsEditModal/AdsEditModal";
+import PromoteListingModal from "./PromoteListingModal/PromoteListingModal";
 
 export default function Ads() {
   const router = useRouter();
@@ -115,6 +117,9 @@ export default function Ads() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingListing, setEditingListing] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  // PROMOTE
+  const [promotingListing, setPromotingListing] = useState(null);
 
   const activeCount = listings.filter(
     (item) => item.status === "Активно",
@@ -460,6 +465,19 @@ export default function Ads() {
                     <button
                       type="button"
                       className={styles.iconButton}
+                      aria-label="Продвинуть объявление"
+                      title="Продвинуть"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPromotingListing(item);
+                      }}
+                    >
+                      <Rocket size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.iconButton}
                       aria-label="Изменить объявление"
                       title="Изменить"
                       onClick={(e) => {
@@ -533,6 +551,16 @@ export default function Ads() {
           listing={editingListing}
           onSave={handleSaveEdit}
           loading={isSaving}
+        />
+
+        {/* =========================
+            PROMOTE MODAL
+        ========================= */}
+
+        <PromoteListingModal
+          isOpen={Boolean(promotingListing)}
+          onClose={() => setPromotingListing(null)}
+          listing={promotingListing}
         />
       </div>
     </main>

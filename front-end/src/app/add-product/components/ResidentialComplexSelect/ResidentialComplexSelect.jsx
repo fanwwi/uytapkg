@@ -8,7 +8,43 @@ import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 import styles from "./ResidentialComplexSelect.module.css";
 
-export default function ResidentialComplexSelect({ value, setValue }) {
+// Строит уникальную подпись для ЖК в выпадающем списке. Названия ЖК не
+// гарантированно уникальны (два застройщика могут назвать комплекс
+// одинаково), а CustomSelect работает с плоским списком строк — поэтому
+// при совпадении названий дописываем город/адрес, а если и это не помогло,
+// добавляем короткий суффикс из ID, чтобы у каждого варианта был свой
+// однозначный текст (и не было дублирующихся React key).
+function buildOptions(complexes) {
+  const withLabel = complexes.map((complex) => ({
+    ...complex,
+    label: complex.city ? `${complex.name} — ${complex.city}` : complex.name,
+  }));
+
+  const labelCounts = new Map();
+  withLabel.forEach(({ label }) => {
+    labelCounts.set(label, (labelCounts.get(label) || 0) + 1);
+  });
+
+  const seen = new Set();
+
+  return withLabel.map((complex) => {
+    let label = complex.label;
+
+    if (labelCounts.get(label) > 1 && complex.address) {
+      label = `${label}, ${complex.address}`;
+    }
+
+    while (seen.has(label)) {
+      label = `${label} (${complex.id.slice(0, 4)})`;
+    }
+
+    seen.add(label);
+
+    return { ...complex, label };
+  });
+}
+
+export default function ResidentialComplexSelect({ value, onSelect }) {
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -31,22 +67,21 @@ export default function ResidentialComplexSelect({ value, setValue }) {
             ? res
             : [];
 
-        const complexOptions = data
-          .map((complex) => {
-            return (
+        const raw = data
+          .map((complex) => ({
+            id: complex?.id,
+            name:
               complex?.name ||
               complex?.title ||
               complex?.complex_name ||
               complex?.name_ru ||
-              ""
-            );
-          })
-          .filter(Boolean);
+              "",
+            city: complex?.city || null,
+            address: complex?.address || null,
+          }))
+          .filter((complex) => complex.id && complex.name);
 
-        // Убираем дубликаты
-        const uniqueOptions = [...new Set(complexOptions)];
-
-        setComplexes(uniqueOptions);
+        setComplexes(buildOptions(raw));
       } catch (err) {
         console.error("Failed to fetch residential complexes:", err);
 
@@ -83,8 +118,11 @@ export default function ResidentialComplexSelect({ value, setValue }) {
         icon={Building2}
         title="Жилой комплекс"
         value={value || ""}
-        setValue={setValue}
-        options={loading ? [] : complexes}
+        setValue={(label) => {
+          const found = complexes.find((complex) => complex.label === label);
+          onSelect(found ? { id: found.id, name: found.label } : { id: null, name: label });
+        }}
+        options={loading ? [] : complexes.map((complex) => complex.label)}
       />
 
       {loading && <span className={styles.loading}>Загрузка списка ЖК...</span>}

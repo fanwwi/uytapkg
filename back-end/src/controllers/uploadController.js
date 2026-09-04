@@ -76,3 +76,47 @@ export const uploadListingPhoto = async (req, res) => {
     });
   }
 };
+
+/**
+ * POST /api/upload/complex-photo — загрузка фото жилого комплекса (галерея
+ * / обложка ЖК). Поле формы: `file`. Тот же водяной знак, что и у фото
+ * объявлений, и по той же причине — отдельный эндпоинт от uploadImage,
+ * чтобы наложение нельзя было обойти со стороны клиента.
+ */
+export const uploadComplexPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Файл не передан. Ожидается поле формы `file`.",
+      });
+    }
+
+    let watermarkedBuffer;
+    try {
+      watermarkedBuffer = await applyWatermark(req.file.buffer, req.file.mimetype);
+    } catch (watermarkError) {
+      console.error("Apply Watermark Error:", watermarkError);
+      return res.status(400).json({
+        success: false,
+        message: "Не удалось обработать изображение. Файл повреждён или имеет неподдерживаемый формат.",
+      });
+    }
+
+    const { publicUrl } = await uploadPublicImageToStorage({
+      ...req.file,
+      buffer: watermarkedBuffer,
+    });
+
+    return res.json({
+      success: true,
+      url: publicUrl,
+    });
+  } catch (error) {
+    console.error("Upload Complex Photo Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Ошибка сервера при загрузке файла",
+    });
+  }
+};

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getComplexes,
   getComplexById,
+  getComplexListings,
   getMyComplexes,
   createComplex,
   updateComplex,
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/", getComplexes);
 router.get("/my", authenticateToken, getMyComplexes); // Собственные ЖК застройщика (должен идти до :id)
 router.get("/:id", getComplexById);
+router.get("/:id/listings", getComplexListings);
 
 // Защищенные маршруты (только для застройщиков)
 router.post("/", authenticateToken, createComplex);

@@ -543,6 +543,20 @@
   white-space: nowrap;
 }
 
+.tariffSub {
+  display: block;
+
+  max-width: 220px;
+  margin-top: 6px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #64616c;
+  font-size: 11px;
+}
+
 /* =========================================================
    PRICE
 ========================================================= */

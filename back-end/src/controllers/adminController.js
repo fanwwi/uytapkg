@@ -5,6 +5,15 @@ import { toPublicLawyer } from "./lawyersController.js";
 import { getVerificationDocumentSignedUrl } from "../utils/storage.js";
 import { getPricingSettings, savePricingSettings } from "../utils/pricingSettings.js";
 import { listAllBanners } from "../utils/bannersStore.js";
+import { listPromotionOrders } from "../utils/promotionOrders.js";
+
+const PROMOTION_TARIFF_PREFIX = "promo_";
+const SERVICE_TITLES = {
+  vip: "VIP-размещение",
+  top: "Поднятие в ТОП",
+  urgent: "Срочная публикация",
+  instagram: "Instagram-продвижение",
+};
 
 const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
 const MAX_REJECTION_REASON_LENGTH = 1000;
@@ -93,7 +102,67 @@ export const listPayments = async (req, res) => {
 
     const pricing = await getPricingSettings();
 
+    // Разовые покупки продвижения (VIP/ТОП/Срочно/Instagram) используют ту
+    // же таблицу payments (tariff_id вида "promo_<serviceType>"), но
+    // привязка к конкретному объявлению хранится отдельно — см.
+    // promotionOrders.js. Подтягиваем её и названия объявлений одним
+    // батчем, а не по одному запросу на платёж.
+    const promotionPayments = (data || []).filter((p) =>
+      p.tariff_id?.startsWith(PROMOTION_TARIFF_PREFIX)
+    );
+
+    let promotionOrdersByOrderId = new Map();
+    let listingTitlesById = new Map();
+
+    if (promotionPayments.length > 0) {
+      const allOrders = await listPromotionOrders();
+      promotionOrdersByOrderId = new Map(allOrders.map((o) => [o.orderId, o]));
+
+      const listingIds = [
+        ...new Set(
+          promotionPayments
+            .map((p) => promotionOrdersByOrderId.get(p.order_id)?.listingId)
+            .filter(Boolean)
+        ),
+      ];
+
+      if (listingIds.length > 0) {
+        const { data: listingRows } = await supabase
+          .from("listings")
+          .select("id, title")
+          .in("id", listingIds);
+
+        listingTitlesById = new Map((listingRows || []).map((l) => [l.id, l.title]));
+      }
+    }
+
     const payments = (data || []).map((payment) => {
+      const isPromotion = payment.tariff_id?.startsWith(PROMOTION_TARIFF_PREFIX);
+
+      if (isPromotion) {
+        const serviceType = payment.tariff_id.slice(PROMOTION_TARIFF_PREFIX.length);
+        const order = promotionOrdersByOrderId.get(payment.order_id);
+
+        return {
+          orderId: payment.order_id,
+          invoiceId: payment.invoice_id,
+          type: "promotion",
+          serviceType,
+          tariffId: payment.tariff_id,
+          tariffTitle: SERVICE_TITLES[serviceType] || payment.tariff_id,
+          listingId: order?.listingId || null,
+          listingTitle: order?.listingId ? listingTitlesById.get(order.listingId) || null : null,
+          days: payment.months,
+          fulfillmentStatus: order?.status || null,
+          amount: payment.amount / 100,
+          status: payment.status,
+          userEmail: payment.users?.email || null,
+          userPhone: payment.users?.phone || null,
+          paidAt: payment.paid_at,
+          createdAt: payment.created_at,
+        };
+      }
+
       const tariff = getTariff(payment.tariff_id, pricing);
       // Пересчитываем цену/мес и скидку по тем же правилам, что и при
       // создании платежа — в БД хранится только итоговая сумма. Обрати
@@ -105,6 +174,7 @@ export const listPayments = async (req, res) => {
       return {
         orderId: payment.order_id,
         invoiceId: payment.invoice_id,
+        type: "subscription",
         tariffId: payment.tariff_id,
         tariffTitle: tariff?.title || payment.tariff_id,
         months: payment.months,
