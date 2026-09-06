@@ -19,7 +19,7 @@ import {
 
 import styles from "./Tarrifs.module.css";
 import TariffModal from "./TarrifModal/TarrifModal";
-
+import Sidebar from "../components/Sidebar/Sidebar";
 
 const INITIAL_TARIFFS = [
   {
@@ -89,11 +89,8 @@ function getTypeIcon(type) {
 
 export default function TariffsPage() {
   const [tariffs, setTariffs] = useState(INITIAL_TARIFFS);
-
   const [search, setSearch] = useState("");
-
   const [modalOpen, setModalOpen] = useState(false);
-
   const [editingTariff, setEditingTariff] = useState(null);
 
   const filteredTariffs = useMemo(() => {
@@ -183,258 +180,262 @@ export default function TariffsPage() {
   }
 
   return (
-    <main className={styles.page}>
-      <div className={styles.backgroundGlow} />
+    <div className={styles.layout}>
+      <Sidebar />
 
-      <section className={styles.container}>
-        {/* HEADER */}
+      <main className={styles.page}>
+        <div className={styles.backgroundGlow} />
 
-        <header className={styles.header}>
-          <div className={styles.headerContent}>
-            <div className={styles.eyebrow}>
-              <ShieldCheck size={15} />
-              ADMINISTRATION
-            </div>
+        <section className={styles.container}>
+          {/* HEADER */}
 
-            <h1>Управление тарифами</h1>
-
-            <p>Мои активные созданные тарифы</p>
-          </div>
-
-          <button
-            type="button"
-            className={styles.createButton}
-            onClick={openCreateModal}
-          >
-            <Plus size={19} />
-            Добавить тариф
-          </button>
-        </header>
-
-        {/* STATS */}
-
-        <div className={styles.stats}>
-          <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <Crown size={19} />
-            </div>
-
-            <div className={styles.statContent}>
-              <span>Всего тарифов</span>
-              <strong>{tariffs.length}</strong>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <Check size={19} />
-            </div>
-
-            <div className={styles.statContent}>
-              <span>Активных тарифов</span>
-              <strong>{activeCount}</strong>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <Megaphone size={19} />
-            </div>
-
-            <div className={styles.statContent}>
-              <span>Всего TOP поднятий</span>
-              <strong>{totalTopUps}</strong>
-            </div>
-          </div>
-
-          <div className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <ArrowUp size={19} />
-            </div>
-
-            <div className={styles.statContent}>
-              <span>Всего VIP поднятий</span>
-              <strong>{totalVipUps}</strong>
-            </div>
-          </div>
-        </div>
-
-        {/* TOOLBAR */}
-
-        <div className={styles.toolbar}>
-          <div className={styles.search}>
-            <Search size={18} />
-
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Поиск тарифа, ID или пользователя..."
-            />
-
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className={styles.clearSearch}
-              >
-                <X size={16} />
-              </button>
-            )}
-          </div>
-
-          <span className={styles.resultInfo}>
-            Показано: <b>{filteredTariffs.length}</b>
-          </span>
-        </div>
-
-        {/* TABLE */}
-
-        <div className={styles.tableWrapper}>
-          <div className={styles.tableHeader}>
-            <div>Название тарифа</div>
-            <div>Активные объявления</div>
-            <div>TOP</div>
-            <div>VIP</div>
-            <div>Кому выдан</div>
-            <div>Статус</div>
-            <div />
-          </div>
-
-          <div className={styles.tableBody}>
-            {filteredTariffs.length === 0 ? (
-              <div className={styles.empty}>
-                <div className={styles.emptyIcon}>
-                  <Search size={24} />
-                </div>
-
-                <strong>Тарифы не найдены</strong>
-
-                <span>Попробуйте изменить поисковый запрос</span>
+          <header className={styles.header}>
+            <div className={styles.headerContent}>
+              <div className={styles.eyebrow}>
+                <ShieldCheck size={15} />
+                ADMINISTRATION
               </div>
-            ) : (
-              filteredTariffs.map((tariff) => {
-                const TypeIcon = getTypeIcon(tariff.type);
 
-                return (
-                  <div className={styles.tariffRow} key={tariff.id}>
-                    {/* NAME */}
+              <h1>Управление тарифами</h1>
 
-                    <div className={styles.nameCell}>
-                      <div className={styles.tariffIcon}>
-                        <Crown size={18} />
-                      </div>
+              <p>Мои активные созданные тарифы</p>
+            </div>
 
-                      <div>
-                        <strong>{tariff.name}</strong>
+            <button
+              type="button"
+              className={styles.createButton}
+              onClick={openCreateModal}
+            >
+              <Plus size={19} />
+              Добавить тариф
+            </button>
+          </header>
 
-                        <span>
-                          {tariff.id}
-                          {" · "}
-                          {tariff.price.toLocaleString("ru-RU")}
-                          {" сом"}
-                        </span>
-                      </div>
-                    </div>
+          {/* STATS */}
 
-                    {/* LISTINGS */}
+          <div className={styles.stats}>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>
+                <Crown size={19} />
+              </div>
 
-                    <div className={styles.numberCell}>
-                      <strong>{tariff.activeListings}</strong>
-                      <span>объектов</span>
-                    </div>
+              <div className={styles.statContent}>
+                <span>Всего тарифов</span>
+                <strong>{tariffs.length}</strong>
+              </div>
+            </div>
 
-                    {/* TOP */}
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>
+                <Check size={19} />
+              </div>
 
-                    <div className={styles.numberCell}>
-                      <strong>{tariff.topUps}</strong>
-                      <span>поднятий</span>
-                    </div>
+              <div className={styles.statContent}>
+                <span>Активных тарифов</span>
+                <strong>{activeCount}</strong>
+              </div>
+            </div>
 
-                    {/* VIP */}
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>
+                <Megaphone size={19} />
+              </div>
 
-                    <div className={styles.numberCell}>
-                      <strong>{tariff.vipUps}</strong>
-                      <span>поднятий</span>
-                    </div>
+              <div className={styles.statContent}>
+                <span>Всего TOP поднятий</span>
+                <strong>{totalTopUps}</strong>
+              </div>
+            </div>
 
-                    {/* ISSUED */}
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>
+                <ArrowUp size={19} />
+              </div>
 
-                    <div className={styles.issuedCell}>
-                      <div className={styles.userIcon}>
-                        <TypeIcon size={16} />
-                      </div>
-
-                      <div>
-                        <strong>{tariff.issuedTo}</strong>
-                        <span>{tariff.issuedToId}</span>
-                      </div>
-                    </div>
-
-                    {/* STATUS */}
-
-                    <div>
-                      <button
-                        type="button"
-                        className={`${styles.switch} ${
-                          tariff.status ? styles.switchActive : ""
-                        }`}
-                        onClick={() => toggleTariff(tariff.id)}
-                        aria-label={
-                          tariff.status
-                            ? "Деактивировать тариф"
-                            : "Активировать тариф"
-                        }
-                      >
-                        <span />
-                      </button>
-                    </div>
-
-                    {/* EDIT */}
-
-                    <div className={styles.actions}>
-                      <button
-                        type="button"
-                        className={styles.editButton}
-                        onClick={() => openEditModal(tariff)}
-                      >
-                        <Pencil size={16} />
-                        Изменить
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
+              <div className={styles.statContent}>
+                <span>Всего VIP поднятий</span>
+                <strong>{totalVipUps}</strong>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* FOOTER */}
+          {/* TOOLBAR */}
 
-        <div className={styles.footer}>
-          <div>
-            <Users size={16} />
+          <div className={styles.toolbar}>
+            <div className={styles.search}>
+              <Search size={18} />
 
-            <span>
-              Управление тарифами определяет доступные пользователю лимиты и
-              возможности размещения.
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Поиск тарифа, ID или пользователя..."
+              />
+
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className={styles.clearSearch}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            <span className={styles.resultInfo}>
+              Показано: <b>{filteredTariffs.length}</b>
             </span>
           </div>
 
-          <span>
-            Активных: <b>{activeCount}</b> / {tariffs.length}
-          </span>
-        </div>
-      </section>
+          {/* TABLE */}
 
-      {/* MODAL */}
+          <div className={styles.tableWrapper}>
+            <div className={styles.tableHeader}>
+              <div>Название тарифа</div>
+              <div>Активные объявления</div>
+              <div>TOP</div>
+              <div>VIP</div>
+              <div>Кому выдан</div>
+              <div>Статус</div>
+              <div />
+            </div>
 
-      {modalOpen && (
-        <TariffModal
-          tariff={editingTariff}
-          onClose={closeModal}
-          onSave={handleSaveTariff}
-        />
-      )}
-    </main>
+            <div className={styles.tableBody}>
+              {filteredTariffs.length === 0 ? (
+                <div className={styles.empty}>
+                  <div className={styles.emptyIcon}>
+                    <Search size={24} />
+                  </div>
+
+                  <strong>Тарифы не найдены</strong>
+
+                  <span>Попробуйте изменить поисковый запрос</span>
+                </div>
+              ) : (
+                filteredTariffs.map((tariff) => {
+                  const TypeIcon = getTypeIcon(tariff.type);
+
+                  return (
+                    <div className={styles.tariffRow} key={tariff.id}>
+                      {/* NAME */}
+
+                      <div className={styles.nameCell}>
+                        <div className={styles.tariffIcon}>
+                          <Crown size={18} />
+                        </div>
+
+                        <div>
+                          <strong>{tariff.name}</strong>
+
+                          <span>
+                            {tariff.id}
+                            {" · "}
+                            {tariff.price.toLocaleString("ru-RU")}
+                            {" сом"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* LISTINGS */}
+
+                      <div className={styles.numberCell}>
+                        <strong>{tariff.activeListings}</strong>
+                        <span>объектов</span>
+                      </div>
+
+                      {/* TOP */}
+
+                      <div className={styles.numberCell}>
+                        <strong>{tariff.topUps}</strong>
+                        <span>поднятий</span>
+                      </div>
+
+                      {/* VIP */}
+
+                      <div className={styles.numberCell}>
+                        <strong>{tariff.vipUps}</strong>
+                        <span>поднятий</span>
+                      </div>
+
+                      {/* ISSUED */}
+
+                      <div className={styles.issuedCell}>
+                        <div className={styles.userIcon}>
+                          <TypeIcon size={16} />
+                        </div>
+
+                        <div>
+                          <strong>{tariff.issuedTo}</strong>
+                          <span>{tariff.issuedToId}</span>
+                        </div>
+                      </div>
+
+                      {/* STATUS */}
+
+                      <div>
+                        <button
+                          type="button"
+                          className={`${styles.switch} ${
+                            tariff.status ? styles.switchActive : ""
+                          }`}
+                          onClick={() => toggleTariff(tariff.id)}
+                          aria-label={
+                            tariff.status
+                              ? "Деактивировать тариф"
+                              : "Активировать тариф"
+                          }
+                        >
+                          <span />
+                        </button>
+                      </div>
+
+                      {/* EDIT */}
+
+                      <div className={styles.actions}>
+                        <button
+                          type="button"
+                          className={styles.editButton}
+                          onClick={() => openEditModal(tariff)}
+                        >
+                          <Pencil size={16} />
+                          Изменить
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+
+          {/* FOOTER */}
+
+          <div className={styles.footer}>
+            <div>
+              <Users size={16} />
+
+              <span>
+                Управление тарифами определяет доступные пользователю лимиты и
+                возможности размещения.
+              </span>
+            </div>
+
+            <span>
+              Активных: <b>{activeCount}</b> / {tariffs.length}
+            </span>
+          </div>
+        </section>
+
+        {/* MODAL */}
+
+        {modalOpen && (
+          <TariffModal
+            tariff={editingTariff}
+            onClose={closeModal}
+            onSave={handleSaveTariff}
+          />
+        )}
+      </main>
+    </div>
   );
 }

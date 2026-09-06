@@ -16,6 +16,40 @@
     #07070a;
 
   color: #f0eff7;
+  margin-left: 250px;
+}
+
+.layout {
+  min-height: 100vh;
+
+  display: flex;
+
+  background: #07070a;
+  color: #fff;
+}
+
+.page {
+  flex: 1;
+
+  min-width: 0;
+  min-height: 100vh;
+
+  padding: 38px 42px 60px;
+
+  background:
+    radial-gradient(
+      circle at 75% 0%,
+      rgba(124, 92, 246, 0.13),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 10% 100%,
+      rgba(72, 61, 246, 0.06),
+      transparent 30%
+    ),
+    #07070a;
+
+  color: #f0eff7;
 }
 
 .backgroundGlow {
