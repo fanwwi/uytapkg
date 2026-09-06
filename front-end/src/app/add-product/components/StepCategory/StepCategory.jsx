@@ -18,6 +18,7 @@ import {
   Maximize,
   ChevronRight,
   Check,
+  PawPrint,
 } from "lucide-react";
 
 import { getConstants } from "@/utils/api";
@@ -40,6 +41,7 @@ const fieldIcons = {
   documents: Tag,
   furniture: House,
   offerType: Tag,
+  pets: PawPrint,
 
   houseType: House,
   floors: Building2,
@@ -307,9 +309,7 @@ const categories = {
       ["material", "Материал"],
       ["security", "Видеонаблюдение"],
       ["gates", "Ворота"],
-      ["inspectionPit", "Смотровая яма"],
       ["basement", "Погреб"],
-      ["electricity", "Электричество"],
       ["truckAccess", "Для грузового авто"],
       ["gateType", "Тип ворот"],
       ["documents", "Документы"],
@@ -406,6 +406,8 @@ const options = {
     "Возможен обмен",
   ],
 
+  pets: ["Да", "Нет"],
+
   houseType: [
     "Любой",
     "Частный дом",
@@ -435,7 +437,7 @@ const options = {
 
   fence: ["Есть", "Нет", "Частично"],
 
-  location: ["В городе", "В пригороде", "За городом", "У трассы", "В центре"],
+  location: ["В квартире", "В доме", "В хостеле", "В гостинице", "В общежитии"],
 
   terrain: ["Ровный", "С уклоном", "Горный", "Холмистый"],
 
@@ -531,6 +533,13 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   const [apiError, setApiError] = useState(false);
 
   /* =========================================================
+     DEAL TYPE
+  ========================================================= */
+
+  const isRent = form.dealType === "rent";
+  const isApartment = form.category === "apartment";
+
+  /* =========================================================
      LOAD CONSTANTS
   ========================================================= */
 
@@ -556,6 +565,42 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         setApiError(true);
       });
   }, []);
+
+  /* =========================================================
+     RESET RENT-SPECIFIC FIELDS
+  ========================================================= */
+
+  useEffect(() => {
+    if (!isRent) {
+      if (form.pets) {
+        updateForm({
+          pets: "",
+        });
+      }
+
+      return;
+    }
+
+    if (isRent) {
+      const resetFields = {};
+
+      if (form.documents) {
+        resetFields.documents = "";
+      }
+
+      if (form.offerType) {
+        resetFields.offerType = "";
+      }
+
+      if (!isApartment && form.pets) {
+        resetFields.pets = "";
+      }
+
+      if (Object.keys(resetFields).length > 0) {
+        updateForm(resetFields);
+      }
+    }
+  }, [isRent, isApartment]);
 
   /* =========================================================
      REGION
@@ -633,6 +678,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       category: key,
       amenities: [],
       residentialComplex: "",
+      pets: "",
     });
   }
 
@@ -654,6 +700,23 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
     updateForm({
       amenities: nextAmenities,
     });
+  }
+
+  /* =========================================================
+     CATEGORY FIELDS
+  ========================================================= */
+
+  const visibleFields =
+    category?.fields.filter(([name]) => {
+      if (isRent && (name === "documents" || name === "offerType")) {
+        return false;
+      }
+
+      return true;
+    }) || [];
+
+  if (isRent && isApartment) {
+    visibleFields.push(["pets", "Можно с животными"]);
   }
 
   return (
@@ -761,6 +824,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   category: "",
                   amenities: [],
                   residentialComplex: "",
+                  pets: "",
                 })
               }
             >
@@ -890,7 +954,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
 
             <div className={styles.fieldsGrid}>
-              {category.fields.map(([name, label]) => {
+              {visibleFields.map(([name, label]) => {
                 const fieldOptions = getFieldOptions(name, dynamicOptions);
 
                 const Icon = fieldIcons[name] || Tag;
