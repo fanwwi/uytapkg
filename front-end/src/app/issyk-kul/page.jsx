@@ -22,30 +22,7 @@ import {
 import styles from "./IssykKul.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { useRouter } from "next/navigation";
-import { div } from "framer-motion/client";
-
-const locations = [
-  {
-    title: "Чолпон-Ата",
-    description: "Главный курортный город северного побережья.",
-    icon: Umbrella,
-  },
-  {
-    title: "Бостери",
-    description: "Пляжи, туристическая инфраструктура и отдых у озера.",
-    icon: Waves,
-  },
-  {
-    title: "Кара-Ой",
-    description: "Тихая курортная зона рядом с Чолпон-Атой.",
-    icon: TreePalm,
-  },
-  {
-    title: "Тамчы",
-    description: "Спокойный район рядом с аэропортом и берегом.",
-    icon: Mountain,
-  },
-];
+import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 const propertyTypes = [
   {
@@ -158,7 +135,7 @@ export default function IssykKul() {
           </div>
         </section>
 
-        {/* INTRO */}
+        <AdBanner />
 
         <section className={styles.intro}>
           <div className={styles.sectionHeading}>

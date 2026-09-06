@@ -8,7 +8,7 @@ import { getBanners } from "@/utils/api";
 
 const ROTATE_INTERVAL_MS = 6000;
 
-export default function AdBanner() {
+export default function AdBanner({ page = null }) {
   const [banners, setBanners] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,16 +17,29 @@ export default function AdBanner() {
 
     getBanners()
       .then((data) => {
-        if (!cancelled) setBanners(data);
+        if (cancelled) return;
+
+        // Если page передан — показываем только баннеры этой страницы.
+        // Если page не передан — показываем все баннеры.
+        const filteredBanners = page
+          ? data.filter((banner) => banner.page === page)
+          : data;
+
+        setBanners(filteredBanners);
+        setActiveIndex(0);
       })
       .catch((err) => {
         console.error("Ошибка загрузки баннеров:", err);
+
+        if (!cancelled) {
+          setBanners([]);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     if (banners.length < 2) return undefined;
@@ -46,10 +59,12 @@ export default function AdBanner() {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={banner.imageUrl}
-      alt={banner.title}
+      alt={banner.title || "Реклама"}
       className={styles.image}
       style={{
-        objectPosition: `${banner.imagePositionX ?? 50}% ${banner.imagePositionY ?? 50}%`,
+        objectPosition: `${banner.imagePositionX ?? 50}% ${
+          banner.imagePositionY ?? 50
+        }%`,
       }}
     />
   );
@@ -60,7 +75,7 @@ export default function AdBanner() {
     <section className={styles.banner}>
       {banner.link ? (
         isInternalLink ? (
-          <Link href={banner.link} aria-label={banner.title}>
+          <Link href={banner.link} aria-label={banner.title || "Реклама"}>
             {image}
           </Link>
         ) : (
@@ -68,7 +83,7 @@ export default function AdBanner() {
             href={banner.link}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={banner.title}
+            aria-label={banner.title || "Реклама"}
           >
             {image}
           </a>

@@ -9,6 +9,7 @@ import { getDevelopers } from "@/utils/api";
 import styles from "./Developers.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import Header from "@/components/pageComponents/header/Header";
+import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 export default function Developers() {
   const router = useRouter();
@@ -157,6 +158,8 @@ export default function Developers() {
           </div>
         </div>
       </section>
+
+      <AdBanner />
 
       <section className={styles.container}>
         <div className={styles.toolbar}>

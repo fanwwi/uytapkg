@@ -19,6 +19,7 @@ import styles from "./Lawyers.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { getLawyers } from "@/utils/api";
+import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 const benefits = [
   {
@@ -203,8 +204,6 @@ export default function Lawyers() {
           </div>
         </section>
 
-        {/* LAWYERS */}
-
         <section id="lawyers" className={styles.lawyersSection}>
           <div className={styles.sectionHeading}>
             <span>03</span>
@@ -319,6 +318,7 @@ export default function Lawyers() {
           </a>
         </section>
       </div>
+      <AdBanner />
       <Footer />
     </main>
   );

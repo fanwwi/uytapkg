@@ -10,6 +10,7 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import { getComplexes } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
 import Header from "@/components/pageComponents/header/Header";
+import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 export default function Complexes() {
   const router = useRouter();
@@ -132,6 +133,8 @@ export default function Complexes() {
 
         <div className={styles.heroBottomFade} />
       </section>
+
+      <AdBanner />
 
       {/* CONTENT */}
 
