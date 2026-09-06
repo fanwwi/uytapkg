@@ -9,43 +9,40 @@ import {
   FileText,
   Sofa,
   CreditCard,
+  Clock3,
+  PawPrint,
 } from "lucide-react";
+
+import { useEffect } from "react";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 import styles from "./ApartmentFilters.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+import ResidentialComplexFilter from "../ResidentalComplexFilter/ResidentalComplexFilter";
+
+/* =========================================================
+   OPTIONS
+========================================================= */
 
 const series = [
-  "Любой",
   "Новостройка",
   "102 серия",
   "104 серия",
   "105 серия",
-  "106 серия",
+  "106 обычная",
+  "106 улучшенная",
+  "107 обычная",
+  "107 улучшенная",
+  "Индивидуалка",
   "Сталинка",
   "Хрущевка",
   "Элитка",
   "Пентхаус",
 ];
 
-const floors = [
-  "Любой",
-  "Цоколь",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10+",
-];
+const floors = ["Цоколь", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"];
 
 const conditions = [
-  "Любой",
   "Дизайнерский ремонт",
   "Евроремонт",
   "Косметический",
@@ -55,7 +52,6 @@ const conditions = [
 ];
 
 const walls = [
-  "Любой",
   "Кирпич",
   "Бетон",
   "Газобетон",
@@ -66,7 +62,6 @@ const walls = [
 ];
 
 const heating = [
-  "Любой",
   "Автономное",
   "Газовое",
   "Центральное",
@@ -75,7 +70,6 @@ const heating = [
 ];
 
 const documents = [
-  "Любые",
   "Красная книга",
   "Техпаспорт",
   "Договор купли-продажи",
@@ -84,19 +78,21 @@ const documents = [
 ];
 
 const furniture = [
-  "Любая",
   "Полностью меблирована",
   "Частично меблирована",
   "Без мебели",
 ];
 
 const offerTypes = [
-  "Любой",
   "Наличный расчет",
   "Ипотека",
   "Рассрочка",
   "Возможен обмен",
 ];
+
+const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
+
+const petsOptions = ["Да", "Нет"];
 
 const amenities = [
   "Балкон / лоджия",
@@ -116,79 +112,241 @@ const amenities = [
   "Бронированные двери",
 ];
 
+/* =========================================================
+   ЖК ПО СЕРИЯМ
+========================================================= */
+
+const residentialComplexSeries = [
+  "Новостройка",
+  "Элитка",
+  "Индивидуалка",
+  "106 обычная",
+  "106 улучшенная",
+  "107 обычная",
+  "107 улучшенная",
+];
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function normalizeMultiValue(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value;
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function ApartmentFilters({ filters, updateFilter }) {
+  const seriesValue = normalizeMultiValue(filters.series);
+
+  const floorValue = normalizeMultiValue(filters.floor);
+
+  const conditionValue = normalizeMultiValue(filters.condition);
+
+  const wallsValue = normalizeMultiValue(filters.walls);
+
+  const heatingValue = normalizeMultiValue(filters.heating);
+
+  const documentsValue = normalizeMultiValue(filters.documents);
+
+  const furnitureValue = normalizeMultiValue(filters.furniture);
+
+  const offerTypeValue = normalizeMultiValue(filters.offerType);
+
+  const residentialComplexValue = normalizeMultiValue(
+    filters.residentialComplex,
+  );
+
+  const rentalPeriodValue = normalizeMultiValue(filters.rentalPeriod);
+
+  const petsValue = normalizeMultiValue(filters.pets);
+
+  const amenitiesValue = normalizeMultiValue(filters.amenities);
+
+  /* =======================================================
+     DEAL
+  ======================================================= */
+
+  const isRent = filters.dealType === "rent";
+
+  /* =======================================================
+     ЖК
+  ======================================================= */
+
+  const showResidentialComplex = seriesValue.some((value) =>
+    residentialComplexSeries.includes(value),
+  );
+
+  /*
+   * Если пользователь убрал все серии,
+   * для которых доступен ЖК,
+   * очищаем выбранные ЖК.
+   */
+  useEffect(() => {
+    if (!showResidentialComplex && residentialComplexValue.length > 0) {
+      updateFilter("residentialComplex", []);
+    }
+  }, [showResidentialComplex, residentialComplexValue.length]);
+
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <div className={styles.grid}>
-      <CustomSelect
+      {/* =================================================
+          SERIES
+      ================================================= */}
+
+      <MultiSelect
         icon={Building2}
         title="Серия"
         options={series}
-        value={filters.series || "Любой"}
+        value={seriesValue}
         setValue={(value) => updateFilter("series", value)}
       />
 
-      <CustomSelect
+      {/* =================================================
+          ЖК
+      ================================================= */}
+
+      {showResidentialComplex && (
+        <div className={styles.full}>
+          <ResidentialComplexFilter
+            value={residentialComplexValue}
+            setValue={(value) => updateFilter("residentialComplex", value)}
+          />
+        </div>
+      )}
+
+      {/* =================================================
+          FLOOR
+      ================================================= */}
+
+      <MultiSelect
         icon={Layers3}
         title="Этаж"
         options={floors}
-        value={filters.floor || "Любой"}
+        value={floorValue}
         setValue={(value) => updateFilter("floor", value)}
       />
 
-      <CustomSelect
+      {/* =================================================
+          CONDITION
+      ================================================= */}
+
+      <MultiSelect
         icon={Paintbrush}
         title="Состояние"
         options={conditions}
-        value={filters.condition || "Любой"}
+        value={conditionValue}
         setValue={(value) => updateFilter("condition", value)}
       />
 
-      <CustomSelect
+      {/* =================================================
+          WALLS
+      ================================================= */}
+
+      <MultiSelect
         icon={BrickWall}
         title="Стены"
         options={walls}
-        value={filters.walls || "Любой"}
+        value={wallsValue}
         setValue={(value) => updateFilter("walls", value)}
       />
 
-      <CustomSelect
+      {/* =================================================
+          HEATING
+      ================================================= */}
+
+      <MultiSelect
         icon={Flame}
         title="Отопление"
         options={heating}
-        value={filters.heating || "Любой"}
+        value={heatingValue}
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelect
-        icon={FileText}
-        title="Документы"
-        options={documents}
-        value={filters.documents || "Любые"}
-        setValue={(value) => updateFilter("documents", value)}
-      />
+      {/* =================================================
+          SALE / DOCUMENTS
+      ================================================= */}
 
-      <CustomSelect
+      {!isRent && (
+        <>
+          <MultiSelect
+            icon={FileText}
+            title="Документы"
+            options={documents}
+            value={documentsValue}
+            setValue={(value) => updateFilter("documents", value)}
+          />
+
+          <MultiSelect
+            icon={CreditCard}
+            title="Способ оплаты"
+            options={offerTypes}
+            value={offerTypeValue}
+            setValue={(value) => updateFilter("offerType", value)}
+          />
+        </>
+      )}
+
+      {/* =================================================
+          RENTAL PERIOD
+      ================================================= */}
+
+      {isRent && (
+        <MultiSelect
+          icon={Clock3}
+          title="Период аренды"
+          options={rentalPeriods}
+          value={rentalPeriodValue}
+          setValue={(value) => updateFilter("rentalPeriod", value)}
+        />
+      )}
+
+      {/* =================================================
+          PETS
+      ================================================= */}
+
+      {isRent && (
+        <MultiSelect
+          icon={PawPrint}
+          title="Можно с животными"
+          options={petsOptions}
+          value={petsValue}
+          setValue={(value) => updateFilter("pets", value)}
+        />
+      )}
+
+      {/* =================================================
+          FURNITURE
+      ================================================= */}
+
+      <MultiSelect
         icon={Sofa}
         title="Мебель"
         options={furniture}
-        value={filters.furniture || "Любая"}
+        value={furnitureValue}
         setValue={(value) => updateFilter("furniture", value)}
       />
 
-      <CustomSelect
-        icon={CreditCard}
-        title="Способ оплаты"
-        options={offerTypes}
-        value={filters.offerType || "Любой"}
-        setValue={(value) => updateFilter("offerType", value)}
-      />
+      {/* =================================================
+          AMENITIES
+      ================================================= */}
 
       <div className={styles.full}>
         <MultiSelect
           icon={Building2}
           title="Удобства"
           options={amenities}
-          value={filters.amenities || []}
+          value={amenitiesValue}
           setValue={(value) => updateFilter("amenities", value)}
         />
       </div>
