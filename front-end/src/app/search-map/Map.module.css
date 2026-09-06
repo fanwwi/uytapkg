@@ -1096,7 +1096,7 @@
 .drawHint strong {
   color: #334155;
 
-  font-size: 11px;
+  font-size: 13px;
 
   font-weight: 800;
 }
@@ -1104,7 +1104,7 @@
 .drawHint span {
   color: #94a3b8;
 
-  font-size: 9px;
+  font-size: 11px;
 }
 
 /* =========================================================
@@ -2159,5 +2159,255 @@
 
   .loadingSpinner {
     animation: none !important;
+  }
+}
+
+/* =========================================================
+   AREA SELECTION
+========================================================= */
+
+.mapDrawingMode {
+  cursor: crosshair !important;
+}
+
+.mapDrawingMode * {
+  cursor: crosshair !important;
+}
+
+.areaSelectionControl {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 1000;
+}
+
+.areaSelectionButton {
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.94);
+  color: #34303d;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.14),
+    0 2px 6px rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+.areaSelectionButton:hover {
+  background: #ffffff;
+
+  border-color: rgba(139, 92, 246, 0.32);
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.17),
+    0 3px 8px rgba(15, 23, 42, 0.09);
+}
+
+.areaSelectionButton:active {
+  transform: scale(0.98);
+}
+
+.areaSelectionButton svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+}
+
+.areaSelectionButtonActive {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(139, 92, 246, 0.28),
+    0 3px 8px rgba(139, 92, 246, 0.18);
+}
+
+.areaSelectionButtonActive:hover {
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+
+/* =========================================================
+   AREA MODE HINT
+========================================================= */
+
+.areaModeHint {
+  position: absolute;
+
+  left: 50%;
+  bottom: 24px;
+
+  z-index: 1000;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 285px;
+
+  padding: 11px 15px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 13px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.14),
+    0 2px 8px rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  pointer-events: none;
+}
+
+.areaModeHintIcon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: rgba(139, 92, 246, 0.1);
+  color: #7c3aed;
+}
+
+.areaModeHintIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.areaModeHint div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.areaModeHint strong {
+  color: #27232f;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.areaModeHint span {
+  color: #77727f;
+
+  font-size: 10px;
+  line-height: 14px;
+}
+
+/* =========================================================
+   DRAWING INDICATOR
+========================================================= */
+
+.drawingIndicator {
+  position: absolute;
+
+  left: 50%;
+  bottom: 24px;
+
+  z-index: 1000;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 15px;
+
+  border-radius: 11px;
+
+  background: #27232f;
+  color: #ffffff;
+
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.2);
+
+  pointer-events: none;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.drawingIndicator svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .areaSelectionControl {
+    top: 12px;
+    right: 12px;
+  }
+
+  .areaSelectionButton {
+    height: 40px;
+
+    padding: 0 12px;
+
+    font-size: 10px;
+  }
+
+  .areaSelectionButton span {
+    display: none;
+  }
+
+  .areaSelectionButton svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .areaModeHint,
+  .drawingIndicator {
+    left: 12px;
+    right: 12px;
+
+    bottom: 18px;
+
+    transform: none;
+
+    min-width: 0;
   }
 }
