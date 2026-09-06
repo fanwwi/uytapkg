@@ -127,6 +127,8 @@ const DEFAULT_FILTERS = {
   beachDistanceFrom: "",
   beachDistanceTo: "",
 
+  urgentOnly: false,
+
   series: [],
   floor: [],
   condition: [],
@@ -202,8 +204,11 @@ const arrayFeatureKeys = [
   "documents",
   "furniture",
   "offerType",
+
   "residentialComplex",
+
   "rentalPeriod",
+
   "amenities",
   "communications",
   "technicalParameters",
@@ -215,19 +220,28 @@ const ignoredUrlKeys = [
   "propertyType",
   "category",
   "dealType",
+
   "city",
   "settlement",
   "region",
   "country",
   "district",
+
   "currency",
+
   "priceFrom",
   "priceTo",
+
   "areaFrom",
   "areaTo",
+
   "rooms",
+
   "beachDistanceFrom",
   "beachDistanceTo",
+
+  "urgentOnly",
+
   ...arrayFeatureKeys,
 ];
 
@@ -307,8 +321,13 @@ function isIssykKulLocation(filters) {
   const country = normalizeLocationValue(filters?.country);
   const district = normalizeLocationValue(filters?.district);
 
-  if (isIssykKulValue(region)) return true;
-  if (isIssykKulValue(city)) return true;
+  if (isIssykKulValue(region)) {
+    return true;
+  }
+
+  if (isIssykKulValue(city)) {
+    return true;
+  }
 
   if (
     city &&
@@ -325,8 +344,13 @@ function isIssykKulLocation(filters) {
     return true;
   }
 
-  if (isIssykKulValue(district)) return true;
-  if (isIssykKulValue(country)) return true;
+  if (isIssykKulValue(district)) {
+    return true;
+  }
+
+  if (isIssykKulValue(country)) {
+    return true;
+  }
 
   return false;
 }
@@ -495,7 +519,9 @@ export default function AllProducts() {
       city: searchParams.get("city") || searchParams.get("settlement") || "Все",
 
       region: searchParams.get("region") || "",
+
       country: searchParams.get("country") || "",
+
       district: searchParams.get("district") || "",
 
       currency: searchParams.get("currency") || "USD",
@@ -514,13 +540,22 @@ export default function AllProducts() {
 
       beachDistanceTo: searchParams.get("beachDistanceTo") || "",
 
+      urgentOnly: searchParams.get("urgentOnly") === "true",
+
       series: parseArrayParam("series"),
+
       floor: parseArrayParam("floor"),
+
       condition: parseArrayParam("condition"),
+
       walls: parseArrayParam("walls"),
+
       heating: parseArrayParam("heating"),
+
       documents: parseArrayParam("documents"),
+
       furniture: parseArrayParam("furniture"),
+
       offerType: parseArrayParam("offerType"),
 
       residentialComplex: parseArrayParam("residentialComplex"),
@@ -554,10 +589,23 @@ export default function AllProducts() {
   ======================================================= */
 
   function updateFilter(key, value) {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setFilters((prev) => {
+      const next = {
+        ...prev,
+        [key]: value,
+      };
+
+      if (key === "dealType") {
+        if (value === "rent") {
+          next.documents = [];
+          next.offerType = [];
+        } else {
+          next.rentalPeriod = [];
+        }
+      }
+
+      return next;
+    });
   }
 
   /* =======================================================
@@ -619,6 +667,18 @@ export default function AllProducts() {
         params.set(key, String(value));
       }
     }
+
+    /* =====================================================
+       URGENT
+    ===================================================== */
+
+    if (nextFilters.urgentOnly) {
+      params.set("urgentOnly", "true");
+    }
+
+    /* =====================================================
+       ARRAY FILTERS
+    ===================================================== */
 
     for (const key of arrayFeatureKeys) {
       const value = normalizeArrayValue(nextFilters[key]);
@@ -743,6 +803,14 @@ export default function AllProducts() {
       next.beachDistanceTo = String(parsed.beachDistanceTo);
     }
 
+    /* =====================================================
+       SMART SEARCH → URGENT
+    ===================================================== */
+
+    if (parsed.urgentOnly !== undefined && parsed.urgentOnly !== null) {
+      next.urgentOnly = Boolean(parsed.urgentOnly);
+    }
+
     for (const key of featureKeys) {
       if (
         parsed[key] !== undefined &&
@@ -778,6 +846,7 @@ export default function AllProducts() {
     async function loadData() {
       try {
         setLoading(true);
+
         setError("");
 
         const token =
@@ -915,6 +984,22 @@ export default function AllProducts() {
   const filteredListings = useMemo(() => {
     return mappedListings
       .filter((item) => {
+        /* =================================================
+           URGENT STATUS FILTER
+        ================================================= */
+
+        const itemStatus = String(item?.status || "")
+          .trim()
+          .toLowerCase();
+
+        if (filters.urgentOnly && itemStatus !== "urgent") {
+          return false;
+        }
+
+        /* =================================================
+           CATEGORY
+        ================================================= */
+
         const selectedType = categoryApiMap[filters.propertyType];
 
         const itemType = String(item.type || "")
@@ -924,6 +1009,10 @@ export default function AllProducts() {
         const matchesCategory =
           !selectedType || itemType === selectedType.toLowerCase();
 
+        /* =================================================
+           DEAL
+        ================================================= */
+
         const selectedDeal = dealApiMap[filters.dealType];
 
         const itemDeal = String(item.dealType || "")
@@ -932,6 +1021,10 @@ export default function AllProducts() {
 
         const matchesDeal =
           !selectedDeal || itemDeal === selectedDeal.toLowerCase();
+
+        /* =================================================
+           CITY
+        ================================================= */
 
         const matchesCity = (() => {
           if (!filters.city || filters.city === "Все") {
@@ -990,6 +1083,10 @@ export default function AllProducts() {
           return values.some((value) => value.includes(selected));
         })();
 
+        /* =================================================
+           ROOMS
+        ================================================= */
+
         const matchesRooms = (() => {
           if (!filters.rooms || filters.rooms === "Все") {
             return true;
@@ -1003,6 +1100,10 @@ export default function AllProducts() {
 
           return itemRooms === Number(filters.rooms);
         })();
+
+        /* =================================================
+           PRICE
+        ================================================= */
 
         const matchesPrice = (() => {
           const price = Number(item.rawPrice);
@@ -1022,6 +1123,10 @@ export default function AllProducts() {
           return true;
         })();
 
+        /* =================================================
+           AREA
+        ================================================= */
+
         const matchesArea = (() => {
           const area = Number(item.rawArea);
 
@@ -1039,6 +1144,10 @@ export default function AllProducts() {
 
           return true;
         })();
+
+        /* =================================================
+           BEACH DISTANCE
+        ================================================= */
 
         const matchesBeach = (() => {
           if (!filters.beachDistanceFrom && !filters.beachDistanceTo) {
@@ -1093,6 +1202,10 @@ export default function AllProducts() {
           return true;
         })();
 
+        /* =================================================
+           ARRAY FEATURES
+        ================================================= */
+
         for (const key of arrayFeatureKeys) {
           const selected = filters[key];
 
@@ -1116,6 +1229,10 @@ export default function AllProducts() {
             return false;
           }
         }
+
+        /* =================================================
+           SIMPLE FEATURES
+        ================================================= */
 
         for (const key of featureKeys) {
           if (arrayFeatureKeys.includes(key)) {
@@ -1149,6 +1266,10 @@ export default function AllProducts() {
           }
         }
 
+        /* =================================================
+           FINAL FILTER RESULT
+        ================================================= */
+
         return (
           matchesCategory &&
           matchesDeal &&
@@ -1167,7 +1288,10 @@ export default function AllProducts() {
           regular: 3,
         };
 
-        return (priority[a.status] ?? 3) - (priority[b.status] ?? 3);
+        return (
+          (priority[String(a.status || "").toLowerCase()] ?? 3) -
+          (priority[String(b.status || "").toLowerCase()] ?? 3)
+        );
       });
   }, [mappedListings, filters]);
 

@@ -8,22 +8,14 @@ import {
   Waves,
   FileText,
   Globe2,
+  Zap,
 } from "lucide-react";
 
 import styles from "./CommonFilters.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
-/* =========================================================
-   OPTIONS
-========================================================= */
-
 const roomsOptions = ["Все", "1", "2", "3", "4+"];
-
 const currencyOptions = ["USD", "KGS", "EUR"];
-
-/* =========================================================
-   FALLBACK LOCATIONS
-========================================================= */
 
 const locations = {
   kyrgyzstan: {
@@ -33,7 +25,6 @@ const locations = {
       BISHKEK: {
         name: "Бишкек",
         type: "bishkek",
-
         districts: [
           "Центр",
           "Верхняя часть города",
@@ -80,7 +71,6 @@ const locations = {
       CHUY: {
         name: "Чуйская область",
         type: "region",
-
         settlements: [
           "Токмок",
           "Кант",
@@ -104,7 +94,6 @@ const locations = {
       OSH_REGION: {
         name: "Ошская область",
         type: "region",
-
         settlements: [
           "Ош",
           "Ноокат",
@@ -125,7 +114,6 @@ const locations = {
       ISSYK_KUL: {
         name: "Иссык-Кульская область",
         type: "region",
-
         settlements: [
           "Каракол",
           "Чолпон-Ата",
@@ -146,7 +134,6 @@ const locations = {
       JALAL_ABAD: {
         name: "Джалал-Абадская область",
         type: "region",
-
         settlements: [
           "Джалал-Абад",
           "Таш-Кумыр",
@@ -164,7 +151,6 @@ const locations = {
       NARYN: {
         name: "Нарынская область",
         type: "region",
-
         settlements: [
           "Нарын",
           "Кочкор",
@@ -180,7 +166,6 @@ const locations = {
       TALAS: {
         name: "Таласская область",
         type: "region",
-
         settlements: [
           "Талас",
           "Бакай-Ата",
@@ -194,7 +179,6 @@ const locations = {
       BATKEN: {
         name: "Баткенская область",
         type: "region",
-
         settlements: [
           "Баткен",
           "Кызыл-Кыя",
@@ -452,19 +436,11 @@ const locations = {
   },
 };
 
-/* =========================================================
-   HELPERS
-========================================================= */
-
 function normalize(value) {
   return String(value || "")
     .trim()
     .toLowerCase();
 }
-
-/* =========================================================
-   ISSYK-KUL DETECTOR
-========================================================= */
 
 function isIssykKul(filters) {
   const city = normalize(filters?.city);
@@ -512,17 +488,13 @@ function isIssykKul(filters) {
   );
 }
 
-/* =========================================================
-   COMPONENT
-========================================================= */
-
 export default function CommonFilters({ filters, updateFilter }) {
   const isKyrgyzstan = filters?.country === "kyrgyzstan" || !filters?.country;
 
   const isTurkey = filters?.country === "turkey";
 
   /* =======================================================
-     KYRGYZSTAN DATA
+     KYRGYZSTAN
   ======================================================= */
 
   const kyrgyzRegions = Object.values(locations.kyrgyzstan.regions);
@@ -542,7 +514,7 @@ export default function CommonFilters({ filters, updateFilter }) {
   const bishkekDistrictOptions = selectedKyrgyzRegion?.districts || [];
 
   /* =======================================================
-     TURKEY DATA
+     TURKEY
   ======================================================= */
 
   const turkeyCities = Object.values(locations.turkey.cities);
@@ -564,7 +536,6 @@ export default function CommonFilters({ filters, updateFilter }) {
       updateFilter("city", "");
       updateFilter("settlement", "");
       updateFilter("district", "");
-
       return;
     }
 
@@ -583,7 +554,6 @@ export default function CommonFilters({ filters, updateFilter }) {
       updateFilter("city", "");
       updateFilter("settlement", "");
       updateFilter("district", "");
-
       return;
     }
 
@@ -606,7 +576,6 @@ export default function CommonFilters({ filters, updateFilter }) {
       updateFilter("settlement", "");
       updateFilter("city", "");
       updateFilter("district", "");
-
       return;
     }
 
@@ -616,20 +585,13 @@ export default function CommonFilters({ filters, updateFilter }) {
   }
 
   function selectBishkekDistrict(value) {
-    if (value === "Все") {
-      updateFilter("district", "");
-
-      return;
-    }
-
-    updateFilter("district", value);
+    updateFilter("district", value === "Все" ? "" : value);
   }
 
   function selectTurkeyCity(value) {
     if (value === "Все") {
       updateFilter("city", "");
       updateFilter("district", "");
-
       return;
     }
 
@@ -648,13 +610,7 @@ export default function CommonFilters({ filters, updateFilter }) {
   }
 
   function selectTurkeyDistrict(value) {
-    if (value === "Все") {
-      updateFilter("district", "");
-
-      return;
-    }
-
-    updateFilter("district", value);
+    updateFilter("district", value === "Все" ? "" : value);
   }
 
   /* =======================================================
@@ -671,15 +627,7 @@ export default function CommonFilters({ filters, updateFilter }) {
 
   const selectedTurkeyDistrict = filters?.district || "Все";
 
-  /* =======================================================
-     BEACH DISTANCE
-  ======================================================= */
-
   const showBeachDistance = isIssykKul(filters);
-
-  /* =======================================================
-     COUNTRY DISPLAY
-  ======================================================= */
 
   const countryValue = isTurkey
     ? "Турция"
@@ -687,21 +635,15 @@ export default function CommonFilters({ filters, updateFilter }) {
       ? "Кыргызстан"
       : "Все";
 
-  /* =======================================================
-     PROPERTY TYPE
-  ======================================================= */
-
   const showRooms = ["apartment", "house", "cottage", "room"].includes(
     filters?.propertyType,
   );
 
+  const urgentOnly = Boolean(filters?.urgentOnly);
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.grid}>
-        {/* =================================================
-            COUNTRY
-        ================================================= */}
-
         <CustomSelect
           icon={Globe2}
           title="Страна"
@@ -709,10 +651,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           value={countryValue}
           setValue={selectCountry}
         />
-
-        {/* =================================================
-            KYRGYZSTAN — REGION
-        ================================================= */}
 
         {isKyrgyzstan && (
           <CustomSelect
@@ -724,10 +662,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           />
         )}
 
-        {/* =================================================
-            KYRGYZSTAN — BISHKEK DISTRICT
-        ================================================= */}
-
         {isKyrgyzstan && isBishkek && (
           <CustomSelect
             icon={MapPin}
@@ -737,10 +671,6 @@ export default function CommonFilters({ filters, updateFilter }) {
             setValue={selectBishkekDistrict}
           />
         )}
-
-        {/* =================================================
-            KYRGYZSTAN — SETTLEMENT
-        ================================================= */}
 
         {isKyrgyzstan && selectedKyrgyzRegion && !isBishkek && (
           <CustomSelect
@@ -752,10 +682,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           />
         )}
 
-        {/* =================================================
-            TURKEY — CITY
-        ================================================= */}
-
         {isTurkey && (
           <CustomSelect
             icon={MapPin}
@@ -765,10 +691,6 @@ export default function CommonFilters({ filters, updateFilter }) {
             setValue={selectTurkeyCity}
           />
         )}
-
-        {/* =================================================
-            TURKEY — DISTRICT
-        ================================================= */}
 
         {isTurkey && selectedTurkeyCity && (
           <CustomSelect
@@ -780,10 +702,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           />
         )}
 
-        {/* =================================================
-            CURRENCY
-        ================================================= */}
-
         <CustomSelect
           icon={FileText}
           title="Валюта"
@@ -791,10 +709,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           value={filters?.currency || "USD"}
           setValue={(value) => updateFilter("currency", value)}
         />
-
-        {/* =================================================
-            PRICE
-        ================================================= */}
 
         <div className={styles.range}>
           <div className={styles.rangeTitle}>
@@ -823,10 +737,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           </div>
         </div>
 
-        {/* =================================================
-            AREA
-        ================================================= */}
-
         <div className={styles.range}>
           <div className={styles.rangeTitle}>
             <Ruler size={17} />
@@ -852,10 +762,6 @@ export default function CommonFilters({ filters, updateFilter }) {
           </div>
         </div>
 
-        {/* =================================================
-            ROOMS
-        ================================================= */}
-
         {showRooms && (
           <CustomSelect
             icon={DoorOpen}
@@ -865,10 +771,6 @@ export default function CommonFilters({ filters, updateFilter }) {
             setValue={(value) => updateFilter("rooms", value)}
           />
         )}
-
-        {/* =================================================
-            BEACH DISTANCE
-        ================================================= */}
 
         {showBeachDistance && (
           <div className={styles.range}>
@@ -900,6 +802,27 @@ export default function CommonFilters({ filters, updateFilter }) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* ================================================
+          URGENT FILTER — ОТДЕЛЬНАЯ СТРОКА
+      ================================================= */}
+
+      <div className={styles.urgentRow}>
+        <button
+          type="button"
+          className={`${styles.urgentButton} ${
+            urgentOnly ? styles.urgentButtonActive : ""
+          }`}
+          onClick={() => updateFilter("urgentOnly", !urgentOnly)}
+          aria-pressed={urgentOnly}
+        >
+          <Zap size={15} strokeWidth={2.4} />
+
+          <span>
+            {urgentOnly ? "Показываются срочные" : "Срочные объявления"}
+          </span>
+        </button>
       </div>
     </section>
   );

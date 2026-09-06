@@ -18,6 +18,8 @@ export default function ProductsResults({
   hasFilters,
   onReset,
 }) {
+  const safeListings = Array.isArray(listings) ? listings : [];
+
   return (
     <>
       {/* =================================================
@@ -28,7 +30,7 @@ export default function ProductsResults({
         <div>
           <span>РЕЗУЛЬТАТЫ ПОИСКА</span>
 
-          <strong>{loading ? "..." : listings.length}</strong>
+          <strong>{loading ? "..." : safeListings.length}</strong>
 
           <small>объявлений</small>
         </div>
@@ -55,9 +57,9 @@ export default function ProductsResults({
           RESULTS
       ================================================= */}
 
-      {!loading && !error && listings.length > 0 && (
+      {!loading && !error && safeListings.length > 0 && (
         <section className={styles.grid}>
-          {listings.map((item) => (
+          {safeListings.map((item) => (
             <ListingCard
               key={item.id}
               item={item}
@@ -72,7 +74,7 @@ export default function ProductsResults({
           EMPTY
       ================================================= */}
 
-      {!loading && !error && listings.length === 0 && (
+      {!loading && !error && safeListings.length === 0 && (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>
             <Search size={27} />

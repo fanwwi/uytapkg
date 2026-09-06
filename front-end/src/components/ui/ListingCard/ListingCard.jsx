@@ -1,17 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MapPin, Heart, Crown, Zap } from "lucide-react";
+
 import styles from "./ListingCard.module.css";
 
 export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
   const router = useRouter();
 
+  const isVip = item?.status === "vip";
+  const isUrgent = item?.status === "urgent";
+
+  function openListing() {
+    router.push(`/all-products/${item.id}`);
+  }
+
   return (
-    <article
-      className={styles.card}
-      onClick={() => router.push(`/all-products/${item.id}`)}
-    >
+    <article className={styles.card} onClick={openListing}>
       {/* IMAGE */}
+
       <div className={styles.image}>
         <Image
           src={item.image}
@@ -21,15 +29,16 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
         />
 
         {/* BADGES */}
+
         <div className={styles.badges}>
-          {item.status === "vip" && (
+          {isVip && (
             <span className={`${styles.status} ${styles.vip}`}>
               <Crown />
               VIP
             </span>
           )}
 
-          {item.status === "urgent" && (
+          {isUrgent && (
             <span className={`${styles.status} ${styles.urgent}`}>
               <Zap />
               Срочно
@@ -40,12 +49,19 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
         </div>
 
         {/* FAVORITE */}
+
         <button
           type="button"
           className={styles.favorite}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onFavoriteClick) onFavoriteClick(item);
+          aria-label={
+            isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+          }
+          onClick={(event) => {
+            event.stopPropagation();
+
+            if (onFavoriteClick) {
+              onFavoriteClick(item);
+            }
           }}
         >
           <Heart fill={isFavorite ? "currentColor" : "none"} />
@@ -53,11 +69,13 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
       </div>
 
       {/* CONTENT */}
+
       <div className={styles.content}>
         <h2>{item.title}</h2>
 
         <div className={styles.location}>
           <MapPin />
+
           <span>{item.location}</span>
         </div>
 
@@ -72,15 +90,16 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
         </div>
 
         {/* BOTTOM */}
+
         <div className={styles.bottom}>
           <strong>{item.price}</strong>
 
           <button
             type="button"
             className={styles.more}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/all-products/${item.id}`);
+            onClick={(event) => {
+              event.stopPropagation();
+              openListing();
             }}
           >
             Подробнее
