@@ -9,13 +9,12 @@ import {
   DoorOpen,
   FileText,
   CreditCard,
+  Clock3,
 } from "lucide-react";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
-
 import styles from "./RoomFilters.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const locations = [
   "Любое",
@@ -92,6 +91,8 @@ const offerTypes = [
   "Возможен обмен",
 ];
 
+const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
+
 const amenities = [
   "Мебель",
   "Бытовая техника",
@@ -106,79 +107,95 @@ const amenities = [
 ];
 
 export default function RoomFilters({ filters, updateFilter }) {
+  const isRent = filters.dealType === "rent";
+
   return (
     <div className={styles.grid}>
-      <CustomSelect
+      <MultiSelect
         icon={MapPin}
         title="Расположение"
         options={locations}
-        value={filters.location || "Любое"}
+        value={filters.location || []}
         setValue={(value) => updateFilter("location", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={DoorOpen}
         title="Комнат в квартире"
         options={rooms}
-        value={filters.roomsInApartment || "Любое"}
+        value={filters.roomsInApartment || []}
         setValue={(value) => updateFilter("roomsInApartment", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Layers3}
         title="Этаж"
         options={floors}
-        value={filters.floor || "Любой"}
+        value={filters.floor || []}
         setValue={(value) => updateFilter("floor", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Paintbrush}
         title="Состояние"
         options={conditions}
-        value={filters.condition || "Любое"}
+        value={filters.condition || []}
         setValue={(value) => updateFilter("condition", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={BrickWall}
         title="Стены"
         options={walls}
-        value={filters.walls || "Любые"}
+        value={filters.walls || []}
         setValue={(value) => updateFilter("walls", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Flame}
         title="Отопление"
         options={heating}
-        value={filters.heating || "Любое"}
+        value={filters.heating || []}
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={DoorOpen}
-        title="Санузел"
+        title="Свой санузел"
         options={bathroom}
-        value={filters.privateBathroom || "Любой"}
+        value={filters.privateBathroom || []}
         setValue={(value) => updateFilter("privateBathroom", value)}
       />
 
-      <CustomSelect
-        icon={FileText}
-        title="Документы"
-        options={documents}
-        value={filters.documents || "Любые"}
-        setValue={(value) => updateFilter("documents", value)}
-      />
+      {!isRent && (
+        <>
+          <MultiSelect
+            icon={FileText}
+            title="Документы"
+            options={documents}
+            value={filters.documents || []}
+            setValue={(value) => updateFilter("documents", value)}
+          />
 
-      <CustomSelect
-        icon={CreditCard}
-        title="Оплата"
-        options={offerTypes}
-        value={filters.offerType || "Любой"}
-        setValue={(value) => updateFilter("offerType", value)}
-      />
+          <MultiSelect
+            icon={CreditCard}
+            title="Оплата"
+            options={offerTypes}
+            value={filters.offerType || []}
+            setValue={(value) => updateFilter("offerType", value)}
+          />
+        </>
+      )}
+
+      {isRent && (
+        <MultiSelect
+          icon={Clock3}
+          title="Период аренды"
+          options={rentalPeriods}
+          value={filters.rentalPeriod || []}
+          setValue={(value) => updateFilter("rentalPeriod", value)}
+        />
+      )}
 
       <div className={styles.full}>
         <MultiSelect
