@@ -53,11 +53,11 @@ const types = [
     description:
       "Разместите объявление в Instagram UyTap и привлеките дополнительную аудиторию.",
     icon: Camera,
-    paid: true,
+    paid: false,
   },
 ];
 
-const paidListingTypes = ["vip", "urgent", "top", "instagram"];
+const paidListingTypes = ["vip", "urgent", "top"];
 
 const regionNames = {
   BISHKEK: "Бишкек",
@@ -148,26 +148,25 @@ export default function StepListingType({
 
     /*
      * Бесплатная публикация.
+     *
+     * Instagram пока тоже публикуется как обычное объявление — оплата
+     * этой услуги ещё не реализована. Заявка на публикацию в Instagram
+     * создаётся на бэкенде автоматически и дальше обрабатывается вручную
+     * через админку.
      */
-    if (form.listingType === "standard") {
+    if (!paidListingTypes.includes(form.listingType)) {
       onSubmit();
       return;
     }
 
     /*
-     * Все дополнительные услуги являются платными.
-     *
-     * В том числе Instagram:
+     * Остальные платные услуги (VIP/Срочно/ТОП):
      * 1. Пользователь переходит на страницу оплаты.
      * 2. Оплачивает услугу.
      * 3. Получает чек.
      * 4. Продолжает публикацию.
-     * 5. Для Instagram после публикации показывается
-     *    отдельная модалка с информацией об ожидании.
      */
-    if (paidListingTypes.includes(form.listingType)) {
-      router.push(`/add-product/payment?service=${form.listingType}`);
-    }
+    router.push(`/add-product/payment?service=${form.listingType}`);
   };
 
   const countryName = form.country === "turkey" ? "Турция" : "Кыргызстан";
@@ -391,9 +390,9 @@ export default function StepListingType({
               </div>
 
               <p>
-                После оплаты объявление будет передано на размещение в Instagram
-                UyTap. Обработка занимает до одного дня. После публикации
-                периодически проверяйте аккаунт UyTap.
+                После публикации объявление будет передано на размещение в
+                Instagram UyTap. Обработка занимает до одного дня. После
+                публикации периодически проверяйте аккаунт UyTap.
               </p>
             </div>
 

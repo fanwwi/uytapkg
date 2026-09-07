@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, X } from "lucide-react";
+import { Home } from "lucide-react";
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,8 +14,6 @@ import {
 
 import { mapListingData } from "@/utils/mapListingData";
 
-import CommonFilters from "./components/CommonFilters/CommonFilters";
-
 import ApartmentFilters from "./components/ApartmentFilters/ApartmentFilters";
 import HouseFilters from "./components/HouseFilters/HouseFilters";
 import CottageFilters from "./components/CottageFilters/CottageFilters";
@@ -24,11 +22,10 @@ import RoomFilters from "./components/RoomFilters/RoomFilters";
 import CommercialFilters from "./components/CommercialFilters/CommercialFilters";
 import ParkingFilters from "./components/ParkingFilters/ParkingFilters";
 
-import SearchModeSlider from "./components/SearchModeSlider/SearchModeSlider";
-import SmartSearch from "./components/SmartSearch/SmartSearch";
+import ProductsFilters from "./components/ProductsFilters/ProductsFilters";
+import ProductsResults from "./components/ProductsResults/ProductsResults";
 
 import styles from "./AllProducts.module.css";
-import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 /* =========================================================
    CATEGORIES
@@ -64,21 +61,6 @@ const categories = [
     label: "Паркинг / гараж",
   },
 ];
-
-const deals = [
-  {
-    value: "sale",
-    label: "Продажа",
-  },
-  {
-    value: "rent",
-    label: "Аренда",
-  },
-];
-
-/* =========================================================
-   CATEGORY COMPONENTS
-========================================================= */
 
 const categoryComponents = {
   apartment: ApartmentFilters,
@@ -145,13 +127,28 @@ const DEFAULT_FILTERS = {
   beachDistanceFrom: "",
   beachDistanceTo: "",
 
+  urgentOnly: false,
+
+  series: [],
+  floor: [],
+  condition: [],
+  walls: [],
+  heating: [],
+  documents: [],
+  furniture: [],
+  offerType: [],
+
+  residentialComplex: [],
+
+  rentalPeriod: [],
+
   amenities: [],
   communications: [],
   technicalParameters: [],
 };
 
 /* =========================================================
-   HELPERS
+   FEATURE KEYS
 ========================================================= */
 
 const featureKeys = [
@@ -163,6 +160,8 @@ const featureKeys = [
   "documents",
   "furniture",
   "offerType",
+
+  "residentialComplex",
 
   "houseType",
   "floors",
@@ -192,6 +191,27 @@ const featureKeys = [
   "basement",
   "truckAccess",
   "gateType",
+
+  "rentalPeriod",
+];
+
+const arrayFeatureKeys = [
+  "series",
+  "floor",
+  "condition",
+  "walls",
+  "heating",
+  "documents",
+  "furniture",
+  "offerType",
+
+  "residentialComplex",
+
+  "rentalPeriod",
+
+  "amenities",
+  "communications",
+  "technicalParameters",
 ];
 
 const arrayFilterKeys = ["amenities", "communications", "technicalParameters"];
@@ -200,34 +220,34 @@ const ignoredUrlKeys = [
   "propertyType",
   "category",
   "dealType",
+
   "city",
   "settlement",
   "region",
   "country",
   "district",
+
   "currency",
+
   "priceFrom",
   "priceTo",
+
   "areaFrom",
   "areaTo",
+
   "rooms",
+
   "beachDistanceFrom",
   "beachDistanceTo",
-  "amenities",
-  "communications",
-  "technicalParameters",
+
+  "urgentOnly",
+
+  ...arrayFeatureKeys,
 ];
 
 /* =========================================================
-   ISSYK-KUL HELPERS
+   ISSYK-KUL
 ========================================================= */
-
-/**
- * Все известные населённые пункты Иссык-Кульской области.
- *
- * Проверка нужна для случаев, когда API передаёт город,
- * но region ещё не выбран/не передан в URL.
- */
 
 const ISSYK_KUL_CITIES = [
   "каракол",
@@ -241,7 +261,6 @@ const ISSYK_KUL_CITIES = [
   "сары-ой",
   "сары ой",
   "боконбаево",
-  "барскоон",
   "барскоон",
   "тамга",
   "каджи-сай",
@@ -264,9 +283,6 @@ const ISSYK_KUL_CITIES = [
   "покровка",
 ];
 
-/**
- * Нормализация строки для географии.
- */
 function normalizeLocationValue(value) {
   return String(value || "")
     .trim()
@@ -276,26 +292,12 @@ function normalizeLocationValue(value) {
     .replace(/\s+/g, " ");
 }
 
-/**
- * Проверяет, является ли значение Иссык-Кулем.
- *
- * Поддерживаются:
- * - ISSYK_KUL
- * - ISSYK-KUL
- * - ISSYK KUL
- * - Иссык-Куль
- * - Иссык-Кульская область
- * - Иссыккуль
- * и т.д.
- */
 function isIssykKulValue(value) {
   const normalized = normalizeLocationValue(value);
 
   if (!normalized) {
     return false;
   }
-
-  /* API CODE */
 
   if (
     normalized === "issyk kul" ||
@@ -306,8 +308,6 @@ function isIssykKulValue(value) {
     return true;
   }
 
-  /* RUSSIAN */
-
   if (normalized.includes("иссык куль") || normalized.includes("иссыккуль")) {
     return true;
   }
@@ -315,39 +315,19 @@ function isIssykKulValue(value) {
   return false;
 }
 
-/**
- * Главная проверка выбранной локации.
- *
- * ВАЖНО:
- * Не зависит от propertyType.
- *
- * Поэтому:
- * apartment + Каракол -> true
- * house + Каракол -> true
- * cottage + Бостери -> true
- * land + Чолпон-Ата -> true
- * commercial + Тамчы -> true
- * parking + Балыкчы -> true
- */
 function isIssykKulLocation(filters) {
   const city = normalizeLocationValue(filters?.city);
   const region = normalizeLocationValue(filters?.region);
   const country = normalizeLocationValue(filters?.country);
   const district = normalizeLocationValue(filters?.district);
 
-  /* REGION */
-
   if (isIssykKulValue(region)) {
     return true;
   }
 
-  /* CITY / SETTLEMENT */
-
   if (isIssykKulValue(city)) {
     return true;
   }
-
-  /* KNOWN ISSYK-KUL CITIES */
 
   if (
     city &&
@@ -364,13 +344,9 @@ function isIssykKulLocation(filters) {
     return true;
   }
 
-  /* DISTRICT */
-
   if (isIssykKulValue(district)) {
     return true;
   }
-
-  /* COUNTRY */
 
   if (isIssykKulValue(country)) {
     return true;
@@ -379,46 +355,8 @@ function isIssykKulLocation(filters) {
   return false;
 }
 
-/**
- * Проверка самого объявления.
- *
- * Используется дополнительно для фильтра расстояния,
- * чтобы любой объект Иссык-Куля мог иметь beachDistance.
- */
-function isIssykKulListing(item) {
-  const values = [
-    item?.city,
-    item?.region,
-    item?.district,
-    item?.location,
-    item?.address,
-    item?.country,
-
-    item?.rawCity,
-    item?.rawRegion,
-    item?.rawDistrict,
-
-    item?.location?.city,
-    item?.location?.region,
-  ]
-    .filter(Boolean)
-    .map(normalizeLocationValue);
-
-  return values.some((value) => {
-    if (isIssykKulValue(value)) {
-      return true;
-    }
-
-    return ISSYK_KUL_CITIES.some((city) => {
-      const normalizedCity = normalizeLocationValue(city);
-
-      return value === normalizedCity || value.includes(normalizedCity);
-    });
-  });
-}
-
 /* =========================================================
-   CATEGORY NORMALIZER
+   NORMALIZERS
 ========================================================= */
 
 function normalizePropertyType(value) {
@@ -438,10 +376,6 @@ function normalizePropertyType(value) {
   return found || "apartment";
 }
 
-/* =========================================================
-   DEAL NORMALIZER
-========================================================= */
-
 function normalizeDealType(value) {
   if (!value) {
     return "sale";
@@ -456,6 +390,80 @@ function normalizeDealType(value) {
   }
 
   return value === "rent" ? "rent" : "sale";
+}
+
+function normalizeArrayValue(value) {
+  if (Array.isArray(value)) {
+    return value.filter(
+      (item) =>
+        item !== undefined && item !== null && String(item).trim() !== "",
+    );
+  }
+
+  if (value === undefined || value === null || String(value).trim() === "") {
+    return [];
+  }
+
+  return [value];
+}
+
+function matchesMultiValue(selected, itemValue) {
+  const selectedValues = normalizeArrayValue(selected);
+
+  if (selectedValues.length === 0) {
+    return true;
+  }
+
+  const itemValues = normalizeArrayValue(itemValue);
+
+  if (itemValues.length === 0) {
+    return false;
+  }
+
+  const normalizedSelected = selectedValues.map((value) =>
+    String(value).trim().toLowerCase(),
+  );
+
+  const normalizedItem = itemValues.map((value) =>
+    String(value).trim().toLowerCase(),
+  );
+
+  return normalizedSelected.some((selectedValue) =>
+    normalizedItem.some(
+      (itemValue) =>
+        itemValue === selectedValue ||
+        itemValue.includes(selectedValue) ||
+        selectedValue.includes(itemValue),
+    ),
+  );
+}
+
+function matchesArrayFilter(selected, itemValue) {
+  const selectedValues = normalizeArrayValue(selected);
+
+  if (selectedValues.length === 0) {
+    return true;
+  }
+
+  const itemValues = normalizeArrayValue(itemValue);
+
+  if (itemValues.length === 0) {
+    return false;
+  }
+
+  const normalizedItem = itemValues.map((value) =>
+    String(value).trim().toLowerCase(),
+  );
+
+  return selectedValues.every((selectedValue) => {
+    const normalizedSelected = String(selectedValue).trim().toLowerCase();
+
+    return normalizedItem.some(
+      (itemValue) =>
+        itemValue === normalizedSelected ||
+        itemValue.includes(normalizedSelected),
+    );
+  });
 }
 
 /* =========================================================
@@ -489,11 +497,23 @@ export default function AllProducts() {
 
     const dealType = normalizeDealType(searchParams.get("dealType"));
 
+    const parseArrayParam = (key) => {
+      const value = searchParams.get(key);
+
+      if (!value) {
+        return [];
+      }
+
+      return value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    };
+
     const nextFilters = {
       ...DEFAULT_FILTERS,
 
       propertyType,
-
       dealType,
 
       city: searchParams.get("city") || searchParams.get("settlement") || "Все",
@@ -520,15 +540,33 @@ export default function AllProducts() {
 
       beachDistanceTo: searchParams.get("beachDistanceTo") || "",
 
-      amenities:
-        searchParams.get("amenities")?.split(",").filter(Boolean) || [],
+      urgentOnly: searchParams.get("urgentOnly") === "true",
 
-      communications:
-        searchParams.get("communications")?.split(",").filter(Boolean) || [],
+      series: parseArrayParam("series"),
 
-      technicalParameters:
-        searchParams.get("technicalParameters")?.split(",").filter(Boolean) ||
-        [],
+      floor: parseArrayParam("floor"),
+
+      condition: parseArrayParam("condition"),
+
+      walls: parseArrayParam("walls"),
+
+      heating: parseArrayParam("heating"),
+
+      documents: parseArrayParam("documents"),
+
+      furniture: parseArrayParam("furniture"),
+
+      offerType: parseArrayParam("offerType"),
+
+      residentialComplex: parseArrayParam("residentialComplex"),
+
+      rentalPeriod: parseArrayParam("rentalPeriod"),
+
+      amenities: parseArrayParam("amenities"),
+
+      communications: parseArrayParam("communications"),
+
+      technicalParameters: parseArrayParam("technicalParameters"),
     };
 
     for (const [key, value] of searchParams.entries()) {
@@ -551,10 +589,23 @@ export default function AllProducts() {
   ======================================================= */
 
   function updateFilter(key, value) {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setFilters((prev) => {
+      const next = {
+        ...prev,
+        [key]: value,
+      };
+
+      if (key === "dealType") {
+        if (value === "rent") {
+          next.documents = [];
+          next.offerType = [];
+        } else {
+          next.rentalPeriod = [];
+        }
+      }
+
+      return next;
+    });
   }
 
   /* =======================================================
@@ -598,11 +649,8 @@ export default function AllProducts() {
       "areaFrom",
       "areaTo",
       "rooms",
-
       "beachDistanceFrom",
       "beachDistanceTo",
-
-      ...featureKeys,
     ];
 
     for (const key of simpleKeys) {
@@ -620,10 +668,22 @@ export default function AllProducts() {
       }
     }
 
-    for (const key of arrayFilterKeys) {
-      const value = nextFilters[key];
+    /* =====================================================
+       URGENT
+    ===================================================== */
 
-      if (Array.isArray(value) && value.length > 0) {
+    if (nextFilters.urgentOnly) {
+      params.set("urgentOnly", "true");
+    }
+
+    /* =====================================================
+       ARRAY FILTERS
+    ===================================================== */
+
+    for (const key of arrayFeatureKeys) {
+      const value = normalizeArrayValue(nextFilters[key]);
+
+      if (value.length > 0) {
         params.set(key, value.join(","));
       }
     }
@@ -650,25 +710,13 @@ export default function AllProducts() {
       ...filters,
     };
 
-    /* =======================================================
-     PROPERTY TYPE
-  ======================================================= */
-
     if (parsed.propertyType) {
       next.propertyType = normalizePropertyType(parsed.propertyType);
     }
 
-    /* =======================================================
-     DEAL
-  ======================================================= */
-
     if (parsed.dealType) {
       next.dealType = normalizeDealType(parsed.dealType);
     }
-
-    /* =======================================================
-     LOCATION
-  ======================================================= */
 
     if (parsed.region) {
       next.region = parsed.region;
@@ -686,12 +734,8 @@ export default function AllProducts() {
       next.district = parsed.district;
     }
 
-    /*
-     * Иссык-Куль всегда приводим
-     * к единому состоянию.
-     */
-
     const cityText = String(next.city || "").toLowerCase();
+
     const regionText = String(next.region || "").toLowerCase();
 
     const isIssykKul =
@@ -703,10 +747,6 @@ export default function AllProducts() {
       next.city = "Иссык-Куль";
     }
 
-    /* =======================================================
-     PRICE
-  ======================================================= */
-
     if (parsed.priceFrom !== undefined && parsed.priceFrom !== null) {
       next.priceFrom = String(parsed.priceFrom);
     }
@@ -715,10 +755,6 @@ export default function AllProducts() {
       next.priceTo = String(parsed.priceTo);
     }
 
-    /*
-     * На случай если API вернул minPrice/maxPrice.
-     */
-
     if (parsed.minPrice !== undefined && parsed.minPrice !== null) {
       next.priceFrom = String(parsed.minPrice);
     }
@@ -726,10 +762,6 @@ export default function AllProducts() {
     if (parsed.maxPrice !== undefined && parsed.maxPrice !== null) {
       next.priceTo = String(parsed.maxPrice);
     }
-
-    /* =======================================================
-     AREA
-  ======================================================= */
 
     if (parsed.areaFrom !== undefined && parsed.areaFrom !== null) {
       next.areaFrom = String(parsed.areaFrom);
@@ -747,10 +779,6 @@ export default function AllProducts() {
       next.areaTo = String(parsed.maxArea);
     }
 
-    /* =======================================================
-     ROOMS
-  ======================================================= */
-
     if (parsed.rooms !== undefined && parsed.rooms !== null) {
       const rooms = Number(parsed.rooms);
 
@@ -760,10 +788,6 @@ export default function AllProducts() {
         next.rooms = String(parsed.rooms);
       }
     }
-
-    /* =======================================================
-     BEACH
-  ======================================================= */
 
     if (
       parsed.beachDistanceFrom !== undefined &&
@@ -779,9 +803,13 @@ export default function AllProducts() {
       next.beachDistanceTo = String(parsed.beachDistanceTo);
     }
 
-    /* =======================================================
-     FEATURES
-  ======================================================= */
+    /* =====================================================
+       SMART SEARCH → URGENT
+    ===================================================== */
+
+    if (parsed.urgentOnly !== undefined && parsed.urgentOnly !== null) {
+      next.urgentOnly = Boolean(parsed.urgentOnly);
+    }
 
     for (const key of featureKeys) {
       if (
@@ -789,21 +817,19 @@ export default function AllProducts() {
         parsed[key] !== null &&
         parsed[key] !== ""
       ) {
-        next[key] = parsed[key];
+        if (arrayFeatureKeys.includes(key)) {
+          next[key] = normalizeArrayValue(parsed[key]);
+        } else {
+          next[key] = parsed[key];
+        }
       }
     }
-
-    /* =======================================================
-     ARRAYS
-  ======================================================= */
 
     for (const key of arrayFilterKeys) {
       if (parsed[key] !== undefined && parsed[key] !== null) {
-        next[key] = Array.isArray(parsed[key]) ? parsed[key] : [parsed[key]];
+        next[key] = normalizeArrayValue(parsed[key]);
       }
     }
-
-    console.log("SMART SEARCH RESULT:", next);
 
     setFilters(next);
 
@@ -820,6 +846,7 @@ export default function AllProducts() {
     async function loadData() {
       try {
         setLoading(true);
+
         setError("");
 
         const token =
@@ -955,353 +982,343 @@ export default function AllProducts() {
   ======================================================= */
 
   const filteredListings = useMemo(() => {
-    return (
-      mappedListings
-        .filter((item) => {
-          /* ---------------------------------------------
+    return mappedListings
+      .filter((item) => {
+        /* =================================================
+           URGENT STATUS FILTER
+        ================================================= */
+
+        const itemStatus = String(item?.status || "")
+          .trim()
+          .toLowerCase();
+
+        if (filters.urgentOnly && itemStatus !== "urgent") {
+          return false;
+        }
+
+        /* =================================================
            CATEGORY
-        --------------------------------------------- */
+        ================================================= */
 
-          const selectedType = categoryApiMap[filters.propertyType];
+        const selectedType = categoryApiMap[filters.propertyType];
 
-          const itemType = String(item.type || "")
-            .trim()
-            .toLowerCase();
+        const itemType = String(item.type || "")
+          .trim()
+          .toLowerCase();
 
-          const matchesCategory =
-            !selectedType || itemType === selectedType.toLowerCase();
+        const matchesCategory =
+          !selectedType || itemType === selectedType.toLowerCase();
 
-          /* ---------------------------------------------
+        /* =================================================
            DEAL
-        --------------------------------------------- */
+        ================================================= */
 
-          const selectedDeal = dealApiMap[filters.dealType];
+        const selectedDeal = dealApiMap[filters.dealType];
 
-          const itemDeal = String(item.dealType || "")
-            .trim()
-            .toLowerCase();
+        const itemDeal = String(item.dealType || "")
+          .trim()
+          .toLowerCase();
 
-          const matchesDeal =
-            !selectedDeal || itemDeal === selectedDeal.toLowerCase();
+        const matchesDeal =
+          !selectedDeal || itemDeal === selectedDeal.toLowerCase();
 
-          /* ---------------------------------------------
-           CITY / LOCATION
-        --------------------------------------------- */
+        /* =================================================
+           CITY
+        ================================================= */
 
-          const matchesCity = (() => {
-            if (!filters.city || filters.city === "Все") {
-              return true;
-            }
-
-            const selected = normalizeLocationValue(filters.city);
-
-            const values = [
-              item.location,
-              item.city,
-              item.region,
-              item.address,
-              item.country,
-              item.district,
-            ]
-              .filter(Boolean)
-              .map(normalizeLocationValue);
-
-            /* ИССЫК-КУЛЬ */
-
-            if (
-              isIssykKulValue(selected) ||
-              ISSYK_KUL_CITIES.some(
-                (city) =>
-                  selected === normalizeLocationValue(city) ||
-                  selected.includes(normalizeLocationValue(city)),
-              )
-            ) {
-              return values.some((value) => {
-                if (isIssykKulValue(value)) {
-                  return true;
-                }
-
-                return ISSYK_KUL_CITIES.some((city) => {
-                  const normalizedCity = normalizeLocationValue(city);
-
-                  return (
-                    value === normalizedCity || value.includes(normalizedCity)
-                  );
-                });
-              });
-            }
-
-            /* ТУРЦИЯ */
-
-            if (selected === "турция") {
-              return values.some(
-                (value) =>
-                  value.includes("турци") ||
-                  value.includes("turkey") ||
-                  value.includes("алань") ||
-                  value.includes("антал") ||
-                  value.includes("стамбул") ||
-                  value.includes("мерсин") ||
-                  value.includes("измир"),
-              );
-            }
-
-            return values.some((value) => value.includes(selected));
-          })();
-
-          /* ---------------------------------------------
-           ROOMS
-        --------------------------------------------- */
-
-          const matchesRooms = (() => {
-            if (!filters.rooms || filters.rooms === "Все") {
-              return true;
-            }
-
-            const itemRooms = Number(item.rooms);
-
-            if (filters.rooms === "4+") {
-              return itemRooms >= 4;
-            }
-
-            return itemRooms === Number(filters.rooms);
-          })();
-
-          /* ---------------------------------------------
-           PRICE
-        --------------------------------------------- */
-
-          const matchesPrice = (() => {
-            const price = Number(item.rawPrice);
-
-            const min = filters.priceFrom ? Number(filters.priceFrom) : null;
-
-            const max = filters.priceTo ? Number(filters.priceTo) : null;
-
-            if (min !== null && !Number.isNaN(min) && price < min) {
-              return false;
-            }
-
-            if (max !== null && !Number.isNaN(max) && price > max) {
-              return false;
-            }
-
+        const matchesCity = (() => {
+          if (!filters.city || filters.city === "Все") {
             return true;
-          })();
-
-          /* ---------------------------------------------
-           AREA
-        --------------------------------------------- */
-
-          const matchesArea = (() => {
-            const area = Number(item.rawArea);
-
-            const min = filters.areaFrom ? Number(filters.areaFrom) : null;
-
-            const max = filters.areaTo ? Number(filters.areaTo) : null;
-
-            if (min !== null && !Number.isNaN(min) && area < min) {
-              return false;
-            }
-
-            if (max !== null && !Number.isNaN(max) && area > max) {
-              return false;
-            }
-
-            return true;
-          })();
-
-          /* ---------------------------------------------
-           BEACH DISTANCE
-        --------------------------------------------- */
-
-          const matchesBeach = (() => {
-            /**
-             * Фильтр не выбран.
-             */
-            if (!filters.beachDistanceFrom && !filters.beachDistanceTo) {
-              return true;
-            }
-
-            /**
-             * Расстояние может лежать
-             * в разных местах объекта.
-             */
-            const rawDistance =
-              item.beachDistanceFrom ??
-              item.beachDistance ??
-              item.beach_distance ??
-              item.distanceToBeach ??
-              item.distance_to_beach ??
-              item.features?.beachDistance ??
-              item.features?.beach_distance ??
-              item.features?.distanceToBeach ??
-              item.features?.distance_to_beach;
-
-            const distance = Number(rawDistance);
-
-            /**
-             * Если расстояние отсутствует,
-             * не убираем объявление из выдачи.
-             */
-            if (
-              rawDistance === undefined ||
-              rawDistance === null ||
-              rawDistance === ""
-            ) {
-              return true;
-            }
-
-            if (Number.isNaN(distance)) {
-              return true;
-            }
-
-            const min = filters.beachDistanceFrom
-              ? Number(filters.beachDistanceFrom)
-              : null;
-
-            const max = filters.beachDistanceTo
-              ? Number(filters.beachDistanceTo)
-              : null;
-
-            if (min !== null && !Number.isNaN(min) && distance < min) {
-              return false;
-            }
-
-            if (max !== null && !Number.isNaN(max) && distance > max) {
-              return false;
-            }
-
-            return true;
-          })();
-
-          /* ---------------------------------------------
-           CATEGORY FEATURES
-        --------------------------------------------- */
-
-          for (const key of featureKeys) {
-            const selected = filters[key];
-
-            if (
-              !selected ||
-              selected === "Любой" ||
-              selected === "Любая" ||
-              selected === "Любые" ||
-              selected === "Любое"
-            ) {
-              continue;
-            }
-
-            const itemValue = item[key] ?? item.features?.[key];
-
-            if (itemValue === undefined || itemValue === null) {
-              return false;
-            }
-
-            if (
-              !String(itemValue)
-                .toLowerCase()
-                .includes(String(selected).toLowerCase())
-            ) {
-              return false;
-            }
           }
 
-          /* ---------------------------------------------
+          const selected = normalizeLocationValue(filters.city);
+
+          const values = [
+            item.location,
+            item.city,
+            item.region,
+            item.address,
+            item.country,
+            item.district,
+          ]
+            .filter(Boolean)
+            .map(normalizeLocationValue);
+
+          if (
+            isIssykKulValue(selected) ||
+            ISSYK_KUL_CITIES.some(
+              (city) =>
+                selected === normalizeLocationValue(city) ||
+                selected.includes(normalizeLocationValue(city)),
+            )
+          ) {
+            return values.some((value) => {
+              if (isIssykKulValue(value)) {
+                return true;
+              }
+
+              return ISSYK_KUL_CITIES.some((city) => {
+                const normalizedCity = normalizeLocationValue(city);
+
+                return (
+                  value === normalizedCity || value.includes(normalizedCity)
+                );
+              });
+            });
+          }
+
+          if (selected === "турция") {
+            return values.some(
+              (value) =>
+                value.includes("турци") ||
+                value.includes("turkey") ||
+                value.includes("алань") ||
+                value.includes("антал") ||
+                value.includes("стамбул") ||
+                value.includes("мерсин") ||
+                value.includes("измир"),
+            );
+          }
+
+          return values.some((value) => value.includes(selected));
+        })();
+
+        /* =================================================
+           ROOMS
+        ================================================= */
+
+        const matchesRooms = (() => {
+          if (!filters.rooms || filters.rooms === "Все") {
+            return true;
+          }
+
+          const itemRooms = Number(item.rooms);
+
+          if (filters.rooms === "4+") {
+            return itemRooms >= 4;
+          }
+
+          return itemRooms === Number(filters.rooms);
+        })();
+
+        /* =================================================
+           PRICE
+        ================================================= */
+
+        const matchesPrice = (() => {
+          const price = Number(item.rawPrice);
+
+          const min = filters.priceFrom ? Number(filters.priceFrom) : null;
+
+          const max = filters.priceTo ? Number(filters.priceTo) : null;
+
+          if (min !== null && !Number.isNaN(min) && price < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && price > max) {
+            return false;
+          }
+
+          return true;
+        })();
+
+        /* =================================================
+           AREA
+        ================================================= */
+
+        const matchesArea = (() => {
+          const area = Number(item.rawArea);
+
+          const min = filters.areaFrom ? Number(filters.areaFrom) : null;
+
+          const max = filters.areaTo ? Number(filters.areaTo) : null;
+
+          if (min !== null && !Number.isNaN(min) && area < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && area > max) {
+            return false;
+          }
+
+          return true;
+        })();
+
+        /* =================================================
+           BEACH DISTANCE
+        ================================================= */
+
+        const matchesBeach = (() => {
+          if (!filters.beachDistanceFrom && !filters.beachDistanceTo) {
+            return true;
+          }
+
+          if (!isIssykKulLocation(filters)) {
+            return true;
+          }
+
+          const rawDistance =
+            item.beachDistanceFrom ??
+            item.beachDistance ??
+            item.beach_distance ??
+            item.distanceToBeach ??
+            item.distance_to_beach ??
+            item.features?.beachDistance ??
+            item.features?.beach_distance ??
+            item.features?.distanceToBeach ??
+            item.features?.distance_to_beach;
+
+          const distance = Number(rawDistance);
+
+          if (
+            rawDistance === undefined ||
+            rawDistance === null ||
+            rawDistance === ""
+          ) {
+            return true;
+          }
+
+          if (Number.isNaN(distance)) {
+            return true;
+          }
+
+          const min = filters.beachDistanceFrom
+            ? Number(filters.beachDistanceFrom)
+            : null;
+
+          const max = filters.beachDistanceTo
+            ? Number(filters.beachDistanceTo)
+            : null;
+
+          if (min !== null && !Number.isNaN(min) && distance < min) {
+            return false;
+          }
+
+          if (max !== null && !Number.isNaN(max) && distance > max) {
+            return false;
+          }
+
+          return true;
+        })();
+
+        /* =================================================
            ARRAY FEATURES
-        --------------------------------------------- */
+        ================================================= */
 
-          const matchesArrayFilter = (key) => {
-            const selected = filters[key];
+        for (const key of arrayFeatureKeys) {
+          const selected = filters[key];
 
-            if (!Array.isArray(selected) || selected.length === 0) {
-              return true;
-            }
+          if (!Array.isArray(selected) || selected.length === 0) {
+            continue;
+          }
 
-            const itemValue = item[key] ?? item.features?.[key];
+          const itemValue = item[key] ?? item.features?.[key];
 
-            if (!Array.isArray(itemValue)) {
+          if (
+            ["amenities", "communications", "technicalParameters"].includes(key)
+          ) {
+            if (!matchesArrayFilter(selected, itemValue)) {
               return false;
             }
 
-            const normalized = itemValue.map((value) =>
-              String(value).toLowerCase(),
-            );
+            continue;
+          }
 
-            return selected.every((value) =>
-              normalized.includes(String(value).toLowerCase()),
-            );
-          };
+          if (!matchesMultiValue(selected, itemValue)) {
+            return false;
+          }
+        }
 
-          /* ---------------------------------------------
-           FINAL
-        --------------------------------------------- */
+        /* =================================================
+           SIMPLE FEATURES
+        ================================================= */
 
-          return (
-            matchesCategory &&
-            matchesDeal &&
-            matchesCity &&
-            matchesRooms &&
-            matchesPrice &&
-            matchesArea &&
-            matchesBeach &&
-            matchesArrayFilter("amenities") &&
-            matchesArrayFilter("communications") &&
-            matchesArrayFilter("technicalParameters")
-          );
-        })
+        for (const key of featureKeys) {
+          if (arrayFeatureKeys.includes(key)) {
+            continue;
+          }
 
-        /* -----------------------------------------------
-         PRIORITY
-      ----------------------------------------------- */
+          const selected = filters[key];
 
-        .sort((a, b) => {
-          const priority = {
-            vip: 0,
-            urgent: 1,
-            top: 2,
-            regular: 3,
-          };
+          if (
+            !selected ||
+            selected === "Любой" ||
+            selected === "Любая" ||
+            selected === "Любые" ||
+            selected === "Любое"
+          ) {
+            continue;
+          }
 
-          return (priority[a.status] ?? 3) - (priority[b.status] ?? 3);
-        })
-    );
+          const itemValue = item[key] ?? item.features?.[key];
+
+          if (itemValue === undefined || itemValue === null) {
+            return false;
+          }
+
+          if (
+            !String(itemValue)
+              .toLowerCase()
+              .includes(String(selected).toLowerCase())
+          ) {
+            return false;
+          }
+        }
+
+        /* =================================================
+           FINAL FILTER RESULT
+        ================================================= */
+
+        return (
+          matchesCategory &&
+          matchesDeal &&
+          matchesCity &&
+          matchesRooms &&
+          matchesPrice &&
+          matchesArea &&
+          matchesBeach
+        );
+      })
+      .sort((a, b) => {
+        const priority = {
+          vip: 0,
+          urgent: 1,
+          top: 2,
+          regular: 3,
+        };
+
+        return (
+          (priority[String(a.status || "").toLowerCase()] ?? 3) -
+          (priority[String(b.status || "").toLowerCase()] ?? 3)
+        );
+      });
   }, [mappedListings, filters]);
 
   /* =======================================================
-     CATEGORY FILTER COMPONENT
+     CATEGORY FILTER
   ======================================================= */
 
   const CategoryFilters =
     categoryComponents[filters.propertyType] || ApartmentFilters;
 
   /* =======================================================
-     ISSYK-KUL STATE
+     BEACH
   ======================================================= */
 
-  /**
-   * Расстояние до пляжа доступно
-   * для ЛЮБОГО типа недвижимости,
-   * если выбрана локация Иссык-Куль.
-   *
-   * apartment -> true
-   * house -> true
-   * cottage -> true
-   * land -> true
-   * room -> true
-   * commercial -> true
-   * parking -> true
-   */
-  const showBeachDistance = useMemo(() => {
-    return isIssykKulLocation(filters);
-  }, [filters.city, filters.region, filters.country, filters.district]);
+  const showBeachDistance = useMemo(
+    () => isIssykKulLocation(filters),
+    [filters.city, filters.region, filters.country, filters.district],
+  );
 
   /* =======================================================
      RESET
   ======================================================= */
 
   function resetFilters() {
-    setFilters(DEFAULT_FILTERS);
+    setFilters({
+      ...DEFAULT_FILTERS,
+    });
 
     router.replace("/all-products", {
       scroll: false,
@@ -1322,9 +1339,9 @@ export default function AllProducts() {
     Boolean(filters.areaTo) ||
     Boolean(filters.beachDistanceFrom) ||
     Boolean(filters.beachDistanceTo) ||
-    Object.entries(filters).some(
-      ([key, value]) =>
-        ![
+    Object.entries(filters).some(([key, value]) => {
+      if (
+        [
           "propertyType",
           "dealType",
           "city",
@@ -1335,10 +1352,17 @@ export default function AllProducts() {
           "areaTo",
           "beachDistanceFrom",
           "beachDistanceTo",
-        ].includes(key) &&
-        value &&
-        (Array.isArray(value) ? value.length > 0 : true),
-    );
+        ].includes(key)
+      ) {
+        return false;
+      }
+
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+
+      return Boolean(value);
+    });
 
   /* =======================================================
      RENDER
@@ -1347,10 +1371,6 @@ export default function AllProducts() {
   return (
     <main className={styles.page}>
       <div className={styles.glow} />
-
-      {/* =================================================
-          HEADER
-      ================================================= */}
 
       <header className={styles.header}>
         <div className={styles.headerTop}>
@@ -1381,205 +1401,30 @@ export default function AllProducts() {
       </header>
 
       <div className={styles.container}>
-        {/* =================================================
-            SEARCH MODE
-        ================================================= */}
+        <ProductsFilters
+          searchMode={searchMode}
+          setSearchMode={setSearchMode}
+          filters={filters}
+          updateFilter={updateFilter}
+          updateUrl={updateUrl}
+          handleSmartSearch={handleSmartSearch}
+          resetFilters={resetFilters}
+          hasFilters={hasFilters}
+          categories={categories}
+          categoryLabels={categoryLabels}
+          CategoryFilters={CategoryFilters}
+          showBeachDistance={showBeachDistance}
+        />
 
-        <SearchModeSlider value={searchMode} onChange={setSearchMode} />
-
-        {/* =================================================
-            SMART SEARCH
-        ================================================= */}
-
-        {searchMode === "smart" && (
-          <SmartSearch onFiltersDetected={handleSmartSearch} />
-        )}
-
-        {/* =================================================
-            FILTER SEARCH
-        ================================================= */}
-
-        {searchMode === "filters" && (
-          <section id="filters" className={styles.filters}>
-            <div className={styles.filterHeader}>
-              <div>
-                <span>ФИЛЬТРЫ</span>
-
-                <h2>Настройте поиск</h2>
-              </div>
-
-              {hasFilters && (
-                <button
-                  type="button"
-                  className={styles.reset}
-                  onClick={resetFilters}
-                >
-                  <X size={14} />
-                  Сбросить
-                </button>
-              )}
-            </div>
-
-            {/* =================================================
-                PROPERTY TYPE
-            ================================================= */}
-
-            <div className={styles.section}>
-              <label>Тип недвижимости</label>
-
-              <div className={styles.categoryList}>
-                {categories.map((category) => {
-                  const active = filters.propertyType === category.value;
-
-                  return (
-                    <button
-                      key={category.value}
-                      type="button"
-                      className={active ? styles.categoryActive : ""}
-                      onClick={() =>
-                        updateFilter("propertyType", category.value)
-                      }
-                    >
-                      {category.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* =================================================
-                DEAL
-            ================================================= */}
-
-            <div className={styles.section}>
-              <label>Тип сделки</label>
-
-              <div className={styles.dealList}>
-                {deals.map((deal) => (
-                  <button
-                    key={deal.value}
-                    type="button"
-                    className={
-                      filters.dealType === deal.value ? styles.dealActive : ""
-                    }
-                    onClick={() => updateFilter("dealType", deal.value)}
-                  >
-                    {deal.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* =================================================
-                COMMON FILTERS
-            ================================================= */}
-
-            <div className={styles.section}>
-              <label>Основные параметры</label>
-
-              <CommonFilters
-                filters={filters}
-                updateFilter={updateFilter}
-                showBeachDistance={showBeachDistance}
-              />
-            </div>
-
-            {/* =================================================
-                CATEGORY FILTERS
-            ================================================= */}
-
-            <div className={styles.categoryFilters}>
-              <div className={styles.categoryTitle}>
-                <div>
-                  <span>ХАРАКТЕРИСТИКИ</span>
-
-                  <h3>{categoryLabels[filters.propertyType]}</h3>
-                </div>
-              </div>
-
-              <CategoryFilters filters={filters} updateFilter={updateFilter} />
-            </div>
-
-            {/* =================================================
-                APPLY
-            ================================================= */}
-
-            <button
-              type="button"
-              className={styles.apply}
-              onClick={() => updateUrl(filters)}
-            >
-              <Search size={17} />
-              Показать объявления
-            </button>
-          </section>
-        )}
-
-        {/* =================================================
-            RESULTS HEADER
-        ================================================= */}
-
-        <div className={styles.resultsHeader}>
-          <div>
-            <span>РЕЗУЛЬТАТЫ ПОИСКА</span>
-
-            <strong>{loading ? "..." : filteredListings.length}</strong>
-
-            <small>объявлений</small>
-          </div>
-        </div>
-
-        {/* =================================================
-            LOADING
-        ================================================= */}
-
-        {loading && (
-          <div className={styles.loading}>
-            <div />
-            Загружаем объявления...
-          </div>
-        )}
-
-        {/* =================================================
-            ERROR
-        ================================================= */}
-
-        {!loading && error && <div className={styles.error}>{error}</div>}
-
-        {/* =================================================
-            RESULTS
-        ================================================= */}
-
-        {!loading &&
-          !error &&
-          (filteredListings.length > 0 ? (
-            <section className={styles.grid}>
-              {filteredListings.map((item) => (
-                <ListingCard
-                  key={item.id}
-                  item={item}
-                  isFavorite={favIds.has(String(item.id))}
-                  onFavoriteClick={handleFavoriteClick}
-                />
-              ))}
-            </section>
-          ) : (
-            <div className={styles.empty}>
-              <div className={styles.emptyIcon}>
-                <Search size={27} />
-              </div>
-
-              <h2>Ничего не найдено</h2>
-
-              <p>Попробуйте изменить параметры поиска.</p>
-
-              {hasFilters && (
-                <button type="button" onClick={resetFilters}>
-                  Сбросить фильтры
-                </button>
-              )}
-            </div>
-          ))}
+        <ProductsResults
+          loading={loading}
+          error={error}
+          listings={filteredListings}
+          favIds={favIds}
+          onFavoriteClick={handleFavoriteClick}
+          hasFilters={hasFilters}
+          onReset={resetFilters}
+        />
       </div>
     </main>
   );

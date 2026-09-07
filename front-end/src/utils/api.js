@@ -714,6 +714,34 @@ export async function verifyDeveloperAdmin(token, id, isVerified, rejectionReaso
   return data;
 }
 
+// Заявки на публикацию объявлений в Instagram
+export async function getAdminInstagramRequests(token) {
+  const response = await fetch(`${API_URL}/admin/instagram-requests`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при загрузке заявок на Instagram");
+  }
+  return data.data;
+}
+
+export async function completeInstagramRequest(token, id) {
+  const response = await fetch(`${API_URL}/admin/instagram-requests/${id}/complete`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка при обновлении заявки");
+  }
+  return data;
+}
+
 // 13. Рекламные баннеры
 
 // Публичный список активных баннеров — без токена

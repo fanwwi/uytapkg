@@ -2,6 +2,7 @@ import { supabase } from "../config/db.js";
 import { createListingSchema, updateListingSchema } from "../utils/validation.js";
 import { removeImageFromStorage } from "../utils/storage.js";
 import { resolvePromotionExpiry } from "../services/promotionsService.js";
+import { createInstagramRequest } from "../utils/instagramRequests.js";
 
 // Купленное продвижение (VIP/ТОП/Срочно) действует ограниченный срок, но
 // в БД нет job'а, который бы его снимал по истечении — вместо cron'а
@@ -311,6 +312,17 @@ export const createListing = async (req, res) => {
         display_order: idx,
       }));
       await supabase.from("listing_photos").insert(photosData);
+    }
+
+    // Тип размещения "instagram" публикует объявление как обычное (оплата
+    // услуги пока не реализована), но создаёт заявку для админки — там её
+    // подтверждают вручную после фактической публикации в Instagram UyTap.
+    if (listingType === "instagram") {
+      try {
+        await createInstagramRequest({ listingId: newListing.id, userId });
+      } catch (instagramError) {
+        console.error("Instagram Request Create Error:", instagramError);
+      }
     }
 
     return res.status(201).json({

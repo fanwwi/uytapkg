@@ -11,13 +11,13 @@ import {
   DoorOpen,
   BriefcaseBusiness,
   CreditCard,
+  FileText,
+  Clock3,
 } from "lucide-react";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
-
 import styles from "./CommercialFilters.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const floors = [
   "Любой",
@@ -87,6 +87,8 @@ const offerTypes = [
   "Возможен обмен",
 ];
 
+const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
+
 const technicalParameters = [
   "Центральная канализация",
   "Трехфазное питание",
@@ -113,79 +115,110 @@ const amenities = [
 ];
 
 export default function CommercialFilters({ filters, updateFilter }) {
+  const isRent = filters.dealType === "rent";
+
   return (
     <div className={styles.grid}>
-      <CustomSelect
+      <MultiSelect
         icon={Layers3}
         title="Этаж"
         options={floors}
-        value={filters.floor || "Любой"}
+        value={filters.floor || []}
         setValue={(value) => updateFilter("floor", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Paintbrush}
         title="Состояние"
         options={conditions}
-        value={filters.condition || "Любое"}
+        value={filters.condition || []}
         setValue={(value) => updateFilter("condition", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={BrickWall}
         title="Стены"
         options={walls}
-        value={filters.walls || "Любые"}
+        value={filters.walls || []}
         setValue={(value) => updateFilter("walls", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Flame}
         title="Отопление"
         options={heating}
-        value={filters.heating || "Любое"}
+        value={filters.heating || []}
         setValue={(value) => updateFilter("heating", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Store}
         title="Тип помещения"
         options={premisesTypes}
-        value={filters.premisesType || "Любое"}
+        value={filters.premisesType || []}
         setValue={(value) => updateFilter("premisesType", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={ShieldCheck}
         title="Первая линия"
         options={yesNoAny}
-        value={filters.firstLine || "Любое"}
+        value={filters.firstLine || []}
         setValue={(value) => updateFilter("firstLine", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={DoorOpen}
         title="Отдельный вход"
         options={yesNoAny}
-        value={filters.separateEntrance || "Любое"}
+        value={filters.separateEntrance || []}
         setValue={(value) => updateFilter("separateEntrance", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={BriefcaseBusiness}
         title="Готовый бизнес"
         options={rentalBusiness}
-        value={filters.rentalBusiness || "Любое"}
+        value={filters.rentalBusiness || []}
         setValue={(value) => updateFilter("rentalBusiness", value)}
       />
 
-      <CustomSelect
-        icon={CreditCard}
-        title="Оплата"
-        options={offerTypes}
-        value={filters.offerType || "Любой"}
-        setValue={(value) => updateFilter("offerType", value)}
-      />
+      {!isRent && (
+        <>
+          <MultiSelect
+            icon={FileText}
+            title="Документы"
+            options={[
+              "Любые",
+              "Красная книга",
+              "Техпаспорт",
+              "Договор купли-продажи",
+              "Договор долевого участия",
+              "Акт приема-передачи",
+            ]}
+            value={filters.documents || []}
+            setValue={(value) => updateFilter("documents", value)}
+          />
+
+          <MultiSelect
+            icon={CreditCard}
+            title="Оплата"
+            options={offerTypes}
+            value={filters.offerType || []}
+            setValue={(value) => updateFilter("offerType", value)}
+          />
+        </>
+      )}
+
+      {isRent && (
+        <MultiSelect
+          icon={Clock3}
+          title="Период аренды"
+          options={rentalPeriods}
+          value={filters.rentalPeriod || []}
+          setValue={(value) => updateFilter("rentalPeriod", value)}
+        />
+      )}
 
       <div className={styles.full}>
         <MultiSelect

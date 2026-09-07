@@ -1,12 +1,17 @@
 "use client";
 
-import { Map, Fence, FileText, CreditCard, Mountain } from "lucide-react";
+import {
+  Map,
+  Fence,
+  FileText,
+  CreditCard,
+  Mountain,
+  Clock3,
+} from "lucide-react";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
-
 import styles from "./LandFilters.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const purposes = [
   "Любое",
@@ -48,6 +53,8 @@ const locations = [
 
 const terrains = ["Любой", "Ровный", "С уклоном", "Горный", "Холмистый"];
 
+const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
+
 const communications = [
   "Электричество",
   "Газ",
@@ -58,12 +65,6 @@ const communications = [
 ];
 
 const amenities = [
-  "Электричество",
-  "Газ",
-  "Вода",
-  "Канализация",
-  "Интернет",
-  "Отопление",
   "Подъездная дорога",
   "Огороженная территория",
   "Сад",
@@ -72,55 +73,71 @@ const amenities = [
 ];
 
 export default function LandFilters({ filters, updateFilter }) {
+  const isRent = filters.dealType === "rent";
+
   return (
     <div className={styles.grid}>
-      <CustomSelect
+      <MultiSelect
         icon={Map}
         title="Назначение"
         options={purposes}
-        value={filters.purpose || "Любое"}
+        value={filters.purpose || []}
         setValue={(value) => updateFilter("purpose", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Fence}
         title="Забор"
         options={fence}
-        value={filters.fence || "Любой"}
+        value={filters.fence || []}
         setValue={(value) => updateFilter("fence", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Map}
         title="Расположение"
         options={locations}
-        value={filters.location || "Любое"}
+        value={filters.location || []}
         setValue={(value) => updateFilter("location", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Mountain}
         title="Рельеф"
         options={terrains}
-        value={filters.terrain || "Любой"}
+        value={filters.terrain || []}
         setValue={(value) => updateFilter("terrain", value)}
       />
 
-      <CustomSelect
-        icon={FileText}
-        title="Документы"
-        options={documents}
-        value={filters.documents || "Любые"}
-        setValue={(value) => updateFilter("documents", value)}
-      />
+      {!isRent && (
+        <>
+          <MultiSelect
+            icon={FileText}
+            title="Документы"
+            options={documents}
+            value={filters.documents || []}
+            setValue={(value) => updateFilter("documents", value)}
+          />
 
-      <CustomSelect
-        icon={CreditCard}
-        title="Оплата"
-        options={offerTypes}
-        value={filters.offerType || "Любой"}
-        setValue={(value) => updateFilter("offerType", value)}
-      />
+          <MultiSelect
+            icon={CreditCard}
+            title="Оплата"
+            options={offerTypes}
+            value={filters.offerType || []}
+            setValue={(value) => updateFilter("offerType", value)}
+          />
+        </>
+      )}
+
+      {isRent && (
+        <MultiSelect
+          icon={Clock3}
+          title="Период аренды"
+          options={rentalPeriods}
+          value={filters.rentalPeriod || []}
+          setValue={(value) => updateFilter("rentalPeriod", value)}
+        />
+      )}
 
       <div className={styles.full}>
         <MultiSelect

@@ -47,6 +47,11 @@ const navigation = [
     href: "/admin/lawyers",
     icon: Scale,
   },
+  {
+    title: "Управление тарифами",
+    href: "/admin/tarrifs",
+    icon: Scale,
+  },
 ];
 
 export default function Sidebar() {

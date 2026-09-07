@@ -28,6 +28,7 @@ import {
   Building2,
   Tag,
   Loader2,
+  SquareDashedMousePointer,
 } from "lucide-react";
 
 import "leaflet/dist/leaflet.css";
@@ -160,7 +161,7 @@ function MapController({ selectedBounds }) {
    AREA DRAWER
 ========================================================= */
 
-function AreaDrawer({ onComplete, onStart }) {
+function AreaDrawer({ enabled, onComplete, onStart, onCancel }) {
   const map = useMap();
 
   const startPoint = useRef(null);
@@ -168,12 +169,19 @@ function AreaDrawer({ onComplete, onStart }) {
 
   useMapEvents({
     mousedown(event) {
-      if (event.originalEvent.button !== 0) return;
+      if (!enabled) return;
 
-      if (!event.originalEvent.shiftKey) return;
+      if (event.originalEvent.button !== 0) {
+        return;
+      }
 
       isDrawing.current = true;
       startPoint.current = event.latlng;
+
+      /*
+       * На время рисования отключаем обычное
+       * взаимодействие с картой.
+       */
 
       map.dragging.disable();
       map.doubleClickZoom.disable();
@@ -185,7 +193,11 @@ function AreaDrawer({ onComplete, onStart }) {
     },
 
     mousemove(event) {
-      if (!isDrawing.current || !startPoint.current) return;
+      if (!enabled) return;
+
+      if (!isDrawing.current || !startPoint.current) {
+        return;
+      }
 
       const bounds = L.latLngBounds(startPoint.current, event.latlng);
 
@@ -193,7 +205,11 @@ function AreaDrawer({ onComplete, onStart }) {
     },
 
     mouseup(event) {
-      if (!isDrawing.current || !startPoint.current) return;
+      if (!enabled) return;
+
+      if (!isDrawing.current || !startPoint.current) {
+        return;
+      }
 
       const bounds = L.latLngBounds(startPoint.current, event.latlng);
 
@@ -209,6 +225,44 @@ function AreaDrawer({ onComplete, onStart }) {
       onComplete(bounds, true);
     },
   });
+
+  useEffect(() => {
+    if (!enabled) {
+      isDrawing.current = false;
+      startPoint.current = null;
+
+      map.dragging.enable();
+      map.doubleClickZoom.enable();
+      map.scrollWheelZoom.enable();
+      map.boxZoom.enable();
+      map.keyboard.enable();
+
+      return;
+    }
+
+    /*
+     * Более профессиональное поведение:
+     * когда включён режим выделения, курсор
+     * становится crosshair.
+     */
+
+    const container = map.getContainer();
+
+    container.classList.add(styles.mapDrawingMode);
+
+    return () => {
+      container.classList.remove(styles.mapDrawingMode);
+
+      map.dragging.enable();
+      map.doubleClickZoom.enable();
+      map.scrollWheelZoom.enable();
+      map.boxZoom.enable();
+      map.keyboard.enable();
+
+      isDrawing.current = false;
+      startPoint.current = null;
+    };
+  }, [enabled, map]);
 
   useEffect(() => {
     return () => {
@@ -676,9 +730,9 @@ function normalizeComplex(item) {
 export default function SearchMapClient() {
   const router = useRouter();
 
-  /* =========================================================
+  /* =======================================================
      DATA
-  ========================================================= */
+  ======================================================= */
 
   const [listings, setListings] = useState([]);
   const [complexes, setComplexes] = useState([]);
@@ -686,15 +740,15 @@ export default function SearchMapClient() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
-  /* =========================================================
+  /* =======================================================
      SEARCH
-  ========================================================= */
+  ======================================================= */
 
   const [search, setSearch] = useState("");
 
-  /* =========================================================
+  /* =======================================================
      FILTERS
-  ========================================================= */
+  ======================================================= */
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -704,9 +758,11 @@ export default function SearchMapClient() {
 
   const [locationFilter, setLocationFilter] = useState("Все");
 
-  /* =========================================================
+  /* =======================================================
      AREA
-  ========================================================= */
+  ======================================================= */
+
+  const [isAreaMode, setIsAreaMode] = useState(false);
 
   const [selectedBounds, setSelectedBounds] = useState(null);
 
@@ -716,9 +772,9 @@ export default function SearchMapClient() {
 
   const [hasSelection, setHasSelection] = useState(false);
 
-  /* =========================================================
+  /* =======================================================
      SELECTED OBJECT
-  ========================================================= */
+  ======================================================= */
 
   const [selectedObject, setSelectedObject] = useState(null);
 
@@ -728,9 +784,9 @@ export default function SearchMapClient() {
 
   const [detailsError, setDetailsError] = useState("");
 
-  /* =========================================================
+  /* =======================================================
      LOAD DATA
-  ========================================================= */
+  ======================================================= */
 
   useEffect(() => {
     let cancelled = false;
@@ -796,17 +852,17 @@ export default function SearchMapClient() {
     };
   }, []);
 
-  /* =========================================================
+  /* =======================================================
      ALL OBJECTS
-  ========================================================= */
+  ======================================================= */
 
   const objects = useMemo(() => {
     return [...listings, ...complexes];
   }, [listings, complexes]);
 
-  /* =========================================================
+  /* =======================================================
      ACTIVE FILTER COUNT
-  ========================================================= */
+  ======================================================= */
 
   const activeFilterCount = useMemo(() => {
     let count = 0;
@@ -823,12 +879,16 @@ export default function SearchMapClient() {
       count += 1;
     }
 
-    return count;
-  }, [dealFilter, propertyFilter, locationFilter]);
+    if (hasSelection) {
+      count += 1;
+    }
 
-  /* =========================================================
+    return count;
+  }, [dealFilter, propertyFilter, locationFilter, hasSelection]);
+
+  /* =======================================================
      DEAL VALUE
-  ========================================================= */
+  ======================================================= */
 
   function getDealValue(object) {
     if (object?.dealType === "buy") {
@@ -842,9 +902,9 @@ export default function SearchMapClient() {
     return "";
   }
 
-  /* =========================================================
+  /* =======================================================
      PROPERTY LABEL
-  ========================================================= */
+  ======================================================= */
 
   function getPropertyLabel(value) {
     const labels = {
@@ -861,9 +921,9 @@ export default function SearchMapClient() {
     return labels[value] || "";
   }
 
-  /* =========================================================
+  /* =======================================================
      LOCATION VALUE
-  ========================================================= */
+  ======================================================= */
 
   function getLocationFilterValue(object) {
     const values = {
@@ -881,9 +941,9 @@ export default function SearchMapClient() {
     return values[object.locationType] || "";
   }
 
-  /* =========================================================
+  /* =======================================================
      FILTERED OBJECTS
-  ========================================================= */
+  ======================================================= */
 
   const filteredObjects = useMemo(() => {
     let result = objects;
@@ -956,14 +1016,16 @@ export default function SearchMapClient() {
     locationFilter,
   ]);
 
-  /* =========================================================
+  /* =======================================================
      AREA
-  ========================================================= */
+  ======================================================= */
 
   function handleBounds(bounds, finished) {
     setTempBounds(bounds);
 
-    if (!finished) return;
+    if (!finished) {
+      return;
+    }
 
     const north = bounds.getNorth();
     const south = bounds.getSouth();
@@ -976,6 +1038,7 @@ export default function SearchMapClient() {
 
     if (isTiny) {
       setTempBounds(null);
+      setIsAreaMode(false);
       return;
     }
 
@@ -985,8 +1048,29 @@ export default function SearchMapClient() {
 
     setHasSelection(true);
 
+    /*
+     * После завершения выделения автоматически
+     * выключаем режим рисования.
+     */
+
+    setIsAreaMode(false);
+
     setSelectedObject((current) => {
-      if (!current) return null;
+      if (!current) {
+        return null;
+      }
+
+      if (bounds.contains(L.latLng(current.position))) {
+        return current;
+      }
+
+      return null;
+    });
+
+    setSelectedObjectDetails((current) => {
+      if (!current) {
+        return null;
+      }
 
       if (bounds.contains(L.latLng(current.position))) {
         return current;
@@ -996,21 +1080,45 @@ export default function SearchMapClient() {
     });
   }
 
-  /* =========================================================
+  /* =======================================================
+     START AREA MODE
+  ======================================================= */
+
+  function startAreaSelection() {
+    closeObjectPreview();
+
+    setTempBounds(null);
+
+    setIsAreaMode(true);
+  }
+
+  /* =======================================================
+     CANCEL AREA MODE
+  ======================================================= */
+
+  function cancelAreaSelection() {
+    setIsAreaMode(false);
+    setTempBounds(null);
+    setIsDrawing(false);
+  }
+
+  /* =======================================================
      CLEAR AREA
-  ========================================================= */
+  ======================================================= */
 
   function clearSelection() {
     setSelectedBounds(null);
     setTempBounds(null);
     setHasSelection(false);
+    setIsAreaMode(false);
+    setIsDrawing(false);
 
     closeObjectPreview();
   }
 
-  /* =========================================================
+  /* =======================================================
      CLEAR FILTERS
-  ========================================================= */
+  ======================================================= */
 
   function clearFilters() {
     setDealFilter("Все");
@@ -1018,28 +1126,18 @@ export default function SearchMapClient() {
     setLocationFilter("Все");
   }
 
-  /* =========================================================
+  /* =======================================================
      OBJECT CLICK
-  ========================================================= */
+  ======================================================= */
 
   async function handleObjectClick(object) {
     if (!object?.id) return;
-
-    /*
-      Сначала показываем карточку с информацией,
-      которая уже есть в карте.
-    */
 
     setSelectedObject(object);
 
     setSelectedObjectDetails(object);
 
     setDetailsError("");
-
-    /*
-      Для обычного объявления дополнительно
-      получаем полную информацию с API.
-    */
 
     if (object.objectType !== "listing") {
       return;
@@ -1049,17 +1147,6 @@ export default function SearchMapClient() {
       setDetailsLoading(true);
 
       const response = await getListingById(object.id);
-
-      /*
-        API может вернуть:
-
-        {
-          success: true,
-          data: {...}
-        }
-
-        либо сразу объект.
-      */
 
       const rawData = response?.data ?? response?.listing ?? response;
 
@@ -1122,20 +1209,15 @@ export default function SearchMapClient() {
 
       setDetailsError("Не удалось загрузить дополнительную информацию");
 
-      /*
-        Даже если API упало, карточка продолжает
-        работать на основе данных карты.
-      */
-
       setSelectedObjectDetails(object);
     } finally {
       setDetailsLoading(false);
     }
   }
 
-  /* =========================================================
+  /* =======================================================
      DETAILS
-  ========================================================= */
+  ======================================================= */
 
   function handleDetails(object) {
     if (!object?.id) return;
@@ -1149,16 +1231,11 @@ export default function SearchMapClient() {
     router.push(`/all-products/${object.id}`);
   }
 
-  /* =========================================================
+  /* =======================================================
      PREVIEW CLICK
-  ========================================================= */
+  ======================================================= */
 
   function handlePreviewClick(event) {
-    /*
-      Не отправляем клик с кнопки Details
-      второй раз.
-    */
-
     if (event.target.closest(`.${styles.detailsButton}`)) {
       return;
     }
@@ -1170,9 +1247,9 @@ export default function SearchMapClient() {
     handleDetails(selectedObjectDetails);
   }
 
-  /* =========================================================
+  /* =======================================================
      CLOSE PREVIEW
-  ========================================================= */
+  ======================================================= */
 
   function closeObjectPreview() {
     setSelectedObject(null);
@@ -1181,15 +1258,15 @@ export default function SearchMapClient() {
     setDetailsError("");
   }
 
-  /* =========================================================
+  /* =======================================================
      PREVIEW OBJECT
-  ========================================================= */
+  ======================================================= */
 
   const previewObject = selectedObjectDetails || selectedObject;
 
-  /* =========================================================
+  /* =======================================================
      RENDER
-  ========================================================= */
+  ======================================================= */
 
   return (
     <main className={styles.page}>
@@ -1265,7 +1342,13 @@ export default function SearchMapClient() {
               <button
                 type="button"
                 className={styles.clearFilters}
-                onClick={clearFilters}
+                onClick={() => {
+                  clearFilters();
+
+                  if (hasSelection) {
+                    clearSelection();
+                  }
+                }}
               >
                 <RotateCcw size={14} />
                 Сбросить
@@ -1325,6 +1408,7 @@ export default function SearchMapClient() {
             <MapController selectedBounds={selectedBounds} />
 
             <AreaDrawer
+              enabled={isAreaMode}
               onStart={() => {
                 setIsDrawing(true);
                 closeObjectPreview();
@@ -1336,9 +1420,12 @@ export default function SearchMapClient() {
                   setIsDrawing(false);
                 }
               }}
+              onCancel={cancelAreaSelection}
             />
 
-            {/* TEMP AREA */}
+            {/* =================================================
+                TEMP AREA
+            ================================================= */}
 
             {tempBounds && (
               <Rectangle
@@ -1354,7 +1441,9 @@ export default function SearchMapClient() {
               />
             )}
 
-            {/* SELECTED AREA */}
+            {/* =================================================
+                SELECTED AREA
+            ================================================= */}
 
             {selectedBounds && (
               <Rectangle
@@ -1371,7 +1460,9 @@ export default function SearchMapClient() {
               />
             )}
 
-            {/* MARKERS */}
+            {/* =================================================
+                MARKERS
+            ================================================= */}
 
             {filteredObjects.map((object) => (
               <Marker
@@ -1408,14 +1499,50 @@ export default function SearchMapClient() {
           )}
 
           {/* =================================================
-              DRAWING
+              AREA SELECTION CONTROL
           ================================================= */}
 
-          {isDrawing && (
-            <div className={styles.drawingIndicator}>
-              <MousePointer2 />
+          {!loading && (
+            <div className={styles.areaSelectionControl}>
+              {!isAreaMode ? (
+                <button
+                  type="button"
+                  className={styles.areaSelectionButton}
+                  onClick={startAreaSelection}
+                >
+                  <SquareDashedMousePointer size={17} />
 
-              <span>Отпустите мышь, чтобы выбрать область</span>
+                  <span>Выделить область</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.areaSelectionButton} ${styles.areaSelectionButtonActive}`}
+                  onClick={cancelAreaSelection}
+                >
+                  <X size={17} />
+
+                  <span>Отменить выделение</span>
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* =================================================
+              AREA MODE HINT
+          ================================================= */}
+
+          {isAreaMode && !isDrawing && (
+            <div className={styles.areaModeHint}>
+              <div className={styles.areaModeHintIcon}>
+                <SquareDashedMousePointer />
+              </div>
+
+              <div>
+                <strong>Режим выделения области</strong>
+
+                <span>Зажмите левую кнопку мыши и протяните по карте</span>
+              </div>
             </div>
           )}
 
@@ -1423,16 +1550,16 @@ export default function SearchMapClient() {
               DRAW HINT
           ================================================= */}
 
-          {!isDrawing && !hasSelection && (
+          {!isAreaMode && !isDrawing && !hasSelection && (
             <div className={styles.drawHint}>
               <div className={styles.drawHintIcon}>
                 <MousePointer2 />
               </div>
 
               <div>
-                <strong>Выделите область</strong>
+                <strong>Хотите искать по области?</strong>
 
-                <span>Удерживайте Shift и протяните по карте мышью</span>
+                <span>Нажмите «Выделить область» над картой</span>
               </div>
             </div>
           )}

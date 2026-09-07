@@ -400,7 +400,7 @@ export default function AddProductPage() {
         // Участок
         purpose: form.purpose || null,
         fence: form.fence || null,
-        location: form.location || null,
+        location: form.landLocation || null,
         terrain: form.terrain || null,
         communications: form.communications || null,
 
@@ -410,6 +410,7 @@ export default function AddProductPage() {
           : null,
 
         privateBathroom: form.privateBathroom || null,
+        roomLocation: form.roomLocation || null,
 
         // Коммерция
         premisesType: form.premisesType || null,

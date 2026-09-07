@@ -1,0 +1,419 @@
+/* =========================
+   WRAPPER
+========================= */
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  z-index: 30;
+}
+
+/* =========================
+   SELECT
+========================= */
+
+.select {
+  position: relative;
+
+  width: 100%;
+  min-height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 17px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.055),
+    rgba(255, 255, 255, 0.025)
+  );
+
+  color: #f4f4f5;
+
+  cursor: pointer;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    0 8px 25px rgba(0, 0, 0, 0.18);
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease,
+    background 0.22s ease;
+}
+
+.select:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(255, 255, 255, 0.025)
+  );
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.22),
+    0 0 0 3px rgba(139, 92, 246, 0.06);
+}
+
+.selectOpen {
+  border-color: rgba(139, 92, 246, 0.75);
+
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.1),
+    rgba(255, 255, 255, 0.025)
+  );
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.1),
+    0 14px 35px rgba(0, 0, 0, 0.3);
+}
+
+.select:active {
+  transform: scale(0.995);
+}
+
+/* =========================
+   LEFT
+========================= */
+
+.left {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+/* =========================
+   ICON
+========================= */
+
+.icon {
+  width: 21px;
+  height: 21px;
+
+  flex-shrink: 0;
+
+  color: #a78bfa;
+
+  filter: drop-shadow(0 0 7px rgba(139, 92, 246, 0.2));
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.left section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-width: 0;
+}
+
+.left small {
+  color: #71717a;
+
+  font-size: 10px;
+  line-height: 1.2;
+
+  font-weight: 650;
+
+  letter-spacing: 0.02em;
+}
+
+.left strong {
+  max-width: 100%;
+
+  margin-top: 4px;
+
+  color: #f4f4f5;
+
+  font-size: 14px;
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   ARROW
+========================= */
+
+.arrow {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
+  color: #71717a;
+
+  transition:
+    transform 0.25s ease,
+    color 0.2s ease;
+}
+
+.select:hover .arrow {
+  color: #a78bfa;
+}
+
+.rotate {
+  transform: rotate(180deg);
+
+  color: #a78bfa;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.dropdown {
+  box-sizing: border-box;
+
+  z-index: 2147483647;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 7px;
+
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  border-radius: 16px;
+
+  background: linear-gradient(145deg, #17151d 0%, #111116 100%);
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.55),
+    0 8px 25px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.025);
+
+  scroll-behavior: smooth;
+
+  scrollbar-width: thin;
+  scrollbar-color: #4c3a78 transparent;
+
+  animation: dropdownAppear 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.dropdown::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: transparent;
+
+  margin: 8px 0;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: #4c3a78;
+
+  border-radius: 999px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: #8b5cf6;
+}
+
+.dropdown::-webkit-scrollbar-button {
+  display: none;
+
+  width: 0;
+  height: 0;
+}
+
+.dropdown::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* =========================
+   OPTIONS
+========================= */
+
+.option {
+  position: relative;
+
+  width: 100%;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 13px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #a1a1aa;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.15s ease;
+}
+
+.option:hover {
+  background: rgba(139, 92, 246, 0.1);
+
+  color: #c4b5fd;
+}
+
+.option:active {
+  transform: scale(0.985);
+}
+
+/* =========================
+   SELECTED OPTION
+========================= */
+
+.optionSelected {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.16),
+    rgba(139, 92, 246, 0.07)
+  );
+
+  color: #c4b5fd;
+
+  font-weight: 700;
+}
+
+.optionSelected::before {
+  content: "";
+
+  width: 4px;
+  height: 18px;
+
+  margin-right: 8px;
+
+  border-radius: 999px;
+
+  background: #8b5cf6;
+
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.45);
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty {
+  padding: 20px 14px;
+
+  color: #71717a;
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes dropdownAppear {
+  from {
+    opacity: 0;
+
+    transform: translateY(-6px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.select:focus-visible,
+.option:focus-visible {
+  outline: 3px solid rgba(139, 92, 246, 0.16);
+
+  outline-offset: 2px;
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .select,
+  .arrow,
+  .option,
+  .dropdown {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .select {
+    min-height: 56px;
+
+    padding: 0 14px;
+
+    border-radius: 15px;
+  }
+
+  .left {
+    gap: 10px;
+  }
+
+  .icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .left strong {
+    font-size: 13px;
+  }
+
+  .dropdown {
+    border-radius: 15px;
+
+    padding: 6px;
+  }
+
+  .option {
+    min-height: 43px;
+
+    font-size: 13px;
+  }
+}

@@ -6,6 +6,11 @@ import { getVerificationDocumentSignedUrl } from "../utils/storage.js";
 import { getPricingSettings, savePricingSettings } from "../utils/pricingSettings.js";
 import { listAllBanners } from "../utils/bannersStore.js";
 import { listPromotionOrders } from "../utils/promotionOrders.js";
+import {
+  listInstagramRequests,
+  getInstagramRequestById,
+  markInstagramRequestPublished,
+} from "../utils/instagramRequests.js";
 
 const PROMOTION_TARIFF_PREFIX = "promo_";
 const SERVICE_TITLES = {
@@ -624,6 +629,136 @@ export const verifyDeveloperAdmin = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Ошибка сервера при верификации застройщика",
+    });
+  }
+};
+
+// =======================================================
+// Заявки на публикацию в Instagram (GET /api/admin/instagram-requests)
+//
+// Оплата услуги пока не реализована — при создании объявления с
+// listingType "instagram" оно публикуется как обычное, а заявка тут
+// служит просто списком "разместить это в Instagram", который админ
+// подтверждает вручную после публикации.
+// =======================================================
+export const listInstagramRequestsAdmin = async (req, res) => {
+  try {
+    const requests = await listInstagramRequests();
+
+    const listingIds = [...new Set(requests.map((r) => r.listingId).filter(Boolean))];
+    const userIds = [...new Set(requests.map((r) => r.userId).filter(Boolean))];
+
+    const [{ data: listingRows }, { data: userRows }, { data: profileRows }] = await Promise.all([
+      listingIds.length > 0
+        ? supabase
+            .from("listings")
+            .select(
+              "id, title, price, currency, property_type, deal_type, region, city, district, address, rooms, area, promotion_status, is_urgent, listing_photos (url, is_main, display_order)"
+            )
+            .in("id", listingIds)
+        : { data: [] },
+      userIds.length > 0
+        ? supabase.from("users").select("id, email, phone").in("id", userIds)
+        : { data: [] },
+      userIds.length > 0
+        ? supabase
+            .from("user_profiles")
+            .select("user_id, first_name, last_name, company_name")
+            .in("user_id", userIds)
+        : { data: [] },
+    ]);
+
+    const listingsById = new Map((listingRows || []).map((l) => [l.id, l]));
+    const usersById = new Map((userRows || []).map((u) => [u.id, u]));
+    const profilesByUserId = new Map((profileRows || []).map((p) => [p.user_id, p]));
+
+    const data = requests.map((request) => {
+      const listing = listingsById.get(request.listingId) || null;
+      const user = usersById.get(request.userId) || null;
+      const profile = profilesByUserId.get(request.userId) || null;
+
+      const mainPhoto = listing?.listing_photos?.length
+        ? [...listing.listing_photos].sort((a, b) => {
+            if (a.is_main !== b.is_main) return a.is_main ? -1 : 1;
+            return (a.display_order ?? 0) - (b.display_order ?? 0);
+          })[0]
+        : null;
+
+      const userName =
+        profile?.company_name ||
+        [profile?.first_name, profile?.last_name].filter(Boolean).join(" ") ||
+        user?.email ||
+        "Пользователь удалён";
+
+      return {
+        id: request.id,
+        status: request.status,
+        createdAt: request.createdAt,
+        publishedAt: request.publishedAt,
+        listing: listing
+          ? {
+              id: listing.id,
+              title: listing.title,
+              price: listing.price,
+              currency: listing.currency,
+              propertyType: listing.property_type,
+              dealType: listing.deal_type,
+              region: listing.region,
+              city: listing.city,
+              district: listing.district,
+              address: listing.address,
+              rooms: listing.rooms,
+              area: listing.area,
+              promotionStatus: listing.promotion_status,
+              isUrgent: listing.is_urgent,
+              image: mainPhoto?.url || null,
+            }
+          : null,
+        user: {
+          name: userName,
+          phone: user?.phone || null,
+        },
+      };
+    });
+
+    return res.json({ success: true, data });
+  } catch (error) {
+    console.error("Admin List Instagram Requests Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка при получении заявок на публикацию в Instagram",
+    });
+  }
+};
+
+// =======================================================
+// Отметить заявку на Instagram выполненной
+// (PATCH /api/admin/instagram-requests/:id/complete)
+// =======================================================
+export const completeInstagramRequestAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existing = await getInstagramRequestById(id);
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Заявка не найдена",
+      });
+    }
+
+    const updated = await markInstagramRequestPublished(id);
+
+    return res.json({
+      success: true,
+      message: "Заявка отмечена как выполненная",
+      data: updated,
+    });
+  } catch (error) {
+    console.error("Admin Complete Instagram Request Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при обновлении заявки",
     });
   }
 };

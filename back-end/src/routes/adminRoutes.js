@@ -9,6 +9,8 @@ import {
   deleteLawyer,
   listDevelopersAdmin,
   verifyDeveloperAdmin,
+  listInstagramRequestsAdmin,
+  completeInstagramRequestAdmin,
 } from "../controllers/adminController.js";
 import {
   getAdminBanners,
@@ -56,6 +58,15 @@ router.delete("/lawyers/:id", authenticateToken, requireAdmin, deleteLawyer);
 // Управление верификацией застройщиков
 router.get("/developers", authenticateToken, requireAdmin, listDevelopersAdmin);
 router.put("/developers/:id/verify", authenticateToken, requireAdmin, verifyDeveloperAdmin);
+
+// Заявки на публикацию объявлений в Instagram
+router.get("/instagram-requests", authenticateToken, requireAdmin, listInstagramRequestsAdmin);
+router.patch(
+  "/instagram-requests/:id/complete",
+  authenticateToken,
+  requireAdmin,
+  completeInstagramRequestAdmin
+);
 
 // Управление рекламными баннерами (публичное чтение — /api/banners)
 router.get("/banners", authenticateToken, requireAdmin, getAdminBanners);

@@ -4,20 +4,17 @@ import {
   Ruler,
   Car,
   BrickWall,
-  ShieldCheck,
   DoorOpen,
   Warehouse,
-  Zap,
   Truck,
   FileText,
   CreditCard,
+  Clock3,
 } from "lucide-react";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
-
 import styles from "./ParkingFilters.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 const ceilingHeight = ["Любая", "До 2.5 м", "2.5–3 м", "3–4 м", "4+ м"];
 
@@ -33,8 +30,6 @@ const parkingTypes = [
 const materials = ["Любой", "Кирпич", "Бетон", "Металл", "Панель", "Другое"];
 
 const yesNo = ["Любое", "Есть", "Нет"];
-
-const electricity = ["Любая", "Есть", "Возможно подведение", "Нет"];
 
 const truckAccess = ["Любой", "Да", "Нет"];
 
@@ -64,6 +59,8 @@ const offerTypes = [
   "Возможен обмен",
 ];
 
+const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
+
 const amenities = [
   "Освещение",
   "Электричество",
@@ -78,103 +75,95 @@ const amenities = [
 ];
 
 export default function ParkingFilters({ filters, updateFilter }) {
+  const isRent = filters.dealType === "rent";
+
   return (
     <div className={styles.grid}>
-      <CustomSelect
+      <MultiSelect
         icon={Ruler}
         title="Высота потолка"
         options={ceilingHeight}
-        value={filters.ceilingHeight || "Любая"}
+        value={filters.ceilingHeight || []}
         setValue={(value) => updateFilter("ceilingHeight", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={Car}
         title="Тип"
         options={parkingTypes}
-        value={filters.parkingType || "Любой"}
+        value={filters.parkingType || []}
         setValue={(value) => updateFilter("parkingType", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={BrickWall}
         title="Материал"
         options={materials}
-        value={filters.material || "Любой"}
+        value={filters.material || []}
         setValue={(value) => updateFilter("material", value)}
       />
 
-      <CustomSelect
-        icon={ShieldCheck}
-        title="Охрана"
-        options={yesNo}
-        value={filters.security || "Любая"}
-        setValue={(value) => updateFilter("security", value)}
-      />
-
-      <CustomSelect
+      <MultiSelect
         icon={DoorOpen}
         title="Ворота"
         options={yesNo}
-        value={filters.gates || "Любое"}
+        value={filters.gates || []}
         setValue={(value) => updateFilter("gates", value)}
       />
 
-      <CustomSelect
-        icon={Warehouse}
-        title="Смотровая яма"
-        options={yesNo}
-        value={filters.inspectionPit || "Любая"}
-        setValue={(value) => updateFilter("inspectionPit", value)}
-      />
-
-      <CustomSelect
+      <MultiSelect
         icon={Warehouse}
         title="Подвал"
         options={yesNo}
-        value={filters.basement || "Любой"}
+        value={filters.basement || []}
         setValue={(value) => updateFilter("basement", value)}
       />
 
-      <CustomSelect
-        icon={Zap}
-        title="Электричество"
-        options={electricity}
-        value={filters.electricity || "Любая"}
-        setValue={(value) => updateFilter("electricity", value)}
-      />
-
-      <CustomSelect
+      <MultiSelect
         icon={Truck}
         title="Заезд грузовых"
         options={truckAccess}
-        value={filters.truckAccess || "Любой"}
+        value={filters.truckAccess || []}
         setValue={(value) => updateFilter("truckAccess", value)}
       />
 
-      <CustomSelect
+      <MultiSelect
         icon={DoorOpen}
         title="Тип ворот"
         options={gateTypes}
-        value={filters.gateType || "Любой"}
+        value={filters.gateType || []}
         setValue={(value) => updateFilter("gateType", value)}
       />
 
-      <CustomSelect
-        icon={FileText}
-        title="Документы"
-        options={documents}
-        value={filters.documents || "Любые"}
-        setValue={(value) => updateFilter("documents", value)}
-      />
+      {!isRent && (
+        <>
+          <MultiSelect
+            icon={FileText}
+            title="Документы"
+            options={documents}
+            value={filters.documents || []}
+            setValue={(value) => updateFilter("documents", value)}
+          />
 
-      <CustomSelect
-        icon={CreditCard}
-        title="Оплата"
-        options={offerTypes}
-        value={filters.offerType || "Любой"}
-        setValue={(value) => updateFilter("offerType", value)}
-      />
+          <MultiSelect
+            icon={CreditCard}
+            title="Оплата"
+            options={offerTypes}
+            value={filters.offerType || []}
+            setValue={(value) => updateFilter("offerType", value)}
+          />
+        </>
+      )}
+
+      {isRent && (
+        <MultiSelect
+          icon={Clock3}
+          title="Период аренды"
+          options={rentalPeriods}
+          value={filters.rentalPeriod || []}
+          setValue={(value) => updateFilter("rentalPeriod", value)}
+        />
+      )}
 
       <div className={styles.full}>
         <MultiSelect

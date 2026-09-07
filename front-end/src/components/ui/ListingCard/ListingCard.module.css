@@ -108,7 +108,7 @@
 .vip {
   background: #f4f2ea;
 
-  color: #ffdd00;
+  color: #cbb004;
 
   border: 1px solid #ffdd00;
 
@@ -125,11 +125,11 @@
 ========================= */
 
 .urgent {
-  background: #483df6;
+  background: #faadad;
 
-  color: #ffffff;
+  color: #fa1004;
 
-  border: 1px solid #483df6;
+  border: 1px solid #fa1004;
 
   box-shadow: 0 6px 18px rgba(72, 61, 246, 0.22);
 }
