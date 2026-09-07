@@ -1,441 +1,347 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
-  Pencil,
   Search,
-  Users,
+  X,
+  Check,
+  Loader2,
+  Phone,
   Megaphone,
   Crown,
   ArrowUp,
-  X,
-  Check,
-  Building2,
   User,
-  Sparkles,
-  ShieldCheck,
+  Package,
 } from "lucide-react";
 
 import styles from "./Tarrifs.module.css";
-import TariffModal from "./TarrifModal/TarrifModal";
+import AddTariffModal from "./AddTarrifModal/AddTarrifModal";
 import Sidebar from "../components/Sidebar/Sidebar";
 
-const INITIAL_TARIFFS = [
+const MOCK_TARIFFS = [
   {
-    id: "TRF-001",
-    name: "Старт",
-    description: "Базовый тариф для активных специалистов",
-    activeListings: 10,
-    topUps: 3,
-    vipUps: 0,
-    issuedTo: "Риелторы",
-    issuedToId: "role:agent",
-    price: 1500,
-    duration: 30,
-    status: true,
-    type: "agent",
+    id: 1,
+    name: "Premium",
+    userId: 101,
+    userName: "Азизбек Маматов",
+    phone: "+996 555 123 456",
+    activeListings: 15,
+    vipBoosts: 8,
+    topBoosts: 5,
+    isActive: true,
   },
   {
-    id: "TRF-002",
-    name: "Оптимальный",
-    description: "Расширенный тариф для профессиональных специалистов",
+    id: 2,
+    name: "Business",
+    userId: 102,
+    userName: "Нурбек Садыков",
+    phone: "+996 700 456 789",
+    activeListings: 30,
+    vipBoosts: 15,
+    topBoosts: 10,
+    isActive: true,
+  },
+  {
+    id: 3,
+    name: "Start",
+    userId: 103,
+    userName: "Айдана Токтосунова",
+    phone: "+996 777 321 654",
+    activeListings: 5,
+    vipBoosts: 2,
+    topBoosts: 1,
+    isActive: false,
+  },
+  {
+    id: 4,
+    name: "Premium",
+    userId: 104,
+    userName: "Бекзат Абдрахманов",
+    phone: "+996 550 987 321",
     activeListings: 20,
-    topUps: 5,
-    vipUps: 1,
-    issuedTo: "Риелторы",
-    issuedToId: "role:agent",
-    price: 3000,
-    duration: 30,
-    status: true,
-    type: "agent",
-  },
-  {
-    id: "TRF-003",
-    name: "Для агентства",
-    description: "Тариф для агентств и команд",
-    activeListings: 40,
-    topUps: 10,
-    vipUps: 3,
-    issuedTo: "Агентства недвижимости",
-    issuedToId: "role:agency",
-    price: 6000,
-    duration: 30,
-    status: true,
-    type: "agency",
-  },
-  {
-    id: "TRF-004",
-    name: "Индивидуальный",
-    description: "Специальный тариф для застройщиков",
-    activeListings: 100,
-    topUps: 20,
-    vipUps: 10,
-    issuedTo: "Строительные компании",
-    issuedToId: "role:developer",
-    price: 15000,
-    duration: 30,
-    status: false,
-    type: "developer",
+    vipBoosts: 10,
+    topBoosts: 7,
+    isActive: true,
   },
 ];
 
-function getTypeIcon(type) {
-  if (type === "agency") return Building2;
-  if (type === "developer") return Sparkles;
+export default function Tarrifs() {
+  const [tariffs, setTariffs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  return User;
-}
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTariffs(MOCK_TARIFFS);
+      setLoading(false);
+    }, 500);
 
-export default function TariffsPage() {
-  const [tariffs, setTariffs] = useState(INITIAL_TARIFFS);
-  const [search, setSearch] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingTariff, setEditingTariff] = useState(null);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const filteredTariffs = useMemo(() => {
-    const query = search.trim().toLowerCase();
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-    if (!query) {
-      return tariffs;
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-    return tariffs.filter((tariff) => {
-      return (
-        tariff.name.toLowerCase().includes(query) ||
-        tariff.id.toLowerCase().includes(query) ||
-        tariff.issuedTo.toLowerCase().includes(query) ||
-        tariff.issuedToId.toLowerCase().includes(query)
-      );
-    });
-  }, [tariffs, search]);
+  const handleCreateTariff = async (tariff) => {
+    const newTariff = {
+      id: Date.now(),
+      ...tariff,
+      isActive: true,
+    };
 
-  const activeCount = tariffs.filter((tariff) => tariff.status).length;
+    setTariffs((prev) => [newTariff, ...prev]);
+  };
 
-  const totalTopUps = tariffs.reduce((sum, tariff) => sum + tariff.topUps, 0);
-
-  const totalVipUps = tariffs.reduce((sum, tariff) => sum + tariff.vipUps, 0);
-
-  function openCreateModal() {
-    setEditingTariff(null);
-    setModalOpen(true);
-  }
-
-  function openEditModal(tariff) {
-    setEditingTariff(tariff);
-    setModalOpen(true);
-  }
-
-  function closeModal() {
-    setModalOpen(false);
-    setEditingTariff(null);
-  }
-
-  function handleSaveTariff(normalizedTariff) {
-    if (editingTariff) {
-      setTariffs((prev) =>
-        prev.map((tariff) =>
-          tariff.id === editingTariff.id
-            ? {
-                ...tariff,
-                ...normalizedTariff,
-              }
-            : tariff,
-        ),
-      );
-    } else {
-      const nextNumber =
-        Math.max(
-          0,
-          ...tariffs.map((tariff) => {
-            const number = Number(tariff.id.replace("TRF-", ""));
-
-            return Number.isFinite(number) ? number : 0;
-          }),
-        ) + 1;
-
-      const newTariff = {
-        ...normalizedTariff,
-        id: `TRF-${String(nextNumber).padStart(3, "0")}`,
-        status: true,
-      };
-
-      setTariffs((prev) => [newTariff, ...prev]);
-    }
-
-    closeModal();
-  }
-
-  function toggleTariff(id) {
+  const toggleTariff = (tariff) => {
     setTariffs((prev) =>
-      prev.map((tariff) =>
-        tariff.id === id
+      prev.map((item) =>
+        item.id === tariff.id
           ? {
-              ...tariff,
-              status: !tariff.status,
+              ...item,
+              isActive: !item.isActive,
             }
-          : tariff,
+          : item,
       ),
     );
-  }
+  };
 
   return (
-    <div className={styles.layout}>
+    <div className={styles.page}>
       <Sidebar />
 
-      <main className={styles.page}>
-        <div className={styles.backgroundGlow} />
+      <div className={styles.content}>
+        <header className={styles.header}>
+          <div>
+            <div className={styles.eyebrow}>ADMINISTRATION</div>
 
-        <section className={styles.container}>
-          {/* HEADER */}
+            <h1 className={styles.title}>Управление тарифами</h1>
 
-          <header className={styles.header}>
-            <div className={styles.headerContent}>
-              <div className={styles.eyebrow}>
-                <ShieldCheck size={15} />
-                ADMINISTRATION
-              </div>
+            <p className={styles.subtitle}>
+              Управляйте тарифами, выданными пользователям и застройщикам.
+            </p>
+          </div>
 
-              <h1>Управление тарифами</h1>
+          <button
+            type="button"
+            className={styles.addButton}
+            onClick={openModal}
+          >
+            <Plus size={20} />
+            Добавить тариф
+          </button>
+        </header>
 
-              <p>Мои активные созданные тарифы</p>
+        <div className={styles.stats}>
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <Package size={22} />
             </div>
 
-            <button
-              type="button"
-              className={styles.createButton}
-              onClick={openCreateModal}
-            >
-              <Plus size={19} />
-              Добавить тариф
-            </button>
-          </header>
+            <div>
+              <span className={styles.statLabel}>Всего тарифов</span>
 
-          {/* STATS */}
-
-          <div className={styles.stats}>
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>
-                <Crown size={19} />
-              </div>
-
-              <div className={styles.statContent}>
-                <span>Всего тарифов</span>
-                <strong>{tariffs.length}</strong>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>
-                <Check size={19} />
-              </div>
-
-              <div className={styles.statContent}>
-                <span>Активных тарифов</span>
-                <strong>{activeCount}</strong>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>
-                <Megaphone size={19} />
-              </div>
-
-              <div className={styles.statContent}>
-                <span>Всего TOP поднятий</span>
-                <strong>{totalTopUps}</strong>
-              </div>
-            </div>
-
-            <div className={styles.statCard}>
-              <div className={styles.statIcon}>
-                <ArrowUp size={19} />
-              </div>
-
-              <div className={styles.statContent}>
-                <span>Всего VIP поднятий</span>
-                <strong>{totalVipUps}</strong>
-              </div>
+              <strong className={styles.statValue}>{tariffs.length}</strong>
             </div>
           </div>
 
-          {/* TOOLBAR */}
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <Check size={22} />
+            </div>
 
-          <div className={styles.toolbar}>
-            <div className={styles.search}>
-              <Search size={18} />
+            <div>
+              <span className={styles.statLabel}>Активные</span>
 
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Поиск тарифа, ID или пользователя..."
-              />
+              <strong className={styles.statValue}>
+                {tariffs.filter((item) => item.isActive).length}
+              </strong>
+            </div>
+          </div>
 
-              {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch("")}
-                  className={styles.clearSearch}
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <Megaphone size={22} />
+            </div>
+
+            <div>
+              <span className={styles.statLabel}>Активных объявлений</span>
+
+              <strong className={styles.statValue}>
+                {tariffs.reduce(
+                  (sum, item) => sum + Number(item.activeListings || 0),
+                  0,
+                )}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <h2>Мои активные тарифы</h2>
+
+              <p>Все индивидуально выданные тарифы пользователей.</p>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className={styles.loading}>
+              <Loader2 className={styles.spinner} size={26} />
+              <span>Загрузка тарифов...</span>
+            </div>
+          ) : tariffs.length === 0 ? (
+            <div className={styles.empty}>
+              <div className={styles.emptyIcon}>
+                <Package size={30} />
+              </div>
+
+              <h3>Тарифов пока нет</h3>
+
+              <p>Выдайте первый индивидуальный тариф пользователю.</p>
+
+              <button
+                type="button"
+                className={styles.emptyButton}
+                onClick={openModal}
+              >
+                <Plus size={19} />
+                Добавить тариф
+              </button>
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {tariffs.map((tariff) => (
+                <article
+                  key={tariff.id}
+                  className={`${styles.tariffCard} ${
+                    !tariff.isActive ? styles.tariffDisabled : ""
+                  }`}
                 >
-                  <X size={16} />
-                </button>
-              )}
-            </div>
+                  <div className={styles.cardTop}>
+                    <div className={styles.packageIcon}>
+                      <Package size={23} />
+                    </div>
 
-            <span className={styles.resultInfo}>
-              Показано: <b>{filteredTariffs.length}</b>
-            </span>
-          </div>
+                    <div className={styles.statusWrapper}>
+                      <span
+                        className={`${styles.status} ${
+                          tariff.isActive
+                            ? styles.statusActive
+                            : styles.statusInactive
+                        }`}
+                      >
+                        <span className={styles.statusDot} />
 
-          {/* TABLE */}
+                        {tariff.isActive ? "Активен" : "Неактивен"}
+                      </span>
 
-          <div className={styles.tableWrapper}>
-            <div className={styles.tableHeader}>
-              <div>Название тарифа</div>
-              <div>Активные объявления</div>
-              <div>TOP</div>
-              <div>VIP</div>
-              <div>Кому выдан</div>
-              <div>Статус</div>
-              <div />
-            </div>
-
-            <div className={styles.tableBody}>
-              {filteredTariffs.length === 0 ? (
-                <div className={styles.empty}>
-                  <div className={styles.emptyIcon}>
-                    <Search size={24} />
+                      <button
+                        type="button"
+                        className={`${styles.switch} ${
+                          tariff.isActive ? styles.switchActive : ""
+                        }`}
+                        onClick={() => toggleTariff(tariff)}
+                        aria-label={
+                          tariff.isActive
+                            ? "Отключить тариф"
+                            : "Активировать тариф"
+                        }
+                      >
+                        <span />
+                      </button>
+                    </div>
                   </div>
 
-                  <strong>Тарифы не найдены</strong>
+                  <div className={styles.tariffName}>{tariff.name}</div>
 
-                  <span>Попробуйте изменить поисковый запрос</span>
-                </div>
-              ) : (
-                filteredTariffs.map((tariff) => {
-                  const TypeIcon = getTypeIcon(tariff.type);
+                  <div className={styles.user}>
+                    <div className={styles.userIcon}>
+                      <User size={18} />
+                    </div>
 
-                  return (
-                    <div className={styles.tariffRow} key={tariff.id}>
-                      {/* NAME */}
+                    <div className={styles.userInfo}>
+                      <span className={styles.userLabel}>Тариф выдан</span>
 
-                      <div className={styles.nameCell}>
-                        <div className={styles.tariffIcon}>
-                          <Crown size={18} />
-                        </div>
+                      <strong>
+                        {tariff.userName || tariff.user?.name || "Пользователь"}
+                      </strong>
 
-                        <div>
-                          <strong>{tariff.name}</strong>
+                      <span className={styles.phone}>
+                        <Phone size={14} />
 
-                          <span>
-                            {tariff.id}
-                            {" · "}
-                            {tariff.price.toLocaleString("ru-RU")}
-                            {" сом"}
-                          </span>
-                        </div>
+                        {tariff.phone || tariff.user?.phone || "—"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={styles.divider} />
+
+                  <div className={styles.features}>
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>
+                        <Megaphone size={18} />
                       </div>
-
-                      {/* LISTINGS */}
-
-                      <div className={styles.numberCell}>
-                        <strong>{tariff.activeListings}</strong>
-                        <span>объектов</span>
-                      </div>
-
-                      {/* TOP */}
-
-                      <div className={styles.numberCell}>
-                        <strong>{tariff.topUps}</strong>
-                        <span>поднятий</span>
-                      </div>
-
-                      {/* VIP */}
-
-                      <div className={styles.numberCell}>
-                        <strong>{tariff.vipUps}</strong>
-                        <span>поднятий</span>
-                      </div>
-
-                      {/* ISSUED */}
-
-                      <div className={styles.issuedCell}>
-                        <div className={styles.userIcon}>
-                          <TypeIcon size={16} />
-                        </div>
-
-                        <div>
-                          <strong>{tariff.issuedTo}</strong>
-                          <span>{tariff.issuedToId}</span>
-                        </div>
-                      </div>
-
-                      {/* STATUS */}
 
                       <div>
-                        <button
-                          type="button"
-                          className={`${styles.switch} ${
-                            tariff.status ? styles.switchActive : ""
-                          }`}
-                          onClick={() => toggleTariff(tariff.id)}
-                          aria-label={
-                            tariff.status
-                              ? "Деактивировать тариф"
-                              : "Активировать тариф"
-                          }
-                        >
-                          <span />
-                        </button>
-                      </div>
+                        <strong>{tariff.activeListings ?? 0}</strong>
 
-                      {/* EDIT */}
-
-                      <div className={styles.actions}>
-                        <button
-                          type="button"
-                          className={styles.editButton}
-                          onClick={() => openEditModal(tariff)}
-                        >
-                          <Pencil size={16} />
-                          Изменить
-                        </button>
+                        <span>
+                          активных
+                          <br />
+                          объявлений
+                        </span>
                       </div>
                     </div>
-                  );
-                })
-              )}
+
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>
+                        <Crown size={18} />
+                      </div>
+
+                      <div>
+                        <strong>{tariff.vipBoosts ?? 0}</strong>
+
+                        <span>
+                          поднятий
+                          <br />в VIP
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>
+                        <ArrowUp size={18} />
+                      </div>
+
+                      <div>
+                        <strong>{tariff.topBoosts ?? 0}</strong>
+
+                        <span>
+                          поднятий
+                          <br />в TOP
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
-
-          {/* FOOTER */}
-
-          <div className={styles.footer}>
-            <div>
-              <Users size={16} />
-
-              <span>
-                Управление тарифами определяет доступные пользователю лимиты и
-                возможности размещения.
-              </span>
-            </div>
-
-            <span>
-              Активных: <b>{activeCount}</b> / {tariffs.length}
-            </span>
-          </div>
+          )}
         </section>
+      </div>
 
-        {/* MODAL */}
-
-        {modalOpen && (
-          <TariffModal
-            tariff={editingTariff}
-            onClose={closeModal}
-            onSave={handleSaveTariff}
-          />
-        )}
-      </main>
+      <AddTariffModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleCreateTariff}
+      />
     </div>
   );
 }

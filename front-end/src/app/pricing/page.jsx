@@ -376,7 +376,7 @@ export default function Pricing() {
                 <button
                   type="button"
                   className={styles.cardButton}
-                  onClick={() => handleTariffClick(item)}
+                  onClick={() => router.push("/connect")}
                 >
                   {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
 

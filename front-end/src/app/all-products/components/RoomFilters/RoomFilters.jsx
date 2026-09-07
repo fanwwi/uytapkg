@@ -17,12 +17,11 @@ import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 import styles from "./RoomFilters.module.css";
 
 const locations = [
-  "Любое",
-  "В городе",
-  "В пригороде",
-  "За городом",
-  "У трассы",
-  "В центре",
+  "В квартире",
+  "В доме",
+  "В хостеле",
+  "В гостинице",
+  "В общежитии",
 ];
 
 const rooms = ["Любое", "1", "2", "3", "4", "5+"];
@@ -121,7 +120,7 @@ export default function RoomFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={DoorOpen}
-        title="Комнат в квартире"
+        title="Комнат в объекте"
         options={rooms}
         value={filters.roomsInApartment || []}
         setValue={(value) => updateFilter("roomsInApartment", value)}

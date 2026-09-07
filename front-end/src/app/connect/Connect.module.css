@@ -1,0 +1,365 @@
+/* Connect.module.css */
+
+.page {
+  position: relative;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 44px 24px 80px;
+
+  overflow: hidden;
+
+  background: #f7f8fc;
+
+  color: #171827;
+}
+
+.backgroundGlow {
+  position: absolute;
+
+  width: 650px;
+  height: 650px;
+
+  top: -300px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  border-radius: 50%;
+
+  background: rgba(72, 61, 246, 0.08);
+
+  filter: blur(90px);
+
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+
+  width: 100%;
+  max-width: 760px;
+
+  z-index: 1;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 28px;
+
+  padding: 11px 16px;
+
+  border: 1px solid #e2e4ef;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #505264;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.backButton:hover {
+  background: #f3f2ff;
+  color: #483df6;
+
+  transform: translateX(-2px);
+}
+
+.card {
+  position: relative;
+
+  padding: 48px;
+
+  border: 1px solid #e5e6ef;
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 20px 60px rgba(32, 31, 61, 0.08),
+    0 2px 8px rgba(32, 31, 61, 0.03);
+}
+
+.iconBox {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 22px;
+
+  border-radius: 18px;
+
+  background: #eeecff;
+
+  color: #483df6;
+}
+
+.badge {
+  display: inline-block;
+
+  margin-bottom: 14px;
+
+  font-size: 12px;
+  line-height: 16px;
+
+  letter-spacing: 1.5px;
+  font-weight: 800;
+
+  color: #483df6;
+}
+
+.title {
+  max-width: 650px;
+
+  margin: 0 0 18px;
+
+  font-size: 42px;
+  line-height: 1.13;
+
+  letter-spacing: -1.2px;
+  font-weight: 750;
+
+  color: #171827;
+}
+
+.title span {
+  color: #483df6;
+}
+
+.description {
+  max-width: 650px;
+
+  margin: 0 0 32px;
+
+  font-size: 18px;
+  line-height: 1.65;
+
+  color: #646678;
+}
+
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 18px;
+  padding: 19px 20px;
+
+  border: 1px solid #e7e8f0;
+  border-radius: 17px;
+
+  background: #fafaff;
+}
+
+.contactIcon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #eeecff;
+
+  color: #483df6;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contactLabel {
+  font-size: 11px;
+  line-height: 15px;
+
+  letter-spacing: 1.2px;
+  font-weight: 800;
+
+  color: #898b9b;
+}
+
+.phone {
+  font-size: 20px;
+  line-height: 27px;
+
+  font-weight: 700;
+
+  color: #202131;
+}
+
+.whatsappButton {
+  width: 100%;
+  min-height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+
+  margin-bottom: 28px;
+  padding: 16px 24px;
+
+  border-radius: 16px;
+
+  background: #483df6;
+
+  color: #ffffff;
+
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  box-shadow: 0 10px 24px rgba(72, 61, 246, 0.22);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.whatsappButton:hover {
+  background: #3e33df;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 14px 30px rgba(72, 61, 246, 0.28);
+}
+
+.whatsappButton:active {
+  transform: translateY(0);
+}
+
+.messagePreview {
+  padding: 22px 24px;
+
+  border: 1px solid #e5e6ef;
+  border-radius: 17px;
+
+  background: #f8f8fc;
+}
+
+.previewLabel {
+  display: block;
+
+  margin-bottom: 10px;
+
+  font-size: 11px;
+  line-height: 15px;
+
+  letter-spacing: 1.2px;
+  font-weight: 800;
+
+  color: #483df6;
+}
+
+.messagePreview p {
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  color: #5f6170;
+}
+
+.footerText {
+  margin: 18px 0 0;
+
+  text-align: center;
+
+  font-size: 13px;
+  line-height: 19px;
+
+  color: #9698a5;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 640px) {
+  .page {
+    padding: 24px 16px 50px;
+  }
+
+  .backButton {
+    margin-bottom: 20px;
+
+    font-size: 14px;
+  }
+
+  .card {
+    padding: 30px 22px;
+
+    border-radius: 22px;
+  }
+
+  .iconBox {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 16px;
+  }
+
+  .badge {
+    font-size: 11px;
+  }
+
+  .title {
+    font-size: 32px;
+    line-height: 1.16;
+
+    letter-spacing: -0.7px;
+  }
+
+  .description {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .contactCard {
+    padding: 16px;
+  }
+
+  .phone {
+    font-size: 18px;
+  }
+
+  .whatsappButton {
+    min-height: 58px;
+
+    font-size: 16px;
+  }
+
+  .messagePreview {
+    padding: 18px;
+  }
+
+  .messagePreview p {
+    font-size: 14px;
+  }
+}
