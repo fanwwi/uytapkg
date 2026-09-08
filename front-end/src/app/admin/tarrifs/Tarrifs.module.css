@@ -1,21 +1,37 @@
 .page {
   min-height: 100vh;
 
-  background: #08080b;
-  color: #f5f5f7;
+  background: #08070c;
+
+  color: #f5f3fa;
+
+  --purple: #8b5cf6;
+  --purple-dark: #7c3aed;
+  --purple-light: #a78bfa;
+
+  --purple-soft: rgba(139, 92, 246, 0.12);
+  --purple-border: rgba(139, 92, 246, 0.32);
+
+  --border: rgba(255, 255, 255, 0.075);
+
+  --card: #101016;
 }
+
+/* ============================================================
+   CONTENT
+============================================================ */
 
 .content {
   min-height: 100vh;
 
   margin-left: 250px;
 
-  padding: 0 34px 55px;
+  padding: 0 34px 60px;
 }
 
 /* ============================================================
    HEADER
-   ============================================================ */
+============================================================ */
 
 .header {
   min-height: 165px;
@@ -26,44 +42,50 @@
 
   gap: 35px;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid var(--border);
+}
+
+.headerInfo {
+  min-width: 0;
 }
 
 .eyebrow {
-  margin-bottom: 10px;
+  margin-bottom: 11px;
 
-  font-size: 11px;
-  line-height: 14px;
+  font-size: 12px;
+  line-height: 15px;
 
-  letter-spacing: 2.2px;
-  font-weight: 700;
+  letter-spacing: 2.4px;
 
-  color: #8b5cf6;
+  font-weight: 800;
+
+  color: var(--purple-light);
 }
 
 .title {
   margin: 0;
 
-  font-size: 34px;
-  line-height: 42px;
+  font-size: 36px;
+  line-height: 44px;
 
-  font-weight: 700;
+  font-weight: 750;
+
   letter-spacing: -1px;
 
-  color: #f7f7fa;
+  color: #f8f7fb;
 }
 
 .subtitle {
-  margin: 9px 0 0;
+  margin: 10px 0 0;
 
-  color: #85858f;
+  color: #8b8895;
 
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 23px;
 }
 
 .addButton {
-  height: 50px;
+  height: 52px;
 
   display: flex;
   align-items: center;
@@ -71,66 +93,202 @@
 
   gap: 10px;
 
-  padding: 0 21px;
+  padding: 0 22px;
 
   border: 0;
-  border-radius: 12px;
 
-  background: #7c3aed;
-  color: #ffffff;
+  border-radius: 13px;
 
-  font-size: 14px;
-  font-weight: 650;
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.addButton:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.08);
+
+  box-shadow: 0 16px 36px rgba(124, 58, 237, 0.32);
+}
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+.searchSection {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 24px 0 4px;
+}
+
+.searchWrapper {
+  position: relative;
+
+  flex: 1;
+
+  max-width: 650px;
+
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.085);
+
+  border-radius: 13px;
+
+  background: #0f0f15;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.searchWrapper:focus-within {
+  border-color: rgba(139, 92, 246, 0.55);
+
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.08);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+
+  margin-left: 17px;
+
+  color: #77717f;
+}
+
+.searchInput {
+  width: 100%;
+
+  height: 100%;
+
+  padding: 0 48px 0 13px;
+
+  border: 0;
+
+  outline: 0;
+
+  background: transparent;
+
+  color: #f2eff7;
+
+  font-family: inherit;
+
+  font-size: 15px;
+}
+
+.searchInput::placeholder {
+  color: #62606a;
+}
+
+.clearSearch {
+  position: absolute;
+
+  right: 12px;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: #898592;
 
   cursor: pointer;
 
   transition:
-    transform 0.2s ease,
     background 0.2s ease,
-    box-shadow 0.2s ease;
+    color 0.2s ease;
 }
 
-.addButton:hover {
-  background: #8b5cf6;
+.clearSearch:hover {
+  background: rgba(139, 92, 246, 0.13);
 
-  transform: translateY(-1px);
+  color: #c4b5fd;
+}
 
-  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.25);
+.searchInfo {
+  color: #77737f;
+
+  font-size: 14px;
+
+  white-space: nowrap;
+}
+
+.searchInfo strong {
+  color: #b49af5;
+
+  font-weight: 700;
 }
 
 /* ============================================================
    STATS
-   ============================================================ */
+============================================================ */
 
 .stats {
   display: grid;
 
   grid-template-columns: repeat(3, 1fr);
 
-  gap: 16px;
+  gap: 17px;
 
-  padding: 28px 0;
+  padding: 25px 0 30px;
 }
 
 .statCard {
-  min-height: 92px;
+  min-height: 96px;
 
   display: flex;
   align-items: center;
 
-  gap: 16px;
+  gap: 17px;
 
-  padding: 18px 20px;
+  padding: 19px 21px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 15px;
+  border: 1px solid var(--border);
 
-  background: #0e0e13;
+  border-radius: 16px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(139, 92, 246, 0.07),
+      transparent 45%
+    ),
+    #0e0e14;
 }
 
 .statIcon {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
 
   display: flex;
   align-items: center;
@@ -138,11 +296,11 @@
 
   flex-shrink: 0;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
-  background: rgba(124, 58, 237, 0.14);
+  background: var(--purple-soft);
 
-  color: #a78bfa;
+  color: var(--purple-light);
 }
 
 .statLabel {
@@ -150,70 +308,70 @@
 
   margin-bottom: 5px;
 
-  color: #85858e;
+  color: #8a8792;
 
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 17px;
 }
 
 .statValue {
   display: block;
 
-  font-size: 24px;
-  line-height: 27px;
+  font-size: 26px;
+  line-height: 29px;
 
-  font-weight: 700;
+  font-weight: 750;
 
-  color: #f4f4f7;
+  color: #f6f4f9;
 }
 
 /* ============================================================
    SECTION
-   ============================================================ */
+============================================================ */
 
 .section {
-  padding-top: 4px;
+  padding-top: 2px;
 }
 
 .sectionHeader {
-  margin-bottom: 21px;
+  margin-bottom: 22px;
 }
 
 .sectionHeader h2 {
   margin: 0;
 
-  font-size: 22px;
-  line-height: 28px;
+  font-size: 24px;
+  line-height: 30px;
 
-  font-weight: 650;
+  font-weight: 700;
 
-  color: #f0f0f3;
+  color: #f2f0f6;
 }
 
 .sectionHeader p {
-  margin: 6px 0 0;
+  margin: 7px 0 0;
 
-  color: #777780;
+  color: #817e89;
 
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 15px;
+  line-height: 21px;
 }
 
 /* ============================================================
    GRID
-   ============================================================ */
+============================================================ */
 
 .grid {
   display: grid;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  gap: 18px;
+  gap: 19px;
 }
 
 /* ============================================================
    TARIFF CARD
-   ============================================================ */
+============================================================ */
 
 .tariffCard {
   position: relative;
@@ -222,16 +380,17 @@
 
   padding: 22px;
 
-  border: 1px solid rgba(255, 255, 255, 0.075);
-  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 19px;
 
   background:
     radial-gradient(
       circle at 100% 0%,
-      rgba(124, 58, 237, 0.11),
-      transparent 38%
+      rgba(139, 92, 246, 0.12),
+      transparent 42%
     ),
-    #0e0e13;
+    #0e0e14;
 
   transition:
     border-color 0.2s ease,
@@ -240,11 +399,13 @@
 }
 
 .tariffCard:hover {
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: var(--purple-border);
 
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(139, 92, 246, 0.045);
 }
 
 .tariffDisabled {
@@ -256,12 +417,12 @@
   align-items: center;
   justify-content: space-between;
 
-  margin-bottom: 20px;
+  margin-bottom: 19px;
 }
 
 .packageIcon {
-  width: 46px;
-  height: 46px;
+  width: 47px;
+  height: 47px;
 
   display: flex;
   align-items: center;
@@ -269,9 +430,9 @@
 
   border-radius: 13px;
 
-  background: rgba(124, 58, 237, 0.14);
+  background: var(--purple-soft);
 
-  color: #a78bfa;
+  color: var(--purple-light);
 }
 
 .statusWrapper {
@@ -287,30 +448,31 @@
 
   gap: 7px;
 
-  padding: 7px 10px;
+  padding: 8px 11px;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
-  font-size: 11px;
-  line-height: 15px;
-  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+
+  font-weight: 650;
 }
 
 .statusActive {
-  color: #a78bfa;
+  color: #b69cff;
 
-  background: rgba(124, 58, 237, 0.11);
+  background: rgba(139, 92, 246, 0.12);
 }
 
 .statusInactive {
-  color: #85858f;
+  color: #8b8892;
 
   background: rgba(255, 255, 255, 0.045);
 }
 
 .statusDot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 
   border-radius: 50%;
 
@@ -319,20 +481,21 @@
 
 /* ============================================================
    SWITCH
-   ============================================================ */
+============================================================ */
 
 .switch {
   position: relative;
 
-  width: 40px;
-  height: 23px;
+  width: 42px;
+  height: 24px;
 
   padding: 0;
 
   border: 0;
+
   border-radius: 20px;
 
-  background: #2b2b32;
+  background: #2c2a33;
 
   cursor: pointer;
 
@@ -345,56 +508,110 @@
   top: 3px;
   left: 3px;
 
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
 
   border-radius: 50%;
 
-  background: #92929a;
+  background: #94919b;
 
   transition: transform 0.2s ease;
 }
 
 .switchActive {
-  background: #7c3aed;
+  background: var(--purple-dark);
 }
 
 .switchActive span {
-  transform: translateX(17px);
+  transform: translateX(18px);
 
-  background: #ffffff;
+  background: #fff;
 }
 
 /* ============================================================
    TARIFF NAME
-   ============================================================ */
+============================================================ */
+
+.tariffNameRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 19px;
+}
 
 .tariffName {
-  margin-bottom: 20px;
+  min-width: 0;
 
-  font-size: 23px;
-  line-height: 29px;
+  font-size: 24px;
+  line-height: 30px;
 
-  font-weight: 700;
+  font-weight: 750;
+
   letter-spacing: -0.4px;
 
-  color: #f5f5f7;
+  color: #f6f4f8;
+}
+
+.editButton {
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+
+  padding: 0 10px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+
+  border-radius: 9px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #b9a2ef;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.editButton:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+
+  background: rgba(139, 92, 246, 0.15);
+
+  color: #d1c2f6;
 }
 
 /* ============================================================
    USER
-   ============================================================ */
+============================================================ */
 
 .user {
   display: flex;
   align-items: center;
 
-  gap: 12px;
+  gap: 13px;
 }
 
 .userIcon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
 
   display: flex;
   align-items: center;
@@ -406,7 +623,7 @@
 
   background: rgba(255, 255, 255, 0.055);
 
-  color: #aaaab3;
+  color: #aaa6b1;
 }
 
 .userInfo {
@@ -419,12 +636,13 @@
   margin-bottom: 3px;
 
   font-size: 10px;
-  line-height: 13px;
+  line-height: 14px;
 
   text-transform: uppercase;
-  letter-spacing: 1.1px;
 
-  color: #66666f;
+  letter-spacing: 1.2px;
+
+  color: #716d79;
 }
 
 .user strong {
@@ -432,10 +650,10 @@
 
   margin-bottom: 4px;
 
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 15px;
+  line-height: 19px;
 
-  color: #e3e3e7;
+  color: #e8e5ed;
 }
 
 .phone {
@@ -444,34 +662,106 @@
 
   gap: 6px;
 
-  color: #85858f;
+  color: #8c8894;
 
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 17px;
+}
+
+/* ============================================================
+   PERIOD
+============================================================ */
+
+.period {
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  margin-top: 18px;
+
+  padding: 11px 12px;
+
+  border: 1px solid rgba(139, 92, 246, 0.12);
+
+  border-radius: 12px;
+
+  background: rgba(139, 92, 246, 0.055);
+}
+
+.periodIcon {
+  width: 35px;
+  height: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: rgba(139, 92, 246, 0.12);
+
+  color: #a78bfa;
+}
+
+.periodContent {
+  min-width: 0;
+}
+
+.periodLabel {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #77727f;
+
+  font-size: 10px;
+
+  line-height: 13px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.9px;
+}
+
+.periodContent strong {
+  display: block;
+
+  color: #ddd7ea;
+
+  font-size: 13px;
+
+  line-height: 17px;
+
+  font-weight: 650;
 }
 
 /* ============================================================
    DIVIDER
-   ============================================================ */
+============================================================ */
 
 .divider {
   height: 1px;
 
-  margin: 21px 0;
+  margin: 19px 0;
 
   background: rgba(255, 255, 255, 0.065);
 }
 
 /* ============================================================
    FEATURES
-   ============================================================ */
+============================================================ */
 
 .features {
   display: grid;
 
   grid-template-columns: repeat(3, 1fr);
 
-  gap: 8px;
+  gap: 9px;
 }
 
 .feature {
@@ -484,8 +774,8 @@
 }
 
 .featureIcon {
-  width: 33px;
-  height: 33px;
+  width: 35px;
+  height: 35px;
 
   display: flex;
   align-items: center;
@@ -495,9 +785,9 @@
 
   border-radius: 9px;
 
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(139, 92, 246, 0.1);
 
-  color: #9575e8;
+  color: #a084e9;
 }
 
 .feature strong {
@@ -505,24 +795,24 @@
 
   margin-bottom: 2px;
 
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 18px;
+  line-height: 20px;
 
-  color: #f1f1f4;
+  color: #f3f1f6;
 }
 
 .feature span {
   display: block;
 
-  font-size: 10px;
-  line-height: 13px;
+  font-size: 11px;
+  line-height: 14px;
 
-  color: #707079;
+  color: #77737e;
 }
 
 /* ============================================================
    LOADING
-   ============================================================ */
+============================================================ */
 
 .loading {
   min-height: 320px;
@@ -531,11 +821,11 @@
   align-items: center;
   justify-content: center;
 
-  gap: 11px;
+  gap: 12px;
 
-  color: #85858f;
+  color: #8b8792;
 
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .spinner {
@@ -550,10 +840,10 @@
 
 /* ============================================================
    EMPTY
-   ============================================================ */
+============================================================ */
 
 .empty {
-  min-height: 340px;
+  min-height: 350px;
 
   display: flex;
   flex-direction: column;
@@ -562,73 +852,576 @@
 
   padding: 35px;
 
-  border: 1px dashed rgba(255, 255, 255, 0.09);
-  border-radius: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
 
-  background: #0e0e13;
+  border-radius: 19px;
+
+  background: #0e0e14;
 
   text-align: center;
 }
 
 .emptyIcon {
-  width: 62px;
-  height: 62px;
+  width: 65px;
+  height: 65px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 17px;
+  margin-bottom: 18px;
 
   border-radius: 17px;
 
-  background: rgba(124, 58, 237, 0.12);
+  background: var(--purple-soft);
 
-  color: #a78bfa;
+  color: var(--purple-light);
 }
 
 .empty h3 {
-  margin: 0 0 6px;
+  margin: 0 0 7px;
 
-  font-size: 19px;
-  line-height: 24px;
+  font-size: 21px;
+  line-height: 26px;
+
+  color: #f1eff5;
 }
 
 .empty p {
-  margin: 0 0 19px;
+  max-width: 430px;
 
-  color: #777780;
+  margin: 0 0 20px;
 
-  font-size: 14px;
-  line-height: 20px;
+  color: #807c88;
+
+  font-size: 15px;
+  line-height: 21px;
 }
 
 .emptyButton {
-  height: 43px;
+  height: 45px;
 
   display: flex;
   align-items: center;
 
   gap: 8px;
 
-  padding: 0 17px;
+  padding: 0 18px;
 
   border: 0;
-  border-radius: 10px;
 
-  background: #7c3aed;
+  border-radius: 11px;
 
-  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
 
-  font-size: 13px;
-  font-weight: 600;
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 700;
 
   cursor: pointer;
 }
 
 /* ============================================================
-   RESPONSIVE
-   ============================================================ */
+   EDIT OVERLAY
+============================================================ */
+
+.editOverlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 100000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(3, 3, 6, 0.8);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  animation: editOverlayIn 0.2s ease;
+}
+
+@keyframes editOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   EDIT MODAL
+============================================================ */
+
+.editModal {
+  width: min(720px, 100%);
+
+  max-height: calc(100vh - 48px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 23px;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.1), transparent 35%),
+    linear-gradient(145deg, #15141c, #0c0c11);
+
+  box-shadow:
+    0 45px 120px rgba(0, 0, 0, 0.65),
+    0 0 70px rgba(139, 92, 246, 0.07);
+
+  animation: editModalIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes editModalIn {
+  from {
+    opacity: 0;
+
+    transform: translateY(15px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   EDIT HEADER
+============================================================ */
+
+.editModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 23px 25px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.editHeaderInfo {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  min-width: 0;
+}
+
+.editHeaderIcon {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid rgba(139, 92, 246, 0.22);
+
+  border-radius: 13px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: #b095f4;
+}
+
+.editHeaderInfo > div:last-child {
+  min-width: 0;
+}
+
+.editHeaderInfo span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #77727f;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.editHeaderInfo h2 {
+  margin: 0;
+
+  font-size: 22px;
+  line-height: 27px;
+
+  font-weight: 750;
+
+  color: #f5f3f8;
+}
+
+.editHeaderInfo p {
+  margin: 4px 0 0;
+
+  color: #85818d;
+
+  font-size: 13px;
+
+  line-height: 18px;
+}
+
+.editClose {
+  width: 39px;
+  height: 39px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #88848f;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.editClose:hover:not(:disabled) {
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: #fff;
+}
+
+/* ============================================================
+   EDIT BODY
+============================================================ */
+
+.editBody {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 25px;
+
+  scrollbar-width: thin;
+
+  scrollbar-color: #493468 transparent;
+}
+
+.editBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.editBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editBody::-webkit-scrollbar-thumb {
+  background: #493468;
+
+  border-radius: 999px;
+}
+
+/* ============================================================
+   EDIT FIELDS
+============================================================ */
+
+.editField {
+  min-width: 0;
+}
+
+.editField > label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #aaa5b2;
+
+  font-size: 13px;
+  line-height: 17px;
+
+  font-weight: 650;
+}
+
+.editField > input {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 11px;
+
+  outline: 0;
+
+  background: #0b0b0f;
+
+  color: #f4f1f7;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.editField > input:focus {
+  border-color: rgba(139, 92, 246, 0.58);
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.07);
+}
+
+.editField > input::placeholder {
+  color: #55515e;
+}
+
+.editInputWrapper {
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 11px;
+
+  background: #0b0b0f;
+
+  color: #9580c9;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.editInputWrapper:focus-within {
+  border-color: rgba(139, 92, 246, 0.58);
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.07);
+}
+
+.editInputWrapper input {
+  width: 100%;
+
+  height: 100%;
+
+  min-width: 0;
+
+  padding: 0;
+
+  border: 0;
+
+  outline: 0;
+
+  background: transparent;
+
+  color: #f4f1f7;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  font-weight: 650;
+}
+
+.editInputWrapper input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+
+  opacity: 0.55;
+
+  cursor: pointer;
+}
+
+.inputError {
+  border-color: rgba(239, 68, 68, 0.55) !important;
+}
+
+.editError {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #f28a8a;
+
+  font-size: 11px;
+
+  line-height: 15px;
+}
+
+/* ============================================================
+   EDIT SECTION
+============================================================ */
+
+.editSectionTitle {
+  margin-top: 23px;
+
+  margin-bottom: 12px;
+
+  color: #e5e0eb;
+
+  font-size: 16px;
+
+  line-height: 21px;
+
+  font-weight: 700;
+}
+
+.editGrid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 13px;
+}
+
+.editGrid .editField:nth-child(1) {
+  min-width: 0;
+}
+
+/* ============================================================
+   EDIT FOOTER
+============================================================ */
+
+.editFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  padding: 17px 25px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.editCancel,
+.editSave {
+  min-height: 47px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 18px;
+
+  border-radius: 11px;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.editCancel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #9995a0;
+}
+
+.editCancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.055);
+
+  color: #fff;
+}
+
+.editSave {
+  border: 1px solid rgba(139, 92, 246, 0.45);
+
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+
+  color: #fff;
+
+  box-shadow: 0 10px 26px rgba(124, 58, 237, 0.22);
+}
+
+.editSave:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow: 0 14px 32px rgba(124, 58, 237, 0.32);
+}
+
+.editCancel:disabled,
+.editSave:disabled,
+.editClose:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   FOCUS
+============================================================ */
+
+.addButton:focus-visible,
+.editButton:focus-visible,
+.switch:focus-visible,
+.clearSearch:focus-visible,
+.emptyButton:focus-visible,
+.editClose:focus-visible,
+.editCancel:focus-visible,
+.editSave:focus-visible,
+.searchInput:focus-visible,
+.editField input:focus-visible,
+.editInputWrapper input:focus-visible {
+  outline: 2px solid rgba(167, 139, 250, 0.75);
+
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   TABLET
+============================================================ */
 
 @media (max-width: 1200px) {
   .grid {
@@ -636,21 +1429,45 @@
   }
 }
 
+@media (max-width: 1000px) {
+  .editGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .content {
     margin-left: 0;
 
-    padding: 0 24px 45px;
+    padding: 0 24px 50px;
   }
 
   .header {
-    min-height: 145px;
+    min-height: 150px;
   }
 
   .title {
-    font-size: 30px;
+    font-size: 32px;
+  }
+
+  .searchSection {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .searchWrapper {
+    max-width: none;
+  }
+
+  .searchInfo {
+    align-self: flex-start;
   }
 }
+
+/* ============================================================
+   MOBILE
+============================================================ */
 
 @media (max-width: 700px) {
   .header {
@@ -672,7 +1489,33 @@
   .grid {
     grid-template-columns: 1fr;
   }
+
+  .editOverlay {
+    padding: 12px;
+  }
+
+  .editModal {
+    max-height: calc(100vh - 24px);
+
+    border-radius: 19px;
+  }
+
+  .editModalHeader {
+    padding: 19px;
+  }
+
+  .editBody {
+    padding: 19px;
+  }
+
+  .editFooter {
+    padding: 15px 19px;
+  }
 }
+
+/* ============================================================
+   SMALL MOBILE
+============================================================ */
 
 @media (max-width: 500px) {
   .content {
@@ -680,12 +1523,31 @@
   }
 
   .title {
-    font-size: 27px;
-    line-height: 34px;
+    font-size: 28px;
+
+    line-height: 35px;
   }
 
   .subtitle {
     font-size: 14px;
+  }
+
+  .tariffCard {
+    padding: 18px;
+  }
+
+  .tariffNameRow {
+    align-items: flex-start;
+  }
+
+  .tariffName {
+    font-size: 22px;
+  }
+
+  .editButton {
+    padding: 0 8px;
+
+    font-size: 11px;
   }
 
   .features {
@@ -693,15 +1555,48 @@
   }
 
   .featureIcon {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
 
   .feature strong {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .feature span {
-    font-size: 9px;
+    font-size: 10px;
+  }
+
+  .editFooter {
+    flex-direction: column-reverse;
+  }
+
+  .editCancel,
+  .editSave {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .tariffCard,
+  .addButton,
+  .editButton,
+  .editSave,
+  .editCancel,
+  .editClose,
+  .switch,
+  .searchWrapper,
+  .clearSearch {
+    transition: none;
+  }
+
+  .editOverlay,
+  .editModal,
+  .spinner {
+    animation: none;
   }
 }

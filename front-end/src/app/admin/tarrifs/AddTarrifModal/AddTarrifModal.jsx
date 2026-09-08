@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, X, User, Phone, Check, Loader2 } from "lucide-react";
+import {
+  Search,
+  X,
+  User,
+  Phone,
+  Check,
+  Loader2,
+  CalendarDays,
+} from "lucide-react";
 
 import styles from "./AddTarrifModal.module.css";
 
@@ -43,6 +51,30 @@ const MOCK_USERS = [
   },
 ];
 
+const formatDateForInput = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+const addMonths = (dateString, months) => {
+  const date = new Date(`${dateString}T00:00:00`);
+
+  date.setMonth(date.getMonth() + months);
+
+  return formatDateForInput(date);
+};
+
+const getToday = () => {
+  return formatDateForInput(new Date());
+};
+
+const getDefaultEndDate = () => {
+  return addMonths(getToday(), 1);
+};
+
 export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
   const [phone, setPhone] = useState("");
   const [users, setUsers] = useState([]);
@@ -55,6 +87,8 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
     activeListings: "",
     vipBoosts: "",
     topBoosts: "",
+    startDate: getToday(),
+    endDate: getDefaultEndDate(),
   });
 
   useEffect(() => {
@@ -70,6 +104,8 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
         activeListings: "",
         vipBoosts: "",
         topBoosts: "",
+        startDate: getToday(),
+        endDate: getDefaultEndDate(),
       });
     }
   }, [isOpen]);
@@ -160,10 +196,33 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
     }));
   };
 
+  const handleStartDateChange = (value) => {
+    setForm((prev) => ({
+      ...prev,
+      startDate: value,
+      endDate: prev.endDate < value ? addMonths(value, 1) : prev.endDate,
+    }));
+  };
+
+  const handlePeriodSelect = (months) => {
+    setForm((prev) => ({
+      ...prev,
+      endDate: addMonths(prev.startDate, months),
+    }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!selectedUser) {
+      return;
+    }
+
+    if (!form.startDate || !form.endDate) {
+      return;
+    }
+
+    if (form.endDate < form.startDate) {
       return;
     }
 
@@ -179,6 +238,9 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
       vipBoosts: Number(form.vipBoosts) || 0,
 
       topBoosts: Number(form.topBoosts) || 0,
+
+      startDate: form.startDate,
+      endDate: form.endDate,
     };
 
     try {
@@ -225,6 +287,7 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
 
         <form onSubmit={handleSubmit}>
           <div className={styles.body}>
+            {/* USER */}
             <div className={styles.section}>
               <div className={styles.sectionTitle}>Пользователь</div>
 
@@ -322,6 +385,7 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
               )}
             </div>
 
+            {/* TARIFF */}
             <div className={styles.section}>
               <div className={styles.sectionTitle}>Параметры тарифа</div>
 
@@ -388,6 +452,99 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
                 </div>
               </div>
 
+              {/* PERIOD */}
+              <div className={styles.periodSection}>
+                <div className={styles.periodHeader}>
+                  <div className={styles.periodTitle}>
+                    <CalendarDays size={18} />
+
+                    <span>Период действия тарифа</span>
+                  </div>
+
+                  <span className={styles.periodHint}>Выберите срок</span>
+                </div>
+
+                <div className={styles.dateGrid}>
+                  <div className={styles.field}>
+                    <label className={styles.label}>Дата начала</label>
+
+                    <div className={styles.dateInputWrapper}>
+                      <CalendarDays size={17} />
+
+                      <input
+                        type="date"
+                        className={styles.dateInput}
+                        value={form.startDate}
+                        onChange={(event) =>
+                          handleStartDateChange(event.target.value)
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.field}>
+                    <label className={styles.label}>Дата окончания</label>
+
+                    <div className={styles.dateInputWrapper}>
+                      <CalendarDays size={17} />
+
+                      <input
+                        type="date"
+                        className={styles.dateInput}
+                        min={form.startDate}
+                        value={form.endDate}
+                        onChange={(event) =>
+                          handleChange("endDate", event.target.value)
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.quickPeriods}>
+                  <span className={styles.quickPeriodsLabel}>
+                    Быстрый выбор:
+                  </span>
+
+                  <div className={styles.quickPeriodsButtons}>
+                    <button
+                      type="button"
+                      className={styles.periodButton}
+                      onClick={() => handlePeriodSelect(2)}
+                    >
+                      2 месяца
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.periodButton}
+                      onClick={() => handlePeriodSelect(4)}
+                    >
+                      4 месяца
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.periodButton}
+                      onClick={() => handlePeriodSelect(6)}
+                    >
+                      6 месяцев
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.periodButton}
+                      onClick={() => handlePeriodSelect(12)}
+                    >
+                      1 год
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* PHONE */}
               <div className={styles.field}>
                 <label className={styles.label}>
                   Номер телефона пользователя
@@ -418,7 +575,13 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={!selectedUser || !form.name.trim()}
+              disabled={
+                !selectedUser ||
+                !form.name.trim() ||
+                !form.startDate ||
+                !form.endDate ||
+                form.endDate < form.startDate
+              }
             >
               <Check size={19} />
               Выдать тариф
