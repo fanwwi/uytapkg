@@ -20,15 +20,17 @@ import {
   Building2,
   Sparkles,
   Camera,
+  ListChecks,
+  ArrowUp,
 } from "lucide-react";
 
 import styles from "./Payments.module.css";
-import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { getAdminPayments, getPricing, updatePricing } from "@/utils/api";
 import { generateReceiptPdf } from "@/utils/generateReceiptPdf";
 import ReceiptDocument from "@/app/payment/PaymentReceiptModal/ReceiptDocument";
 import PricingEditModal from "./PricingModal/PricingModal";
+import CustomSelectBlack from "@/components/ui/CustomSelectBlack/CustomSelectBlack";
 
 const TARIFF_OPTIONS = [
   "Все тарифы",
@@ -42,29 +44,216 @@ const TARIFF_OPTIONS = [
 ];
 
 const STATUS_CONFIG = {
-  approved: { label: "Оплачено", icon: CheckCircle2, cls: "status_paid" },
-  processing: { label: "Ожидает оплаты", icon: Clock3, cls: "status_pending" },
-  pending: { label: "Ожидает оплаты", icon: Clock3, cls: "status_pending" },
-  canceled: { label: "Отменён", icon: XCircle, cls: "status_canceled" },
-  failed: { label: "Ошибка", icon: AlertCircle, cls: "status_canceled" },
+  approved: {
+    label: "Оплачено",
+    icon: CheckCircle2,
+    cls: "status_paid",
+  },
+
+  processing: {
+    label: "Ожидает оплаты",
+    icon: Clock3,
+    cls: "status_pending",
+  },
+
+  pending: {
+    label: "Ожидает оплаты",
+    icon: Clock3,
+    cls: "status_pending",
+  },
+
+  canceled: {
+    label: "Отменён",
+    icon: XCircle,
+    cls: "status_canceled",
+  },
+
+  failed: {
+    label: "Ошибка",
+    icon: AlertCircle,
+    cls: "status_canceled",
+  },
+};
+
+const DEFAULT_PRICING = {
+  tariffs: {
+    start: {
+      price: 390,
+      activeListings: 3,
+      vipLifts: 1,
+      topLifts: 3,
+    },
+
+    optimal: {
+      price: 790,
+      activeListings: 10,
+      vipLifts: 3,
+      topLifts: 7,
+    },
+
+    business: {
+      price: 1890,
+      activeListings: 30,
+      vipLifts: 7,
+      topLifts: 15,
+    },
+
+    developer: {
+      mode: "individual",
+      value: "",
+      activeListings: null,
+      vipLifts: null,
+      topLifts: null,
+    },
+  },
+
+  services: {
+    vip: 290,
+    urgent: 70,
+    top: 190,
+    instagram: 390,
+  },
 };
 
 const formatPrice = (price) => {
+  if (price === null || price === undefined || price === "") {
+    return "—";
+  }
+
   return `${Number(price).toLocaleString("ru-RU")} сом`;
 };
 
 const formatDate = (value) => {
   if (!value) return "—";
+
   return new Date(value).toLocaleDateString("ru-RU");
 };
 
-const formatServicePrice = (price, suffix) => {
-  return `${Number(price).toLocaleString("ru-RU")} сом ${suffix}`;
+const formatNumber = (value) => {
+  if (value === null || value === undefined || value === "") {
+    return "—";
+  }
+
+  return Number(value).toLocaleString("ru-RU");
+};
+
+const formatServicePrice = (price) => {
+  return `${Number(price).toLocaleString("ru-RU")} сом`;
+};
+
+const getTariffValue = (tariff, field) => {
+  if (!tariff) return null;
+
+  /*
+   * Поддерживаем и новый формат:
+   *
+   * start: {
+   *   price,
+   *   activeListings,
+   *   vipLifts,
+   *   topLifts
+   * }
+   *
+   * и старый формат:
+   *
+   * start: 390
+   *
+   * чтобы страница не падала во время обновления API.
+   */
+
+  if (typeof tariff === "object") {
+    return tariff[field] ?? null;
+  }
+
+  return null;
+};
+
+const getTariffPrice = (tariff) => {
+  if (typeof tariff === "object") {
+    return tariff.price ?? 0;
+  }
+
+  return tariff ?? 0;
+};
+
+const normalizePricing = (data) => {
+  if (!data) {
+    return DEFAULT_PRICING;
+  }
+
+  /*
+   * Новый формат API
+   */
+  if (
+    typeof data.tariffs?.start === "object" ||
+    typeof data.tariffs?.optimal === "object" ||
+    typeof data.tariffs?.business === "object"
+  ) {
+    return {
+      ...DEFAULT_PRICING,
+      ...data,
+      tariffs: {
+        ...DEFAULT_PRICING.tariffs,
+        ...data.tariffs,
+      },
+
+      services: {
+        ...DEFAULT_PRICING.services,
+        ...data.services,
+      },
+    };
+  }
+
+  /*
+   * Совместимость со старым API,
+   * где start / optimal / business были числами.
+   */
+  return {
+    ...DEFAULT_PRICING,
+
+    ...data,
+
+    tariffs: {
+      ...DEFAULT_PRICING.tariffs,
+
+      ...data.tariffs,
+
+      start: {
+        ...DEFAULT_PRICING.tariffs.start,
+        price: data.tariffs?.start ?? DEFAULT_PRICING.tariffs.start.price,
+      },
+
+      optimal: {
+        ...DEFAULT_PRICING.tariffs.optimal,
+        price: data.tariffs?.optimal ?? DEFAULT_PRICING.tariffs.optimal.price,
+      },
+
+      business: {
+        ...DEFAULT_PRICING.tariffs.business,
+        price: data.tariffs?.business ?? DEFAULT_PRICING.tariffs.business.price,
+      },
+
+      developer: {
+        ...DEFAULT_PRICING.tariffs.developer,
+        ...(data.tariffs?.developer || {}),
+      },
+    },
+
+    services: {
+      ...DEFAULT_PRICING.services,
+      ...(data.services || {}),
+    },
+  };
 };
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([]);
-  const [stats, setStats] = useState({ totalRevenue: 0, paidCount: 0 });
+
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    paidCount: 0,
+  });
+
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
@@ -74,7 +263,17 @@ export default function PaymentsPage() {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+
+  const [pricing, setPricing] = useState(DEFAULT_PRICING);
+
   const receiptRef = useRef(null);
+
+  /*
+   * =========================================================
+   * LOAD PAYMENTS
+   * =========================================================
+   */
 
   useEffect(() => {
     const token = localStorage.getItem("uytap_token");
@@ -82,51 +281,38 @@ export default function PaymentsPage() {
     getAdminPayments(token)
       .then((res) => {
         setPayments(res.data || []);
-        setStats(res.stats || { totalRevenue: 0, paidCount: 0 });
+
+        setStats(
+          res.stats || {
+            totalRevenue: 0,
+            paidCount: 0,
+          },
+        );
       })
       .catch((err) => {
         console.error("Ошибка загрузки платежей:", err);
+
         setLoadError(err.message || "Не удалось загрузить платежи");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
-
-  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
 
   /*
    * =========================================================
-   * CURRENT PRICING
-   *
-   * Загружается с бэкенда (GET /api/settings/pricing) — это
-   * публичный эндпоинт, отдающий актуальные цены, которые
-   * реально используются при расчёте суммы платежа на сервере.
+   * LOAD PRICING
    * =========================================================
    */
 
-  const [pricing, setPricing] = useState({
-    tariffs: {
-      start: 390,
-      optimal: 790,
-      business: 1890,
-
-      developer: {
-        mode: "individual",
-        value: "",
-      },
-    },
-
-    services: {
-      vip: 290,
-      urgent: 70,
-      top: 190,
-      instagram: 390,
-    },
-  });
-
   useEffect(() => {
     getPricing()
-      .then((data) => setPricing(data))
-      .catch((err) => console.error("Ошибка загрузки цен:", err));
+      .then((data) => {
+        setPricing(normalizePricing(data));
+      })
+      .catch((err) => {
+        console.error("Ошибка загрузки цен:", err);
+      });
   }, []);
 
   /*
@@ -143,7 +329,7 @@ export default function PaymentsPage() {
         !query ||
         (payment.userEmail || "").toLowerCase().includes(query) ||
         (payment.userPhone || "").toLowerCase().includes(query) ||
-        payment.orderId.toLowerCase().includes(query);
+        (payment.orderId || "").toLowerCase().includes(query);
 
       const matchesTariff =
         tariffFilter === "Все тарифы" || payment.tariffTitle === tariffFilter;
@@ -152,23 +338,38 @@ export default function PaymentsPage() {
     });
   }, [payments, search, tariffFilter]);
 
+  /*
+   * =========================================================
+   * RECEIPT
+   * =========================================================
+   */
+
   const receiptData = selectedPayment
     ? {
         tariff: selectedPayment.tariffTitle,
+
         price: selectedPayment.pricePerMonth ?? selectedPayment.amount,
+
         months: selectedPayment.months,
+
         discount: selectedPayment.discountPercent || 0,
+
         total: selectedPayment.amount,
+
         paymentId: selectedPayment.orderId,
+
         date: new Date(selectedPayment.paidAt || selectedPayment.createdAt),
       }
     : null;
 
   const downloadReceipt = async () => {
-    if (!receiptRef.current || !receiptData || isDownloading) return;
+    if (!receiptRef.current || !receiptData || isDownloading) {
+      return;
+    }
 
     try {
       setIsDownloading(true);
+
       await generateReceiptPdf(receiptRef.current, receiptData);
     } catch (error) {
       console.error("Ошибка создания PDF:", error);
@@ -186,11 +387,9 @@ export default function PaymentsPage() {
   const handleSavePricing = async (nextPricing) => {
     const token = localStorage.getItem("uytap_token");
 
-    // Сумма к оплате пересчитывается на сервере, поэтому источником
-    // истины после сохранения считаем то, что вернул бэкенд (он же
-    // нормализует значения), а не то, что было отправлено из формы.
     const saved = await updatePricing(token, nextPricing);
-    setPricing(saved);
+
+    setPricing(normalizePricing(saved));
   };
 
   /*
@@ -199,12 +398,43 @@ export default function PaymentsPage() {
    * =========================================================
    */
 
+  const developerMode = pricing.tariffs.developer?.mode;
+
+  const developerValue = pricing.tariffs.developer?.value;
+
   const developerPrice =
-    pricing.tariffs.developer.mode === "individual"
+    developerMode === "individual"
       ? "Индивидуально"
-      : `${Number(pricing.tariffs.developer.value).toLocaleString(
-          "ru-RU",
-        )} сом`;
+      : `${Number(developerValue || 0).toLocaleString("ru-RU")} сом`;
+
+  /*
+   * =========================================================
+   * TARIFFS
+   * =========================================================
+   */
+
+  const tariffCards = [
+    {
+      key: "start",
+      title: "СТАРТ",
+      icon: Rocket,
+      tariff: pricing.tariffs.start,
+    },
+
+    {
+      key: "optimal",
+      title: "ОПТИМАЛЬНЫЙ",
+      icon: Crown,
+      tariff: pricing.tariffs.optimal,
+    },
+
+    {
+      key: "business",
+      title: "БИЗНЕС",
+      icon: Building2,
+      tariff: pricing.tariffs.business,
+    },
+  ];
 
   return (
     <div className={styles.layout}>
@@ -275,7 +505,7 @@ export default function PaymentsPage() {
           </section>
 
           {/* =====================================================
-              CURRENT PRICES
+              CURRENT PRICING
           ===================================================== */}
 
           <section className={styles.pricingPanel}>
@@ -290,7 +520,7 @@ export default function PaymentsPage() {
 
                   <h2>Текущие цены</h2>
 
-                  <p>Стоимость тарифов и дополнительных услуг UyTap</p>
+                  <p>Стоимость тарифов и дополнительные возможности UyTap</p>
                 </div>
               </div>
 
@@ -314,60 +544,68 @@ export default function PaymentsPage() {
               <div>
                 <strong>Тарифы</strong>
 
-                <small>Ежемесячная стоимость</small>
+                <small>Стоимость и доступные возможности</small>
               </div>
             </div>
 
             <div className={styles.currentPricingGrid}>
-              <div className={styles.currentPriceCard}>
-                <div className={styles.currentPriceIcon}>
-                  <Rocket size={18} />
+              {tariffCards.map(({ key, title, icon: Icon, tariff }) => (
+                <div key={key} className={styles.currentPriceCard}>
+                  <div className={styles.currentPriceIcon}>
+                    <Icon size={18} />
+                  </div>
+
+                  <div className={styles.currentPriceContent}>
+                    <span>{title}</span>
+
+                    <strong>{formatPrice(getTariffPrice(tariff))}</strong>
+
+                    <small>в месяц</small>
+                  </div>
+
+                  <div className={styles.tariffLimits}>
+                    <div className={styles.tariffLimit}>
+                      <ListChecks size={14} />
+
+                      <div>
+                        <span>Активные</span>
+
+                        <strong>
+                          {formatNumber(
+                            getTariffValue(tariff, "activeListings"),
+                          )}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className={styles.tariffLimit}>
+                      <Crown size={14} />
+
+                      <div>
+                        <span>VIP</span>
+
+                        <strong>
+                          {formatNumber(getTariffValue(tariff, "vipLifts"))}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className={styles.tariffLimit}>
+                      <ArrowUp size={14} />
+
+                      <div>
+                        <span>TOP</span>
+
+                        <strong>
+                          {formatNumber(getTariffValue(tariff, "topLifts"))}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              ))}
 
-                <div className={styles.currentPriceContent}>
-                  <span>СТАРТ</span>
-
-                  <strong>
-                    {Number(pricing.tariffs.start).toLocaleString("ru-RU")} сом
-                  </strong>
-
-                  <small>в месяц</small>
-                </div>
-              </div>
-
-              <div className={styles.currentPriceCard}>
-                <div className={styles.currentPriceIcon}>
-                  <Crown size={18} />
-                </div>
-
-                <div className={styles.currentPriceContent}>
-                  <span>ОПТИМАЛЬНЫЙ</span>
-
-                  <strong>
-                    {Number(pricing.tariffs.optimal).toLocaleString("ru-RU")}{" "}
-                    сом
-                  </strong>
-
-                  <small>в месяц</small>
-                </div>
-              </div>
-
-              <div className={styles.currentPriceCard}>
-                <div className={styles.currentPriceIcon}>
-                  <Building2 size={18} />
-                </div>
-
-                <div className={styles.currentPriceContent}>
-                  <span>БИЗНЕС</span>
-
-                  <strong>
-                    {Number(pricing.tariffs.business).toLocaleString("ru-RU")}{" "}
-                    сом
-                  </strong>
-
-                  <small>в месяц</small>
-                </div>
-              </div>
+              {/* DEVELOPER */}
 
               <div className={styles.currentPriceCard}>
                 <div className={styles.currentPriceIcon}>
@@ -380,10 +618,57 @@ export default function PaymentsPage() {
                   <strong>{developerPrice}</strong>
 
                   <small>
-                    {pricing.tariffs.developer.mode === "individual"
+                    {developerMode === "individual"
                       ? "особые условия"
                       : "в месяц"}
                   </small>
+                </div>
+
+                <div className={styles.tariffLimits}>
+                  <div className={styles.tariffLimit}>
+                    <ListChecks size={14} />
+
+                    <div>
+                      <span>Активные</span>
+
+                      <strong>
+                        {formatNumber(
+                          getTariffValue(
+                            pricing.tariffs.developer,
+                            "activeListings",
+                          ),
+                        )}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className={styles.tariffLimit}>
+                    <Crown size={14} />
+
+                    <div>
+                      <span>VIP</span>
+
+                      <strong>
+                        {formatNumber(
+                          getTariffValue(pricing.tariffs.developer, "vipLifts"),
+                        )}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className={styles.tariffLimit}>
+                    <ArrowUp size={14} />
+
+                    <div>
+                      <span>TOP</span>
+
+                      <strong>
+                        {formatNumber(
+                          getTariffValue(pricing.tariffs.developer, "topLifts"),
+                        )}
+                      </strong>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -413,7 +698,7 @@ export default function PaymentsPage() {
                 <div className={styles.currentPriceContent}>
                   <span>VIP</span>
 
-                  <strong>{formatServicePrice(pricing.services.vip, "")}</strong>
+                  <strong>{formatServicePrice(pricing.services.vip)}</strong>
 
                   <small>в день</small>
                 </div>
@@ -427,7 +712,7 @@ export default function PaymentsPage() {
                 <div className={styles.currentPriceContent}>
                   <span>СРОЧНО</span>
 
-                  <strong>{formatServicePrice(pricing.services.urgent, "")}</strong>
+                  <strong>{formatServicePrice(pricing.services.urgent)}</strong>
 
                   <small>в день</small>
                 </div>
@@ -441,7 +726,7 @@ export default function PaymentsPage() {
                 <div className={styles.currentPriceContent}>
                   <span>ТОП</span>
 
-                  <strong>{formatServicePrice(pricing.services.top, "")}</strong>
+                  <strong>{formatServicePrice(pricing.services.top)}</strong>
 
                   <small>в день</small>
                 </div>
@@ -455,7 +740,9 @@ export default function PaymentsPage() {
                 <div className={styles.currentPriceContent}>
                   <span>INSTAGRAM</span>
 
-                  <strong>{formatServicePrice(pricing.services.instagram, "")}</strong>
+                  <strong>
+                    {formatServicePrice(pricing.services.instagram)}
+                  </strong>
 
                   <small>за публикацию</small>
                 </div>
@@ -463,7 +750,7 @@ export default function PaymentsPage() {
             </div>
 
             <div className={styles.pricingPanelFooter}>
-              <span>Цены применяются к новым покупкам и услугам.</span>
+              <span>Цены и лимиты применяются к новым покупкам и услугам.</span>
 
               <button
                 type="button"
@@ -505,7 +792,7 @@ export default function PaymentsPage() {
               </div>
 
               <div className={styles.customSelect}>
-                <CustomSelect
+                <CustomSelectBlack
                   icon={Filter}
                   title="Тариф"
                   options={TARIFF_OPTIONS}
@@ -521,12 +808,15 @@ export default function PaymentsPage() {
               {loading ? (
                 <div className={styles.empty}>
                   <LoaderCircle className={styles.spin} />
+
                   <strong>Загружаем платежи...</strong>
                 </div>
               ) : loadError ? (
                 <div className={styles.empty}>
                   <AlertCircle />
+
                   <strong>Не удалось загрузить платежи</strong>
+
                   <span>{loadError}</span>
                 </div>
               ) : (
@@ -534,13 +824,20 @@ export default function PaymentsPage() {
                   <thead>
                     <tr>
                       <th>Пользователь</th>
+
                       <th>Тариф</th>
+
                       <th>Сумма</th>
+
                       <th>Период</th>
+
                       <th>Дата</th>
+
                       <th>Чек</th>
+
                       <th>Статус</th>
-                      <th></th>
+
+                      <th />
                     </tr>
                   </thead>
 
@@ -548,25 +845,31 @@ export default function PaymentsPage() {
                     {filteredPayments.map((payment) => {
                       const status =
                         STATUS_CONFIG[payment.status] || STATUS_CONFIG.pending;
+
                       const StatusIcon = status.icon;
 
                       return (
                         <tr key={payment.orderId}>
                           {/* USER */}
+
                           <td>
                             <div className={styles.user}>
                               <div className={styles.avatar}>
-                                {(payment.userEmail || "?").charAt(0).toUpperCase()}
+                                {(payment.userEmail || "?")
+                                  .charAt(0)
+                                  .toUpperCase()}
                               </div>
 
                               <div>
                                 <strong>{payment.userEmail || "—"}</strong>
+
                                 <span>{payment.userPhone || ""}</span>
                               </div>
                             </div>
                           </td>
 
                           {/* TARIFF */}
+
                           <td>
                             <span className={styles.tariff}>
                               {payment.tariffTitle}
@@ -580,6 +883,7 @@ export default function PaymentsPage() {
                           </td>
 
                           {/* PRICE */}
+
                           <td>
                             <strong className={styles.price}>
                               {formatPrice(payment.amount)}
@@ -587,6 +891,7 @@ export default function PaymentsPage() {
                           </td>
 
                           {/* PERIOD */}
+
                           <td>
                             <div className={styles.period}>
                               <strong>
@@ -600,6 +905,7 @@ export default function PaymentsPage() {
                           </td>
 
                           {/* DATE */}
+
                           <td>
                             <span className={styles.date}>
                               {formatDate(payment.paidAt || payment.createdAt)}
@@ -607,6 +913,7 @@ export default function PaymentsPage() {
                           </td>
 
                           {/* RECEIPT */}
+
                           <td>
                             <button
                               type="button"
@@ -619,16 +926,19 @@ export default function PaymentsPage() {
                           </td>
 
                           {/* STATUS */}
+
                           <td>
                             <span
                               className={`${styles.status} ${styles[status.cls]}`}
                             >
                               <StatusIcon />
+
                               {status.label}
                             </span>
                           </td>
 
                           {/* MORE */}
+
                           <td>
                             <button
                               type="button"
@@ -690,11 +1000,14 @@ export default function PaymentsPage() {
                 <div className={styles.modalBody}>
                   <div className={styles.modalUser}>
                     <div className={styles.modalAvatar}>
-                      {(selectedPayment.userEmail || "?").charAt(0).toUpperCase()}
+                      {(selectedPayment.userEmail || "?")
+                        .charAt(0)
+                        .toUpperCase()}
                     </div>
 
                     <div>
                       <strong>{selectedPayment.userEmail || "—"}</strong>
+
                       <span>{selectedPayment.userPhone || ""}</span>
                     </div>
                   </div>
@@ -702,16 +1015,19 @@ export default function PaymentsPage() {
                   <div className={styles.detailsGrid}>
                     <div>
                       <span>Тариф</span>
+
                       <strong>{selectedPayment.tariffTitle}</strong>
                     </div>
 
                     <div>
                       <span>Стоимость</span>
+
                       <strong>{formatPrice(selectedPayment.amount)}</strong>
                     </div>
 
                     <div>
                       <span>Период</span>
+
                       <strong>
                         {selectedPayment.type === "promotion"
                           ? selectedPayment.serviceType === "instagram"
@@ -724,6 +1040,7 @@ export default function PaymentsPage() {
                     {selectedPayment.type === "promotion" && (
                       <div>
                         <span>Объявление</span>
+
                         <strong>
                           {selectedPayment.listingTitle || "Объявление удалено"}
                         </strong>
@@ -734,8 +1051,10 @@ export default function PaymentsPage() {
                       selectedPayment.serviceType === "instagram" && (
                         <div>
                           <span>Публикация</span>
+
                           <strong>
-                            {selectedPayment.fulfillmentStatus === "fulfillment_pending"
+                            {selectedPayment.fulfillmentStatus ===
+                            "fulfillment_pending"
                               ? "Ожидает публикации"
                               : selectedPayment.fulfillmentStatus === "applied"
                                 ? "Опубликовано"
@@ -746,14 +1065,16 @@ export default function PaymentsPage() {
 
                     <div>
                       <span>ID платежа</span>
+
                       <strong>{selectedPayment.orderId}</strong>
                     </div>
 
                     <div>
                       <span>Дата</span>
+
                       <strong>
                         {formatDate(
-                          selectedPayment.paidAt || selectedPayment.createdAt
+                          selectedPayment.paidAt || selectedPayment.createdAt,
                         )}
                       </strong>
                     </div>
@@ -762,13 +1083,18 @@ export default function PaymentsPage() {
                       <span>Статус</span>
 
                       <strong>
-                        {(STATUS_CONFIG[selectedPayment.status] || STATUS_CONFIG.pending)
-                          .label}
+                        {
+                          (
+                            STATUS_CONFIG[selectedPayment.status] ||
+                            STATUS_CONFIG.pending
+                          ).label
+                        }
                       </strong>
                     </div>
                   </div>
 
                   {/* RECEIPT */}
+
                   {selectedPayment.status === "approved" && (
                     <div className={styles.receiptPreview}>
                       <div className={styles.receiptHeader}>
@@ -795,6 +1121,7 @@ export default function PaymentsPage() {
                       <div className={styles.receiptImage}>
                         <div>
                           <CreditCard />
+
                           <span>Чек сформирован — нажмите «Скачать»</span>
                         </div>
                       </div>
@@ -805,10 +1132,18 @@ export default function PaymentsPage() {
             </div>
           )}
 
-          {/* Скрытый исходник для генерации PDF-чека (html2canvas требует
-              реально отрисованный DOM-узел, поэтому не display:none) */}
+          {/* =====================================================
+              HIDDEN RECEIPT
+          ===================================================== */}
+
           {receiptData && (
-            <div style={{ position: "fixed", top: 0, left: "-9999px" }}>
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: "-9999px",
+              }}
+            >
               <ReceiptDocument ref={receiptRef} paymentData={receiptData} />
             </div>
           )}
