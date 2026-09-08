@@ -5,13 +5,16 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Building2,
-  Users,
   CreditCard,
   Image,
   Scale,
   LogOut,
   Home,
   Camera,
+  BiMoneyWithdraw,
+  Monitor,
+  ScreenShareIcon,
+  DatabaseArrowDown
 } from "lucide-react";
 
 import styles from "./Sidebar.module.css";
@@ -50,7 +53,12 @@ const navigation = [
   {
     title: "Управление тарифами",
     href: "/admin/tarrifs",
-    icon: Scale,
+    icon: Monitor,
+  },
+  {
+    title: "Управление дефолтными тарифами",
+    href: "/admin/defaultTarrifs",
+    icon: DatabaseArrowDown,
   },
 ];
 

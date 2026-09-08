@@ -1,0 +1,640 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.72);
+
+  backdrop-filter: blur(8px);
+}
+
+.modal {
+  width: 100%;
+  max-width: 570px;
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(145deg, rgba(139, 92, 246, 0.035), transparent 45%), #101015;
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.55),
+    0 0 50px rgba(139, 92, 246, 0.05);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 25px 25px 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.eyebrow {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #a78bfa;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 1.3px;
+}
+
+.header h2 {
+  margin: 0;
+
+  color: #f3f1f7;
+
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.header p {
+  margin: 6px 0 0;
+
+  color: #716d79;
+
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.closeButton {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #77727f;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #eeeaf5;
+}
+
+/* =========================================================
+   USER
+========================================================= */
+
+.userCard {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 20px 25px 0;
+
+  padding: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.09);
+
+  color: #c4b5fd;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.userInfo {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.userInfo strong {
+  color: #e4e1e9;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.userInfo span,
+.userInfo small {
+  color: #696571;
+
+  font-size: 10px;
+}
+
+.userInfo small {
+  color: #55515d;
+}
+
+.tariffBadge {
+  margin-left: auto;
+
+  padding: 6px 9px;
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  border-radius: 7px;
+
+  background: rgba(139, 92, 246, 0.07);
+
+  color: #a78bfa;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   CURRENT PERIOD
+========================================================= */
+
+.currentPeriod {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  margin: 15px 25px 0;
+
+  padding: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: 12px;
+
+  background: #0c0c10;
+}
+
+.currentIcon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #8f7ac7;
+}
+
+.currentPeriod > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.currentPeriod span {
+  color: #55515d;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+}
+
+.currentPeriod strong {
+  color: #c9c5cf;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section {
+  margin: 22px 25px 0;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 12px;
+
+  color: #aaa5b1;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.sectionTitle svg {
+  color: #a78bfa;
+}
+
+.quickDescription {
+  margin: -4px 0 12px;
+
+  color: #5e5a66;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   DATES
+========================================================= */
+
+.dates {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
+
+  align-items: end;
+
+  gap: 8px;
+}
+
+.field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.field label {
+  color: #625e69;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.4px;
+}
+
+.dateInput {
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #292632;
+  border-radius: 9px;
+
+  background: #0b0b0f;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dateInput:focus-within {
+  border-color: rgba(139, 92, 246, 0.5);
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.07);
+}
+
+.dateInput svg {
+  flex-shrink: 0;
+
+  color: #68636f;
+}
+
+.dateInput input {
+  width: 100%;
+  min-width: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #d2ced8;
+
+  font-family: inherit;
+
+  font-size: 11px;
+}
+
+.dateInput input::-webkit-calendar-picker-indicator {
+  filter: invert(0.55);
+
+  cursor: pointer;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 42px;
+
+  color: #514d59;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quickActions {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 8px;
+}
+
+.quickActions button {
+  min-height: 55px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 10px;
+
+  background: rgba(139, 92, 246, 0.045);
+
+  color: #aaa1c8;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.quickActions button:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: rgba(139, 92, 246, 0.09);
+}
+
+.quickActions button:active {
+  transform: scale(0.97);
+}
+
+.quickActions span {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.quickActions small {
+  margin-top: 2px;
+
+  color: #676271;
+
+  font-size: 9px;
+}
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin: 22px 25px 0;
+
+  padding: 13px 15px;
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  border-radius: 12px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.07),
+    rgba(139, 92, 246, 0.025)
+  );
+}
+
+.preview > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.preview span {
+  color: #70677f;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+}
+
+.preview strong {
+  color: #d5cceb;
+
+  font-size: 12px;
+}
+
+.preview > svg {
+  color: #a78bfa;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  margin-top: 22px;
+
+  padding: 18px 25px 22px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.cancelButton,
+.saveButton {
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 15px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.cancelButton {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  background: rgba(255, 255, 255, 0.035);
+
+  color: #817c88;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #aaa5b1;
+}
+
+.saveButton {
+  border: 1px solid rgba(139, 92, 246, 0.35);
+
+  background: #8b5cf6;
+
+  color: #fff;
+
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+}
+
+.saveButton:hover {
+  background: #9569f7;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .overlay {
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: calc(100vh - 20px);
+
+    border-radius: 18px;
+  }
+
+  .header {
+    padding: 20px 18px 17px;
+  }
+
+  .userCard,
+  .currentPeriod,
+  .section,
+  .preview {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .actions {
+    padding: 16px 18px 18px;
+  }
+
+  .dates {
+    grid-template-columns: 1fr;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .tariffBadge {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .quickActions {
+    grid-template-columns: 1fr;
+  }
+
+  .quickActions button {
+    min-height: 45px;
+
+    flex-direction: row;
+
+    gap: 5px;
+  }
+
+  .quickActions small {
+    margin-top: 0;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancelButton,
+  .saveButton {
+    width: 100%;
+  }
+}

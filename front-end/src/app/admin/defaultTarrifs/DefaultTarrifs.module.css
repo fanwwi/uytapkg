@@ -1,0 +1,1203 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 34px;
+
+  background: #0b0b0f;
+  color: #f5f5f7;
+  display: flex;
+  padding-left: 300px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+  margin-bottom: 25px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+
+  color: #8b5cf6;
+
+  font-size: 9px;
+  line-height: 1;
+
+  font-weight: 900;
+
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+
+  color: #f5f3fa;
+
+  font-size: 30px;
+  line-height: 1.15;
+
+  font-weight: 900;
+
+  letter-spacing: -0.7px;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+
+  color: #85818e;
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   INFO CARD
+========================================================= */
+
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 20px;
+
+  padding: 18px 20px;
+
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(139, 92, 246, 0.055),
+      rgba(255, 255, 255, 0.01)
+    ),
+    #101015;
+}
+
+.infoIcon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.09);
+
+  color: #a78bfa;
+}
+
+.infoCard h3 {
+  margin: 1px 0 5px;
+
+  color: #e9e6ef;
+
+  font-size: 14px;
+  line-height: 1.3;
+
+  font-weight: 850;
+}
+
+.infoCard p {
+  margin: 0;
+
+  max-width: 850px;
+
+  color: #716d79;
+
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+  display: grid;
+
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 20px;
+}
+
+.statCard {
+  min-height: 100px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  box-sizing: border-box;
+
+  padding: 17px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 55%),
+    #101015;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.statCard:hover {
+  border-color: rgba(139, 92, 246, 0.14);
+
+  transform: translateY(-1px);
+}
+
+.statIcon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, 0.08);
+
+  color: #a78bfa;
+}
+
+.statContent {
+  min-width: 0;
+}
+
+.statLabel {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #66636e;
+
+  font-size: 9px;
+  line-height: 1.2;
+
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+
+  text-transform: uppercase;
+}
+
+.statValue {
+  display: block;
+
+  color: #f1eef5;
+
+  font-size: 24px;
+  line-height: 1;
+
+  font-weight: 900;
+}
+
+/* =========================================================
+   USERS SECTION
+========================================================= */
+
+.usersSection {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.018), transparent 50%),
+    #101015;
+
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 24px 26px 20px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+
+  color: #f1eff5;
+
+  font-size: 20px;
+  line-height: 1.2;
+
+  font-weight: 900;
+}
+
+.sectionHeader p {
+  margin: 6px 0 0;
+
+  color: #74717d;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search {
+  width: 300px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #292632;
+  border-radius: 11px;
+
+  background: #0b0b0f;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search:focus-within {
+  border-color: rgba(139, 92, 246, 0.55);
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.07);
+}
+
+.search svg {
+  flex-shrink: 0;
+
+  color: #716d79;
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #f5f3f8;
+
+  font-family: inherit;
+
+  font-size: 13px;
+}
+
+.search input::placeholder {
+  color: #5d5965;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.tableWrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: #403354 transparent;
+}
+
+.tableWrapper::-webkit-scrollbar {
+  height: 7px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: #403354;
+
+  border-radius: 999px;
+}
+
+.table {
+  width: 100%;
+
+  min-width: 1180px;
+
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 14px 20px;
+
+  text-align: left;
+  vertical-align: middle;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.015);
+
+  color: #73707c;
+
+  font-size: 10px;
+  line-height: 1.2;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.8px;
+
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 16px 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(139, 92, 246, 0.025);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================================================
+   USER
+========================================================= */
+
+.user {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 210px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(139, 92, 246, 0.17);
+  border-radius: 11px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(139, 92, 246, 0.18),
+    rgba(139, 92, 246, 0.07)
+  );
+
+  color: #c4b5fd;
+}
+
+.userInfo {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.userInfo strong {
+  color: #e3e1e7;
+
+  font-size: 13px;
+  line-height: 1.25;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.userInfo span {
+  color: #77727f;
+
+  font-size: 11px;
+  line-height: 1.25;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   CONTACTS
+========================================================= */
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 185px;
+}
+
+.contacts span {
+  color: #85818c;
+
+  font-size: 11px;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.contacts span:first-child {
+  color: #c0bcc7;
+
+  font-weight: 500;
+}
+
+/* =========================================================
+   TARIFF
+========================================================= */
+
+.tariff {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  min-width: 110px;
+
+  color: #cfc8dc;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.tariffDot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--tariff-color, #a78bfa);
+
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--tariff-color, #a78bfa) 35%, transparent);
+}
+
+/* =========================================================
+   PERIOD
+========================================================= */
+
+.period {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  white-space: nowrap;
+}
+
+.period span {
+  color: #d0ccd7;
+
+  font-size: 11px;
+  line-height: 1.2;
+
+  font-weight: 650;
+}
+
+.periodSeparator {
+  color: #55515d !important;
+
+  font-size: 12px !important;
+}
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.editButton,
+.mobileEditButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  height: 36px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  border-radius: 9px;
+
+  background: rgba(139, 92, 246, 0.07);
+
+  color: #a78bfa;
+
+  font-family: inherit;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.editButton:hover,
+.mobileEditButton:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+
+  background: rgba(139, 92, 246, 0.14);
+
+  color: #c4b5fd;
+}
+
+.editButton:active,
+.mobileEditButton:active {
+  transform: scale(0.97);
+}
+
+.editButton:focus-visible,
+.mobileEditButton:focus-visible {
+  outline: none;
+
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+.editButton svg,
+.mobileEditButton svg {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 7px 10px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  background: transparent;
+
+  font-family: inherit;
+
+  font-size: 9px;
+  line-height: 1;
+
+  font-weight: 850;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.status span {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+}
+
+.statusActive {
+  border-color: rgba(74, 222, 128, 0.13);
+
+  background: rgba(74, 222, 128, 0.055);
+
+  color: #86dca3;
+}
+
+.statusActive span {
+  background: #4ade80;
+
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.45);
+}
+
+.statusActive:hover {
+  border-color: rgba(74, 222, 128, 0.24);
+
+  background: rgba(74, 222, 128, 0.09);
+}
+
+.statusInactive {
+  border-color: rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #77737e;
+}
+
+.statusInactive span {
+  background: #5d5965;
+}
+
+.statusInactive:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+
+  background: rgba(255, 255, 255, 0.045);
+
+  color: #96919e;
+}
+
+/* =========================================================
+   MOBILE LIST
+========================================================= */
+
+.mobileList {
+  display: none;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+  min-height: 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 40px;
+
+  color: #5c5864;
+
+  text-align: center;
+}
+
+.empty svg {
+  color: #706b77;
+}
+
+.empty span {
+  color: #625e69;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   RESPONSIVE — 1400
+========================================================= */
+
+@media (max-width: 1400px) {
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 1200
+========================================================= */
+
+@media (max-width: 1200px) {
+  .page {
+    padding: 28px;
+  }
+
+  .sectionHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 800
+========================================================= */
+
+@media (max-width: 800px) {
+  .page {
+    padding: 22px 18px;
+  }
+
+  .title {
+    font-size: 27px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tableWrapper {
+    display: none;
+  }
+
+  .mobileList {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 0 15px 15px;
+  }
+
+  .mobileCard {
+    padding: 15px;
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 14px;
+
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.02), transparent 60%),
+      #0d0d12;
+  }
+
+  .mobileTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 13px;
+  }
+
+  .mobileTop .user {
+    min-width: 0;
+  }
+
+  .mobileTop .avatar {
+    width: 39px;
+    height: 39px;
+  }
+
+  .mobileTop .userInfo {
+    min-width: 0;
+  }
+
+  .mobileTop .userInfo strong {
+    font-size: 13px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  .mobileTop .userInfo span {
+    max-width: 180px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  .mobileTop .status {
+    flex-shrink: 0;
+  }
+
+  .mobileContacts {
+    margin-bottom: 9px;
+  }
+
+  .mobileContacts span {
+    color: #77727f;
+
+    font-size: 10px;
+  }
+
+  .mobileTariff {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 11px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.045);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.018);
+
+    color: #c5b8ee;
+
+    font-size: 11px;
+
+    font-weight: 850;
+  }
+
+  .mobileTariff .tariffDot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .mobilePrice {
+    margin-left: auto;
+
+    color: #6f6a77;
+
+    font-size: 10px;
+
+    font-weight: 700;
+  }
+
+  .mobilePeriod {
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 9px;
+    padding: 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, 0.045);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.018);
+  }
+
+  .mobilePeriod > div:not(.mobilePeriodArrow) {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+  }
+
+  .mobilePeriod span {
+    color: #5f5b67;
+
+    font-size: 8px;
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+  }
+
+  .mobilePeriod strong {
+    color: #ddd9e4;
+
+    font-size: 12px;
+    line-height: 1.2;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+  }
+
+  .mobilePeriodArrow {
+    flex-shrink: 0;
+
+    color: #55515d;
+
+    font-size: 12px;
+  }
+
+  .mobileEditButton {
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 10px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 600
+========================================================= */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 18px 14px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .eyebrow {
+    margin-bottom: 7px;
+
+    font-size: 8px;
+  }
+
+  .title {
+    font-size: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    margin-top: 6px;
+
+    font-size: 12px;
+  }
+
+  .infoCard {
+    gap: 11px;
+
+    margin-bottom: 14px;
+
+    padding: 14px;
+  }
+
+  .infoIcon {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+  }
+
+  .infoCard h3 {
+    font-size: 13px;
+  }
+
+  .infoCard p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+
+    gap: 9px;
+
+    margin-bottom: 14px;
+  }
+
+  .statCard {
+    min-height: 78px;
+
+    padding: 14px;
+  }
+
+  .statIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .statValue {
+    font-size: 21px;
+  }
+
+  .usersSection {
+    border-radius: 16px;
+  }
+
+  .sectionHeader {
+    gap: 14px;
+
+    padding: 18px 15px 15px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 18px;
+  }
+
+  .sectionHeader p {
+    font-size: 11px;
+  }
+
+  .search {
+    height: 42px;
+  }
+
+  .mobileList {
+    padding: 0 12px 12px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 430
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 15px 11px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 11px;
+  }
+
+  .infoCard {
+    padding: 12px;
+  }
+
+  .infoCard h3 {
+    font-size: 12px;
+  }
+
+  .infoCard p {
+    font-size: 9px;
+  }
+
+  .sectionHeader {
+    padding: 16px 13px 13px;
+  }
+
+  .mobileList {
+    padding: 0 10px 10px;
+  }
+
+  .mobileCard {
+    padding: 12px;
+  }
+
+  .mobileTop {
+    gap: 7px;
+  }
+
+  .mobileTop .user {
+    gap: 9px;
+  }
+
+  .mobileTop .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobileTop .userInfo strong {
+    font-size: 12px;
+  }
+
+  .mobileTop .userInfo span {
+    max-width: 145px;
+
+    font-size: 9px;
+  }
+
+  .mobileTop .status {
+    padding: 6px 8px;
+
+    font-size: 8px;
+  }
+
+  .mobileContacts span {
+    font-size: 9px;
+  }
+
+  .mobilePeriod {
+    padding: 10px;
+  }
+
+  .mobilePeriod strong {
+    font-size: 11px;
+  }
+
+  .mobileEditButton {
+    height: 40px;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .statCard,
+  .editButton,
+  .mobileEditButton,
+  .status,
+  .search {
+    transition: none;
+  }
+}
