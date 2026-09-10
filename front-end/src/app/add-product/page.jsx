@@ -17,6 +17,11 @@ import styles from "./AddProduct.module.css";
 import { House } from "lucide-react";
 import Link from "next/link";
 
+// Срок VIP/ТОП/Срочно, применяемый при публикации (со списанием тарифа
+// или после оплаты) — продлить на другой срок можно позже через "Мои
+// объявления" (см. profile/ads/PromoteListingModal), где есть выбор дней.
+const DEFAULT_BOOST_DAYS = 7;
+
 const initialForm = {
   title: "",
 
@@ -192,7 +197,7 @@ export default function AddProductPage() {
   }
 
   async function submitProduct() {
-    if (isSubmitting) return;
+    if (isSubmitting) return null;
 
     setIsSubmitting(true);
     setSubmitMessage("");
@@ -547,6 +552,14 @@ export default function AddProductPage() {
 
         listingType: form.listingType || "standard",
 
+        // На сколько дней действует VIP/ТОП/Срочно — актуально только
+        // вместе с соответствующим listingType, для остальных бэкенд его
+        // игнорирует (см. back-end/src/controllers/listingsController.js
+        // createListing).
+        days: ["vip", "top", "urgent"].includes(form.listingType)
+          ? DEFAULT_BOOST_DAYS
+          : undefined,
+
         // =========================
         // ФОТО
         // =========================
@@ -594,8 +607,6 @@ export default function AddProductPage() {
 
       const result = await createListing(token, payload);
 
-      setSubmitMessage(result?.message || "Объявление успешно опубликовано");
-
       // =========================
       // ОЧИСТКА BLOB URL
       // =========================
@@ -617,12 +628,36 @@ export default function AddProductPage() {
       // =========================
       // REDIRECT
       // =========================
+      //
+      // needsPayment=true — бэкенд создал объявление статусом "draft"
+      // (VIP/ТОП без покрытия тарифом либо "Срочно" — платные типы без
+      // бесплатного лимита): оно НЕ опубликовано и не появится в поиске,
+      // пока не пройдёт оплата. Ведём сразу на оплату конкретно этого
+      // объявления — /payment сам создаст счёт по listingId/serviceType/days.
+      if (result?.needsPayment && result?.promotion && result?.data?.id) {
+        const params = new URLSearchParams({
+          type: "promotion",
+          listingId: result.data.id,
+          serviceType: result.promotion.serviceType,
+          days: String(result.promotion.days),
+        });
 
+        router.push(`/payment?${params.toString()}`);
+        return result;
+      }
+
+      // Бесплатная публикация ИЛИ VIP/ТОП, сразу списанные с тарифа —
+      // объявление уже активно.
+      setSubmitMessage(result?.message || "Объявление успешно опубликовано");
       router.push("/profile/ads");
+
+      return result;
     } catch (error) {
       console.error("Ошибка публикации:", error);
 
       setSubmitMessage(error?.message || "Не удалось опубликовать объявление");
+
+      return null;
     } finally {
       setIsSubmitting(false);
     }

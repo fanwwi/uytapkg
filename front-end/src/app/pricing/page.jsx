@@ -25,12 +25,19 @@ import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { getPricing } from "@/utils/api";
 
+// Совпадает по форме с back-end/src/utils/pricingSettings.js
+// DEFAULT_PRICING — реальный /api/settings/pricing всегда отдаёт тарифы
+// как объект { price, activeListings, vipLifts, topLifts }, а не голым
+// числом, поэтому и дефолтная заглушка (до ответа API) должна быть в
+// том же формате — иначе после setPricing(data) с реальными данными
+// pricing.tariffs.start превращается в объект, и getPrice()/getTotal()
+// (которые ждут число) считают NaN.
 const DEFAULT_PRICING = {
   tariffs: {
-    start: 390,
-    optimal: 790,
-    business: 1890,
-    developer: { mode: "individual", value: null },
+    start: { price: 390, activeListings: 5, vipLifts: 1, topLifts: 1 },
+    optimal: { price: 790, activeListings: 15, vipLifts: 2, topLifts: 3 },
+    business: { price: 1890, activeListings: 50, vipLifts: 5, topLifts: 10 },
+    developer: { mode: "individual", value: null, activeListings: 100, vipLifts: 10, topLifts: 20 },
   },
   services: {
     vip: 290,
@@ -39,6 +46,15 @@ const DEFAULT_PRICING = {
     instagram: 390,
   },
 };
+
+// Тариф из API/заглушки может прийти как объект { price, activeListings,
+// vipLifts, topLifts } (актуальный формат) — вытаскиваем нужное поле, не
+// завязываясь на то, что весь объект — число.
+const getTariffPrice = (tariff) =>
+  tariff && typeof tariff === "object" ? tariff.price ?? 0 : tariff ?? 0;
+
+const getTariffLimit = (tariff, field, fallback) =>
+  tariff && typeof tariff === "object" && tariff[field] != null ? tariff[field] : fallback;
 
 export default function Pricing() {
   const router = useRouter();
@@ -66,7 +82,6 @@ export default function Pricing() {
       desc: "Для собственников, которые продают или сдают свою недвижимость",
       features: [
         "2 бесплатных объявления",
-        "2 поднятия в ТОП",
         "Размещение объявления на 45 дней",
         "Поиск и фильтры",
         "Публичный профиль пользователя",
@@ -78,12 +93,12 @@ export default function Pricing() {
     {
       id: "start",
       title: "Старт",
-      price: pricing.tariffs.start,
+      price: getTariffPrice(pricing.tariffs.start),
       icon: Rocket,
       desc: "Для риелторов и частных специалистов",
       features: [
-        "До 10 активных объявлений",
-        "До 5 поднятий в ТОП",
+        `До ${getTariffLimit(pricing.tariffs.start, "activeListings", DEFAULT_PRICING.tariffs.start.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.start, "topLifts", DEFAULT_PRICING.tariffs.start.topLifts)} поднятий в ТОП`,
         "Публичный профиль специалиста",
         "Поиск и фильтры",
         "Размещение объявлений на карте",
@@ -94,13 +109,13 @@ export default function Pricing() {
     {
       id: "optimal",
       title: "Оптимальный",
-      price: pricing.tariffs.optimal,
+      price: getTariffPrice(pricing.tariffs.optimal),
       icon: Crown,
       popular: true,
       desc: "Для активных риелторов и специалистов с большим количеством объектов",
       features: [
-        "До 20 активных объявлений",
-        "До 2 поднятий объявления в VIP",
+        `До ${getTariffLimit(pricing.tariffs.optimal, "activeListings", DEFAULT_PRICING.tariffs.optimal.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.optimal, "vipLifts", DEFAULT_PRICING.tariffs.optimal.vipLifts)} поднятий объявления в VIP`,
         "Публичный профиль специалиста",
         "Размещение объектов на карте",
         "Продвижение объявлений",
@@ -111,12 +126,12 @@ export default function Pricing() {
     {
       id: "business",
       title: "Для агентства",
-      price: pricing.tariffs.business,
+      price: getTariffPrice(pricing.tariffs.business),
       icon: Building2,
       desc: "Для агентств недвижимости и команд",
       features: [
-        "До 40 активных объявлений",
-        "До 4 поднятий в VIP",
+        `До ${getTariffLimit(pricing.tariffs.business, "activeListings", DEFAULT_PRICING.tariffs.business.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.business, "vipLifts", DEFAULT_PRICING.tariffs.business.vipLifts)} поднятий в VIP`,
         "Профиль агентства",
         "Размещение объектов агентства",
         "Сравнение объектов в избранном"

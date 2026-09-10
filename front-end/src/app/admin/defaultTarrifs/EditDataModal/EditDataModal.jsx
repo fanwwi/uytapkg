@@ -20,7 +20,7 @@ const addDays = (dateString, days) => {
   return date.toISOString().split("T")[0];
 };
 
-export default function EditDataModal({ isOpen, user, onClose, onSave }) {
+export default function EditDataModal({ isOpen, user, onClose, onSave, saving }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -43,7 +43,7 @@ export default function EditDataModal({ isOpen, user, onClose, onSave }) {
     setEndDate(addDays(baseDate, days));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!startDate || !endDate) {
       return;
     }
@@ -52,12 +52,10 @@ export default function EditDataModal({ isOpen, user, onClose, onSave }) {
       return;
     }
 
-    onSave({
+    await onSave({
       startDate,
       endDate,
     });
-
-    onClose();
   };
 
   return (
@@ -221,6 +219,7 @@ export default function EditDataModal({ isOpen, user, onClose, onSave }) {
             type="button"
             className={styles.cancelButton}
             onClick={onClose}
+            disabled={saving}
           >
             Отмена
           </button>
@@ -229,9 +228,10 @@ export default function EditDataModal({ isOpen, user, onClose, onSave }) {
             type="button"
             className={styles.saveButton}
             onClick={handleSave}
+            disabled={saving}
           >
             <Check size={16} />
-            Сохранить изменения
+            {saving ? "Сохранение..." : "Сохранить изменения"}
           </button>
         </div>
       </div>

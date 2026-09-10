@@ -13,43 +13,7 @@ import {
 
 import styles from "./AddTarrifModal.module.css";
 
-const MOCK_USERS = [
-  {
-    id: 101,
-    name: "Азизбек Маматов",
-    phone: "+996 555 123 456",
-  },
-  {
-    id: 102,
-    name: "Нурбек Садыков",
-    phone: "+996 700 456 789",
-  },
-  {
-    id: 103,
-    name: "Айдана Токтосунова",
-    phone: "+996 777 321 654",
-  },
-  {
-    id: 104,
-    name: "Бекзат Абдрахманов",
-    phone: "+996 550 987 321",
-  },
-  {
-    id: 105,
-    name: "Эльдар Осмонов",
-    phone: "+996 501 222 333",
-  },
-  {
-    id: 106,
-    name: "Мээрим Исакова",
-    phone: "+996 707 444 555",
-  },
-  {
-    id: 107,
-    name: "Самат Касымов",
-    phone: "+996 555 777 888",
-  },
-];
+import { searchAdminUsers } from "@/utils/api";
 
 const formatDateForInput = (date) => {
   const year = date.getFullYear();
@@ -154,10 +118,10 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
     setSearched(false);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const searchNumbers = phone.replace(/\D/g, "");
 
-    if (searchNumbers.length < 9) {
+    if (searchNumbers.length < 3) {
       setUsers([]);
       setSearched(true);
       return;
@@ -167,19 +131,18 @@ export default function AddTariffModal({ isOpen, onClose, onSubmit }) {
     setSearched(false);
     setUsers([]);
 
-    setTimeout(() => {
-      const normalizedSearch = searchNumbers.slice(-9);
+    try {
+      const token = localStorage.getItem("uytap_token");
+      const results = await searchAdminUsers(token, searchNumbers);
 
-      const results = MOCK_USERS.filter((user) => {
-        const normalizedUserPhone = user.phone.replace(/\D/g, "").slice(-9);
-
-        return normalizedUserPhone.includes(normalizedSearch);
-      });
-
-      setUsers(results);
+      setUsers(results || []);
+    } catch (error) {
+      console.error("Ошибка поиска пользователей:", error);
+      setUsers([]);
+    } finally {
       setSearching(false);
       setSearched(true);
-    }, 500);
+    }
   };
 
   const handleSelectUser = (user) => {

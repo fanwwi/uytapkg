@@ -162,6 +162,24 @@ export async function getUserPublicProfile(id) {
   return data;
 }
 
+// Сводка по текущему тарифу пользователя (активен/тип/остаток
+// объявлений и поднятий VIP/TOP) — блок "Мой тариф" в профиле.
+export async function getMySubscription(token) {
+  const response = await fetch(`${API_URL}/subscriptions/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения данных тарифа");
+  }
+
+  return data.data;
+}
+
 export async function getMe(token) {
   const response = await fetch(`${API_URL}/auth/me`, {
     headers: {
@@ -469,6 +487,28 @@ export async function createPromotionPayment(token, { listingId, serviceType, da
   return data.data;
 }
 
+// Бесплатное поднятие VIP/TOP за счёт лимита тарифа — пробуем ДО того,
+// как вести пользователя на оплату. { granted: false } — у пользователя
+// нет тарифа/лимит исчерпан, нужно продолжить обычной платной покупкой.
+export async function promoteListingWithTariff(token, listingId, { serviceType, days }) {
+  const response = await fetch(`${API_URL}/listings/${listingId}/promote-with-tariff`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ serviceType, days }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка проверки тарифа");
+  }
+
+  return data.data;
+}
+
 export async function getPaymentStatus(token, orderId) {
   const response = await fetch(`${API_URL}/payments/${orderId}/status`, {
     headers: {
@@ -553,6 +593,151 @@ export async function updatePricing(token, pricing) {
 
   if (!response.ok || !data.success) {
     throw new Error(data.message || "Не удалось сохранить цены");
+  }
+
+  return data.data;
+}
+
+// Поиск пользователя по номеру телефона (выдача индивидуального тарифа)
+export async function searchAdminUsers(token, phone) {
+  const response = await fetch(
+    `${API_URL}/admin/users/search?phone=${encodeURIComponent(phone)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка поиска пользователей");
+  }
+
+  return data.data;
+}
+
+// Дефолтные тарифы (start/optimal/business), купленные через оплату
+export async function getDefaultTariffs(token) {
+  const response = await fetch(`${API_URL}/admin/tariffs/default`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения списка тарифов");
+  }
+
+  return data.data;
+}
+
+export async function updateDefaultTariffPeriod(token, id, { startDate, endDate }) {
+  const response = await fetch(`${API_URL}/admin/tariffs/default/${id}/period`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ startDate, endDate }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось изменить период тарифа");
+  }
+
+  return data.data;
+}
+
+export async function toggleDefaultTariff(token, id) {
+  const response = await fetch(`${API_URL}/admin/tariffs/default/${id}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось изменить статус тарифа");
+  }
+
+  return data.data;
+}
+
+// Индивидуальные тарифы, выданные вручную одному пользователю
+export async function getIndividualTariffs(token) {
+  const response = await fetch(`${API_URL}/admin/tariffs/individual`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Ошибка получения списка тарифов");
+  }
+
+  return data.data;
+}
+
+export async function createIndividualTariff(token, payload) {
+  const response = await fetch(`${API_URL}/admin/tariffs/individual`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось выдать тариф");
+  }
+
+  return data.data;
+}
+
+export async function updateIndividualTariff(token, id, payload) {
+  const response = await fetch(`${API_URL}/admin/tariffs/individual/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось изменить тариф");
+  }
+
+  return data.data;
+}
+
+export async function toggleIndividualTariff(token, id) {
+  const response = await fetch(`${API_URL}/admin/tariffs/individual/${id}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Не удалось изменить статус тарифа");
   }
 
   return data.data;

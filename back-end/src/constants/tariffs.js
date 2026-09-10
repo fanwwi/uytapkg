@@ -24,10 +24,14 @@ export const PERIOD_DISCOUNTS = {
 export function getTariff(tariffId, pricing) {
   if (!pricing) return null;
 
+  // pricing.tariffs.<id> — объект { price, activeListings, vipLifts,
+  // topLifts } (см. utils/pricingSettings.js); лимиты нужны, чтобы при
+  // выдаче/продлении дефолтного тарифа (subscriptionsService.js) знать,
+  // сколько объявлений/поднятий полагается пользователю.
   const map = {
-    start: { id: "start", title: "СТАРТ", price: pricing.tariffs.start },
-    optimal: { id: "optimal", title: "ОПТИМАЛЬНЫЙ", price: pricing.tariffs.optimal },
-    business: { id: "business", title: "БИЗНЕС", price: pricing.tariffs.business },
+    start: { id: "start", title: "СТАРТ", ...pricing.tariffs.start },
+    optimal: { id: "optimal", title: "ОПТИМАЛЬНЫЙ", ...pricing.tariffs.optimal },
+    business: { id: "business", title: "БИЗНЕС", ...pricing.tariffs.business },
   };
 
   return map[tariffId] || null;

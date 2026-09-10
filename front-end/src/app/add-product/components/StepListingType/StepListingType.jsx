@@ -11,8 +11,6 @@ import {
   Camera,
   CreditCard,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-
 import styles from "./StepListingType.module.css";
 
 const types = [
@@ -106,8 +104,6 @@ export default function StepListingType({
   onSubmit,
   isSubmitting,
 }) {
-  const router = useRouter();
-
   const title = form.title || "";
   const description = form.description || "";
 
@@ -143,30 +139,18 @@ export default function StepListingType({
     });
   };
 
+  // Публикация (в т.ч. для платных типов) полностью решается на бэкенде
+  // (см. add-product/page.jsx submitProduct и
+  // back-end/src/controllers/listingsController.js createListing):
+  // - бесплатные типы (обычное/Instagram) публикуются сразу;
+  // - VIP/ТОП сначала пробуют списаться с лимита тарифа — если получилось,
+  //   тоже публикуются сразу, уже продвинутыми;
+  // - иначе (в т.ч. всегда для "Срочно") объявление создаётся, но не
+  //   публикуется, пока не пройдёт оплата — родитель сам уводит на
+  //   /payment.
   const handlePublish = () => {
     if (!isReady || isSubmitting) return;
-
-    /*
-     * Бесплатная публикация.
-     *
-     * Instagram пока тоже публикуется как обычное объявление — оплата
-     * этой услуги ещё не реализована. Заявка на публикацию в Instagram
-     * создаётся на бэкенде автоматически и дальше обрабатывается вручную
-     * через админку.
-     */
-    if (!paidListingTypes.includes(form.listingType)) {
-      onSubmit();
-      return;
-    }
-
-    /*
-     * Остальные платные услуги (VIP/Срочно/ТОП):
-     * 1. Пользователь переходит на страницу оплаты.
-     * 2. Оплачивает услугу.
-     * 3. Получает чек.
-     * 4. Продолжает публикацию.
-     */
-    router.push(`/add-product/payment?service=${form.listingType}`);
+    onSubmit();
   };
 
   const countryName = form.country === "turkey" ? "Турция" : "Кыргызстан";

@@ -27,31 +27,31 @@ const DEFAULT_VALUES = {
     start: {
       price: 390,
       activeListings: 5,
-      topRaises: 1,
-      vipListings: 1,
+      topLifts: 1,
+      vipLifts: 1,
     },
 
     optimal: {
       price: 790,
       activeListings: 15,
-      topRaises: 3,
-      vipListings: 2,
+      topLifts: 3,
+      vipLifts: 2,
     },
 
     business: {
       price: 1890,
       activeListings: 50,
-      topRaises: 10,
-      vipListings: 5,
+      topLifts: 10,
+      vipLifts: 5,
     },
 
     developer: {
       mode: "individual",
-      price: "",
+      value: "",
 
       activeListings: 100,
-      topRaises: 20,
-      vipListings: 10,
+      topLifts: 20,
+      vipLifts: 10,
     },
   },
 
@@ -160,30 +160,30 @@ export default function PricingEditModal({
           price: source?.tariffs?.start?.price ?? 390,
           activeListings:
             source?.tariffs?.start?.activeListings ?? 5,
-          topRaises:
-            source?.tariffs?.start?.topRaises ?? 1,
-          vipListings:
-            source?.tariffs?.start?.vipListings ?? 1,
+          topLifts:
+            source?.tariffs?.start?.topLifts ?? 1,
+          vipLifts:
+            source?.tariffs?.start?.vipLifts ?? 1,
         },
 
         optimal: {
           price: source?.tariffs?.optimal?.price ?? 790,
           activeListings:
             source?.tariffs?.optimal?.activeListings ?? 15,
-          topRaises:
-            source?.tariffs?.optimal?.topRaises ?? 3,
-          vipListings:
-            source?.tariffs?.optimal?.vipListings ?? 2,
+          topLifts:
+            source?.tariffs?.optimal?.topLifts ?? 3,
+          vipLifts:
+            source?.tariffs?.optimal?.vipLifts ?? 2,
         },
 
         business: {
           price: source?.tariffs?.business?.price ?? 1890,
           activeListings:
             source?.tariffs?.business?.activeListings ?? 50,
-          topRaises:
-            source?.tariffs?.business?.topRaises ?? 10,
-          vipListings:
-            source?.tariffs?.business?.vipListings ?? 5,
+          topLifts:
+            source?.tariffs?.business?.topLifts ?? 10,
+          vipLifts:
+            source?.tariffs?.business?.vipLifts ?? 5,
         },
 
         developer: {
@@ -191,19 +191,19 @@ export default function PricingEditModal({
             source?.tariffs?.developer?.mode ??
             "individual",
 
-          price:
-            source?.tariffs?.developer?.price ??
+          value:
             source?.tariffs?.developer?.value ??
+            source?.tariffs?.developer?.price ??
             "",
 
           activeListings:
             source?.tariffs?.developer?.activeListings ?? 100,
 
-          topRaises:
-            source?.tariffs?.developer?.topRaises ?? 20,
+          topLifts:
+            source?.tariffs?.developer?.topLifts ?? 20,
 
-          vipListings:
-            source?.tariffs?.developer?.vipListings ?? 10,
+          vipLifts:
+            source?.tariffs?.developer?.vipLifts ?? 10,
         },
       },
 
@@ -261,6 +261,10 @@ export default function PricingEditModal({
   ======================================================= */
 
   const updateTariffPrice = (id, value) => {
+    // У тарифа "Застройщик" цена хранится в поле value (mode: "numeric"),
+    // у остальных тарифов — в price.
+    const field = id === "developer" ? "value" : "price";
+
     setForm((prev) => ({
       ...prev,
 
@@ -269,7 +273,7 @@ export default function PricingEditModal({
 
         [id]: {
           ...prev.tariffs[id],
-          price: value,
+          [field]: value,
         },
       },
     }));
@@ -340,10 +344,10 @@ export default function PricingEditModal({
 
           mode,
 
-          price:
+          value:
             mode === "individual"
               ? ""
-              : prev.tariffs.developer.price,
+              : prev.tariffs.developer.value,
         },
       },
     }));
@@ -370,10 +374,10 @@ export default function PricingEditModal({
 
       if (item.id === "developer") {
         if (tariff.mode === "numeric") {
-          const price = Number(tariff.price);
+          const price = Number(tariff.value);
 
           if (
-            tariff.price === "" ||
+            tariff.value === "" ||
             !Number.isFinite(price) ||
             price < 0
           ) {
@@ -415,14 +419,14 @@ export default function PricingEditModal({
          TOP RAISES
       --------------------------------------------------- */
 
-      const topRaises = Number(tariff.topRaises);
+      const topLifts = Number(tariff.topLifts);
 
       if (
-        tariff.topRaises === "" ||
-        !Number.isInteger(topRaises) ||
-        topRaises < 0
+        tariff.topLifts === "" ||
+        !Number.isInteger(topLifts) ||
+        topLifts < 0
       ) {
-        nextErrors[`${item.id}.topRaises`] =
+        nextErrors[`${item.id}.topLifts`] =
           "Введите корректное количество";
       }
 
@@ -430,16 +434,16 @@ export default function PricingEditModal({
          VIP LISTINGS
       --------------------------------------------------- */
 
-      const vipListings = Number(
-        tariff.vipListings
+      const vipLifts = Number(
+        tariff.vipLifts
       );
 
       if (
-        tariff.vipListings === "" ||
-        !Number.isInteger(vipListings) ||
-        vipListings < 0
+        tariff.vipLifts === "" ||
+        !Number.isInteger(vipLifts) ||
+        vipLifts < 0
       ) {
-        nextErrors[`${item.id}.vipListings`] =
+        nextErrors[`${item.id}.vipLifts`] =
           "Введите корректное количество";
       }
     });
@@ -484,12 +488,12 @@ export default function PricingEditModal({
             form.tariffs.start.activeListings
           ),
 
-          topRaises: Number(
-            form.tariffs.start.topRaises
+          topLifts: Number(
+            form.tariffs.start.topLifts
           ),
 
-          vipListings: Number(
-            form.tariffs.start.vipListings
+          vipLifts: Number(
+            form.tariffs.start.vipLifts
           ),
         },
 
@@ -500,12 +504,12 @@ export default function PricingEditModal({
             form.tariffs.optimal.activeListings
           ),
 
-          topRaises: Number(
-            form.tariffs.optimal.topRaises
+          topLifts: Number(
+            form.tariffs.optimal.topLifts
           ),
 
-          vipListings: Number(
-            form.tariffs.optimal.vipListings
+          vipLifts: Number(
+            form.tariffs.optimal.vipLifts
           ),
         },
 
@@ -516,33 +520,33 @@ export default function PricingEditModal({
             form.tariffs.business.activeListings
           ),
 
-          topRaises: Number(
-            form.tariffs.business.topRaises
+          topLifts: Number(
+            form.tariffs.business.topLifts
           ),
 
-          vipListings: Number(
-            form.tariffs.business.vipListings
+          vipLifts: Number(
+            form.tariffs.business.vipLifts
           ),
         },
 
         developer: {
           mode: form.tariffs.developer.mode,
 
-          price:
+          value:
             form.tariffs.developer.mode === "numeric"
-              ? Number(form.tariffs.developer.price)
-              : "",
+              ? Number(form.tariffs.developer.value)
+              : null,
 
           activeListings: Number(
             form.tariffs.developer.activeListings
           ),
 
-          topRaises: Number(
-            form.tariffs.developer.topRaises
+          topLifts: Number(
+            form.tariffs.developer.topLifts
           ),
 
-          vipListings: Number(
-            form.tariffs.developer.vipListings
+          vipLifts: Number(
+            form.tariffs.developer.vipLifts
           ),
         },
       },
@@ -735,7 +739,7 @@ export default function PricingEditModal({
                               type="number"
                               min="0"
                               value={formatValue(
-                                tariff.price
+                                tariff.value
                               )}
                               onChange={(event) =>
                                 updateTariffPrice(
@@ -909,12 +913,12 @@ export default function PricingEditModal({
                               min="0"
                               step="1"
                               value={formatValue(
-                                tariff.topRaises
+                                tariff.topLifts
                               )}
                               onChange={(event) =>
                                 updateTariffLimit(
                                   item.id,
-                                  "topRaises",
+                                  "topLifts",
                                   event.target.value
                                 )
                               }
@@ -927,7 +931,7 @@ export default function PricingEditModal({
                           </div>
 
                           {errors[
-                            `${item.id}.topRaises`
+                            `${item.id}.topLifts`
                           ] && (
                             <small
                               className={
@@ -936,7 +940,7 @@ export default function PricingEditModal({
                             >
                               {
                                 errors[
-                                  `${item.id}.topRaises`
+                                  `${item.id}.topLifts`
                                 ]
                               }
                             </small>
@@ -972,12 +976,12 @@ export default function PricingEditModal({
                               min="0"
                               step="1"
                               value={formatValue(
-                                tariff.vipListings
+                                tariff.vipLifts
                               )}
                               onChange={(event) =>
                                 updateTariffLimit(
                                   item.id,
-                                  "vipListings",
+                                  "vipLifts",
                                   event.target.value
                                 )
                               }
@@ -990,7 +994,7 @@ export default function PricingEditModal({
                           </div>
 
                           {errors[
-                            `${item.id}.vipListings`
+                            `${item.id}.vipLifts`
                           ] && (
                             <small
                               className={
@@ -999,7 +1003,7 @@ export default function PricingEditModal({
                             >
                               {
                                 errors[
-                                  `${item.id}.vipListings`
+                                  `${item.id}.vipLifts`
                                 ]
                               }
                             </small>

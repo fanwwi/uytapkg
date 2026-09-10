@@ -13,6 +13,16 @@ import {
   completeInstagramRequestAdmin,
 } from "../controllers/adminController.js";
 import {
+  searchUsersByPhone,
+  listDefaultTariffs,
+  updateDefaultTariffPeriod,
+  toggleDefaultTariff,
+  listIndividualTariffs,
+  createIndividualTariff,
+  updateIndividualTariff,
+  toggleIndividualTariff,
+} from "../controllers/tariffsController.js";
+import {
   getAdminBanners,
   uploadBannerImage,
   createBanner,
@@ -49,6 +59,30 @@ router.get("/payments", authenticateToken, requireAdmin, listPayments);
 
 // Изменение цен тарифов и услуг (чтение — публичное, /api/settings/pricing)
 router.put("/pricing", authenticateToken, requireAdmin, updatePricing);
+
+// Поиск пользователя по номеру телефона (модалка выдачи тарифа)
+router.get("/users/search", authenticateToken, requireAdmin, searchUsersByPhone);
+
+// Дефолтные тарифы (start/optimal/business), купленные через оплату
+router.get("/tariffs/default", authenticateToken, requireAdmin, listDefaultTariffs);
+router.patch(
+  "/tariffs/default/:id/period",
+  authenticateToken,
+  requireAdmin,
+  updateDefaultTariffPeriod
+);
+router.patch("/tariffs/default/:id/toggle", authenticateToken, requireAdmin, toggleDefaultTariff);
+
+// Индивидуальные тарифы, выданные вручную одному пользователю
+router.get("/tariffs/individual", authenticateToken, requireAdmin, listIndividualTariffs);
+router.post("/tariffs/individual", authenticateToken, requireAdmin, createIndividualTariff);
+router.put("/tariffs/individual/:id", authenticateToken, requireAdmin, updateIndividualTariff);
+router.patch(
+  "/tariffs/individual/:id/toggle",
+  authenticateToken,
+  requireAdmin,
+  toggleIndividualTariff
+);
 
 router.get("/lawyers", authenticateToken, requireAdmin, listLawyers);
 router.post("/lawyers", authenticateToken, requireAdmin, createLawyer);

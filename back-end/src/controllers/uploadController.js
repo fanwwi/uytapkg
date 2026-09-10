@@ -1,5 +1,6 @@
 import { uploadPublicImageToStorage } from "../utils/storage.js";
 import { applyWatermark } from "../utils/watermark.js";
+import { recordUploadOwner } from "../utils/uploadOwnership.js";
 
 /**
  * POST /api/upload — публичная загрузка фото/логотипа.
@@ -59,10 +60,12 @@ export const uploadListingPhoto = async (req, res) => {
       });
     }
 
-    const { publicUrl } = await uploadPublicImageToStorage({
+    const { publicUrl, objectPath } = await uploadPublicImageToStorage({
       ...req.file,
       buffer: watermarkedBuffer,
     });
+
+    await recordUploadOwner(objectPath, req.user.id);
 
     return res.json({
       success: true,
@@ -103,10 +106,12 @@ export const uploadComplexPhoto = async (req, res) => {
       });
     }
 
-    const { publicUrl } = await uploadPublicImageToStorage({
+    const { publicUrl, objectPath } = await uploadPublicImageToStorage({
       ...req.file,
       buffer: watermarkedBuffer,
     });
+
+    await recordUploadOwner(objectPath, req.user.id);
 
     return res.json({
       success: true,

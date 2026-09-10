@@ -1,0 +1,21 @@
+# Секреты — никогда не коммитить
+.env
+.env.*
+*.env
+back-end.env
+
+# Зависимости
+node_modules/
+
+# Сборки
+.next/
+dist/
+build/
+
+# Логи и временные файлы
+*.log
+.DS_Store
+Thumbs.db
+
+# Локальные scratch/debug-файлы
+**/scratch/

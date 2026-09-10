@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, Crown, Zap, Rocket, Camera, ArrowRight, AlertCircle } from "lucide-react";
 
-import { getPricing } from "@/utils/api";
+import { getPricing, promoteListingWithTariff } from "@/utils/api";
 import styles from "./PromoteListingModal.module.css";
 
 const SERVICES = [
@@ -40,13 +40,16 @@ const SERVICES = [
 
 const DAY_OPTIONS = [1, 3, 7, 14, 30];
 
-export default function PromoteListingModal({ isOpen, onClose, listing }) {
+const TARIFF_BOOSTABLE_SERVICES = ["vip", "top"];
+
+export default function PromoteListingModal({ isOpen, onClose, listing, onPromoted }) {
   const router = useRouter();
 
   const [pricing, setPricing] = useState(null);
   const [pricingError, setPricingError] = useState("");
   const [serviceType, setServiceType] = useState("vip");
   const [days, setDays] = useState(7);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -54,6 +57,7 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
     setServiceType("vip");
     setDays(7);
     setPricingError("");
+    setSubmitting(false);
 
     getPricing()
       .then((data) => setPricing(data))
@@ -84,7 +88,7 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
       : Number(pricePerUnit)
     : null;
 
-  const handleSubmit = () => {
+  const goToPayment = () => {
     const params = new URLSearchParams({
       type: "promotion",
       listingId: listing.id,
@@ -96,6 +100,43 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
     }
 
     router.push(`/payment?${params.toString()}`);
+  };
+
+  const handleSubmit = async () => {
+    if (submitting) return;
+
+    // VIP/TOP сначала пытаемся списать бесплатно с лимита тарифа —
+    // "Срочно" и Instagram в лимиты тарифа не входят, для них сразу оплата.
+    if (!TARIFF_BOOSTABLE_SERVICES.includes(serviceType)) {
+      goToPayment();
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const token = localStorage.getItem("uytap_token");
+
+      const result = await promoteListingWithTariff(token, listing.id, {
+        serviceType,
+        days,
+      });
+
+      if (result?.granted) {
+        onPromoted?.();
+        onClose();
+        return;
+      }
+
+      goToPayment();
+    } catch (error) {
+      console.error("Ошибка проверки тарифа:", error);
+      // Не блокируем пользователя из-за сбоя проверки тарифа — платный
+      // путь всё ещё должен быть доступен.
+      goToPayment();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -193,9 +234,9 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             type="button"
             className={styles.submit}
             onClick={handleSubmit}
-            disabled={!pricing}
+            disabled={!pricing || submitting}
           >
-            Перейти к оплате
+            {submitting ? "Проверяем тариф..." : "Перейти к оплате"}
             <ArrowRight size={16} />
           </button>
         </div>

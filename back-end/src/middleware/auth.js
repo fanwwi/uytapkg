@@ -13,7 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Генерация JWT токена
 export const generateToken = (payload) => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d", algorithm: "HS256" });
 };
 
 // Middleware для проверки токена доступа
@@ -28,7 +28,14 @@ export const authenticateToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, JWT_SECRET, async (err, decodedUser) => {
+  // Явно ограничиваем допустимый алгоритм подписи — jsonwebtoken по
+  // умолчанию доверяет алгоритму, указанному в самом токене (поле `alg`
+  // в заголовке), а не жёстко привязывает его к вызову. Без этой опции
+  // теоретическая atack-поверхность на смену алгоритма (например, если бы
+  // где-то в системе также использовался RS256 с публичным ключом) была
+  // бы шире, чем нужно — сейчас мы всегда подписываем только HS256 (см.
+  // generateToken выше), поэтому verify должен проверять только его.
+  jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] }, async (err, decodedUser) => {
     if (err) {
       return res.status(403).json({
         success: false,

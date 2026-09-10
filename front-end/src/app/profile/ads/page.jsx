@@ -80,7 +80,7 @@ export default function Ads() {
     };
   };
 
-  useEffect(() => {
+  const loadListings = () => {
     const token = localStorage.getItem("uytap_token");
 
     if (!token) {
@@ -106,6 +106,11 @@ export default function Ads() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   // DELETE
@@ -561,6 +566,7 @@ export default function Ads() {
           isOpen={Boolean(promotingListing)}
           onClose={() => setPromotingListing(null)}
           listing={promotingListing}
+          onPromoted={loadListings}
         />
       </div>
     </main>

@@ -38,6 +38,28 @@ const isTrustedImageUrl = (value) => {
 const trustedImageUrl = (message = "Изображение должно быть загружено через форму загрузки") =>
   z.string().refine(isTrustedImageUrl, { message });
 
+// =======================================================
+// Внешние ссылки, которые попадают напрямую в <a href>/window.open на
+// фронте (сайт риэлтора/агентства, ссылка на документы ЖК и т.п.) —
+// разрешаем только http(s), запрещая javascript:/data:/vbscript: и
+// прочие псевдо-протоколы. Без этого сохранённая в профиле ссылка вида
+// "javascript:..." выполнялась бы в контексте нашего сайта у любого, кто
+// кликнет по ней на публичной странице — Stored XSS. Тот же принцип, что
+// и у isSafeBannerLink ниже, но для полей, где допустимы только
+// абсолютные http(s)-ссылки (не относительные пути).
+const isHttpsOrHttpUrl = (value) => {
+  if (typeof value !== "string") return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
+const httpUrlField = (message = "Ссылка должна начинаться с http:// или https://") =>
+  z.string().refine((value) => !value || isHttpsOrHttpUrl(value), { message });
+
 // Нормализация номера телефона (очистка от лишних символов)
 export const normalizePhone = (phone) => {
   if (!phone) return "";
@@ -99,7 +121,7 @@ export const updateMeSchema = z.object({
   officeAddress: z.string().optional().nullable(),
   agencyName: z.string().optional().nullable(),
   actualAddress: z.string().optional().nullable(),
-  website: z.string().optional().nullable(),
+  website: httpUrlField("Сайт должен быть ссылкой http(s)").optional().nullable(),
   socials: z.any().optional(),
   region: z.string().optional().nullable(),
 });
@@ -174,6 +196,16 @@ export const createListingSchema = z
     beachDistanceTo: z.number().optional().nullable(),
     developerOrComplex: z.string().optional().nullable(),
     listingType: z.string().optional().nullable(),
+    // На сколько дней действует VIP/ТОП/Срочно, если listingType — платный
+    // тип размещения (см. controllers/listingsController.js createListing).
+    // Для остальных listingType игнорируется. Диапазон совпадает с
+    // promoteWithTariffSchema/createPromotionPaymentSchema.
+    days: z
+      .number({ invalid_type_error: "Количество дней должно быть числом" })
+      .int("Количество дней должно быть целым числом")
+      .min(1, "Минимум 1 день")
+      .max(90, "Максимум 90 дней")
+      .optional(),
     isResort: z.boolean().optional(),
     resortFilters: z.record(z.any()).optional(),
     features: z.record(z.any()).optional(),
@@ -328,7 +360,8 @@ export const createComplexSchema = z
     areaSotka: z.union([z.number(), z.string()]).optional().nullable(),
     documentsUrl: z
       .string({ required_error: "Укажите ссылку на документы ЖК" })
-      .min(1, "Укажите ссылку на документы ЖК"),
+      .min(1, "Укажите ссылку на документы ЖК")
+      .refine(isHttpsOrHttpUrl, { message: "Ссылка на документы должна начинаться с http:// или https://" }),
     amenities: z.array(z.string()).optional(),
     images: z.array(trustedImageUrl("Некорректная ссылка на фото ЖК")).optional(),
     features: z.record(z.any()).optional(),
@@ -370,6 +403,15 @@ const priceField = (label) =>
     .number({ invalid_type_error: `Цена «${label}» должна быть числом` })
     .min(0, `Цена «${label}» не может быть отрицательной`)
     .max(MAX_PRICE, `Цена «${label}» слишком велика`);
+
+const MAX_LIMIT = 100_000;
+
+const limitField = (label) =>
+  z
+    .number({ invalid_type_error: `«${label}» должно быть числом` })
+    .int(`«${label}» должно быть целым числом`)
+    .min(0, `«${label}» не может быть отрицательным`)
+    .max(MAX_LIMIT, `«${label}» слишком велико`);
 
 // Схема рекламного баннера (POST/PUT /api/admin/banners)
 //
@@ -459,11 +501,25 @@ export const updateBannerSchema = z
     }
   });
 
+// Лимиты тарифа: сколько активных объявлений и платных поднятий
+// (VIP/TOP) включено в план. Общие для всех трёх тарифов + застройщика.
+const tariffLimitsShape = (label) => ({
+  activeListings: limitField(`${label} — активные объявления`),
+  vipLifts: limitField(`${label} — поднятия VIP`),
+  topLifts: limitField(`${label} — поднятия TOP`),
+});
+
+const tariffPlanSchema = (label) =>
+  z.object({
+    price: priceField(label),
+    ...tariffLimitsShape(label),
+  });
+
 export const pricingSchema = z.object({
   tariffs: z.object({
-    start: priceField("СТАРТ"),
-    optimal: priceField("ОПТИМАЛЬНЫЙ"),
-    business: priceField("БИЗНЕС"),
+    start: tariffPlanSchema("СТАРТ"),
+    optimal: tariffPlanSchema("ОПТИМАЛЬНЫЙ"),
+    business: tariffPlanSchema("БИЗНЕС"),
     developer: z
       .object({
         mode: z.enum(["individual", "numeric"], {
@@ -475,6 +531,7 @@ export const pricingSchema = z.object({
           (v) => (v === "" || v === undefined ? null : v),
           z.number().min(0).max(MAX_PRICE).nullable()
         ),
+        ...tariffLimitsShape("ЗАСТРОЙЩИК"),
       })
       .superRefine((data, ctx) => {
         if (data.mode === "numeric" && (data.value === null || data.value === undefined)) {
@@ -492,6 +549,77 @@ export const pricingSchema = z.object({
     top: priceField("ТОП"),
     instagram: priceField("Instagram"),
   }),
+});
+
+// =======================================================
+// Индивидуальные и дефолтные тарифы (админка /admin/tarrifs,
+// /admin/defaultTarrifs) — см. controllers/tariffsController.js
+// =======================================================
+
+const tariffPeriodShape = {
+  startDate: isoDate,
+  endDate: isoDate,
+};
+
+const refineTariffPeriod = (data, ctx) => {
+  if (data.endDate < data.startDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Дата окончания не может быть раньше даты начала",
+      path: ["endDate"],
+    });
+  }
+};
+
+// Изменение периода дефолтного тарифа (PATCH /api/admin/tariffs/default/:id/period)
+export const tariffPeriodSchema = z.object(tariffPeriodShape).superRefine(refineTariffPeriod);
+
+const MAX_TARIFF_NAME_LENGTH = 100;
+
+const individualTariffFieldsSchema = z.object({
+  userId: z.string().uuid("Некорректный ID пользователя"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Укажите название тарифа")
+    .max(MAX_TARIFF_NAME_LENGTH, "Слишком длинное название тарифа"),
+  activeListings: limitField("Активные объявления"),
+  vipBoosts: limitField("Поднятия VIP"),
+  topBoosts: limitField("Поднятия TOP"),
+  ...tariffPeriodShape,
+});
+
+// Выдача индивидуального тарифа (POST /api/admin/tariffs/individual)
+export const createIndividualTariffSchema =
+  individualTariffFieldsSchema.superRefine(refineTariffPeriod);
+
+// Редактирование индивидуального тарифа (PUT /api/admin/tariffs/individual/:id)
+// — пользователя переназначить нельзя, только условия и период.
+export const updateIndividualTariffSchema = individualTariffFieldsSchema
+  .omit({ userId: true })
+  .superRefine(refineTariffPeriod);
+
+// Бесплатное поднятие VIP/TOP за счёт лимита тарифа
+// (POST /api/listings/:id/promote-with-tariff) — только vip/top, "срочно"
+// в лимиты тарифа не входит и всегда покупается отдельно.
+export const promoteWithTariffSchema = z.object({
+  serviceType: z.enum(["vip", "top"], {
+    errorMap: () => ({ message: "Некорректный тип продвижения" }),
+  }),
+  days: z
+    .number({ invalid_type_error: "Количество дней должно быть числом" })
+    .int("Количество дней должно быть целым числом")
+    .min(1, "Минимум 1 день")
+    .max(90, "Максимум 90 дней"),
+});
+
+// Поиск пользователя по номеру телефона (GET /api/admin/users/search)
+export const userPhoneSearchSchema = z.object({
+  phone: z
+    .string()
+    .trim()
+    .min(3, "Введите минимум 3 цифры номера")
+    .max(30, "Слишком длинный номер"),
 });
 
 // Разовая покупка продвижения объявления (POST /api/payments/promotion/create).
