@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Search, House } from "lucide-react";
+import { Heart, Search, House, GitCompare, Check } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getFavorites, removeFavorite as removeFavoriteApi } from "@/utils/api";
@@ -8,6 +8,7 @@ import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./Favorites.module.css";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
+import CompareListingsModal from "./CompareListingsModal/CompareListingsModal";
 
 const categories = [
   "Все",
@@ -28,6 +29,11 @@ export default function Favorites() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
+
+  // COMPARE
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedForCompare, setSelectedForCompare] = useState([]);
+  const [compareOpen, setCompareOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("uytap_token");
@@ -68,6 +74,8 @@ export default function Favorites() {
 
       if (res.success) {
         setFavorites((prev) => prev.filter((item) => item.id !== id));
+
+        setSelectedForCompare((prev) => prev.filter((item) => item.id !== id));
       } else {
         alert(res.message || "Ошибка при удалении из избранного");
       }
@@ -102,6 +110,64 @@ export default function Favorites() {
     );
   }, [favorites, search, activeCategory]);
 
+  /*
+   * =========================================================
+   * COMPARE
+   * =========================================================
+   */
+
+  const selectedType = selectedForCompare[0]?.type || null;
+
+  function toggleCompareMode() {
+    setCompareMode((prev) => !prev);
+    setSelectedForCompare([]);
+  }
+
+  function toggleCompareItem(item) {
+    if (!compareMode) return;
+
+    const alreadySelected = selectedForCompare.some(
+      (selected) => selected.id === item.id,
+    );
+
+    if (alreadySelected) {
+      setSelectedForCompare((prev) =>
+        prev.filter((selected) => selected.id !== item.id),
+      );
+
+      return;
+    }
+
+    // Только одинаковый тип
+    if (selectedType && item.type !== selectedType) {
+      return;
+    }
+
+    setSelectedForCompare((prev) => [...prev, item]);
+  }
+
+  function isCompareDisabled(item) {
+    if (!compareMode) return false;
+
+    if (!selectedType) return false;
+
+    return item.type !== selectedType;
+  }
+
+  function openCompare() {
+    if (selectedForCompare.length < 2) return;
+
+    setCompareOpen(true);
+  }
+
+  function closeCompare() {
+    setCompareOpen(false);
+  }
+
+  function clearCompare() {
+    setSelectedForCompare([]);
+  }
+
   return (
     <main className={styles.page}>
       {/* HEADER */}
@@ -116,6 +182,7 @@ export default function Favorites() {
             <House size={18} />
             <span>На главную</span>
           </button>
+
           <div className={styles.titleRow}>
             <div className={styles.titleIcon}>
               <Heart fill="currentColor" />
@@ -159,6 +226,22 @@ export default function Favorites() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+
+            {/* COMPARE BUTTON */}
+
+            <button
+              type="button"
+              className={`${styles.compareButton} ${
+                compareMode ? styles.compareButtonActive : ""
+              }`}
+              onClick={toggleCompareMode}
+            >
+              {compareMode ? <Check size={17} /> : <GitCompare size={17} />}
+
+              <span>
+                {compareMode ? "Отменить сравнение" : "Сравнить объекты"}
+              </span>
+            </button>
           </div>
 
           {/* CATEGORIES */}
@@ -178,6 +261,28 @@ export default function Favorites() {
             ))}
           </div>
 
+          {/* COMPARE INFO */}
+
+          {compareMode && (
+            <div className={styles.compareHint}>
+              <GitCompare size={16} />
+
+              <div>
+                <strong>
+                  {selectedForCompare.length > 0
+                    ? `Выбрано: ${selectedForCompare.length}`
+                    : "Выберите объекты для сравнения"}
+                </strong>
+
+                <span>
+                  {selectedType
+                    ? `Можно выбирать только: ${selectedType}`
+                    : "Можно сравнивать только объекты одного типа"}
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* RESULT */}
 
           <div className={styles.result}>
@@ -191,68 +296,70 @@ export default function Favorites() {
       {/* PRODUCTS */}
 
       {loading ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "80px 0",
-            color: "#888",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-block",
-              border: "3px solid rgba(255,255,255,0.1)",
-              borderTop: "3px solid #483df6",
-              borderRadius: "50%",
-              width: "30px",
-              height: "30px",
-              animation: "spin 1s linear infinite",
-              marginBottom: "15px",
-            }}
-          />
+        <div className={styles.loading}>
+          <span className={styles.loadingSpinner} />
 
           <div>Загрузка избранного...</div>
-
-          <style>{`
-            @keyframes spin {
-              0% {
-                transform: rotate(0deg);
-              }
-
-              100% {
-                transform: rotate(360deg);
-              }
-            }
-          `}</style>
         </div>
       ) : error ? (
-        <div
-          style={{
-            color: "#e53e3e",
-            background: "#fed7d7",
-            padding: "15px",
-            borderRadius: "10px",
-            margin: "20px 0",
-            textAlign: "center",
-            border: "1px solid #feb2b2",
-          }}
-        >
-          {error}
-        </div>
+        <div className={styles.error}>{error}</div>
       ) : filteredFavorites.length > 0 ? (
-        <section className={styles.grid}>
-          {filteredFavorites.map((item) => (
-            <ListingCard
-              key={item.id}
-              item={item}
-              isFavorite={true}
-              onFavoriteClick={(clickedItem) => removeFavorite(clickedItem.id)}
-            />
-          ))}
+        <section
+          className={`${styles.grid} ${
+            compareMode ? styles.gridCompareMode : ""
+          }`}
+        >
+          {filteredFavorites.map((item) => {
+            const selected = selectedForCompare.some(
+              (selectedItem) => selectedItem.id === item.id,
+            );
+
+            const disabled = isCompareDisabled(item);
+
+            return (
+              <div
+                key={item.id}
+                className={`${styles.compareWrapper} ${
+                  compareMode && selected ? styles.compareWrapperSelected : ""
+                } ${
+                  compareMode && disabled ? styles.compareWrapperDisabled : ""
+                }`}
+              >
+                {compareMode && (
+                  <button
+                    type="button"
+                    className={`${styles.compareCheck} ${
+                      selected ? styles.compareCheckSelected : ""
+                    }`}
+                    disabled={disabled}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleCompareItem(item);
+                    }}
+                    aria-label={
+                      selected ? "Убрать из сравнения" : "Добавить к сравнению"
+                    }
+                  >
+                    {selected && <Check size={15} />}
+                  </button>
+                )}
+
+                <ListingCard
+                  item={item}
+                  isFavorite={true}
+                  onFavoriteClick={(clickedItem) =>
+                    removeFavorite(clickedItem.id)
+                  }
+                />
+
+                {compareMode && disabled && (
+                  <div className={styles.compareDisabledOverlay}></div>
+                )}
+              </div>
+            );
+          })}
         </section>
       ) : favorites.length > 0 ? (
-        /* SEARCH EMPTY */
-
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>
             <Search />
@@ -273,8 +380,6 @@ export default function Favorites() {
           </button>
         </div>
       ) : (
-        /* EMPTY FAVORITES */
-
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>
             <Heart />
@@ -292,6 +397,57 @@ export default function Favorites() {
           </button>
         </div>
       )}
+
+      {/* FLOATING COMPARE BAR */}
+
+      {compareMode && selectedForCompare.length > 0 && (
+        <div className={styles.compareBar}>
+          <div className={styles.compareBarInfo}>
+            <GitCompare size={19} />
+
+            <div>
+              <strong>
+                {selectedForCompare.length}{" "}
+                {selectedForCompare.length === 1
+                  ? "объект выбран"
+                  : "объекта выбрано"}
+              </strong>
+
+              <span>{selectedType}</span>
+            </div>
+          </div>
+
+          <div className={styles.compareBarActions}>
+            <button
+              type="button"
+              className={styles.clearCompare}
+              onClick={clearCompare}
+            >
+              Очистить
+            </button>
+
+            <button
+              type="button"
+              className={styles.startCompare}
+              disabled={selectedForCompare.length < 2}
+              onClick={openCompare}
+            >
+              <GitCompare size={16} />
+              Сравнить
+              {selectedForCompare.length >= 2 &&
+                ` (${selectedForCompare.length})`}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* COMPARE MODAL */}
+
+      <CompareListingsModal
+        isOpen={compareOpen}
+        items={selectedForCompare}
+        onClose={closeCompare}
+      />
     </main>
   );
 }

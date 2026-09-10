@@ -2,11 +2,27 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Heart, Crown, Zap } from "lucide-react";
+import {
+  MapPin,
+  Heart,
+  Crown,
+  Zap,
+  Check,
+} from "lucide-react";
 
 import styles from "./ListingCard.module.css";
 
-export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
+export default function ListingCard({
+  item,
+  isFavorite,
+  onFavoriteClick,
+
+  // COMPARE
+  compareMode = false,
+  isSelected = false,
+  compareDisabled = false,
+  onCompareToggle,
+}) {
   const router = useRouter();
 
   const isVip = item?.status === "vip";
@@ -16,8 +32,21 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
     router.push(`/all-products/${item.id}`);
   }
 
+  function handleCompareClick(event) {
+    event.stopPropagation();
+
+    if (compareDisabled) return;
+
+    onCompareToggle?.(item);
+  }
+
   return (
-    <article className={styles.card} onClick={openListing}>
+    <article
+      className={`${styles.card} ${
+        compareMode && isSelected ? styles.cardSelected : ""
+      }`}
+      onClick={openListing}
+    >
       {/* IMAGE */}
 
       <div className={styles.image}>
@@ -27,6 +56,41 @@ export default function ListingCard({ item, isFavorite, onFavoriteClick }) {
           alt={item.title}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
         />
+
+        {/* COMPARE SELECT */}
+
+        {compareMode && (
+          <button
+            type="button"
+            className={`${styles.compareSelect} ${
+              isSelected ? styles.compareSelectActive : ""
+            } ${compareDisabled ? styles.compareSelectDisabled : ""}`}
+            onClick={handleCompareClick}
+            disabled={compareDisabled}
+            aria-label={
+              isSelected
+                ? "Убрать объект из сравнения"
+                : "Добавить объект к сравнению"
+            }
+            aria-pressed={isSelected}
+          >
+            <span
+              className={`${styles.compareCheckbox} ${
+                isSelected ? styles.compareCheckboxActive : ""
+              }`}
+            >
+              {isSelected && <Check />}
+            </span>
+
+            <span className={styles.compareSelectText}>
+              {isSelected
+                ? "Выбрано"
+                : compareDisabled
+                  ? "Другой тип"
+                  : "Сравнить"}
+            </span>
+          </button>
+        )}
 
         {/* BADGES */}
 
