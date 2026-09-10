@@ -1,3 +1,5 @@
+// MyProductDetails.jsx
+
 "use client";
 
 import Image from "next/image";
@@ -39,7 +41,6 @@ import {
   DoorOpen,
   Building,
   CircleDollarSign,
-  Clock3,
   CheckCircle2,
 } from "lucide-react";
 
@@ -65,11 +66,15 @@ export default function MyProductDetails() {
   useEffect(() => {
     if (!id) return;
 
+    let mounted = true;
+
     setLoading(true);
     setError(null);
 
     getListingById(id)
       .then((res) => {
+        if (!mounted) return;
+
         if (res.success && res.data) {
           const mapped = mapListingDetail(res.data);
 
@@ -80,12 +85,29 @@ export default function MyProductDetails() {
       })
       .catch((err) => {
         console.error("Fetch my listing details error:", err);
-        setError("Ошибка загрузки объявления");
+
+        if (mounted) {
+          setError("Ошибка загрузки объявления");
+        }
       })
       .finally(() => {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       });
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
+
+  /*
+   * =========================================================
+   * RAW DATA
+   * =========================================================
+   */
+
+  const raw = product?.rawFeatures || {};
 
   /*
    * =========================================================
@@ -93,29 +115,218 @@ export default function MyProductDetails() {
    * =========================================================
    */
 
-  const raw = product?.rawFeatures || {};
-
   const hasValue = (value) => {
+    if (value === undefined || value === null) return false;
+    if (value === "") return false;
+    if (value === false) return false;
+
+    if (Array.isArray(value) && value.length === 0) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const normalizeKey = (key) => {
+    return String(key)
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/[_-]+/g, " ")
+      .trim()
+      .toLowerCase();
+  };
+
+  const formatKey = (key) => {
+    const normalized = normalizeKey(key);
+
+    const labels = {
+      residentialcomplex: "Жилой комплекс",
+      residentialcomplexname: "Жилой комплекс",
+      residential_complex: "Жилой комплекс",
+      residential_complex_name: "Жилой комплекс",
+      developerorcomplex: "Застройщик / ЖК",
+      developer_or_complex: "Застройщик / ЖК",
+      developer: "Застройщик",
+      developername: "Застройщик",
+      developer_name: "Застройщик",
+
+      buildingtype: "Тип дома",
+      building_type: "Тип дома",
+      housetype: "Тип дома",
+      house_type: "Тип дома",
+
+      floor: "Этаж",
+      floors: "Этажность",
+
+      rooms: "Комнаты",
+      area: "Площадь",
+
+      year: "Год",
+      yearbuilt: "Год постройки",
+      year_built: "Год постройки",
+
+      repair: "Ремонт",
+      condition: "Состояние",
+      furniture: "Мебель",
+
+      ceilingheight: "Высота потолков",
+      ceiling_height: "Высота потолков",
+
+      bathroom: "Санузел",
+      bathrooms: "Количество санузлов",
+
+      heating: "Отопление",
+      heatingtype: "Тип отопления",
+      heating_type: "Тип отопления",
+
+      sewerage: "Канализация",
+      sewer: "Канализация",
+
+      water: "Водоснабжение",
+      watersupply: "Водоснабжение",
+      water_supply: "Водоснабжение",
+
+      electricity: "Электричество",
+      gas: "Газ",
+
+      documents: "Документы",
+      document: "Документы",
+
+      parking: "Парковка",
+      parkingtype: "Тип парковки",
+      parking_type: "Тип парковки",
+
+      view: "Вид",
+      orientation: "Ориентация",
+
+      landarea: "Площадь участка",
+      land_area: "Площадь участка",
+
+      areasotka: "Площадь участка",
+      area_sotka: "Площадь участка",
+      sotka: "Площадь участка",
+      sotok: "Площадь участка",
+
+      blocks: "Количество блоков",
+      blockcount: "Количество блоков",
+      block_count: "Количество блоков",
+
+      construction: "Конструкция",
+      constructiontype: "Тип конструкции",
+      construction_type: "Тип конструкции",
+
+      entrances: "Количество входов",
+      entrancecount: "Количество входов",
+      entrance_count: "Количество входов",
+
+      yardarea: "Площадь двора",
+      yard_area: "Площадь двора",
+
+      landwidth: "Ширина участка",
+      land_width: "Ширина участка",
+
+      landlength: "Длина участка",
+      land_length: "Длина участка",
+
+      offerType: "Тип предложения",
+      offertype: "Тип предложения",
+
+      purpose: "Назначение",
+      fence: "Ограждение",
+      terrain: "Рельеф",
+      landlocation: "Расположение участка",
+
+      roomlocation: "Расположение комнаты",
+      roomsinapartment: "Комнат в квартире",
+      privatebathroom: "Личный санузел",
+
+      premisesType: "Тип помещения",
+      premisestype: "Тип помещения",
+      technicalparameters: "Технические параметры",
+      firstline: "Первая линия",
+      separateentrance: "Отдельный вход",
+      rentalbusiness: "Готовый арендный бизнес",
+
+      material: "Материал",
+      gates: "Ворота",
+      truckaccess: "Заезд для грузовых",
+      gatetype: "Тип ворот",
+
+      pets: "Домашние животные",
+      internet: "Интернет",
+      balcony: "Балкон",
+      elevator: "Лифт",
+      security: "Охрана",
+      parkingplace: "Парковочное место",
+    };
+
+    const compact = normalized.replace(/\s/g, "");
+
     return (
-      value !== undefined && value !== null && value !== "" && value !== false
+      labels[normalized] ||
+      labels[compact] ||
+      String(key)
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/[_-]+/g, " ")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase())
     );
   };
 
-  const formatValue = (value, suffix = "") => {
+  const getRaw = (...keys) => {
+    for (const key of keys) {
+      if (hasValue(raw[key])) {
+        return raw[key];
+      }
+    }
+
+    return null;
+  };
+
+  const formatDisplayValue = (value) => {
     if (!hasValue(value)) return null;
 
     if (typeof value === "boolean") {
-      return value ? "Есть" : null;
+      return value ? "Есть" : "Нет";
     }
 
-    return `${value}${suffix}`;
+    if (Array.isArray(value)) {
+      return value
+        .filter(Boolean)
+        .map((item) => {
+          if (typeof item === "object") {
+            return (
+              item.name ||
+              item.title ||
+              item.label ||
+              item.value ||
+              JSON.stringify(item)
+            );
+          }
+
+          return String(item);
+        })
+        .join(", ");
+    }
+
+    if (typeof value === "object") {
+      return (
+        value.name ||
+        value.title ||
+        value.label ||
+        value.value ||
+        JSON.stringify(value)
+      );
+    }
+
+    return String(value);
   };
 
   /*
    * =========================================================
    * CHARACTERISTICS
-   * Все новые поля собираются здесь.
-   * Пустые значения автоматически не отображаются.
+   *
+   * Основные поля идут первыми.
+   * После них автоматически добавляются все остальные
+   * значения из rawFeatures.
    * =========================================================
    */
 
@@ -123,139 +334,624 @@ export default function MyProductDetails() {
     if (!product) return [];
 
     const items = [];
+    const usedKeys = new Set();
 
-    const add = (icon, label, value) => {
-      if (hasValue(value)) {
-        items.push({
-          icon,
-          label,
-          value: String(value),
-        });
+    const markUsed = (...keys) => {
+      keys.forEach((key) => usedKeys.add(key));
+    };
+
+    const add = (icon, label, value, ...keys) => {
+      if (!hasValue(value)) return;
+
+      items.push({
+        icon,
+        label,
+        value: formatDisplayValue(value),
+      });
+
+      if (keys.length > 0) {
+        markUsed(...keys);
       }
     };
 
-    // Общие
-    add(BedDouble, "Комнаты", product.rooms);
-    add(Ruler, "Площадь", product.area);
+    /*
+     * =======================================================
+     * ОСНОВНЫЕ
+     * =======================================================
+     */
 
-    // Этажи
-    add(Layers3, "Этаж", raw.floor ?? product.floor);
+    add(BedDouble, "Комнаты", product.rooms, "rooms");
 
-    add(Building2, "Этажность", raw.floors ?? product.floors);
+    add(Ruler, "Площадь", product.area, "area");
 
-    // Тип
-    add(Home, "Тип недвижимости", product.type);
+    add(Layers3, "Этаж", getRaw("floor") ?? product.floor, "floor");
 
-    // Тип дома
-    add(Building, "Тип дома", raw.buildingType);
+    add(Building2, "Этажность", getRaw("floors") ?? product.floors, "floors");
 
-    // Год
-    add(CalendarDays, "Год постройки", raw.year);
+    add(Home, "Тип недвижимости", product.type, "type");
 
-    add(CalendarDays, "Год сдачи", raw.yearBuilt);
+    /*
+     * =======================================================
+     * ЖК
+     * =======================================================
+     */
 
-    // Состояние / ремонт
-    add(Sparkles, "Ремонт", raw.repair);
+    const residentialComplex = getRaw(
+      "residentialComplex",
+      "residential_complex",
+      "residentialComplexName",
+      "residential_complex_name",
+      "developerOrComplex",
+      "developer_or_complex",
+      "complex",
+      "complexName",
+      "complex_name",
+      "zhk",
+    );
 
-    add(Sofa, "Мебель", raw.furniture);
+    if (hasValue(residentialComplex)) {
+      add(
+        Building2,
+        "Жилой комплекс",
+        residentialComplex,
+        "residentialComplex",
+        "residential_complex",
+        "residentialComplexName",
+        "residential_complex_name",
+        "developerOrComplex",
+        "developer_or_complex",
+        "complex",
+        "complexName",
+        "complex_name",
+        "zhk",
+      );
+    }
 
-    // Потолки
-    if (hasValue(raw.ceilingHeight)) {
+    /*
+     * =======================================================
+     * ЗАСТРОЙЩИК
+     * =======================================================
+     */
+
+    const developer = getRaw("developer", "developerName", "developer_name");
+
+    if (
+      hasValue(developer) &&
+      formatDisplayValue(developer) !== formatDisplayValue(residentialComplex)
+    ) {
+      add(
+        Building2,
+        "Застройщик",
+        developer,
+        "developer",
+        "developerName",
+        "developer_name",
+      );
+    }
+
+    /*
+     * =======================================================
+     * ДОМ
+     * =======================================================
+     */
+
+    add(
+      Building,
+      "Тип дома",
+      getRaw("buildingType", "building_type", "houseType", "house_type"),
+      "buildingType",
+      "building_type",
+      "houseType",
+      "house_type",
+    );
+
+    /*
+     * =======================================================
+     * ГОД
+     * =======================================================
+     */
+
+    add(
+      CalendarDays,
+      "Год постройки",
+      getRaw(
+        "yearBuilt",
+        "year_built",
+        "year",
+        "constructionYear",
+        "construction_year",
+      ),
+      "year",
+      "yearBuilt",
+      "year_built",
+      "constructionYear",
+      "construction_year",
+    );
+
+    /*
+     * =======================================================
+     * СОСТОЯНИЕ
+     * =======================================================
+     */
+
+    add(
+      Sparkles,
+      "Ремонт",
+      getRaw("repair", "condition", "state"),
+      "repair",
+      "condition",
+      "state",
+    );
+
+    add(
+      Sofa,
+      "Мебель",
+      getRaw("furniture", "furnished"),
+      "furniture",
+      "furnished",
+    );
+
+    /*
+     * =======================================================
+     * ПОТОЛКИ
+     * =======================================================
+     */
+
+    const ceilingHeight = getRaw("ceilingHeight", "ceiling_height");
+
+    if (hasValue(ceilingHeight)) {
       add(
         Maximize,
         "Высота потолков",
-        String(raw.ceilingHeight).includes("м")
-          ? raw.ceilingHeight
-          : `${raw.ceilingHeight} м`,
+        String(ceilingHeight).includes("м")
+          ? ceilingHeight
+          : `${ceilingHeight} м`,
+        "ceilingHeight",
+        "ceiling_height",
       );
     }
 
-    // Санузел
-    add(Bath, "Санузел", raw.bathroom);
+    /*
+     * =======================================================
+     * САНУЗЕЛ
+     * =======================================================
+     */
 
-    add(Bath, "Количество санузлов", raw.bathrooms);
+    add(
+      Bath,
+      "Санузел",
+      getRaw("bathroom", "bathroomType", "bathroom_type"),
+      "bathroom",
+      "bathroomType",
+      "bathroom_type",
+    );
 
-    // Отопление
-    add(Flame, "Отопление", raw.heating);
+    add(
+      Bath,
+      "Количество санузлов",
+      getRaw("bathrooms", "bathroomCount", "bathroom_count"),
+      "bathrooms",
+      "bathroomCount",
+      "bathroom_count",
+    );
 
-    // Канализация
-    add(Droplets, "Канализация", raw.sewerage);
+    /*
+     * =======================================================
+     * ОТОПЛЕНИЕ
+     * =======================================================
+     */
 
-    // Вода
-    add(Droplets, "Водоснабжение", raw.water);
+    add(
+      Flame,
+      "Отопление",
+      getRaw("heating", "heatingType", "heating_type"),
+      "heating",
+      "heatingType",
+      "heating_type",
+    );
 
-    // Электричество
-    if (hasValue(raw.electricity)) {
+    /*
+     * =======================================================
+     * КОММУНИКАЦИИ
+     * =======================================================
+     */
+
+    add(
+      Droplets,
+      "Канализация",
+      getRaw("sewerage", "sewer", "sewerageType", "sewerage_type"),
+      "sewerage",
+      "sewer",
+      "sewerageType",
+      "sewerage_type",
+    );
+
+    add(
+      Droplets,
+      "Водоснабжение",
+      getRaw("water", "waterSupply", "water_supply"),
+      "water",
+      "waterSupply",
+      "water_supply",
+    );
+
+    const electricity = getRaw(
+      "electricity",
+      "electricityType",
+      "electricity_type",
+    );
+
+    if (hasValue(electricity)) {
       add(
         Zap,
         "Электричество",
-        raw.electricity === true ? "Есть" : raw.electricity,
+        electricity === true ? "Есть" : electricity,
+        "electricity",
+        "electricityType",
+        "electricity_type",
       );
     }
 
-    // Газ
-    if (hasValue(raw.gas)) {
-      add(Flame, "Газ", raw.gas === true ? "Есть" : raw.gas);
+    const gas = getRaw("gas", "gasSupply", "gas_supply");
+
+    if (hasValue(gas)) {
+      add(
+        Flame,
+        "Газ",
+        gas === true ? "Есть" : gas,
+        "gas",
+        "gasSupply",
+        "gas_supply",
+      );
     }
 
-    // Документы
-    add(FileCheck, "Документы", raw.documents);
+    /*
+     * =======================================================
+     * ДОКУМЕНТЫ
+     * =======================================================
+     */
 
-    // Парковка
-    add(CarFront, "Парковка", raw.parking);
+    add(
+      FileCheck,
+      "Документы",
+      getRaw("documents", "document", "documentStatus", "document_status"),
+      "documents",
+      "document",
+      "documentStatus",
+      "document_status",
+    );
 
-    // Вид
-    add(Waves, "Вид", raw.view);
+    /*
+     * =======================================================
+     * ПАРКОВКА
+     * =======================================================
+     */
 
-    // Ориентация
-    add(Compass, "Ориентация", raw.orientation);
+    add(
+      CarFront,
+      "Парковка",
+      getRaw("parking", "parkingType", "parking_type"),
+      "parking",
+      "parkingType",
+      "parking_type",
+    );
 
-    // Территория
-    add(LandPlot, "Площадь участка", raw.landArea);
+    /*
+     * =======================================================
+     * ВИД
+     * =======================================================
+     */
 
-    if (hasValue(raw.areaSotka)) {
+    add(
+      Waves,
+      "Вид",
+      getRaw("view", "viewType", "view_type"),
+      "view",
+      "viewType",
+      "view_type",
+    );
+
+    add(
+      Compass,
+      "Ориентация",
+      getRaw("orientation", "direction"),
+      "orientation",
+      "direction",
+    );
+
+    /*
+     * =======================================================
+     * УЧАСТОК
+     * =======================================================
+     */
+
+    const landArea = getRaw("landArea", "land_area");
+
+    if (hasValue(landArea)) {
+      add(LandPlot, "Площадь участка", landArea, "landArea", "land_area");
+    }
+
+    const areaSotka = getRaw("areaSotka", "area_sotka", "sotka", "sotok");
+
+    if (hasValue(areaSotka)) {
       add(
         LandPlot,
         "Площадь участка",
-        String(raw.areaSotka).includes("сот")
-          ? raw.areaSotka
-          : `${raw.areaSotka} соток`,
+        String(areaSotka).includes("сот") ? areaSotka : `${areaSotka} соток`,
+        "areaSotka",
+        "area_sotka",
+        "sotka",
+        "sotok",
       );
     }
 
-    // Количество блоков
-    if (hasValue(raw.blocks)) {
+    /*
+     * =======================================================
+     * БЛОКИ
+     * =======================================================
+     */
+
+    const blocks = getRaw("blocks", "blockCount", "block_count");
+
+    if (hasValue(blocks)) {
       add(
         Layers3,
         "Количество блоков",
-        String(raw.blocks).includes("блок")
-          ? raw.blocks
-          : `${raw.blocks} блоков`,
+        String(blocks).includes("блок") ? blocks : `${blocks} блоков`,
+        "blocks",
+        "blockCount",
+        "block_count",
       );
     }
 
-    // Конструкция
-    add(Building2, "Конструкция", raw.construction ?? raw.constructionType);
+    /*
+     * =======================================================
+     * КОНСТРУКЦИЯ
+     * =======================================================
+     */
 
-    // Застройщик / ЖК
-    add(Building2, "Застройщик / ЖК", raw.developerOrComplex);
+    add(
+      Building2,
+      "Конструкция",
+      getRaw("construction", "constructionType", "construction_type"),
+      "construction",
+      "constructionType",
+      "construction_type",
+    );
 
-    // Расстояние до пляжа
-    if (hasValue(product.beachDistance)) {
-      add(Waves, "Расстояние до пляжа", `${product.beachDistance} м`);
+    /*
+     * =======================================================
+     * ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ
+     * =======================================================
+     */
+
+    add(
+      DoorOpen,
+      "Количество входов",
+      getRaw("entrances", "entranceCount", "entrance_count"),
+      "entrances",
+      "entranceCount",
+      "entrance_count",
+    );
+
+    add(
+      Trees,
+      "Площадь двора",
+      getRaw("yardArea", "yard_area"),
+      "yardArea",
+      "yard_area",
+    );
+
+    add(
+      Ruler,
+      "Ширина участка",
+      getRaw("landWidth", "land_width"),
+      "landWidth",
+      "land_width",
+    );
+
+    add(
+      Ruler,
+      "Длина участка",
+      getRaw("landLength", "land_length"),
+      "landLength",
+      "land_length",
+    );
+
+    /*
+     * =======================================================
+     * СПЕЦИФИЧЕСКИЕ ПОЛЯ
+     * =======================================================
+     */
+
+    const specificFields = [
+      {
+        keys: ["purpose"],
+        icon: Tag,
+      },
+      {
+        keys: ["fence"],
+        icon: Home,
+      },
+      {
+        keys: ["terrain"],
+        icon: LandPlot,
+      },
+      {
+        keys: ["landLocation", "land_location"],
+        icon: MapPin,
+      },
+      {
+        keys: ["roomLocation", "room_location"],
+        icon: Home,
+      },
+      {
+        keys: ["roomsInApartment", "rooms_in_apartment"],
+        icon: BedDouble,
+      },
+      {
+        keys: ["privateBathroom", "private_bathroom"],
+        icon: Bath,
+      },
+      {
+        keys: ["premisesType", "premises_type"],
+        icon: Building,
+      },
+      {
+        keys: ["technicalParameters", "technical_parameters"],
+        icon: Ruler,
+      },
+      {
+        keys: ["firstLine", "first_line"],
+        icon: DoorOpen,
+      },
+      {
+        keys: ["separateEntrance", "separate_entrance"],
+        icon: DoorOpen,
+      },
+      {
+        keys: ["rentalBusiness", "rental_business"],
+        icon: CircleDollarSign,
+      },
+      {
+        keys: ["material"],
+        icon: Building2,
+      },
+      {
+        keys: ["gates"],
+        icon: DoorOpen,
+      },
+      {
+        keys: ["truckAccess", "truck_access"],
+        icon: CarFront,
+      },
+      {
+        keys: ["gateType", "gate_type"],
+        icon: DoorOpen,
+      },
+      {
+        keys: ["offerType", "offer_type"],
+        icon: Tag,
+      },
+    ];
+
+    specificFields.forEach(({ keys, icon }) => {
+      const value = getRaw(...keys);
+
+      if (!hasValue(value)) return;
+
+      const existingKey = keys.find((key) => usedKeys.has(key));
+
+      if (existingKey) return;
+
+      add(icon, formatKey(keys[0]), value, ...keys);
+    });
+
+    /*
+     * =======================================================
+     * ВСЕ ОСТАЛЬНЫЕ RAW FEATURES
+     *
+     * Это гарантирует, что новое поле из формы не потеряется.
+     * =======================================================
+     */
+
+    Object.entries(raw).forEach(([key, value]) => {
+      if (!hasValue(value)) return;
+
+      if (usedKeys.has(key)) return;
+
+      const normalized = normalizeKey(key);
+
+      /*
+       * Не показываем технические поля.
+       */
+
+      const technicalKeys = [
+        "id",
+        "listing id",
+        "listingid",
+        "created at",
+        "createdat",
+        "updated at",
+        "updatedat",
+        "image",
+        "images",
+        "photo",
+        "photos",
+      ];
+
+      if (technicalKeys.includes(normalized)) {
+        return;
+      }
+
+      /*
+       * Amenities показываются отдельным блоком.
+       */
+
+      if (
+        key === "amenities" ||
+        normalized === "amenities" ||
+        normalized === "удобства"
+      ) {
+        return;
+      }
+
+      const Icon = key.toLowerCase().includes("floor")
+        ? Layers3
+        : key.toLowerCase().includes("area")
+          ? Ruler
+          : key.toLowerCase().includes("water")
+            ? Droplets
+            : key.toLowerCase().includes("heating")
+              ? Flame
+              : key.toLowerCase().includes("parking")
+                ? CarFront
+                : key.toLowerCase().includes("document")
+                  ? FileCheck
+                  : key.toLowerCase().includes("year")
+                    ? CalendarDays
+                    : key.toLowerCase().includes("bath")
+                      ? Bath
+                      : key.toLowerCase().includes("view")
+                        ? Waves
+                        : key.toLowerCase().includes("electric")
+                          ? Zap
+                          : key.toLowerCase().includes("entrance")
+                            ? DoorOpen
+                            : Tag;
+
+      const formattedValue = formatDisplayValue(value);
+
+      if (!hasValue(formattedValue)) return;
+
+      items.push({
+        icon: Icon,
+        label: formatKey(key),
+        value: formattedValue,
+      });
+
+      usedKeys.add(key);
+    });
+
+    /*
+     * =======================================================
+     * РАССТОЯНИЕ ДО ПЛЯЖА
+     * =======================================================
+     */
+
+    if (
+      hasValue(product.beachDistance) &&
+      !items.some((item) => item.label === "Расстояние до пляжа")
+    ) {
+      items.push({
+        icon: Waves,
+        label: "Расстояние до пляжа",
+        value: `${product.beachDistance} м`,
+      });
     }
 
-    // Дополнительные новые поля
-    add(DoorOpen, "Количество входов", raw.entrances);
-
-    add(Trees, "Площадь двора", raw.yardArea);
-
-    add(Ruler, "Ширина участка", raw.landWidth);
-
-    add(Ruler, "Длина участка", raw.landLength);
-
     return items;
-  }, [product, raw]);
+  }, [product]);
 
   /*
    * =========================================================
@@ -269,15 +965,24 @@ export default function MyProductDetails() {
     const source = raw.amenities;
 
     if (Array.isArray(source)) {
-      return source.filter(Boolean);
+      return source
+        .filter(Boolean)
+        .map((item) => {
+          if (typeof item === "object") {
+            return item.name || item.title || item.label || item.value;
+          }
+
+          return String(item);
+        })
+        .filter(Boolean);
     }
 
     if (source) {
-      return [source];
+      return [String(source)];
     }
 
     return [];
-  }, [product, raw]);
+  }, [product]);
 
   /*
    * =========================================================
@@ -285,20 +990,18 @@ export default function MyProductDetails() {
    * =========================================================
    */
 
-  const nextImage = () => {
-    if (!product?.images?.length) return;
+  const images = Array.isArray(product?.images) ? product.images : [];
 
-    setCurrentImage((prev) =>
-      prev === product.images.length - 1 ? 0 : prev + 1,
-    );
+  const nextImage = () => {
+    if (!images.length) return;
+
+    setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const previousImage = () => {
-    if (!product?.images?.length) return;
+    if (!images.length) return;
 
-    setCurrentImage((prev) =>
-      prev === 0 ? product.images.length - 1 : prev - 1,
-    );
+    setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   /*
@@ -363,7 +1066,9 @@ export default function MyProductDetails() {
       <main className={styles.page}>
         <div className={styles.state}>
           <div className={styles.stateLoader} />
+
           <h2>Загрузка объявления...</h2>
+
           <p>Получаем информацию об объекте</p>
         </div>
       </main>
@@ -401,14 +1106,16 @@ export default function MyProductDetails() {
     );
   }
 
-  const images = product.images || [];
+  /*
+   * =========================================================
+   * RENDER
+   * =========================================================
+   */
 
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* =====================================================
-            TOP BAR
-        ===================================================== */}
+        {/* TOP BAR */}
 
         <div className={styles.topBar}>
           <button
@@ -426,9 +1133,7 @@ export default function MyProductDetails() {
           </span>
         </div>
 
-        {/* =====================================================
-            TOP
-        ===================================================== */}
+        {/* TOP */}
 
         <section className={styles.top}>
           {/* GALLERY */}
@@ -438,7 +1143,7 @@ export default function MyProductDetails() {
               {images.length > 0 ? (
                 <Image
                   src={images[currentImage]}
-                  alt={product.title}
+                  alt={product.title || "Объект недвижимости"}
                   fill
                   priority
                   sizes="(max-width: 900px) 100vw, 65vw"
@@ -500,7 +1205,9 @@ export default function MyProductDetails() {
 
               <button
                 type="button"
-                className={styles.favorite}
+                className={`${styles.favorite} ${
+                  isFavorite ? styles.favoriteActive : ""
+                }`}
                 onClick={() => setIsFavorite((prev) => !prev)}
                 aria-label="Добавить в избранное"
               >
@@ -543,6 +1250,7 @@ export default function MyProductDetails() {
 
               <div className={styles.imageTitle}>
                 <span>МОЯ НЕДВИЖИМОСТЬ</span>
+
                 <strong>{product.title}</strong>
               </div>
             </div>
@@ -628,6 +1336,7 @@ export default function MyProductDetails() {
               {hasValue(product.rooms) && (
                 <div>
                   <BedDouble />
+
                   <span>
                     <b>{product.rooms}</b>
                     комнат
@@ -638,6 +1347,7 @@ export default function MyProductDetails() {
               {hasValue(product.area) && (
                 <div>
                   <Ruler />
+
                   <span>
                     <b>{product.area}</b>
                     площадь
@@ -648,6 +1358,7 @@ export default function MyProductDetails() {
               {hasValue(raw.floor ?? product.floor) && (
                 <div>
                   <Layers3 />
+
                   <span>
                     <b>{raw.floor ?? product.floor}</b>
                     этаж
@@ -658,6 +1369,7 @@ export default function MyProductDetails() {
               {hasValue(product.beachDistance) && (
                 <div>
                   <Waves />
+
                   <span>
                     <b>{product.beachDistance} м</b>
                     до пляжа
@@ -690,9 +1402,7 @@ export default function MyProductDetails() {
           </div>
         </section>
 
-        {/* =====================================================
-            CONTENT
-        ===================================================== */}
+        {/* CONTENT */}
 
         <div className={styles.contentGrid}>
           <div className={styles.mainContent}>
@@ -707,6 +1417,7 @@ export default function MyProductDetails() {
 
                   <div>
                     <span>ОБ ОБЪЕКТЕ</span>
+
                     <h2>Описание</h2>
                   </div>
                 </div>
@@ -726,6 +1437,7 @@ export default function MyProductDetails() {
 
                   <div>
                     <span>ПОДРОБНОСТИ</span>
+
                     <h2>Характеристики объекта</h2>
                   </div>
                 </div>
@@ -745,6 +1457,7 @@ export default function MyProductDetails() {
 
                         <div>
                           <span>{item.label}</span>
+
                           <strong>{item.value}</strong>
                         </div>
                       </div>
@@ -765,6 +1478,7 @@ export default function MyProductDetails() {
 
                   <div>
                     <span>ДОПОЛНИТЕЛЬНО</span>
+
                     <h2>Удобства</h2>
                   </div>
                 </div>
@@ -791,6 +1505,7 @@ export default function MyProductDetails() {
 
                   <div>
                     <span>РАСПОЛОЖЕНИЕ</span>
+
                     <h2>Адрес объекта</h2>
                   </div>
                 </div>
@@ -800,7 +1515,7 @@ export default function MyProductDetails() {
                     <MapPin />
                   </div>
 
-                  <div>
+                  <div className={styles.addressContent}>
                     {product.location && <strong>{product.location}</strong>}
 
                     {product.address && <p>{product.address}</p>}
@@ -810,9 +1525,7 @@ export default function MyProductDetails() {
             )}
           </div>
 
-          {/* =====================================================
-              SIDEBAR
-          ===================================================== */}
+          {/* SIDEBAR */}
 
           <aside className={styles.sidebar}>
             {/* INFORMATION */}
@@ -826,6 +1539,7 @@ export default function MyProductDetails() {
               {product.type && (
                 <div className={styles.sideRow}>
                   <span>Категория</span>
+
                   <strong>{product.type}</strong>
                 </div>
               )}
@@ -833,6 +1547,7 @@ export default function MyProductDetails() {
               {product.dealType && (
                 <div className={styles.sideRow}>
                   <span>Тип предложения</span>
+
                   <strong>{product.dealType}</strong>
                 </div>
               )}
@@ -840,6 +1555,7 @@ export default function MyProductDetails() {
               {product.createdAt && (
                 <div className={styles.sideRow}>
                   <span>Дата публикации</span>
+
                   <strong>{product.createdAt}</strong>
                 </div>
               )}
@@ -847,6 +1563,7 @@ export default function MyProductDetails() {
               {product.price && (
                 <div className={styles.sideRow}>
                   <span>Стоимость</span>
+
                   <strong>{product.price}</strong>
                 </div>
               )}
@@ -854,6 +1571,7 @@ export default function MyProductDetails() {
               {product.beachDistance && (
                 <div className={styles.sideRow}>
                   <span>До пляжа</span>
+
                   <strong>{product.beachDistance} м</strong>
                 </div>
               )}
