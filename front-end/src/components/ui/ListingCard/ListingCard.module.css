@@ -438,3 +438,173 @@
     transition: none;
   }
 }
+
+/* =========================
+   COMPARE
+========================= */
+
+.cardSelected {
+  border-color: #483df6;
+
+  box-shadow:
+    0 0 0 2px rgba(72, 61, 246, 0.14),
+    0 18px 42px rgba(72, 61, 246, 0.14);
+}
+
+.compareSelect {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 10;
+
+  min-height: 42px;
+
+  padding: 6px 12px 6px 7px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: #1f2421;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 20px rgba(31, 36, 33, 0.18),
+    0 2px 6px rgba(31, 36, 33, 0.08);
+
+  backdrop-filter: blur(12px);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.compareSelect:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  border-color: #483df6;
+
+  box-shadow:
+    0 9px 24px rgba(72, 61, 246, 0.2),
+    0 3px 8px rgba(31, 36, 33, 0.08);
+}
+
+.compareSelect:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.compareSelectActive {
+  background: #483df6;
+
+  border-color: #483df6;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgba(72, 61, 246, 0.3),
+    0 2px 7px rgba(72, 61, 246, 0.18);
+}
+
+.compareSelectDisabled {
+  opacity: 0.48;
+
+  cursor: not-allowed;
+
+  background: rgba(255, 255, 255, 0.8);
+
+  box-shadow: 0 5px 14px rgba(31, 36, 33, 0.08);
+}
+
+.compareCheckbox {
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #68716b;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.compareCheckboxActive {
+  border-color: #ffffff;
+
+  background: #ffffff;
+
+  color: #483df6;
+}
+
+.compareCheckbox svg {
+  width: 17px;
+  height: 17px;
+
+  stroke-width: 3;
+}
+
+.compareSelectText {
+  white-space: nowrap;
+}
+
+.compareSelect:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* =========================
+   MOBILE COMPARE
+========================= */
+
+@media (max-width: 700px) {
+  .compareSelect {
+    top: 12px;
+    left: 12px;
+
+    min-height: 40px;
+
+    padding: 5px 10px 5px 6px;
+
+    gap: 7px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+  }
+
+  .compareCheckbox {
+    width: 26px;
+    height: 26px;
+
+    border-radius: 7px;
+  }
+
+  .compareCheckbox svg {
+    width: 16px;
+    height: 16px;
+  }
+}

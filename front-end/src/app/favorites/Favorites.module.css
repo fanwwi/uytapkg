@@ -885,3 +885,691 @@
     display: none;
   }
 }
+
+/* =========================================================
+   COMPARE BUTTON
+========================================================= */
+
+.compareButton {
+  height: 56px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 0 20px;
+
+  border: 1px solid rgba(72, 61, 246, 0.2);
+  border-radius: 17px;
+
+  background: #ffffff;
+  color: #483df6;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px rgba(30, 35, 60, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.compareButton:hover {
+  transform: translateY(-2px);
+
+  border-color: #483df6;
+
+  background: #f7f6ff;
+
+  box-shadow:
+    0 12px 30px rgba(72, 61, 246, 0.1),
+    0 4px 12px rgba(30, 35, 60, 0.04);
+}
+
+.compareButtonActive {
+  background: #483df6;
+
+  border-color: #483df6;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 10px 28px rgba(72, 61, 246, 0.24),
+    0 3px 10px rgba(72, 61, 246, 0.12);
+}
+
+.compareButtonActive:hover {
+  background: #392ee0;
+
+  border-color: #392ee0;
+
+  color: #ffffff;
+}
+
+.compareButton:active {
+  transform: scale(0.98);
+}
+
+.compareButton:focus-visible {
+  outline: 2px solid #483df6;
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   COMPARE HINT
+========================================================= */
+
+.compareHint {
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+
+  padding: 12px 16px;
+
+  border: 1px solid rgba(72, 61, 246, 0.15);
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(72, 61, 246, 0.07),
+    rgba(72, 61, 246, 0.025)
+  );
+
+  color: #483df6;
+}
+
+.compareHint > svg {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+}
+
+.compareHint > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.compareHint strong {
+  color: #272b38;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.compareHint span {
+  color: #7b808f;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   COMPARE WRAPPER
+========================================================= */
+
+.compareWrapper {
+  position: relative;
+
+  min-width: 0;
+
+  border-radius: 22px;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.compareWrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  border-radius: 22px;
+
+  background: rgba(15, 17, 25, 0.289);
+
+  pointer-events: none;
+}
+
+.compareWrapper .compareCheck {
+  z-index: 30;
+}
+
+.compareWrapperSelected .compareCheck {
+  z-index: 50;
+}
+/*
+ * Карточка другого типа
+ */
+
+.compareWrapperDisabled {
+  opacity: 0.55;
+}
+
+/*
+ * Не даём hover карточке
+ * визуально "выпрыгивать" поверх compare UI
+ */
+
+.gridCompareMode .compareWrapper:hover {
+  transform: none;
+}
+
+/* =========================================================
+   COMPARE CHECKBOX
+========================================================= */
+
+.compareCheck {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 20;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: #483df6;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 22px rgba(20, 25, 45, 0.18),
+    0 2px 8px rgba(20, 25, 45, 0.08);
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/*
+ * Пустая галочка
+ */
+
+.compareCheck::after {
+  content: "";
+
+  position: absolute;
+
+  width: 17px;
+  height: 17px;
+
+  border: 2px solid #6f7685;
+  border-radius: 5px;
+
+  pointer-events: none;
+}
+
+/*
+ * Hover
+ */
+
+.compareCheck:hover:not(:disabled) {
+  transform: scale(1.07);
+
+  border-color: #ffffff;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 26px rgba(72, 61, 246, 0.2),
+    0 3px 10px rgba(20, 25, 45, 0.08);
+}
+
+/*
+ * SELECTED
+ */
+
+.compareCheckSelected {
+  background: #483df6;
+
+  border-color: #483df6;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 9px 25px rgba(72, 61, 246, 0.35),
+    0 3px 10px rgba(72, 61, 246, 0.16);
+}
+
+.compareCheckSelected::after {
+  display: none;
+}
+
+.compareCheckSelected:hover:not(:disabled) {
+  background: #392ee0;
+
+  border-color: #392ee0;
+}
+
+/*
+ * Disabled
+ */
+
+.compareCheck:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.65;
+
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.compareCheck:disabled::after {
+  border-color: #a8adb8;
+}
+
+.compareCheck svg {
+  position: relative;
+
+  z-index: 2;
+
+  width: 18px;
+  height: 18px;
+
+  stroke-width: 3;
+}
+
+.compareCheck:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.35);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   DISABLED OVERLAY
+========================================================= */
+
+.compareDisabledOverlay {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+
+  z-index: 300;
+  padding-top: 200px;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 20px;
+
+  color: #020229;
+
+  text-align: center;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  /* Белая тень для читаемости */
+  text-shadow:
+    0 0px 15px rgba(255, 255, 255, 0.975),
+    0 0 6px rgba(255, 255, 255, 0.99);
+
+  backdrop-filter: blur(3px);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   FLOATING COMPARE BAR
+========================================================= */
+
+.compareBar {
+  position: fixed;
+
+  left: 50%;
+
+  bottom: 24px;
+
+  z-index: 1000;
+
+  width: min(760px, calc(100% - 40px));
+
+  min-height: 76px;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 12px 14px 12px 18px;
+
+  border: 1px solid rgba(72, 61, 246, 0.18);
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 20px 60px rgba(30, 35, 60, 0.18),
+    0 5px 20px rgba(72, 61, 246, 0.1);
+
+  backdrop-filter: blur(18px);
+
+  animation: compareBarIn 0.25s ease;
+}
+
+@keyframes compareBarIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* =========================================================
+   COMPARE BAR INFO
+========================================================= */
+
+.compareBarInfo {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  min-width: 0;
+}
+
+.compareBarInfo > svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  color: #483df6;
+}
+
+.compareBarInfo > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.compareBarInfo strong {
+  color: #20232e;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.compareBarInfo span {
+  color: #7b808f;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   COMPARE BAR ACTIONS
+========================================================= */
+
+.compareBarActions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.clearCompare {
+  height: 42px;
+
+  padding: 0 14px;
+
+  border: 1px solid #e1e4ed;
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #727887;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.clearCompare:hover {
+  border-color: #cfd3df;
+
+  background: #f7f8fb;
+
+  color: #454a58;
+}
+
+.startCompare {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 16px;
+
+  border: 1px solid #483df6;
+  border-radius: 11px;
+
+  background: #483df6;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 7px 20px rgba(72, 61, 246, 0.2);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.startCompare:hover:not(:disabled) {
+  background: #392ee0;
+
+  border-color: #392ee0;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.26);
+}
+
+.startCompare:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.startCompare:disabled {
+  background: #e4e6ed;
+
+  border-color: #e4e6ed;
+
+  color: #999eaa;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+/* =========================================================
+   COMPARE MODE GRID
+========================================================= */
+
+.gridCompareMode {
+  padding-bottom: 125px;
+}
+
+/* =========================================================
+   RESPONSIVE COMPARE
+========================================================= */
+
+@media (max-width: 900px) {
+  .toolbar {
+    flex-direction: column;
+  }
+
+  .compareButton {
+    width: 100%;
+  }
+
+  .compareBar {
+    width: calc(100% - 28px);
+
+    bottom: 14px;
+
+    padding: 11px 12px 11px 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .compareHint {
+    align-items: flex-start;
+
+    padding: 13px 14px;
+  }
+
+  .compareHint > svg {
+    margin-top: 2px;
+  }
+
+  .compareCheck {
+    top: 10px;
+    left: 10px;
+
+    width: 40px;
+    height: 40px;
+  }
+
+  .compareDisabledOverlay {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    padding: 8px;
+
+    font-size: 10px;
+  }
+
+  .compareBar {
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 10px;
+
+    border-radius: 18px;
+  }
+
+  .compareBarInfo {
+    justify-content: center;
+  }
+
+  .compareBarActions {
+    width: 100%;
+  }
+
+  .clearCompare,
+  .startCompare {
+    flex: 1;
+  }
+
+  .gridCompareMode {
+    padding-bottom: 155px;
+  }
+}
+
+@media (max-width: 400px) {
+  .compareButton {
+    font-size: 13px;
+  }
+
+  .compareHint strong {
+    font-size: 12px;
+  }
+
+  .compareHint span {
+    font-size: 11px;
+  }
+
+  .compareBar {
+    width: calc(100% - 20px);
+  }
+
+  .clearCompare,
+  .startCompare {
+    padding: 0 10px;
+
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compareButton,
+  .compareCheck,
+  .compareBar {
+    transition: none;
+    animation: none;
+  }
+}

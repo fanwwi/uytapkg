@@ -143,6 +143,25 @@
   );
 }
 
+.noImage {
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #858b99;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
 /* =========================
    BADGES
 ========================= */
@@ -158,6 +177,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  max-width: calc(100% - 150px);
+
+  flex-wrap: wrap;
 }
 
 .badge,
@@ -191,7 +214,6 @@
 
 .urgent {
   background: #dc3545;
-
   color: #fff;
 }
 
@@ -204,13 +226,13 @@
 }
 
 /* =========================
-   IMAGE MANAGEMENT
+   IMAGE ACTIONS
 ========================= */
 
 .imageActions {
   position: absolute;
 
-  z-index: 4;
+  z-index: 5;
 
   top: 20px;
   right: 20px;
@@ -259,6 +281,7 @@
 
 .imageEdit:hover {
   background: #483df6;
+
   border-color: #483df6;
 
   transform: translateY(-2px);
@@ -278,6 +301,7 @@
 
 .imageDelete:hover {
   background: #dc3545;
+
   border-color: #dc3545;
 
   color: #fff;
@@ -292,7 +316,7 @@
 .favorite {
   position: absolute;
 
-  z-index: 4;
+  z-index: 5;
 
   right: 20px;
   bottom: 73px;
@@ -319,8 +343,10 @@
   transition: 0.2s ease;
 }
 
-.favorite:hover {
+.favorite:hover,
+.favoriteActive {
   background: #483df6;
+
   border-color: #483df6;
 
   transform: scale(1.06);
@@ -335,7 +361,7 @@
 .galleryArrow {
   position: absolute;
 
-  z-index: 4;
+  z-index: 5;
 
   top: 50%;
 
@@ -373,6 +399,7 @@
 
 .galleryArrow:hover {
   background: #483df6;
+
   border-color: #483df6;
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.25);
@@ -387,13 +414,13 @@
 }
 
 /* =========================
-   IMAGE COUNTER
+   COUNTER
 ========================= */
 
 .imageCounter {
   position: absolute;
 
-  z-index: 4;
+  z-index: 5;
 
   right: 20px;
   bottom: 20px;
@@ -419,12 +446,12 @@
 .imageTitle {
   position: absolute;
 
-  z-index: 3;
+  z-index: 4;
 
   left: 23px;
   bottom: 21px;
 
-  max-width: calc(100% - 120px);
+  max-width: calc(100% - 130px);
 
   display: flex;
   flex-direction: column;
@@ -464,6 +491,10 @@
   gap: 12px;
 
   margin-top: 13px;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
 }
 
 .thumbnail {
@@ -512,6 +543,32 @@
 
 .dots {
   display: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #c8ccd6;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.dotActive {
+  width: 20px;
+
+  border-radius: 5px;
+
+  background: #483df6;
+
+  box-shadow: 0 0 10px rgba(72, 61, 246, 0.3);
 }
 
 /* =========================
@@ -581,17 +638,8 @@
   font-weight: 750;
 }
 
-.published::before {
-  content: "";
-
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: #32c878;
-
-  box-shadow: 0 0 10px rgba(50, 200, 120, 0.35);
+.published svg {
+  color: #32c878;
 }
 
 .summary h1 {
@@ -628,11 +676,13 @@
   margin-top: 1px;
 }
 
-.location div {
+.location > div {
   display: flex;
   flex-direction: column;
 
   gap: 3px;
+
+  min-width: 0;
 }
 
 .location strong {
@@ -706,6 +756,8 @@
 }
 
 .quickInfo span {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -718,6 +770,12 @@
   color: #292d38;
 
   font-size: 12px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
 }
 
 /* =========================
@@ -770,6 +828,7 @@
 
 .editButton:hover {
   background: #483df6;
+
   border-color: #483df6;
 
   color: #fff;
@@ -789,6 +848,7 @@
 
 .deleteButton:hover {
   background: #d83c4d;
+
   border-color: #d83c4d;
 
   color: #fff;
@@ -797,7 +857,7 @@
 }
 
 /* =========================
-   CONTENT GRID
+   CONTENT
 ========================= */
 
 .contentGrid {
@@ -817,7 +877,7 @@
 }
 
 /* =========================
-   SECTIONS
+   SECTION
 ========================= */
 
 .section {
@@ -827,7 +887,7 @@
 
   border-radius: 25px;
 
-  background: #ffffff;
+  background: #fff;
 
   border: 1px solid #e4e7ee;
 
@@ -862,6 +922,10 @@
   color: #483df6;
 }
 
+.sectionHeader > div:last-child {
+  min-width: 0;
+}
+
 .sectionHeader span {
   color: #483df6;
 
@@ -894,6 +958,8 @@
 
   font-size: 15px;
   line-height: 1.8;
+
+  white-space: pre-wrap;
 }
 
 /* =========================
@@ -903,12 +969,14 @@
 .characteristics {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 }
 
 .characteristic {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -954,6 +1022,8 @@
 }
 
 .characteristic > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -964,12 +1034,18 @@
   color: #858b99;
 
   font-size: 11px;
+
+  line-height: 1.25;
 }
 
 .characteristic strong {
   color: #303440;
 
   font-size: 14px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================
@@ -1061,18 +1137,31 @@
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.2);
 }
 
-.addressCard strong {
+.addressContent {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.addressContent strong {
   color: #242733;
 
   font-size: 15px;
+
+  overflow-wrap: anywhere;
 }
 
-.addressCard p {
-  margin: 4px 0 0;
+.addressContent p {
+  margin: 0;
 
   color: #7b8291;
 
   font-size: 13px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -1084,6 +1173,8 @@
   flex-direction: column;
 
   gap: 20px;
+
+  align-self: start;
 }
 
 .sideCard,
@@ -1092,7 +1183,7 @@
 
   border-radius: 23px;
 
-  background: #ffffff;
+  background: #fff;
 
   border: 1px solid #e4e7ee;
 
@@ -1113,9 +1204,14 @@
   font-weight: 900;
 }
 
+.sideTop svg {
+  width: 18px;
+  height: 18px;
+}
+
 .sideRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   gap: 15px;
@@ -1132,16 +1228,30 @@
 }
 
 .sideRow strong {
+  max-width: 58%;
+
   color: #303440;
 
   text-align: right;
 
   font-size: 12px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
-   SIDEBAR MANAGEMENT
+   OWNER / MANAGEMENT
 ========================= */
+
+.ownerCard {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(72, 61, 246, 0.08),
+      transparent 45%
+    ),
+    #fff;
+}
 
 .ownerHeader {
   display: flex;
@@ -1155,6 +1265,11 @@
 
   font-size: 14px;
   font-weight: 900;
+}
+
+.ownerHeader svg {
+  width: 18px;
+  height: 18px;
 }
 
 .sideEdit,
@@ -1195,6 +1310,8 @@
   color: #fff;
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.2);
+
+  transform: translateY(-1px);
 }
 
 .sideDelete {
@@ -1213,10 +1330,12 @@
   border-color: #d83c4d;
 
   color: #fff;
+
+  transform: translateY(-1px);
 }
 
 /* =========================
-   LOADING / ERROR
+   STATE
 ========================= */
 
 .state {
@@ -1334,10 +1453,6 @@
     min-height: auto;
   }
 
-  .management {
-    margin-top: 25px;
-  }
-
   .contentGrid {
     grid-template-columns: 1fr;
   }
@@ -1364,12 +1479,6 @@
     gap: 12px;
   }
 
-  .ownerBadge {
-    padding: 7px 9px;
-
-    font-size: 8px;
-  }
-
   .mainImage {
     height: 390px;
 
@@ -1380,9 +1489,7 @@
     top: 14px;
     left: 14px;
 
-    flex-wrap: wrap;
-
-    max-width: calc(100% - 90px);
+    max-width: calc(100% - 100px);
   }
 
   .imageActions {
@@ -1422,6 +1529,19 @@
     opacity: 1;
   }
 
+  .left {
+    left: 13px;
+  }
+
+  .right {
+    right: 13px;
+  }
+
+  .imageCounter {
+    right: 13px;
+    bottom: 13px;
+  }
+
   .imageTitle {
     left: 15px;
     bottom: 18px;
@@ -1434,8 +1554,6 @@
   }
 
   .thumbnails {
-    overflow-x: auto;
-
     padding-bottom: 3px;
   }
 
@@ -1447,37 +1565,12 @@
   .dots {
     display: flex;
 
+    align-items: center;
     justify-content: center;
 
     gap: 6px;
 
     margin-top: 12px;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-
-    padding: 0;
-
-    border: none;
-    border-radius: 50%;
-
-    background: #c8ccd6;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-  }
-
-  .dotActive {
-    width: 20px;
-
-    border-radius: 5px;
-
-    background: #483df6;
-
-    box-shadow: 0 0 10px rgba(72, 61, 246, 0.3);
   }
 
   .summary {
@@ -1504,6 +1597,12 @@
 
   .management {
     grid-template-columns: 1fr;
+
+    margin-top: 25px;
+  }
+
+  .contentGrid {
+    margin-top: 22px;
   }
 
   .section {
@@ -1570,5 +1669,14 @@
   .sectionIcon {
     width: 42px;
     height: 42px;
+  }
+
+  .characteristic {
+    padding: 13px;
+  }
+
+  .characteristicIcon {
+    width: 36px;
+    height: 36px;
   }
 }
