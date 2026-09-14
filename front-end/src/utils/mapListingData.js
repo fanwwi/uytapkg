@@ -107,6 +107,12 @@ export function mapListingDetail(item) {
     year: features.year || null,
     beachDistance,
     status: item.is_urgent ? "urgent" : (item.promotion_status === "vip" ? "vip" : null),
+    // Реальный статус публикации (active/draft/hidden/moderation) — не
+    // путать с полем status выше, которое означает тип продвижения
+    // (vip/urgent). Нужен, чтобы страница объявления честно показывала
+    // "Черновик"/"На модерации"/"Скрыто" вместо всегда "Опубликовано" —
+    // см. front-end/src/app/profile/ads/[id]/page.jsx.
+    publicationStatus: item.status || "active",
     description: item.description || "Описание отсутствует.",
     images,
     owner,
