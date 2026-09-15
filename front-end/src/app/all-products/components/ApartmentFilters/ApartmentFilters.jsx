@@ -15,6 +15,8 @@ import {
 
 import { useEffect } from "react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 import styles from "./ApartmentFilters.module.css";
@@ -138,11 +140,20 @@ function normalizeMultiValue(value) {
   return value;
 }
 
+function translateOptions(options, t, translationKey) {
+  return options.map((value) => ({
+    value,
+    label: t(`${translationKey}.${value}`),
+  }));
+}
+
 /* =========================================================
    COMPONENT
 ========================================================= */
 
 export default function ApartmentFilters({ filters, updateFilter }) {
+  const { t } = useLanguage();
+
   const seriesValue = normalizeMultiValue(filters.series);
 
   const floorValue = normalizeMultiValue(filters.floor);
@@ -168,6 +179,76 @@ export default function ApartmentFilters({ filters, updateFilter }) {
   const petsValue = normalizeMultiValue(filters.pets);
 
   const amenitiesValue = normalizeMultiValue(filters.amenities);
+
+  /* =======================================================
+     TRANSLATED OPTIONS
+  ======================================================= */
+
+  const translatedSeries = translateOptions(
+    series,
+    t,
+    "apartmentFilters.options.series",
+  );
+
+  const translatedFloors = translateOptions(
+    floors,
+    t,
+    "apartmentFilters.options.floors",
+  );
+
+  const translatedConditions = translateOptions(
+    conditions,
+    t,
+    "apartmentFilters.options.conditions",
+  );
+
+  const translatedWalls = translateOptions(
+    walls,
+    t,
+    "apartmentFilters.options.walls",
+  );
+
+  const translatedHeating = translateOptions(
+    heating,
+    t,
+    "apartmentFilters.options.heating",
+  );
+
+  const translatedDocuments = translateOptions(
+    documents,
+    t,
+    "apartmentFilters.options.documents",
+  );
+
+  const translatedFurniture = translateOptions(
+    furniture,
+    t,
+    "apartmentFilters.options.furniture",
+  );
+
+  const translatedOfferTypes = translateOptions(
+    offerTypes,
+    t,
+    "apartmentFilters.options.offerTypes",
+  );
+
+  const translatedRentalPeriods = translateOptions(
+    rentalPeriods,
+    t,
+    "apartmentFilters.options.rentalPeriods",
+  );
+
+  const translatedPetsOptions = translateOptions(
+    petsOptions,
+    t,
+    "apartmentFilters.options.pets",
+  );
+
+  const translatedAmenities = translateOptions(
+    amenities,
+    t,
+    "apartmentFilters.options.amenities",
+  );
 
   /* =======================================================
      DEAL
@@ -206,8 +287,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={Building2}
-        title="Серия"
-        options={series}
+        title={t("apartmentFilters.series")}
+        options={translatedSeries}
         value={seriesValue}
         setValue={(value) => updateFilter("series", value)}
       />
@@ -231,8 +312,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={Layers3}
-        title="Этаж"
-        options={floors}
+        title={t("apartmentFilters.floor")}
+        options={translatedFloors}
         value={floorValue}
         setValue={(value) => updateFilter("floor", value)}
       />
@@ -243,8 +324,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={Paintbrush}
-        title="Состояние"
-        options={conditions}
+        title={t("apartmentFilters.condition")}
+        options={translatedConditions}
         value={conditionValue}
         setValue={(value) => updateFilter("condition", value)}
       />
@@ -255,8 +336,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={BrickWall}
-        title="Стены"
-        options={walls}
+        title={t("apartmentFilters.walls")}
+        options={translatedWalls}
         value={wallsValue}
         setValue={(value) => updateFilter("walls", value)}
       />
@@ -267,8 +348,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={Flame}
-        title="Отопление"
-        options={heating}
+        title={t("apartmentFilters.heating")}
+        options={translatedHeating}
         value={heatingValue}
         setValue={(value) => updateFilter("heating", value)}
       />
@@ -281,16 +362,16 @@ export default function ApartmentFilters({ filters, updateFilter }) {
         <>
           <MultiSelect
             icon={FileText}
-            title="Документы"
-            options={documents}
+            title={t("apartmentFilters.documents")}
+            options={translatedDocuments}
             value={documentsValue}
             setValue={(value) => updateFilter("documents", value)}
           />
 
           <MultiSelect
             icon={CreditCard}
-            title="Способ оплаты"
-            options={offerTypes}
+            title={t("apartmentFilters.paymentMethod")}
+            options={translatedOfferTypes}
             value={offerTypeValue}
             setValue={(value) => updateFilter("offerType", value)}
           />
@@ -304,8 +385,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
       {isRent && (
         <MultiSelect
           icon={Clock3}
-          title="Период аренды"
-          options={rentalPeriods}
+          title={t("apartmentFilters.rentalPeriod")}
+          options={translatedRentalPeriods}
           value={rentalPeriodValue}
           setValue={(value) => updateFilter("rentalPeriod", value)}
         />
@@ -318,8 +399,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
       {isRent && (
         <MultiSelect
           icon={PawPrint}
-          title="Можно с животными"
-          options={petsOptions}
+          title={t("apartmentFilters.pets")}
+          options={translatedPetsOptions}
           value={petsValue}
           setValue={(value) => updateFilter("pets", value)}
         />
@@ -331,8 +412,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
 
       <MultiSelect
         icon={Sofa}
-        title="Мебель"
-        options={furniture}
+        title={t("apartmentFilters.furniture")}
+        options={translatedFurniture}
         value={furnitureValue}
         setValue={(value) => updateFilter("furniture", value)}
       />
@@ -344,8 +425,8 @@ export default function ApartmentFilters({ filters, updateFilter }) {
       <div className={styles.full}>
         <MultiSelect
           icon={Building2}
-          title="Удобства"
-          options={amenities}
+          title={t("apartmentFilters.amenities")}
+          options={translatedAmenities}
           value={amenitiesValue}
           setValue={(value) => updateFilter("amenities", value)}
         />

@@ -11,6 +11,7 @@ import {
   Waves,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./ProductSummary.module.css";
 
 const ROOM_TYPES = ["квартира", "дом", "коттедж", "комната"];
@@ -73,22 +74,22 @@ function formatArea(value, land = false) {
   return land ? `${stringValue} сот.` : `${stringValue} м²`;
 }
 
-function formatSeries(value) {
+function formatSeries(value, t) {
   if (!value) return null;
 
   const normalized = String(value).trim().toLowerCase().replace(/ё/g, "е");
 
   const labels = {
-    "106_normal": "106 обычная",
-    "106_improved": "106 улучшенная",
-    "107_normal": "107 обычная",
-    "107_improved": "107 улучшенная",
-    new_building: "Новостройка",
-    newbuilding: "Новостройка",
-    elite: "Элитка",
-    eliteka: "Элитка",
-    individual: "Индивидуалка",
-    individualka: "Индивидуалка",
+    "106_normal": t("productSummary.series.106Normal"),
+    "106_improved": t("productSummary.series.106Improved"),
+    "107_normal": t("productSummary.series.107Normal"),
+    "107_improved": t("productSummary.series.107Improved"),
+    new_building: t("productSummary.series.newBuilding"),
+    newbuilding: t("productSummary.series.newBuilding"),
+    elite: t("productSummary.series.elite"),
+    eliteka: t("productSummary.series.elite"),
+    individual: t("productSummary.series.individual"),
+    individualka: t("productSummary.series.individual"),
   };
 
   return (
@@ -99,6 +100,8 @@ function formatSeries(value) {
 }
 
 export default function ProductSummary({ product }) {
+  const { t } = useLanguage();
+
   const locationParts = [product.country, product.city].filter(
     (value) =>
       value !== null && value !== undefined && String(value).trim() !== "",
@@ -134,7 +137,7 @@ export default function ProductSummary({ product }) {
     quickInfo.push({
       icon: BedDouble,
       value: rooms,
-      label: "комнат",
+      label: t("productSummary.rooms"),
     });
   }
 
@@ -150,7 +153,7 @@ export default function ProductSummary({ product }) {
     quickInfo.push({
       icon: LandPlot,
       value: formatArea(landArea, true),
-      label: "участок",
+      label: t("productSummary.plot"),
     });
   }
 
@@ -158,12 +161,12 @@ export default function ProductSummary({ product }) {
     quickInfo.push({
       icon: Layers3,
       value: floors ? `${floor} / ${floors}` : floor,
-      label: floors ? "этаж" : "",
+      label: floors ? t("productSummary.floor") : "",
     });
   }
 
   if (normalizeType(product.type).includes("квартир")) {
-    const formattedSeries = formatSeries(series);
+    const formattedSeries = formatSeries(series, t);
 
     if (formattedSeries) {
       quickInfo.push({
@@ -178,7 +181,7 @@ export default function ProductSummary({ product }) {
     quickInfo.push({
       icon: Waves,
       value: `${beachDistance} м`,
-      label: "до пляжа",
+      label: t("productSummary.toBeach"),
     });
   }
 
@@ -196,7 +199,7 @@ export default function ProductSummary({ product }) {
         </div>
       </div>
 
-      <h1>{product.title || "Объект недвижимости"}</h1>
+      <h1>{product.title || t("productSummary.property")}</h1>
 
       <div className={styles.location}>
         <MapPin size={20} />
@@ -205,7 +208,7 @@ export default function ProductSummary({ product }) {
           {locationParts.length > 0 ? (
             <strong>{locationParts.join(", ")}</strong>
           ) : (
-            <strong>Местоположение не указано</strong>
+            <strong>{t("productSummary.locationNotSpecified")}</strong>
           )}
 
           {product.address && <span>{product.address}</span>}
@@ -219,7 +222,8 @@ export default function ProductSummary({ product }) {
           <CalendarDays size={16} />
 
           <span>
-            Период аренды: <strong>{product.rentalPeriod}</strong>
+            {t("productSummary.rentalPeriod")}:{" "}
+            <strong>{product.rentalPeriod}</strong>
           </span>
         </div>
       )}

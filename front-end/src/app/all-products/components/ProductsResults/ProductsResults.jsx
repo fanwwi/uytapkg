@@ -2,6 +2,8 @@
 
 import { Search } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 
 import styles from "../../AllProducts.module.css";
@@ -18,6 +20,8 @@ export default function ProductsResults({
   hasFilters,
   onReset,
 }) {
+  const { t } = useLanguage();
+
   const safeListings = Array.isArray(listings) ? listings : [];
 
   return (
@@ -28,11 +32,11 @@ export default function ProductsResults({
 
       <div className={styles.resultsHeader}>
         <div>
-          <span>РЕЗУЛЬТАТЫ ПОИСКА</span>
+          <span>{t("productsResults.header.eyebrow")}</span>
 
           <strong>{loading ? "..." : safeListings.length}</strong>
 
-          <small>объявлений</small>
+          <small>{t("productsResults.header.count")}</small>
         </div>
       </div>
 
@@ -43,7 +47,7 @@ export default function ProductsResults({
       {loading && (
         <div className={styles.loading}>
           <div />
-          Загружаем объявления...
+          {t("productsResults.loading")}
         </div>
       )}
 
@@ -80,13 +84,13 @@ export default function ProductsResults({
             <Search size={27} />
           </div>
 
-          <h2>Ничего не найдено</h2>
+          <h2>{t("productsResults.empty.title")}</h2>
 
-          <p>Попробуйте изменить параметры поиска.</p>
+          <p>{t("productsResults.empty.description")}</p>
 
           {hasFilters && (
             <button type="button" onClick={onReset}>
-              Сбросить фильтры
+              {t("productsResults.empty.reset")}
             </button>
           )}
         </div>

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Building2 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import { getComplexes } from "@/utils/api";
 
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
@@ -10,6 +12,8 @@ import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 import styles from "./ResidentalComplexFilter.module.css";
 
 export default function ResidentialComplexFilter({ value = [], setValue }) {
+  const { t } = useLanguage();
+
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -76,7 +80,7 @@ export default function ResidentialComplexFilter({ value = [], setValue }) {
       <div className={styles.error}>
         <Building2 size={18} />
 
-        <span>Не удалось загрузить список ЖК</span>
+        <span>{t("residentialComplexFilter.loadError")}</span>
       </div>
     );
   }
@@ -85,13 +89,17 @@ export default function ResidentialComplexFilter({ value = [], setValue }) {
     <div className={styles.wrapper}>
       <MultiSelect
         icon={Building2}
-        title="Жилой комплекс"
+        title={t("residentialComplexFilter.title")}
         options={loading ? [] : complexes}
         value={Array.isArray(value) ? value : []}
         setValue={setValue}
       />
 
-      {loading && <span className={styles.loading}>Загрузка списка ЖК...</span>}
+      {loading && (
+        <span className={styles.loading}>
+          {t("residentialComplexFilter.loading")}
+        </span>
+      )}
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { Home } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import {
   getListings,
   getFavorites,
@@ -34,31 +36,31 @@ import styles from "./AllProducts.module.css";
 const categories = [
   {
     value: "apartment",
-    label: "Квартиры",
+    labelKey: "allProducts.categories.apartment",
   },
   {
     value: "house",
-    label: "Дома",
+    labelKey: "allProducts.categories.house",
   },
   {
     value: "cottage",
-    label: "Коттеджи",
+    labelKey: "allProducts.categories.cottage",
   },
   {
     value: "land",
-    label: "Участки",
+    labelKey: "allProducts.categories.land",
   },
   {
     value: "room",
-    label: "Комнаты",
+    labelKey: "allProducts.categories.room",
   },
   {
     value: "commercial",
-    label: "Коммерция",
+    labelKey: "allProducts.categories.commercial",
   },
   {
     value: "parking",
-    label: "Паркинг / гараж",
+    labelKey: "allProducts.categories.parking",
   },
 ];
 
@@ -70,16 +72,6 @@ const categoryComponents = {
   room: RoomFilters,
   commercial: CommercialFilters,
   parking: ParkingFilters,
-};
-
-const categoryLabels = {
-  apartment: "Квартиры",
-  house: "Дома",
-  cottage: "Коттеджи",
-  land: "Участки",
-  room: "Комнаты",
-  commercial: "Коммерция",
-  parking: "Паркинг / гараж",
 };
 
 /* =========================================================
@@ -471,6 +463,8 @@ function matchesArrayFilter(selected, itemValue) {
 ========================================================= */
 
 export default function AllProducts() {
+  const { t } = useLanguage();
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -485,6 +479,32 @@ export default function AllProducts() {
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState("");
+
+  /* =======================================================
+     TRANSLATED CATEGORIES
+  ======================================================= */
+
+  const translatedCategories = useMemo(
+    () =>
+      categories.map((category) => ({
+        value: category.value,
+        label: t(category.labelKey),
+      })),
+    [t],
+  );
+
+  const categoryLabels = useMemo(
+    () => ({
+      apartment: t("allProducts.categories.apartment"),
+      house: t("allProducts.categories.house"),
+      cottage: t("allProducts.categories.cottage"),
+      land: t("allProducts.categories.land"),
+      room: t("allProducts.categories.room"),
+      commercial: t("allProducts.categories.commercial"),
+      parking: t("allProducts.categories.parking"),
+    }),
+    [t],
+  );
 
   /* =======================================================
      URL → FILTERS
@@ -846,7 +866,6 @@ export default function AllProducts() {
     async function loadData() {
       try {
         setLoading(true);
-
         setError("");
 
         const token =
@@ -1380,24 +1399,21 @@ export default function AllProducts() {
             onClick={() => router.push("/")}
           >
             <Home size={17} />
-            На главную
+            {t("allProducts.home")}
           </button>
 
           <div className={styles.badge}>
             <span />
-            Все объявления
+            {t("allProducts.badge")}
           </div>
         </div>
 
         <h1>
-          Найдите свою
-          <span> недвижимость</span>
+          {t("allProducts.title")}
+          <span> {t("allProducts.titleAccent")}</span>
         </h1>
 
-        <p>
-          Используйте точные фильтры или просто расскажите умному поиску, что
-          именно вы ищете.
-        </p>
+        <p>{t("allProducts.description")}</p>
       </header>
 
       <div className={styles.container}>
@@ -1410,7 +1426,7 @@ export default function AllProducts() {
           handleSmartSearch={handleSmartSearch}
           resetFilters={resetFilters}
           hasFilters={hasFilters}
-          categories={categories}
+          categories={translatedCategories}
           categoryLabels={categoryLabels}
           CategoryFilters={CategoryFilters}
           showBeachDistance={showBeachDistance}

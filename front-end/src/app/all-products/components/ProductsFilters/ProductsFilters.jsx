@@ -2,6 +2,8 @@
 
 import { Search, X } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import CommonFilters from "../CommonFilters/CommonFilters";
 import SearchModeSlider from "../SearchModeSlider/SearchModeSlider";
 import SmartSearch from "../SmartSearch/SmartSearch";
@@ -27,6 +29,8 @@ export default function ProductsFilters({
 
   showBeachDistance,
 }) {
+  const { t } = useLanguage();
+
   return (
     <>
       <SearchModeSlider value={searchMode} onChange={setSearchMode} />
@@ -43,9 +47,9 @@ export default function ProductsFilters({
 
           <div className={styles.filterHeader}>
             <div>
-              <span>ФИЛЬТРЫ</span>
+              <span>{t("productsFilters.header.eyebrow")}</span>
 
-              <h2>Настройте поиск</h2>
+              <h2>{t("productsFilters.header.title")}</h2>
             </div>
 
             {hasFilters && (
@@ -55,7 +59,7 @@ export default function ProductsFilters({
                 onClick={resetFilters}
               >
                 <X size={14} />
-                Сбросить
+                {t("productsFilters.reset")}
               </button>
             )}
           </div>
@@ -65,7 +69,7 @@ export default function ProductsFilters({
           ================================================= */}
 
           <div className={styles.section}>
-            <label>Тип недвижимости</label>
+            <label>{t("productsFilters.propertyType")}</label>
 
             <div className={styles.categoryList}>
               {categories.map((category) => {
@@ -90,7 +94,7 @@ export default function ProductsFilters({
           ================================================= */}
 
           <div className={styles.section}>
-            <label>Тип сделки</label>
+            <label>{t("productsFilters.dealType")}</label>
 
             <div className={styles.dealList}>
               <button
@@ -98,7 +102,7 @@ export default function ProductsFilters({
                 className={filters.dealType === "sale" ? styles.dealActive : ""}
                 onClick={() => updateFilter("dealType", "sale")}
               >
-                Продажа
+                {t("productsFilters.deal.sale")}
               </button>
 
               <button
@@ -106,7 +110,7 @@ export default function ProductsFilters({
                 className={filters.dealType === "rent" ? styles.dealActive : ""}
                 onClick={() => updateFilter("dealType", "rent")}
               >
-                Аренда
+                {t("productsFilters.deal.rent")}
               </button>
             </div>
           </div>
@@ -116,7 +120,7 @@ export default function ProductsFilters({
           ================================================= */}
 
           <div className={styles.section}>
-            <label>Основные параметры</label>
+            <label>{t("productsFilters.commonParameters")}</label>
 
             <CommonFilters
               filters={filters}
@@ -132,7 +136,7 @@ export default function ProductsFilters({
           <div className={styles.categoryFilters}>
             <div className={styles.categoryTitle}>
               <div>
-                <span>ХАРАКТЕРИСТИКИ</span>
+                <span>{t("productsFilters.characteristics")}</span>
 
                 <h3>{categoryLabels[filters.propertyType]}</h3>
               </div>
@@ -151,7 +155,7 @@ export default function ProductsFilters({
             onClick={() => updateUrl(filters)}
           >
             <Search size={17} />
-            Показать объявления
+            {t("productsFilters.showListings")}
           </button>
         </section>
       )}

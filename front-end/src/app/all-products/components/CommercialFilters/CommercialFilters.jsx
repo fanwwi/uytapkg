@@ -15,9 +15,15 @@ import {
   Clock3,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 import styles from "./CommercialFilters.module.css";
+
+/* =========================================================
+   OPTIONS
+========================================================= */
 
 const floors = [
   "Любой",
@@ -89,6 +95,15 @@ const offerTypes = [
 
 const rentalPeriods = ["По часам", "Посуточно", "Помесячно", "На долгий срок"];
 
+const documents = [
+  "Любые",
+  "Красная книга",
+  "Техпаспорт",
+  "Договор купли-продажи",
+  "Договор долевого участия",
+  "Акт приема-передачи",
+];
+
 const technicalParameters = [
   "Центральная канализация",
   "Трехфазное питание",
@@ -114,71 +129,168 @@ const amenities = [
   "Санузел",
 ];
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function translateOptions(options, t, translationKey) {
+  return options.map((value) => ({
+    value,
+    label: t(`${translationKey}.${value}`),
+  }));
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function CommercialFilters({ filters, updateFilter }) {
+  const { t } = useLanguage();
+
   const isRent = filters.dealType === "rent";
+
+  /* =======================================================
+     TRANSLATED OPTIONS
+  ======================================================= */
+
+  const translatedFloors = translateOptions(
+    floors,
+    t,
+    "commercialFilters.options.floors",
+  );
+
+  const translatedConditions = translateOptions(
+    conditions,
+    t,
+    "commercialFilters.options.conditions",
+  );
+
+  const translatedWalls = translateOptions(
+    walls,
+    t,
+    "commercialFilters.options.walls",
+  );
+
+  const translatedHeating = translateOptions(
+    heating,
+    t,
+    "commercialFilters.options.heating",
+  );
+
+  const translatedPremisesTypes = translateOptions(
+    premisesTypes,
+    t,
+    "commercialFilters.options.premisesTypes",
+  );
+
+  const translatedYesNoAny = translateOptions(
+    yesNoAny,
+    t,
+    "commercialFilters.options.yesNoAny",
+  );
+
+  const translatedRentalBusiness = translateOptions(
+    rentalBusiness,
+    t,
+    "commercialFilters.options.rentalBusiness",
+  );
+
+  const translatedOfferTypes = translateOptions(
+    offerTypes,
+    t,
+    "commercialFilters.options.offerTypes",
+  );
+
+  const translatedRentalPeriods = translateOptions(
+    rentalPeriods,
+    t,
+    "commercialFilters.options.rentalPeriods",
+  );
+
+  const translatedDocuments = translateOptions(
+    documents,
+    t,
+    "commercialFilters.options.documents",
+  );
+
+  const translatedTechnicalParameters = translateOptions(
+    technicalParameters,
+    t,
+    "commercialFilters.options.technicalParameters",
+  );
+
+  const translatedAmenities = translateOptions(
+    amenities,
+    t,
+    "commercialFilters.options.amenities",
+  );
+
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
     <div className={styles.grid}>
       <MultiSelect
         icon={Layers3}
-        title="Этаж"
-        options={floors}
+        title={t("commercialFilters.floor")}
+        options={translatedFloors}
         value={filters.floor || []}
         setValue={(value) => updateFilter("floor", value)}
       />
 
       <MultiSelect
         icon={Paintbrush}
-        title="Состояние"
-        options={conditions}
+        title={t("commercialFilters.condition")}
+        options={translatedConditions}
         value={filters.condition || []}
         setValue={(value) => updateFilter("condition", value)}
       />
 
       <MultiSelect
         icon={BrickWall}
-        title="Стены"
-        options={walls}
+        title={t("commercialFilters.walls")}
+        options={translatedWalls}
         value={filters.walls || []}
         setValue={(value) => updateFilter("walls", value)}
       />
 
       <MultiSelect
         icon={Flame}
-        title="Отопление"
-        options={heating}
+        title={t("commercialFilters.heating")}
+        options={translatedHeating}
         value={filters.heating || []}
         setValue={(value) => updateFilter("heating", value)}
       />
 
       <MultiSelect
         icon={Store}
-        title="Тип помещения"
-        options={premisesTypes}
+        title={t("commercialFilters.premisesType")}
+        options={translatedPremisesTypes}
         value={filters.premisesType || []}
         setValue={(value) => updateFilter("premisesType", value)}
       />
 
       <MultiSelect
         icon={ShieldCheck}
-        title="Первая линия"
-        options={yesNoAny}
+        title={t("commercialFilters.firstLine")}
+        options={translatedYesNoAny}
         value={filters.firstLine || []}
         setValue={(value) => updateFilter("firstLine", value)}
       />
 
       <MultiSelect
         icon={DoorOpen}
-        title="Отдельный вход"
-        options={yesNoAny}
+        title={t("commercialFilters.separateEntrance")}
+        options={translatedYesNoAny}
         value={filters.separateEntrance || []}
         setValue={(value) => updateFilter("separateEntrance", value)}
       />
 
       <MultiSelect
         icon={BriefcaseBusiness}
-        title="Готовый бизнес"
-        options={rentalBusiness}
+        title={t("commercialFilters.readyBusiness")}
+        options={translatedRentalBusiness}
         value={filters.rentalBusiness || []}
         setValue={(value) => updateFilter("rentalBusiness", value)}
       />
@@ -187,23 +299,16 @@ export default function CommercialFilters({ filters, updateFilter }) {
         <>
           <MultiSelect
             icon={FileText}
-            title="Документы"
-            options={[
-              "Любые",
-              "Красная книга",
-              "Техпаспорт",
-              "Договор купли-продажи",
-              "Договор долевого участия",
-              "Акт приема-передачи",
-            ]}
+            title={t("commercialFilters.documents")}
+            options={translatedDocuments}
             value={filters.documents || []}
             setValue={(value) => updateFilter("documents", value)}
           />
 
           <MultiSelect
             icon={CreditCard}
-            title="Оплата"
-            options={offerTypes}
+            title={t("commercialFilters.payment")}
+            options={translatedOfferTypes}
             value={filters.offerType || []}
             setValue={(value) => updateFilter("offerType", value)}
           />
@@ -213,8 +318,8 @@ export default function CommercialFilters({ filters, updateFilter }) {
       {isRent && (
         <MultiSelect
           icon={Clock3}
-          title="Период аренды"
-          options={rentalPeriods}
+          title={t("commercialFilters.rentalPeriod")}
+          options={translatedRentalPeriods}
           value={filters.rentalPeriod || []}
           setValue={(value) => updateFilter("rentalPeriod", value)}
         />
@@ -223,8 +328,8 @@ export default function CommercialFilters({ filters, updateFilter }) {
       <div className={styles.full}>
         <MultiSelect
           icon={Building2}
-          title="Технические параметры"
-          options={technicalParameters}
+          title={t("commercialFilters.technicalParameters")}
+          options={translatedTechnicalParameters}
           value={filters.technicalParameters || []}
           setValue={(value) => updateFilter("technicalParameters", value)}
         />
@@ -233,8 +338,8 @@ export default function CommercialFilters({ filters, updateFilter }) {
       <div className={styles.full}>
         <MultiSelect
           icon={Building2}
-          title="Удобства"
-          options={amenities}
+          title={t("commercialFilters.amenities")}
+          options={translatedAmenities}
           value={filters.amenities || []}
           setValue={(value) => updateFilter("amenities", value)}
         />

@@ -11,6 +11,8 @@ import {
 
 import { useEffect, useRef, useState } from "react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./SmartSearch.module.css";
 
 const SAFE_MAX_TEXT_LENGTH = 2000;
@@ -47,31 +49,59 @@ const PROPERTY_TYPES = {
   квартиры: "apartment",
   квартир: "apartment",
 
+  // Кыргызча
+  батир: "apartment",
+  батирлер: "apartment",
+
   house: "house",
   дома: "house",
   дом: "house",
 
+  // Кыргызча
+  үй: "house",
+  уй: "house",
+  үйлөр: "house",
+  уйлор: "house",
+
   cottage: "cottage",
   коттедж: "cottage",
   коттеджи: "cottage",
+
+  // Кыргызча
+  коттедждер: "cottage",
 
   land: "land",
   участок: "land",
   участки: "land",
   земля: "land",
 
+  // Кыргызча
+  жер: "land",
+  участоктор: "land",
+
   room: "room",
   комната: "room",
   комнаты: "room",
+
+  // Кыргызча
+  бөлмө: "room",
+  болмө: "room",
+  бөлмөлөр: "room",
 
   commercial: "commercial",
   коммерция: "commercial",
   коммерческая: "commercial",
 
+  // Кыргызча
+  коммерциялык: "commercial",
+
   parking: "parking",
   паркинг: "parking",
   гараж: "parking",
   гаражи: "parking",
+
+  // Кыргызча
+  унааТоктотмоЖай: "parking",
 };
 
 /* =========================================================
@@ -86,12 +116,24 @@ const DEAL_TYPES = {
   купить: "sale",
   покупка: "sale",
 
+  // Кыргызча
+  сатуу: "sale",
+  сатам: "sale",
+  сатыпАлуу: "sale",
+  сатып: "sale",
+
   rent: "rent",
   аренда: "rent",
   арендовать: "rent",
   снять: "rent",
   сниму: "rent",
   "сниму в аренду": "rent",
+
+  // Кыргызча
+  ижара: "rent",
+  ижарага: "rent",
+  "ижарага алуу": "rent",
+  алам: "rent",
 };
 
 /* =========================================================
@@ -102,9 +144,10 @@ const REGION_TYPES = {
   bishkek: "BISHKEK",
   бишкек: "BISHKEK",
 
-  osh: "OSH",
   ош: "OSH",
+  osh: "OSH",
   "ошская область": "OSH",
+  "ош облусу": "OSH",
 
   "issyk-kul": "ISSYK_KUL",
   "issyk kul": "ISSYK_KUL",
@@ -116,9 +159,17 @@ const REGION_TYPES = {
   "иссык-кульская область": "ISSYK_KUL",
   "иссык кульская область": "ISSYK_KUL",
 
+  // Кыргызча
+  "ысык-көл": "ISSYK_KUL",
+  "ысык көл": "ISSYK_KUL",
+  ысыккөл: "ISSYK_KUL",
+  "ысык-көл облусу": "ISSYK_KUL",
+
   chu: "CHUY",
   "чуйская область": "CHUY",
   чуй: "CHUY",
+  чүй: "CHUY",
+  "чүй облусу": "CHUY",
 
   "jalal-abad": "JALAL_ABAD",
   "жалал-абад": "JALAL_ABAD",
@@ -126,22 +177,33 @@ const REGION_TYPES = {
   "джалал-абадская область": "JALAL_ABAD",
   "джалал абадская область": "JALAL_ABAD",
 
+  // Кыргызча
+  "жалал-абад облусу": "JALAL_ABAD",
+  "жалал абад облусу": "JALAL_ABAD",
+
   batken: "BATKEN",
   баткен: "BATKEN",
   "баткенская область": "BATKEN",
+  "баткен облусу": "BATKEN",
 
   naryn: "NARYN",
   нарын: "NARYN",
   "нарынская область": "NARYN",
+  "нарын облусу": "NARYN",
 
   talas: "TALAS",
   талас: "TALAS",
   "таласская область": "TALAS",
+  "талас облусу": "TALAS",
 
   turkey: "TURKEY",
   турция: "TURKEY",
   турцию: "TURKEY",
   турции: "TURKEY",
+
+  // Кыргызча
+  түркия: "TURKEY",
+  түркияны: "TURKEY",
 };
 
 /* =========================================================
@@ -161,7 +223,6 @@ const ISSYK_KUL_CITIES = [
   "сары ой",
   "боконбаево",
   "барскоон",
-  "барскоон",
   "тамга",
   "каджи-сай",
   "каджисай",
@@ -171,6 +232,26 @@ const ISSYK_KUL_CITIES = [
   "рыбачье",
   "балыкчы",
   "иссык-куль",
+
+  // Кыргызские варианты
+  "ысык-көл",
+  "ысык көл",
+  "каракол",
+  "чолпон-ата",
+  "чолпон ата",
+  "бостери",
+  "тамчы",
+  "чоң-сары-ой",
+  "чоң сары ой",
+  "сары-ой",
+  "сары ой",
+  "боконбаево",
+  "барскоон",
+  "тамга",
+  "кажы-сай",
+  "тосор",
+  "ананьево",
+  "балыкчы",
 ];
 
 /* =========================================================
@@ -185,7 +266,10 @@ function detectRegionFromText(value) {
   if (
     text.includes("иссык-куль") ||
     text.includes("иссык куль") ||
-    text.includes("иссыккуль")
+    text.includes("иссыккуль") ||
+    text.includes("ысык-көл") ||
+    text.includes("ысык көл") ||
+    text.includes("ысыккөл")
   ) {
     return "ISSYK_KUL";
   }
@@ -200,20 +284,21 @@ function detectRegionFromText(value) {
     return "BISHKEK";
   }
 
-  if (text.includes("ош")) {
+  if (text.includes("ош") || text.includes("ош облусу")) {
     return "OSH";
   }
 
   if (
     text.includes("турци") ||
     text.includes("турция") ||
+    text.includes("түркия") ||
     text.includes("анталья") ||
     text.includes("стамбул")
   ) {
     return "TURKEY";
   }
 
-  if (text.includes("чуй")) {
+  if (text.includes("чуй") || text.includes("чүй")) {
     return "CHUY";
   }
 
@@ -258,19 +343,27 @@ function normalizeRegion(value) {
     return "ISSYK_KUL";
   }
 
+  if (normalized.includes("ысык") && normalized.includes("көл")) {
+    return "ISSYK_KUL";
+  }
+
   if (normalized.includes("бишкек")) {
     return "BISHKEK";
   }
 
-  if (normalized === "ош" || normalized.includes("ошская")) {
+  if (
+    normalized === "ош" ||
+    normalized.includes("ошская") ||
+    normalized.includes("ош облусу")
+  ) {
     return "OSH";
   }
 
-  if (normalized.includes("тур")) {
+  if (normalized.includes("тур") || normalized.includes("түрк")) {
     return "TURKEY";
   }
 
-  if (normalized.includes("чуй")) {
+  if (normalized.includes("чуй") || normalized.includes("чүй")) {
     return "CHUY";
   }
 
@@ -337,7 +430,11 @@ function normalizeRooms(value) {
     raw.includes("четыре") ||
     raw.includes("пять") ||
     raw.includes("шесть") ||
-    raw.includes("7")
+    raw.includes("7") ||
+    // Кыргызча
+    raw.includes("төрт") ||
+    raw.includes("беш") ||
+    raw.includes("алты")
   ) {
     return "4+";
   }
@@ -452,12 +549,6 @@ function normalizeFilters(aiFilters, originalQuery = "") {
 
   let region = normalizeRegion(f.region);
 
-  /*
-   * Если AI не дал region,
-   * пытаемся определить его непосредственно
-   * из исходного пользовательского запроса.
-   */
-
   if (!region) {
     region = detectRegionFromText(originalQuery);
   }
@@ -466,7 +557,8 @@ function normalizeFilters(aiFilters, originalQuery = "") {
   const normalizedCity = normalizeText(rawCity);
 
   const cityIsIssykKul =
-    normalizedCity.includes("иссык") && normalizedCity.includes("куль");
+    (normalizedCity.includes("иссык") && normalizedCity.includes("куль")) ||
+    (normalizedCity.includes("ысык") && normalizedCity.includes("көл"));
 
   const cityIsIssykKulLocation = ISSYK_KUL_CITIES.some((city) =>
     normalizedCity.includes(city),
@@ -490,14 +582,6 @@ function normalizeFilters(aiFilters, originalQuery = "") {
     }
   }
 
-  /*
-   * Если AI вернул конкретный город,
-   * сохраняем его.
-   *
-   * Исключение — Иссык-Куль,
-   * где регион имеет приоритет.
-   */
-
   if (
     rawCity &&
     region !== "ISSYK_KUL" &&
@@ -514,7 +598,11 @@ function normalizeFilters(aiFilters, originalQuery = "") {
   if (f.country) {
     const country = normalizeText(f.country);
 
-    if (country.includes("турц") || country === "turkey") {
+    if (
+      country.includes("турц") ||
+      country === "turkey" ||
+      country.includes("түрк")
+    ) {
       normalized.country = "turkey";
     } else {
       normalized.country = cleanValue(f.country);
@@ -543,11 +631,6 @@ function normalizeFilters(aiFilters, originalQuery = "") {
   if (maxPrice !== null) {
     normalized.priceTo = String(maxPrice);
   }
-
-  /*
-   * Поддерживаем старое поле maxPrice,
-   * если backend отдаёт только его.
-   */
 
   if (normalized.priceTo === undefined && f.maxPrice !== undefined) {
     normalized.priceTo = normalizeRangeValue(f.maxPrice);
@@ -583,6 +666,7 @@ function normalizeFilters(aiFilters, originalQuery = "") {
   ------------------------------------------------------- */
 
   const beachFrom = normalizeNumber(f.beachDistanceFrom);
+
   const beachTo = normalizeNumber(f.beachDistanceTo);
 
   if (beachFrom !== null) {
@@ -592,15 +676,6 @@ function normalizeFilters(aiFilters, originalQuery = "") {
   if (beachTo !== null) {
     normalized.beachDistanceTo = String(beachTo);
   }
-
-  /*
-   * Если AI понял Иссык-Куль,
-   * но расстояние до пляжа не было задано,
-   * ничего не придумываем.
-   *
-   * Фильтр просто покажется пользователю,
-   * потому что region = ISSYK_KUL.
-   */
 
   /* -------------------------------------------------------
      FEATURES
@@ -634,6 +709,8 @@ function normalizeFilters(aiFilters, originalQuery = "") {
 ========================================================= */
 
 export default function SmartSearch({ onFiltersDetected }) {
+  const { language, t } = useLanguage();
+
   const recognitionRef = useRef(null);
 
   const [supported, setSupported] = useState(true);
@@ -662,7 +739,15 @@ export default function SmartSearch({ onFiltersDetected }) {
 
     const recognition = new SpeechRecognition();
 
-    recognition.lang = "ru-RU";
+    /*
+     * ВАЖНО:
+     * язык распознавания меняется вместе с языком интерфейса.
+     *
+     * RU -> русский
+     * KY -> кыргызский
+     */
+    recognition.lang = language === "ky" ? "ky-KG" : "ru-RU";
+
     recognition.continuous = false;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
@@ -692,23 +777,21 @@ export default function SmartSearch({ onFiltersDetected }) {
       setListening(false);
 
       if (event.error === "not-allowed") {
-        setError(
-          "Нет доступа к микрофону. Разрешите микрофон в настройках браузера.",
-        );
+        setError(t("smartSearch.errors.microphonePermission"));
         return;
       }
 
       if (event.error === "no-speech") {
-        setError("Не удалось услышать речь. Попробуйте ещё раз.");
+        setError(t("smartSearch.errors.noSpeech"));
         return;
       }
 
       if (event.error === "audio-capture") {
-        setError("Микрофон не найден.");
+        setError(t("smartSearch.errors.microphoneNotFound"));
         return;
       }
 
-      setError("Не удалось распознать голос. Попробуйте ещё раз.");
+      setError(t("smartSearch.errors.voiceRecognition"));
     };
 
     recognition.onend = () => {
@@ -726,7 +809,7 @@ export default function SmartSearch({ onFiltersDetected }) {
 
       recognitionRef.current = null;
     };
-  }, []);
+  }, [language, t]);
 
   /* =========================================================
      VOICE
@@ -734,12 +817,12 @@ export default function SmartSearch({ onFiltersDetected }) {
 
   function toggleVoice() {
     if (!supported) {
-      setError("Ваш браузер не поддерживает голосовой ввод.");
+      setError(t("smartSearch.errors.browserNotSupported"));
       return;
     }
 
     if (!recognitionRef.current) {
-      setError("Голосовой ввод недоступен.");
+      setError(t("smartSearch.errors.voiceUnavailable"));
       return;
     }
 
@@ -770,12 +853,12 @@ export default function SmartSearch({ onFiltersDetected }) {
     const trimmedText = String(searchText || "").trim();
 
     if (!trimmedText) {
-      setError("Опишите, какую недвижимость вы ищете.");
+      setError(t("smartSearch.errors.emptyQuery"));
       return;
     }
 
     if (trimmedText.length > SAFE_MAX_TEXT_LENGTH) {
-      setError("Запрос слишком длинный. Сократите его до 2000 символов.");
+      setError(t("smartSearch.errors.queryTooLong"));
       return;
     }
 
@@ -796,27 +879,23 @@ export default function SmartSearch({ onFiltersDetected }) {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || !data?.success) {
-        throw new Error(data?.message || "Не удалось выполнить умный поиск.");
+        throw new Error(data?.message || t("smartSearch.errors.searchFailed"));
       }
 
       if (!data.filters || typeof data.filters !== "object") {
-        throw new Error("AI не вернул параметры поиска.");
+        throw new Error(t("smartSearch.errors.aiNoFilters"));
       }
 
       const normalized = normalizeFilters(data.filters, trimmedText);
 
       console.group("SMART SEARCH");
+      console.log("Language:", language);
       console.log("Query:", trimmedText);
       console.log("AI response:", data.filters);
       console.log("Normalized:", normalized);
       console.groupEnd();
 
       setText(trimmedText);
-
-      /*
-       * Передаём родителю И исходный запрос,
-       * И готовые нормализованные фильтры.
-       */
 
       onFiltersDetected?.({
         query: trimmedText,
@@ -828,7 +907,7 @@ export default function SmartSearch({ onFiltersDetected }) {
       setError(
         error instanceof Error
           ? error.message
-          : "Не удалось выполнить умный поиск. Попробуйте ещё раз.",
+          : t("smartSearch.errors.searchFailed"),
       );
     } finally {
       setSearching(false);
@@ -838,6 +917,37 @@ export default function SmartSearch({ onFiltersDetected }) {
   /* =========================================================
      EXAMPLES
   ========================================================= */
+
+  const examples =
+    language === "ky"
+      ? [
+          {
+            label: "Бишкектеги батир",
+            text: "Бишкектен 80000 долларга чейинки эки бөлмөлүү батир издеп жатам, аянты 50дөн 80 чарчы метрге чейин, жакшы ремонту жана унаа токтотмо жайы болсун",
+          },
+          {
+            label: "Жеке үй",
+            text: "Бишкекте же ага жакын жерде 150000 долларга чейинки, кеминде 4 бөлмөлүү, жылытуусу жана суусу бар жеке үй керек",
+          },
+          {
+            label: "Ысык-Көлдөгү коттедж",
+            text: "Ысык-Көлдөн 200 миң долларга чейинки, бассейни, саунасы, биринчи жээкте жайгашкан жана пляжга жакын коттедж издеп жатам",
+          },
+        ]
+      : [
+          {
+            label: "Квартира в Бишкеке",
+            text: "Ищу двухкомнатную квартиру в Бишкеке до 80000 долларов, площадью от 50 до 80 квадратных метров, с хорошим ремонтом и парковкой",
+          },
+          {
+            label: "Частный дом",
+            text: "Нужен частный дом в Бишкеке или рядом, до 150000 долларов, минимум 4 комнаты, с отоплением и водой",
+          },
+          {
+            label: "Коттедж на Иссык-Куле",
+            text: "Ищу коттедж на Иссык-Куле до 200 тысяч долларов, с бассейном, сауной, первой линией и недалеко от пляжа",
+          },
+        ];
 
   function useExample(example) {
     setText(example);
@@ -866,12 +976,9 @@ export default function SmartSearch({ onFiltersDetected }) {
             AI SEARCH
           </div>
 
-          <h2>Расскажите, что вы ищете</h2>
+          <h2>{t("smartSearch.title")}</h2>
 
-          <p>
-            Напишите или скажите своими словами — AI определит тип недвижимости,
-            локацию, цену, площадь, комнаты и характеристики.
-          </p>
+          <p>{t("smartSearch.description")}</p>
         </div>
       </div>
 
@@ -879,7 +986,7 @@ export default function SmartSearch({ onFiltersDetected }) {
         <textarea
           value={text}
           onChange={(event) => setText(event.target.value)}
-          placeholder="Например: Ищу коттедж на Иссык-Куле до 200 тысяч долларов, с бассейном, сауной, первой линией и недалеко от пляжа"
+          placeholder={t("smartSearch.placeholder")}
           rows={5}
           maxLength={SAFE_MAX_TEXT_LENGTH}
           disabled={searching}
@@ -893,7 +1000,11 @@ export default function SmartSearch({ onFiltersDetected }) {
             }`}
             onClick={toggleVoice}
             disabled={searching}
-            aria-label={listening ? "Остановить запись" : "Голосовой ввод"}
+            aria-label={
+              listening
+                ? t("smartSearch.voice.stop")
+                : t("smartSearch.voice.start")
+            }
           >
             {listening ? <MicOff size={21} /> : <Mic size={21} />}
           </button>
@@ -904,7 +1015,7 @@ export default function SmartSearch({ onFiltersDetected }) {
               className={styles.clearButton}
               onClick={clearSearch}
               disabled={searching}
-              aria-label="Очистить"
+              aria-label={t("smartSearch.clear")}
             >
               <RotateCcw size={15} />
             </button>
@@ -915,7 +1026,8 @@ export default function SmartSearch({ onFiltersDetected }) {
       {listening && (
         <div className={styles.listeningStatus}>
           <span className={styles.pulse} />
-          <span>Слушаю... Говорите, что вы ищете</span>
+
+          <span>{t("smartSearch.listening")}</span>
         </div>
       )}
 
@@ -923,7 +1035,7 @@ export default function SmartSearch({ onFiltersDetected }) {
 
       {!supported && (
         <div className={styles.browserNotice}>
-          Голосовой ввод недоступен в этом браузере. Попробуйте Chrome.
+          {t("smartSearch.browserNotice")}
         </div>
       )}
 
@@ -936,52 +1048,31 @@ export default function SmartSearch({ onFiltersDetected }) {
         {searching ? (
           <>
             <Loader2 size={19} className={styles.spinner} />
-            Анализирую запрос...
+
+            {t("smartSearch.analyzing")}
           </>
         ) : (
           <>
             <Search size={19} />
-            Найти подходящие объявления
+
+            {t("smartSearch.searchButton")}
           </>
         )}
       </button>
 
       <div className={styles.examples}>
-        <span>Например:</span>
+        <span>{t("smartSearch.examples.title")}</span>
 
         <div className={styles.exampleList}>
-          <button
-            type="button"
-            onClick={() =>
-              useExample(
-                "Ищу двухкомнатную квартиру в Бишкеке до 80000 долларов, площадью от 50 до 80 квадратных метров, с хорошим ремонтом и парковкой",
-              )
-            }
-          >
-            Квартира в Бишкеке
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              useExample(
-                "Нужен частный дом в Бишкеке или рядом, до 150000 долларов, минимум 4 комнаты, с отоплением и водой",
-              )
-            }
-          >
-            Частный дом
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              useExample(
-                "Ищу коттедж на Иссык-Куле до 200 тысяч долларов, с бассейном, сауной, первой линией и недалеко от пляжа",
-              )
-            }
-          >
-            Коттедж на Иссык-Куле
-          </button>
+          {examples.map((example) => (
+            <button
+              key={example.label}
+              type="button"
+              onClick={() => useExample(example.text)}
+            >
+              {example.label}
+            </button>
+          ))}
         </div>
       </div>
     </section>

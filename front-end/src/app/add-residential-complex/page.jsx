@@ -25,6 +25,7 @@ import {
 
 import styles from "./AddResidentialComplex.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+import { useLanguage } from "@/context/LanguageContext";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -58,6 +59,7 @@ const MAX_IMAGES = 20;
 
 export default function AddResidentialComplex() {
   const router = useRouter();
+  const { t, language } = useLanguage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -87,6 +89,42 @@ export default function AddResidentialComplex() {
 
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [images, setImages] = useState([]);
+
+  const getTranslation = (key, fallback) => {
+    const translated = t(key);
+
+    return translated === key ? fallback : translated;
+  };
+
+  const getStatusLabel = (value) =>
+    getTranslation(`addResidentialComplex.options.status.${value}`, value);
+
+  const getClassLabel = (value) =>
+    getTranslation(`addResidentialComplex.options.class.${value}`, value);
+
+  const getConstructionLabel = (value) =>
+    getTranslation(
+      `addResidentialComplex.options.construction.${value}`,
+      value,
+    );
+
+  const getAmenityLabel = (value) =>
+    getTranslation(`addResidentialComplex.amenities.items.${value}`, value);
+
+  const translatedStatuses = statuses.map((value) => ({
+    value,
+    label: getStatusLabel(value),
+  }));
+
+  const translatedClasses = classes.map((value) => ({
+    value,
+    label: getClassLabel(value),
+  }));
+
+  const translatedConstructions = constructions.map((value) => ({
+    value,
+    label: getConstructionLabel(value),
+  }));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -166,38 +204,36 @@ export default function AddResidentialComplex() {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Вы не авторизованы. Пожалуйста, войдите в аккаунт.");
+        throw new Error(t("addResidentialComplex.errors.unauthorized"));
       }
 
       if (!form.name.trim()) {
-        throw new Error("Введите название жилого комплекса.");
+        throw new Error(t("addResidentialComplex.errors.nameRequired"));
       }
 
       if (!form.city.trim()) {
-        throw new Error("Введите город.");
+        throw new Error(t("addResidentialComplex.errors.cityRequired"));
       }
 
       if (!form.address.trim()) {
-        throw new Error("Введите адрес жилого комплекса.");
+        throw new Error(t("addResidentialComplex.errors.addressRequired"));
       }
 
-      /*
-       * Ссылка на Минстрой НЕОБЯЗАТЕЛЬНА.
-       * Проверяем URL только если пользователь что-то ввёл.
-       */
       if (form.documentsUrl.trim()) {
         try {
           new URL(form.documentsUrl.trim());
         } catch {
           throw new Error(
-            "Ссылка на официальную информацию должна быть корректным URL.",
+            t("addResidentialComplex.errors.invalidDocumentsUrl"),
           );
         }
       }
 
-      /* =========================
-         UPLOAD IMAGES
-      ========================= */
+      /*
+       * =========================
+       * UPLOAD IMAGES
+       * =========================
+       */
 
       const uploadedUrls = [];
 
@@ -216,9 +252,11 @@ export default function AddResidentialComplex() {
         }
       }
 
-      /* =========================
-         PAYLOAD
-      ========================= */
+      /*
+       * =========================
+       * PAYLOAD
+       * =========================
+       */
 
       const payload = {
         name: form.name.trim(),
@@ -226,6 +264,11 @@ export default function AddResidentialComplex() {
         address: form.address.trim(),
         description: form.description.trim(),
 
+        /*
+         * ВАЖНО:
+         * Эти значения оставляем каноническими.
+         * Переводятся только labels в UI.
+         */
         status: form.status,
         class: form.class,
         construction: form.construction,
@@ -253,16 +296,16 @@ export default function AddResidentialComplex() {
       const res = await createComplex(token, payload);
 
       if (!res?.success) {
-        throw new Error(res?.message || "Не удалось добавить жилой комплекс.");
+        throw new Error(
+          res?.message || t("addResidentialComplex.errors.createFailed"),
+        );
       }
 
       router.push("/profile/projects");
     } catch (err) {
       console.error("Ошибка добавления ЖК:", err);
 
-      setError(
-        err?.message || "Произошла ошибка при сохранении жилого комплекса.",
-      );
+      setError(err?.message || t("addResidentialComplex.errors.saveFailed"));
     } finally {
       setLoading(false);
     }
@@ -285,21 +328,18 @@ export default function AddResidentialComplex() {
             onClick={() => router.push("/profile")}
           >
             <ArrowLeft size={18} />
-            <span>Назад в профиль</span>
+            <span>{t("addResidentialComplex.backToProfile")}</span>
           </button>
 
           <div className={styles.headerContent}>
             <div className={styles.eyebrow}>
               <Building2 size={16} />
-              Панель застройщика
+              {t("addResidentialComplex.developerPanel")}
             </div>
 
-            <h1>Добавить жилой комплекс</h1>
+            <h1>{t("addResidentialComplex.title")}</h1>
 
-            <p>
-              Заполните информацию о жилом комплексе, добавьте характеристики,
-              инфраструктуру, фотографии и официальную информацию.
-            </p>
+            <p>{t("addResidentialComplex.description")}</p>
           </div>
         </header>
 
@@ -328,9 +368,9 @@ export default function AddResidentialComplex() {
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>01</span>
 
-                <h2>Основная информация</h2>
+                <h2>{t("addResidentialComplex.sections.basic.title")}</h2>
 
-                <p>Название, расположение и описание жилого комплекса.</p>
+                <p>{t("addResidentialComplex.sections.basic.description")}</p>
               </div>
             </div>
 
@@ -339,7 +379,7 @@ export default function AddResidentialComplex() {
 
               <div className={`${styles.field} ${styles.full}`}>
                 <label htmlFor="complex-name">
-                  Название ЖК <span>*</span>
+                  {t("addResidentialComplex.fields.name")} <span>*</span>
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -351,7 +391,7 @@ export default function AddResidentialComplex() {
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Например: ЖК Ала-Тоо"
+                    placeholder={t("addResidentialComplex.placeholders.name")}
                     required
                   />
                 </div>
@@ -361,7 +401,7 @@ export default function AddResidentialComplex() {
 
               <div className={styles.field}>
                 <label htmlFor="complex-city">
-                  Город <span>*</span>
+                  {t("addResidentialComplex.fields.city")} <span>*</span>
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -373,7 +413,7 @@ export default function AddResidentialComplex() {
                     type="text"
                     value={form.city}
                     onChange={handleChange}
-                    placeholder="Бишкек"
+                    placeholder={t("addResidentialComplex.placeholders.city")}
                     required
                   />
                 </div>
@@ -383,7 +423,7 @@ export default function AddResidentialComplex() {
 
               <div className={styles.field}>
                 <label htmlFor="complex-address">
-                  Адрес <span>*</span>
+                  {t("addResidentialComplex.fields.address")} <span>*</span>
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -395,7 +435,9 @@ export default function AddResidentialComplex() {
                     type="text"
                     value={form.address}
                     onChange={handleChange}
-                    placeholder="Улица, номер дома"
+                    placeholder={t(
+                      "addResidentialComplex.placeholders.address",
+                    )}
                     autoComplete="street-address"
                     required
                   />
@@ -405,7 +447,9 @@ export default function AddResidentialComplex() {
               {/* DESCRIPTION */}
 
               <div className={`${styles.field} ${styles.full}`}>
-                <label htmlFor="complex-description">Описание</label>
+                <label htmlFor="complex-description">
+                  {t("addResidentialComplex.fields.description")}
+                </label>
 
                 <div className={styles.textareaWrapper}>
                   <AlignLeft className={styles.textareaIcon} />
@@ -415,7 +459,9 @@ export default function AddResidentialComplex() {
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    placeholder="Расскажите о концепции ЖК, архитектуре, расположении, инфраструктуре и преимуществах..."
+                    placeholder={t(
+                      "addResidentialComplex.placeholders.description",
+                    )}
                     rows={7}
                     maxLength={1000}
                   />
@@ -441,9 +487,15 @@ export default function AddResidentialComplex() {
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>02</span>
 
-                <h2>Характеристики комплекса</h2>
+                <h2>
+                  {t("addResidentialComplex.sections.characteristics.title")}
+                </h2>
 
-                <p>Основные параметры здания, территории и квартир.</p>
+                <p>
+                  {t(
+                    "addResidentialComplex.sections.characteristics.description",
+                  )}
+                </p>
               </div>
             </div>
 
@@ -451,12 +503,12 @@ export default function AddResidentialComplex() {
               {/* STATUS */}
 
               <div className={styles.field}>
-                <label>Статус строительства</label>
+                <label>{t("addResidentialComplex.fields.status")}</label>
 
                 <CustomSelect
                   icon={Layers3}
-                  title="Статус"
-                  options={statuses}
+                  title={t("addResidentialComplex.selectTitles.status")}
+                  options={translatedStatuses}
                   value={form.status}
                   setValue={(value) => setField("status", value)}
                 />
@@ -465,12 +517,12 @@ export default function AddResidentialComplex() {
               {/* CLASS */}
 
               <div className={styles.field}>
-                <label>Класс жилья</label>
+                <label>{t("addResidentialComplex.fields.class")}</label>
 
                 <CustomSelect
                   icon={Building2}
-                  title="Класс"
-                  options={classes}
+                  title={t("addResidentialComplex.selectTitles.class")}
+                  options={translatedClasses}
                   value={form.class}
                   setValue={(value) => setField("class", value)}
                 />
@@ -479,12 +531,12 @@ export default function AddResidentialComplex() {
               {/* CONSTRUCTION */}
 
               <div className={styles.field}>
-                <label>Конструкция здания</label>
+                <label>{t("addResidentialComplex.fields.construction")}</label>
 
                 <CustomSelect
                   icon={Building2}
-                  title="Конструкция"
-                  options={constructions}
+                  title={t("addResidentialComplex.selectTitles.construction")}
+                  options={translatedConstructions}
                   value={form.construction}
                   setValue={(value) => setField("construction", value)}
                 />
@@ -493,7 +545,9 @@ export default function AddResidentialComplex() {
               {/* COMPLETION DATE */}
 
               <div className={styles.field}>
-                <label htmlFor="completion-date">Дата сдачи</label>
+                <label htmlFor="completion-date">
+                  {t("addResidentialComplex.fields.completionDate")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <CalendarDays />
@@ -511,7 +565,9 @@ export default function AddResidentialComplex() {
               {/* FLOORS */}
 
               <div className={styles.field}>
-                <label htmlFor="floors">Количество этажей</label>
+                <label htmlFor="floors">
+                  {t("addResidentialComplex.fields.floors")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Layers3 />
@@ -531,7 +587,9 @@ export default function AddResidentialComplex() {
               {/* BLOCKS */}
 
               <div className={styles.field}>
-                <label htmlFor="blocks">Количество блоков</label>
+                <label htmlFor="blocks">
+                  {t("addResidentialComplex.fields.blocks")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Blocks />
@@ -551,7 +609,9 @@ export default function AddResidentialComplex() {
               {/* APARTMENTS */}
 
               <div className={styles.field}>
-                <label htmlFor="apartments">Количество квартир</label>
+                <label htmlFor="apartments">
+                  {t("addResidentialComplex.fields.apartments")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Home />
@@ -571,7 +631,9 @@ export default function AddResidentialComplex() {
               {/* PARKING */}
 
               <div className={styles.field}>
-                <label htmlFor="parking">Парковочных мест</label>
+                <label htmlFor="parking">
+                  {t("addResidentialComplex.fields.parking")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Car />
@@ -591,7 +653,9 @@ export default function AddResidentialComplex() {
               {/* CEILING */}
 
               <div className={styles.field}>
-                <label htmlFor="ceiling-height">Высота потолков, м</label>
+                <label htmlFor="ceiling-height">
+                  {t("addResidentialComplex.fields.ceilingHeight")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Maximize />
@@ -612,7 +676,9 @@ export default function AddResidentialComplex() {
               {/* AREA */}
 
               <div className={styles.field}>
-                <label htmlFor="area">Площадь комплекса, м²</label>
+                <label htmlFor="area">
+                  {t("addResidentialComplex.fields.area")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Ruler />
@@ -633,7 +699,9 @@ export default function AddResidentialComplex() {
               {/* AREA SOTKA */}
 
               <div className={styles.field}>
-                <label htmlFor="area-sotka">Площадь территории, соток</label>
+                <label htmlFor="area-sotka">
+                  {t("addResidentialComplex.fields.areaSotka")}
+                </label>
 
                 <div className={styles.inputWithIcon}>
                   <Ruler />
@@ -666,9 +734,15 @@ export default function AddResidentialComplex() {
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>03</span>
 
-                <h2>Инфраструктура</h2>
+                <h2>
+                  {t("addResidentialComplex.sections.infrastructure.title")}
+                </h2>
 
-                <p>Выберите объекты и удобства, доступные жителям.</p>
+                <p>
+                  {t(
+                    "addResidentialComplex.sections.infrastructure.description",
+                  )}
+                </p>
               </div>
             </div>
 
@@ -690,7 +764,7 @@ export default function AddResidentialComplex() {
                       {active && <Check size={14} />}
                     </span>
 
-                    <span>{item}</span>
+                    <span>{getAmenityLabel(item)}</span>
                   </button>
                 );
               })}
@@ -710,17 +784,17 @@ export default function AddResidentialComplex() {
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>04</span>
 
-                <h2>Фотографии</h2>
+                <h2>{t("addResidentialComplex.sections.photos.title")}</h2>
 
-                <p>Первое изображение станет главным фото жилого комплекса.</p>
+                <p>{t("addResidentialComplex.sections.photos.description")}</p>
               </div>
             </div>
 
             <div className={styles.uploadTop}>
               <div>
-                <strong>Фотографии жилого комплекса</strong>
+                <strong>{t("addResidentialComplex.photos.title")}</strong>
 
-                <span>Добавьте фасад, территорию, дворы и инфраструктуру.</span>
+                <span>{t("addResidentialComplex.photos.description")}</span>
               </div>
 
               <div className={styles.imageCount}>
@@ -741,16 +815,20 @@ export default function AddResidentialComplex() {
                   <Upload />
                 </div>
 
-                <strong>Добавить фотографии</strong>
+                <strong>{t("addResidentialComplex.photos.add")}</strong>
 
-                <span>PNG, JPG или WEBP · до {MAX_IMAGES} изображений</span>
+                <span>
+                  {t("addResidentialComplex.photos.formats")} ·{" "}
+                  {t("addResidentialComplex.photos.upTo")} {MAX_IMAGES}{" "}
+                  {t("addResidentialComplex.photos.images")}
+                </span>
               </label>
             )}
 
             {images.length === MAX_IMAGES && (
               <div className={styles.limitReached}>
                 <Check />
-                Максимальное количество фотографий добавлено
+                {t("addResidentialComplex.photos.limitReached")}
               </div>
             )}
 
@@ -758,10 +836,17 @@ export default function AddResidentialComplex() {
               <div className={styles.images}>
                 {images.map((image, index) => (
                   <div className={styles.image} key={image.url}>
-                    <img src={image.url} alt={`Фото ЖК ${index + 1}`} />
+                    <img
+                      src={image.url}
+                      alt={`${t(
+                        "addResidentialComplex.photos.photoAlt",
+                      )} ${index + 1}`}
+                    />
 
                     {index === 0 && (
-                      <span className={styles.cover}>Главное фото</span>
+                      <span className={styles.cover}>
+                        {t("addResidentialComplex.photos.cover")}
+                      </span>
                     )}
 
                     <span className={styles.imageNumber}>{index + 1}</span>
@@ -770,7 +855,9 @@ export default function AddResidentialComplex() {
                       type="button"
                       onClick={() => removeImage(index)}
                       className={styles.removeImage}
-                      aria-label={`Удалить фото ${index + 1}`}
+                      aria-label={`${t(
+                        "addResidentialComplex.photos.remove",
+                      )} ${index + 1}`}
                     >
                       <X />
                     </button>
@@ -793,11 +880,10 @@ export default function AddResidentialComplex() {
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionNumber}>05</span>
 
-                <h2>Официальная информация</h2>
+                <h2>{t("addResidentialComplex.sections.official.title")}</h2>
 
                 <p>
-                  При наличии добавьте ссылку на официальный источник с
-                  информацией о жилом комплексе.
+                  {t("addResidentialComplex.sections.official.description")}
                 </p>
               </div>
             </div>
@@ -805,7 +891,7 @@ export default function AddResidentialComplex() {
             <div className={styles.documentForm}>
               <div className={styles.field}>
                 <label htmlFor="complex-documents">
-                  Ссылка на официальную информацию о ЖК
+                  {t("addResidentialComplex.fields.documentsUrl")}
                 </label>
 
                 <div className={styles.inputWithIcon}>
@@ -822,10 +908,7 @@ export default function AddResidentialComplex() {
                 </div>
 
                 <small className={styles.fieldHint}>
-                  Необязательно. Если у вас есть ссылка на официальный источник
-                  — сайт застройщика, официальный сайт ЖК, паспорт, проектную
-                  документацию или информацию на сайте Минстроя — укажите её
-                  здесь.
+                  {t("addResidentialComplex.fields.documentsHint")}
                 </small>
               </div>
             </div>
@@ -842,13 +925,15 @@ export default function AddResidentialComplex() {
               onClick={() => router.push("/profile")}
               disabled={loading}
             >
-              Отмена
+              {t("common.cancel")}
             </button>
 
             <button type="submit" className={styles.submit} disabled={loading}>
               <Building2 size={18} />
 
-              {loading ? "Добавление..." : "Добавить ЖК"}
+              {loading
+                ? t("addResidentialComplex.actions.adding")
+                : t("addResidentialComplex.actions.add")}
             </button>
           </div>
         </form>

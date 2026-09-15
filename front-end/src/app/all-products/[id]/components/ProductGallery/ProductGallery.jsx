@@ -9,6 +9,7 @@ import {
   Flame,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./ProductGallery.module.css";
 
 export default function ProductGallery({
@@ -20,6 +21,8 @@ export default function ProductGallery({
   isFavoriteLoading,
   onFavoriteToggle,
 }) {
+  const { t } = useLanguage();
+
   const nextImage = () => {
     if (!images.length) return;
 
@@ -39,7 +42,7 @@ export default function ProductGallery({
       <div className={styles.mainImage}>
         <Image
           src={currentImageSrc}
-          alt={product.title || "Объект недвижимости"}
+          alt={product.title || t("productGallery.property")}
           fill
           priority
           sizes="(max-width: 900px) 100vw, 65vw"
@@ -60,7 +63,7 @@ export default function ProductGallery({
           {product.status === "urgent" && (
             <span className={`${styles.badge} ${styles.urgent}`}>
               <Flame size={14} />
-              Срочно
+              {t("productGallery.urgent")}
             </span>
           )}
 
@@ -79,7 +82,9 @@ export default function ProductGallery({
           onClick={onFavoriteToggle}
           disabled={isFavoriteLoading}
           aria-label={
-            isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+            isFavorite
+              ? t("productGallery.removeFavorite")
+              : t("productGallery.addFavorite")
           }
         >
           <Heart size={23} fill={isFavorite ? "currentColor" : "none"} />
@@ -93,7 +98,7 @@ export default function ProductGallery({
               type="button"
               className={`${styles.galleryArrow} ${styles.left}`}
               onClick={previousImage}
-              aria-label="Предыдущее фото"
+              aria-label={t("productGallery.previousPhoto")}
             >
               <ChevronLeft />
             </button>
@@ -102,7 +107,7 @@ export default function ProductGallery({
               type="button"
               className={`${styles.galleryArrow} ${styles.right}`}
               onClick={nextImage}
-              aria-label="Следующее фото"
+              aria-label={t("productGallery.nextPhoto")}
             >
               <ChevronRight />
             </button>
@@ -132,7 +137,7 @@ export default function ProductGallery({
               >
                 <Image
                   src={image}
-                  alt={`Фото ${index + 1}`}
+                  alt={`${t("productGallery.photo")} ${index + 1}`}
                   fill
                   sizes="100px"
                 />
@@ -149,7 +154,7 @@ export default function ProductGallery({
                   index === currentImage ? styles.dotActive : ""
                 }`}
                 onClick={() => setCurrentImage(index)}
-                aria-label={`Фото ${index + 1}`}
+                aria-label={`${t("productGallery.photo")} ${index + 1}`}
               />
             ))}
           </div>

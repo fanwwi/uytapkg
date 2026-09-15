@@ -14,6 +14,8 @@ import {
 
 import { mapListingData } from "@/utils/mapListingData";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./IssykKulProducts.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
@@ -106,6 +108,61 @@ const normalizeDeal = (value) => {
 
 export default function IssykKulProducts() {
   const router = useRouter();
+  const { t } = useLanguage();
+
+  /*
+   * =========================================================
+   * TRANSLATIONS
+   * =========================================================
+   */
+
+  const getTranslation = (key, fallback) => {
+    const translated = t(key);
+
+    return translated === key ? fallback : translated;
+  };
+
+  const translatedCategories = useMemo(
+    () =>
+      categories.map((category) => ({
+        value: category.value,
+        label: getTranslation(
+          `issykKulProducts.categories.${category.value}`,
+          category.label,
+        ),
+      })),
+    [t],
+  );
+
+  const translatedDealTypes = useMemo(
+    () =>
+      dealTypes.map((deal) => ({
+        value: deal.value,
+        label: getTranslation(
+          `issykKulProducts.dealTypes.${deal.value}`,
+          deal.label,
+        ),
+      })),
+    [t],
+  );
+
+  const translatedCityOptions = useMemo(
+    () =>
+      cityOptions.map((city) => ({
+        value: city,
+        label: getTranslation(`issykKulProducts.cities.${city}`, city),
+      })),
+    [t],
+  );
+
+  const translatedRoomOptions = useMemo(
+    () =>
+      roomOptions.map((room) => ({
+        value: room,
+        label: getTranslation(`issykKulProducts.rooms.${room}`, room),
+      })),
+    [t],
+  );
 
   /*
    * =========================================================
@@ -187,7 +244,8 @@ export default function IssykKulProducts() {
 
         if (!listingsResponse?.success) {
           throw new Error(
-            listingsResponse?.message || "Не удалось загрузить объявления",
+            listingsResponse?.message ||
+              t("issykKulProducts.errors.loadListings"),
           );
         }
 
@@ -209,7 +267,8 @@ export default function IssykKulProducts() {
         console.error("Failed to load listings:", err);
 
         if (!cancelled) {
-          setError(err?.message || "Ошибка соединения с сервером");
+          setError(err?.message || t("issykKulProducts.errors.connection"));
+
           setListingsList([]);
         }
       } finally {
@@ -224,7 +283,7 @@ export default function IssykKulProducts() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   /*
    * =========================================================
@@ -628,24 +687,21 @@ export default function IssykKulProducts() {
               onClick={() => router.push("/")}
             >
               <Home size={17} />
-              На главную
+              {t("issykKulProducts.home")}
             </button>
 
             <span className={styles.regionBadge}>
               <MapPin size={15} />
-              Иссык-Куль
+              {t("issykKulProducts.region")}
             </span>
           </div>
 
           <h1>
-            Недвижимость
-            <span> Иссык-Куля</span>
+            {t("issykKulProducts.title")}
+            <span> {t("issykKulProducts.titleAccent")}</span>
           </h1>
 
-          <p>
-            Дома, квартиры, коттеджи, участки и другие объекты недвижимости в
-            лучших районах Иссык-Кульской области.
-          </p>
+          <p>{t("issykKulProducts.description")}</p>
         </div>
       </header>
 
@@ -657,7 +713,7 @@ export default function IssykKulProducts() {
 
           <input
             type="text"
-            placeholder="Поиск по названию, адресу или городу..."
+            placeholder={t("issykKulProducts.searchPlaceholder")}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             onKeyDown={handleSearchKeyDown}
@@ -670,7 +726,7 @@ export default function IssykKulProducts() {
               type="button"
               className={styles.clearSearch}
               onClick={() => setSearch("")}
-              aria-label="Очистить поиск"
+              aria-label={t("issykKulProducts.clearSearch")}
             >
               <X size={16} />
             </button>
@@ -684,7 +740,7 @@ export default function IssykKulProducts() {
           disabled={loading}
         >
           <Search size={19} />
-          <span>Искать</span>
+          <span>{t("common.search")}</span>
         </button>
       </section>
 
@@ -693,11 +749,11 @@ export default function IssykKulProducts() {
       <section id="filters" className={styles.filtersContainer}>
         <div className={styles.filterBlock}>
           <div className={styles.filterHeading}>
-            <span>Тип недвижимости</span>
+            <span>{t("issykKulProducts.filters.propertyType")}</span>
           </div>
 
           <div className={styles.categories}>
-            {categories.map((category) => {
+            {translatedCategories.map((category) => {
               const active = activeCategory === category.value;
 
               return (
@@ -716,11 +772,11 @@ export default function IssykKulProducts() {
 
         <div className={styles.filterBlock}>
           <div className={styles.filterHeading}>
-            <span>Тип сделки</span>
+            <span>{t("issykKulProducts.filters.dealType")}</span>
           </div>
 
           <div className={styles.dealTypes}>
-            {dealTypes.map((deal) => {
+            {translatedDealTypes.map((deal) => {
               const active = dealType === deal.value;
 
               return (
@@ -741,28 +797,28 @@ export default function IssykKulProducts() {
           <div className={styles.advancedGrid}>
             <CustomSelect
               icon={MapPin}
-              title="Город / Район"
-              options={cityOptions}
+              title={t("issykKulProducts.filters.cityDistrict")}
+              options={translatedCityOptions}
               value={city}
               setValue={setCity}
             />
 
             <CustomSelect
               icon={DoorOpen}
-              title="Количество комнат"
-              options={roomOptions}
+              title={t("issykKulProducts.filters.rooms")}
+              options={translatedRoomOptions}
               value={rooms}
               setValue={setRooms}
             />
 
             <div className={styles.rangeField}>
-              <label>Цена ($)</label>
+              <label>{t("issykKulProducts.filters.price")}</label>
 
               <div className={styles.rangeInputs}>
                 <input
                   type="number"
                   min="0"
-                  placeholder="От"
+                  placeholder={t("issykKulProducts.from")}
                   value={priceFrom}
                   onChange={(event) => setPriceFrom(event.target.value)}
                 />
@@ -770,7 +826,7 @@ export default function IssykKulProducts() {
                 <input
                   type="number"
                   min="0"
-                  placeholder="До"
+                  placeholder={t("issykKulProducts.to")}
                   value={priceTo}
                   onChange={(event) => setPriceTo(event.target.value)}
                 />
@@ -778,13 +834,13 @@ export default function IssykKulProducts() {
             </div>
 
             <div className={styles.rangeField}>
-              <label>Площадь (м²)</label>
+              <label>{t("issykKulProducts.filters.area")}</label>
 
               <div className={styles.rangeInputs}>
                 <input
                   type="number"
                   min="0"
-                  placeholder="От"
+                  placeholder={t("issykKulProducts.from")}
                   value={areaFrom}
                   onChange={(event) => setAreaFrom(event.target.value)}
                 />
@@ -792,7 +848,7 @@ export default function IssykKulProducts() {
                 <input
                   type="number"
                   min="0"
-                  placeholder="До"
+                  placeholder={t("issykKulProducts.to")}
                   value={areaTo}
                   onChange={(event) => setAreaTo(event.target.value)}
                 />
@@ -809,7 +865,7 @@ export default function IssykKulProducts() {
             disabled={loading}
           >
             <Search size={19} />
-            Искать
+            {t("common.search")}
           </button>
 
           {hasDraftFilters && (
@@ -819,7 +875,7 @@ export default function IssykKulProducts() {
               onClick={resetFilters}
             >
               <X size={15} />
-              Сбросить
+              {t("issykKulProducts.reset")}
             </button>
           )}
         </div>
@@ -829,11 +885,11 @@ export default function IssykKulProducts() {
 
       <div id="results" className={styles.resultsHeader}>
         <div className={styles.result}>
-          <span>Объявления Иссык-Куля</span>
+          <span>{t("issykKulProducts.results.title")}</span>
 
           <strong>{loading ? "..." : filteredListings.length}</strong>
 
-          <span>объявлений</span>
+          <span>{t("issykKulProducts.results.count")}</span>
         </div>
 
         {hasAppliedFilters && !loading && (
@@ -843,7 +899,7 @@ export default function IssykKulProducts() {
             onClick={resetFilters}
           >
             <X size={15} />
-            Сбросить
+            {t("issykKulProducts.reset")}
           </button>
         )}
       </div>
@@ -853,7 +909,8 @@ export default function IssykKulProducts() {
       {loading && (
         <div className={styles.loading}>
           <div className={styles.spinner} />
-          <span>Загружаем объявления...</span>
+
+          <span>{t("issykKulProducts.loading")}</span>
         </div>
       )}
 
@@ -887,16 +944,13 @@ export default function IssykKulProducts() {
                 <Search size={30} />
               </div>
 
-              <h2>Ничего не найдено</h2>
+              <h2>{t("issykKulProducts.empty.title")}</h2>
 
-              <p>
-                В Иссык-Кульской области нет объявлений, соответствующих
-                выбранным параметрам.
-              </p>
+              <p>{t("issykKulProducts.empty.description")}</p>
 
               {hasAppliedFilters && (
                 <button type="button" onClick={resetFilters}>
-                  Сбросить фильтры
+                  {t("issykKulProducts.resetFilters")}
                 </button>
               )}
             </div>

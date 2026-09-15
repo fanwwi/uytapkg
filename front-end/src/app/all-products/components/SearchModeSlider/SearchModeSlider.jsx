@@ -1,9 +1,14 @@
 "use client";
 
 import { SlidersHorizontal, Sparkles } from "lucide-react";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./SearchModeSlider.module.css";
 
 export default function SearchModeSlider({ value, onChange }) {
+  const { t } = useLanguage();
+
   const isSmart = value === "smart";
 
   return (
@@ -24,8 +29,8 @@ export default function SearchModeSlider({ value, onChange }) {
           </span>
 
           <span className={styles.text}>
-            <strong>Фильтры</strong>
-            <small>Настроить вручную</small>
+            <strong>{t("searchModeSlider.filters.title")}</strong>
+            <small>{t("searchModeSlider.filters.description")}</small>
           </span>
         </button>
 
@@ -40,8 +45,8 @@ export default function SearchModeSlider({ value, onChange }) {
           </span>
 
           <span className={styles.text}>
-            <strong>Умный поиск</strong>
-            <small>Опишите, что ищете</small>
+            <strong>{t("searchModeSlider.smart.title")}</strong>
+            <small>{t("searchModeSlider.smart.description")}</small>
           </span>
         </button>
       </div>

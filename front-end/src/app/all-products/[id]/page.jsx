@@ -13,6 +13,8 @@ import {
 
 import { mapListingDetail } from "@/utils/mapListingData";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import ProductGallery from "./components/ProductGallery/ProductGallery";
 import ProductSummary from "./components/ProductSummary/ProductSummary";
 import ProductInfo from "./components/ProductInfo/ProductInfo";
@@ -22,6 +24,8 @@ import styles from "./ProductDetails.module.css";
 export default function ProductDetails() {
   const router = useRouter();
   const { id } = useParams();
+
+  const { t } = useLanguage();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,14 +57,14 @@ export default function ProductDetails() {
         if (res.success && res.data) {
           setProduct(mapListingDetail(res.data));
         } else {
-          setError(res.message || "Объявление не найдено");
+          setError(res.message || t("productDetails.notFound"));
         }
       })
       .catch((err) => {
         console.error("Fetch listing details error:", err);
 
         if (mounted) {
-          setError("Ошибка при загрузке данных объявления");
+          setError(t("productDetails.loadError"));
         }
       })
       .finally(() => {
@@ -96,7 +100,7 @@ export default function ProductDetails() {
     return () => {
       mounted = false;
     };
-  }, [id]);
+  }, [id, t]);
 
   /*
    * ========================================================
@@ -149,9 +153,9 @@ export default function ProductDetails() {
         <div className={styles.loadingState}>
           <div className={styles.loadingSpinner} />
 
-          <h2>Загрузка объявления...</h2>
+          <h2>{t("productDetails.loading.title")}</h2>
 
-          <p>Получаем информацию об объекте</p>
+          <p>{t("productDetails.loading.description")}</p>
         </div>
       </main>
     );
@@ -171,9 +175,9 @@ export default function ProductDetails() {
             <Home size={28} />
           </div>
 
-          <h2>Объявление не найдено</h2>
+          <h2>{t("productDetails.notFound")}</h2>
 
-          <p>{error || "Не удалось загрузить данные."}</p>
+          <p>{error || t("productDetails.dataLoadFailed")}</p>
 
           <button
             type="button"
@@ -181,7 +185,7 @@ export default function ProductDetails() {
             onClick={() => router.push("/all-products")}
           >
             <ArrowLeft size={18} />
-            Вернуться к объявлениям
+            {t("productDetails.backToListings")}
           </button>
         </div>
       </main>
@@ -212,7 +216,7 @@ export default function ProductDetails() {
           onClick={() => router.push("/all-products")}
         >
           <ArrowLeft size={18} />
-          Вернуться к объявлениям
+          {t("productDetails.backToListings")}
         </button>
 
         {/* TOP */}

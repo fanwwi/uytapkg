@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./MultiSelect.module.css";
 
 export default function MultiSelect({
@@ -13,10 +15,40 @@ export default function MultiSelect({
   value = [],
   setValue,
 }) {
+  const { t } = useLanguage();
+
   const [open, setOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState(null);
 
   const wrapperRef = useRef(null);
+
+  /* =========================================================
+     OPTION HELPERS
+  ========================================================= */
+
+  function getOptionValue(option) {
+    if (option && typeof option === "object") {
+      return option.value;
+    }
+
+    return option;
+  }
+
+  function getOptionLabel(option) {
+    if (option && typeof option === "object") {
+      return option.label;
+    }
+
+    return option;
+  }
+
+  function getSelectedOption(valueItem) {
+    return options.find((option) => getOptionValue(option) === valueItem);
+  }
+
+  /* =========================================================
+     DROPDOWN POSITION
+  ========================================================= */
 
   function updatePosition() {
     if (!wrapperRef.current) return;
@@ -35,6 +67,10 @@ export default function MultiSelect({
       maxHeight: `${maxHeight}px`,
     });
   }
+
+  /* =========================================================
+     OPEN / CLOSE
+  ========================================================= */
 
   useEffect(() => {
     if (!open) return;
@@ -85,20 +121,37 @@ export default function MultiSelect({
     };
   }, [open]);
 
-  function toggleValue(option) {
+  /* =========================================================
+     VALUE
+  ========================================================= */
+
+  function toggleValue(optionValue) {
     setValue(
-      value.includes(option)
-        ? value.filter((item) => item !== option)
-        : [...value, option],
+      value.includes(optionValue)
+        ? value.filter((item) => item !== optionValue)
+        : [...value, optionValue],
     );
   }
 
-  const label =
-    value.length === 0
-      ? "Любые"
-      : value.length === 1
-        ? value[0]
-        : `${value.length} выбрано`;
+  /* =========================================================
+     SELECTED LABEL
+  ========================================================= */
+
+  let label;
+
+  if (value.length === 0) {
+    label = t("common.any");
+  } else if (value.length === 1) {
+    const selectedOption = getSelectedOption(value[0]);
+
+    label = selectedOption ? getOptionLabel(selectedOption) : value[0];
+  } else {
+    label = `${value.length} ${t("commonFilters.selected")}`;
+  }
+
+  /* =========================================================
+     DROPDOWN
+  ========================================================= */
 
   const dropdown =
     open && dropdownStyle
@@ -109,18 +162,21 @@ export default function MultiSelect({
             style={dropdownStyle}
           >
             {options.map((option) => {
-              const selected = value.includes(option);
+              const optionValue = getOptionValue(option);
+              const optionLabel = getOptionLabel(option);
+
+              const selected = value.includes(optionValue);
 
               return (
                 <button
-                  key={option}
+                  key={optionValue}
                   type="button"
                   className={`${styles.option} ${
                     selected ? styles.selected : ""
                   }`}
-                  onClick={() => toggleValue(option)}
+                  onClick={() => toggleValue(optionValue)}
                 >
-                  <span>{option}</span>
+                  <span>{optionLabel}</span>
 
                   {selected && <Check size={16} />}
                 </button>
@@ -131,6 +187,10 @@ export default function MultiSelect({
         )
       : null;
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <>
       <div ref={wrapperRef} className={styles.wrapper}>
@@ -139,12 +199,14 @@ export default function MultiSelect({
           className={`${styles.select} ${open ? styles.selectOpen : ""}`}
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
+          aria-haspopup="listbox"
         >
           <div className={styles.left}>
             {Icon && <Icon className={styles.icon} />}
 
             <div className={styles.content}>
               <span>{title}</span>
+
               <strong>{label}</strong>
             </div>
           </div>

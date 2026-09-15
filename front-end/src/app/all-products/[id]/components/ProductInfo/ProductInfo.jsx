@@ -29,13 +29,9 @@ import {
   PawPrint,
   CircleDollarSign,
   Waves,
-  CalendarDays,
-  Trees,
-  Maximize,
-  Building,
-  CircleCheck,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./ProductInfo.module.css";
 
 /*
@@ -92,13 +88,13 @@ function getRawValue(product, ...keys) {
 |--------------------------------------------------------------------------
 */
 
-function formatValue(value) {
+function formatValue(value, t) {
   if (!hasValue(value)) {
     return null;
   }
 
   if (typeof value === "boolean") {
-    return value ? "Да" : "Нет";
+    return value ? t("productInfo.yes") : t("productInfo.no");
   }
 
   if (Array.isArray(value)) {
@@ -127,12 +123,12 @@ function formatValue(value) {
     if (value.name) return String(value.name);
     if (value.title) return String(value.title);
     if (value.label) return String(value.label);
-    if (value.value !== undefined) return formatValue(value.value);
+    if (value.value !== undefined) return formatValue(value.value, t);
 
     const entries = Object.entries(value)
       .filter(([, item]) => hasValue(item))
       .map(([key, item]) => {
-        return `${formatFieldLabel(key)}: ${formatValue(item)}`;
+        return `${formatFieldLabel(key, t)}: ${formatValue(item, t)}`;
       });
 
     return entries.length ? entries.join(", ") : null;
@@ -141,8 +137,8 @@ function formatValue(value) {
   return String(value).trim();
 }
 
-function formatDistance(value) {
-  const formatted = formatValue(value);
+function formatDistance(value, t) {
+  const formatted = formatValue(value, t);
 
   if (!formatted) return null;
 
@@ -154,11 +150,11 @@ function formatDistance(value) {
     return formatted;
   }
 
-  return `${formatted} м`;
+  return `${formatted} ${t("productInfo.units.meter")}`;
 }
 
-function formatHeight(value) {
-  const formatted = formatValue(value);
+function formatHeight(value, t) {
+  const formatted = formatValue(value, t);
 
   if (!formatted) return null;
 
@@ -166,11 +162,11 @@ function formatHeight(value) {
     return formatted;
   }
 
-  return `${formatted} м`;
+  return `${formatted} ${t("productInfo.units.meter")}`;
 }
 
-function formatArea(value, land = false) {
-  const formatted = formatValue(value);
+function formatArea(value, t, land = false) {
+  const formatted = formatValue(value, t);
 
   if (!formatted) return null;
 
@@ -182,7 +178,9 @@ function formatArea(value, land = false) {
     return formatted;
   }
 
-  return land ? `${formatted} сот.` : `${formatted} м²`;
+  return land
+    ? `${formatted} ${t("productInfo.units.sotka")}`
+    : `${formatted} ${t("productInfo.units.squareMeter")}`;
 }
 
 /*
@@ -191,171 +189,171 @@ function formatArea(value, land = false) {
 |--------------------------------------------------------------------------
 */
 
-const FIELD_LABELS = {
-  type: "Тип объекта",
-  category: "Категория",
+function getFieldLabels(t) {
+  return {
+    type: t("productInfo.fields.type"),
+    category: t("productInfo.fields.category"),
 
-  property_type: "Тип недвижимости",
-  propertyType: "Тип недвижимости",
+    property_type: t("productInfo.fields.propertyType"),
+    propertyType: t("productInfo.fields.propertyType"),
 
-  residentialComplex: "Жилой комплекс",
-  residential_complex: "Жилой комплекс",
-  residentialComplexName: "Жилой комплекс",
-  residential_complex_name: "Жилой комплекс",
-  complex: "Жилой комплекс",
-  complexName: "Жилой комплекс",
-  complex_name: "Жилой комплекс",
-  zhk: "Жилой комплекс",
-  zhkName: "Жилой комплекс",
+    residentialComplex: t("productInfo.fields.residentialComplex"),
+    residential_complex: t("productInfo.fields.residentialComplex"),
+    residentialComplexName: t("productInfo.fields.residentialComplex"),
+    residential_complex_name: t("productInfo.fields.residentialComplex"),
+    complex: t("productInfo.fields.residentialComplex"),
+    complexName: t("productInfo.fields.residentialComplex"),
+    complex_name: t("productInfo.fields.residentialComplex"),
+    zhk: t("productInfo.fields.residentialComplex"),
+    zhkName: t("productInfo.fields.residentialComplex"),
 
-  developer: "Застройщик",
-  developerName: "Застройщик",
-  developer_name: "Застройщик",
-  developerOrComplex: "Застройщик / ЖК",
-  developer_or_complex: "Застройщик / ЖК",
+    developer: t("productInfo.fields.developer"),
+    developerName: t("productInfo.fields.developer"),
+    developer_name: t("productInfo.fields.developer"),
+    developerOrComplex: t("productInfo.fields.developerOrComplex"),
+    developer_or_complex: t("productInfo.fields.developerOrComplex"),
 
-  series: "Серия / тип",
-  apartmentSeries: "Серия / тип",
-  apartment_series: "Серия / тип",
+    series: t("productInfo.fields.series"),
+    apartmentSeries: t("productInfo.fields.series"),
+    apartment_series: t("productInfo.fields.series"),
 
-  rooms: "Количество комнат",
-  roomCount: "Количество комнат",
-  room_count: "Количество комнат",
+    rooms: t("productInfo.fields.rooms"),
+    roomCount: t("productInfo.fields.rooms"),
+    room_count: t("productInfo.fields.rooms"),
 
-  area: "Площадь",
-  totalArea: "Общая площадь",
-  total_area: "Общая площадь",
+    area: t("productInfo.fields.area"),
+    totalArea: t("productInfo.fields.totalArea"),
+    total_area: t("productInfo.fields.totalArea"),
 
-  landArea: "Площадь участка",
-  land_area: "Площадь участка",
-  areaSotka: "Площадь участка",
-  area_sotka: "Площадь участка",
-  plotArea: "Площадь участка",
-  plot_area: "Площадь участка",
+    landArea: t("productInfo.fields.landArea"),
+    land_area: t("productInfo.fields.landArea"),
+    areaSotka: t("productInfo.fields.landArea"),
+    area_sotka: t("productInfo.fields.landArea"),
+    plotArea: t("productInfo.fields.landArea"),
+    plot_area: t("productInfo.fields.landArea"),
 
-  floor: "Этаж",
-  currentFloor: "Этаж",
-  current_floor: "Этаж",
+    floor: t("productInfo.fields.floor"),
+    currentFloor: t("productInfo.fields.floor"),
+    current_floor: t("productInfo.fields.floor"),
 
-  floors: "Этажность",
-  totalFloors: "Этажность",
-  total_floors: "Этажность",
+    floors: t("productInfo.fields.floors"),
+    totalFloors: t("productInfo.fields.floors"),
+    total_floors: t("productInfo.fields.floors"),
 
-  condition: "Состояние",
-  repair: "Ремонт",
+    condition: t("productInfo.fields.condition"),
+    repair: t("productInfo.fields.repair"),
 
-  walls: "Материал стен",
-  wallMaterial: "Материал стен",
-  wall_material: "Материал стен",
+    walls: t("productInfo.fields.walls"),
+    wallMaterial: t("productInfo.fields.walls"),
+    wall_material: t("productInfo.fields.walls"),
 
-  heating: "Отопление",
-  sewerage: "Канализация",
-  water: "Вода",
-  electricity: "Электричество",
-  gas: "Газ",
+    heating: t("productInfo.fields.heating"),
+    sewerage: t("productInfo.fields.sewerage"),
+    water: t("productInfo.fields.water"),
+    electricity: t("productInfo.fields.electricity"),
+    gas: t("productInfo.fields.gas"),
 
-  documents: "Документы",
-  furniture: "Мебель",
+    documents: t("productInfo.fields.documents"),
+    furniture: t("productInfo.fields.furniture"),
 
-  bathroom: "Санузел",
-  bathrooms: "Количество санузлов",
-  bathroomCount: "Количество санузлов",
-  bathroom_count: "Количество санузлов",
-  privateBathroom: "Свой санузел",
-  private_bathroom: "Свой санузел",
+    bathroom: t("productInfo.fields.bathroom"),
+    bathrooms: t("productInfo.fields.bathrooms"),
+    bathroomCount: t("productInfo.fields.bathrooms"),
+    bathroom_count: t("productInfo.fields.bathrooms"),
+    privateBathroom: t("productInfo.fields.privateBathroom"),
+    private_bathroom: t("productInfo.fields.privateBathroom"),
 
-  ceilingHeight: "Высота потолков",
-  ceiling_height: "Высота потолков",
+    ceilingHeight: t("productInfo.fields.ceilingHeight"),
+    ceiling_height: t("productInfo.fields.ceilingHeight"),
 
-  parking: "Парковка",
-  parkingType: "Тип парковки",
-  parking_type: "Тип парковки",
+    parking: t("productInfo.fields.parking"),
+    parkingType: t("productInfo.fields.parkingType"),
+    parking_type: t("productInfo.fields.parkingType"),
 
-  view: "Вид из окон",
-  orientation: "Ориентация",
+    view: t("productInfo.fields.view"),
+    orientation: t("productInfo.fields.orientation"),
 
-  purpose: "Назначение",
-  fence: "Забор",
-  terrain: "Рельеф",
-  communications: "Коммуникации",
-  landLocation: "Расположение участка",
-  land_location: "Расположение участка",
+    purpose: t("productInfo.fields.purpose"),
+    fence: t("productInfo.fields.fence"),
+    terrain: t("productInfo.fields.terrain"),
+    communications: t("productInfo.fields.communications"),
+    landLocation: t("productInfo.fields.landLocation"),
+    land_location: t("productInfo.fields.landLocation"),
 
-  houseType: "Тип дома",
-  house_type: "Тип дома",
+    houseType: t("productInfo.fields.houseType"),
+    house_type: t("productInfo.fields.houseType"),
 
-  roomsInApartment: "Комнат в квартире",
-  rooms_in_apartment: "Комнат в квартире",
+    roomsInApartment: t("productInfo.fields.roomsInApartment"),
+    rooms_in_apartment: t("productInfo.fields.roomsInApartment"),
 
-  roomLocation: "Расположение комнаты",
-  room_location: "Расположение комнаты",
+    roomLocation: t("productInfo.fields.roomLocation"),
+    room_location: t("productInfo.fields.roomLocation"),
 
-  premisesType: "Тип помещения",
-  premises_type: "Тип помещения",
+    premisesType: t("productInfo.fields.premisesType"),
+    premises_type: t("productInfo.fields.premisesType"),
 
-  technicalParameters: "Технические параметры",
-  technical_parameters: "Технические параметры",
+    technicalParameters: t("productInfo.fields.technicalParameters"),
+    technical_parameters: t("productInfo.fields.technicalParameters"),
 
-  firstLine: "Первая линия",
-  first_line: "Первая линия",
+    firstLine: t("productInfo.fields.firstLine"),
+    first_line: t("productInfo.fields.firstLine"),
 
-  separateEntrance: "Отдельный вход",
-  separate_entrance: "Отдельный вход",
+    separateEntrance: t("productInfo.fields.separateEntrance"),
+    separate_entrance: t("productInfo.fields.separateEntrance"),
 
-  rentalBusiness: "Готовый арендный бизнес",
-  rental_business: "Готовый арендный бизнес",
+    rentalBusiness: t("productInfo.fields.rentalBusiness"),
+    rental_business: t("productInfo.fields.rentalBusiness"),
 
-  material: "Материал",
+    material: t("productInfo.fields.material"),
 
-  gates: "Ворота",
-  gateType: "Тип ворот",
-  gate_type: "Тип ворот",
+    gates: t("productInfo.fields.gates"),
+    gateType: t("productInfo.fields.gateType"),
+    gate_type: t("productInfo.fields.gateType"),
 
-  truckAccess: "Заезд грузового авто",
-  truck_access: "Заезд грузового авто",
+    truckAccess: t("productInfo.fields.truckAccess"),
+    truck_access: t("productInfo.fields.truckAccess"),
 
-  offerType: "Тип предложения",
-  offer_type: "Тип предложения",
+    offerType: t("productInfo.fields.offerType"),
+    offer_type: t("productInfo.fields.offerType"),
 
-  pets: "Можно с животными",
+    pets: t("productInfo.fields.pets"),
 
-  construction: "Тип строительства",
-  constructionType: "Тип строительства",
-  construction_type: "Тип строительства",
+    construction: t("productInfo.fields.construction"),
+    constructionType: t("productInfo.fields.construction"),
+    construction_type: t("productInfo.fields.construction"),
 
-  developerOrComplex: "Застройщик / ЖК",
+    beachDistance: t("productInfo.fields.beachDistance"),
+    beach_distance: t("productInfo.fields.beachDistance"),
 
-  beachDistance: "До пляжа",
-  beach_distance: "До пляжа",
+    entrances: t("productInfo.fields.entrances"),
+    entranceCount: t("productInfo.fields.entrances"),
+    entrance_count: t("productInfo.fields.entrances"),
 
-  entrances: "Количество подъездов",
-  entranceCount: "Количество подъездов",
-  entrance_count: "Количество подъездов",
+    yardArea: t("productInfo.fields.yardArea"),
+    yard_area: t("productInfo.fields.yardArea"),
 
-  yardArea: "Площадь двора",
-  yard_area: "Площадь двора",
+    landWidth: t("productInfo.fields.landWidth"),
+    land_width: t("productInfo.fields.landWidth"),
 
-  landWidth: "Ширина участка",
-  land_width: "Ширина участка",
+    landLength: t("productInfo.fields.landLength"),
+    land_length: t("productInfo.fields.landLength"),
 
-  landLength: "Длина участка",
-  land_length: "Длина участка",
+    dealType: t("productInfo.fields.dealType"),
+    deal_type: t("productInfo.fields.dealType"),
 
-  dealType: "Тип сделки",
-  deal_type: "Тип сделки",
+    rentalPeriod: t("productInfo.fields.rentalPeriod"),
+    rental_period: t("productInfo.fields.rentalPeriod"),
 
-  rentalPeriod: "Период аренды",
-  rental_period: "Период аренды",
+    amenities: t("productInfo.fields.amenities"),
 
-  amenities: "Удобства",
-
-  country: "Страна",
-  region: "Регион",
-  city: "Город",
-  settlement: "Населённый пункт",
-  district: "Район",
-  address: "Адрес",
-};
+    country: t("productInfo.fields.country"),
+    region: t("productInfo.fields.region"),
+    city: t("productInfo.fields.city"),
+    settlement: t("productInfo.fields.settlement"),
+    district: t("productInfo.fields.district"),
+    address: t("productInfo.fields.address"),
+  };
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -363,11 +361,13 @@ const FIELD_LABELS = {
 |--------------------------------------------------------------------------
 */
 
-function formatFieldLabel(key) {
+function formatFieldLabel(key, t) {
   if (!key) return "";
 
-  if (FIELD_LABELS[key]) {
-    return FIELD_LABELS[key];
+  const fieldLabels = getFieldLabels(t);
+
+  if (fieldLabels[key]) {
+    return fieldLabels[key];
   }
 
   return String(key)
@@ -530,118 +530,120 @@ function getCategoryKey(product) {
 |--------------------------------------------------------------------------
 */
 
-const CATEGORY_CONFIG = {
-  apartment: [
-    ["series", "Серия / тип", Tag],
-    ["rooms", "Количество комнат", BedDouble],
-    ["area", "Площадь", Ruler],
-    ["floor", "Этаж", Layers3],
-    ["floors", "Этажность", Layers3],
-    ["condition", "Состояние", Home],
-    ["walls", "Материал стен", Building2],
-    ["heating", "Отопление", Flame],
-    ["furniture", "Мебель", Sofa],
-    ["bathroom", "Санузел", Bath],
-    ["bathrooms", "Количество санузлов", Bath],
-    ["ceilingHeight", "Высота потолков", Ruler],
-    ["view", "Вид из окон", Compass],
-    ["orientation", "Ориентация", Compass],
-    ["parking", "Парковка", CarFront],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+function getCategoryConfig(t) {
+  return {
+    apartment: [
+      ["series", t("productInfo.fields.series"), Tag],
+      ["rooms", t("productInfo.fields.rooms"), BedDouble],
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["floor", t("productInfo.fields.floor"), Layers3],
+      ["floors", t("productInfo.fields.floors"), Layers3],
+      ["condition", t("productInfo.fields.condition"), Home],
+      ["walls", t("productInfo.fields.walls"), Building2],
+      ["heating", t("productInfo.fields.heating"), Flame],
+      ["furniture", t("productInfo.fields.furniture"), Sofa],
+      ["bathroom", t("productInfo.fields.bathroom"), Bath],
+      ["bathrooms", t("productInfo.fields.bathrooms"), Bath],
+      ["ceilingHeight", t("productInfo.fields.ceilingHeight"), Ruler],
+      ["view", t("productInfo.fields.view"), Compass],
+      ["orientation", t("productInfo.fields.orientation"), Compass],
+      ["parking", t("productInfo.fields.parking"), CarFront],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  house: [
-    ["houseType", "Тип дома", Home],
-    ["area", "Площадь", Ruler],
-    ["landArea", "Площадь участка", LandPlot],
-    ["floors", "Этажность", Layers3],
-    ["rooms", "Количество комнат", BedDouble],
-    ["heating", "Отопление", Flame],
-    ["sewerage", "Канализация", Droplets],
-    ["water", "Вода", Droplets],
-    ["electricity", "Электричество", Zap],
-    ["gas", "Газ", Flame],
-    ["bathrooms", "Количество санузлов", Bath],
-    ["parking", "Парковка", CarFront],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+    house: [
+      ["houseType", t("productInfo.fields.houseType"), Home],
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["landArea", t("productInfo.fields.landArea"), LandPlot],
+      ["floors", t("productInfo.fields.floors"), Layers3],
+      ["rooms", t("productInfo.fields.rooms"), BedDouble],
+      ["heating", t("productInfo.fields.heating"), Flame],
+      ["sewerage", t("productInfo.fields.sewerage"), Droplets],
+      ["water", t("productInfo.fields.water"), Droplets],
+      ["electricity", t("productInfo.fields.electricity"), Zap],
+      ["gas", t("productInfo.fields.gas"), Flame],
+      ["bathrooms", t("productInfo.fields.bathrooms"), Bath],
+      ["parking", t("productInfo.fields.parking"), CarFront],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  cottage: [
-    ["houseType", "Тип объекта", Home],
-    ["area", "Площадь", Ruler],
-    ["landArea", "Площадь участка", LandPlot],
-    ["floors", "Этажность", Layers3],
-    ["rooms", "Количество комнат", BedDouble],
-    ["heating", "Отопление", Flame],
-    ["sewerage", "Канализация", Droplets],
-    ["water", "Вода", Droplets],
-    ["electricity", "Электричество", Zap],
-    ["gas", "Газ", Flame],
-    ["bathrooms", "Количество санузлов", Bath],
-    ["parking", "Парковка", CarFront],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+    cottage: [
+      ["houseType", t("productInfo.fields.type"), Home],
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["landArea", t("productInfo.fields.landArea"), LandPlot],
+      ["floors", t("productInfo.fields.floors"), Layers3],
+      ["rooms", t("productInfo.fields.rooms"), BedDouble],
+      ["heating", t("productInfo.fields.heating"), Flame],
+      ["sewerage", t("productInfo.fields.sewerage"), Droplets],
+      ["water", t("productInfo.fields.water"), Droplets],
+      ["electricity", t("productInfo.fields.electricity"), Zap],
+      ["gas", t("productInfo.fields.gas"), Flame],
+      ["bathrooms", t("productInfo.fields.bathrooms"), Bath],
+      ["parking", t("productInfo.fields.parking"), CarFront],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  land: [
-    ["purpose", "Назначение", Map],
-    ["landArea", "Площадь участка", LandPlot],
-    ["fence", "Забор", LandPlot],
-    ["landLocation", "Расположение", MapPin],
-    ["terrain", "Рельеф", Compass],
-    ["communications", "Коммуникации", Zap],
-    ["water", "Вода", Droplets],
-    ["electricity", "Электричество", Zap],
-    ["gas", "Газ", Flame],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+    land: [
+      ["purpose", t("productInfo.fields.purpose"), Map],
+      ["landArea", t("productInfo.fields.landArea"), LandPlot],
+      ["fence", t("productInfo.fields.fence"), LandPlot],
+      ["landLocation", t("productInfo.fields.landLocation"), MapPin],
+      ["terrain", t("productInfo.fields.terrain"), Compass],
+      ["communications", t("productInfo.fields.communications"), Zap],
+      ["water", t("productInfo.fields.water"), Droplets],
+      ["electricity", t("productInfo.fields.electricity"), Zap],
+      ["gas", t("productInfo.fields.gas"), Flame],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  room: [
-    ["roomLocation", "Расположение комнаты", MapPin],
-    ["area", "Площадь", Ruler],
-    ["roomsInApartment", "Комнат в квартире", BedDouble],
-    ["floor", "Этаж", Layers3],
-    ["floors", "Этажность", Layers3],
-    ["condition", "Состояние", Home],
-    ["walls", "Материал стен", Building2],
-    ["heating", "Отопление", Flame],
-    ["privateBathroom", "Свой санузел", Bath],
-    ["furniture", "Мебель", Sofa],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+    room: [
+      ["roomLocation", t("productInfo.fields.roomLocation"), MapPin],
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["roomsInApartment", t("productInfo.fields.roomsInApartment"), BedDouble],
+      ["floor", t("productInfo.fields.floor"), Layers3],
+      ["floors", t("productInfo.fields.floors"), Layers3],
+      ["condition", t("productInfo.fields.condition"), Home],
+      ["walls", t("productInfo.fields.walls"), Building2],
+      ["heating", t("productInfo.fields.heating"), Flame],
+      ["privateBathroom", t("productInfo.fields.privateBathroom"), Bath],
+      ["furniture", t("productInfo.fields.furniture"), Sofa],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  commercial: [
-    ["area", "Площадь", Ruler],
-    ["floor", "Этаж", Layers3],
-    ["condition", "Состояние", Home],
-    ["walls", "Материал стен", Building2],
-    ["heating", "Отопление", Flame],
-    ["premisesType", "Тип помещения", Store],
-    ["technicalParameters", "Технические параметры", Tag],
-    ["firstLine", "Первая линия", Store],
-    ["separateEntrance", "Отдельный вход", DoorOpen],
-    ["rentalBusiness", "Готовый арендный бизнес", Store],
-    ["parking", "Парковка", CarFront],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
+    commercial: [
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["floor", t("productInfo.fields.floor"), Layers3],
+      ["condition", t("productInfo.fields.condition"), Home],
+      ["walls", t("productInfo.fields.walls"), Building2],
+      ["heating", t("productInfo.fields.heating"), Flame],
+      ["premisesType", t("productInfo.fields.premisesType"), Store],
+      ["technicalParameters", t("productInfo.fields.technicalParameters"), Tag],
+      ["firstLine", t("productInfo.fields.firstLine"), Store],
+      ["separateEntrance", t("productInfo.fields.separateEntrance"), DoorOpen],
+      ["rentalBusiness", t("productInfo.fields.rentalBusiness"), Store],
+      ["parking", t("productInfo.fields.parking"), CarFront],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
 
-  parking: [
-    ["area", "Площадь", Ruler],
-    ["ceilingHeight", "Высота потолков", Ruler],
-    ["parkingType", "Тип парковки", CarFront],
-    ["material", "Материал", Building2],
-    ["gates", "Ворота", DoorOpen],
-    ["truckAccess", "Для грузового авто", CarFront],
-    ["gateType", "Тип ворот", DoorOpen],
-    ["documents", "Документы", FileCheck],
-    ["offerType", "Тип предложения", CircleDollarSign],
-  ],
-};
+    parking: [
+      ["area", t("productInfo.fields.area"), Ruler],
+      ["ceilingHeight", t("productInfo.fields.ceilingHeight"), Ruler],
+      ["parkingType", t("productInfo.fields.parkingType"), CarFront],
+      ["material", t("productInfo.fields.material"), Building2],
+      ["gates", t("productInfo.fields.gates"), DoorOpen],
+      ["truckAccess", t("productInfo.fields.truckAccess"), CarFront],
+      ["gateType", t("productInfo.fields.gateType"), DoorOpen],
+      ["documents", t("productInfo.fields.documents"), FileCheck],
+      ["offerType", t("productInfo.fields.offerType"), CircleDollarSign],
+    ],
+  };
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -649,35 +651,35 @@ const CATEGORY_CONFIG = {
 |--------------------------------------------------------------------------
 */
 
-function formatSeries(value) {
+function formatSeries(value, t) {
   if (!value) return null;
 
   const normalized = normalize(value);
 
   const labels = {
-    "106_normal": "106 обычная",
-    "106_improved": "106 улучшенная",
-    "107_normal": "107 обычная",
-    "107_improved": "107 улучшенная",
+    "106_normal": t("productInfo.series.106Normal"),
+    "106_improved": t("productInfo.series.106Improved"),
+    "107_normal": t("productInfo.series.107Normal"),
+    "107_improved": t("productInfo.series.107Improved"),
 
-    "106_обычная": "106 обычная",
-    "106_улучшенная": "106 улучшенная",
-    "107_обычная": "107 обычная",
-    "107_улучшенная": "107 улучшенная",
+    "106_обычная": t("productInfo.series.106Normal"),
+    "106_улучшенная": t("productInfo.series.106Improved"),
+    "107_обычная": t("productInfo.series.107Normal"),
+    "107_улучшенная": t("productInfo.series.107Improved"),
 
-    new_building: "Новостройка",
-    newbuilding: "Новостройка",
+    new_building: t("productInfo.series.newBuilding"),
+    newbuilding: t("productInfo.series.newBuilding"),
 
-    elite: "Элитка",
-    элитка: "Элитка",
+    elite: t("productInfo.series.elite"),
+    элитка: t("productInfo.series.elite"),
 
-    individual: "Индивидуалка",
-    individualka: "Индивидуалка",
-    индивидуалка: "Индивидуалка",
+    individual: t("productInfo.series.individual"),
+    individualka: t("productInfo.series.individual"),
+    индивидуалка: t("productInfo.series.individual"),
 
-    сталинка: "Сталинка",
-    хрущевка: "Хрущевка",
-    пентхаус: "Пентхаус",
+    сталинка: t("productInfo.series.stalinka"),
+    хрущевка: t("productInfo.series.khrushchevka"),
+    пентхаус: t("productInfo.series.penthouse"),
   };
 
   return (
@@ -709,9 +711,10 @@ function isRent(product) {
 |--------------------------------------------------------------------------
 */
 
-function buildCharacteristics(product) {
+function buildCharacteristics(product, t) {
   const categoryKey = getCategoryKey(product);
-  const config = CATEGORY_CONFIG[categoryKey] || [];
+  const categoryConfig = getCategoryConfig(t);
+  const config = categoryConfig[categoryKey] || [];
 
   const rent = isRent(product);
 
@@ -721,7 +724,7 @@ function buildCharacteristics(product) {
   const addCharacteristic = (key, label, Icon, value) => {
     if (!hasValue(value)) return;
 
-    const formatted = formatValue(value);
+    const formatted = formatValue(value, t);
 
     if (!formatted) return;
 
@@ -755,19 +758,19 @@ function buildCharacteristics(product) {
     }
 
     if (key === "series") {
-      value = formatSeries(value);
+      value = formatSeries(value, t);
     }
 
     if (key === "ceilingHeight") {
-      value = formatHeight(value);
+      value = formatHeight(value, t);
     }
 
     if (key === "area") {
-      value = formatArea(value);
+      value = formatArea(value, t);
     }
 
     if (key === "landArea" || key === "areaSotka" || key === "plotArea") {
-      value = formatArea(value, true);
+      value = formatArea(value, t, true);
     }
 
     addCharacteristic(key, label, Icon, value);
@@ -795,8 +798,8 @@ function buildCharacteristics(product) {
   if (hasValue(complex)) {
     result.unshift({
       key: "residentialComplex",
-      label: "Жилой комплекс",
-      value: formatValue(complex),
+      label: t("productInfo.fields.residentialComplex"),
+      value: formatValue(complex, t),
       icon: Building2,
     });
 
@@ -825,7 +828,12 @@ function buildCharacteristics(product) {
   );
 
   if (hasValue(developer)) {
-    addCharacteristic("developer", "Застройщик", Building, developer);
+    addCharacteristic(
+      "developer",
+      t("productInfo.fields.developer"),
+      Building,
+      developer,
+    );
 
     usedKeys.add("developerName");
     usedKeys.add("developer_name");
@@ -841,26 +849,19 @@ function buildCharacteristics(product) {
     const pets = getRawValue(product, "pets");
 
     if (hasValue(pets)) {
-      addCharacteristic("pets", "Можно с животными", PawPrint, pets);
+      addCharacteristic("pets", t("productInfo.fields.pets"), PawPrint, pets);
     }
   }
 
   /*
    * --------------------------------------------------------
    * GENERIC RAW FEATURES
-   *
-   * Всё, что не вошло в CATEGORY_CONFIG,
-   * всё равно показываем.
    * --------------------------------------------------------
    */
 
   const raw = product?.rawFeatures || {};
 
   Object.entries(raw).forEach(([key, value]) => {
-    /*
-     * Системные / служебные поля.
-     */
-
     if (
       [
         "amenities",
@@ -876,25 +877,13 @@ function buildCharacteristics(product) {
       return;
     }
 
-    /*
-     * Уже показано.
-     */
-
     if (usedKeys.has(key)) {
       return;
     }
 
-    /*
-     * Пустое значение.
-     */
-
     if (!hasValue(value)) {
       return;
     }
-
-    /*
-     * Не показываем внутренние технические поля.
-     */
 
     const normalizedKey = normalize(key);
 
@@ -908,10 +897,6 @@ function buildCharacteristics(product) {
       return;
     }
 
-    /*
-     * Форматируем отдельные поля.
-     */
-
     let formattedValue = value;
 
     if (
@@ -919,15 +904,15 @@ function buildCharacteristics(product) {
       key === "apartmentSeries" ||
       key === "apartment_series"
     ) {
-      formattedValue = formatSeries(value);
+      formattedValue = formatSeries(value, t);
     }
 
     if (key === "ceilingHeight" || key === "ceiling_height") {
-      formattedValue = formatHeight(value);
+      formattedValue = formatHeight(value, t);
     }
 
     if (key === "area" || key === "totalArea" || key === "total_area") {
-      formattedValue = formatArea(value);
+      formattedValue = formatArea(value, t);
     }
 
     if (
@@ -938,12 +923,12 @@ function buildCharacteristics(product) {
       key === "plotArea" ||
       key === "plot_area"
     ) {
-      formattedValue = formatArea(value, true);
+      formattedValue = formatArea(value, t, true);
     }
 
     addCharacteristic(
       key,
-      formatFieldLabel(key),
+      formatFieldLabel(key, t),
       getFieldIcon(key),
       formattedValue,
     );
@@ -1015,7 +1000,9 @@ function getLocationParts(product) {
 */
 
 export default function ProductInfo({ product, router }) {
-  const characteristics = buildCharacteristics(product);
+  const { t } = useLanguage();
+
+  const characteristics = buildCharacteristics(product, t);
 
   const amenities = getAmenities(product);
 
@@ -1048,13 +1035,13 @@ export default function ProductInfo({ product, router }) {
               </div>
 
               <div>
-                <span>ОБ ОБЪЕКТЕ</span>
-                <h2>Описание</h2>
+                <span>{t("productInfo.sections.about")}</span>
+                <h2>{t("productInfo.sections.description")}</h2>
               </div>
             </div>
 
             <p className={styles.description}>
-              {product.description || "Описание объекта не указано."}
+              {product.description || t("productInfo.descriptionNotSpecified")}
             </p>
           </section>
         )}
@@ -1068,8 +1055,8 @@ export default function ProductInfo({ product, router }) {
             </div>
 
             <div>
-              <span>ПОДРОБНОСТИ</span>
-              <h2>Характеристики объекта</h2>
+              <span>{t("productInfo.sections.details")}</span>
+              <h2>{t("productInfo.sections.characteristics")}</h2>
             </div>
           </div>
 
@@ -1095,7 +1082,9 @@ export default function ProductInfo({ product, router }) {
           ) : (
             <div className={styles.emptyBlock}>
               <CheckCircle2 size={20} />
-              <span>Дополнительные характеристики не указаны.</span>
+              <span>
+                {t("productInfo.additionalCharacteristicsNotSpecified")}
+              </span>
             </div>
           )}
         </section>
@@ -1110,8 +1099,8 @@ export default function ProductInfo({ product, router }) {
               </div>
 
               <div>
-                <span>ДОПОЛНИТЕЛЬНО</span>
-                <h2>Удобства</h2>
+                <span>{t("productInfo.sections.additional")}</span>
+                <h2>{t("productInfo.sections.amenities")}</h2>
               </div>
             </div>
 
@@ -1135,8 +1124,8 @@ export default function ProductInfo({ product, router }) {
             </div>
 
             <div>
-              <span>РАСПОЛОЖЕНИЕ</span>
-              <h2>Адрес объекта</h2>
+              <span>{t("productInfo.sections.location")}</span>
+              <h2>{t("productInfo.sections.address")}</h2>
             </div>
           </div>
 
@@ -1149,7 +1138,7 @@ export default function ProductInfo({ product, router }) {
               <strong>
                 {locationParts.length
                   ? locationParts.join(", ")
-                  : "Местоположение не указано"}
+                  : t("productInfo.locationNotSpecified")}
               </strong>
 
               {product.address && <p>{product.address}</p>}
@@ -1157,7 +1146,7 @@ export default function ProductInfo({ product, router }) {
               {product.latitude != null && product.longitude != null && (
                 <div className={styles.coordinates}>
                   <Compass size={14} />
-                  Координаты объекта указаны
+                  {t("productInfo.coordinatesSpecified")}
                 </div>
               )}
             </div>
@@ -1173,55 +1162,55 @@ export default function ProductInfo({ product, router }) {
         <div className={styles.sideCard}>
           <div className={styles.sideTop}>
             <Tag />
-            <span>Информация</span>
+            <span>{t("productInfo.sidebar.information")}</span>
           </div>
 
           {hasValue(category) && (
             <div className={styles.sideRow}>
-              <span>Категория</span>
-              <strong>{formatValue(category)}</strong>
+              <span>{t("productInfo.fields.category")}</span>
+              <strong>{formatValue(category, t)}</strong>
             </div>
           )}
 
           {hasValue(type) && (
             <div className={styles.sideRow}>
-              <span>Тип объекта</span>
-              <strong>{formatValue(type)}</strong>
+              <span>{t("productInfo.fields.type")}</span>
+              <strong>{formatValue(type, t)}</strong>
             </div>
           )}
 
           {hasValue(dealType) && (
             <div className={styles.sideRow}>
-              <span>Тип сделки</span>
-              <strong>{formatValue(dealType)}</strong>
+              <span>{t("productInfo.fields.dealType")}</span>
+              <strong>{formatValue(dealType, t)}</strong>
             </div>
           )}
 
           {hasValue(rentalPeriod) && (
             <div className={styles.sideRow}>
-              <span>Период аренды</span>
-              <strong>{formatValue(rentalPeriod)}</strong>
+              <span>{t("productInfo.fields.rentalPeriod")}</span>
+              <strong>{formatValue(rentalPeriod, t)}</strong>
             </div>
           )}
 
           {hasValue(listingType) && (
             <div className={styles.sideRow}>
-              <span>Тип объявления</span>
-              <strong>{formatValue(listingType)}</strong>
+              <span>{t("productInfo.fields.listingType")}</span>
+              <strong>{formatValue(listingType, t)}</strong>
             </div>
           )}
 
           {hasValue(createdAt) && (
             <div className={styles.sideRow}>
-              <span>Дата публикации</span>
-              <strong>{formatValue(createdAt)}</strong>
+              <span>{t("productInfo.fields.publicationDate")}</span>
+              <strong>{formatValue(createdAt, t)}</strong>
             </div>
           )}
 
           {hasValue(beachDistance) && (
             <div className={styles.sideRow}>
-              <span>До пляжа</span>
-              <strong>{formatDistance(beachDistance)}</strong>
+              <span>{t("productInfo.fields.beachDistance")}</span>
+              <strong>{formatDistance(beachDistance, t)}</strong>
             </div>
           )}
         </div>
@@ -1232,21 +1221,21 @@ export default function ProductInfo({ product, router }) {
           <div className={styles.sideCard}>
             <div className={styles.sideTop}>
               <MapPin />
-              <span>Локация</span>
+              <span>{t("productInfo.sidebar.location")}</span>
             </div>
 
             {locationParts.map((value, index) => (
               <div className={styles.sideRow} key={`${value}-${index}`}>
                 <span>
                   {index === 0
-                    ? "Страна"
+                    ? t("productInfo.location.country")
                     : index === 1
-                      ? "Регион"
+                      ? t("productInfo.location.region")
                       : index === 2
-                        ? "Город"
+                        ? t("productInfo.location.city")
                         : index === 3
-                          ? "Населённый пункт"
-                          : "Район"}
+                          ? t("productInfo.location.settlement")
+                          : t("productInfo.location.district")}
                 </span>
 
                 <strong>{value}</strong>
@@ -1261,7 +1250,7 @@ export default function ProductInfo({ product, router }) {
           <div className={styles.ownerSideCard}>
             <div className={styles.ownerSideHeader}>
               <UserRound />
-              Владелец
+              {t("productInfo.owner.title")}
             </div>
 
             <div className={styles.ownerSideProfile}>
@@ -1270,7 +1259,7 @@ export default function ProductInfo({ product, router }) {
                   src={
                     product.owner.avatar || "https://i.pravatar.cc/150?img=12"
                   }
-                  alt={product.owner.name || "Владелец"}
+                  alt={product.owner.name || t("productInfo.owner.title")}
                   fill
                   sizes="55px"
                 />
@@ -1279,7 +1268,9 @@ export default function ProductInfo({ product, router }) {
               <div>
                 <strong>{product.owner.name}</strong>
 
-                <span>{product.owner.role || "Владелец объявления"}</span>
+                <span>
+                  {product.owner.role || t("productInfo.owner.defaultRole")}
+                </span>
               </div>
             </div>
 
@@ -1300,7 +1291,7 @@ export default function ProductInfo({ product, router }) {
                   router.push(`/public-profile/${product.owner.id}`)
                 }
               >
-                Связаться с владельцем
+                {t("productInfo.owner.contact")}
               </button>
             )}
           </div>
@@ -1314,12 +1305,9 @@ export default function ProductInfo({ product, router }) {
           </div>
 
           <div className={styles.lawyerContent}>
-            <strong>Проверка у юриста</strong>
+            <strong>{t("productInfo.lawyer.title")}</strong>
 
-            <p>
-              Хотите убедиться в юридической чистоте объекта? Запросите проверку
-              объявления у юриста.
-            </p>
+            <p>{t("productInfo.lawyer.description")}</p>
           </div>
 
           <button
@@ -1327,7 +1315,7 @@ export default function ProductInfo({ product, router }) {
             className={styles.lawyerButton}
             onClick={() => router.push("/lawyers")}
           >
-            Запросить проверку
+            {t("productInfo.lawyer.button")}
           </button>
         </div>
       </aside>

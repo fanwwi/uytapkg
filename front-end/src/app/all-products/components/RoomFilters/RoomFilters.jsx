@@ -12,9 +12,15 @@ import {
   Clock3,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import MultiSelect from "../MultiSelectFilters/MultiSelectFilter";
 
 import styles from "./RoomFilters.module.css";
+
+/* =========================================================
+   OPTIONS
+========================================================= */
 
 const locations = [
   "В квартире",
@@ -105,63 +111,213 @@ const amenities = [
   "Вид на горы",
 ];
 
+/* =========================================================
+   TRANSLATION KEYS
+========================================================= */
+
+const optionKeys = {
+  locations: {
+    "В квартире": "apartment",
+    "В доме": "house",
+    "В хостеле": "hostel",
+    "В гостинице": "hotel",
+    "В общежитии": "dormitory",
+  },
+
+  rooms: {
+    Любое: "any",
+  },
+
+  floors: {
+    Любой: "any",
+    Цоколь: "basement",
+  },
+
+  conditions: {
+    Любое: "any",
+    "Дизайнерский ремонт": "designer",
+    Евроремонт: "euro",
+    Косметический: "cosmetic",
+    "Под самоотделку": "unfinished",
+    "Старый ремонт": "old",
+    "Без ремонта": "noRenovation",
+  },
+
+  walls: {
+    Любые: "any",
+    Кирпич: "brick",
+    Бетон: "concrete",
+    Газобетон: "aeratedConcrete",
+    Панельные: "panel",
+    Монолитные: "monolithic",
+    "Монолитно-кирпичные": "brickMonolithic",
+    "Монолитно-каркасные": "frameMonolithic",
+  },
+
+  heating: {
+    Любое: "any",
+    Автономное: "autonomous",
+    Газовое: "gas",
+    Центральное: "central",
+    Электрическое: "electric",
+    Комбинированное: "combined",
+  },
+
+  bathroom: {
+    Любой: "any",
+    Есть: "yes",
+    Нет: "no",
+  },
+
+  documents: {
+    Любые: "any",
+    "Красная книга": "redBook",
+    Техпаспорт: "technicalPassport",
+    "Договор купли-продажи": "saleContract",
+    "Договор долевого участия": "equityParticipation",
+    "Акт приема-передачи": "acceptanceAct",
+  },
+
+  offerTypes: {
+    Любой: "any",
+    "Наличный расчет": "cash",
+    Ипотека: "mortgage",
+    Рассрочка: "installment",
+    "Возможен обмен": "exchange",
+  },
+
+  rentalPeriods: {
+    "По часам": "hourly",
+    Посуточно: "daily",
+    Помесячно: "monthly",
+    "На долгий срок": "longTerm",
+  },
+
+  amenities: {
+    Мебель: "furniture",
+    "Бытовая техника": "appliances",
+    "Балкон / лоджия": "balcony",
+    Лифт: "elevator",
+    Интернет: "internet",
+    Видеонаблюдение: "videoSurveillance",
+    Охрана: "security",
+    Парковка: "parking",
+    "Закрытая территория": "gatedArea",
+    "Вид на горы": "mountainView",
+  },
+};
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function translateOptions(options, group, t) {
+  return options.map((value) => {
+    const key = optionKeys[group]?.[value];
+
+    if (!key) {
+      return {
+        value,
+        label: value,
+      };
+    }
+
+    return {
+      value,
+      label: t(`roomFilters.options.${group}.${key}`),
+    };
+  });
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function RoomFilters({ filters, updateFilter }) {
+  const { t } = useLanguage();
+
   const isRent = filters.dealType === "rent";
+
+  const translatedLocations = translateOptions(locations, "locations", t);
+
+  const translatedRooms = translateOptions(rooms, "rooms", t);
+
+  const translatedFloors = translateOptions(floors, "floors", t);
+
+  const translatedConditions = translateOptions(conditions, "conditions", t);
+
+  const translatedWalls = translateOptions(walls, "walls", t);
+
+  const translatedHeating = translateOptions(heating, "heating", t);
+
+  const translatedBathroom = translateOptions(bathroom, "bathroom", t);
+
+  const translatedDocuments = translateOptions(documents, "documents", t);
+
+  const translatedOfferTypes = translateOptions(offerTypes, "offerTypes", t);
+
+  const translatedRentalPeriods = translateOptions(
+    rentalPeriods,
+    "rentalPeriods",
+    t,
+  );
+
+  const translatedAmenities = translateOptions(amenities, "amenities", t);
 
   return (
     <div className={styles.grid}>
       <MultiSelect
         icon={MapPin}
-        title="Расположение"
-        options={locations}
+        title={t("roomFilters.titles.location")}
+        options={translatedLocations}
         value={filters.location || []}
         setValue={(value) => updateFilter("location", value)}
       />
 
       <MultiSelect
         icon={DoorOpen}
-        title="Комнат в объекте"
-        options={rooms}
+        title={t("roomFilters.titles.rooms")}
+        options={translatedRooms}
         value={filters.roomsInApartment || []}
         setValue={(value) => updateFilter("roomsInApartment", value)}
       />
 
       <MultiSelect
         icon={Layers3}
-        title="Этаж"
-        options={floors}
+        title={t("roomFilters.titles.floor")}
+        options={translatedFloors}
         value={filters.floor || []}
         setValue={(value) => updateFilter("floor", value)}
       />
 
       <MultiSelect
         icon={Paintbrush}
-        title="Состояние"
-        options={conditions}
+        title={t("roomFilters.titles.condition")}
+        options={translatedConditions}
         value={filters.condition || []}
         setValue={(value) => updateFilter("condition", value)}
       />
 
       <MultiSelect
         icon={BrickWall}
-        title="Стены"
-        options={walls}
+        title={t("roomFilters.titles.walls")}
+        options={translatedWalls}
         value={filters.walls || []}
         setValue={(value) => updateFilter("walls", value)}
       />
 
       <MultiSelect
         icon={Flame}
-        title="Отопление"
-        options={heating}
+        title={t("roomFilters.titles.heating")}
+        options={translatedHeating}
         value={filters.heating || []}
         setValue={(value) => updateFilter("heating", value)}
       />
 
       <MultiSelect
         icon={DoorOpen}
-        title="Свой санузел"
-        options={bathroom}
+        title={t("roomFilters.titles.privateBathroom")}
+        options={translatedBathroom}
         value={filters.privateBathroom || []}
         setValue={(value) => updateFilter("privateBathroom", value)}
       />
@@ -170,16 +326,16 @@ export default function RoomFilters({ filters, updateFilter }) {
         <>
           <MultiSelect
             icon={FileText}
-            title="Документы"
-            options={documents}
+            title={t("roomFilters.titles.documents")}
+            options={translatedDocuments}
             value={filters.documents || []}
             setValue={(value) => updateFilter("documents", value)}
           />
 
           <MultiSelect
             icon={CreditCard}
-            title="Оплата"
-            options={offerTypes}
+            title={t("roomFilters.titles.payment")}
+            options={translatedOfferTypes}
             value={filters.offerType || []}
             setValue={(value) => updateFilter("offerType", value)}
           />
@@ -189,8 +345,8 @@ export default function RoomFilters({ filters, updateFilter }) {
       {isRent && (
         <MultiSelect
           icon={Clock3}
-          title="Период аренды"
-          options={rentalPeriods}
+          title={t("roomFilters.titles.rentalPeriod")}
+          options={translatedRentalPeriods}
           value={filters.rentalPeriod || []}
           setValue={(value) => updateFilter("rentalPeriod", value)}
         />
@@ -199,8 +355,8 @@ export default function RoomFilters({ filters, updateFilter }) {
       <div className={styles.full}>
         <MultiSelect
           icon={DoorOpen}
-          title="Удобства"
-          options={amenities}
+          title={t("roomFilters.titles.amenities")}
+          options={translatedAmenities}
           value={filters.amenities || []}
           setValue={(value) => updateFilter("amenities", value)}
         />
