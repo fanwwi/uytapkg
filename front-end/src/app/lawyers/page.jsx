@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   BadgeCheck,
   Clock3,
-  Building2,
 } from "lucide-react";
 
 import styles from "./Lawyers.module.css";
@@ -21,32 +20,35 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import { getLawyers } from "@/utils/api";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 const benefits = [
   {
+    key: "documents",
     icon: FileCheck2,
-    title: "Проверка документов",
-    text: "Юрист изучает документы, связанные с объектом и его владельцем.",
   },
   {
+    key: "risks",
     icon: SearchCheck,
-    title: "Поиск рисков",
-    text: "Помогает выявить возможные юридические ограничения и спорные моменты.",
   },
   {
+    key: "saferDeal",
     icon: ShieldCheck,
-    title: "Безопаснее сделка",
-    text: "Вы получаете профессиональную оценку перед покупкой или арендой.",
   },
 ];
 
 export default function Lawyers() {
+  const { t } = useLanguage();
+
   const [lawyers, setLawyers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getLawyers()
       .then((res) => {
-        if (res.success) setLawyers(res.data || []);
+        if (res.success) {
+          setLawyers(res.data || []);
+        }
       })
       .catch((err) => console.error("Ошибка загрузки юристов:", err))
       .finally(() => setLoading(false));
@@ -55,6 +57,7 @@ export default function Lawyers() {
   return (
     <main className={styles.page}>
       <Header />
+
       <div className={styles.glowOne} />
       <div className={styles.glowTwo} />
 
@@ -65,29 +68,25 @@ export default function Lawyers() {
           <div className={styles.heroContent}>
             <div className={styles.eyebrow}>
               <Scale />
-              Юридическая проверка
+              {t("lawyers.hero.eyebrow")}
             </div>
 
             <h1>
-              Проверьте недвижимость
-              <span> перед сделкой</span>
+              {t("lawyers.hero.title")}
+              <span> {t("lawyers.hero.titleAccent")}</span>
             </h1>
 
-            <p>
-              Наши юристы помогут проверить объявление или жилой комплекс,
-              изучить документы и обратить внимание на возможные юридические
-              риски до заключения сделки.
-            </p>
+            <p>{t("lawyers.hero.description")}</p>
 
             <div className={styles.heroActions}>
               <a href="#lawyers" className={styles.primaryButton}>
-                Выбрать юриста
+                {t("lawyers.hero.chooseLawyer")}
                 <ArrowRight />
               </a>
 
               <div className={styles.trust}>
                 <BadgeCheck />
-                <span>Проверка специалистом</span>
+                <span>{t("lawyers.hero.trust")}</span>
               </div>
             </div>
           </div>
@@ -99,22 +98,22 @@ export default function Lawyers() {
 
             <span className={styles.heroCardLabel}>UYТAP LEGAL</span>
 
-            <h2>Юридическая проверка объекта</h2>
+            <h2>{t("lawyers.hero.cardTitle")}</h2>
 
             <div className={styles.heroChecks}>
               <div>
                 <CheckCircle2 />
-                Проверка документов
+                {t("lawyers.hero.checks.documents")}
               </div>
 
               <div>
                 <CheckCircle2 />
-                Анализ юридических рисков
+                {t("lawyers.hero.checks.risks")}
               </div>
 
               <div>
                 <CheckCircle2 />
-                Консультация юриста
+                {t("lawyers.hero.checks.consultation")}
               </div>
             </div>
           </div>
@@ -127,8 +126,9 @@ export default function Lawyers() {
             <span>01</span>
 
             <div>
-              <h2>Как это работает</h2>
-              <p>Получить юридическую консультацию можно прямо через UyTap.</p>
+              <h2>{t("lawyers.howItWorks.title")}</h2>
+
+              <p>{t("lawyers.howItWorks.description")}</p>
             </div>
           </div>
 
@@ -137,11 +137,9 @@ export default function Lawyers() {
               <div className={styles.stepNumber}>01</div>
 
               <div>
-                <h3>Выберите объект</h3>
-                <p>
-                  Откройте объявление или жилой комплекс, который хотите
-                  проверить.
-                </p>
+                <h3>{t("lawyers.howItWorks.steps.choose.title")}</h3>
+
+                <p>{t("lawyers.howItWorks.steps.choose.text")}</p>
               </div>
             </div>
 
@@ -149,11 +147,9 @@ export default function Lawyers() {
               <div className={styles.stepNumber}>02</div>
 
               <div>
-                <h3>Запросите проверку</h3>
-                <p>
-                  Нажмите кнопку «Запросить проверку у юриста» и выберите
-                  специалиста.
-                </p>
+                <h3>{t("lawyers.howItWorks.steps.request.title")}</h3>
+
+                <p>{t("lawyers.howItWorks.steps.request.text")}</p>
               </div>
             </div>
 
@@ -161,11 +157,9 @@ export default function Lawyers() {
               <div className={styles.stepNumber}>03</div>
 
               <div>
-                <h3>Свяжитесь с юристом</h3>
-                <p>
-                  Юрист получает информацию и связывается с вами для проведения
-                  проверки.
-                </p>
+                <h3>{t("lawyers.howItWorks.steps.contact.title")}</h3>
+
+                <p>{t("lawyers.howItWorks.steps.contact.text")}</p>
               </div>
             </div>
           </div>
@@ -178,10 +172,9 @@ export default function Lawyers() {
             <span>02</span>
 
             <div>
-              <h2>Что проверяет юрист</h2>
-              <p>
-                Перед сделкой важно смотреть не только на фотографию квартиры.
-              </p>
+              <h2>{t("lawyers.benefits.title")}</h2>
+
+              <p>{t("lawyers.benefits.description")}</p>
             </div>
           </div>
 
@@ -190,36 +183,37 @@ export default function Lawyers() {
               const Icon = item.icon;
 
               return (
-                <article className={styles.benefit} key={item.title}>
+                <article className={styles.benefit} key={item.key}>
                   <div className={styles.benefitIcon}>
                     <Icon />
                   </div>
 
-                  <h3>{item.title}</h3>
+                  <h3>{t(`lawyers.benefits.items.${item.key}.title`)}</h3>
 
-                  <p>{item.text}</p>
+                  <p>{t(`lawyers.benefits.items.${item.key}.text`)}</p>
                 </article>
               );
             })}
           </div>
         </section>
 
+        {/* LAWYERS */}
+
         <section id="lawyers" className={styles.lawyersSection}>
           <div className={styles.sectionHeading}>
             <span>03</span>
 
             <div>
-              <h2>Наши юристы</h2>
-              <p>Выберите специалиста и свяжитесь с ним для консультации.</p>
+              <h2>{t("lawyers.list.title")}</h2>
+
+              <p>{t("lawyers.list.description")}</p>
             </div>
           </div>
 
           {loading ? (
-            <p className={styles.stateMessage}>Загружаем юристов...</p>
+            <p className={styles.stateMessage}>{t("lawyers.list.loading")}</p>
           ) : lawyers.length === 0 ? (
-            <p className={styles.stateMessage}>
-              Пока нет доступных юристов. Загляните позже.
-            </p>
+            <p className={styles.stateMessage}>{t("lawyers.list.empty")}</p>
           ) : (
             <div className={styles.lawyersGrid}>
               {lawyers.map((lawyer) => {
@@ -227,9 +221,9 @@ export default function Lawyers() {
                   .filter(Boolean)
                   .join(" ");
 
-                const initials = `${lawyer.firstName?.[0] || ""}${
-                  lawyer.lastName?.[0] || ""
-                }`;
+                const initials = `${
+                  lawyer.firstName?.[0] || ""
+                }${lawyer.lastName?.[0] || ""}`;
 
                 return (
                   <article className={styles.lawyerCard} key={lawyer.id}>
@@ -238,7 +232,7 @@ export default function Lawyers() {
 
                       <div className={styles.verified}>
                         <BadgeCheck />
-                        Проверен
+                        {t("lawyers.list.verified")}
                       </div>
                     </div>
 
@@ -267,13 +261,16 @@ export default function Lawyers() {
                           className={styles.phone}
                         >
                           <Phone />
-                          Позвонить
+                          {t("lawyers.list.call")}
                         </a>
                       )}
 
                       {lawyer.whatsapp && (
                         <a
-                          href={`https://wa.me/${lawyer.whatsapp.replace(/\D/g, "")}`}
+                          href={`https://wa.me/${lawyer.whatsapp.replace(
+                            /\D/g,
+                            "",
+                          )}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className={styles.whatsapp}
@@ -298,27 +295,26 @@ export default function Lawyers() {
           </div>
 
           <div>
-            <span>Нужна юридическая помощь?</span>
+            <span>{t("lawyers.cta.eyebrow")}</span>
 
             <h2>
-              Нашли объект, но сомневаетесь
+              {t("lawyers.cta.title")}
               <br />
-              перед сделкой?
+              {t("lawyers.cta.titleAccent")}
             </h2>
 
-            <p>
-              Запросите проверку у юриста и получите профессиональную
-              консультацию.
-            </p>
+            <p>{t("lawyers.cta.description")}</p>
           </div>
 
           <a href="#lawyers" className={styles.ctaButton}>
-            Найти юриста
+            {t("lawyers.cta.button")}
             <ArrowRight />
           </a>
         </section>
       </div>
+
       <AdBanner />
+
       <Footer />
     </main>
   );

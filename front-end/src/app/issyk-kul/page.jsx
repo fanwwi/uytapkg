@@ -4,15 +4,9 @@ import {
   Search,
   Plus,
   Waves,
-  MapPin,
   Home,
   Building2,
-  TreePalm,
-  Umbrella,
   TrendingUp,
-  ShieldCheck,
-  Mountain,
-  CarFront,
   Sparkles,
   ArrowRight,
   Compass,
@@ -24,84 +18,71 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import { useRouter } from "next/navigation";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 const propertyTypes = [
   {
-    title: "Дома и коттеджи",
-    description:
-      "Просторные дома для постоянного проживания, отдыха и семейных поездок.",
+    key: "houses",
     icon: Home,
   },
   {
-    title: "Гостевые дома",
-    description:
-      "Готовые объекты для туристического бизнеса и сезонной аренды.",
+    key: "guestHouses",
     icon: Building2,
   },
   {
-    title: "Участки",
-    description:
-      "Земельные участки под строительство домов, коттеджей и коммерческих объектов.",
+    key: "land",
     icon: Compass,
   },
   {
-    title: "Квартиры",
-    description:
-      "Квартиры и апартаменты в курортных комплексах рядом с озером.",
+    key: "apartments",
     icon: BedDouble,
   },
 ];
 
 const benefits = [
   {
-    title: "Курортная зона",
-    description:
-      "Недвижимость рядом с одним из главных туристических направлений Кыргызстана.",
+    key: "resortZone",
     icon: Waves,
   },
   {
-    title: "Для отдыха и жизни",
-    description:
-      "Можно подобрать объект как для личного проживания, так и для сезонного отдыха.",
+    key: "restAndLife",
     icon: Home,
   },
   {
-    title: "Инвестиционный потенциал",
-    description:
-      "Туристический поток создаёт возможности для посуточной и сезонной аренды.",
+    key: "investmentPotential",
     icon: TrendingUp,
   },
   {
-    title: "Разные форматы",
-    description:
-      "От небольших квартир до больших коттеджей, гостевых домов и участков.",
+    key: "differentFormats",
     icon: Sparkles,
   },
 ];
 
 export default function IssykKul() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   return (
     <div>
       <main className={styles.page}>
+        {/* HERO */}
+
         <section className={styles.hero}>
           <div className={styles.heroOverlay} />
 
           <div className={styles.heroContent}>
             <div className={styles.badge}>
               <Waves />
-              Недвижимость Иссык-Куля
+              {t("issykKul.hero.badge")}
             </div>
 
             <h1>
-              Ваш дом
-              <br />у самого озера
+              {t("issykKul.hero.title")}
+              <br />
+              {t("issykKul.hero.titleAccent")}
             </h1>
 
-            <p>
-              Дома, коттеджи, квартиры, гостевые дома и земельные участки в
-              курортных районах Иссык-Куля — для жизни, отдыха и инвестиций.
-            </p>
+            <p>{t("issykKul.hero.description")}</p>
 
             <div className={styles.buttons}>
               <button
@@ -109,7 +90,7 @@ export default function IssykKul() {
                 className={styles.homeButton}
                 onClick={() => router.push("/")}
               >
-                На главную
+                {t("issykKul.hero.home")}
               </button>
 
               <button
@@ -117,7 +98,7 @@ export default function IssykKul() {
                 className={styles.mainButton}
                 onClick={() => router.push("/all-issykkul-products")}
               >
-                Смотреть объекты
+                {t("issykKul.hero.viewObjects")}
                 <ArrowRight size={18} />
               </button>
 
@@ -129,7 +110,8 @@ export default function IssykKul() {
                 <span>
                   <Plus size={19} />
                 </span>
-                Разместить объект
+
+                {t("issykKul.hero.addObject")}
               </button>
             </div>
           </div>
@@ -137,32 +119,27 @@ export default function IssykKul() {
 
         <AdBanner />
 
+        {/* INTRO */}
+
         <section className={styles.intro}>
           <div className={styles.sectionHeading}>
-            <span>КУРОРТНАЯ ЗОНА</span>
-            <h2>Иссык-Куль — больше, чем место для отдыха</h2>
+            <span>{t("issykKul.intro.eyebrow")}</span>
+
+            <h2>{t("issykKul.intro.title")}</h2>
           </div>
 
           <div className={styles.introGrid}>
             <div className={styles.introText}>
-              <p>
-                Иссык-Куль — одно из самых популярных туристических направлений
-                Кыргызстана. Здесь сочетаются озеро, горы, пляжи, чистый воздух
-                и активно развивающаяся инфраструктура.
-              </p>
+              <p>{t("issykKul.intro.paragraphOne")}</p>
 
-              <p>
-                Поэтому недвижимость здесь интересна не только для собственного
-                отдыха. Дом, квартира или гостевой объект могут стать источником
-                сезонного дохода и долгосрочной инвестицией.
-              </p>
+              <p>{t("issykKul.intro.paragraphTwo")}</p>
 
               <button
                 type="button"
                 className={styles.textButton}
                 onClick={() => router.push("/all-issykkul-products")}
               >
-                Найти недвижимость
+                {t("issykKul.intro.findProperty")}
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -170,12 +147,9 @@ export default function IssykKul() {
             <div className={styles.introCard}>
               <Waves size={34} />
 
-              <strong>Жизнь у озера</strong>
+              <strong>{t("issykKul.intro.cardTitle")}</strong>
 
-              <p>
-                Просыпаться рядом с водой, проводить лето на берегу и при этом
-                иметь собственную недвижимость.
-              </p>
+              <p>{t("issykKul.intro.cardText")}</p>
             </div>
           </div>
         </section>
@@ -184,13 +158,11 @@ export default function IssykKul() {
 
         <section className={styles.section}>
           <div className={styles.sectionHeading}>
-            <span>НЕДВИЖИМОСТЬ</span>
-            <h2>Что можно найти на Иссык-Куле?</h2>
+            <span>{t("issykKul.propertyTypes.eyebrow")}</span>
 
-            <p>
-              Подберите формат недвижимости под свои цели — от семейного отдыха
-              до полноценного туристического бизнеса.
-            </p>
+            <h2>{t("issykKul.propertyTypes.title")}</h2>
+
+            <p>{t("issykKul.propertyTypes.description")}</p>
           </div>
 
           <div className={styles.propertyGrid}>
@@ -198,20 +170,22 @@ export default function IssykKul() {
               const Icon = item.icon;
 
               return (
-                <div className={styles.propertyCard} key={item.title}>
+                <div className={styles.propertyCard} key={item.key}>
                   <div className={styles.cardIcon}>
                     <Icon size={23} />
                   </div>
 
-                  <h3>{item.title}</h3>
+                  <h3>{t(`issykKul.propertyTypes.items.${item.key}.title`)}</h3>
 
-                  <p>{item.description}</p>
+                  <p>
+                    {t(`issykKul.propertyTypes.items.${item.key}.description`)}
+                  </p>
 
                   <button
                     type="button"
                     onClick={() => router.push("/all-issykkul-products")}
                   >
-                    Смотреть
+                    {t("issykKul.propertyTypes.view")}
                     <ArrowRight size={16} />
                   </button>
                 </div>
@@ -224,8 +198,9 @@ export default function IssykKul() {
 
         <section className={styles.benefitsSection}>
           <div className={styles.sectionHeading}>
-            <span>ПОЧЕМУ ИССЫК-КУЛЬ</span>
-            <h2>Место для жизни и инвестиций</h2>
+            <span>{t("issykKul.benefits.eyebrow")}</span>
+
+            <h2>{t("issykKul.benefits.title")}</h2>
           </div>
 
           <div className={styles.benefitsGrid}>
@@ -233,14 +208,17 @@ export default function IssykKul() {
               const Icon = item.icon;
 
               return (
-                <div className={styles.benefit} key={item.title}>
+                <div className={styles.benefit} key={item.key}>
                   <div className={styles.benefitIcon}>
                     <Icon size={21} />
                   </div>
 
                   <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
+                    <h3>{t(`issykKul.benefits.items.${item.key}.title`)}</h3>
+
+                    <p>
+                      {t(`issykKul.benefits.items.${item.key}.description`)}
+                    </p>
                   </div>
                 </div>
               );
@@ -258,21 +236,17 @@ export default function IssykKul() {
               <TrendingUp size={27} />
             </div>
 
-            <span>ИНВЕСТИЦИИ</span>
+            <span>{t("issykKul.investment.eyebrow")}</span>
 
-            <h2>Недвижимость, которая может работать на вас</h2>
+            <h2>{t("issykKul.investment.title")}</h2>
 
-            <p>
-              Курортная недвижимость может использоваться для собственного
-              отдыха, долгосрочной аренды, посуточной сдачи или туристического
-              бизнеса.
-            </p>
+            <p>{t("issykKul.investment.description")}</p>
 
             <button
               type="button"
               onClick={() => router.push("/all-issykkul-products")}
             >
-              Посмотреть инвестиционные объекты
+              {t("issykKul.investment.button")}
               <ArrowRight size={18} />
             </button>
           </div>
@@ -287,12 +261,11 @@ export default function IssykKul() {
             </div>
 
             <div>
-              <span>ПОИСК</span>
-              <h2>Найдите свой объект на Иссык-Куле</h2>
-              <p>
-                Дома, квартиры, участки и коммерческая недвижимость в популярных
-                районах курортной зоны.
-              </p>
+              <span>{t("issykKul.quickSearch.eyebrow")}</span>
+
+              <h2>{t("issykKul.quickSearch.title")}</h2>
+
+              <p>{t("issykKul.quickSearch.description")}</p>
             </div>
           </div>
 
@@ -300,7 +273,7 @@ export default function IssykKul() {
             type="button"
             onClick={() => router.push("/all-issykkul-products")}
           >
-            Смотреть все объекты
+            {t("issykKul.quickSearch.button")}
             <ArrowRight size={18} />
           </button>
         </section>
@@ -309,22 +282,20 @@ export default function IssykKul() {
 
         <section className={styles.addSection}>
           <div>
-            <span>ДЛЯ СОБСТВЕННИКОВ</span>
+            <span>{t("issykKul.addObject.eyebrow")}</span>
 
-            <h2>Есть недвижимость на Иссык-Куле?</h2>
+            <h2>{t("issykKul.addObject.title")}</h2>
 
-            <p>
-              Разместите объявление и покажите свой объект людям, которые ищут
-              недвижимость для отдыха, жизни и инвестиций.
-            </p>
+            <p>{t("issykKul.addObject.description")}</p>
           </div>
 
           <button type="button" onClick={() => router.push("/add-product")}>
             <Plus size={20} />
-            Разместить объект
+            {t("issykKul.addObject.button")}
           </button>
         </section>
       </main>
+
       <Footer />
     </div>
   );

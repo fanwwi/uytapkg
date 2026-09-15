@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { getFavorites, removeFavorite as removeFavoriteApi } from "@/utils/api";
 import { mapListingData } from "@/utils/mapListingData";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Favorites.module.css";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
 import CompareListingsModal from "./CompareListingsModal/CompareListingsModal";
@@ -23,6 +25,7 @@ const categories = [
 
 export default function Favorites() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,12 +55,12 @@ export default function Favorites() {
           const mapped = res.data.map((item) => mapListingData(item));
           setFavorites(mapped);
         } else {
-          setError(res.message || "Не удалось загрузить список избранного");
+          setError(res.message || null);
         }
       })
       .catch((err) => {
         console.error("Load favorites error:", err);
-        setError("Ошибка при подключении к серверу");
+        setError(null);
       })
       .finally(() => {
         setLoading(false);
@@ -77,11 +80,11 @@ export default function Favorites() {
 
         setSelectedForCompare((prev) => prev.filter((item) => item.id !== id));
       } else {
-        alert(res.message || "Ошибка при удалении из избранного");
+        alert(res.message || t("favorites.removeError"));
       }
     } catch (err) {
       console.error(err);
-      alert("Не удалось удалить из избранного");
+      alert(t("favorites.removeFailed"));
     }
   }
 
@@ -109,6 +112,23 @@ export default function Favorites() {
       (a, b) => priority[a.status] - priority[b.status],
     );
   }, [favorites, search, activeCategory]);
+
+  /*
+   * =========================================================
+   * CATEGORY LABELS
+   * =========================================================
+   */
+
+  const categoryLabels = {
+    Все: t("favorites.categories.all"),
+    Дом: t("favorites.categories.house"),
+    Квартира: t("favorites.categories.apartment"),
+    Коттедж: t("favorites.categories.cottage"),
+    Участок: t("favorites.categories.land"),
+    Коммерция: t("favorites.categories.commercial"),
+    "Паркинг/гараж": t("favorites.categories.parking"),
+    Комнаты: t("favorites.categories.rooms"),
+  };
 
   /*
    * =========================================================
@@ -180,7 +200,7 @@ export default function Favorites() {
             onClick={() => router.push("/")}
           >
             <House size={18} />
-            <span>На главную</span>
+            <span>{t("favorites.home")}</span>
           </button>
 
           <div className={styles.titleRow}>
@@ -189,9 +209,9 @@ export default function Favorites() {
             </div>
 
             <div>
-              <h1>Избранное</h1>
+              <h1>{t("favorites.title")}</h1>
 
-              <p>Сохранённые объявления, которые вы хотите посмотреть позже</p>
+              <p>{t("favorites.description")}</p>
             </div>
           </div>
         </div>
@@ -203,10 +223,10 @@ export default function Favorites() {
 
           <span>
             {favorites.length === 1
-              ? "объявление"
+              ? t("favorites.listing.one")
               : favorites.length < 5
-                ? "объявления"
-                : "объявлений"}
+                ? t("favorites.listing.few")
+                : t("favorites.listing.many")}
           </span>
         </div>
       </header>
@@ -221,7 +241,7 @@ export default function Favorites() {
 
               <input
                 type="text"
-                placeholder="Поиск в избранном..."
+                placeholder={t("favorites.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -239,7 +259,9 @@ export default function Favorites() {
               {compareMode ? <Check size={17} /> : <GitCompare size={17} />}
 
               <span>
-                {compareMode ? "Отменить сравнение" : "Сравнить объекты"}
+                {compareMode
+                  ? t("favorites.cancelCompare")
+                  : t("favorites.compareObjects")}
               </span>
             </button>
           </div>
@@ -256,7 +278,7 @@ export default function Favorites() {
                 }
                 onClick={() => setActiveCategory(category)}
               >
-                {category}
+                {categoryLabels[category]}
               </button>
             ))}
           </div>
@@ -270,14 +292,14 @@ export default function Favorites() {
               <div>
                 <strong>
                   {selectedForCompare.length > 0
-                    ? `Выбрано: ${selectedForCompare.length}`
-                    : "Выберите объекты для сравнения"}
+                    ? `${t("favorites.selected")}: ${selectedForCompare.length}`
+                    : t("favorites.selectForCompare")}
                 </strong>
 
                 <span>
                   {selectedType
-                    ? `Можно выбирать только: ${selectedType}`
-                    : "Можно сравнивать только объекты одного типа"}
+                    ? `${t("favorites.onlyType")}: ${selectedType}`
+                    : t("favorites.sameTypeOnly")}
                 </span>
               </div>
             </div>
@@ -286,7 +308,7 @@ export default function Favorites() {
           {/* RESULT */}
 
           <div className={styles.result}>
-            <span>В избранном найдено:</span>
+            <span>{t("favorites.foundInFavorites")}</span>
 
             <strong>{filteredFavorites.length}</strong>
           </div>
@@ -299,10 +321,10 @@ export default function Favorites() {
         <div className={styles.loading}>
           <span className={styles.loadingSpinner} />
 
-          <div>Загрузка избранного...</div>
+          <div>{t("favorites.loading")}</div>
         </div>
       ) : error ? (
-        <div className={styles.error}>{error}</div>
+        <div className={styles.error}>{error || t("favorites.loadError")}</div>
       ) : filteredFavorites.length > 0 ? (
         <section
           className={`${styles.grid} ${
@@ -337,7 +359,9 @@ export default function Favorites() {
                       toggleCompareItem(item);
                     }}
                     aria-label={
-                      selected ? "Убрать из сравнения" : "Добавить к сравнению"
+                      selected
+                        ? t("favorites.removeFromCompare")
+                        : t("favorites.addToCompare")
                     }
                   >
                     {selected && <Check size={15} />}
@@ -353,7 +377,7 @@ export default function Favorites() {
                 />
 
                 {compareMode && disabled && (
-                  <div className={styles.compareDisabledOverlay}></div>
+                  <div className={styles.compareDisabledOverlay} />
                 )}
               </div>
             );
@@ -365,9 +389,9 @@ export default function Favorites() {
             <Search />
           </div>
 
-          <h2>Ничего не найдено</h2>
+          <h2>{t("favorites.nothingFound")}</h2>
 
-          <p>В избранном нет объявлений, соответствующих вашему запросу.</p>
+          <p>{t("favorites.noMatchingListings")}</p>
 
           <button
             type="button"
@@ -376,7 +400,7 @@ export default function Favorites() {
               setActiveCategory("Все");
             }}
           >
-            Сбросить фильтры
+            {t("favorites.resetFilters")}
           </button>
         </div>
       ) : (
@@ -385,15 +409,12 @@ export default function Favorites() {
             <Heart />
           </div>
 
-          <h2>Избранное пока пусто</h2>
+          <h2>{t("favorites.emptyTitle")}</h2>
 
-          <p>
-            Сохраняйте понравившиеся объявления, чтобы быстро вернуться к ним
-            позже.
-          </p>
+          <p>{t("favorites.emptyDescription")}</p>
 
           <button type="button" onClick={() => router.push("/all-products")}>
-            Смотреть объявления
+            {t("favorites.viewListings")}
           </button>
         </div>
       )}
@@ -409,8 +430,8 @@ export default function Favorites() {
               <strong>
                 {selectedForCompare.length}{" "}
                 {selectedForCompare.length === 1
-                  ? "объект выбран"
-                  : "объекта выбрано"}
+                  ? t("favorites.objectSelected.one")
+                  : t("favorites.objectSelected.many")}
               </strong>
 
               <span>{selectedType}</span>
@@ -423,7 +444,7 @@ export default function Favorites() {
               className={styles.clearCompare}
               onClick={clearCompare}
             >
-              Очистить
+              {t("favorites.clear")}
             </button>
 
             <button
@@ -433,7 +454,9 @@ export default function Favorites() {
               onClick={openCompare}
             >
               <GitCompare size={16} />
-              Сравнить
+
+              {t("favorites.compare")}
+
               {selectedForCompare.length >= 2 &&
                 ` (${selectedForCompare.length})`}
             </button>

@@ -3,14 +3,20 @@
 import { MessageCircle, Building2, ArrowLeft, Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Connect.module.css";
 
 const WHATSAPP_NUMBER = "996553554541";
 
-const message = `Здравствуйте! Мы строительная компания и хотели бы узнать подробнее о тарифах для застройщиков на UyTap. Хотели бы обсудить условия сотрудничества, доступные тарифы и возможности размещения наших объявлений. Будем рады получить подробную информацию. Спасибо!`;
-
 export default function Connect() {
   const router = useRouter();
+  const { t, language } = useLanguage();
+
+  const message =
+    language === "ky"
+      ? "Саламатсызбы! Биз курулуш компаниябыз жана UyTap платформасында куруучулар үчүн тарифтер тууралуу кененирээк маалымат алгыбыз келет. Кызматташуу шарттарын, жеткиликтүү тарифтерди жана жарыяларыбызды жайгаштыруу мүмкүнчүлүктөрүн талкуулагыбыз келет. Толук маалымат берсеңиздер кубанычта болобуз. Рахмат!"
+      : "Здравствуйте! Мы строительная компания и хотели бы узнать подробнее о тарифах для застройщиков на UyTap. Хотели бы обсудить условия сотрудничества, доступные тарифы и возможности размещения наших объявлений. Будем рады получить подробную информацию. Спасибо!";
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     message,
@@ -27,7 +33,7 @@ export default function Connect() {
           type="button"
         >
           <ArrowLeft size={21} />
-          <span>Назад</span>
+          <span>{t("common.back")}</span>
         </button>
 
         <div className={styles.card}>
@@ -35,18 +41,14 @@ export default function Connect() {
             <Building2 size={32} strokeWidth={1.8} />
           </div>
 
-          <span className={styles.badge}>ДЛЯ ЗАСТРОЙЩИКОВ</span>
+          <span className={styles.badge}>{t("connect.forDevelopers")}</span>
 
           <h1 className={styles.title}>
-            Свяжитесь с нами
-            <span> по поводу тарифа</span>
+            {t("connect.title")}
+            <span> {t("connect.titleAccent")}</span>
           </h1>
 
-          <p className={styles.description}>
-            Хотите размещать объекты вашей строительной компании на UyTap?
-            Свяжитесь с нами напрямую — расскажем о доступных тарифах, условиях
-            размещения и возможностях продвижения ваших объявлений.
-          </p>
+          <p className={styles.description}>{t("connect.description")}</p>
 
           <div className={styles.contactCard}>
             <div className={styles.contactIcon}>
@@ -54,7 +56,10 @@ export default function Connect() {
             </div>
 
             <div className={styles.contactInfo}>
-              <span className={styles.contactLabel}>ТЕЛЕФОН / WHATSAPP</span>
+              <span className={styles.contactLabel}>
+                {t("connect.phoneLabel")}
+              </span>
+
               <span className={styles.phone}>+996 (553) 55-45-41</span>
             </div>
           </div>
@@ -67,19 +72,18 @@ export default function Connect() {
           >
             <MessageCircle size={24} strokeWidth={2.2} />
 
-            <span>Написать в WhatsApp</span>
+            <span>{t("connect.whatsappButton")}</span>
           </a>
 
           <div className={styles.messagePreview}>
-            <span className={styles.previewLabel}>ГОТОВЫЙ ТЕКСТ</span>
+            <span className={styles.previewLabel}>
+              {t("connect.readyMessage")}
+            </span>
 
             <p>{message}</p>
           </div>
 
-          <p className={styles.footerText}>
-            Сообщение уже подготовлено — просто нажмите кнопку выше и отправьте
-            его нам.
-          </p>
+          <p className={styles.footerText}>{t("connect.footer")}</p>
         </div>
       </section>
     </main>

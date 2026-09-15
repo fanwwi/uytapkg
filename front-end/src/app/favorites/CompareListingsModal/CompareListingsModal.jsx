@@ -6,12 +6,13 @@ import {
   Ruler,
   BedDouble,
   Building2,
-  CalendarDays,
   Layers3,
   Check,
   Minus,
   GitCompare,
 } from "lucide-react";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./CompareListingsModal.module.css";
 
@@ -95,6 +96,8 @@ function getBetterValue(values, type) {
 }
 
 function ComparisonRow({ icon: Icon, label, values, type, unit = "" }) {
+  const { t } = useLanguage();
+
   const better = getBetterValue(values, type);
 
   return (
@@ -124,13 +127,16 @@ function ComparisonRow({ icon: Icon, label, values, type, unit = "" }) {
                   </strong>
 
                   {better[index] && (
-                    <span className={styles.betterLabel}>Лучше</span>
+                    <span className={styles.betterLabel}>
+                      {t("compareListings.better")}
+                    </span>
                   )}
                 </>
               ) : (
                 <span className={styles.missing}>
                   <Minus size={14} />
-                  Не указано
+
+                  {t("compareListings.notSpecified")}
                 </span>
               )}
             </div>
@@ -142,6 +148,8 @@ function ComparisonRow({ icon: Icon, label, values, type, unit = "" }) {
 }
 
 export default function CompareListingsModal({ isOpen, items = [], onClose }) {
+  const { t } = useLanguage();
+
   if (!isOpen || items.length === 0) {
     return null;
   }
@@ -177,10 +185,11 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             </div>
 
             <div>
-              <h2>Сравнение объектов</h2>
+              <h2>{t("compareListings.title")}</h2>
 
               <p>
-                Сравнение {items.length} объектов типа{" "}
+                {t("compareListings.comparison")} {items.length}{" "}
+                {t("compareListings.objectsOfType")}{" "}
                 <strong>{items[0].type}</strong>
               </p>
             </div>
@@ -190,7 +199,7 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Закрыть"
+            aria-label={t("compareListings.close")}
           >
             <X size={19} />
           </button>
@@ -225,11 +234,13 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
         {/* COMPARISON */}
 
         <div className={styles.comparison}>
-          <div className={styles.sectionTitle}>Основные характеристики</div>
+          <div className={styles.sectionTitle}>
+            {t("compareListings.mainCharacteristics")}
+          </div>
 
           <ComparisonRow
             icon={Ruler}
-            label="Площадь"
+            label={t("compareListings.area")}
             values={items.map((item) => item.rawArea)}
             type="area"
             unit=" м²"
@@ -237,14 +248,14 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
 
           <ComparisonRow
             icon={BedDouble}
-            label="Комнаты"
+            label={t("compareListings.rooms")}
             values={items.map((item) => item.rooms)}
             type="rooms"
           />
 
           <ComparisonRow
             icon={Layers3}
-            label="Этаж / этажность"
+            label={t("compareListings.floor")}
             values={items.map((item) =>
               item.floors ? `${item.floors}` : null,
             )}
@@ -252,7 +263,7 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
 
           <ComparisonRow
             icon={Building2}
-            label="Тип сделки"
+            label={t("compareListings.dealType")}
             values={items.map((item) => item.dealType)}
           />
 
@@ -260,7 +271,7 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             <div className={styles.rowLabel}>
               <MapPin size={16} />
 
-              <span>Локация</span>
+              <span>{t("compareListings.location")}</span>
             </div>
 
             <div className={styles.rowValues}>
@@ -277,10 +288,10 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
           {featureMap.size > 0 && (
             <>
               <div className={styles.sectionTitle}>
-                Удобства и характеристики
+                {t("compareListings.features")}
               </div>
 
-              {[...featureMap.entries()].map(([key, values]) => {
+              {[...featureMap.entries()].map(([key]) => {
                 const valuesByItem = items.map((item) => {
                   const feature = getFeatures(item).find(
                     (itemFeature) => itemFeature.key === key,
@@ -312,7 +323,8 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
                           ) : (
                             <span className={styles.featureMissing}>
                               <Minus size={14} />
-                              Нет
+
+                              {t("compareListings.no")}
                             </span>
                           )}
                         </div>
@@ -324,7 +336,7 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             </>
           )}
 
-          {/* MISSING FEATURES */}
+          {/* INSIGHT */}
 
           <div className={styles.insight}>
             <div className={styles.insightIcon}>
@@ -332,13 +344,9 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             </div>
 
             <div>
-              <strong>На что обратить внимание</strong>
+              <strong>{t("compareListings.insightTitle")}</strong>
 
-              <p>
-                Значения, отмеченные как «Лучше», являются ориентиром по
-                числовым характеристикам. Более низкая цена и большая площадь
-                обычно выгоднее, но итоговый выбор зависит от ваших приоритетов.
-              </p>
+              <p>{t("compareListings.insightText")}</p>
             </div>
           </div>
         </div>
@@ -351,7 +359,7 @@ export default function CompareListingsModal({ isOpen, items = [], onClose }) {
             className={styles.closeButton}
             onClick={onClose}
           >
-            Закрыть
+            {t("compareListings.close")}
           </button>
         </footer>
       </div>

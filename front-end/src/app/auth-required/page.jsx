@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { LockKeyhole, ArrowLeft, LogIn } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./AuthRequired.module.css";
 
 export default function AuthRequired() {
+  const { t } = useLanguage();
+
   return (
     <main className={styles.page}>
       <div className={styles.card}>
@@ -13,22 +17,19 @@ export default function AuthRequired() {
           <LockKeyhole />
         </div>
 
-        <h1>Требуется вход</h1>
+        <h1>{t("authRequired.title")}</h1>
 
-        <p>
-          Чтобы пользоваться избранным, добавлять объявления и управлять
-          профилем, необходимо войти в аккаунт.
-        </p>
+        <p>{t("authRequired.description")}</p>
 
         <div className={styles.buttons}>
           <Link href="/login" className={styles.login}>
             <LogIn />
-            Войти в аккаунт
+            {t("authRequired.login")}
           </Link>
 
           <Link href="/" className={styles.home}>
             <ArrowLeft />
-            На главную
+            {t("authRequired.home")}
           </Link>
         </div>
       </div>

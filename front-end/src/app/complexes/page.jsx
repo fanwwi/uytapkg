@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Building2, MapPin, Search, Wallet } from "lucide-react";
+import { ArrowRight, Building2, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./Complexes.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
@@ -14,6 +16,7 @@ import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 export default function Complexes() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +28,9 @@ export default function Complexes() {
       try {
         setLoading(true);
         setError("");
+
         const res = await getComplexes();
+
         if (res && res.success && Array.isArray(res.data)) {
           const mapped = res.data.map(mapComplexData);
           setComplexes(mapped);
@@ -34,14 +39,14 @@ export default function Complexes() {
         }
       } catch (err) {
         console.error("Failed to load complexes:", err);
-        setError(err.message || "Ошибка при загрузке жилых комплексов");
+        setError(err.message || t("complexes.errors.load"));
       } finally {
         setLoading(false);
       }
     }
 
     loadComplexes();
-  }, []);
+  }, [t]);
 
   const filteredComplexes = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -68,7 +73,7 @@ export default function Complexes() {
 
   return (
     <main className={styles.page}>
-    <Header />
+      <Header />
 
       <section className={styles.hero}>
         <div className={styles.heroImage} />
@@ -81,18 +86,17 @@ export default function Complexes() {
               <Building2 />
             </span>
 
-            <span>PREMIUM REAL ESTATE · KYRGYZSTAN</span>
+            <span>{t("complexes.eyebrow")}</span>
           </div>
 
           <h1>
-            Жилые комплексы,
+            {t("complexes.heroTitle")}
             <br />
-            <span>которые выбирают</span>
+            <span>{t("complexes.heroTitleAccent")}</span>
           </h1>
 
           <p className={styles.heroDescription}>
-            Премиальные жилые комплексы от ведущих застройщиков Кыргызстана.
-            Найдите пространство, которое соответствует вашему стилю жизни.
+            {t("complexes.heroDescription")}
           </p>
 
           {/* SEARCH */}
@@ -104,7 +108,7 @@ export default function Complexes() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Название ЖК, застройщик, район..."
+              placeholder={t("complexes.searchPlaceholder")}
             />
 
             {search && (
@@ -121,12 +125,12 @@ export default function Complexes() {
           <div className={styles.heroMeta}>
             <span>
               <i />
-              Премиальные проекты
+              {t("complexes.meta.premium")}
             </span>
 
             <span>
               <i />
-              Проверенные застройщики
+              {t("complexes.meta.verified")}
             </span>
           </div>
         </div>
@@ -141,16 +145,18 @@ export default function Complexes() {
       <section className={styles.wrapper}>
         <div className={styles.sectionHeader}>
           <div>
-            <span className={styles.sectionLabel}>OUR COLLECTION</span>
+            <span className={styles.sectionLabel}>
+              {t("complexes.collection")}
+            </span>
 
-            <h2>Жилые комплексы</h2>
+            <h2>{t("complexes.title")}</h2>
 
-            <p>Подобрали лучшие проекты недвижимости в Кыргызстане</p>
+            <p>{t("complexes.subtitle")}</p>
           </div>
 
           <div className={styles.counter}>
             <strong>{filteredComplexes.length}</strong>
-            <span>проекта</span>
+            <span>{t("complexes.projects")}</span>
           </div>
         </div>
 
@@ -161,19 +167,20 @@ export default function Complexes() {
             <Search />
 
             <span>
-              Результаты поиска для <strong>«{search}»</strong>
+              {t("complexes.searchResult")} <strong>«{search}»</strong>
             </span>
 
             <button type="button" onClick={() => setSearch("")}>
-              Сбросить
+              {t("complexes.reset")}
             </button>
           </div>
         )}
 
         {/* LOADING & ERROR */}
+
         {loading && (
           <div className={styles.empty}>
-            <p>Загрузка жилых комплексов...</p>
+            <p>{t("complexes.loading")}</p>
           </div>
         )}
 
@@ -219,7 +226,9 @@ export default function Complexes() {
                 <div className={styles.content}>
                   <div className={styles.titleRow}>
                     <div>
-                      <span className={styles.projectType}>RESIDENTIAL</span>
+                      <span className={styles.projectType}>
+                        {t("complexes.projectType")}
+                      </span>
 
                       <h3>{item.name}</h3>
                     </div>
@@ -248,7 +257,7 @@ export default function Complexes() {
                     </div>
 
                     <div>
-                      <span>Застройщик</span>
+                      <span>{t("complexes.developer")}</span>
 
                       <strong>{item.developer}</strong>
                     </div>
@@ -265,7 +274,7 @@ export default function Complexes() {
                       router.push(`/complexes/${item.id}`);
                     }}
                   >
-                    <span>Подробнее о проекте</span>
+                    <span>{t("complexes.more")}</span>
 
                     <span className={styles.arrow}>
                       <ArrowRight />
@@ -281,17 +290,16 @@ export default function Complexes() {
               <Search />
             </div>
 
-            <span className={styles.sectionLabel}>NO RESULTS</span>
+            <span className={styles.sectionLabel}>
+              {t("complexes.noResults")}
+            </span>
 
-            <h3>Ничего не найдено</h3>
+            <h3>{t("complexes.empty.title")}</h3>
 
-            <p>
-              Мы не нашли жилые комплексы по вашему запросу. Попробуйте изменить
-              название, район или застройщика.
-            </p>
+            <p>{t("complexes.empty.description")}</p>
 
             <button type="button" onClick={() => setSearch("")}>
-              Показать все проекты
+              {t("complexes.showAll")}
             </button>
           </div>
         )}

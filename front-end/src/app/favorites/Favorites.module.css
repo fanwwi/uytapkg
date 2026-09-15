@@ -1042,19 +1042,6 @@
     opacity 0.2s ease;
 }
 
-.compareWrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-
-  border-radius: 22px;
-
-  background: rgba(15, 17, 25, 0.289);
-
-  pointer-events: none;
-}
-
 .compareWrapper .compareCheck {
   z-index: 30;
 }

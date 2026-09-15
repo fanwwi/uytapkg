@@ -6,6 +6,8 @@ import { ArrowRight, Building2, CheckCircle2, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getDevelopers } from "@/utils/api";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Developers.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import Header from "@/components/pageComponents/header/Header";
@@ -13,6 +15,7 @@ import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 export default function Developers() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [developersList, setDevelopersList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,34 +37,31 @@ export default function Developers() {
         console.log("DATA:", res?.data);
 
         if (!mounted) return;
+
         if (res?.success && Array.isArray(res?.data)) {
           const mapped = res.data
             .filter((dev) => dev?.verificationStatus === "approved")
             .map((dev) => ({
               id: dev?.user_id || dev?.id,
-              nameRu: dev?.company_name || "Застройщик",
-              nameEn: dev?.company_name || "Застройщик",
-
+              name: dev?.company_name || "",
               objects: Array.isArray(dev?.residential_complexes)
                 ? dev.residential_complexes.length
                 : 0,
-
               logo:
                 dev?.avatarUrl || dev?.logo_url || "/assets/DeveloperImage.png",
-
               isVerified: true,
             }))
             .filter((dev) => dev.id);
 
           setDevelopersList(mapped);
         } else {
-          setError(res?.message || "Ошибка загрузки застройщиков");
+          setError(res?.message || null);
         }
       } catch (err) {
         console.error("Fetch developers error:", err);
 
         if (mounted) {
-          setError("Ошибка при получении списка застройщиков");
+          setError(null);
         }
       } finally {
         if (mounted) {
@@ -84,10 +84,8 @@ export default function Developers() {
       return developersList;
     }
 
-    return developersList.filter(
-      (item) =>
-        item.nameRu?.toLowerCase().includes(query) ||
-        item.nameEn?.toLowerCase().includes(query),
+    return developersList.filter((item) =>
+      item.name?.toLowerCase().includes(query),
     );
   }, [search, developersList]);
 
@@ -99,7 +97,7 @@ export default function Developers() {
             <Building2 />
           </div>
 
-          <h2>Загрузка списка застройщиков...</h2>
+          <h2>{t("developers.loading")}</h2>
         </div>
       </main>
     );
@@ -113,7 +111,7 @@ export default function Developers() {
             <Building2 />
           </div>
 
-          <h2>Ошибка загрузки застройщиков</h2>
+          <h2>{t("developers.errorTitle")}</h2>
 
           <p>{error}</p>
         </div>
@@ -133,27 +131,24 @@ export default function Developers() {
             <div className={styles.btns}>
               <span className={styles.eyebrow}>
                 <Building2 />
-                Застройщики Кыргызстана
+                {t("developers.eyebrow")}
               </span>
             </div>
 
             <h1>
-              Найдите своего
-              <span> застройщика</span>
+              {t("developers.title")}
+              <span> {t("developers.titleAccent")}</span>
             </h1>
 
-            <p>
-              Изучайте строительные компании, их проекты и выбирайте надежного
-              застройщика для будущего дома.
-            </p>
+            <p>{t("developers.description")}</p>
           </div>
 
           <div className={styles.headerStat}>
             <div className={styles.statNumber}>{developersList.length}</div>
 
             <div className={styles.statText}>
-              <span>застройщиков</span>
-              <small>на UyTap</small>
+              <span>{t("developers.developers")}</span>
+              <small>{t("developers.onUyTap")}</small>
             </div>
           </div>
         </div>
@@ -164,9 +159,9 @@ export default function Developers() {
       <section className={styles.container}>
         <div className={styles.toolbar}>
           <div className={styles.toolbarTitle}>
-            <span>КАТАЛОГ</span>
+            <span>{t("developers.catalog")}</span>
 
-            <h2>Застройщики</h2>
+            <h2>{t("developers.titleShort")}</h2>
           </div>
 
           <div className={styles.search}>
@@ -174,7 +169,7 @@ export default function Developers() {
 
             <input
               type="text"
-              placeholder="Поиск застройщика..."
+              placeholder={t("developers.searchPlaceholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -184,7 +179,7 @@ export default function Developers() {
                 type="button"
                 className={styles.clear}
                 onClick={() => setSearch("")}
-                aria-label="Очистить поиск"
+                aria-label={t("developers.clearSearch")}
               >
                 ×
               </button>
@@ -193,16 +188,16 @@ export default function Developers() {
         </div>
 
         <div className={styles.result}>
-          <span>Найдено</span>
+          <span>{t("developers.found")}</span>
 
           <strong>{filtered.length}</strong>
 
           <span>
             {filtered.length === 1
-              ? "застройщик"
+              ? t("developers.developer.one")
               : filtered.length >= 2 && filtered.length <= 4
-                ? "застройщика"
-                : "застройщиков"}
+                ? t("developers.developer.few")
+                : t("developers.developer.many")}
           </span>
         </div>
 
@@ -217,7 +212,7 @@ export default function Developers() {
                         src={item.logo}
                         fill
                         sizes="64px"
-                        alt={item.nameEn}
+                        alt={item.name || t("developers.defaultName")}
                         className={styles.logoImage}
                       />
                     ) : (
@@ -227,17 +222,16 @@ export default function Developers() {
 
                   <div className={styles.cardTitle}>
                     <h2>
-                      {item.nameEn}
+                      {item.name || t("developers.defaultName")}
 
                       {item.isVerified && (
                         <CheckCircle2
                           className={styles.verifiedIcon}
-                          aria-label="Проверенный застройщик" color="#0d00ff"
+                          aria-label={t("developers.verified")}
+                          color="#0d00ff"
                         />
                       )}
                     </h2>
-
-                    {item.nameRu !== item.nameEn && <p>{item.nameRu}</p>}
                   </div>
                 </div>
 
@@ -245,17 +239,19 @@ export default function Developers() {
                   <span>
                     {item.objects}{" "}
                     {item.objects === 1
-                      ? "жилой проект"
+                      ? t("developers.project.one")
                       : item.objects >= 2 && item.objects <= 4
-                        ? "жилых проекта"
-                        : "жилых проектов"}
+                        ? t("developers.project.few")
+                        : t("developers.project.many")}
                   </span>
 
                   <button
                     type="button"
                     className={styles.projects}
                     onClick={() => router.push(`/public-profile/${item.id}`)}
-                    aria-label={`Открыть профиль ${item.nameEn}`}
+                    aria-label={`${t("developers.openProfile")} ${
+                      item.name || t("developers.defaultName")
+                    }`}
                   >
                     <ArrowRight />
                   </button>
@@ -269,15 +265,17 @@ export default function Developers() {
               <Search />
             </div>
 
-            <span className={styles.sectionLabel}>NO RESULTS</span>
+            <span className={styles.sectionLabel}>
+              {t("developers.noResultsLabel")}
+            </span>
 
-            <h2>Застройщик не найден</h2>
+            <h2>{t("developers.notFound")}</h2>
 
-            <p>Попробуйте изменить поисковый запрос.</p>
+            <p>{t("developers.changeQuery")}</p>
 
             {search && (
               <button type="button" onClick={() => setSearch("")}>
-                Показать всех застройщиков
+                {t("developers.showAll")}
               </button>
             )}
           </div>

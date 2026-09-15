@@ -4,11 +4,6 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { getComplexById, getComplexListings } from "@/utils/api";
-import { mapComplexData } from "@/utils/mapComplexData";
-import { mapListingData } from "@/utils/mapListingData";
-
-
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +28,12 @@ import {
   Maximize,
   Grid3X3,
 } from "lucide-react";
+
+import { useLanguage } from "@/context/LanguageContext";
+
+import { getComplexById, getComplexListings } from "@/utils/api";
+import { mapComplexData } from "@/utils/mapComplexData";
+import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./ComplexDetail.module.css";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
@@ -84,14 +85,14 @@ const EMPTY_COMPLEX = {
   layouts: [],
 };
 
-const formatValue = (value, suffix = "") => {
+const formatValue = (value, suffix = "", fallback = "Не указано") => {
   if (
     value === null ||
     value === undefined ||
     value === "" ||
     Number(value) === 0
   ) {
-    return "Не указано";
+    return fallback;
   }
 
   return `${value}${suffix}`;
@@ -108,22 +109,6 @@ const formatPrice = (value) => {
   }
 
   return `${Number(value).toLocaleString("ru-RU")} $`;
-};
-
-const formatDate = (value) => {
-  if (!value) return "Уточняйте у застройщика";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return date.toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 };
 
 const getLayoutValue = (layout, keys) => {
@@ -194,10 +179,11 @@ export default function ComplexDetails() {
   const router = useRouter();
   const params = useParams();
 
+  const { t, language } = useLanguage();
+
   const complexId = params?.id;
 
   const [complex, setComplex] = useState(EMPTY_COMPLEX);
-
   const [apartments, setApartments] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -208,6 +194,28 @@ export default function ComplexDetails() {
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  /* =========================================================
+     DATE
+  ========================================================= */
+
+  const formatDate = (value) => {
+    if (!value) {
+      return t("complexDetails.date.askDeveloper");
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return date.toLocaleDateString(language === "ky" ? "ky-KG" : "ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
 
   /* =========================================================
      LOAD COMPLEX + APARTMENTS
@@ -238,7 +246,7 @@ export default function ComplexDetails() {
 
         if (!complexResponse?.success || !complexResponse?.data) {
           throw new Error(
-            complexResponse?.message || "Жилой комплекс не найден",
+            complexResponse?.message || t("complexDetails.errors.notFound"),
           );
         }
 
@@ -266,7 +274,7 @@ export default function ComplexDetails() {
 
           if (listingsResponse && !listingsResponse.success) {
             setApartmentsError(
-              listingsResponse.message || "Не удалось загрузить квартиры этого ЖК",
+              listingsResponse.message || t("complexDetails.errors.apartments"),
             );
           }
         }
@@ -274,7 +282,7 @@ export default function ComplexDetails() {
         console.error("Failed to load complex detail:", err);
 
         if (!cancelled) {
-          setError(err?.message || "Ошибка загрузки жилого комплекса");
+          setError(err?.message || t("complexDetails.errors.load"));
 
           setApartments([]);
         }
@@ -291,7 +299,7 @@ export default function ComplexDetails() {
     return () => {
       cancelled = true;
     };
-  }, [complexId]);
+  }, [complexId, t]);
 
   /* =========================================================
      IMAGES
@@ -336,11 +344,11 @@ export default function ComplexDetails() {
     }
 
     if (from) {
-      return `от ${from}`;
+      return `${t("complexDetails.price.from")} ${from}`;
     }
 
-    return "Цена по запросу";
-  }, [complex.priceFrom, complex.priceTo]);
+    return t("complexDetails.price.onRequest");
+  }, [complex.priceFrom, complex.priceTo, t]);
 
   /* =========================================================
      DETAIL ITEMS
@@ -348,47 +356,71 @@ export default function ComplexDetails() {
 
   const detailItems = [
     {
-      label: "Класс",
+      label: t("complexDetails.details.class"),
       value: complex.housingClass,
       icon: Sparkles,
     },
     {
-      label: "Количество квартир",
-      value: formatValue(complex.apartments, " квартир"),
+      label: t("complexDetails.details.apartments"),
+      value: formatValue(
+        complex.apartments,
+        ` ${t("complexDetails.units.apartments")}`,
+        t("complexDetails.notSpecified"),
+      ),
       icon: Home,
     },
     {
-      label: "Этажность",
-      value: formatValue(complex.floors, " этажей"),
+      label: t("complexDetails.details.floors"),
+      value: formatValue(
+        complex.floors,
+        ` ${t("complexDetails.units.floors")}`,
+        t("complexDetails.notSpecified"),
+      ),
       icon: Layers3,
     },
     {
-      label: "Количество блоков",
-      value: formatValue(complex.blocks, " блоков"),
+      label: t("complexDetails.details.blocks"),
+      value: formatValue(
+        complex.blocks,
+        ` ${t("complexDetails.units.blocks")}`,
+        t("complexDetails.notSpecified"),
+      ),
       icon: Building2,
     },
     {
-      label: "Площадь территории",
+      label: t("complexDetails.details.area"),
       value: complex.areaSotka
-        ? `${complex.areaSotka} соток`
+        ? `${complex.areaSotka} ${t("complexDetails.units.sotkas")}`
         : complex.area
           ? `${complex.area} м²`
-          : "Не указано",
+          : t("complexDetails.notSpecified"),
       icon: Ruler,
     },
     {
-      label: "Высота потолков",
-      value: formatValue(complex.ceilingHeight, " м"),
+      label: t("complexDetails.details.ceiling"),
+      value: formatValue(
+        complex.ceilingHeight,
+        " м",
+        t("complexDetails.notSpecified"),
+      ),
       icon: Maximize,
     },
     {
-      label: "Конструкция",
-      value: formatValue(complex.construction),
+      label: t("complexDetails.details.construction"),
+      value: formatValue(
+        complex.construction,
+        "",
+        t("complexDetails.notSpecified"),
+      ),
       icon: Grid3X3,
     },
     {
-      label: "Паркинг",
-      value: formatValue(complex.parking, " мест"),
+      label: t("complexDetails.details.parking"),
+      value: formatValue(
+        complex.parking,
+        ` ${t("complexDetails.units.places")}`,
+        t("complexDetails.notSpecified"),
+      ),
       icon: CarFront,
     },
   ];
@@ -400,28 +432,50 @@ export default function ComplexDetails() {
   const engineeringItems = [
     {
       icon: Zap,
-      title: "Отопление",
+      title: t("complexDetails.engineering.heating"),
       value: complex.heating,
     },
     {
       icon: Zap,
-      title: "Электроснабжение",
+      title: t("complexDetails.engineering.electricity"),
       value: complex.electricity,
     },
     {
       icon: ShieldCheck,
-      title: "Безопасность",
+      title: t("complexDetails.engineering.security"),
       value: complex.security,
     },
     {
       icon: Camera,
-      title: "Видеонаблюдение",
+      title: t("complexDetails.engineering.video"),
       value: complex.videoSurveillance,
     },
   ].filter(
     (item) =>
       item.value !== null && item.value !== undefined && item.value !== "",
   );
+
+  /* =========================================================
+     APARTMENT COUNT LABEL
+  ========================================================= */
+
+  const apartmentCountLabel = useMemo(() => {
+    const count = apartments.length;
+
+    if (language === "ky") {
+      return t("complexDetails.apartments.available");
+    }
+
+    if (count === 1) {
+      return t("complexDetails.apartments.one");
+    }
+
+    if (count < 5) {
+      return t("complexDetails.apartments.few");
+    }
+
+    return t("complexDetails.apartments.many");
+  }, [apartments.length, language, t]);
 
   /* =========================================================
      LOADING
@@ -433,7 +487,8 @@ export default function ComplexDetails() {
         <div className={styles.container}>
           <div className={styles.loading}>
             <div className={styles.loadingSpinner} />
-            <span>Загрузка жилого комплекса...</span>
+
+            <span>{t("complexDetails.loading.complex")}</span>
           </div>
         </div>
       </main>
@@ -454,7 +509,8 @@ export default function ComplexDetails() {
             onClick={() => router.back()}
           >
             <ArrowLeft size={18} />
-            Вернуться назад
+
+            {t("complexDetails.back.back")}
           </button>
 
           <div className={styles.error}>
@@ -462,12 +518,12 @@ export default function ComplexDetails() {
               <Building2 size={28} />
             </div>
 
-            <h1>Не удалось загрузить ЖК</h1>
+            <h1>{t("complexDetails.errors.title")}</h1>
 
             <p>{error}</p>
 
             <button type="button" onClick={() => window.location.reload()}>
-              Попробовать снова
+              {t("complexDetails.errors.retry")}
             </button>
           </div>
         </div>
@@ -488,7 +544,8 @@ export default function ComplexDetails() {
           onClick={() => router.back()}
         >
           <ArrowLeft size={18} />
-          Вернуться к объявлениям
+
+          {t("complexDetails.back.toListings")}
         </button>
 
         {/* =====================================================
@@ -513,6 +570,7 @@ export default function ComplexDetails() {
               <div className={styles.heroBadges}>
                 <span className={styles.premiumBadge}>
                   <Sparkles size={14} />
+
                   {complex.housingClass}
                 </span>
 
@@ -524,7 +582,7 @@ export default function ComplexDetails() {
               <button
                 type="button"
                 className={styles.favorite}
-                aria-label="Добавить в избранное"
+                aria-label={t("complexDetails.aria.addFavorite")}
                 onClick={() => setIsFavorite((prev) => !prev)}
               >
                 <Heart size={22} fill={isFavorite ? "currentColor" : "none"} />
@@ -536,7 +594,7 @@ export default function ComplexDetails() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryLeft}`}
                     onClick={previousImage}
-                    aria-label="Предыдущее изображение"
+                    aria-label={t("complexDetails.aria.previousImage")}
                   >
                     <ChevronLeft />
                   </button>
@@ -545,7 +603,7 @@ export default function ComplexDetails() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryRight}`}
                     onClick={nextImage}
-                    aria-label="Следующее изображение"
+                    aria-label={t("complexDetails.aria.nextImage")}
                   >
                     <ChevronRight />
                   </button>
@@ -557,7 +615,8 @@ export default function ComplexDetails() {
               </div>
 
               <div className={styles.heroImageText}>
-                <span>ЖИЛОЙ КОМПЛЕКС</span>
+                <span>{t("complexDetails.labels.residentialComplex")}</span>
+
                 <strong>{complex.name}</strong>
               </div>
             </div>
@@ -592,7 +651,8 @@ export default function ComplexDetails() {
           <div className={styles.heroInfo}>
             <div className={styles.eyebrow}>
               <Building2 size={15} />
-              ЖИЛОЙ КОМПЛЕКС
+
+              {t("complexDetails.labels.residentialComplex")}
             </div>
 
             <h1>{complex.name}</h1>
@@ -612,7 +672,7 @@ export default function ComplexDetails() {
             <div className={styles.heroDivider} />
 
             <div className={styles.priceBlock}>
-              <span>СТОИМОСТЬ КВАРТИР</span>
+              <span>{t("complexDetails.labels.apartmentPrice")}</span>
 
               <strong>{priceText}</strong>
             </div>
@@ -627,7 +687,8 @@ export default function ComplexDetails() {
               </div>
 
               <div>
-                <span>ЗАСТРОЙЩИК</span>
+                <span>{t("complexDetails.labels.developer")}</span>
+
                 <strong>{complex.developer}</strong>
               </div>
             </div>
@@ -637,8 +698,15 @@ export default function ComplexDetails() {
                 <Layers3 />
 
                 <span>
-                  <strong>{formatValue(complex.floors)}</strong>
-                  этажей
+                  <strong>
+                    {formatValue(
+                      complex.floors,
+                      "",
+                      t("complexDetails.notSpecified"),
+                    )}
+                  </strong>
+
+                  {t("complexDetails.units.floors")}
                 </span>
               </div>
 
@@ -646,8 +714,15 @@ export default function ComplexDetails() {
                 <Building2 />
 
                 <span>
-                  <strong>{formatValue(complex.blocks)}</strong>
-                  блоков
+                  <strong>
+                    {formatValue(
+                      complex.blocks,
+                      "",
+                      t("complexDetails.notSpecified"),
+                    )}
+                  </strong>
+
+                  {t("complexDetails.units.blocks")}
                 </span>
               </div>
 
@@ -655,8 +730,15 @@ export default function ComplexDetails() {
                 <Home />
 
                 <span>
-                  <strong>{formatValue(complex.apartments)}</strong>
-                  квартир
+                  <strong>
+                    {formatValue(
+                      complex.apartments,
+                      "",
+                      t("complexDetails.notSpecified"),
+                    )}
+                  </strong>
+
+                  {t("complexDetails.units.apartments")}
                 </span>
               </div>
             </div>
@@ -667,7 +749,7 @@ export default function ComplexDetails() {
               </div>
 
               <div>
-                <span>СРОК СДАЧИ</span>
+                <span>{t("complexDetails.labels.completion")}</span>
 
                 <strong>{formatDate(complex.completionDate)}</strong>
               </div>
@@ -686,7 +768,8 @@ export default function ComplexDetails() {
                 }
               }}
             >
-              Смотреть профиль застройщика
+              {t("complexDetails.buttons.developerProfile")}
+
               <ArrowRight size={18} />
             </button>
           </div>
@@ -706,9 +789,11 @@ export default function ComplexDetails() {
             </div>
 
             <div>
-              <span>ДОСТУПНЫЕ КВАРТИРЫ</span>
+              <span>{t("complexDetails.sections.availableApartments")}</span>
 
-              <h2>Квартиры в {complex.name}</h2>
+              <h2>
+                {t("complexDetails.apartments.title")} {complex.name}
+              </h2>
             </div>
           </div>
 
@@ -716,7 +801,7 @@ export default function ComplexDetails() {
             <div className={styles.apartmentsLoading}>
               <div className={styles.loadingSpinner} />
 
-              <span>Загружаем доступные квартиры...</span>
+              <span>{t("complexDetails.loading.apartments")}</span>
             </div>
           ) : apartments.length > 0 ? (
             <>
@@ -724,13 +809,7 @@ export default function ComplexDetails() {
                 <div>
                   <strong>{apartments.length}</strong>
 
-                  <span>
-                    {apartments.length === 1
-                      ? "доступная квартира"
-                      : apartments.length < 5
-                        ? "доступные квартиры"
-                        : "доступных квартир"}
-                  </span>
+                  <span>{apartmentCountLabel}</span>
                 </div>
 
                 <button
@@ -741,7 +820,8 @@ export default function ComplexDetails() {
                     })
                   }
                 >
-                  Все квартиры
+                  {t("complexDetails.buttons.allApartments")}
+
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -763,12 +843,9 @@ export default function ComplexDetails() {
                 <Home />
               </div>
 
-              <h3>Свободных квартир пока нет</h3>
+              <h3>{t("complexDetails.apartments.emptyTitle")}</h3>
 
-              <p>
-                Сейчас в этом жилом комплексе нет доступных объявлений о продаже
-                квартир.
-              </p>
+              <p>{t("complexDetails.apartments.emptyDescription")}</p>
             </div>
           )}
 
@@ -788,8 +865,9 @@ export default function ComplexDetails() {
             </div>
 
             <div>
-              <span>О ПРОЕКТЕ</span>
-              <h2>О жилом комплексе</h2>
+              <span>{t("complexDetails.sections.about")}</span>
+
+              <h2>{t("complexDetails.about.title")}</h2>
             </div>
           </div>
 
@@ -803,10 +881,7 @@ export default function ComplexDetails() {
 
               <strong>{complex.name}</strong>
 
-              <span>
-                Современный жилой комплекс с продуманной инфраструктурой и
-                комфортной городской средой.
-              </span>
+              <span>{t("complexDetails.about.highlight")}</span>
             </div>
           </div>
         </section>
@@ -822,8 +897,9 @@ export default function ComplexDetails() {
             </div>
 
             <div>
-              <span>ОСНОВНЫЕ ПАРАМЕТРЫ</span>
-              <h2>О проекте</h2>
+              <span>{t("complexDetails.sections.parameters")}</span>
+
+              <h2>{t("complexDetails.project.title")}</h2>
             </div>
           </div>
 
@@ -860,8 +936,9 @@ export default function ComplexDetails() {
               </div>
 
               <div>
-                <span>ИНЖЕНЕРИЯ</span>
-                <h2>Инженерные решения и безопасность</h2>
+                <span>{t("complexDetails.sections.engineering")}</span>
+
+                <h2>{t("complexDetails.engineering.title")}</h2>
               </div>
             </div>
 
@@ -875,6 +952,7 @@ export default function ComplexDetails() {
 
                     <div>
                       <span>{item.title}</span>
+
                       <strong>{item.value}</strong>
                     </div>
                   </div>
@@ -896,8 +974,9 @@ export default function ComplexDetails() {
               </div>
 
               <div>
-                <span>ТЕРРИТОРИЯ</span>
-                <h2>Инфраструктура комплекса</h2>
+                <span>{t("complexDetails.sections.territory")}</span>
+
+                <h2>{t("complexDetails.infrastructure.title")}</h2>
               </div>
             </div>
 
@@ -916,6 +995,7 @@ export default function ComplexDetails() {
                     key={`${text}-${index}`}
                   >
                     <CheckCircle2 size={17} />
+
                     {text}
                   </div>
                 );
@@ -935,14 +1015,15 @@ export default function ComplexDetails() {
             </div>
 
             <div>
-              <span>ЛОКАЦИЯ</span>
-              <h2>Расположение</h2>
+              <span>{t("complexDetails.sections.location")}</span>
+
+              <h2>{t("complexDetails.location.title")}</h2>
             </div>
           </div>
 
           <div className={styles.locationCard}>
             <div className={styles.locationContent}>
-              <span>АДРЕС</span>
+              <span>{t("complexDetails.location.address")}</span>
 
               <strong>{complex.address}</strong>
 
@@ -963,8 +1044,9 @@ export default function ComplexDetails() {
               </div>
 
               <div>
-                <span>ПЛАНИРОВКИ</span>
-                <h2>Планировки</h2>
+                <span>{t("complexDetails.sections.layouts")}</span>
+
+                <h2>{t("complexDetails.layouts.title")}</h2>
               </div>
             </div>
 
@@ -1003,7 +1085,9 @@ export default function ComplexDetails() {
                       <div className={styles.layoutImage}>
                         <Image
                           src={layoutImage}
-                          alt={`Планировка ${index + 1}`}
+                          alt={`${t(
+                            "complexDetails.layouts.alt",
+                          )} ${index + 1}`}
                           fill
                           sizes="(max-width: 700px) 100vw, 300px"
                         />
@@ -1011,7 +1095,8 @@ export default function ComplexDetails() {
                     ) : (
                       <div className={styles.layoutPlaceholder}>
                         <Home size={38} />
-                        <span>Планировка</span>
+
+                        <span>{t("complexDetails.layouts.placeholder")}</span>
                       </div>
                     )}
 
@@ -1019,8 +1104,10 @@ export default function ComplexDetails() {
                       <div className={styles.layoutTop}>
                         <span>
                           {rooms !== null
-                            ? `${rooms}-комнатная`
-                            : `Вариант ${index + 1}`}
+                            ? `${rooms} ${t("complexDetails.layouts.rooms")}`
+                            : `${t(
+                                "complexDetails.layouts.variant",
+                              )} ${index + 1}`}
                         </span>
 
                         {price && <strong>{formatPrice(price)}</strong>}
@@ -1037,7 +1124,7 @@ export default function ComplexDetails() {
                         {floor !== null && (
                           <span>
                             <Layers3 size={14} />
-                            {floor} этаж
+                            {floor} {t("complexDetails.units.floor")}
                           </span>
                         )}
                       </div>
@@ -1060,9 +1147,9 @@ export default function ComplexDetails() {
             </div>
 
             <div>
-              <span>ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ</span>
+              <span>{t("complexDetails.sections.officialInfo")}</span>
 
-              <h2>Документы о жилом комплексе</h2>
+              <h2>{t("complexDetails.documents.title")}</h2>
             </div>
           </div>
 
@@ -1073,12 +1160,9 @@ export default function ComplexDetails() {
               </div>
 
               <div className={styles.ministryText}>
-                <strong>Официальные документы</strong>
+                <strong>{t("complexDetails.documents.official")}</strong>
 
-                <p>
-                  Здесь можно проверить доступную официальную информацию о жилом
-                  комплексе и строительном объекте.
-                </p>
+                <p>{t("complexDetails.documents.description")}</p>
               </div>
             </div>
 
@@ -1088,7 +1172,9 @@ export default function ComplexDetails() {
               onClick={openMinstroy}
             >
               <FileCheck size={18} />
-              Смотреть документы
+
+              {t("complexDetails.buttons.documents")}
+
               <ExternalLink size={16} />
             </button>
           </div>
@@ -1100,12 +1186,12 @@ export default function ComplexDetails() {
 
         <section className={styles.apartmentsCta}>
           <div>
-            <span>ВЫБОР КВАРТИРЫ</span>
+            <span>{t("complexDetails.cta.label")}</span>
 
-            <h2>Найдите своё пространство</h2>
+            <h2>{t("complexDetails.cta.title")}</h2>
 
             <p>
-              Посмотрите доступные квартиры, планировки и цены в {complex.name}.
+              {t("complexDetails.cta.description")} {complex.name}.
             </p>
           </div>
 
@@ -1119,7 +1205,8 @@ export default function ComplexDetails() {
                   })
                 }
               >
-                Смотреть квартиры
+                {t("complexDetails.buttons.viewApartments")}
+
                 <ArrowRight size={18} />
               </button>
             )}
@@ -1131,14 +1218,17 @@ export default function ComplexDetails() {
                   router.push(`/public-profile/${complex.developerId}`)
                 }
               >
-                Профиль застройщика
+                {t("complexDetails.buttons.developerProfileShort")}
+
                 <ArrowRight size={18} />
               </button>
             )}
 
             <button type="button" onClick={openMinstroy}>
               <FileCheck size={18} />
-              Документы
+
+              {t("complexDetails.buttons.documents")}
+
               <ExternalLink size={16} />
             </button>
           </div>

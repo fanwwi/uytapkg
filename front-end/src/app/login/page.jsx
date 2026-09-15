@@ -20,9 +20,12 @@ import {
 
 import styles from "./Login.module.css";
 import { loginUser } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Login() {
   const router = useRouter();
+  const { t } = useLanguage();
+
   const [accountType, setAccountType] = useState("personal");
   const [method, setMethod] = useState("phone");
   const [phoneStep, setPhoneStep] = useState(1);
@@ -61,16 +64,19 @@ export default function Login() {
 
   const sendCode = () => {
     const clean = phone.replace(/\D/g, "");
+
     if (clean.length !== 12) {
-      setError("Введите корректный номер Кыргызстана (+996...)");
+      setError(t("login.invalidPhone"));
       return;
     }
+
     setError("");
     setPhoneStep(2);
   };
 
   const changeCode = (value, index) => {
     if (!/^\d*$/.test(value)) return;
+
     const arr = [...code];
     arr[index] = value;
     setCode(arr);
@@ -93,7 +99,10 @@ export default function Login() {
       });
 
       if (data.token) {
-        document.cookie = `uytap_token=${data.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+        document.cookie = `uytap_token=${data.token}; path=/; max-age=${
+          60 * 60 * 24 * 30
+        }`;
+
         localStorage.setItem("uytap_token", data.token);
         localStorage.setItem("uytap_user", JSON.stringify(data.user));
       }
@@ -104,7 +113,7 @@ export default function Login() {
         router.push("/profile");
       }, 1000);
     } catch (err) {
-      setError(err.message || "Ошибка входа");
+      setError(err.message || t("login.loginError"));
     } finally {
       setLoading(false);
     }
@@ -122,7 +131,10 @@ export default function Login() {
       const result = await verifyOtpCode(phone.replace(/\D/g, ""), fullCode);
 
       if (result.token) {
-        document.cookie = `uytap_token=${result.token}; path=/; max-age=${60 * 60 * 24 * 30}`;
+        document.cookie = `uytap_token=${result.token}; path=/; max-age=${
+          60 * 60 * 24 * 30
+        }`;
+
         localStorage.setItem("uytap_token", result.token);
         localStorage.setItem("uytap_user", JSON.stringify(result.user));
       }
@@ -133,7 +145,7 @@ export default function Login() {
         router.push("/profile");
       }, 1000);
     } catch (err) {
-      setError(err.message || "Неверный код");
+      setError(err.message || t("login.invalidCode"));
     } finally {
       setLoading(false);
     }
@@ -158,9 +170,9 @@ export default function Login() {
       >
         <div className={styles.brand}>UyTap</div>
 
-        <h1 className={styles.title}>Вход</h1>
+        <h1 className={styles.title}>{t("login.title")}</h1>
 
-        <p className={styles.subtitle}>Войдите в аккаунт для продолжения</p>
+        <p className={styles.subtitle}>{t("login.subtitle")}</p>
 
         {/* Тип аккаунта */}
         <div className={styles.accountTabs}>
@@ -174,7 +186,7 @@ export default function Login() {
             }}
           >
             <User />
-            Частное лицо
+            {t("login.personal")}
           </button>
 
           <button
@@ -186,7 +198,7 @@ export default function Login() {
             }}
           >
             <Building2 />
-            Бизнес
+            {t("login.business")}
           </button>
         </div>
 
@@ -222,7 +234,7 @@ export default function Login() {
                   }}
                 >
                   <Phone />
-                  Телефон
+                  {t("login.phone")}
                 </button>
 
                 <button
@@ -250,6 +262,7 @@ export default function Login() {
                   ⚠️ {error}
                 </div>
               )}
+
               {success && (
                 <div
                   style={{
@@ -261,8 +274,8 @@ export default function Login() {
                     margin: "10px 0",
                   }}
                 >
-                  <CheckCircle2 size={18} /> Авторизация успешна!
-                  Перенаправление...
+                  <CheckCircle2 size={18} />
+                  {t("login.success")} {t("login.redirecting")}
                 </div>
               )}
 
@@ -279,6 +292,7 @@ export default function Login() {
                       <div className={styles.form}>
                         <div className={styles.inputBox}>
                           <Phone />
+
                           <input
                             type="tel"
                             value={phone}
@@ -288,7 +302,7 @@ export default function Login() {
                         </div>
 
                         <button className={styles.submit} onClick={sendCode}>
-                          Получить код
+                          {t("login.getCode")}
                           <ArrowRight />
                         </button>
                       </div>
@@ -297,7 +311,7 @@ export default function Login() {
                     {phoneStep === 2 && (
                       <form className={styles.form} onSubmit={handlePhoneLogin}>
                         <p className={styles.smsInfo}>
-                          Введите код из SMS ({phone})
+                          {t("login.enterSmsCode")} ({phone})
                         </p>
 
                         <div className={styles.codeInputs}>
@@ -319,7 +333,7 @@ export default function Login() {
                           type="submit"
                           disabled={loading}
                         >
-                          {loading ? "Проверка..." : "Войти"}
+                          {loading ? t("login.checking") : t("login.login")}
                         </button>
 
                         <button
@@ -327,7 +341,7 @@ export default function Login() {
                           className={styles.resend}
                           onClick={sendCode}
                         >
-                          Отправить код повторно
+                          {t("login.resendCode")}
                         </button>
                       </form>
                     )}
@@ -353,6 +367,7 @@ export default function Login() {
                       setRemember={setRemember}
                       handleEmailLogin={handleEmailLogin}
                       loading={loading}
+                      t={t}
                     />
                   </motion.div>
                 )}
@@ -379,6 +394,7 @@ export default function Login() {
                   ⚠️ {error}
                 </div>
               )}
+
               {success && (
                 <div
                   style={{
@@ -390,10 +406,11 @@ export default function Login() {
                     margin: "10px 0",
                   }}
                 >
-                  <CheckCircle2 size={18} /> Авторизация успешна!
-                  Перенаправление...
+                  <CheckCircle2 size={18} />
+                  {t("login.success")} {t("login.redirecting")}
                 </div>
               )}
+
               <EmailForm
                 email={email}
                 setEmail={setEmail}
@@ -406,14 +423,15 @@ export default function Login() {
                 handleEmailLogin={handleEmailLogin}
                 loading={loading}
                 business
+                t={t}
               />
             </motion.div>
           )}
         </AnimatePresence>
 
         <div className={styles.bottom}>
-          Нет аккаунта?
-          <Link href="/register">Регистрация</Link>
+          {t("login.noAccount")}{" "}
+          <Link href="/register">{t("login.register")}</Link>
         </div>
       </motion.section>
     </main>
@@ -432,11 +450,13 @@ function EmailForm({
   handleEmailLogin,
   loading,
   business,
+  t,
 }) {
   return (
     <form className={styles.form} onSubmit={handleEmailLogin}>
       <div className={styles.inputBox}>
         <Mail />
+
         <input
           type="email"
           value={email}
@@ -448,13 +468,15 @@ function EmailForm({
 
       <div className={styles.inputBox}>
         <Lock />
+
         <input
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Пароль"
+          placeholder={t("login.password")}
           required
         />
+
         <button
           type="button"
           className={styles.eye}
@@ -471,15 +493,17 @@ function EmailForm({
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
           />
+
           <span className={styles.check}>{remember && <Check />}</span>
-          Запомнить меня
+
+          {t("login.remember")}
         </label>
 
-        <Link href="/forgot">Забыли пароль?</Link>
+        <Link href="/forgot">{t("login.forgotPassword")}</Link>
       </div>
 
       <button className={styles.submit} type="submit" disabled={loading}>
-        {loading ? "Вход..." : "Войти"}
+        {loading ? t("login.loggingIn") : t("login.login")}
       </button>
     </form>
   );
