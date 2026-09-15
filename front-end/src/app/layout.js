@@ -1,13 +1,17 @@
 import NavigationLoader from "@/components/ui/navigationLoader/NavigationLoader";
+import LanguageProvider from "../context/LanguageContext";
+
 import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ru" data-scroll-behavior="smooth">
       <body>
-        <NavigationLoader />
+        <LanguageProvider>
+          <NavigationLoader />
 
-        {children}
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

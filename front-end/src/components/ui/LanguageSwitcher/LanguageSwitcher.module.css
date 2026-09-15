@@ -1,0 +1,173 @@
+.switcher {
+  position: relative;
+
+  width: 82px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 4px;
+
+  border-radius: 13px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   SLIDER
+========================================================= */
+
+.slider {
+  position: absolute;
+
+  top: 4px;
+  left: 4px;
+
+  width: 36px;
+  height: 30px;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 3px 10px rgba(32, 32, 39, 0.12),
+    0 1px 3px rgba(32, 32, 39, 0.08);
+
+  transition:
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s ease;
+}
+
+.sliderKy {
+  transform: translateX(38px);
+}
+
+/* =========================================================
+   OPTION
+========================================================= */
+
+.option {
+  position: relative;
+  z-index: 2;
+
+  width: 36px;
+  height: 30px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  border-radius: 9px;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.option:hover {
+  transform: translateY(-1px);
+
+  color: #ffffff;
+}
+
+.option.active {
+  color: #303039;
+}
+
+.option:active {
+  transform: scale(0.94);
+}
+
+/* =========================================================
+   SCROLLED HEADER
+========================================================= */
+
+:global(.scrolled) .option {
+  color: rgba(48, 48, 57, 0.5);
+}
+
+:global(.scrolled) .option:hover {
+  color: #483df6;
+}
+
+:global(.scrolled) .option.active {
+  color: #303039;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .switcher {
+    width: 78px;
+    height: 38px;
+
+    padding: 4px;
+  }
+
+  .slider {
+    width: 34px;
+    height: 28px;
+  }
+
+  .sliderKy {
+    transform: translateX(36px);
+  }
+
+  .option {
+    width: 34px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .switcher {
+    width: 72px;
+    height: 36px;
+  }
+
+  .slider {
+    width: 31px;
+    height: 26px;
+  }
+
+  .sliderKy {
+    transform: translateX(33px);
+  }
+
+  .option {
+    width: 31px;
+    height: 26px;
+
+    font-size: 9px;
+  }
+}

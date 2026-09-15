@@ -18,10 +18,15 @@ import {
   User,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Header.module.css";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher/LanguageSwitcher";
 
 export default function Header() {
   const router = useRouter();
+
+  const { t } = useLanguage();
 
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
@@ -52,10 +57,11 @@ export default function Header() {
     checkAuth();
 
     window.addEventListener("storage", checkAuth);
+
     const handleUserUpdated = () => {
-      // Re-run auth check when profile updates in the same window
       checkAuth();
     };
+
     window.addEventListener("uytap:user-updated", handleUserUpdated);
 
     const handleScroll = () => {
@@ -99,10 +105,14 @@ export default function Header() {
         </Link>
 
         <nav className={styles.nav}>
+          {/* LOCATIONS */}
+
           <div className={styles.dropdown}>
             <button onClick={() => toggleMenu("location")}>
               <MapPin />
-              Локации
+
+              {t("header.locations")}
+
               <ChevronDown />
             </button>
 
@@ -110,61 +120,79 @@ export default function Header() {
               <div className={styles.menu}>
                 <Link href="/issyk-kul">Иссык-Куль</Link>
 
-                <Link href="/search-map">Искать объекты на карте</Link>
+                <Link href="/search-map">{t("header.searchOnMap")}</Link>
               </div>
             )}
           </div>
 
+          {/* NEW BUILDINGS */}
+
           <div className={styles.dropdown}>
             <button onClick={() => toggleMenu("new")}>
               <Building2 />
-              Новостройки
+
+              {t("header.newBuildings")}
+
               <ChevronDown />
             </button>
 
             {openMenu === "new" && (
               <div className={styles.menu}>
-                <Link href="/complexes">Жилые комплексы</Link>
+                <Link href="/complexes">
+                  {t("header.residentialComplexes")}
+                </Link>
 
-                <Link href="/developers">Застройщики</Link>
+                <Link href="/developers">{t("header.developers")}</Link>
               </div>
             )}
           </div>
 
+          {/* MORE */}
+
           <div className={styles.dropdown}>
             <button onClick={() => toggleMenu("more")}>
               <Users />
-              Еще
+
+              {t("header.more")}
+
               <ChevronDown />
             </button>
 
             {openMenu === "more" && (
               <div className={styles.menu}>
-                <Link href="/pricing">Тарифы</Link>
+                <Link href="/pricing">{t("header.pricing")}</Link>
 
-                <Link href="/all-products">Все объявления</Link>
+                <Link href="/all-products">{t("header.allListings")}</Link>
 
-                <Link href="/lawyers">Юристы</Link>
+                <Link href="/lawyers">{t("header.lawyers")}</Link>
               </div>
             )}
           </div>
+
+          {/* FAVORITES */}
 
           <button
             className={styles.favorite}
             onClick={() => protectedRoute("/favorites")}
           >
             <Heart />
-            Избранное
+
+            {t("header.favorites")}
           </button>
         </nav>
 
+        {/* ACTIONS */}
+
         <div className={styles.actions}>
+          <LanguageSwitcher />
+
           <button
             className={styles.add}
             onClick={() => protectedRoute("/add-product")}
           >
             <PlusCircle />
-            <span>Добавить объявление</span>
+
+            <span>{t("header.addListing")}</span>
           </button>
 
           <button
@@ -172,18 +200,21 @@ export default function Header() {
             onClick={() => protectedRoute("/add-product")}
           >
             <Flame />
-            <span>Разместить за 0 сом</span>
+
+            <span>{t("header.freeListing")}</span>
           </button>
 
           {isAuth ? (
             <Link href="/profile" className={styles.login}>
               <User />
-              <span>Профиль</span>
+
+              <span>{t("header.profile")}</span>
             </Link>
           ) : (
             <Link href="/login" className={styles.login}>
               <LogIn />
-              <span>Войти</span>
+
+              <span>{t("header.login")}</span>
             </Link>
           )}
         </div>
