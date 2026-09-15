@@ -15,39 +15,33 @@ import {
   Zap,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./Payment.module.css";
 import ServiceReceiptModal from "./ServiceReceiptModal/ServiceReceiptModal";
 
 const SERVICES = {
   vip: {
     id: "vip",
-    title: "VIP-размещение",
-    description:
-      "Объявление будет выделено среди других и получит повышенную видимость.",
     price: 500,
     icon: Crown,
   },
 
   urgent: {
     id: "urgent",
-    title: "Срочная публикация",
-    description:
-      "Добавьте отметку о срочности, чтобы быстрее привлечь внимание покупателей.",
     price: 300,
     icon: Zap,
   },
 
   top: {
     id: "top",
-    title: "Поднять в ТОП",
-    description:
-      "Поднимите объявление выше других объявлений и получите больше просмотров.",
     price: 200,
     icon: TrendingUp,
   },
 };
 
 export default function PaymentPage() {
+  const { t, language } = useLanguage();
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -59,17 +53,20 @@ export default function PaymentPage() {
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [showReceipt, setShowReceipt] = useState(false);
 
+  const serviceTitle = t(`payment.services.${service.id}.title`);
+  const serviceDescription = t(`payment.services.${service.id}.description`);
+
   const payment = useMemo(
     () => ({
       orderId: `UT-${Date.now().toString().slice(-8)}`,
       serviceId: service.id,
-      serviceTitle: service.title,
+      serviceTitle,
       amount: service.price,
       status: paymentStatus,
       createdAt: new Date(),
       paidAt: paymentStatus === "approved" ? new Date() : null,
     }),
-    [service, paymentStatus],
+    [service, serviceTitle, paymentStatus],
   );
 
   const handleMockPayment = () => {
@@ -82,7 +79,9 @@ export default function PaymentPage() {
   };
 
   const formatMoney = (value) => {
-    return `${Number(value).toLocaleString("ru-RU")} сом`;
+    return `${Number(value).toLocaleString(
+      language === "ky" ? "ky-KG" : "ru-RU",
+    )} ${t("payment.currencyShort")}`;
   };
 
   return (
@@ -96,7 +95,7 @@ export default function PaymentPage() {
           onClick={() => router.back()}
         >
           <ArrowLeft size={17} />
-          Назад
+          {t("payment.back")}
         </button>
 
         <div className={styles.logo}>
@@ -105,7 +104,7 @@ export default function PaymentPage() {
 
         <div className={styles.secure}>
           <ShieldCheck size={16} />
-          Безопасная оплата
+          {t("payment.securePayment")}
         </div>
       </header>
 
@@ -114,18 +113,16 @@ export default function PaymentPage() {
           <div>
             <div className={styles.badge}>
               <Sparkles size={13} />
-              Услуга UyTap
+              {t("payment.badge")}
             </div>
 
-            <h1>Оплата услуги</h1>
+            <h1>{t("payment.title")}</h1>
 
-            <p>
-              Оплатите выбранную услугу, чтобы продолжить публикацию объявления.
-            </p>
+            <p>{t("payment.description")}</p>
           </div>
 
           <div className={styles.paymentId}>
-            <span>ID платежа</span>
+            <span>{t("payment.paymentId")}</span>
 
             <strong>{payment.orderId}</strong>
           </div>
@@ -141,14 +138,13 @@ export default function PaymentPage() {
               </div>
 
               <div>
-                <h2>Отсканируйте QR</h2>
-                <p>Откройте банковское приложение</p>
+                <h2>{t("payment.qr.title")}</h2>
+                <p>{t("payment.qr.description")}</p>
               </div>
             </div>
 
             <div className={styles.qrWrapper}>
               <div className={styles.qr}>
-                {/* MOCK QR */}
                 <div className={styles.mockQr}>
                   <div className={styles.qrPattern} />
                   <span>UyTap</span>
@@ -157,7 +153,7 @@ export default function PaymentPage() {
             </div>
 
             <div className={styles.amount}>
-              <span>К оплате</span>
+              <span>{t("payment.toPay")}</span>
 
               <strong>{formatMoney(service.price)}</strong>
             </div>
@@ -172,12 +168,12 @@ export default function PaymentPage() {
               {paymentStatus === "approved" ? (
                 <>
                   <Check size={17} />
-                  Оплата подтверждена
+                  {t("payment.status.approved")}
                 </>
               ) : (
                 <>
                   <Clock3 size={17} />
-                  Ожидаем оплату
+                  {t("payment.status.pending")}
                 </>
               )}
             </div>
@@ -189,7 +185,7 @@ export default function PaymentPage() {
                 onClick={handleMockPayment}
               >
                 <Check size={17} />
-                Имитировать оплату
+                {t("payment.mockPayment")}
               </button>
             )}
 
@@ -200,20 +196,18 @@ export default function PaymentPage() {
                 onClick={() => setShowReceipt(true)}
               >
                 <Download size={17} />
-                Открыть чек
+                {t("payment.openReceipt")}
               </button>
             )}
 
-            <p className={styles.hint}>
-              Это тестовая страница. Кнопка выше имитирует успешную оплату.
-            </p>
+            <p className={styles.hint}>{t("payment.testHint")}</p>
           </section>
 
           {/* SUMMARY */}
 
           <aside className={styles.summary}>
             <div className={styles.summaryHeader}>
-              <span>Ваша услуга</span>
+              <span>{t("payment.summary.title")}</span>
               <ShieldCheck size={18} />
             </div>
 
@@ -223,31 +217,33 @@ export default function PaymentPage() {
               </div>
 
               <div>
-                <span>Размещение</span>
-                <strong>{service.title}</strong>
+                <span>{t("payment.summary.placement")}</span>
+                <strong>{serviceTitle}</strong>
               </div>
             </div>
 
-            <div className={styles.description}>{service.description}</div>
+            <div className={styles.description}>{serviceDescription}</div>
 
             <div className={styles.details}>
               <div>
-                <span>Стоимость услуги</span>
+                <span>{t("payment.summary.serviceCost")}</span>
 
                 <strong>{formatMoney(service.price)}</strong>
               </div>
 
               <div>
-                <span>Статус</span>
+                <span>{t("payment.summary.status")}</span>
 
                 <strong>
-                  {paymentStatus === "approved" ? "Оплачено" : "Ожидает оплаты"}
+                  {paymentStatus === "approved"
+                    ? t("payment.summary.paid")
+                    : t("payment.summary.awaitingPayment")}
                 </strong>
               </div>
             </div>
 
             <div className={styles.total}>
-              <span>Итого</span>
+              <span>{t("payment.summary.total")}</span>
 
               <strong>{formatMoney(service.price)}</strong>
             </div>
@@ -255,10 +251,7 @@ export default function PaymentPage() {
             <div className={styles.info}>
               <ShieldCheck size={17} />
 
-              <p>
-                После подтверждения оплаты вы сможете продолжить публикацию
-                объявления.
-              </p>
+              <p>{t("payment.summary.info")}</p>
             </div>
           </aside>
         </div>
@@ -270,7 +263,8 @@ export default function PaymentPage() {
               className={styles.continueButton}
               onClick={handleContinue}
             >
-              Продолжить публикацию
+              {t("payment.continuePublication")}
+
               <ArrowLeft size={17} style={{ transform: "rotate(180deg)" }} />
             </button>
           </div>

@@ -1,27 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  ArrowRight,
-  ChevronRight,
-  Loader2,
-  MapPin,
-  Search,
-} from "lucide-react";
+import { ChevronRight, Loader2, MapPin, Search } from "lucide-react";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./StepAddress.module.css";
 import RealEstateMap from "@/components/ui/realEstateMap/RealEstateMap";
 
 export default function StepAddress({ form, updateForm, onNext, onBack }) {
+  const { t, language } = useLanguage();
+
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
 
   const canContinue = form.address?.trim().length > 3;
 
-  /*
-   * Поиск адреса через Nominatim.
-   * Не отправляем запрос на каждую букву.
-   */
   useEffect(() => {
     const query = form.address?.trim();
 
@@ -30,8 +24,6 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
       return;
     }
 
-    // Если адрес уже выбран из подсказки —
-    // повторно его не ищем.
     if (form.addressSelected) {
       return;
     }
@@ -45,12 +37,9 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
           format: "json",
           addressdetails: "1",
           limit: "5",
-          "accept-language": "ru",
+          "accept-language": language === "ky" ? "ky" : "ru",
         });
 
-        /*
-         * Ограничиваем поиск выбранной страной.
-         */
         if (form.country === "kyrgyzstan") {
           params.set("countrycodes", "kg");
         }
@@ -79,11 +68,8 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
     }, 700);
 
     return () => clearTimeout(timeout);
-  }, [form.address, form.country, form.addressSelected]);
+  }, [form.address, form.country, form.addressSelected, language]);
 
-  /*
-   * Пользователь выбрал адрес из подсказки.
-   */
   function selectAddress(place) {
     const latitude = Number(place.lat);
     const longitude = Number(place.lon);
@@ -98,9 +84,6 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
     setSuggestions([]);
   }
 
-  /*
-   * Пользователь печатает адрес вручную.
-   */
   function handleAddressChange(event) {
     updateForm({
       address: event.target.value,
@@ -110,13 +93,6 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
     setSuggestions([]);
   }
 
-  /*
-   * Пользователь нажал / перетащил точку на карте.
-   *
-   * Координаты приходят из RealEstateMap.
-   * Сам RealEstateMap затем делает reverse geocoding
-   * и возвращает найденный адрес.
-   */
   function handleLocationChange({ latitude, longitude, address }) {
     updateForm({
       latitude,
@@ -135,16 +111,17 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
   return (
     <div className={styles.step}>
       <div className={styles.header}>
-        <span>Шаг 5 из 6</span>
+        <span>{t("stepAddress.step")}</span>
 
-        <h1>Где находится объект?</h1>
+        <h1>{t("stepAddress.title")}</h1>
 
-        <p>Введите адрес или выберите точку непосредственно на карте.</p>
+        <p>{t("stepAddress.description")}</p>
       </div>
 
       {/* ПОИСК АДРЕСА */}
+
       <div className={styles.addressSearch}>
-        <label>Адрес</label>
+        <label>{t("stepAddress.address.label")}</label>
 
         <div className={styles.searchInput}>
           <MapPin className={styles.searchIcon} />
@@ -153,7 +130,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
             type="text"
             value={form.address || ""}
             onChange={handleAddressChange}
-            placeholder="Начните вводить адрес..."
+            placeholder={t("stepAddress.address.placeholder")}
             autoComplete="off"
           />
 
@@ -165,6 +142,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
         </div>
 
         {/* ПОДСКАЗКИ */}
+
         {suggestions.length > 0 && (
           <div className={styles.suggestions}>
             {suggestions.map((place) => (
@@ -181,7 +159,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
                     {place.address?.road ||
                       place.address?.neighbourhood ||
                       place.address?.city ||
-                      "Адрес"}
+                      t("stepAddress.address.default")}
                   </strong>
 
                   <span>{place.display_name}</span>
@@ -193,6 +171,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
       </div>
 
       {/* КАРТА */}
+
       <div className={styles.map}>
         <RealEstateMap
           latitude={form.latitude}
@@ -202,9 +181,10 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
       </div>
 
       {/* КООРДИНАТЫ */}
+
       {form.latitude && form.longitude && (
         <div className={styles.coordinatesPreview}>
-          <span>Координаты объекта</span>
+          <span>{t("stepAddress.coordinates")}</span>
 
           <strong>
             {Number(form.latitude).toFixed(6)},{" "}
@@ -215,7 +195,7 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
 
       <div className={styles.actions}>
         <button type="button" className={styles.secondary} onClick={onBack}>
-          Назад
+          {t("common.back")}
         </button>
 
         <button
@@ -224,13 +204,13 @@ export default function StepAddress({ form, updateForm, onNext, onBack }) {
           disabled={!canContinue}
           onClick={onNext}
         >
-          Продолжить
+          {t("stepAddress.continue")}
           <ChevronRight size={18} />
         </button>
       </div>
 
       <div className={styles.mapAttribution}>
-        Карта © OpenStreetMap contributors
+        {t("stepAddress.mapAttribution")}
       </div>
     </div>
   );

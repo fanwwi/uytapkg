@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { House } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { createListing, getConstants, uploadListingPhoto } from "@/utils/api";
 
 import StepProgress from "./components/StepProgress/StepProgress";
@@ -14,8 +17,6 @@ import StepAddress from "./components/StepAddress/StepAddress";
 import StepListingType from "./components/StepListingType/StepListingType";
 
 import styles from "./AddProduct.module.css";
-import { House } from "lucide-react";
-import Link from "next/link";
 
 const initialForm = {
   title: "",
@@ -118,7 +119,6 @@ const initialForm = {
 
   // =========================
   // УДОБСТВА
-  // МУЛЬТИВЫБОР
   // =========================
   amenities: [],
 
@@ -156,22 +156,15 @@ const initialForm = {
 
 export default function AddProductPage() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // У тебя 6 шагов:
-  //
-  // 1. Фотографии
-  // 2. Местоположение
-  // 3. Тип сделки
-  // 4. Категория и характеристики
-  // 5. Адрес
-  // 6. Тип объявления
-  //
   const totalSteps = 6;
 
   function updateForm(values) {
@@ -184,11 +177,13 @@ export default function AddProductPage() {
   function nextStep() {
     setStep((prev) => Math.min(prev + 1, totalSteps));
     setSubmitMessage("");
+    setSubmitSuccess(false);
   }
 
   function prevStep() {
     setStep((prev) => Math.max(prev - 1, 1));
     setSubmitMessage("");
+    setSubmitSuccess(false);
   }
 
   async function submitProduct() {
@@ -196,6 +191,7 @@ export default function AddProductPage() {
 
     setIsSubmitting(true);
     setSubmitMessage("");
+    setSubmitSuccess(false);
 
     try {
       const token = localStorage.getItem("uytap_token");
@@ -210,19 +206,19 @@ export default function AddProductPage() {
       // =========================
 
       if (!form.title?.trim()) {
-        throw new Error("Введите название объявления");
+        throw new Error(t("addProduct.errors.titleRequired"));
       }
 
       if (!form.images?.length) {
-        throw new Error("Добавьте хотя бы одну фотографию");
+        throw new Error(t("addProduct.errors.imagesRequired"));
       }
 
       if (!form.category) {
-        throw new Error("Выберите категорию недвижимости");
+        throw new Error(t("addProduct.errors.categoryRequired"));
       }
 
       if (!form.dealType) {
-        throw new Error("Выберите тип сделки");
+        throw new Error(t("addProduct.errors.dealRequired"));
       }
 
       // =========================
@@ -262,17 +258,17 @@ export default function AddProductPage() {
       // =========================
 
       const categoryTitles = {
-        apartment: "квартиры",
-        house: "дома",
-        cottage: "коттеджа",
-        land: "участка",
-        room: "комнаты",
-        commercial: "коммерческого помещения",
-        parking: "паркинга",
+        apartment: t("addProduct.categoryTitles.apartment"),
+        house: t("addProduct.categoryTitles.house"),
+        cottage: t("addProduct.categoryTitles.cottage"),
+        land: t("addProduct.categoryTitles.land"),
+        room: t("addProduct.categoryTitles.room"),
+        commercial: t("addProduct.categoryTitles.commercial"),
+        parking: t("addProduct.categoryTitles.parking"),
       };
 
       const categoryTitle =
-        categoryTitles[form.category] || "объекта недвижимости";
+        categoryTitles[form.category] || t("addProduct.categoryTitles.default");
 
       // =========================
       // ОПИСАНИЕ
@@ -283,15 +279,21 @@ export default function AddProductPage() {
         form.city ||
         form.settlement ||
         form.region ||
-        "Кыргызстан";
+        t("addProduct.defaultCountry");
 
       const generatedDescription = [
-        `Объект: ${categoryTitle}.`,
-        `Местоположение: ${locationText}.`,
-        form.district ? `Район: ${form.district}.` : "",
-        form.address ? `Адрес: ${form.address}.` : "",
+        `${t("addProduct.generatedDescription.object")}: ${categoryTitle}.`,
+        `${t("addProduct.generatedDescription.location")}: ${locationText}.`,
+        form.district
+          ? `${t("addProduct.generatedDescription.district")}: ${form.district}.`
+          : "",
+        form.address
+          ? `${t("addProduct.generatedDescription.address")}: ${form.address}.`
+          : "",
         form.developerOrComplex
-          ? `Застройщик / ЖК: ${form.developerOrComplex}.`
+          ? `${t(
+              "addProduct.generatedDescription.developer",
+            )}: ${form.developerOrComplex}.`
           : "",
       ]
         .filter(Boolean)
@@ -315,9 +317,9 @@ export default function AddProductPage() {
             console.error("Failed to upload image:", img.file.name, e);
 
             throw new Error(
-              `Не удалось загрузить фотографию ${img.file.name}: ${
-                e.message || "неизвестная ошибка"
-              }`,
+              `${t("addProduct.errors.photoUpload")} ${
+                img.file.name
+              }: ${e.message || t("addProduct.errors.unknown")}`,
             );
           }
         } else if (img.url && !img.url.startsWith("blob:")) {
@@ -328,16 +330,7 @@ export default function AddProductPage() {
       // =========================
       // УДОБСТВА
       // =========================
-      //
-      // Теперь amenities — массив.
-      //
-      // Например:
-      // [
-      //   "Балкон/Лоджия",
-      //   "Лифт",
-      //   "Парковка"
-      // ]
-      //
+
       const selectedAmenities = Array.isArray(form.amenities)
         ? form.amenities.filter((item) => item && item !== "Любые")
         : form.amenities && form.amenities !== "Любые"
@@ -360,11 +353,10 @@ export default function AddProductPage() {
         console.error("Failed to fetch constants for amenities split", e);
       }
 
-      // Разделяем выбранные удобства:
-      //
-      // resortAmenities → курортные удобства
-      // остальные → обычные
-      //
+      // =========================
+      // РАЗДЕЛЕНИЕ УДОБСТВ
+      // =========================
+
       const resortSelectedAmenities = selectedAmenities.filter((amenity) =>
         resortAmenities.includes(amenity),
       );
@@ -442,7 +434,7 @@ export default function AddProductPage() {
         buildingType: form.buildingType || null,
         repair: form.repair || null,
 
-        // Все выбранные общие удобства
+        // Общие удобства
         amenities: generalSelectedAmenities,
       };
 
@@ -451,20 +443,14 @@ export default function AddProductPage() {
       // =========================
 
       const payload = {
-        // =========================
-        // ОСНОВНОЕ
-        // =========================
-
+        // Основное
         title: form.title.trim(),
 
         description,
 
         propertyType: form.category,
 
-        // =========================
-        // СДЕЛКА
-        // =========================
-
+        // Сделка
         dealType: form.dealType,
 
         rentPeriod:
@@ -476,10 +462,7 @@ export default function AddProductPage() {
                 : form.rentalPeriod || null
             : null,
 
-        // =========================
-        // МЕСТОПОЛОЖЕНИЕ
-        // =========================
-
+        // Местоположение
         country: form.country || "Кыргызстан",
 
         region: form.country === "turkey" ? "TURKEY" : form.region || "BISHKEK",
@@ -493,20 +476,14 @@ export default function AddProductPage() {
 
         district: form.district || null,
 
-        // =========================
-        // АДРЕС
-        // =========================
-
+        // Адрес
         address: form.address || null,
 
         latitude: form.latitude ?? null,
 
         longitude: form.longitude ?? null,
 
-        // =========================
-        // ЦЕНА
-        // =========================
-
+        // Цена
         price: derivedPrice,
 
         priceFrom: price > 0 ? price : null,
@@ -515,64 +492,40 @@ export default function AddProductPage() {
 
         currency: "USD",
 
-        // =========================
-        // ПЛОЩАДЬ
-        // =========================
-
+        // Площадь
         area: derivedArea,
 
         areaFrom: derivedArea,
 
         areaTo: derivedArea,
 
-        // =========================
-        // ИССЫК-КУЛЬ
-        // =========================
-
+        // Иссык-Куль
         beachDistanceFrom: beachDistanceValue,
 
         beachDistanceTo: beachDistanceValue,
 
-        // =========================
-        // ЗАСТРОЙЩИК / ЖК
-        // =========================
-
+        // Застройщик / ЖК
         developerOrComplex: form.developerOrComplex || null,
 
         residentialComplexId: form.residentialComplexId || null,
 
-        // =========================
-        // ТИП РАЗМЕЩЕНИЯ
-        // =========================
-
+        // Тип размещения
         listingType: form.listingType || "standard",
 
-        // =========================
-        // ФОТО
-        // =========================
-
+        // Фото
         photos,
 
-        // =========================
-        // ОСНОВНЫЕ ПАРАМЕТРЫ
-        // =========================
-
+        // Основные параметры
         rooms: form.rooms ? Number(form.rooms) : null,
 
         floor: form.floor ? Number(form.floor) : null,
 
         totalFloors: form.floors ? Number(form.floors) : null,
 
-        // =========================
-        // FEATURES
-        // =========================
-
+        // Features
         features,
 
-        // =========================
-        // RESORT
-        // =========================
-
+        // Resort
         isResort: isIssykKul,
 
         resortFilters: {
@@ -594,7 +547,9 @@ export default function AddProductPage() {
 
       const result = await createListing(token, payload);
 
-      setSubmitMessage(result?.message || "Объявление успешно опубликовано");
+      setSubmitSuccess(true);
+
+      setSubmitMessage(result?.message || t("addProduct.success"));
 
       // =========================
       // ОЧИСТКА BLOB URL
@@ -622,7 +577,9 @@ export default function AddProductPage() {
     } catch (error) {
       console.error("Ошибка публикации:", error);
 
-      setSubmitMessage(error?.message || "Не удалось опубликовать объявление");
+      setSubmitSuccess(false);
+
+      setSubmitMessage(error?.message || t("addProduct.errors.publish"));
     } finally {
       setIsSubmitting(false);
     }
@@ -633,7 +590,7 @@ export default function AddProductPage() {
       <div className={styles.container}>
         <Link href="/" className={styles.homeButton}>
           <House size={18} />
-          На главную
+          {t("addProduct.home")}
         </Link>
 
         <StepProgress currentStep={step} totalSteps={totalSteps} />
@@ -719,9 +676,7 @@ export default function AddProductPage() {
           {submitMessage && (
             <div
               className={
-                submitMessage.includes("успешно")
-                  ? styles.successMessage
-                  : styles.errorMessage
+                submitSuccess ? styles.successMessage : styles.errorMessage
               }
             >
               {submitMessage}

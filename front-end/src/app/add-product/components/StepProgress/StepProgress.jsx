@@ -1,9 +1,19 @@
 "use client";
 
-import styles from ".//StepProgress.module.css";
+import { useLanguage } from "@/context/LanguageContext";
+import styles from "./StepProgress.module.css";
 
 export default function StepProgress({ currentStep, totalSteps }) {
-  const steps = ["Добавить изображения", "Локация", "Тип сделки", "Параметры", "Адрес", "Публикация"];
+  const { t } = useLanguage();
+
+  const steps = [
+    t("stepProgress.images"),
+    t("stepProgress.location"),
+    t("stepProgress.deal"),
+    t("stepProgress.parameters"),
+    t("stepProgress.address"),
+    t("stepProgress.publication"),
+  ];
 
   return (
     <div className={styles.progress}>

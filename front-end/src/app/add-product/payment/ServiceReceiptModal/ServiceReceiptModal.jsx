@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Check, Download, LoaderCircle, X } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./ServiceReceiptModal.module.css";
 import ReceiptDocument from "./ServicesReceiptDocument";
 import { generateServicesReceiptPdf } from "@/utils/generateServicesReceiptModal";
@@ -13,6 +14,8 @@ export default function ServiceReceiptModal({
   onClose,
   onContinue,
 }) {
+  const { t } = useLanguage();
+
   const receiptRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -22,7 +25,9 @@ export default function ServiceReceiptModal({
 
   const receiptData = {
     serviceTitle:
-      paymentData.serviceTitle || paymentData.service || "Услуга размещения",
+      paymentData.serviceTitle ||
+      paymentData.service ||
+      t("payment.receipt.serviceDefault"),
 
     amount:
       Number(paymentData.amount) ||
@@ -82,7 +87,7 @@ export default function ServiceReceiptModal({
           className={styles.closeButton}
           onClick={handleClose}
           disabled={isDownloading}
-          aria-label="Закрыть"
+          aria-label={t("payment.receipt.close")}
         >
           <X size={19} />
         </button>
@@ -93,12 +98,14 @@ export default function ServiceReceiptModal({
           <Check size={28} strokeWidth={2.5} />
         </div>
 
-        <span className={styles.modalLabel}>ОПЛАТА ПОДТВЕРЖДЕНА</span>
+        <span className={styles.modalLabel}>
+          {t("payment.receipt.paymentConfirmedLabel")}
+        </span>
 
-        <h2>Услуга оплачена</h2>
+        <h2>{t("payment.receipt.paidTitle")}</h2>
 
         <p className={styles.modalDescription}>
-          Платёж успешно получен. Электронный чек сформирован автоматически.
+          {t("payment.receipt.description")}
         </p>
 
         {/* RECEIPT */}
@@ -118,12 +125,12 @@ export default function ServiceReceiptModal({
           {isDownloading ? (
             <>
               <LoaderCircle size={18} className={styles.spin} />
-              Формируем чек...
+              {t("payment.receipt.generating")}
             </>
           ) : (
             <>
               <Download size={18} />
-              Скачать чек PDF
+              {t("payment.receipt.downloadPdf")}
             </>
           )}
         </button>
@@ -136,7 +143,7 @@ export default function ServiceReceiptModal({
           onClick={handleContinue}
           disabled={isDownloading}
         >
-          Продолжить публикацию
+          {t("payment.receipt.continuePublication")}
         </button>
 
         {/* INFO */}
@@ -144,10 +151,7 @@ export default function ServiceReceiptModal({
         <div className={styles.modalHint}>
           <Check size={14} />
 
-          <span>
-            После продолжения вы сможете опубликовать объявление с оплаченной
-            услугой.
-          </span>
+          <span>{t("payment.receipt.continueHint")}</span>
         </div>
       </div>
     </div>

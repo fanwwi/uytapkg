@@ -13,45 +13,33 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./StepListingType.module.css";
 
 const types = [
   {
     id: "standard",
-    title: "Обычное размещение",
-    description: "Стандартная публикация объявления с базовым размещением.",
     icon: Sparkles,
     paid: false,
   },
   {
     id: "vip",
-    title: "VIP-размещение",
-    description:
-      "Более заметное размещение, чтобы объявление увидело больше людей.",
     icon: Crown,
     paid: true,
   },
   {
     id: "urgent",
-    title: "Срочная публикация",
-    description:
-      "Покажите покупателям, что объект нужно продать или сдать быстрее.",
     icon: Zap,
     paid: true,
   },
   {
     id: "top",
-    title: "Поднять в ТОП",
-    description:
-      "Поднимите объявление выше других и получите больше просмотров.",
     icon: TrendingUp,
     paid: true,
   },
   {
     id: "instagram",
-    title: "Поделиться в Instagram",
-    description:
-      "Разместите объявление в Instagram UyTap и привлеките дополнительную аудиторию.",
     icon: Camera,
     paid: false,
   },
@@ -106,6 +94,7 @@ export default function StepListingType({
   onSubmit,
   isSubmitting,
 }) {
+  const { t } = useLanguage();
   const router = useRouter();
 
   const title = form.title || "";
@@ -149,10 +138,8 @@ export default function StepListingType({
     /*
      * Бесплатная публикация.
      *
-     * Instagram пока тоже публикуется как обычное объявление — оплата
-     * этой услуги ещё не реализована. Заявка на публикацию в Instagram
-     * создаётся на бэкенде автоматически и дальше обрабатывается вручную
-     * через админку.
+     * Instagram пока тоже публикуется как обычное объявление —
+     * оплата этой услуги ещё не реализована.
      */
     if (!paidListingTypes.includes(form.listingType)) {
       onSubmit();
@@ -160,7 +147,7 @@ export default function StepListingType({
     }
 
     /*
-     * Остальные платные услуги (VIP/Срочно/ТОП):
+     * Платные услуги:
      * 1. Пользователь переходит на страницу оплаты.
      * 2. Оплачивает услугу.
      * 3. Получает чек.
@@ -169,36 +156,49 @@ export default function StepListingType({
     router.push(`/add-product/payment?service=${form.listingType}`);
   };
 
-  const countryName = form.country === "turkey" ? "Турция" : "Кыргызстан";
+  const countryName =
+    form.country === "turkey"
+      ? t("stepListingType.countries.turkey")
+      : t("stepListingType.countries.kyrgyzstan");
 
-  const regionName = regionNames[form.region] || form.region || "Не указан";
+  const regionName = form.region
+    ? t(`stepListingType.regions.${form.region}`) !==
+      `stepListingType.regions.${form.region}`
+      ? t(`stepListingType.regions.${form.region}`)
+      : regionNames[form.region] || form.region
+    : t("stepListingType.notSpecified");
 
   const dealName =
     form.dealType === "sale"
-      ? "Продажа"
+      ? t("stepListingType.deal.sale")
       : form.dealType === "rent"
-        ? "Аренда"
-        : "Не указан";
+        ? t("stepListingType.deal.rent")
+        : t("stepListingType.notSpecified");
 
-  const categoryName = categoryLabels[form.category] || "Не указана";
+  const categoryName = form.category
+    ? t(`stepListingType.categories.${form.category}`) !==
+      `stepListingType.categories.${form.category}`
+      ? t(`stepListingType.categories.${form.category}`)
+      : categoryLabels[form.category] || t("stepListingType.notSpecified")
+    : t("stepListingType.notSpecified");
 
   const getPrimaryButton = () => {
     if (isSubmitting) {
       return {
-        text: "Публикация...",
+        text: t("stepListingType.actions.publishing"),
         icon: ArrowRight,
       };
     }
 
     if (isPaidSelected) {
       return {
-        text: "Перейти к оплате",
+        text: t("stepListingType.actions.payment"),
         icon: CreditCard,
       };
     }
 
     return {
-      text: "Опубликовать",
+      text: t("stepListingType.actions.publish"),
       icon: ArrowRight,
     };
   };
@@ -208,36 +208,30 @@ export default function StepListingType({
 
   return (
     <div className={styles.step}>
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <div className={styles.header}>
         <span className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 6 из 6
+
+          {t("stepListingType.step")}
         </span>
 
-        <h1>Завершите публикацию</h1>
+        <h1>{t("stepListingType.title")}</h1>
 
-        <p>
-          Добавьте название и описание объявления, а затем выберите подходящий
-          вариант размещения.
-        </p>
+        <p>{t("stepListingType.description")}</p>
       </div>
 
-      {/* =====================================================
-          01 — TITLE
-      ===================================================== */}
+      {/* 01 — TITLE */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
           <span>01</span>
 
           <div>
-            <strong>Название объявления</strong>
+            <strong>{t("stepListingType.titleField.title")}</strong>
 
-            <small>Придумайте короткое и понятное название</small>
+            <small>{t("stepListingType.titleField.description")}</small>
           </div>
         </div>
 
@@ -251,7 +245,7 @@ export default function StepListingType({
               type="text"
               value={title}
               onChange={handleTitleChange}
-              placeholder="Например: Уютная квартира у озера"
+              placeholder={t("stepListingType.titleField.placeholder")}
               maxLength={100}
               autoComplete="off"
               autoFocus
@@ -261,27 +255,27 @@ export default function StepListingType({
           </div>
 
           <div className={styles.titleFooter}>
-            <span>Хорошее название поможет быстрее привлечь внимание.</span>
+            <span>{t("stepListingType.titleField.hint")}</span>
 
             {!isTitleValid && (
-              <strong className={styles.required}>Обязательное поле</strong>
+              <strong className={styles.required}>
+                {t("stepListingType.required")}
+              </strong>
             )}
           </div>
         </div>
       </section>
 
-      {/* =====================================================
-          02 — DESCRIPTION
-      ===================================================== */}
+      {/* 02 — DESCRIPTION */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
           <span>02</span>
 
           <div>
-            <strong>Описание объявления</strong>
+            <strong>{t("stepListingType.descriptionField.title")}</strong>
 
-            <small>Расскажите подробнее об объекте</small>
+            <small>{t("stepListingType.descriptionField.description")}</small>
           </div>
         </div>
 
@@ -296,7 +290,7 @@ export default function StepListingType({
             <textarea
               value={description}
               onChange={handleDescriptionChange}
-              placeholder="Например: Светлая двухкомнатная квартира в центре города. Рядом магазины, школы и остановки общественного транспорта..."
+              placeholder={t("stepListingType.descriptionField.placeholder")}
               maxLength={2000}
               rows={7}
             />
@@ -307,30 +301,27 @@ export default function StepListingType({
           </div>
 
           <div className={styles.titleFooter}>
-            <span>
-              Укажите площадь, состояние, расположение, инфраструктуру и другие
-              важные детали.
-            </span>
+            <span>{t("stepListingType.descriptionField.hint")}</span>
 
             {!isDescriptionValid && (
-              <strong className={styles.required}>Обязательное поле</strong>
+              <strong className={styles.required}>
+                {t("stepListingType.required")}
+              </strong>
             )}
           </div>
         </div>
       </section>
 
-      {/* =====================================================
-          03 — LISTING TYPE
-      ===================================================== */}
+      {/* 03 — LISTING TYPE */}
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>
           <span>03</span>
 
           <div>
-            <strong>Тип размещения</strong>
+            <strong>{t("stepListingType.listingType.title")}</strong>
 
-            <small>Выберите один вариант</small>
+            <small>{t("stepListingType.listingType.description")}</small>
           </div>
         </div>
 
@@ -359,9 +350,11 @@ export default function StepListingType({
                 </div>
 
                 <div className={styles.cardContent}>
-                  <strong>{item.title}</strong>
+                  <strong>{t(`stepListingType.types.${item.id}.title`)}</strong>
 
-                  <span>{item.description}</span>
+                  <span>
+                    {t(`stepListingType.types.${item.id}.description`)}
+                  </span>
                 </div>
 
                 {!isSelected && (
@@ -374,9 +367,7 @@ export default function StepListingType({
           })}
         </div>
 
-        {/* ===================================================
-            INSTAGRAM INFO
-        =================================================== */}
+        {/* INSTAGRAM INFO */}
 
         {isInstagramSelected && (
           <div className={styles.instagramInfo}>
@@ -386,14 +377,10 @@ export default function StepListingType({
 
             <div className={styles.instagramInfoContent}>
               <div className={styles.instagramTitleRow}>
-                <strong>Размещение в Instagram</strong>
+                <strong>{t("stepListingType.instagram.title")}</strong>
               </div>
 
-              <p>
-                После публикации объявление будет передано на размещение в
-                Instagram UyTap. Обработка занимает до одного дня. После
-                публикации периодически проверяйте аккаунт UyTap.
-              </p>
+              <p>{t("stepListingType.instagram.description")}</p>
             </div>
 
             <Check
@@ -405,9 +392,7 @@ export default function StepListingType({
         )}
       </section>
 
-      {/* =====================================================
-          04 — SUMMARY
-      ===================================================== */}
+      {/* 04 — SUMMARY */}
 
       <section className={styles.summary}>
         <div className={styles.summaryHeader}>
@@ -415,9 +400,9 @@ export default function StepListingType({
             <span className={styles.summaryEyebrow}>04</span>
 
             <div>
-              <h3>Проверьте объявление</h3>
+              <h3>{t("stepListingType.summary.title")}</h3>
 
-              <p>Основная информация перед публикацией</p>
+              <p>{t("stepListingType.summary.description")}</p>
             </div>
           </div>
 
@@ -428,53 +413,55 @@ export default function StepListingType({
           >
             <span />
 
-            {isReady ? "Готово" : "Не заполнено"}
+            {isReady
+              ? t("stepListingType.summary.ready")
+              : t("stepListingType.summary.notReady")}
           </div>
         </div>
 
         <div className={styles.summaryGrid}>
           <div className={styles.summaryItemWide}>
-            <span>Название</span>
+            <span>{t("stepListingType.summary.fields.title")}</span>
 
-            <strong>{title.trim() || "Не указано"}</strong>
+            <strong>{title.trim() || t("stepListingType.notSpecified")}</strong>
           </div>
 
           <div className={styles.summaryItemWide}>
-            <span>Описание</span>
+            <span>{t("stepListingType.summary.fields.description")}</span>
 
             <strong className={styles.summaryDescription}>
-              {description.trim() || "Не указано"}
+              {description.trim() || t("stepListingType.notSpecified")}
             </strong>
           </div>
 
           <div className={styles.summaryItem}>
-            <span>Страна</span>
+            <span>{t("stepListingType.summary.fields.country")}</span>
 
             <strong>{countryName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
-            <span>Регион</span>
+            <span>{t("stepListingType.summary.fields.region")}</span>
 
             <strong>{regionName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
-            <span>Тип сделки</span>
+            <span>{t("stepListingType.summary.fields.deal")}</span>
 
             <strong>{dealName}</strong>
           </div>
 
           <div className={styles.summaryItem}>
-            <span>Категория</span>
+            <span>{t("stepListingType.summary.fields.category")}</span>
 
             <strong>{categoryName}</strong>
           </div>
 
           <div className={styles.summaryItemWide}>
-            <span>Адрес</span>
+            <span>{t("stepListingType.summary.fields.address")}</span>
 
-            <strong>{form.address || "Не указан"}</strong>
+            <strong>{form.address || t("stepListingType.notSpecified")}</strong>
           </div>
 
           <div
@@ -489,9 +476,13 @@ export default function StepListingType({
             )}
 
             <div>
-              <span>Размещение</span>
+              <span>{t("stepListingType.summary.fields.listing")}</span>
 
-              <strong>{selectedType?.title || "Не выбрано"}</strong>
+              <strong>
+                {selectedType
+                  ? t(`stepListingType.types.${selectedType.id}.title`)
+                  : t("stepListingType.summary.notSelected")}
+              </strong>
             </div>
 
             {isInstagramSelected && (
@@ -505,9 +496,7 @@ export default function StepListingType({
         </div>
       </section>
 
-      {/* =====================================================
-          ACTIONS
-      ===================================================== */}
+      {/* ACTIONS */}
 
       <div className={styles.actions}>
         <button
@@ -517,7 +506,8 @@ export default function StepListingType({
           disabled={isSubmitting}
         >
           <ArrowLeft size={17} />
-          Назад
+
+          {t("common.back")}
         </button>
 
         <button

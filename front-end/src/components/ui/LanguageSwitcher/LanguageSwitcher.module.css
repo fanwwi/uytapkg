@@ -11,7 +11,7 @@
 
   border-radius: 13px;
 
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.652);
 
   border: 1px solid rgba(255, 255, 255, 0.16);
 
@@ -40,7 +40,7 @@
 
   border-radius: 9px;
 
-  background: #ffffff;
+  background: #483df6;
 
   box-shadow:
     0 3px 10px rgba(32, 32, 39, 0.12),
@@ -77,7 +77,7 @@
 
   border-radius: 9px;
 
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(61, 60, 60, 0.68);
 
   font-family: inherit;
   font-size: 10px;
@@ -99,7 +99,7 @@
 }
 
 .option.active {
-  color: #303039;
+  color: #dddde2;
 }
 
 .option:active {

@@ -20,28 +20,29 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { getMe } from "@/utils/api";
 
 import styles from "./Footer.module.css";
 
 const categories = [
   {
-    title: "Квартиры",
+    key: "apartments",
     icon: Building2,
     value: "Квартира",
   },
   {
-    title: "Дома",
+    key: "houses",
     icon: Home,
     value: "Дом",
   },
   {
-    title: "Участки",
+    key: "land",
     icon: Trees,
     value: "Участок",
   },
   {
-    title: "Паркинг",
+    key: "parking",
     icon: Car,
     value: "Паркинг/гараж",
   },
@@ -49,6 +50,7 @@ const categories = [
 
 export default function Footer() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [isAuth, setIsAuth] = useState(false);
 
@@ -67,10 +69,6 @@ export default function Footer() {
           const user = await getMe(token);
           setIsAuth(Boolean(user));
         } catch {
-          // Такая же логика, как в Header:
-          // если токен + сохранённый пользователь есть,
-          // считаем пользователя авторизованным,
-          // даже если getMe временно не ответил.
           setIsAuth(true);
         }
       } catch {
@@ -80,10 +78,7 @@ export default function Footer() {
 
     checkAuth();
 
-    // Если пользователь вошёл/вышел в другой вкладке
     window.addEventListener("storage", checkAuth);
-
-    // Если авторизация изменилась внутри этой вкладки
     window.addEventListener("uytap:user-updated", checkAuth);
 
     return () => {
@@ -111,10 +106,7 @@ export default function Footer() {
             <img src="/assets/logo.png" alt="UyTap" />
           </Link>
 
-          <p>
-            Современный сервис поиска недвижимости. Найдите место, которое
-            станет вашим домом.
-          </p>
+          <p>{t("footer.brand.description")}</p>
 
           <div className={styles.contacts}>
             <div>
@@ -129,7 +121,7 @@ export default function Footer() {
 
             <div>
               <MapPin />
-              <span>Бишкек, Кыргызстан</span>
+              <span>{t("footer.location")}</span>
             </div>
           </div>
         </div>
@@ -137,7 +129,7 @@ export default function Footer() {
         {/* КАТЕГОРИИ */}
 
         <div className={styles.column}>
-          <h3>Категории</h3>
+          <h3>{t("footer.categories.title")}</h3>
 
           {categories.map((item) => {
             const Icon = item.icon;
@@ -150,7 +142,7 @@ export default function Footer() {
                 )}`}
               >
                 <Icon />
-                {item.title}
+                {t(`footer.categories.items.${item.key}`)}
               </Link>
             );
           })}
@@ -161,28 +153,28 @@ export default function Footer() {
             onClick={() => protectedRoute("/favorites")}
           >
             <Heart />
-            Избранное
+            {t("footer.categories.favorites")}
           </button>
         </div>
 
         {/* СЕРВИС */}
 
         <div className={styles.column}>
-          <h3>Сервис</h3>
+          <h3>{t("footer.service.title")}</h3>
 
           <Link href="/about">
             <Laptop />
-            О проекте
+            {t("footer.service.about")}
           </Link>
 
-          <Link href="/about">
+          <Link href="/safety">
             <ShieldCheck />
-            Безопасность
+            {t("footer.service.safety")}
           </Link>
 
           <Link href="/all-products">
             <Search />
-            Поиск недвижимости
+            {t("footer.service.search")}
           </Link>
 
           <button
@@ -191,7 +183,7 @@ export default function Footer() {
             onClick={() => protectedRoute("/profile")}
           >
             <UserRound />
-            Личный кабинет
+            {t("footer.service.profile")}
           </button>
 
           <button
@@ -200,24 +192,24 @@ export default function Footer() {
             onClick={() => protectedRoute("/profile/ads")}
           >
             <Heart />
-            Мои объявления
+            {t("footer.service.myListings")}
           </button>
         </div>
 
         {/* ПРИЛОЖЕНИЕ */}
 
         <div className={styles.column}>
-          <h3>Мобильное приложение</h3>
+          <h3>{t("footer.app.title")}</h3>
 
           <div className={styles.appBox}>
             <Smartphone />
 
             <div>
               <strong>
-                <span>UyTap</span> в вашем телефоне
+                <span>UyTap</span> {t("footer.app.onYourPhone")}
               </strong>
 
-              <p>Ищите недвижимость где угодно</p>
+              <p>{t("footer.app.description")}</p>
             </div>
           </div>
 
@@ -229,7 +221,7 @@ export default function Footer() {
             <div className={styles.playIcon}>▶</div>
 
             <div>
-              <span>Скачайте в</span>
+              <span>{t("footer.app.download")}</span>
               <strong>Google Play</strong>
             </div>
           </a>
@@ -239,7 +231,7 @@ export default function Footer() {
       {/* BOTTOM */}
 
       <div className={styles.bottom}>
-        © {new Date().getFullYear()} UyTap. Все права защищены.
+        © {new Date().getFullYear()} UyTap. {t("footer.copyright")}
       </div>
     </footer>
   );

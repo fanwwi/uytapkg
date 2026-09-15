@@ -7,7 +7,6 @@ import {
   Check,
   ChevronRight,
   Home,
-  LifeBuoy,
   MapPin,
   Mic,
   Search,
@@ -17,78 +16,79 @@ import {
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./About.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
 
-const features = [
-  {
-    number: "01",
-    icon: Mic,
-    title: "Голосовой умный поиск",
-    description:
-      "Просто скажите, что ищете. UyTap распознаёт речь, понимает параметры запроса и автоматически подбирает подходящую недвижимость.",
-    example: "«Найди дом у Иссык-Куля до $120 000»",
-  },
-  {
-    number: "02",
-    icon: BrainCircuit,
-    title: "Подходящие рекомендации",
-    description:
-      "UyTap анализирует ваши запросы и сохранённые объекты, чтобы показывать недвижимость, которая действительно может вам подойти.",
-    example: "Подборка объектов специально для вас",
-  },
-  {
-    number: "03",
-    icon: ShieldCheck,
-    title: "Проверка и прозрачность",
-    description:
-      "Мы внедряем инструменты верификации продавцов и дополнительные механизмы доверия, чтобы сделать рынок безопаснее.",
-    example: "Верифицированный продавец",
-  },
-  {
-    number: "04",
-    icon: Building2,
-    title: "Фильтры под объект",
-    description:
-      "Для каждой категории недвижимости свои параметры. Квартиры, дома, участки, коммерция и паркинги имеют собственный набор характеристик, чтобы вы смогли найти именно то, что подходит именно вам.",
-    example: "Квартира → этаж, серия, отопление, ремонт...",
-  },
-];
-
-const principles = [
-  {
-    icon: Search,
-    title: "Просто",
-    text: "Человек должен найти недвижимость, а не разобраться в интерфейсе.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Прозрачно",
-    text: "Понятные данные, единые правила и в будущем — верификация продавцов.",
-  },
-  {
-    icon: BrainCircuit,
-    title: "Умно",
-    text: "AI работает там, где он действительно экономит время пользователя.",
-  },
-  {
-    icon: Users,
-    title: "Для людей",
-    text: "UyTap соединяет тех, кто ищет недвижимость, с теми, кто её продаёт или сдаёт.",
-  },
-];
-
-const roadmap = [
-  "Умный поиск недвижимости",
-  "Голосовой ввод",
-  "Верификация продавцов",
-  "Каталог новостроек",
-  "Новые регионы и страны",
-];
-
 export default function AboutPage() {
   const router = useRouter();
+
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      number: "01",
+      icon: Mic,
+      title: t("about.features.voiceSearch.title"),
+      description: t("about.features.voiceSearch.description"),
+      example: t("about.features.voiceSearch.example"),
+    },
+    {
+      number: "02",
+      icon: BrainCircuit,
+      title: t("about.features.recommendations.title"),
+      description: t("about.features.recommendations.description"),
+      example: t("about.features.recommendations.example"),
+    },
+    {
+      number: "03",
+      icon: ShieldCheck,
+      title: t("about.features.verification.title"),
+      description: t("about.features.verification.description"),
+      example: t("about.features.verification.example"),
+    },
+    {
+      number: "04",
+      icon: Building2,
+      title: t("about.features.filters.title"),
+      description: t("about.features.filters.description"),
+      example: t("about.features.filters.example"),
+    },
+  ];
+
+  const principles = [
+    {
+      icon: Search,
+      title: t("about.principles.simple.title"),
+      text: t("about.principles.simple.text"),
+    },
+    {
+      icon: ShieldCheck,
+      title: t("about.principles.transparent.title"),
+      text: t("about.principles.transparent.text"),
+    },
+    {
+      icon: BrainCircuit,
+      title: t("about.principles.smart.title"),
+      text: t("about.principles.smart.text"),
+    },
+    {
+      icon: Users,
+      title: t("about.principles.people.title"),
+      text: t("about.principles.people.text"),
+    },
+  ];
+
+  const roadmap = [
+    t("about.roadmap.smartSearch"),
+    t("about.roadmap.voiceInput"),
+    t("about.roadmap.verification"),
+    t("about.roadmap.newBuildings"),
+    t("about.roadmap.newRegions"),
+  ];
 
   return (
     <main className={styles.page}>
@@ -107,19 +107,16 @@ export default function AboutPage() {
 
         <div className={styles.heroContent}>
           <div className={styles.eyebrow}>
-            <span className={styles.liveDot} />О проекте UyTap
+            <span className={styles.liveDot} />
+            {t("about.hero.eyebrow")}
           </div>
 
           <h1>
-            Недвижимость
-            <span> должна быть проще.</span>
+            {t("about.hero.title")}
+            <span> {t("about.hero.titleAccent")}</span>
           </h1>
 
-          <p className={styles.heroText}>
-            UyTap — современная платформа недвижимости, созданная для того,
-            чтобы поиск, продажа и аренда жилья были понятными, быстрыми и
-            удобными.
-          </p>
+          <p className={styles.heroText}>{t("about.hero.description")}</p>
 
           <div className={styles.heroActions}>
             <button
@@ -127,7 +124,7 @@ export default function AboutPage() {
               className={styles.primaryButton}
               onClick={() => router.push("/all-products")}
             >
-              Найти недвижимость
+              {t("about.hero.findProperty")}
               <ArrowRight size={18} />
             </button>
 
@@ -136,7 +133,7 @@ export default function AboutPage() {
               className={styles.secondaryButton}
               onClick={() => router.push("/add-product")}
             >
-              Разместить объявление
+              {t("about.hero.addListing")}
             </button>
           </div>
         </div>
@@ -156,7 +153,7 @@ export default function AboutPage() {
               <Search size={20} />
 
               <span>
-                квартира у озера до <b>$100 000</b>
+                {t("about.demo.searchText")} <b>$100 000</b>
               </span>
             </div>
 
@@ -166,8 +163,8 @@ export default function AboutPage() {
               </div>
 
               <div>
-                <strong>Найдено 24 объекта</strong>
-                <span>Иссык-Куль · квартиры</span>
+                <strong>{t("about.demo.found")}</strong>
+                <span>{t("about.demo.location")}</span>
               </div>
 
               <ChevronRight size={18} />
@@ -175,14 +172,14 @@ export default function AboutPage() {
 
             <div className={styles.aiBadge}>
               <Sparkles size={14} />
-              AI понял ваш запрос
+              {t("about.demo.aiUnderstood")}
             </div>
           </div>
 
           <div className={styles.floatingCard}>
             <span>01</span>
-            <strong>Простой поиск</strong>
-            <small>без лишних фильтров</small>
+            <strong>{t("about.demo.simpleSearch")}</strong>
+            <small>{t("about.demo.withoutFilters")}</small>
           </div>
         </div>
       </section>
@@ -194,27 +191,20 @@ export default function AboutPage() {
       <section className={styles.intro}>
         <div className={styles.sectionLabel}>
           <span>01</span>
-          <span>Почему UyTap</span>
+          <span>{t("about.intro.label")}</span>
         </div>
 
         <div className={styles.introContent}>
           <h2>
-            Мы убираем всё,
+            {t("about.intro.title")}
             <br />
-            <span>что мешает найти свой дом.</span>
+            <span>{t("about.intro.titleAccent")}</span>
           </h2>
 
           <div className={styles.introText}>
-            <p>
-              Рынок недвижимости часто заставляет пользователя заполнять длинные
-              формы, изучать десятки фильтров и разбираться в сложных
-              интерфейсах.
-            </p>
+            <p>{t("about.intro.paragraph1")}</p>
 
-            <p>
-              UyTap строится вокруг обратного подхода: технология должна
-              адаптироваться к человеку, а не человек к технологии.
-            </p>
+            <p>{t("about.intro.paragraph2")}</p>
           </div>
         </div>
       </section>
@@ -228,20 +218,17 @@ export default function AboutPage() {
           <div>
             <div className={styles.sectionLabel}>
               <span>02</span>
-              <span>Что умеет UyTap</span>
+              <span>{t("about.featuresSection.label")}</span>
             </div>
 
             <h2>
-              Меньше действий.
+              {t("about.featuresSection.title")}
               <br />
-              <span>Больше результата.</span>
+              <span>{t("about.featuresSection.titleAccent")}</span>
             </h2>
           </div>
 
-          <p>
-            Мы используем искусственный интеллект не ради красивого слова «AI»,
-            а там, где он действительно делает продукт удобнее.
-          </p>
+          <p>{t("about.featuresSection.description")}</p>
         </div>
 
         <div className={styles.featureGrid}>
@@ -280,12 +267,12 @@ export default function AboutPage() {
         <div className={styles.workflowHeader}>
           <div className={styles.sectionLabel}>
             <span>03</span>
-            <span>Как это работает</span>
+            <span>{t("about.workflow.label")}</span>
           </div>
 
           <h2>
-            От идеи до
-            <span> объявления — несколько секунд.</span>
+            {t("about.workflow.title")}
+            <span> {t("about.workflow.titleAccent")}</span>
           </h2>
         </div>
 
@@ -295,33 +282,25 @@ export default function AboutPage() {
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>01</div>
 
-            <h3>Расскажите</h3>
+            <h3>{t("about.workflow.step1.title")}</h3>
 
-            <p>
-              Напишите или расскажите голосом, какую недвижимость вы ищете.
-            </p>
+            <p>{t("about.workflow.step1.text")}</p>
           </div>
 
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>02</div>
 
-            <h3>UyTap понимает</h3>
+            <h3>{t("about.workflow.step2.title")}</h3>
 
-            <p>
-              AI анализирует запрос, выделяет параметры и превращает обычную
-              речь в понятные данные.
-            </p>
+            <p>{t("about.workflow.step2.text")}</p>
           </div>
 
           <div className={styles.workflowStep}>
             <div className={styles.workflowNumber}>03</div>
 
-            <h3>Вы получаете результат</h3>
+            <h3>{t("about.workflow.step3.title")}</h3>
 
-            <p>
-              Подходящие объекты появляются без лишней
-              ручной работы.
-            </p>
+            <p>{t("about.workflow.step3.text")}</p>
           </div>
         </div>
       </section>
@@ -342,26 +321,22 @@ export default function AboutPage() {
           <div className={styles.regionContent}>
             <div className={styles.sectionLabel}>
               <span>04</span>
-              <span>География</span>
+              <span>{t("about.regions.label")}</span>
             </div>
 
             <h2>
-              Начинаем с Кыргызстана.
+              {t("about.regions.title")}
               <br />
-              <span>Дальше — больше.</span>
+              <span>{t("about.regions.titleAccent")}</span>
             </h2>
 
-            <p>
-              UyTap объединяет недвижимость разных регионов в одной системе.
-              Бишкек, Иссык-Куль, другие области Кыргызстана — и постепенно
-              зарубежные направления.
-            </p>
+            <p>{t("about.regions.description")}</p>
 
             <div className={styles.regionTags}>
-              <span>Бишкек</span>
-              <span>Иссык-Куль</span>
-              <span>Кыргызстан</span>
-              <span>Турция</span>
+              <span>{t("about.regions.bishkek")}</span>
+              <span>{t("about.regions.issykKul")}</span>
+              <span>{t("about.regions.kyrgyzstan")}</span>
+              <span>{t("about.regions.turkey")}</span>
               <span>+</span>
             </div>
           </div>
@@ -377,13 +352,13 @@ export default function AboutPage() {
           <div>
             <div className={styles.sectionLabel}>
               <span>05</span>
-              <span>Наш подход</span>
+              <span>{t("about.principlesSection.label")}</span>
             </div>
 
             <h2>
-              Четыре принципа,
+              {t("about.principlesSection.title")}
               <br />
-              <span>на которых всё держится.</span>
+              <span>{t("about.principlesSection.titleAccent")}</span>
             </h2>
           </div>
         </div>
@@ -413,19 +388,16 @@ export default function AboutPage() {
         <div className={styles.roadmapIntro}>
           <div className={styles.sectionLabel}>
             <span>06</span>
-            <span>Что дальше</span>
+            <span>{t("about.roadmapSection.label")}</span>
           </div>
 
           <h2>
-            Это только
+            {t("about.roadmapSection.title")}
             <br />
-            <span>начало.</span>
+            <span>{t("about.roadmapSection.titleAccent")}</span>
           </h2>
 
-          <p>
-            UyTap развивается как единая экосистема недвижимости, а не просто
-            каталог объявлений.
-          </p>
+          <p>{t("about.roadmapSection.description")}</p>
         </div>
 
         <div className={styles.roadmapList}>
@@ -457,22 +429,19 @@ export default function AboutPage() {
           </span>
 
           <h2>
-            Найдите место,
+            {t("about.final.title")}
             <br />
-            <span>которое станет вашим.</span>
+            <span>{t("about.final.titleAccent")}</span>
           </h2>
 
-          <p>
-            Ищете квартиру, продаёте дом или хотите разместить новый объект?
-            Начните с UyTap.
-          </p>
+          <p>{t("about.final.description")}</p>
 
           <button
             type="button"
             className={styles.primaryButton}
             onClick={() => router.push("/all-products")}
           >
-            Перейти к недвижимости
+            {t("about.final.button")}
             <ArrowRight size={18} />
           </button>
         </div>

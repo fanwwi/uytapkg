@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./CustomSelect.module.css";
 
 export default function CustomSelect({
@@ -13,6 +15,8 @@ export default function CustomSelect({
   value,
   setValue,
 }) {
+  const { t } = useLanguage();
+
   const [open, setOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState(null);
 
@@ -21,6 +25,48 @@ export default function CustomSelect({
   const GAP = 10;
   const MAX_HEIGHT = 300;
   const MIN_HEIGHT = 120;
+
+  /**
+   * Поддерживаем оба формата:
+   *
+   * "Новостройка"
+   *
+   * или
+   *
+   * {
+   *   value: "Новостройка",
+   *   label: "Жаңы курулуш"
+   * }
+   */
+  function getOptionValue(option) {
+    if (option && typeof option === "object") {
+      return option.value;
+    }
+
+    return option;
+  }
+
+  function getOptionLabel(option) {
+    if (option && typeof option === "object") {
+      return option.label;
+    }
+
+    return option;
+  }
+
+  /**
+   * Находим выбранную опцию.
+   *
+   * value всегда содержит внутреннее значение,
+   * которое используется формой/API.
+   */
+  const selectedOption = options.find(
+    (option) => getOptionValue(option) === value,
+  );
+
+  const selectedLabel = selectedOption
+    ? getOptionLabel(selectedOption)
+    : value || t("common.any");
 
   /**
    * Позиция dropdown относительно исходного select.
@@ -93,10 +139,6 @@ export default function CustomSelect({
    *
    * Поскольку dropdown находится через portal,
    * wrapperRef его не содержит.
-   *
-   * Поэтому отдельно проверяем:
-   * - исходный select
-   * - dropdown через data-attribute
    */
   useEffect(() => {
     if (!open) return;
@@ -143,7 +185,7 @@ export default function CustomSelect({
 
   /**
    * Если dropdown открыт и его размер/позиция
-   * ещё не рассчитаны — не рендерим его на долю секунды
+   * ещё не рассчитаны — не рендерим его
    * в неправильном месте.
    */
   const dropdown =
@@ -155,23 +197,31 @@ export default function CustomSelect({
             style={dropdownStyle}
           >
             {options.length > 0 ? (
-              options.map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  className={`${styles.option} ${
-                    value === item ? styles.optionSelected : ""
-                  }`}
-                  onClick={() => {
-                    setValue(item);
-                    setOpen(false);
-                  }}
-                >
-                  {item}
-                </button>
-              ))
+              options.map((item) => {
+                const optionValue = getOptionValue(item);
+
+                const optionLabel = getOptionLabel(item);
+
+                const isSelected = value === optionValue;
+
+                return (
+                  <button
+                    type="button"
+                    key={optionValue}
+                    className={`${styles.option} ${
+                      isSelected ? styles.optionSelected : ""
+                    }`}
+                    onClick={() => {
+                      setValue(optionValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {optionLabel}
+                  </button>
+                );
+              })
             ) : (
-              <div className={styles.empty}>Нет доступных вариантов</div>
+              <div className={styles.empty}>{t("common.noOptions")}</div>
             )}
           </div>,
           document.body,
@@ -194,7 +244,7 @@ export default function CustomSelect({
             <section>
               <small>{title}</small>
 
-              <strong>{value || "Любой"}</strong>
+              <strong>{selectedLabel}</strong>
             </section>
           </div>
 

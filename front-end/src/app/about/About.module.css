@@ -19,7 +19,11 @@
   overflow: hidden;
 
   background:
-    radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.09), transparent 30%),
+    radial-gradient(
+      circle at 15% 1%,
+      rgba(73, 61, 246, 0.748),
+      transparent 30%
+    ),
     radial-gradient(
       circle at 10% 60%,
       rgba(72, 61, 246, 0.045),
@@ -137,13 +141,13 @@
 
   padding: 8px 13px;
 
-  border: 1px solid rgba(72, 61, 246, 0.18);
+  border: 1px solid rgba(246, 245, 253, 0.481);
 
   border-radius: 100px;
 
   background: rgba(72, 61, 246, 0.06);
 
-  color: var(--purple);
+  color: var(--bg);
 
   font-size: 12px;
   font-weight: 700;
@@ -159,7 +163,7 @@
 
   border-radius: 50%;
 
-  background: var(--purple);
+  background: var(--bg);
 
   box-shadow:
     0 0 12px rgba(72, 61, 246, 0.45),
@@ -175,7 +179,7 @@
 
   margin: 30px 0 25px;
 
-  color: var(--text);
+  color: var(--bg);
 
   font-size: clamp(56px, 7vw, 100px);
 
@@ -193,7 +197,7 @@
 .regionContent h2 span,
 .roadmapIntro h2 span,
 .final h2 span {
-  color: var(--purple);
+  color: var(--card);
 }
 
 .heroText {
@@ -201,7 +205,7 @@
 
   margin: 0;
 
-  color: var(--muted);
+  color: var(--bg-soft);
 
   font-size: 19px;
 
@@ -570,6 +574,14 @@
   line-height: 1;
 
   letter-spacing: -0.055em;
+}
+
+.intro h2 span,
+.sectionHeading h2 span,
+.workflowHeader h2 span,
+.regionContent h2 span,
+.roadmapIntro h2 span {
+  color: var(--purple);
 }
 
 .introText {
@@ -1182,7 +1194,7 @@
 .finalContent .finalBadge {
   position: relative;
   z-index: 2;
-
+  color: #483df6;
   margin: 0 auto;
 }
 
@@ -1199,6 +1211,10 @@
   line-height: 0.95;
 
   letter-spacing: -0.06em;
+}
+
+.finalContent h2 span {
+  color: var(--purple);
 }
 
 .final p {

@@ -11,11 +11,15 @@ import {
   Images,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./StepImage.module.css";
 
 const MAX_IMAGES = 20;
 
 export default function StepImage({ form, updateForm, onNext }) {
+  const { t } = useLanguage();
+
   const inputRef = useRef(null);
 
   const [images, setImages] = useState(form.images || []);
@@ -124,15 +128,12 @@ export default function StepImage({ form, updateForm, onNext }) {
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 1 из 6
+          {t("stepImage.step")}
         </div>
 
-        <h1>Добавьте фотографии</h1>
+        <h1>{t("stepImage.title")}</h1>
 
-        <p>
-          Покажите объект со всех сторон. Хорошие фотографии помогают быстрее
-          привлечь внимание к объявлению.
-        </p>
+        <p>{t("stepImage.description")}</p>
       </div>
 
       {/* UPLOAD SECTION */}
@@ -144,9 +145,12 @@ export default function StepImage({ form, updateForm, onNext }) {
           </div>
 
           <div>
-            <label>Фотографии объекта</label>
+            <label>{t("stepImage.upload.title")}</label>
 
-            <span>Можно загрузить до {MAX_IMAGES} изображений</span>
+            <span>
+              {t("stepImage.upload.limit")} {MAX_IMAGES}{" "}
+              {t("stepImage.upload.images")}
+            </span>
           </div>
         </div>
 
@@ -179,15 +183,19 @@ export default function StepImage({ form, updateForm, onNext }) {
           <div className={styles.uploadContent}>
             <strong>
               {images.length >= MAX_IMAGES
-                ? "Лимит фотографий достигнут"
-                : "Добавьте фотографии"}
+                ? t("stepImage.upload.limitReached")
+                : t("stepImage.upload.addPhotos")}
             </strong>
 
             <span>
-              Перетащите изображения сюда или <b>выберите их на устройстве</b>
+              {t("stepImage.upload.dragText")}{" "}
+              <b>{t("stepImage.upload.chooseOnDevice")}</b>
             </span>
 
-            <small>JPG, PNG или WebP · до {MAX_IMAGES} фотографий</small>
+            <small>
+              JPG, PNG или WebP · {t("stepImage.upload.upTo")} {MAX_IMAGES}{" "}
+              {t("stepImage.upload.photos")}
+            </small>
           </div>
 
           {images.length < MAX_IMAGES && (
@@ -200,7 +208,7 @@ export default function StepImage({ form, updateForm, onNext }) {
               }}
             >
               <Upload size={17} />
-              Выбрать файлы
+              {t("stepImage.upload.chooseFiles")}
             </button>
           )}
         </div>
@@ -216,15 +224,15 @@ export default function StepImage({ form, updateForm, onNext }) {
 
           <div>
             <strong>
-              {images.length} из {MAX_IMAGES}
+              {images.length} {t("stepImage.counter.of")} {MAX_IMAGES}
             </strong>
 
             <span>
               {images.length === 0
-                ? "Фотографии ещё не добавлены"
+                ? t("stepImage.counter.empty")
                 : remaining === 0
-                  ? "Вы добавили максимальное количество"
-                  : `Можно добавить ещё ${remaining}`}
+                  ? t("stepImage.counter.maximum")
+                  : `${t("stepImage.counter.canAdd")} ${remaining}`}
             </span>
           </div>
         </div>
@@ -245,15 +253,14 @@ export default function StepImage({ form, updateForm, onNext }) {
         <div className={styles.gallerySection}>
           <div className={styles.galleryHeader}>
             <div>
-              <h2>Ваши фотографии</h2>
+              <h2>{t("stepImage.gallery.title")}</h2>
 
-              <p>
-                Первая фотография будет использоваться как главное фото
-                объявления.
-              </p>
+              <p>{t("stepImage.gallery.description")}</p>
             </div>
 
-            <span className={styles.photoCount}>{images.length} фото</span>
+            <span className={styles.photoCount}>
+              {images.length} {t("stepImage.gallery.photos")}
+            </span>
           </div>
 
           <div className={styles.gallery}>
@@ -265,14 +272,17 @@ export default function StepImage({ form, updateForm, onNext }) {
                 }`}
               >
                 <div className={styles.photo}>
-                  <img src={image.url} alt={`Фото объекта ${index + 1}`} />
+                  <img
+                    src={image.url}
+                    alt={`${t("stepImage.photoAlt")} ${index + 1}`}
+                  />
 
                   <div className={styles.photoOverlay}>
                     <button
                       type="button"
                       className={styles.remove}
                       onClick={() => removeImage(image.id)}
-                      aria-label="Удалить фотографию"
+                      aria-label={t("stepImage.remove")}
                     >
                       <X size={17} />
                     </button>
@@ -281,7 +291,7 @@ export default function StepImage({ form, updateForm, onNext }) {
                   {index === 0 && (
                     <div className={styles.mainBadge}>
                       <Star size={13} fill="currentColor" />
-                      Главное фото
+                      {t("stepImage.mainPhoto")}
                     </div>
                   )}
 
@@ -292,7 +302,7 @@ export default function StepImage({ form, updateForm, onNext }) {
                       onClick={() => setMainImage(image.id)}
                     >
                       <Star size={14} />
-                      Сделать главным
+                      {t("stepImage.makeMain")}
                     </button>
                   )}
 
@@ -302,10 +312,14 @@ export default function StepImage({ form, updateForm, onNext }) {
                 </div>
 
                 <div className={styles.photoInfo}>
-                  <span>Фото {index + 1}</span>
+                  <span>
+                    {t("stepImage.photo")} {index + 1}
+                  </span>
 
                   {index === 0 && (
-                    <span className={styles.mainText}>Главное</span>
+                    <span className={styles.mainText}>
+                      {t("stepImage.main")}
+                    </span>
                   )}
                 </div>
               </div>
@@ -323,9 +337,11 @@ export default function StepImage({ form, updateForm, onNext }) {
                   <ImagePlus size={24} />
                 </div>
 
-                <strong>Добавить ещё</strong>
+                <strong>{t("stepImage.addMore")}</strong>
 
-                <span>Осталось {remaining}</span>
+                <span>
+                  {t("stepImage.remaining")} {remaining}
+                </span>
               </button>
             )}
           </div>
@@ -341,12 +357,9 @@ export default function StepImage({ form, updateForm, onNext }) {
           </div>
 
           <div>
-            <strong>Начните с хорошего главного фото</strong>
+            <strong>{t("stepImage.empty.title")}</strong>
 
-            <span>
-              Рекомендуем загрузить фотографии фасада, комнат, кухни, санузла и
-              других важных частей объекта.
-            </span>
+            <span>{t("stepImage.empty.description")}</span>
           </div>
         </div>
       )}
@@ -360,7 +373,7 @@ export default function StepImage({ form, updateForm, onNext }) {
           disabled={!canContinue}
           onClick={handleNext}
         >
-          Продолжить
+          {t("stepImage.continue")}
           <ChevronRight size={18} />
         </button>
       </div>

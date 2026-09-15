@@ -7,24 +7,21 @@ import {
   Clock3,
   Home,
   KeyRound,
-  Moon,
   Sun,
 } from "lucide-react";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./StepDeal.module.css";
 
 const dealTypes = [
   {
     value: "sale",
-    title: "Продам",
-    description: "Разместить объект на продажу",
     icon: BadgeDollarSign,
     accent: "sale",
   },
   {
     value: "rent",
-    title: "Сдам в аренду",
-    description: "Получать доход от аренды объекта",
     icon: KeyRound,
     accent: "rent",
   },
@@ -33,27 +30,25 @@ const dealTypes = [
 const rentalPeriods = [
   {
     value: "monthly",
-    label: "Помесячно",
     icon: CalendarDays,
   },
   {
     value: "daily",
-    label: "Посуточно",
     icon: Clock3,
   },
   {
     value: "longTerm",
-    label: "Долгосрочно",
     icon: Home,
   },
   {
     value: "shortTerm",
-    label: "Краткосрочно",
     icon: Sun,
   },
 ];
 
 export default function StepDeal({ form, updateForm, onNext, onBack }) {
+  const { t } = useLanguage();
+
   const canContinue =
     form.dealType && (form.dealType === "sale" || form.rentalPeriod);
 
@@ -69,19 +64,19 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
       <div className={styles.header}>
         <span className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 3 из 6
+          {t("stepDeal.step")}
         </span>
 
-        <h1>Что вы хотите сделать?</h1>
+        <h1>{t("stepDeal.title")}</h1>
 
-        <p>Выберите формат сделки — продажа или аренда недвижимости.</p>
+        <p>{t("stepDeal.description")}</p>
       </div>
 
       {/* DEAL TYPE */}
       <div className={styles.section}>
         <div className={styles.sectionTitle}>
-          <span>Тип сделки</span>
-          <small>Выберите один вариант</small>
+          <span>{t("stepDeal.dealType.title")}</span>
+          <small>{t("stepDeal.dealType.description")}</small>
         </div>
 
         <div className={styles.cards}>
@@ -103,12 +98,13 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
                     <Icon />
                   </div>
 
-                  {selected && <span className={styles.check}></span>}
+                  {selected && <span className={styles.check} />}
                 </div>
 
                 <div className={styles.cardContent}>
-                  <strong>{item.title}</strong>
-                  <span>{item.description}</span>
+                  <strong>{t(`stepDeal.types.${item.value}.title`)}</strong>
+
+                  <span>{t(`stepDeal.types.${item.value}.description`)}</span>
                 </div>
 
                 <div className={styles.cardGlow} />
@@ -123,8 +119,9 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
         <div className={styles.field}>
           <div className={styles.periodHeader}>
             <div>
-              <strong>Период аренды</strong>
-              <span>Как долго планируете сдавать объект?</span>
+              <strong>{t("stepDeal.rentalPeriod.title")}</strong>
+
+              <span>{t("stepDeal.rentalPeriod.description")}</span>
             </div>
 
             <div className={styles.periodIcon}>
@@ -154,7 +151,9 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
                     <Icon />
                   </span>
 
-                  <span className={styles.smallLabel}>{item.label}</span>
+                  <span className={styles.smallLabel}>
+                    {t(`stepDeal.rentalPeriods.${item.value}`)}
+                  </span>
 
                   {selected && <span className={styles.smallCheck}>✓</span>}
                 </button>
@@ -167,7 +166,7 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
       {/* ACTIONS */}
       <div className={styles.actions}>
         <button type="button" className={styles.secondary} onClick={onBack}>
-          Назад
+          {t("common.back")}
         </button>
 
         <div className={styles.actions}>
@@ -177,7 +176,7 @@ export default function StepDeal({ form, updateForm, onNext, onBack }) {
             disabled={!canContinue}
             onClick={onNext}
           >
-            Продолжить
+            {t("stepDeal.continue")}
             <ChevronRight size={18} />
           </button>
         </div>

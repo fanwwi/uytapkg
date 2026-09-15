@@ -3,14 +3,21 @@
 import { forwardRef } from "react";
 import { Check, ReceiptText, ShieldCheck } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./ServiceReceiptModal.module.css";
 
 const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
   { paymentData },
   ref,
 ) {
+  const { t, language } = useLanguage();
+
+  const locale = language === "ky" ? "ky-KG" : "ru-RU";
+
   const formatMoney = (value) => {
-    return `${Number(value || 0).toLocaleString("ru-RU")} сом`;
+    return `${Number(value || 0).toLocaleString(locale)} ${t(
+      "payment.currencyShort",
+    )}`;
   };
 
   const formatDate = (date) => {
@@ -22,7 +29,7 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
       return "—";
     }
 
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat(locale, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -31,7 +38,8 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
     }).format(parsedDate);
   };
 
-  const serviceTitle = paymentData?.serviceTitle || "Услуга размещения";
+  const serviceTitle =
+    paymentData?.serviceTitle || t("payment.receipt.serviceDefault");
 
   const amount = Number(paymentData?.amount) || 0;
 
@@ -55,21 +63,21 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
             Uy<span>Tap</span>
           </strong>
 
-          <span>НЕДВИЖИМОСТЬ КЫРГЫЗСТАНА</span>
+          <span>{t("payment.receipt.brandSubtitle")}</span>
         </div>
 
         <div className={styles.paidStamp}>
           <Check size={14} />
-          ОПЛАЧЕНО
+          {t("payment.receipt.paid")}
         </div>
       </div>
 
       {/* TITLE */}
 
       <div className={styles.receiptTitle}>
-        <span>ЭЛЕКТРОННЫЙ ЧЕК</span>
+        <span>{t("payment.receipt.electronicReceipt")}</span>
 
-        <strong>Оплата услуги</strong>
+        <strong>{t("payment.receipt.servicePayment")}</strong>
       </div>
 
       {/* SERVICE */}
@@ -80,7 +88,7 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
         </div>
 
         <div className={styles.serviceBadgeContent}>
-          <span>ОПЛАЧЕННАЯ УСЛУГА</span>
+          <span>{t("payment.receipt.paidService")}</span>
 
           <strong>{serviceTitle}</strong>
         </div>
@@ -92,45 +100,47 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
 
       <div className={styles.receiptRows}>
         <div className={styles.receiptRow}>
-          <span>Услуга</span>
+          <span>{t("payment.receipt.service")}</span>
 
           <strong>{serviceTitle}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Стоимость</span>
+          <span>{t("payment.receipt.cost")}</span>
 
           <strong>{formatMoney(amount)}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>ID платежа</span>
+          <span>{t("payment.receipt.paymentId")}</span>
 
           <strong className={styles.mono}>{orderId}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Дата оплаты</span>
+          <span>{t("payment.receipt.paymentDate")}</span>
 
           <strong>{formatDate(paidAt)}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Способ оплаты</span>
+          <span>{t("payment.receipt.paymentMethod")}</span>
 
-          <strong>QR / банковское приложение</strong>
+          <strong>{t("payment.receipt.qrPayment")}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Валюта</span>
+          <span>{t("payment.receipt.currency")}</span>
 
-          <strong>KGS — Кыргызский сом</strong>
+          <strong>{t("payment.receipt.currencyFull")}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Статус</span>
+          <span>{t("payment.receipt.status")}</span>
 
-          <strong className={styles.statusSuccess}>Оплата подтверждена</strong>
+          <strong className={styles.statusSuccess}>
+            {t("payment.receipt.paymentConfirmed")}
+          </strong>
         </div>
       </div>
 
@@ -139,7 +149,7 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
       {/* TOTAL */}
 
       <div className={styles.total}>
-        <span>ИТОГО</span>
+        <span>{t("payment.receipt.total")}</span>
 
         <strong>{formatMoney(amount)}</strong>
       </div>
@@ -149,10 +159,12 @@ const ReceiptDocument = forwardRef(function ServicesReceiptDocument(
       <div className={styles.receiptFooter}>
         <ShieldCheck size={15} />
 
-        <span>Платёж подтверждён системой UyTap</span>
+        <span>{t("payment.receipt.systemConfirmed")}</span>
       </div>
 
-      <div className={styles.receiptNumber}>ЧЕК № {orderId}</div>
+      <div className={styles.receiptNumber}>
+        {t("payment.receipt.receiptNumber")} {orderId}
+      </div>
     </div>
   );
 });

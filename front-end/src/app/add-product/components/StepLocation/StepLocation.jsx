@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapPin, Globe2, Building2, Check, ChevronRight } from "lucide-react";
+import { MapPin, Globe2, Check, ChevronRight } from "lucide-react";
+
 import { getConstants } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import styles from "./StepLocation.module.css";
@@ -392,6 +394,7 @@ const fallbackLocations = {
 
       mugla: {
         name: "Бодрум",
+
         districts: [
           "Акьярлар",
           "Битез",
@@ -442,9 +445,9 @@ const fallbackLocations = {
   },
 };
 
-// Keep the original turkey object as fallback because backend doesn't provide Turkey districts
 const originalTurkey = {
   name: "Турция",
+
   cities: {
     istanbul: {
       name: "Стамбул",
@@ -489,6 +492,7 @@ const originalTurkey = {
         "Эюпсултан",
       ],
     },
+
     ankara: {
       name: "Анкара",
       districts: [
@@ -519,6 +523,7 @@ const originalTurkey = {
         "Эриаман",
       ],
     },
+
     antalya: {
       name: "Анталья",
       districts: [
@@ -543,6 +548,7 @@ const originalTurkey = {
         "Эльмалы",
       ],
     },
+
     izmir: {
       name: "Измир",
       districts: [
@@ -578,6 +584,7 @@ const originalTurkey = {
         "Урла",
       ],
     },
+
     bursa: {
       name: "Бурса",
       districts: [
@@ -600,8 +607,9 @@ const originalTurkey = {
         "Йылдырым",
       ],
     },
+
     mersin: {
-      name: "Аланья", // NOTE: This was exactly like this in the original file
+      name: "Аланья",
       districts: [
         "Авсаллар",
         "Бекташ",
@@ -628,6 +636,7 @@ const originalTurkey = {
         "Шекерхане",
       ],
     },
+
     mugla: {
       name: "Бодрум",
       districts: [
@@ -654,6 +663,7 @@ const originalTurkey = {
         "Ялыкавак",
       ],
     },
+
     adana: {
       name: "Мармарис",
       districts: [
@@ -678,7 +688,10 @@ const originalTurkey = {
 };
 
 export default function StepLocation({ form, updateForm, onNext }) {
+  const { t } = useLanguage();
+
   const [locationsData, setLocationsData] = useState(null);
+
   const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
@@ -686,57 +699,66 @@ export default function StepLocation({ form, updateForm, onNext }) {
       .then((res) => {
         const locations =
           res?.data?.locationsByRegion || res?.locationsByRegion;
+
         if (locations) {
-          const apiLocations = locations;
           setLocationsData({
             kyrgyzstan: {
               name: "Кыргызстан",
+
               regions: {
                 BISHKEK: {
                   name: "Бишкек",
                   type: "bishkek",
-                  districts: apiLocations.BISHKEK || [],
+                  districts: locations.BISHKEK || [],
                 },
+
                 CHUY: {
                   name: "Чуйская область",
                   type: "region",
-                  settlements: apiLocations.CHUY || [],
+                  settlements: locations.CHUY || [],
                 },
+
                 OSH_REGION: {
                   name: "Ошская область",
                   type: "region",
                   settlements: [
-                    ...(apiLocations.OSH_CITY || []),
-                    ...(apiLocations.OSH_REGION || []),
+                    ...(locations.OSH_CITY || []),
+                    ...(locations.OSH_REGION || []),
                   ],
                 },
+
                 ISSYK_KUL: {
                   name: "Иссык-Кульская область",
                   type: "region",
-                  settlements: apiLocations.ISSYK_KUL || [],
+                  settlements: locations.ISSYK_KUL || [],
                 },
+
                 JALAL_ABAD: {
                   name: "Джалал-Абадская область",
                   type: "region",
-                  settlements: apiLocations.JALAL_ABAD || [],
+                  settlements: locations.JALAL_ABAD || [],
                 },
+
                 NARYN: {
                   name: "Нарынская область",
                   type: "region",
-                  settlements: apiLocations.NARYN || [],
+                  settlements: locations.NARYN || [],
                 },
+
                 TALAS: {
                   name: "Таласская область",
                   type: "region",
-                  settlements: apiLocations.TALAS || [],
+                  settlements: locations.TALAS || [],
                 },
+
                 BATKEN: {
                   name: "Баткенская область",
                   type: "region",
-                  settlements: apiLocations.BATKEN || [],
+                  settlements: locations.BATKEN || [],
                 },
               },
             },
+
             turkey: originalTurkey,
           });
         } else {
@@ -745,7 +767,9 @@ export default function StepLocation({ form, updateForm, onNext }) {
       })
       .catch((err) => {
         console.error("Failed to fetch constants", err);
+
         setApiError(true);
+
         setLocationsData({
           kyrgyzstan: fallbackLocations.kyrgyzstan,
           turkey: originalTurkey,
@@ -756,6 +780,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
   const countryData = locationsData ? locationsData[form.country] : null;
 
   const isKyrgyzstan = form.country === "kyrgyzstan";
+
   const isTurkey = form.country === "turkey";
 
   const selectedRegion = isKyrgyzstan
@@ -767,14 +792,31 @@ export default function StepLocation({ form, updateForm, onNext }) {
   const isBishkek =
     isKyrgyzstan && (form.region === "BISHKEK" || form.region === "bishkek");
 
+  /*
+   * Переводим только отображаемые названия.
+   * В value остаются реальные ключи формы.
+   */
+  const getRegionLabel = (regionKey, name) => {
+    const key = `stepLocation.regions.${regionKey}`;
+    const translated = t(key);
+
+    return translated === key ? name : translated;
+  };
+
   const regionOptions = isKyrgyzstan
-    ? Object.values(countryData?.regions || {}).map((item) => item.name)
+    ? Object.entries(countryData?.regions || {}).map(([value, item]) => ({
+        value,
+        label: getRegionLabel(value, item.name),
+      }))
     : [];
 
   const kyrgyzSettlementOptions = selectedRegion?.settlements || [];
 
   const turkeyCityOptions = isTurkey
-    ? Object.values(countryData?.cities || {}).map((item) => item.name)
+    ? Object.entries(countryData?.cities || {}).map(([value, item]) => ({
+        value,
+        label: item.name,
+      }))
     : [];
 
   const districtOptions = isBishkek
@@ -798,14 +840,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
   }
 
   function selectKyrgyzRegion(value) {
-    const region = Object.entries(countryData.regions).find(
-      ([, item]) => item.name === value,
-    )?.[0];
-
-    if (!region) return;
+    if (!countryData?.regions?.[value]) {
+      return;
+    }
 
     updateForm({
-      region,
+      region: value,
       city: "",
       settlement: "",
       district: "",
@@ -821,14 +861,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
   }
 
   function selectTurkeyCity(value) {
-    const city = Object.entries(countryData.cities).find(
-      ([, item]) => item.name === value,
-    )?.[0];
-
-    if (!city) return;
+    if (!countryData?.cities?.[value]) {
+      return;
+    }
 
     updateForm({
-      city,
+      city: value,
       region: "",
       settlement: "",
       district: "",
@@ -847,20 +885,22 @@ export default function StepLocation({ form, updateForm, onNext }) {
       ? Boolean(form.city && form.district)
       : false;
 
+  const selectedRegionDisplay = form.region
+    ? getRegionLabel(form.region, selectedRegionName)
+    : "";
+
   return (
     <div className={styles.step}>
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 2 из 6
+
+          {t("stepLocation.step")}
         </div>
 
-        <h1>Где находится объект?</h1>
+        <h1>{t("stepLocation.title")}</h1>
 
-        <p>
-          Укажите страну и точное местоположение недвижимости. Это поможет
-          покупателям быстрее найти ваше объявление.
-        </p>
+        <p>{t("stepLocation.description")}</p>
       </div>
 
       {apiError && (
@@ -874,12 +914,12 @@ export default function StepLocation({ form, updateForm, onNext }) {
             fontSize: "14px",
           }}
         >
-          Не удалось загрузить актуальный справочник локаций. Попробуйте
-          обновить страницу.
+          {t("stepLocation.apiError")}
         </div>
       )}
 
       {/* COUNTRY */}
+
       <div className={styles.section}>
         <div className={styles.sectionTitle}>
           <div className={styles.sectionIcon}>
@@ -887,8 +927,9 @@ export default function StepLocation({ form, updateForm, onNext }) {
           </div>
 
           <div>
-            <label>Страна</label>
-            <span>Выберите страну размещения</span>
+            <label>{t("stepLocation.country.title")}</label>
+
+            <span>{t("stepLocation.country.description")}</span>
           </div>
         </div>
 
@@ -901,12 +942,20 @@ export default function StepLocation({ form, updateForm, onNext }) {
             onClick={() => selectCountry("kyrgyzstan")}
           >
             <div className={styles.choiceIcon}>
-              <span style={{ color: "#483df6", marginTop: "-5px" }}>🇰🇬</span>
+              <span
+                style={{
+                  color: "#483df6",
+                  marginTop: "-5px",
+                }}
+              >
+                🇰🇬
+              </span>
             </div>
 
             <div className={styles.choiceContent}>
-              <strong>Кыргызстан</strong>
-              <span>Область, город и район</span>
+              <strong>{t("stepLocation.countries.kyrgyzstan")}</strong>
+
+              <span>{t("stepLocation.countries.kyrgyzstanDescription")}</span>
             </div>
 
             {form.country === "kyrgyzstan" && (
@@ -926,12 +975,20 @@ export default function StepLocation({ form, updateForm, onNext }) {
             onClick={() => selectCountry("turkey")}
           >
             <div className={styles.choiceIcon}>
-              <span style={{ color: "#483df6", marginTop: "-5px" }}>🇹🇷</span>
+              <span
+                style={{
+                  color: "#483df6",
+                  marginTop: "-5px",
+                }}
+              >
+                🇹🇷
+              </span>
             </div>
 
             <div className={styles.choiceContent}>
-              <strong>Турция</strong>
-              <span>Город и район</span>
+              <strong>{t("stepLocation.countries.turkey")}</strong>
+
+              <span>{t("stepLocation.countries.turkeyDescription")}</span>
             </div>
 
             {form.country === "turkey" && (
@@ -946,12 +1003,13 @@ export default function StepLocation({ form, updateForm, onNext }) {
       </div>
 
       {/* KYRGYZSTAN */}
+
       {isKyrgyzstan && (
         <div className={styles.locationFields}>
           <div className={styles.grid}>
             <CustomSelect
-              title="Область / город"
-              value={selectedRegionName}
+              title={t("stepLocation.fields.region")}
+              value={form.region || ""}
               setValue={selectKyrgyzRegion}
               options={regionOptions}
             />
@@ -960,7 +1018,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
           {isBishkek && (
             <div className={styles.grid}>
               <CustomSelect
-                title="Район Бишкека"
+                title={t("stepLocation.fields.bishkekDistrict")}
                 value={form.district || ""}
                 setValue={selectDistrict}
                 options={districtOptions}
@@ -971,7 +1029,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
           {!isBishkek && selectedRegion && (
             <div className={styles.grid}>
               <CustomSelect
-                title="Город / село"
+                title={t("stepLocation.fields.settlement")}
                 value={form.settlement || ""}
                 setValue={selectKyrgyzSettlement}
                 options={kyrgyzSettlementOptions}
@@ -982,12 +1040,13 @@ export default function StepLocation({ form, updateForm, onNext }) {
       )}
 
       {/* TURKEY */}
+
       {isTurkey && (
         <div className={styles.locationFields}>
           <div className={styles.grid}>
             <CustomSelect
-              title="Город"
-              value={selectedCityName}
+              title={t("stepLocation.fields.city")}
+              value={form.city || ""}
               setValue={selectTurkeyCity}
               options={turkeyCityOptions}
             />
@@ -996,7 +1055,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
           {selectedCity && (
             <div className={styles.grid}>
               <CustomSelect
-                title="Район"
+                title={t("stepLocation.fields.district")}
                 value={form.district || ""}
                 setValue={selectDistrict}
                 options={districtOptions}
@@ -1007,6 +1066,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
       )}
 
       {/* LOCATION STATUS */}
+
       {canContinue && (
         <div className={styles.locationReady}>
           <div className={styles.readyIcon}>
@@ -1014,13 +1074,13 @@ export default function StepLocation({ form, updateForm, onNext }) {
           </div>
 
           <div>
-            <strong>Местоположение выбрано</strong>
+            <strong>{t("stepLocation.ready.title")}</strong>
 
             <span>
               {isBishkek
-                ? `Бишкек · ${form.district}`
+                ? `${selectedRegionDisplay} · ${form.district}`
                 : isKyrgyzstan
-                  ? `${selectedRegionName} · ${form.settlement}`
+                  ? `${selectedRegionDisplay} · ${form.settlement}`
                   : `${selectedCityName} · ${form.district}`}
             </span>
           </div>
@@ -1028,6 +1088,7 @@ export default function StepLocation({ form, updateForm, onNext }) {
       )}
 
       {/* ACTIONS */}
+
       <div className={styles.actions}>
         <button
           type="button"
@@ -1035,7 +1096,8 @@ export default function StepLocation({ form, updateForm, onNext }) {
           disabled={!canContinue}
           onClick={onNext}
         >
-          Продолжить
+          {t("stepLocation.continue")}
+
           <ChevronRight size={18} />
         </button>
       </div>

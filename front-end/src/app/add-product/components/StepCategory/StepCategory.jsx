@@ -21,6 +21,7 @@ import {
   PawPrint,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { getConstants } from "@/utils/api";
 
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
@@ -52,13 +53,13 @@ const fieldIcons = {
   purpose: Map,
   fence: Tag,
   location: Map,
+  landLocation: Map,
   terrain: Map,
-  communications: Tag,
+  communications: Map,
 
   roomsInApartment: Building2,
   privateBathroom: DoorOpen,
   roomLocation: Map,
-  landLocation: Map,
 
   premisesType: Store,
   technicalParameters: Tag,
@@ -99,9 +100,6 @@ const categoryIcons = {
 
 const categories = {
   apartment: {
-    title: "Квартира",
-    description: "Квартиры и апартаменты",
-
     fields: [
       ["series", "Серия / тип"],
       ["rooms", "Количество комнат"],
@@ -113,7 +111,6 @@ const categories = {
       ["furniture", "Мебель"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Балкон / лоджия",
       "Лифт",
@@ -134,9 +131,6 @@ const categories = {
   },
 
   house: {
-    title: "Дом",
-    description: "Частные дома и особняки",
-
     fields: [
       ["houseType", "Тип дома"],
       ["floors", "Этажность"],
@@ -148,7 +142,6 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Гараж",
       "Парковка",
@@ -171,9 +164,6 @@ const categories = {
   },
 
   cottage: {
-    title: "Коттедж",
-    description: "Коттеджи и загородные дома",
-
     fields: [
       ["houseType", "Тип объекта"],
       ["floors", "Этажность"],
@@ -185,7 +175,6 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Бассейн",
       "Сауна",
@@ -208,9 +197,6 @@ const categories = {
   },
 
   land: {
-    title: "Участок",
-    description: "Земельные участки",
-
     fields: [
       ["purpose", "Назначение"],
       ["fence", "Забор"],
@@ -220,7 +206,6 @@ const categories = {
       ["terrain", "Рельеф"],
       ["communications", "Коммуникации"],
     ],
-
     amenities: [
       "Электричество",
       "Газ",
@@ -237,9 +222,6 @@ const categories = {
   },
 
   room: {
-    title: "Комната",
-    description: "Отдельные комнаты",
-
     fields: [
       ["roomLocation", "Расположение"],
       ["roomsInApartment", "Комнат в квартире"],
@@ -251,7 +233,6 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Мебель",
       "Бытовая техника",
@@ -267,9 +248,6 @@ const categories = {
   },
 
   commercial: {
-    title: "Коммерция",
-    description: "Офисы, магазины и другие помещения",
-
     fields: [
       ["floor", "Этаж"],
       ["condition", "Состояние"],
@@ -282,7 +260,6 @@ const categories = {
       ["rentalBusiness", "Готовый арендный бизнес"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Парковка",
       "Отдельный вход",
@@ -302,9 +279,6 @@ const categories = {
   },
 
   parking: {
-    title: "Паркинг / гараж",
-    description: "Гаражи и парковочные места",
-
     fields: [
       ["ceilingHeight", "Высота потолков"],
       ["parkingType", "Тип парковки"],
@@ -315,7 +289,6 @@ const categories = {
       ["documents", "Документы"],
       ["offerType", "Тип предложения"],
     ],
-
     amenities: [
       "Освещение",
       "Электричество",
@@ -437,7 +410,13 @@ const options = {
 
   fence: ["Есть", "Нет", "Частично"],
 
-  landLocation: ["В городе", "В пригороде", "За городом", "У трассы", "В центре"],
+  landLocation: [
+    "В городе",
+    "В пригороде",
+    "За городом",
+    "У трассы",
+    "В центре",
+  ],
 
   terrain: ["Ровный", "С уклоном", "Горный", "Холмистый"],
 
@@ -456,7 +435,13 @@ const options = {
 
   privateBathroom: ["Есть", "Нет"],
 
-  roomLocation: ["В квартире", "В доме", "В хостеле", "В гостинице", "В общежитии"],
+  roomLocation: [
+    "В квартире",
+    "В доме",
+    "В хостеле",
+    "В гостинице",
+    "В общежитии",
+  ],
 
   premisesType: [
     "Любой",
@@ -509,7 +494,7 @@ const options = {
 };
 
 /* =========================================================
-   ЖК — SERIES WHERE FIELD IS AVAILABLE
+   ЖК
 ========================================================= */
 
 const residentialComplexSeries = [
@@ -530,7 +515,47 @@ function getFieldOptions(field, dynamicOptions) {
   return dynamicOptions[field] || options[field] || [];
 }
 
+function getTranslation(t, key, fallback) {
+  const translated = t(key);
+
+  return translated === key ? fallback : translated;
+}
+
+function getFieldLabel(name, fallback, t) {
+  return getTranslation(t, `stepCategory.fields.${name}`, fallback);
+}
+
+function getOptionLabel(name, option, t) {
+  return getTranslation(t, `stepCategory.options.${name}.${option}`, option);
+}
+
+function getAmenityLabel(amenity, t) {
+  return getTranslation(t, `stepCategory.amenities.items.${amenity}`, amenity);
+}
+
+function getCategoryTitle(category, t) {
+  return getTranslation(
+    t,
+    `stepCategory.categories.${category}.title`,
+    category,
+  );
+}
+
+function getCategoryDescription(category, t) {
+  return getTranslation(
+    t,
+    `stepCategory.categories.${category}.description`,
+    "",
+  );
+}
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
+  const { t } = useLanguage();
+
   const [dynamicOptions, setDynamicOptions] = useState({});
   const [apiError, setApiError] = useState(false);
 
@@ -556,6 +581,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
         setDynamicOptions((prev) => ({
           ...prev,
+
           apiAmenities: [
             ...(data.amenities.general || []),
             ...(data.amenities.resort || []),
@@ -583,24 +609,22 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       return;
     }
 
-    if (isRent) {
-      const resetFields = {};
+    const resetFields = {};
 
-      if (form.documents) {
-        resetFields.documents = "";
-      }
+    if (form.documents) {
+      resetFields.documents = "";
+    }
 
-      if (form.offerType) {
-        resetFields.offerType = "";
-      }
+    if (form.offerType) {
+      resetFields.offerType = "";
+    }
 
-      if (!isApartment && form.pets) {
-        resetFields.pets = "";
-      }
+    if (!isApartment && form.pets) {
+      resetFields.pets = "";
+    }
 
-      if (Object.keys(resetFields).length > 0) {
-        updateForm(resetFields);
-      }
+    if (Object.keys(resetFields).length > 0) {
+      updateForm(resetFields);
     }
   }, [isRent, isApartment]);
 
@@ -654,13 +678,20 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   ========================================================= */
 
   useEffect(() => {
-    if (!showResidentialComplex && (form.residentialComplex || form.residentialComplexId)) {
+    if (
+      !showResidentialComplex &&
+      (form.residentialComplex || form.residentialComplexId)
+    ) {
       updateForm({
         residentialComplex: "",
         residentialComplexId: "",
       });
     }
-  }, [showResidentialComplex, form.residentialComplex, form.residentialComplexId]);
+  }, [
+    showResidentialComplex,
+    form.residentialComplex,
+    form.residentialComplexId,
+  ]);
 
   /* =========================================================
      UPDATE FIELD
@@ -723,58 +754,52 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
     visibleFields.push(["pets", "Можно с животными"]);
   }
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <div className={styles.step}>
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <div className={styles.header}>
         <div className={styles.stepBadge}>
           <span className={styles.stepDot} />
-          Шаг 4 из 6
+
+          {t("stepCategory.step")}
         </div>
 
-        <h1>Параметры объекта</h1>
+        <h1>{t("stepCategory.title")}</h1>
 
-        <p>
-          Укажите основные характеристики недвижимости — это поможет покупателям
-          быстрее понять, подходит ли им объект.
-        </p>
+        <p>{t("stepCategory.description")}</p>
       </div>
 
-      {/* =====================================================
-          API ERROR
-      ===================================================== */}
+      {/* API ERROR */}
 
       {apiError && (
-        <div className={styles.apiError}>
-          Не удалось загрузить дополнительные данные. Основные характеристики
-          доступны.
-        </div>
+        <div className={styles.apiError}>{t("stepCategory.apiError")}</div>
       )}
 
-      {/* =====================================================
-          CATEGORY
-      ===================================================== */}
+      {/* CATEGORY */}
 
       {!category && (
         <div className={styles.categorySection}>
           <div className={styles.sectionTitle}>
             <div>
               <span>01</span>
-              <h2>Выберите категорию</h2>
+
+              <h2>{t("stepCategory.category.title")}</h2>
             </div>
 
             <p>
               {isIssykKul
-                ? "Для Иссык-Куля доступны дополнительные категории."
-                : "Это поможет подобрать нужные параметры."}
+                ? t("stepCategory.category.issykKulDescription")
+                : t("stepCategory.category.description")}
             </p>
           </div>
 
           <div className={styles.categoryGrid}>
-            {visibleCategories.map(([key, item]) => {
+            {visibleCategories.map(([key]) => {
               const Icon = categoryIcons[key];
 
               return (
@@ -791,8 +816,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   </div>
 
                   <div className={styles.categoryContent}>
-                    <strong>{item.title}</strong>
-                    <span>{item.description}</span>
+                    <strong>{getCategoryTitle(key, t)}</strong>
+
+                    <span>{getCategoryDescription(key, t)}</span>
                   </div>
 
                   <ArrowRight className={styles.categoryArrow} size={19} />
@@ -803,9 +829,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
         </div>
       )}
 
-      {/* =====================================================
-          SELECTED CATEGORY
-      ===================================================== */}
+      {/* SELECTED CATEGORY */}
 
       {category && (
         <>
@@ -816,8 +840,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               </div>
 
               <div className={styles.selectedCategoryInfo}>
-                <span>Вы выбрали</span>
-                <strong>{category.title}</strong>
+                <span>{t("stepCategory.selectedCategory")}</span>
+
+                <strong>{getCategoryTitle(form.category, t)}</strong>
               </div>
             </div>
 
@@ -834,22 +859,22 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               }
             >
               <Pencil size={14} />
-              Изменить
+
+              {t("stepCategory.change")}
             </button>
           </div>
 
-          {/* =================================================
-              PRICE / AREA
-          ================================================= */}
+          {/* PRICE / AREA */}
 
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
                 <span>02</span>
-                <h2>Цена и площадь</h2>
+
+                <h2>{t("stepCategory.priceArea.title")}</h2>
               </div>
 
-              <p>Основные параметры объекта</p>
+              <p>{t("stepCategory.priceArea.description")}</p>
             </div>
 
             <div className={styles.priceGrid}>
@@ -859,12 +884,12 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 </div>
 
                 <div className={styles.field}>
-                  <label>Цена, $</label>
+                  <label>{t("stepCategory.priceArea.priceLabel")}</label>
 
                   <input
                     type="number"
                     min="0"
-                    placeholder="Например 75 000"
+                    placeholder={t("stepCategory.priceArea.pricePlaceholder")}
                     value={form.price || ""}
                     onChange={(e) =>
                       updateForm({
@@ -881,13 +906,21 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 </div>
 
                 <div className={styles.field}>
-                  <label>Площадь, {isLand ? "соток" : "м²"}</label>
+                  <label>
+                    {isLand
+                      ? t("stepCategory.priceArea.landAreaLabel")
+                      : t("stepCategory.priceArea.areaLabel")}
+                  </label>
 
                   <input
                     type="number"
                     min="0"
                     step="0.01"
-                    placeholder={isLand ? "Например 6 соток" : "Например 85 м²"}
+                    placeholder={
+                      isLand
+                        ? t("stepCategory.priceArea.landAreaPlaceholder")
+                        : t("stepCategory.priceArea.areaPlaceholder")
+                    }
                     value={form.area || ""}
                     onChange={(e) =>
                       updateForm({
@@ -900,21 +933,18 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           </div>
 
-          {/* =================================================
-              ISSYK KUL — BEACH DISTANCE
-          ================================================= */}
+          {/* ISSYK KUL */}
 
           {isIssykKul && (
             <div className={styles.sectionBlock}>
               <div className={styles.sectionTitle}>
                 <div>
                   <span>03</span>
-                  <h2>Расстояние до пляжа</h2>
+
+                  <h2>{t("stepCategory.beachDistance.title")}</h2>
                 </div>
 
-                <p>
-                  Укажите примерное расстояние от объекта до ближайшего пляжа
-                </p>
+                <p>{t("stepCategory.beachDistance.description")}</p>
               </div>
 
               <div className={styles.beachDistanceGrid}>
@@ -924,13 +954,13 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   </div>
 
                   <div className={styles.field}>
-                    <label>Расстояние до пляжа, м</label>
+                    <label>{t("stepCategory.beachDistance.label")}</label>
 
                     <input
                       type="number"
                       min="0"
                       step="1"
-                      placeholder="Например 300"
+                      placeholder={t("stepCategory.beachDistance.placeholder")}
                       value={form.beachDistance || ""}
                       onChange={(e) =>
                         updateForm({
@@ -944,18 +974,17 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
             </div>
           )}
 
-          {/* =================================================
-              CHARACTERISTICS
-          ================================================= */}
+          {/* CHARACTERISTICS */}
 
           <div className={styles.sectionBlock}>
             <div className={styles.sectionTitle}>
               <div>
                 <span>{isIssykKul ? "04" : "03"}</span>
-                <h2>Характеристики</h2>
+
+                <h2>{t("stepCategory.characteristics.title")}</h2>
               </div>
 
-              <p>Выберите подходящие значения</p>
+              <p>{t("stepCategory.characteristics.description")}</p>
             </div>
 
             <div className={styles.fieldsGrid}>
@@ -969,10 +998,13 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                     <div className={styles.selectWrapper} key={name}>
                       <CustomSelect
                         icon={Icon}
-                        title={label}
+                        title={getFieldLabel(name, label, t)}
                         value={form[name] || ""}
                         setValue={(value) => updateField(name, value)}
-                        options={fieldOptions}
+                        options={fieldOptions.map((option) => ({
+                          value: option,
+                          label: getOptionLabel(name, option, t),
+                        }))}
                       />
                     </div>
                   );
@@ -985,12 +1017,16 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                     </div>
 
                     <div className={styles.field}>
-                      <label>{label}</label>
+                      <label>{getFieldLabel(name, label, t)}</label>
 
                       <input
                         value={form[name] || ""}
-                        onChange={(e) => updateField(name, e.target.value)}
-                        placeholder="Укажите значение"
+                        onChange={(e) =>
+                          updateForm({
+                            [name]: e.target.value,
+                          })
+                        }
+                        placeholder={t("stepCategory.valuePlaceholder")}
                       />
                     </div>
                   </div>
@@ -998,9 +1034,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               })}
             </div>
 
-            {/* =================================================
-                RESIDENTIAL COMPLEX
-            ================================================= */}
+            {/* RESIDENTIAL COMPLEX */}
 
             {showResidentialComplex && (
               <div className={styles.residentialComplexWrapper}>
@@ -1015,15 +1049,13 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 />
 
                 <span className={styles.fieldHint}>
-                  Выберите жилой комплекс из списка
+                  {t("stepCategory.residentialComplexHint")}
                 </span>
               </div>
             )}
           </div>
 
-          {/* =================================================
-              AMENITIES
-          ================================================= */}
+          {/* AMENITIES */}
 
           {categoryAmenities.length > 0 && (
             <div className={styles.sectionBlock}>
@@ -1031,10 +1063,10 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                 <div>
                   <span>{isIssykKul ? "05" : "04"}</span>
 
-                  <h2>Удобства</h2>
+                  <h2>{t("stepCategory.amenities.title")}</h2>
                 </div>
 
-                <p>Можно выбрать несколько вариантов</p>
+                <p>{t("stepCategory.amenities.description")}</p>
               </div>
 
               <div className={styles.amenitiesGrid}>
@@ -1054,7 +1086,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                         {isSelected && <Check size={14} strokeWidth={3} />}
                       </span>
 
-                      <span>{amenity}</span>
+                      <span>{getAmenityLabel(amenity, t)}</span>
                     </button>
                   );
                 })}
@@ -1062,24 +1094,25 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
 
               {selectedAmenities.length > 0 && (
                 <div className={styles.amenitiesSelectedCount}>
-                  Выбрано удобств: <strong>{selectedAmenities.length}</strong>
+                  {t("stepCategory.amenities.selected")}{" "}
+                  <strong>{selectedAmenities.length}</strong>
                 </div>
               )}
             </div>
           )}
 
-          {/* =================================================
-              ACTIONS
-          ================================================= */}
+          {/* ACTIONS */}
 
           <div className={styles.actions}>
             <button type="button" className={styles.secondary} onClick={onBack}>
               <ArrowLeft size={17} />
-              Назад
+
+              {t("common.back")}
             </button>
 
             <button type="button" className={styles.primary} onClick={onNext}>
-              Продолжить
+              {t("stepCategory.continue")}
+
               <ChevronRight size={18} />
             </button>
           </div>

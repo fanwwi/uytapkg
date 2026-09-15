@@ -4,10 +4,13 @@ import { motion } from "framer-motion";
 import { Search, MapPin, ShieldCheck, ArrowUpRight, Map } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Hero.module.css";
 
 export default function Hero() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   return (
     <section className={styles.hero}>
@@ -30,19 +33,17 @@ export default function Hero() {
       >
         <div className={styles.location}>
           <MapPin />
-          Бишкек • Кыргызстан
+          {t("hero.location")}
         </div>
 
         <h1 className={styles.title}>
           UyTap.kg —
-          <span className={styles.highlight}> ваш надежный помощник</span>
-          <br />в поиске недвижимости
+          <span className={styles.highlight}> {t("hero.titleAccent")}</span>
+          <br />
+          {t("hero.title")}
         </h1>
 
-        <p className={styles.description}>
-          Находите квартиры, дома и коммерческую недвижимость от проверенных
-          застройщиков, владельцев и риэлторов.
-        </p>
+        <p className={styles.description}>{t("hero.description")}</p>
 
         <div className={styles.buttons}>
           <button
@@ -53,7 +54,7 @@ export default function Hero() {
             }}
           >
             <Search />
-            Найти недвижимость
+            {t("hero.findProperty")}
           </button>
 
           <button
@@ -61,7 +62,7 @@ export default function Hero() {
             className={styles.secondary}
             onClick={() => router.push("/all-products")}
           >
-            Смотреть все объявления
+            {t("hero.allListings")}
           </button>
         </div>
 
@@ -69,15 +70,15 @@ export default function Hero() {
           type="button"
           className={styles.mapButton}
           onClick={() => router.push("/search-map")}
-          aria-label="Искать объекты на карте"
+          aria-label={t("hero.map.ariaLabel")}
         >
           <span className={styles.mapIcon}>
             <Map />
           </span>
 
           <span className={styles.mapText}>
-            <strong>Искать объекты на карте</strong>
-            <small>Найдите недвижимость рядом с вами</small>
+            <strong>{t("hero.map.title")}</strong>
+            <small>{t("hero.map.description")}</small>
           </span>
 
           <ArrowUpRight className={styles.mapArrow} />
@@ -87,15 +88,15 @@ export default function Hero() {
           type="button"
           className={styles.safetyButton}
           onClick={() => router.push("/safety")}
-          aria-label="Безопасность при покупке недвижимости"
+          aria-label={t("hero.safety.ariaLabel")}
         >
           <span className={styles.safetyIcon}>
             <ShieldCheck />
           </span>
 
           <span className={styles.safetyText}>
-            <strong>Безопасность</strong>
-            <small>Как не стать жертвой мошенников</small>
+            <strong>{t("hero.safety.title")}</strong>
+            <small>{t("hero.safety.description")}</small>
           </span>
 
           <ArrowUpRight className={styles.safetyArrow} />
