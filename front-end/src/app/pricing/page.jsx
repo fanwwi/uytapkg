@@ -229,9 +229,11 @@ export default function Pricing() {
 
     // Тариф застройщика оформляется не через онлайн-оплату (backend не
     // принимает его в /api/payments/create) — независимо от того, задал
-    // ли админ конкретную цену или оставил "Индивидуально".
+    // ли админ конкретную цену или оставил "Индивидуально". У этого
+    // тарифа отдельная страница-визитка с готовым WhatsApp-сообщением
+    // именно под застройщиков (см. app/connect/page.jsx).
     if (tariff.developer) {
-      router.push("/profile");
+      router.push("/connect");
       return;
     }
 
@@ -391,7 +393,7 @@ export default function Pricing() {
                 <button
                   type="button"
                   className={styles.cardButton}
-                  onClick={() => router.push("/connect")}
+                  onClick={() => handleTariffClick(item)}
                 >
                   {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
 
