@@ -1,19 +1,30 @@
 "use client";
 
 import { AlertTriangle, X, Trash2, Loader2 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import styles from "./DeleteModal.module.css";
 
 export default function DeleteModal({
   isOpen,
   onClose,
   onConfirm,
-  title = "Удалить объект?",
-  description = "Это действие нельзя отменить. Объект будет удалён без возможности восстановления.",
+  title,
+  description,
   loading = false,
-  confirmText = "Удалить",
-  cancelText = "Отмена",
+  confirmText,
+  cancelText,
 }) {
+  const { t } = useLanguage();
+
   if (!isOpen) return null;
+
+  const finalTitle = title ?? t("deleteModal.defaults.title");
+
+  const finalDescription = description ?? t("deleteModal.defaults.description");
+
+  const finalConfirmText = confirmText ?? t("deleteModal.defaults.confirm");
+
+  const finalCancelText = cancelText ?? t("deleteModal.defaults.cancel");
 
   const handleConfirm = async () => {
     if (loading) return;
@@ -41,7 +52,7 @@ export default function DeleteModal({
           className={styles.close}
           onClick={onClose}
           disabled={loading}
-          aria-label="Закрыть"
+          aria-label={t("deleteModal.actions.close")}
         >
           <X size={19} />
         </button>
@@ -53,11 +64,11 @@ export default function DeleteModal({
         </div>
 
         <div className={styles.content}>
-          <span className={styles.label}>ПОДТВЕРЖДЕНИЕ</span>
+          <span className={styles.label}>{t("deleteModal.confirmation")}</span>
 
-          <h2 id="delete-modal-title">{title}</h2>
+          <h2 id="delete-modal-title">{finalTitle}</h2>
 
-          <p>{description}</p>
+          <p>{finalDescription}</p>
         </div>
 
         <div className={styles.actions}>
@@ -67,7 +78,7 @@ export default function DeleteModal({
             onClick={onClose}
             disabled={loading}
           >
-            {cancelText}
+            {finalCancelText}
           </button>
 
           <button
@@ -79,12 +90,12 @@ export default function DeleteModal({
             {loading ? (
               <>
                 <Loader2 size={17} className={styles.loader} />
-                Удаление...
+                {t("deleteModal.actions.deleting")}
               </>
             ) : (
               <>
                 <Trash2 size={17} />
-                {confirmText}
+                {finalConfirmText}
               </>
             )}
           </button>

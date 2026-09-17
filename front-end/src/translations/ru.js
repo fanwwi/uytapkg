@@ -5315,6 +5315,43 @@ const ru = {
     },
     unknownType: "Неизвестный тип профиля",
   },
+
+  deleteModal: {
+    confirmation: "ПОДТВЕРЖДЕНИЕ",
+    defaults: {
+      title: "Удалить объект?",
+      description:
+        "Это действие нельзя отменить. Объект будет удалён без возможности восстановления.",
+      confirm: "Удалить",
+      cancel: "Отмена",
+    },
+    actions: {
+      close: "Закрыть",
+      deleting: "Удаление...",
+    },
+  },
+
+  listingCard: {
+    compare: {
+      remove: "Убрать объект из сравнения",
+      add: "Добавить объект к сравнению",
+      selected: "Выбрано",
+      otherType: "Другой тип",
+      button: "Сравнить",
+    },
+    badges: {
+      urgent: "Срочно",
+    },
+    favorite: {
+      remove: "Удалить из избранного",
+      add: "Добавить в избранное",
+    },
+    rooms: {
+      one: "комната",
+      many: "комнат",
+    },
+    details: "Подробнее",
+  },
 };
 
 export default ru;

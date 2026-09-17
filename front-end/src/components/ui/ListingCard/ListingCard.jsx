@@ -2,13 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  MapPin,
-  Heart,
-  Crown,
-  Zap,
-  Check,
-} from "lucide-react";
+import { MapPin, Heart, Crown, Zap, Check } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./ListingCard.module.css";
 
@@ -24,6 +19,7 @@ export default function ListingCard({
   onCompareToggle,
 }) {
   const router = useRouter();
+  const { t, language } = useLanguage();
 
   const isVip = item?.status === "vip";
   const isUrgent = item?.status === "urgent";
@@ -38,6 +34,14 @@ export default function ListingCard({
     if (compareDisabled) return;
 
     onCompareToggle?.(item);
+  }
+
+  function getRoomsLabel(rooms) {
+    if (language === "ky") {
+      return rooms === 1 ? "бөлмө" : "бөлмө";
+    }
+
+    return rooms === 1 ? "комната" : "комнат";
   }
 
   return (
@@ -69,8 +73,8 @@ export default function ListingCard({
             disabled={compareDisabled}
             aria-label={
               isSelected
-                ? "Убрать объект из сравнения"
-                : "Добавить объект к сравнению"
+                ? t("listingCard.compare.remove")
+                : t("listingCard.compare.add")
             }
             aria-pressed={isSelected}
           >
@@ -84,10 +88,10 @@ export default function ListingCard({
 
             <span className={styles.compareSelectText}>
               {isSelected
-                ? "Выбрано"
+                ? t("listingCard.compare.selected")
                 : compareDisabled
-                  ? "Другой тип"
-                  : "Сравнить"}
+                  ? t("listingCard.compare.otherType")
+                  : t("listingCard.compare.button")}
             </span>
           </button>
         )}
@@ -105,7 +109,7 @@ export default function ListingCard({
           {isUrgent && (
             <span className={`${styles.status} ${styles.urgent}`}>
               <Zap />
-              Срочно
+              {t("listingCard.badges.urgent")}
             </span>
           )}
 
@@ -118,7 +122,9 @@ export default function ListingCard({
           type="button"
           className={styles.favorite}
           aria-label={
-            isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+            isFavorite
+              ? t("listingCard.favorite.remove")
+              : t("listingCard.favorite.add")
           }
           onClick={(event) => {
             event.stopPropagation();
@@ -146,7 +152,7 @@ export default function ListingCard({
         <div className={styles.details}>
           {item.rooms && (
             <span>
-              {item.rooms} {item.rooms === 1 ? "комната" : "комнат"}
+              {item.rooms} {getRoomsLabel(item.rooms)}
             </span>
           )}
 
@@ -166,7 +172,7 @@ export default function ListingCard({
               openListing();
             }}
           >
-            Подробнее
+            {t("listingCard.details")}
           </button>
         </div>
       </div>
