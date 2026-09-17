@@ -4951,125 +4951,6 @@ const ru = {
     },
   },
 
-  residentialComplexes: {
-    header: {
-      profile: "В профиль",
-      eyebrow: "Кабинет застройщика",
-      title: "Мои жилые комплексы",
-      description:
-        "Управляйте своими ЖК, следите за строительством и обновляйте информацию для покупателей.",
-    },
-
-    actions: {
-      add: "Добавить ЖК",
-      details: "Подробнее",
-      edit: "Редактировать",
-      delete: "Удалить",
-      cancel: "Отмена",
-      save: "Сохранить изменения",
-      close: "Закрыть",
-      more: "Дополнительные действия",
-    },
-
-    overview: {
-      total: "Всего ЖК",
-      construction: "В строительстве",
-      apartments: "Всего квартир",
-    },
-
-    filters: {
-      search: "Поиск по названию или адресу...",
-    },
-
-    fields: {
-      status: "Статус",
-    },
-
-    statuses: {
-      all: "Все статусы",
-      project: "Проект",
-      construction: "Строительство",
-      completed: "Сдан",
-    },
-
-    classes: {
-      economy: "Эконом",
-      comfort: "Комфорт",
-      business: "Бизнес",
-      premium: "Премиум",
-    },
-
-    amenities: {
-      parking: "Паркинг",
-      undergroundParking: "Подземный паркинг",
-      playground: "Детская площадка",
-      security: "Охрана",
-      fitness: "Фитнес-зал",
-      gatedArea: "Закрытая территория",
-      elevator: "Лифт",
-      greenArea: "Зеленая зона",
-      kindergarten: "Детский сад",
-      school: "Школа",
-      videoSurveillance: "Видеонаблюдение",
-      commercial: "Коммерческие помещения",
-    },
-
-    units: {
-      floors: "этажей",
-      apartments: "квартир",
-      completion: "сдача",
-    },
-
-    result: {
-      title: "Ваши проекты",
-      hint: "Управляйте каждым жилым комплексом отдельно",
-    },
-
-    loading: "Загрузка ваших жилых комплексов...",
-
-    empty: {
-      title: "ЖК не найдены",
-      description:
-        "По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.",
-    },
-
-    errors: {
-      load: "Ошибка загрузки жилых комплексов",
-      loadServer: "Не удалось загрузить жилые комплексы с сервера",
-      unauthorized: "Вы не авторизованы",
-      delete: "Не удалось удалить жилой комплекс",
-      update: "Не удалось обновить жилой комплекс",
-    },
-
-    deleteModal: {
-      title: "Удалить жилой комплекс?",
-      descriptionStart: "Вы действительно хотите удалить «",
-      descriptionEnd: "»? Это действие нельзя будет отменить.",
-    },
-
-    editModal: {
-      eyebrow: "Редактирование",
-      title: "Изменить жилой комплекс",
-      descriptionStart: "Обновите информацию о",
-
-      fields: {
-        name: "Название ЖК",
-        address: "Адрес",
-        class: "Класс жилья",
-        completionDate: "Дата сдачи",
-        floors: "Количество этажей",
-        apartments: "Количество квартир",
-        parking: "Парковочных мест",
-        area: "Площадь территории, соток",
-      },
-
-      placeholders: {
-        name: "Название ЖК",
-        address: "Адрес",
-      },
-    },
-  },
-
   agencyPublicProfile: {
     topBar: {
       home: "На главную",
@@ -5351,6 +5232,128 @@ const ru = {
       many: "комнат",
     },
     details: "Подробнее",
+  },
+
+  residentialComplexes: {
+    header: {
+      profile: "В профиль",
+      eyebrow: "Кабинет застройщика",
+      title: "Мои жилые комплексы",
+      description:
+        "Управляйте своими ЖК, следите за строительством и обновляйте информацию для покупателей.",
+    },
+
+    actions: {
+      add: "Добавить ЖК",
+      details: "Подробнее",
+      editAria: "Редактировать",
+      deleteAria: "Удалить",
+      more: "Дополнительные действия",
+      close: "Закрыть",
+      cancel: "Отмена",
+      save: "Сохранить изменения",
+    },
+
+    stats: {
+      total: "Всего ЖК",
+      construction: "В строительстве",
+      apartments: "Всего квартир",
+    },
+
+    filters: {
+      searchPlaceholder: "Поиск по названию или адресу...",
+    },
+
+    result: {
+      title: "Ваши проекты",
+      hint: "Управляйте каждым жилым комплексом отдельно",
+    },
+
+    loading: "Загрузка ваших жилых комплексов...",
+
+    statuses: {
+      all: "Все статусы",
+      project: "Проект",
+      construction: "Строительство",
+      completed: "Сдан",
+    },
+
+    classes: {
+      economy: "Эконом",
+      comfort: "Комфорт",
+      business: "Бизнес",
+      premium: "Премиум",
+    },
+
+    fields: {
+      name: "Название ЖК",
+      namePlaceholder: "Название ЖК",
+
+      address: "Адрес",
+      addressPlaceholder: "Адрес",
+
+      status: "Статус",
+
+      class: "Класс",
+      housingClass: "Класс жилья",
+
+      completionDate: "Дата сдачи",
+
+      floors: "Количество этажей",
+      apartments: "Количество квартир",
+      parking: "Парковочных мест",
+      area: "Площадь территории, соток",
+    },
+
+    specs: {
+      floors: "этажей",
+      apartments: "квартир",
+      completion: "сдача",
+    },
+
+    months: {
+      january: "Январь",
+      february: "Февраль",
+      march: "Март",
+      april: "Апрель",
+      may: "Май",
+      june: "Июнь",
+      july: "Июль",
+      august: "Август",
+      september: "Сентябрь",
+      october: "Октябрь",
+      november: "Ноябрь",
+      december: "Декабрь",
+    },
+
+    empty: {
+      title: "ЖК не найдены",
+      description:
+        "По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.",
+    },
+
+    deleteModal: {
+      title: "Удалить жилой комплекс?",
+      descriptionStart: "Вы действительно хотите удалить «",
+      descriptionEnd: "»? Это действие нельзя будет отменить.",
+      confirm: "Удалить",
+      cancel: "Отмена",
+    },
+
+    editModal: {
+      eyebrow: "Редактирование",
+      title: "Изменить жилой комплекс",
+      descriptionStart: "Обновите информацию о «",
+      descriptionEnd: "».",
+    },
+
+    errors: {
+      load: "Ошибка загрузки жилых комплексов",
+      loadServer: "Не удалось загрузить жилые комплексы с сервера",
+      unauthorized: "Вы не авторизованы",
+      delete: "Не удалось удалить жилой комплекс",
+      update: "Не удалось обновить жилой комплекс",
+    },
   },
 };
 

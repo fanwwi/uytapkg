@@ -15,7 +15,6 @@ import {
   TrendingUp,
   X,
   Save,
-  HomeIcon,
   UserRoundArrowLeft,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -26,92 +25,15 @@ import {
   deleteComplex as deleteComplexApi,
 } from "@/utils/api";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./ResidentialComplexes.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
-import { ImProfile } from "react-icons/im";
-import { RiProfileFill } from "react-icons/ri";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
-const initialComplexes = [
-  {
-    id: 1,
-    name: "ЖК Ала-Тоо",
-    address: "ул. Токтогула, 125, Бишкек",
-    status: "Строительство",
-    class: "Бизнес",
-    completionLabel: "Сентябрь 2027",
-    completionDate: "2027-09-01",
-    progress: 68,
-    floors: 16,
-    apartments: 384,
-    sold: 217,
-    parking: 240,
-    area: "42 500 м²",
-    image:
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
-    amenities: ["Паркинг", "Охрана", "Детская площадка", "Лифт"],
-  },
-  {
-    id: 2,
-    name: "ЖК Mountain Residence",
-    address: "мкр. Джал, Бишкек",
-    status: "Строительство",
-    class: "Премиум",
-    completionLabel: "Май 2028",
-    completionDate: "2028-05-01",
-    progress: 34,
-    floors: 20,
-    apartments: 520,
-    sold: 143,
-    parking: 310,
-    area: "61 800 м²",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
-    amenities: ["Подземный паркинг", "Фитнес", "Охрана", "Закрытая территория"],
-  },
-  {
-    id: 3,
-    name: "ЖК Green Park",
-    address: "ул. Байтик Баатыра, 72, Бишкек",
-    status: "Сдан",
-    class: "Комфорт",
-    completionLabel: "Ноябрь 2025",
-    completionDate: "2025-11-01",
-    progress: 100,
-    floors: 12,
-    apartments: 288,
-    sold: 276,
-    parking: 180,
-    area: "31 200 м²",
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=85",
-    amenities: ["Детская площадка", "Парковка", "Зеленая зона", "Лифт"],
-  },
-  {
-    id: 4,
-    name: "ЖК Nova City",
-    address: "ул. Масалиева, 44, Бишкек",
-    status: "Проект",
-    class: "Комфорт",
-    completionLabel: "Март 2029",
-    completionDate: "2029-03-01",
-    progress: 8,
-    floors: 14,
-    apartments: 420,
-    sold: 0,
-    parking: 260,
-    area: "48 000 м²",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85",
-    amenities: ["Паркинг", "Детский сад", "Зеленая зона"],
-  },
-];
+const statusValues = ["Проект", "Строительство", "Сдан"];
 
-const statusOptions = ["Все статусы", "Проект", "Строительство", "Сдан"];
-
-const editStatusOptions = ["Проект", "Строительство", "Сдан"];
-
-const classOptions = ["Эконом", "Комфорт", "Бизнес", "Премиум"];
+const classValues = ["Эконом", "Комфорт", "Бизнес", "Премиум"];
 
 const statusClass = {
   Проект: "project",
@@ -119,73 +41,27 @@ const statusClass = {
   Сдан: "completed",
 };
 
+const statusKeys = {
+  "Все статусы": "all",
+  Проект: "project",
+  Строительство: "construction",
+  Сдан: "completed",
+};
+
+const classKeys = {
+  Эконом: "economy",
+  Комфорт: "comfort",
+  Бизнес: "business",
+  Премиум: "premium",
+};
+
 export default function ResidentialComplexes() {
   const router = useRouter();
+  const { t, language } = useLanguage();
 
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("uytap_token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    getMyComplexes(token)
-      .then((res) => {
-        if (res.success && res.data) {
-          const mapped = res.data.map((item) => {
-            const compl = item;
-            let completion_status = "Строительство";
-            if (compl.completion_status === "planning")
-              completion_status = "Проект";
-            if (compl.completion_status === "completed")
-              completion_status = "Сдан";
-
-            const parseNumber = (val) => {
-              if (!val) return 0;
-              const n = parseInt(String(val).replace(/\D+/g, ""), 10);
-              return isNaN(n) ? 0 : n;
-            };
-
-            return {
-              id: compl.id,
-              name: compl.name,
-              address: compl.address,
-              status: completion_status,
-              class: compl.housing_class || "Комфорт",
-              completionLabel: getCompletionLabel(compl.completion_date),
-              completionDate: compl.completion_date,
-              floors: parseNumber(compl.features?.floors),
-              apartments: parseNumber(compl.features?.apartments),
-              parking: parseNumber(compl.features?.parking),
-              area: compl.features?.areaSotka
-                ? `${compl.features.areaSotka} соток`
-                : compl.features?.area
-                  ? `${compl.features.area} м²`
-                  : "0 м²",
-              image:
-                compl.cover_photo ||
-                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
-              amenities: compl.features?.amenities || [],
-              rawFeatures: compl.features || {},
-            };
-          });
-          setComplexes(mapped);
-        } else {
-          setError(res.message || "Ошибка загрузки жилых комплексов");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Не удалось загрузить жилые комплексы с сервера");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [router]);
 
   const [status, setStatus] = useState("Все статусы");
   const [search, setSearch] = useState("");
@@ -209,6 +85,147 @@ export default function ResidentialComplexes() {
     area: "",
   });
 
+  const statusOptions = statusValues;
+  const editStatusOptions = statusValues;
+  const classOptions = classValues;
+
+  const translateStatus = (value) => {
+    const key = statusKeys[value];
+
+    if (!key) return value;
+
+    return t(`residentialComplexes.statuses.${key}`);
+  };
+
+  const translateClass = (value) => {
+    const key = classKeys[value];
+
+    if (!key) return value;
+
+    return t(`residentialComplexes.classes.${key}`);
+  };
+
+  const getCompletionLabel = (date) => {
+    if (!date) return "";
+
+    const [year, month] = date.split("-");
+
+    const months = [
+      "january",
+      "february",
+      "march",
+      "april",
+      "may",
+      "june",
+      "july",
+      "august",
+      "september",
+      "october",
+      "november",
+      "december",
+    ];
+
+    const monthIndex = Number(month) - 1;
+
+    if (!months[monthIndex]) return "";
+
+    return `${t(`residentialComplexes.months.${months[monthIndex]}`)} ${year}`;
+  };
+
+  const getLocalizedStatusOptions = () =>
+    statusOptions.map((value) => translateStatus(value));
+
+  const getLocalizedClassOptions = () =>
+    classOptions.map((value) => translateClass(value));
+
+  const statusLabelToValue = (label) => {
+    const value = statusValues.find((item) => translateStatus(item) === label);
+
+    return value || "Строительство";
+  };
+
+  const classLabelToValue = (label) => {
+    const value = classValues.find((item) => translateClass(item) === label);
+
+    return value || "Комфорт";
+  };
+
+  const localizedStatusValue = translateStatus(status);
+
+  const localizedEditStatusValue = translateStatus(editForm.status);
+  const localizedEditClassValue = translateClass(editForm.class);
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    getMyComplexes(token)
+      .then((res) => {
+        if (res.success && res.data) {
+          const mapped = res.data.map((item) => {
+            const compl = item;
+
+            let completion_status = "Строительство";
+
+            if (compl.completion_status === "planning") {
+              completion_status = "Проект";
+            }
+
+            if (compl.completion_status === "completed") {
+              completion_status = "Сдан";
+            }
+
+            const parseNumber = (val) => {
+              if (!val) return 0;
+
+              const n = parseInt(String(val).replace(/\D+/g, ""), 10);
+
+              return isNaN(n) ? 0 : n;
+            };
+
+            return {
+              id: compl.id,
+              name: compl.name,
+              address: compl.address,
+              status: completion_status,
+              class: compl.housing_class || "Комфорт",
+              completionLabel: compl.completion_date || "",
+              completionDate: compl.completion_date,
+              floors: parseNumber(compl.features?.floors),
+              apartments: parseNumber(compl.features?.apartments),
+              parking: parseNumber(compl.features?.parking),
+              area: compl.features?.areaSotka
+                ? `${compl.features.areaSotka} соток`
+                : compl.features?.area
+                  ? `${compl.features.area} м²`
+                  : "0 м²",
+              image:
+                compl.cover_photo ||
+                "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
+              amenities: compl.features?.amenities || [],
+              rawFeatures: compl.features || {},
+            };
+          });
+
+          setComplexes(mapped);
+        } else {
+          setError(res.message || t("residentialComplexes.errors.load"));
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+
+        setError(t("residentialComplexes.errors.loadServer"));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [router, t]);
+
   const filteredComplexes = useMemo(() => {
     const query = search.trim().toLowerCase();
 
@@ -217,8 +234,8 @@ export default function ResidentialComplexes() {
 
       const matchesSearch =
         !query ||
-        item.name.toLowerCase().includes(query) ||
-        item.address.toLowerCase().includes(query);
+        item.name?.toLowerCase().includes(query) ||
+        item.address?.toLowerCase().includes(query);
 
       return matchesStatus && matchesSearch;
     });
@@ -233,9 +250,9 @@ export default function ResidentialComplexes() {
     (item) => item.status === "Строительство",
   ).length;
 
-  /* =========================================================
-     DELETE
-  ========================================================= */
+  // =========================================================
+  // DELETE
+  // =========================================================
 
   const handleDeleteClick = (item) => {
     setDeleteComplex(item);
@@ -250,24 +267,30 @@ export default function ResidentialComplexes() {
 
     try {
       const token = localStorage.getItem("uytap_token");
-      if (!token) throw new Error("Вы не авторизованы");
+
+      if (!token) {
+        throw new Error(t("residentialComplexes.errors.unauthorized"));
+      }
 
       const res = await deleteComplexApi(token, deleteComplex.id);
-      if (!res.success) throw new Error(res.message || "Ошибка удаления");
+
+      if (!res.success) {
+        throw new Error(res.message || t("residentialComplexes.errors.delete"));
+      }
 
       setComplexes((prev) =>
         prev.filter((item) => item.id !== deleteComplex.id),
       );
     } catch (err) {
-      alert(err.message || "Не удалось удалить жилой комплекс");
+      alert(err.message || t("residentialComplexes.errors.delete"));
     } finally {
       setDeleteComplex(null);
     }
   };
 
-  /* =========================================================
-     EDIT
-  ========================================================= */
+  // =========================================================
+  // EDIT
+  // =========================================================
 
   const handleEditClick = (item) => {
     setEditComplex(item);
@@ -307,39 +330,15 @@ export default function ResidentialComplexes() {
     }));
   };
 
-  const getCompletionLabel = (date) => {
-    if (!date) return "";
-
-    const [year, month] = date.split("-");
-
-    const months = [
-      "Январь",
-      "Февраль",
-      "Март",
-      "Апрель",
-      "Май",
-      "Июнь",
-      "Июль",
-      "Август",
-      "Сентябрь",
-      "Октябрь",
-      "Ноябрь",
-      "Декабрь",
-    ];
-
-    const monthIndex = Number(month) - 1;
-
-    if (!months[monthIndex]) return "";
-
-    return `${months[monthIndex]} ${year}`;
-  };
-
   const saveEdit = async () => {
     if (!editComplex) return;
 
     try {
       const token = localStorage.getItem("uytap_token");
-      if (!token) throw new Error("Вы не авторизованы");
+
+      if (!token) {
+        throw new Error(t("residentialComplexes.errors.unauthorized"));
+      }
 
       const payload = {
         name: editForm.name,
@@ -354,12 +353,22 @@ export default function ResidentialComplexes() {
       };
 
       const res = await updateComplexApi(token, editComplex.id, payload);
-      if (!res.success) throw new Error(res.message || "Ошибка обновления");
+
+      if (!res.success) {
+        throw new Error(res.message || t("residentialComplexes.errors.update"));
+      }
 
       const compl = res.data;
+
       let completion_status = "Строительство";
-      if (compl.completion_status === "planning") completion_status = "Проект";
-      if (compl.completion_status === "completed") completion_status = "Сдан";
+
+      if (compl.completion_status === "planning") {
+        completion_status = "Проект";
+      }
+
+      if (compl.completion_status === "completed") {
+        completion_status = "Сдан";
+      }
 
       const updated = {
         id: compl.id,
@@ -367,7 +376,7 @@ export default function ResidentialComplexes() {
         address: compl.address,
         status: completion_status,
         class: compl.housing_class || "Комфорт",
-        completionLabel: getCompletionLabel(compl.completion_date),
+        completionLabel: compl.completion_date || "",
         completionDate: compl.completion_date,
         floors: compl.features?.floors || 0,
         apartments: compl.features?.apartments || 0,
@@ -375,14 +384,16 @@ export default function ResidentialComplexes() {
         area: compl.features?.area ? `${compl.features.area} м²` : "0 м²",
         image: compl.cover_photo || editComplex.image,
         amenities: compl.features?.amenities || editComplex.amenities,
+        rawFeatures: compl.features || {},
       };
 
       setComplexes((prev) =>
         prev.map((item) => (item.id === editComplex.id ? updated : item)),
       );
+
       setEditComplex(null);
     } catch (err) {
-      alert(err.message || "Не удалось обновить жилой комплекс");
+      alert(err.message || t("residentialComplexes.errors.update"));
     }
   };
 
@@ -401,21 +412,21 @@ export default function ResidentialComplexes() {
                 className={styles.homeButton}
                 onClick={() => router.push("/profile")}
               >
-                <UserRoundArrowLeft size={18} />В профиль
+                <UserRoundArrowLeft size={18} />
+
+                {t("residentialComplexes.header.profile")}
               </button>
 
               <span className={styles.eyebrow}>
                 <Building2 />
-                Кабинет застройщика
+
+                {t("residentialComplexes.header.eyebrow")}
               </span>
             </div>
 
-            <h1>Мои жилые комплексы</h1>
+            <h1>{t("residentialComplexes.header.title")}</h1>
 
-            <p>
-              Управляйте своими ЖК, следите за строительством и обновляйте
-              информацию для покупателей.
-            </p>
+            <p>{t("residentialComplexes.header.description")}</p>
           </div>
 
           <div className={styles.headerActions}>
@@ -425,7 +436,8 @@ export default function ResidentialComplexes() {
               onClick={() => router.push("/add-residential-complex")}
             >
               <Plus size={19} />
-              Добавить ЖК
+
+              {t("residentialComplexes.actions.add")}
             </button>
           </div>
         </header>
@@ -441,7 +453,8 @@ export default function ResidentialComplexes() {
             </div>
 
             <div>
-              <span>Всего ЖК</span>
+              <span>{t("residentialComplexes.stats.total")}</span>
+
               <strong>{complexes.length}</strong>
             </div>
           </div>
@@ -452,7 +465,8 @@ export default function ResidentialComplexes() {
             </div>
 
             <div>
-              <span>В строительстве</span>
+              <span>{t("residentialComplexes.stats.construction")}</span>
+
               <strong>{constructionCount}</strong>
             </div>
           </div>
@@ -463,8 +477,13 @@ export default function ResidentialComplexes() {
             </div>
 
             <div>
-              <span>Всего квартир</span>
-              <strong>{totalApartments.toLocaleString("ru-RU")}</strong>
+              <span>{t("residentialComplexes.stats.apartments")}</span>
+
+              <strong>
+                {totalApartments.toLocaleString(
+                  language === "ky" ? "ky-KG" : "ru-RU",
+                )}
+              </strong>
             </div>
           </div>
         </section>
@@ -479,7 +498,7 @@ export default function ResidentialComplexes() {
 
             <input
               type="text"
-              placeholder="Поиск по названию или адресу..."
+              placeholder={t("residentialComplexes.filters.searchPlaceholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -488,10 +507,17 @@ export default function ResidentialComplexes() {
           <div className={styles.statusSelect}>
             <CustomSelect
               icon={TrendingUp}
-              title="Статус"
-              options={statusOptions}
-              value={status}
-              setValue={setStatus}
+              title={t("residentialComplexes.fields.status")}
+              options={getLocalizedStatusOptions()}
+              value={localizedStatusValue}
+              setValue={(value) => {
+                if (value === t("residentialComplexes.statuses.all")) {
+                  setStatus("Все статусы");
+                  return;
+                }
+
+                setStatus(statusLabelToValue(value));
+              }}
             />
           </div>
         </section>
@@ -502,12 +528,13 @@ export default function ResidentialComplexes() {
 
         <div className={styles.resultRow}>
           <div>
-            <span>Ваши проекты</span>
+            <span>{t("residentialComplexes.result.title")}</span>
+
             <strong>{filteredComplexes.length}</strong>
           </div>
 
           <span className={styles.resultHint}>
-            Управляйте каждым жилым комплексом отдельно
+            {t("residentialComplexes.result.hint")}
           </span>
         </div>
 
@@ -536,8 +563,20 @@ export default function ResidentialComplexes() {
                 marginBottom: "15px",
               }}
             />
-            <div>Загрузка ваших жилых комплексов...</div>
-            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+
+            <div>{t("residentialComplexes.loading")}</div>
+
+            <style>{`
+              @keyframes spin {
+                0% {
+                  transform: rotate(0deg);
+                }
+
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+            `}</style>
           </div>
         ) : error ? (
           <div
@@ -576,10 +615,13 @@ export default function ResidentialComplexes() {
                       }`}
                     >
                       <i />
-                      {item.status}
+
+                      {translateStatus(item.status)}
                     </span>
 
-                    <span className={styles.classBadge}>{item.class}</span>
+                    <span className={styles.classBadge}>
+                      {translateClass(item.class)}
+                    </span>
                   </div>
 
                   <button
@@ -588,6 +630,7 @@ export default function ResidentialComplexes() {
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
+                    aria-label={t("residentialComplexes.actions.more")}
                   >
                     <MoreVertical />
                   </button>
@@ -602,6 +645,7 @@ export default function ResidentialComplexes() {
 
                       <div className={styles.location}>
                         <MapPin />
+
                         <span>{item.address}</span>
                       </div>
                     </div>
@@ -614,8 +658,8 @@ export default function ResidentialComplexes() {
                       <Layers3 />
 
                       <span>
-                        <b>{item.floors}</b>
-                        этажей
+                        <b>{item.floors}</b>{" "}
+                        {t("residentialComplexes.specs.floors")}
                       </span>
                     </div>
 
@@ -623,8 +667,8 @@ export default function ResidentialComplexes() {
                       <Home />
 
                       <span>
-                        <b>{item.apartments}</b>
-                        квартир
+                        <b>{item.apartments}</b>{" "}
+                        {t("residentialComplexes.specs.apartments")}
                       </span>
                     </div>
 
@@ -632,8 +676,8 @@ export default function ResidentialComplexes() {
                       <CalendarDays />
 
                       <span>
-                        <b>{item.completionLabel}</b>
-                        сдача
+                        <b>{getCompletionLabel(item.completionDate)}</b>{" "}
+                        {t("residentialComplexes.specs.completion")}
                       </span>
                     </div>
                   </div>
@@ -661,27 +705,28 @@ export default function ResidentialComplexes() {
                       }
                     >
                       <Eye />
-                      Подробнее
-                    </button>
 
-                    {/* EDIT */}
+                      {t("residentialComplexes.actions.details")}
+                    </button>
 
                     <button
                       type="button"
                       className={styles.editAction}
                       onClick={() => handleEditClick(item)}
-                      aria-label={`Редактировать ${item.name}`}
+                      aria-label={`${t(
+                        "residentialComplexes.actions.editAria",
+                      )}: ${item.name}`}
                     >
                       <Edit />
                     </button>
-
-                    {/* DELETE */}
 
                     <button
                       type="button"
                       className={styles.deleteAction}
                       onClick={() => handleDeleteClick(item)}
-                      aria-label={`Удалить ${item.name}`}
+                      aria-label={`${t(
+                        "residentialComplexes.actions.deleteAria",
+                      )}: ${item.name}`}
                     >
                       <Trash2 />
                     </button>
@@ -696,12 +741,9 @@ export default function ResidentialComplexes() {
               <Building2 />
             </div>
 
-            <h2>ЖК не найдены</h2>
+            <h2>{t("residentialComplexes.empty.title")}</h2>
 
-            <p>
-              По вашему запросу ничего не найдено. Попробуйте изменить параметры
-              поиска.
-            </p>
+            <p>{t("residentialComplexes.empty.description")}</p>
           </div>
         )}
 
@@ -711,12 +753,18 @@ export default function ResidentialComplexes() {
 
         <DeleteModal
           isOpen={Boolean(deleteComplex)}
-          title="Удалить жилой комплекс?"
+          title={t("residentialComplexes.deleteModal.title")}
           description={
             deleteComplex
-              ? `Вы действительно хотите удалить «${deleteComplex.name}»? Это действие нельзя будет отменить.`
+              ? `${t(
+                  "residentialComplexes.deleteModal.descriptionStart",
+                )}${deleteComplex.name}${t(
+                  "residentialComplexes.deleteModal.descriptionEnd",
+                )}`
               : ""
           }
+          confirmText={t("residentialComplexes.deleteModal.confirm")}
+          cancelText={t("residentialComplexes.deleteModal.cancel")}
           onClose={closeDeleteModal}
           onConfirm={confirmDelete}
         />
@@ -737,19 +785,24 @@ export default function ResidentialComplexes() {
                 <div>
                   <span className={styles.editModalEyebrow}>
                     <Edit />
-                    Редактирование
+
+                    {t("residentialComplexes.editModal.eyebrow")}
                   </span>
 
-                  <h2>Изменить жилой комплекс</h2>
+                  <h2>{t("residentialComplexes.editModal.title")}</h2>
 
-                  <p>Обновите информацию о «{editComplex.name}».</p>
+                  <p>
+                    {t("residentialComplexes.editModal.descriptionStart")}
+                    {editComplex.name}
+                    {t("residentialComplexes.editModal.descriptionEnd")}
+                  </p>
                 </div>
 
                 <button
                   type="button"
                   className={styles.editModalClose}
                   onClick={closeEditModal}
-                  aria-label="Закрыть"
+                  aria-label={t("residentialComplexes.actions.close")}
                 >
                   <X />
                 </button>
@@ -765,7 +818,7 @@ export default function ResidentialComplexes() {
                     className={`${styles.editField} ${styles.editFieldFull}`}
                   >
                     <label>
-                      Название ЖК <span>*</span>
+                      {t("residentialComplexes.fields.name")} <span>*</span>
                     </label>
 
                     <div className={styles.editInput}>
@@ -775,7 +828,9 @@ export default function ResidentialComplexes() {
                         name="name"
                         value={editForm.name}
                         onChange={handleEditChange}
-                        placeholder="Название ЖК"
+                        placeholder={t(
+                          "residentialComplexes.fields.namePlaceholder",
+                        )}
                       />
                     </div>
                   </div>
@@ -786,7 +841,7 @@ export default function ResidentialComplexes() {
                     className={`${styles.editField} ${styles.editFieldFull}`}
                   >
                     <label>
-                      Адрес <span>*</span>
+                      {t("residentialComplexes.fields.address")} <span>*</span>
                     </label>
 
                     <div className={styles.editInput}>
@@ -796,7 +851,9 @@ export default function ResidentialComplexes() {
                         name="address"
                         value={editForm.address}
                         onChange={handleEditChange}
-                        placeholder="Адрес"
+                        placeholder={t(
+                          "residentialComplexes.fields.addressPlaceholder",
+                        )}
                       />
                     </div>
                   </div>
@@ -804,35 +861,43 @@ export default function ResidentialComplexes() {
                   {/* STATUS */}
 
                   <div className={styles.editField}>
-                    <label>Статус</label>
+                    <label>{t("residentialComplexes.fields.status")}</label>
 
                     <CustomSelect
                       icon={TrendingUp}
-                      title="Статус"
-                      options={editStatusOptions}
-                      value={editForm.status}
-                      setValue={(value) => setEditField("status", value)}
+                      title={t("residentialComplexes.fields.status")}
+                      options={getLocalizedStatusOptions()}
+                      value={localizedEditStatusValue}
+                      setValue={(value) =>
+                        setEditField("status", statusLabelToValue(value))
+                      }
                     />
                   </div>
 
                   {/* CLASS */}
 
                   <div className={styles.editField}>
-                    <label>Класс жилья</label>
+                    <label>
+                      {t("residentialComplexes.fields.housingClass")}
+                    </label>
 
                     <CustomSelect
                       icon={Building2}
-                      title="Класс"
-                      options={classOptions}
-                      value={editForm.class}
-                      setValue={(value) => setEditField("class", value)}
+                      title={t("residentialComplexes.fields.class")}
+                      options={getLocalizedClassOptions()}
+                      value={localizedEditClassValue}
+                      setValue={(value) =>
+                        setEditField("class", classLabelToValue(value))
+                      }
                     />
                   </div>
 
                   {/* DATE */}
 
                   <div className={styles.editField}>
-                    <label>Дата сдачи</label>
+                    <label>
+                      {t("residentialComplexes.fields.completionDate")}
+                    </label>
 
                     <div className={styles.editInput}>
                       <CalendarDays />
@@ -849,7 +914,7 @@ export default function ResidentialComplexes() {
                   {/* FLOORS */}
 
                   <div className={styles.editField}>
-                    <label>Количество этажей</label>
+                    <label>{t("residentialComplexes.fields.floors")}</label>
 
                     <div className={styles.editInput}>
                       <Layers3 />
@@ -867,7 +932,7 @@ export default function ResidentialComplexes() {
                   {/* APARTMENTS */}
 
                   <div className={styles.editField}>
-                    <label>Количество квартир</label>
+                    <label>{t("residentialComplexes.fields.apartments")}</label>
 
                     <div className={styles.editInput}>
                       <Home />
@@ -885,7 +950,7 @@ export default function ResidentialComplexes() {
                   {/* PARKING */}
 
                   <div className={styles.editField}>
-                    <label>Парковочных мест</label>
+                    <label>{t("residentialComplexes.fields.parking")}</label>
 
                     <div className={styles.editInput}>
                       <span className={styles.editInputSimpleIcon}>P</span>
@@ -903,7 +968,7 @@ export default function ResidentialComplexes() {
                   {/* AREA */}
 
                   <div className={styles.editField}>
-                    <label>Площадь территории, соток</label>
+                    <label>{t("residentialComplexes.fields.area")}</label>
 
                     <div className={styles.editInput}>
                       <Layers3 />
@@ -928,7 +993,7 @@ export default function ResidentialComplexes() {
                   className={styles.editCancel}
                   onClick={closeEditModal}
                 >
-                  Отмена
+                  {t("residentialComplexes.actions.cancel")}
                 </button>
 
                 <button
@@ -937,7 +1002,8 @@ export default function ResidentialComplexes() {
                   onClick={saveEdit}
                 >
                   <Save />
-                  Сохранить изменения
+
+                  {t("residentialComplexes.actions.save")}
                 </button>
               </div>
             </div>
