@@ -32,7 +32,8 @@ export default function PaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const type = searchParams.get("type") === "promotion" ? "promotion" : "tariff";
+  const type =
+    searchParams.get("type") === "promotion" ? "promotion" : "tariff";
 
   const tariffId = searchParams.get("tariffId");
   const months = Number(searchParams.get("months") || 1);
@@ -84,7 +85,11 @@ export default function PaymentPage() {
     const init = async () => {
       try {
         const data = isPromotion
-          ? await createPromotionPayment(token, { listingId, serviceType, days })
+          ? await createPromotionPayment(token, {
+              listingId,
+              serviceType,
+              days,
+            })
           : await createPayment(token, { tariffId, months });
 
         if (cancelled) return;
@@ -119,7 +124,9 @@ export default function PaymentPage() {
         if (cancelled) return;
 
         setLoadState("error");
-        setErrorMessage(error.message || "Не удалось создать платёж. Попробуйте позже.");
+        setErrorMessage(
+          error.message || "Не удалось создать платёж. Попробуйте позже.",
+        );
       }
     };
 
@@ -129,7 +136,16 @@ export default function PaymentPage() {
       cancelled = true;
       stopPolling();
     };
-  }, [isPromotion, tariffId, months, listingId, serviceType, days, router, stopPolling]);
+  }, [
+    isPromotion,
+    tariffId,
+    months,
+    listingId,
+    serviceType,
+    days,
+    router,
+    stopPolling,
+  ]);
 
   const copyPaymentId = async () => {
     if (!payment) return;
@@ -188,7 +204,10 @@ export default function PaymentPage() {
           tariff: `${payment.serviceTitle || payment.tariffId} — ${
             payment.listingTitle || "объявление"
           }`,
-          priceLabel: payment.serviceType === "instagram" ? "Стоимость" : "Стоимость / день",
+          priceLabel:
+            payment.serviceType === "instagram"
+              ? "Стоимость"
+              : "Стоимость / день",
           price: payment.pricePerUnit ?? payment.amount,
           periodLabel:
             payment.serviceType === "instagram"
@@ -210,9 +229,12 @@ export default function PaymentPage() {
         }
     : null;
 
-  const isPending = payment && (payment.status === "pending" || payment.status === "processing");
+  const isPending =
+    payment &&
+    (payment.status === "pending" || payment.status === "processing");
   const isApproved = payment?.status === "approved";
-  const isCanceled = payment?.status === "canceled" || payment?.status === "failed";
+  const isCanceled =
+    payment?.status === "canceled" || payment?.status === "failed";
 
   return (
     <main className={styles.page}>
@@ -240,7 +262,10 @@ export default function PaymentPage() {
 
       <section className={styles.container}>
         {loadState === "loading" && (
-          <div className={styles.qrCard} style={{ maxWidth: 420, margin: "0 auto" }}>
+          <div
+            className={styles.qrCard}
+            style={{ maxWidth: 420, margin: "0 auto" }}
+          >
             <div className={styles.qrHeader}>
               <div className={styles.qrIcon}>
                 <LoaderCircle size={20} className={styles.spin} />
@@ -254,7 +279,10 @@ export default function PaymentPage() {
         )}
 
         {loadState === "error" && (
-          <div className={styles.qrCard} style={{ maxWidth: 420, margin: "0 auto" }}>
+          <div
+            className={styles.qrCard}
+            style={{ maxWidth: 420, margin: "0 auto" }}
+          >
             <div className={styles.qrHeader}>
               <div className={styles.qrIcon}>
                 <XCircle size={20} />
@@ -323,7 +351,12 @@ export default function PaymentPage() {
                   <div className={styles.qr}>
                     {payment.qrUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={payment.qrUrl} alt="QR-код для оплаты" width={250} height={250} />
+                      <img
+                        src={payment.qrUrl}
+                        alt="QR-код для оплаты"
+                        width={250}
+                        height={250}
+                      />
                     ) : (
                       <div className={styles.qrSkeleton}>
                         <LoaderCircle size={28} />
@@ -394,7 +427,9 @@ export default function PaymentPage() {
                     className={styles.actionButton}
                     onClick={() => router.push(backHref)}
                   >
-                    {isPromotion ? "Вернуться к объявлениям" : "Вернуться к тарифам"}
+                    {isPromotion
+                      ? "Вернуться к объявлениям"
+                      : "Вернуться к тарифам"}
                   </button>
                 )}
 
@@ -480,7 +515,9 @@ export default function PaymentPage() {
           open={showReceipt}
           paymentData={paymentData}
           onClose={() => setShowReceipt(false)}
-          onProfile={() => router.push(isPromotion ? "/profile/ads" : "/profile")}
+          onProfile={() =>
+            router.push(isPromotion ? "/profile/ads" : "/profile")
+          }
           description={
             isPromotion
               ? payment?.serviceType === "instagram"

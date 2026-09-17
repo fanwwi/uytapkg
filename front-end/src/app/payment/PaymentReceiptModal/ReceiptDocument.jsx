@@ -3,21 +3,24 @@
 import { forwardRef } from "react";
 import { Check, ShieldCheck } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./PaymentReceiptModal.module.css";
 
-// Визуальная разметка электронного чека UyTap. Вынесена отдельно от
-// PaymentReceiptModal, чтобы её мог переиспользовать и админ-раздел
-// «Оплаты» (скачивание чека по любому платежу) — оба места передают
-// сюда ref и через generateReceiptPdf() рендерят этот DOM-узел в PDF.
-//
-// paymentData: { tariff, price, months, discount, total, paymentId, date }
-const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref) {
+const ReceiptDocument = forwardRef(function ReceiptDocument(
+  { paymentData },
+  ref,
+) {
+  const { t, language } = useLanguage();
+
   const formatMoney = (value) => {
-    return `${Number(value).toLocaleString("ru-RU")} сом`;
+    return `${Number(value).toLocaleString(
+      language === "ky" ? "ky-KG" : "ru-RU",
+    )} сом`;
   };
 
   const formatDate = (date) => {
-    return new Intl.DateTimeFormat("ru-RU", {
+    return new Intl.DateTimeFormat(language === "ky" ? "ky-KG" : "ru-RU", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -27,11 +30,15 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
   };
 
   const getMonthsText = (months) => {
-    if (months === 1) return "месяц";
+    if (months === 1) {
+      return t("paymentReceipt.month.one");
+    }
 
-    if (months >= 2 && months <= 4) return "месяца";
+    if (months >= 2 && months <= 4) {
+      return t("paymentReceipt.month.few");
+    }
 
-    return "месяцев";
+    return t("paymentReceipt.month.many");
   };
 
   return (
@@ -42,38 +49,43 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
         <div className={styles.brand}>
           <strong>UyTap</strong>
 
-          <span>НЕДВИЖИМОСТЬ КЫРГЫЗСТАНА</span>
+          <span>{t("paymentReceipt.brandSubtitle")}</span>
         </div>
 
         <div className={styles.paidStamp}>
           <Check size={15} />
-          ОПЛАЧЕНО
+
+          {t("paymentReceipt.paid")}
         </div>
       </div>
 
       <div className={styles.receiptTitle}>
-        <span>ЭЛЕКТРОННЫЙ ЧЕК</span>
+        <span>{t("paymentReceipt.electronicReceipt")}</span>
 
-        <strong>{paymentData.heading || "Оплата тарифа"}</strong>
+        <strong>
+          {paymentData.heading || t("paymentReceipt.tariffPayment")}
+        </strong>
       </div>
 
       <div className={styles.line} />
 
       <div className={styles.receiptRows}>
         <div className={styles.receiptRow}>
-          <span>{paymentData.tariffLabel || "Тариф"}</span>
+          <span>{paymentData.tariffLabel || t("paymentReceipt.tariff")}</span>
 
           <strong>{paymentData.tariff}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>{paymentData.priceLabel || "Стоимость / месяц"}</span>
+          <span>
+            {paymentData.priceLabel || t("paymentReceipt.pricePerMonth")}
+          </span>
 
           <strong>{formatMoney(paymentData.price)}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Период</span>
+          <span>{t("paymentReceipt.period")}</span>
 
           <strong>
             {paymentData.periodLabel ||
@@ -83,7 +95,7 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
 
         {paymentData.discount > 0 && (
           <div className={styles.receiptRow}>
-            <span>Скидка</span>
+            <span>{t("paymentReceipt.discount")}</span>
 
             <strong className={styles.discount}>
               -{paymentData.discount}%
@@ -92,25 +104,25 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
         )}
 
         <div className={styles.receiptRow}>
-          <span>ID платежа</span>
+          <span>{t("paymentReceipt.paymentId")}</span>
 
           <strong className={styles.mono}>{paymentData.paymentId}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Дата оплаты</span>
+          <span>{t("paymentReceipt.paymentDate")}</span>
 
           <strong>{formatDate(paymentData.date)}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Способ оплаты</span>
+          <span>{t("paymentReceipt.paymentMethod")}</span>
 
-          <strong>QR / банковское приложение</strong>
+          <strong>{t("paymentReceipt.qrBankApp")}</strong>
         </div>
 
         <div className={styles.receiptRow}>
-          <span>Валюта</span>
+          <span>{t("paymentReceipt.currency")}</span>
 
           <strong>KGS — Кыргызский сом</strong>
         </div>
@@ -119,7 +131,7 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
       <div className={styles.line} />
 
       <div className={styles.total}>
-        <span>ИТОГО</span>
+        <span>{t("paymentReceipt.total")}</span>
 
         <strong>{formatMoney(paymentData.total)}</strong>
       </div>
@@ -127,7 +139,7 @@ const ReceiptDocument = forwardRef(function ReceiptDocument({ paymentData }, ref
       <div className={styles.receiptFooter}>
         <ShieldCheck size={14} />
 
-        <span>Платёж подтверждён системой UyTap</span>
+        <span>{t("paymentReceipt.systemConfirmed")}</span>
       </div>
 
       <div className={styles.receiptNumber}>{paymentData.paymentId}</div>

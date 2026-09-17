@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 
 import { Check, Download, LoaderCircle, X } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./PaymentReceiptModal.module.css";
 import { generateReceiptPdf } from "@/utils/generateReceiptPdf";
 import ReceiptDocument from "./ReceiptDocument";
@@ -13,20 +15,29 @@ export default function PaymentReceiptModal({
   paymentData,
   onClose,
   onProfile,
-  description = "Ваш тариф успешно активирован. Ниже находится электронный чек.",
-  profileButtonLabel = "Перейти в личный кабинет",
+  description,
+  profileButtonLabel,
 }) {
+  const { t } = useLanguage();
+
   const receiptRef = useRef(null);
 
   const [isDownloading, setIsDownloading] = useState(false);
 
   if (!open) return null;
 
+  const finalDescription =
+    description || t("paymentReceipt.defaultDescription");
+
+  const finalProfileButtonLabel =
+    profileButtonLabel || t("paymentReceipt.profileButton");
+
   const downloadReceipt = async () => {
     if (!receiptRef.current || isDownloading) return;
 
     try {
       setIsDownloading(true);
+
       await generateReceiptPdf(receiptRef.current, paymentData);
     } catch (error) {
       console.error("Ошибка создания PDF:", error);
@@ -45,7 +56,7 @@ export default function PaymentReceiptModal({
           type="button"
           className={styles.closeButton}
           onClick={onClose}
-          aria-label="Закрыть"
+          aria-label={t("paymentReceipt.close")}
         >
           <X size={19} />
         </button>
@@ -54,17 +65,14 @@ export default function PaymentReceiptModal({
           <Check size={30} />
         </div>
 
-        <span className={styles.modalLabel}>Оплата подтверждена</span>
+        <span className={styles.modalLabel}>
+          {t("paymentReceipt.paymentConfirmed")}
+        </span>
 
-        <h2>Спасибо за оплату!</h2>
+        <h2>{t("paymentReceipt.thanks")}</h2>
 
-        <p className={styles.modalDescription}>{description}</p>
+        <p className={styles.modalDescription}>{finalDescription}</p>
 
-        {/*
-          Этот блок одновременно:
-          1. показывается пользователю;
-          2. используется как источник для PDF.
-        */}
         <ReceiptDocument ref={receiptRef} paymentData={paymentData} />
 
         <button
@@ -76,12 +84,12 @@ export default function PaymentReceiptModal({
           {isDownloading ? (
             <>
               <LoaderCircle size={18} className={styles.spin} />
-              Формируем PDF...
+              {t("paymentReceipt.generatingPdf")}
             </>
           ) : (
             <>
               <Download size={18} />
-              Скачать чек PDF
+              {t("paymentReceipt.downloadPdf")}
             </>
           )}
         </button>
@@ -91,7 +99,7 @@ export default function PaymentReceiptModal({
           className={styles.profileButton}
           onClick={onProfile}
         >
-          {profileButtonLabel}
+          {finalProfileButtonLabel}
         </button>
       </div>
     </div>

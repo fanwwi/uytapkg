@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { CheckCircle, LogIn, Home } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./SuccessRegister.module.css";
 
 export default function SuccessRegister() {
+  const { t } = useLanguage();
+
   return (
     <main className={styles.page}>
       <div className={styles.card}>
@@ -13,24 +17,23 @@ export default function SuccessRegister() {
           <CheckCircle />
         </div>
 
-        <h1>Регистрация успешно завершена 🎉</h1>
+        <h1>{t("successRegister.title")}</h1>
 
         <p>
-          Ваш аккаунт был успешно создан.
+          {t("successRegister.description")}
           <br />
-          Теперь войдите в профиль, чтобы получить доступ ко всем функциям
-          UyTap.
+          {t("successRegister.descriptionSecond")}
         </p>
 
         <div className={styles.actions}>
           <Link href="/login" className={styles.login}>
             <LogIn />
-            Войти в профиль
+            {t("successRegister.login")}
           </Link>
 
           <Link href="/" className={styles.home}>
             <Home />
-            На главную
+            {t("successRegister.home")}
           </Link>
         </div>
       </div>

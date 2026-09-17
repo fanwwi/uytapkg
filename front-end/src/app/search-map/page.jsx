@@ -1,10 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useLanguage } from "@/context/LanguageContext";
 
-const SearchMapClient = dynamic(() => import("./SearchMapClient"), {
-  ssr: false,
-  loading: () => (
+function MapLoading() {
+  const { t } = useLanguage();
+
+  return (
     <div
       style={{
         display: "flex",
@@ -16,9 +18,14 @@ const SearchMapClient = dynamic(() => import("./SearchMapClient"), {
         fontWeight: 500,
       }}
     >
-      Загрузка интерактивной карты...
+      {t("searchMap.loading.objects")}
     </div>
-  ),
+  );
+}
+
+const SearchMapClient = dynamic(() => import("./searchMapClient/SearchMapClient"), {
+  ssr: false,
+  loading: () => <MapLoading />,
 });
 
 export default function SearchMapPage() {

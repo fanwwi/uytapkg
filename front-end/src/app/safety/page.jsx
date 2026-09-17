@@ -22,155 +22,111 @@ import { useRouter } from "next/navigation";
 import styles from "./Safety.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
+import { useLanguage } from "@/context/LanguageContext";
 
 const scams = [
   {
+    key: "prepayment",
     icon: Banknote,
-    title: "Просьба перевести предоплату",
-    danger: "Высокий риск",
-    description:
-      "Мошенник предлагает очень выгодную квартиру и просит срочно перевести задаток или бронь до просмотра объекта.",
-    warning:
-      "После получения денег объявление удаляется, а продавец перестаёт выходить на связь.",
-    action:
-      "Не переводите деньги до проверки объекта, документов и личности собственника.",
+    danger: "high",
   },
   {
+    key: "fakeLandlord",
     icon: KeyRound,
-    title: "Фальшивый арендодатель",
-    danger: "Высокий риск",
-    description:
-      "Человек выдаёт себя за владельца квартиры, хотя на самом деле не имеет отношения к недвижимости.",
-    warning:
-      "Он может использовать чужие фотографии, документы или фотографии паспорта.",
-    action:
-      "Попросите подтвердить право собственности и лично встретиться с владельцем.",
+    danger: "high",
   },
   {
+    key: "paymentLink",
     icon: CreditCard,
-    title: "Ссылка на оплату",
-    danger: "Высокий риск",
-    description:
-      "Вам отправляют ссылку якобы для бронирования, оплаты комиссии или получения денег.",
-    warning:
-      "Ссылка может вести на фишинговый сайт, который крадёт данные банковской карты.",
-    action:
-      "Не вводите данные карты, SMS-коды и пароли на подозрительных сайтах.",
+    danger: "high",
   },
   {
+    key: "fakeDocuments",
     icon: FileCheck,
-    title: "Поддельные документы",
-    danger: "Высокий риск",
-    description:
-      "Мошенник показывает договор, свидетельство или другой документ, который выглядит убедительно.",
-    warning:
-      "Документ может быть поддельным, просроченным или относиться к другому объекту.",
-    action: "Проверяйте документы через официальные государственные источники.",
+    danger: "high",
   },
   {
+    key: "fakeRealtor",
     icon: BadgeCheck,
-    title: "Фальшивый риэлтор",
-    danger: "Средний риск",
-    description:
-      "Человек представляется агентом недвижимости и требует комиссию за несуществующую услугу.",
-    warning:
-      "Он может использовать логотипы настоящего агентства и чужие фотографии.",
-    action: "Проверьте агентство, его контакты и договор до передачи денег.",
+    danger: "medium",
   },
   {
+    key: "tooGoodOffer",
     icon: AlertTriangle,
-    title: "Слишком выгодное предложение",
-    danger: "Средний риск",
-    description:
-      "Цена значительно ниже рынка, а продавец объясняет это срочностью продажи.",
-    warning:
-      "Срочность часто используется, чтобы заставить вас отказаться от проверки.",
-    action:
-      "Сравните цену с похожими объектами и не принимайте решение под давлением.",
+    danger: "medium",
   },
 ];
 
 const rules = [
   {
+    key: "listing",
     icon: Search,
-    title: "Проверяйте объявление",
-    text: "Сравните фотографии, описание, адрес и цену с другими предложениями.",
   },
   {
+    key: "person",
     icon: UserCheck,
-    title: "Проверяйте человека",
-    text: "Уточните, кто перед вами: собственник, представитель собственника или риэлтор.",
   },
   {
+    key: "documents",
     icon: FileCheck,
-    title: "Проверяйте документы",
-    text: "Не ограничивайтесь фотографией документа. Проверяйте информацию через официальные источники.",
   },
   {
+    key: "property",
     icon: Building2,
-    title: "Посмотрите объект лично",
-    text: "Не переводите деньги только после переписки и просмотра фотографий.",
   },
   {
+    key: "card",
     icon: CreditCard,
-    title: "Не передавайте данные карты",
-    text: "Никому не сообщайте CVV, PIN, SMS-коды и пароли от банковских приложений.",
   },
   {
+    key: "pressure",
     icon: Phone,
-    title: "Не поддавайтесь давлению",
-    text: "Фразы «нужно оплатить прямо сейчас» или «ещё пять покупателей» — повод остановиться.",
   },
 ];
 
 const redFlags = [
-  "Цена значительно ниже аналогичных предложений.",
-  "Продавец отказывается показать объект лично.",
-  "Вас торопят с переводом денег.",
-  "Просят оплатить до просмотра недвижимости.",
-  "Просят перейти по подозрительной ссылке.",
-  "Отказываются предоставить документы.",
-  "Имя получателя платежа не совпадает с продавцом.",
-  "Продавец постоянно меняет условия сделки.",
-  "Фотографии выглядят украденными или слишком профессиональными для частного объявления.",
-  "Общение ведётся только через анонимный аккаунт.",
+  "lowPrice",
+  "refusesViewing",
+  "rushPayment",
+  "paymentBeforeViewing",
+  "suspiciousLink",
+  "noDocuments",
+  "paymentNameMismatch",
+  "changingConditions",
+  "stolenPhotos",
+  "anonymousAccount",
 ];
 
 const steps = [
   {
     number: "01",
-    title: "Проверьте объявление",
-    text: "Адрес, фотографии, описание, цену и историю общения с продавцом.",
+    key: "listing",
   },
   {
     number: "02",
-    title: "Установите личность",
-    text: "Убедитесь, что человек действительно является собственником или имеет право представлять собственника.",
+    key: "identity",
   },
   {
     number: "03",
-    title: "Проверьте документы",
-    text: "Сверьте данные человека, объекта и документы на недвижимость.",
+    key: "documents",
   },
   {
     number: "04",
-    title: "Осмотрите объект",
-    text: "Посетите квартиру или дом лично. Не принимайте решение только по фотографиям.",
+    key: "property",
   },
   {
     number: "05",
-    title: "Изучите договор",
-    text: "Не подписывайте документы, которые не прочитали и не понимаете.",
+    key: "contract",
   },
   {
     number: "06",
-    title: "Только после проверки — оплата",
-    text: "Передача денег должна происходить после проверки всех ключевых условий сделки.",
+    key: "payment",
   },
 ];
 
 export default function Safety() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   return (
     <main className={styles.page}>
@@ -183,18 +139,15 @@ export default function Safety() {
         <header className={styles.header}>
           <div className={styles.headerBadge}>
             <ShieldCheck size={17} />
-            БЕЗОПАСНОСТЬ UYTAP.KG
+            {t("safety.header.badge")}
           </div>
 
           <h1>
-            Как не стать жертвой
-            <span> мошенников</span>
+            {t("safety.header.title")}
+            <span> {t("safety.header.titleAccent")}</span>
           </h1>
 
-          <p>
-            Покупка или аренда недвижимости — серьёзная сделка. Узнайте, какие
-            схемы используют мошенники и как защитить свои деньги и документы.
-          </p>
+          <p>{t("safety.header.description")}</p>
         </header>
 
         <section className={styles.important}>
@@ -203,17 +156,11 @@ export default function Safety() {
           </div>
 
           <div>
-            <span>ГЛАВНОЕ ПРАВИЛО</span>
+            <span>{t("safety.important.label")}</span>
 
-            <h2>
-              Не переводите деньги, пока не проверили человека, объект и
-              документы.
-            </h2>
+            <h2>{t("safety.important.title")}</h2>
 
-            <p>
-              Даже если объявление выглядит идеально, цена кажется выгодной, а
-              собеседник убедительно рассказывает о себе.
-            </p>
+            <p>{t("safety.important.description")}</p>
           </div>
         </section>
 
@@ -224,8 +171,8 @@ export default function Safety() {
             </div>
 
             <div>
-              <span>ПЕРЕД СДЕЛКОЙ</span>
-              <h2>6 правил безопасности</h2>
+              <span>{t("safety.rules.eyebrow")}</span>
+              <h2>{t("safety.rules.title")}</h2>
             </div>
           </div>
 
@@ -234,14 +181,15 @@ export default function Safety() {
               const Icon = rule.icon;
 
               return (
-                <article className={styles.ruleCard} key={rule.title}>
+                <article className={styles.ruleCard} key={rule.key}>
                   <div className={styles.ruleIcon}>
                     <Icon size={21} />
                   </div>
 
                   <div>
-                    <h3>{rule.title}</h3>
-                    <p>{rule.text}</p>
+                    <h3>{t(`safety.rules.items.${rule.key}.title`)}</h3>
+
+                    <p>{t(`safety.rules.items.${rule.key}.text`)}</p>
                   </div>
                 </article>
               );
@@ -256,8 +204,8 @@ export default function Safety() {
             </div>
 
             <div>
-              <span>ОПАСНЫЕ СХЕМЫ</span>
-              <h2>Как работают мошенники</h2>
+              <span>{t("safety.scams.eyebrow")}</span>
+              <h2>{t("safety.scams.title")}</h2>
             </div>
           </div>
 
@@ -266,25 +214,28 @@ export default function Safety() {
               const Icon = scam.icon;
 
               return (
-                <article className={styles.scamCard} key={scam.title}>
+                <article className={styles.scamCard} key={scam.key}>
                   <div className={styles.scamTop}>
                     <div className={styles.scamIcon}>
                       <Icon size={22} />
                     </div>
 
-                    <span className={styles.danger}>{scam.danger}</span>
+                    <span className={styles.danger}>
+                      {t(`safety.scams.danger.${scam.danger}`)}
+                    </span>
                   </div>
 
-                  <h3>{scam.title}</h3>
+                  <h3>{t(`safety.scams.items.${scam.key}.title`)}</h3>
 
-                  <p>{scam.description}</p>
+                  <p>{t(`safety.scams.items.${scam.key}.description`)}</p>
 
                   <div className={styles.warning}>
                     <AlertTriangle size={17} />
 
                     <div>
-                      <strong>Что происходит</strong>
-                      <span>{scam.warning}</span>
+                      <strong>{t("safety.scams.whatHappens")}</strong>
+
+                      <span>{t(`safety.scams.items.${scam.key}.warning`)}</span>
                     </div>
                   </div>
 
@@ -292,8 +243,9 @@ export default function Safety() {
                     <CheckCircle2 size={17} />
 
                     <div>
-                      <strong>Как защититься</strong>
-                      <span>{scam.action}</span>
+                      <strong>{t("safety.scams.howToProtect")}</strong>
+
+                      <span>{t(`safety.scams.items.${scam.key}.action`)}</span>
                     </div>
                   </div>
                 </article>
@@ -309,8 +261,8 @@ export default function Safety() {
             </div>
 
             <div>
-              <span>КРАСНЫЕ ФЛАГИ</span>
-              <h2>Когда стоит остановиться</h2>
+              <span>{t("safety.redFlags.eyebrow")}</span>
+              <h2>{t("safety.redFlags.title")}</h2>
             </div>
           </div>
 
@@ -319,12 +271,9 @@ export default function Safety() {
               <AlertTriangle size={24} />
 
               <div>
-                <h3>Заметили несколько признаков?</h3>
+                <h3>{t("safety.redFlags.introTitle")}</h3>
 
-                <p>
-                  Не продолжайте сделку, пока не получите подтверждение
-                  информации.
-                </p>
+                <p>{t("safety.redFlags.introDescription")}</p>
               </div>
             </div>
 
@@ -332,7 +281,8 @@ export default function Safety() {
               {redFlags.map((flag) => (
                 <div className={styles.redFlag} key={flag}>
                   <XCircle size={17} />
-                  <span>{flag}</span>
+
+                  <span>{t(`safety.redFlags.items.${flag}`)}</span>
                 </div>
               ))}
             </div>
@@ -346,8 +296,8 @@ export default function Safety() {
             </div>
 
             <div>
-              <span>БЕЗОПАСНАЯ СДЕЛКА</span>
-              <h2>Проверяйте всё по шагам</h2>
+              <span>{t("safety.steps.eyebrow")}</span>
+              <h2>{t("safety.steps.title")}</h2>
             </div>
           </div>
 
@@ -357,8 +307,9 @@ export default function Safety() {
                 <span>{step.number}</span>
 
                 <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
+                  <h3>{t(`safety.steps.items.${step.key}.title`)}</h3>
+
+                  <p>{t(`safety.steps.items.${step.key}.text`)}</p>
                 </div>
               </div>
             ))}
@@ -371,37 +322,35 @@ export default function Safety() {
           </div>
 
           <div>
-            <span>ЗАЩИТА ДАННЫХ</span>
+            <span>{t("safety.data.eyebrow")}</span>
 
-            <h2>Никому не передавайте банковские данные</h2>
+            <h2>{t("safety.data.title")}</h2>
 
-            <p>
-              Сотрудники банков, UyTap.kg и других сервисов не должны просить у
-              вас пароль, PIN-код, CVV или код подтверждения из SMS для
-              получения платежа или «подтверждения личности».
-            </p>
+            <p>{t("safety.data.description")}</p>
 
             <div className={styles.dataGrid}>
               <div>
                 <CheckCircle2 />
-                <span>
-                  Номер карты — только там, где это необходимо для оплаты
-                </span>
+
+                <span>{t("safety.data.items.cardNumber")}</span>
               </div>
 
               <div>
                 <XCircle />
-                <span>CVV и PIN нельзя сообщать другим людям</span>
+
+                <span>{t("safety.data.items.cvvPin")}</span>
               </div>
 
               <div>
                 <XCircle />
-                <span>SMS-коды нельзя диктовать собеседнику</span>
+
+                <span>{t("safety.data.items.sms")}</span>
               </div>
 
               <div>
                 <CheckCircle2 />
-                <span>Проверяйте адрес сайта перед вводом данных</span>
+
+                <span>{t("safety.data.items.website")}</span>
               </div>
             </div>
           </div>
@@ -413,36 +362,35 @@ export default function Safety() {
           </div>
 
           <div>
-            <span>ЕСЛИ ВЫ УЖЕ СТОЛКНУЛИСЬ С МОШЕННИКОМ</span>
+            <span>{t("safety.ifScam.eyebrow")}</span>
 
-            <h2>Не продолжайте общение и сохраните доказательства</h2>
+            <h2>{t("safety.ifScam.title")}</h2>
 
-            <p>
-              Сохраните переписку, фотографии объявления, номера телефонов,
-              реквизиты платежей и другие материалы. Если вы уже передали деньги
-              или банковские данные — как можно скорее обратитесь в свой банк и
-              в правоохранительные органы.
-            </p>
+            <p>{t("safety.ifScam.description")}</p>
 
             <div className={styles.emergencyList}>
               <div>
                 <strong>01</strong>
-                <span>Заблокируйте карту, если раскрыли её данные.</span>
+
+                <span>{t("safety.ifScam.items.blockCard")}</span>
               </div>
 
               <div>
                 <strong>02</strong>
-                <span>Свяжитесь с банком через официальный номер.</span>
+
+                <span>{t("safety.ifScam.items.contactBank")}</span>
               </div>
 
               <div>
                 <strong>03</strong>
-                <span>Сохраните все доказательства.</span>
+
+                <span>{t("safety.ifScam.items.saveEvidence")}</span>
               </div>
 
               <div>
                 <strong>04</strong>
-                <span>Обратитесь в правоохранительные органы.</span>
+
+                <span>{t("safety.ifScam.items.contactAuthorities")}</span>
               </div>
             </div>
           </div>
@@ -452,12 +400,9 @@ export default function Safety() {
           <ShieldCheck size={22} />
 
           <div>
-            <strong>Безопасность начинается с проверки.</strong>
+            <strong>{t("safety.bottom.title")}</strong>
 
-            <p>
-              UyTap.kg помогает находить недвижимость, но решение о сделке
-              всегда требует самостоятельной проверки документов и участников.
-            </p>
+            <p>{t("safety.bottom.description")}</p>
           </div>
         </section>
       </div>

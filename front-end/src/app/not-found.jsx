@@ -1,12 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, Search, ArrowLeft, Sparkles } from "lucide-react";
-
-import styles from "./not-found.module.css";
+import { Home, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+import { useLanguage } from "@/context/LanguageContext";
+
+import styles from "./not-found.module.css";
+
 export default function NotFound() {
+  const { t } = useLanguage();
+
   return (
     <main className={styles.page}>
       <div className={styles.glowOne} />
@@ -32,30 +36,27 @@ export default function NotFound() {
 
         <div className={styles.badge}>
           <Sparkles />
-          UyTap
+          {t("notFound.badge")}
         </div>
 
         <h1 className={styles.number}>404</h1>
 
         <h2 className={styles.title}>
-          Такой страницы
-          <span> не существует</span>
+          {t("notFound.title")}
+          <span>{t("notFound.titleAccent")}</span>
         </h2>
 
-        <p className={styles.description}>
-          Возможно, объявление было удалено или ссылка больше не существует. Но
-          ваш новый дом всё ещё ждёт вас.
-        </p>
+        <p className={styles.description}>{t("notFound.description")}</p>
 
         <div className={styles.actions}>
           <Link href="/" className={styles.primaryButton}>
             <Home />
-            На главную
+            {t("notFound.home")}
           </Link>
 
           <Link href="/main/#search" className={styles.secondaryButton}>
             <Search />
-            Найти жильё
+            {t("notFound.search")}
           </Link>
         </div>
       </motion.div>

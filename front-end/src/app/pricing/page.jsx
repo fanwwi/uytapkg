@@ -24,6 +24,7 @@ import styles from "./Pricing.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { getPricing } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 const DEFAULT_PRICING = {
   tariffs: {
@@ -42,6 +43,8 @@ const DEFAULT_PRICING = {
 
 export default function Pricing() {
   const router = useRouter();
+  const { t } = useLanguage();
+
   const [period, setPeriod] = useState("1");
   const [pricing, setPricing] = useState(DEFAULT_PRICING);
 
@@ -60,83 +63,83 @@ export default function Pricing() {
   const tariffs = [
     {
       id: "free",
-      title: "Частный",
+      title: t("pricing.tariffs.private.title"),
       price: 0,
       icon: User,
-      desc: "Для собственников, которые продают или сдают свою недвижимость",
+      desc: t("pricing.tariffs.private.description"),
       features: [
-        "2 бесплатных объявления",
-        "2 поднятия в ТОП",
-        "Размещение объявления на 45 дней",
-        "Поиск и фильтры",
-        "Публичный профиль пользователя",
-        "Добавление в избранное",
-        "Сравнение объектов в избранном"
+        t("pricing.tariffs.private.features.freeListings"),
+        t("pricing.tariffs.private.features.top"),
+        t("pricing.tariffs.private.features.duration"),
+        t("pricing.tariffs.private.features.search"),
+        t("pricing.tariffs.private.features.profile"),
+        t("pricing.tariffs.private.features.favorites"),
+        t("pricing.tariffs.private.features.compare"),
       ],
     },
 
     {
       id: "start",
-      title: "Старт",
+      title: t("pricing.tariffs.start.title"),
       price: pricing.tariffs.start,
       icon: Rocket,
-      desc: "Для риелторов и частных специалистов",
+      desc: t("pricing.tariffs.start.description"),
       features: [
-        "До 10 активных объявлений",
-        "До 5 поднятий в ТОП",
-        "Публичный профиль специалиста",
-        "Поиск и фильтры",
-        "Размещение объявлений на карте",
-        "Сравнение объектов в избранном"
+        t("pricing.tariffs.start.features.listings"),
+        t("pricing.tariffs.start.features.top"),
+        t("pricing.tariffs.start.features.profile"),
+        t("pricing.tariffs.start.features.search"),
+        t("pricing.tariffs.start.features.map"),
+        t("pricing.tariffs.start.features.compare"),
       ],
     },
 
     {
       id: "optimal",
-      title: "Оптимальный",
+      title: t("pricing.tariffs.optimal.title"),
       price: pricing.tariffs.optimal,
       icon: Crown,
       popular: true,
-      desc: "Для активных риелторов и специалистов с большим количеством объектов",
+      desc: t("pricing.tariffs.optimal.description"),
       features: [
-        "До 20 активных объявлений",
-        "До 2 поднятий объявления в VIP",
-        "Публичный профиль специалиста",
-        "Размещение объектов на карте",
-        "Продвижение объявлений",
-        "Сравнение объектов в избранном"
+        t("pricing.tariffs.optimal.features.listings"),
+        t("pricing.tariffs.optimal.features.vip"),
+        t("pricing.tariffs.optimal.features.profile"),
+        t("pricing.tariffs.optimal.features.map"),
+        t("pricing.tariffs.optimal.features.promotion"),
+        t("pricing.tariffs.optimal.features.compare"),
       ],
     },
 
     {
       id: "business",
-      title: "Для агентства",
+      title: t("pricing.tariffs.business.title"),
       price: pricing.tariffs.business,
       icon: Building2,
-      desc: "Для агентств недвижимости и команд",
+      desc: t("pricing.tariffs.business.description"),
       features: [
-        "До 40 активных объявлений",
-        "До 4 поднятий в VIP",
-        "Профиль агентства",
-        "Размещение объектов агентства",
-        "Сравнение объектов в избранном"
+        t("pricing.tariffs.business.features.listings"),
+        t("pricing.tariffs.business.features.vip"),
+        t("pricing.tariffs.business.features.profile"),
+        t("pricing.tariffs.business.features.objects"),
+        t("pricing.tariffs.business.features.compare"),
       ],
     },
 
     {
       id: "developer",
-      title: "Индивидуальный",
+      title: t("pricing.tariffs.developer.title"),
       price: developerPrice,
       icon: Sparkles,
       developer: true,
-      desc: "Для строительных компаний и застройщиков",
+      desc: t("pricing.tariffs.developer.description"),
       features: [
-        "Размещение жилых комплексов",
-        "Карточка застройщика",
-        "Карточки жилых комплексов",
-        "Информация о квартирах и планировках",
-        "Управление объектами ЖК",
-        "Сравнение объектов в избранном"
+        t("pricing.tariffs.developer.features.complexes"),
+        t("pricing.tariffs.developer.features.developerCard"),
+        t("pricing.tariffs.developer.features.complexCards"),
+        t("pricing.tariffs.developer.features.apartments"),
+        t("pricing.tariffs.developer.features.management"),
+        t("pricing.tariffs.developer.features.compare"),
       ],
     },
   ];
@@ -144,25 +147,25 @@ export default function Pricing() {
   const periods = [
     {
       id: "1",
-      title: "1 месяц",
+      title: t("pricing.periods.month1"),
       discount: "",
       discountPercent: 0,
     },
     {
       id: "3",
-      title: "3 месяца",
+      title: t("pricing.periods.month3"),
       discount: "-10%",
       discountPercent: 10,
     },
     {
       id: "6",
-      title: "6 месяцев",
+      title: t("pricing.periods.month6"),
       discount: "-20%",
       discountPercent: 20,
     },
     {
       id: "12",
-      title: "12 месяцев",
+      title: t("pricing.periods.month12"),
       discount: "-35%",
       discountPercent: 35,
     },
@@ -171,6 +174,7 @@ export default function Pricing() {
   const selectedPeriod = periods.find((item) => item.id === period);
 
   const discountPercent = selectedPeriod?.discountPercent ?? 0;
+
   const months = Number(period);
 
   const getPrice = (price) => {
@@ -206,15 +210,11 @@ export default function Pricing() {
   };
 
   const handleTariffClick = (tariff) => {
-    // Бесплатный тариф активен по умолчанию — платить не нужно
     if (tariff.price === 0) {
       router.push("/profile");
       return;
     }
 
-    // Тариф застройщика оформляется не через онлайн-оплату (backend не
-    // принимает его в /api/payments/create) — независимо от того, задал
-    // ли админ конкретную цену или оставил "Индивидуально".
     if (tariff.developer) {
       router.push("/profile");
       return;
@@ -252,14 +252,11 @@ export default function Pricing() {
         </div>
 
         <h1>
-          Тарифы, которые
-          <span> работают на вас.</span>
+          {t("pricing.hero.title")}
+          <span> {t("pricing.hero.titleAccent")}</span>
         </h1>
 
-        <p>
-          Выберите подходящий пакет для продажи, аренды и продвижения
-          недвижимости на UyTap.
-        </p>
+        <p>{t("pricing.hero.description")}</p>
 
         <div className={styles.periods}>
           {periods.map((item) => (
@@ -283,10 +280,13 @@ export default function Pricing() {
         <div className={styles.sectionHeader}>
           <div>
             <span className={styles.sectionNumber}>01</span>
-            <span className={styles.sectionLabel}>Тарифы</span>
+
+            <span className={styles.sectionLabel}>
+              {t("pricing.sections.tariffs")}
+            </span>
           </div>
 
-          <p>Для собственников, риелторов, агентств и застройщиков.</p>
+          <p>{t("pricing.tariffsSectionDescription")}</p>
         </div>
 
         <div className={styles.cards}>
@@ -300,7 +300,7 @@ export default function Pricing() {
 
             return (
               <article
-                key={item.title}
+                key={item.id}
                 className={`
                   ${styles.card}
                   ${item.popular ? styles.popular : ""}
@@ -310,7 +310,7 @@ export default function Pricing() {
                 {item.popular && (
                   <div className={styles.badge}>
                     <Star size={12} />
-                    ПОПУЛЯРНЫЙ
+                    {t("pricing.popular")}
                   </div>
                 )}
 
@@ -331,31 +331,31 @@ export default function Pricing() {
                 <div className={styles.price}>
                   {item.price === null ? (
                     <strong className={styles.individualPrice}>
-                      Индивидуально
+                      {t("pricing.individual")}
                     </strong>
                   ) : item.price === 0 ? (
                     <>
                       <strong>0</strong>
-                      <span>сом / месяц</span>
+                      <span>{t("pricing.somPerMonth")}</span>
                     </>
                   ) : (
                     <>
                       {discounted && (
                         <span className={styles.oldPrice}>
-                          {item.price} сом
+                          {item.price} {t("pricing.som")}
                         </span>
                       )}
 
                       <strong>{currentPrice}</strong>
 
-                      <span>сом / месяц</span>
+                      <span>{t("pricing.somPerMonth")}</span>
                     </>
                   )}
                 </div>
 
                 {discounted && (
                   <div className={styles.discountInfo}>
-                    Экономия {discountPercent}%
+                    {t("pricing.saving")} {discountPercent}%
                   </div>
                 )}
 
@@ -376,9 +376,15 @@ export default function Pricing() {
                 <button
                   type="button"
                   className={styles.cardButton}
-                  onClick={() => router.push("/connect")}
+                  onClick={() =>
+                    item.developer
+                      ? router.push("/connect")
+                      : handleTariffClick(item)
+                  }
                 >
-                  {item.developer ? "Обсудить пакет" : "Выбрать тариф"}
+                  {item.developer
+                    ? t("pricing.discussPackage")
+                    : t("pricing.chooseTariff")}
 
                   <ArrowRight size={16} />
                 </button>
@@ -394,52 +400,49 @@ export default function Pricing() {
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>02</span>
 
-          <span className={styles.sectionLabel}>Как это работает</span>
+          <span className={styles.sectionLabel}>
+            {t("pricing.sections.howItWorks")}
+          </span>
 
           <h2>
-            Подключиться
-            <span> проще, чем кажется.</span>
+            {t("pricing.how.title")}
+            <span> {t("pricing.how.titleAccent")}</span>
           </h2>
 
-          <p>
-            Всего несколько шагов — и ваши объявления начинают работать на вас.
-          </p>
+          <p>{t("pricing.how.description")}</p>
         </div>
 
         <div className={styles.steps}>
           <div className={styles.step}>
             <div className={styles.stepNumber}>01</div>
-            <h3>Выберите тариф</h3>
-            <p>
-              Подберите решение для собственника, риелтора, агентства или
-              застройщика.
-            </p>
+
+            <h3>{t("pricing.how.steps.choose.title")}</h3>
+
+            <p>{t("pricing.how.steps.choose.description")}</p>
           </div>
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>02</div>
-            <h3>Создайте аккаунт</h3>
-            <p>
-              Войдите в личный кабинет и заполните информацию о вашем профиле.
-            </p>
+
+            <h3>{t("pricing.how.steps.account.title")}</h3>
+
+            <p>{t("pricing.how.steps.account.description")}</p>
           </div>
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>03</div>
-            <h3>Оплатите тариф</h3>
-            <p>
-              После успешной оплаты возможности тарифа активируются
-              автоматически.
-            </p>
+
+            <h3>{t("pricing.how.steps.payment.title")}</h3>
+
+            <p>{t("pricing.how.steps.payment.description")}</p>
           </div>
 
           <div className={styles.step}>
             <div className={styles.stepNumber}>04</div>
-            <h3>Получайте клиентов</h3>
-            <p>
-              Размещайте объекты, продвигайте их и увеличивайте количество
-              обращений.
-            </p>
+
+            <h3>{t("pricing.how.steps.clients.title")}</h3>
+
+            <p>{t("pricing.how.steps.clients.description")}</p>
           </div>
         </div>
       </section>
@@ -450,11 +453,13 @@ export default function Pricing() {
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>03</span>
 
-          <span className={styles.sectionLabel}>Оплата</span>
+          <span className={styles.sectionLabel}>
+            {t("pricing.sections.payment")}
+          </span>
 
           <h2>
-            Всё необходимое
-            <span> для бизнеса.</span>
+            {t("pricing.payment.title")}
+            <span> {t("pricing.payment.titleAccent")}</span>
           </h2>
         </div>
 
@@ -464,8 +469,9 @@ export default function Pricing() {
               <CreditCard size={20} />
             </div>
 
-            <h3>Банковская карта</h3>
-            <p>Быстрая онлайн-оплата через безопасный сервис.</p>
+            <h3>{t("pricing.payment.card.title")}</h3>
+
+            <p>{t("pricing.payment.card.description")}</p>
           </div>
 
           <div className={styles.paymentCard}>
@@ -473,8 +479,9 @@ export default function Pricing() {
               <Smartphone size={20} />
             </div>
 
-            <h3>Мобильные платежи</h3>
-            <p>Оплачивайте через популярные платежные системы Кыргызстана.</p>
+            <h3>{t("pricing.payment.mobile.title")}</h3>
+
+            <p>{t("pricing.payment.mobile.description")}</p>
           </div>
 
           <div className={styles.paymentCard}>
@@ -482,8 +489,9 @@ export default function Pricing() {
               <Wallet size={20} />
             </div>
 
-            <h3>Для бизнеса</h3>
-            <p>Индивидуальные условия для агентств и застройщиков.</p>
+            <h3>{t("pricing.payment.business.title")}</h3>
+
+            <p>{t("pricing.payment.business.description")}</p>
           </div>
 
           <div className={styles.paymentCard}>
@@ -491,8 +499,9 @@ export default function Pricing() {
               <ShieldCheck size={20} />
             </div>
 
-            <h3>Безопасность</h3>
-            <p>Проверенные платежи и защита вашего аккаунта.</p>
+            <h3>{t("pricing.payment.security.title")}</h3>
+
+            <p>{t("pricing.payment.security.description")}</p>
           </div>
         </div>
       </section>
@@ -504,18 +513,17 @@ export default function Pricing() {
           <div>
             <span className={styles.sectionNumber}>04</span>
 
-            <span className={styles.sectionLabel}>Продвижение</span>
+            <span className={styles.sectionLabel}>
+              {t("pricing.sections.promotion")}
+            </span>
 
             <h2>
-              Сделайте объект
-              <span> заметнее.</span>
+              {t("pricing.promotion.title")}
+              <span> {t("pricing.promotion.titleAccent")}</span>
             </h2>
           </div>
 
-          <p>
-            Инструменты продвижения, которые помогают быстрее привлечь внимание
-            покупателей и увеличить количество обращений.
-          </p>
+          <p>{t("pricing.promotion.description")}</p>
         </div>
 
         <div className={styles.promoGrid}>
@@ -528,18 +536,19 @@ export default function Pricing() {
 
             <h3>ТОП</h3>
 
-            <strong>{pricing.services.top} сом / день</strong>
+            <strong>
+              {pricing.services.top} {t("pricing.somPerDay")}
+            </strong>
 
-            <p>
-              Подъем и закрепление объявления выше стандартных бесплатных
-              карточек.
-            </p>
+            <p>{t("pricing.promotion.top")}</p>
           </div>
 
           <div className={styles.promoCard}>
             <div
               className={styles.promoIcon}
-              style={{ borderColor: "#9a9a0b7f" }}
+              style={{
+                borderColor: "#9a9a0b7f",
+              }}
             >
               <Crown size={22} color="#9a9a0b" />
             </div>
@@ -549,13 +558,10 @@ export default function Pricing() {
             <h3>VIP</h3>
 
             <strong style={{ color: "#9a9a0b" }}>
-              {pricing.services.vip} сом / день
+              {pricing.services.vip} {t("pricing.somPerDay")}
             </strong>
 
-            <p>
-              Закрепление в самом верху каталога + выделение яркой золотой
-              рамкой.
-            </p>
+            <p>{t("pricing.promotion.vip")}</p>
           </div>
 
           <div className={`${styles.promoCard} ${styles.urgentCard}`}>
@@ -565,14 +571,13 @@ export default function Pricing() {
 
             <span className={styles.promoIndex}>03</span>
 
-            <h3>Срочно</h3>
+            <h3>{t("pricing.promotion.urgentTitle")}</h3>
 
-            <strong>{pricing.services.urgent} сом / день</strong>
+            <strong>
+              {pricing.services.urgent} {t("pricing.somPerDay")}
+            </strong>
 
-            <p>
-              Красный бейдж на карточке + автоматическое попадание в специальный
-              фильтр «Срочные продажи».
-            </p>
+            <p>{t("pricing.promotion.urgent")}</p>
           </div>
         </div>
 
@@ -580,7 +585,9 @@ export default function Pricing() {
           <div className={styles.smmVisual}>
             <div
               className={styles.smmIcon}
-              style={{ borderColor: "#eb23ac6a" }}
+              style={{
+                borderColor: "#eb23ac6a",
+              }}
             >
               <Camera size={23} color="#eb23ab" />
             </div>
@@ -590,46 +597,44 @@ export default function Pricing() {
 
           <div className={styles.smmContent}>
             <div className={styles.smmTop}>
-              <span className={styles.smmLabel}>
-                Автоматизированный SMM-модуль
-              </span>
+              <span className={styles.smmLabel}>{t("pricing.smm.label")}</span>
 
               <span className={styles.smmPlatforms}>
                 Instagram · Telegram · Meta Ads
               </span>
             </div>
 
-            <h3>Instagram Пост + Сторис</h3>
+            <h3>{t("pricing.smm.title")}</h3>
 
             <div className={styles.smmPrice} style={{ color: "#eb23ab" }}>
-              {pricing.services.instagram} сом
+              {pricing.services.instagram} {t("pricing.som")}
             </div>
 
             <p>
-              Возможность сделать ваше объявление еще заметнее через публикацию
-              и размещении в сторис на официальной Instagram-странице
-              <strong> @uytap.kg</strong> и дублирование в Telegram-канал.
+              {t("pricing.smm.description")}
+              <strong> @uytap.kg</strong>
+              {t("pricing.smm.telegramSuffix")}
             </p>
 
             <div className={styles.smmFeatures}>
               <span>
                 <Check size={12} />
-                Автогенерация макета
+                {t("pricing.smm.features.layout")}
               </span>
 
               <span>
                 <Check size={12} />
-                Instagram Post + Story
+                {t("pricing.smm.features.post")}
               </span>
 
               <span>
                 <Check size={12} />
-                Дублирование в Telegram
+                {t("pricing.smm.features.telegram")}
               </span>
 
               <span>
                 <Check size={12} />
-                Instagram Graph API
+                {t("pricing.smm.features.api")}
               </span>
             </div>
           </div>
@@ -648,22 +653,19 @@ export default function Pricing() {
           </div>
 
           <h2>
-            Развивайте продажи
+            {t("pricing.cta.title")}
             <br />
-            недвижимости с <span>UyTap.</span>
+            {t("pricing.cta.titleSecond")} <span>UyTap.</span>
           </h2>
 
-          <p>
-            Получайте больше клиентов, продвигайте объекты и управляйте
-            недвижимостью профессионально.
-          </p>
+          <p>{t("pricing.cta.description")}</p>
 
           <button
             type="button"
             className={styles.ctaButton}
             onClick={handleProfileClick}
           >
-            Перейти в личный кабинет
+            {t("pricing.cta.button")}
             <ArrowRight size={18} />
           </button>
         </div>

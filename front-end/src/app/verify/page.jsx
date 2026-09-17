@@ -13,11 +13,15 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+
 import {
   getVerificationStatus,
   submitVerificationRequest,
   uploadVerificationDocument,
 } from "@/utils/api";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./Verify.module.css";
 
 const ACCEPTED_TYPES = [
@@ -27,9 +31,12 @@ const ACCEPTED_TYPES = [
   "image/png",
   "image/webp",
 ];
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export default function VerifyPage() {
+  const { t } = useLanguage();
+
   const [documents, setDocuments] = useState({
     document1: null,
     document2: null,
@@ -43,25 +50,31 @@ export default function VerifyPage() {
   });
 
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState("none"); // none | pending | approved | rejected
+  const [status, setStatus] = useState("none");
   const [rejectionReason, setRejectionReason] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [uploadingKey, setUploadingKey] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorKey, setErrorKey] = useState("");
+  const [dynamicError, setDynamicError] = useState("");
 
   useEffect(() => {
     async function loadStatus() {
       const token = localStorage.getItem("uytap_token");
+
       if (!token) {
         setLoading(false);
         return;
       }
+
       try {
         const res = await getVerificationStatus(token);
+
         if (res.success) {
           setStatus(res.status || (res.isVerified ? "approved" : "none"));
+
           setRejectionReason(res.rejectionReason || "");
+
           if (res.documents) {
             setDocumentUrls(res.documents);
           }
@@ -72,32 +85,40 @@ export default function VerifyPage() {
         setLoading(false);
       }
     }
+
     loadStatus();
   }, []);
 
   const handleFileChange = async (key, event) => {
     const file = event.target.files?.[0];
+
     event.target.value = "";
+
     if (!file) return;
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setErrorMsg("Допустимые форматы: PDF, JPEG, PNG или WebP.");
+      setDynamicError("");
+      setErrorKey("verify.errors.fileType");
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      setErrorMsg("Размер файла не должен превышать 10 МБ.");
+      setDynamicError("");
+      setErrorKey("verify.errors.fileSize");
       return;
     }
 
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
-      setErrorMsg("Требуется авторизация. Войдите в аккаунт застройщика.");
+      setDynamicError("");
+      setErrorKey("verify.errors.authorization");
       return;
     }
 
     setUploadingKey(key);
-    setErrorMsg("");
+    setErrorKey("");
+    setDynamicError("");
 
     try {
       const uploadRes = await uploadVerificationDocument(token, file);
@@ -113,7 +134,9 @@ export default function VerifyPage() {
       }));
     } catch (err) {
       console.error("Document upload error:", err);
-      setErrorMsg(err.message || "Не удалось загрузить файл. Попробуйте еще раз.");
+
+      setErrorKey("");
+      setDynamicError(err.message || t("verify.errors.upload"));
     } finally {
       setUploadingKey(null);
     }
@@ -124,6 +147,7 @@ export default function VerifyPage() {
       ...prev,
       [key]: null,
     }));
+
     setDocumentUrls((prev) => ({
       ...prev,
       [key]: "",
@@ -139,35 +163,54 @@ export default function VerifyPage() {
     if (!allDocumentsUploaded) return;
 
     setSubmitting(true);
-    setErrorMsg("");
+    setErrorKey("");
+    setDynamicError("");
 
     try {
       const token = localStorage.getItem("uytap_token");
+
       if (!token) {
-        setErrorMsg("Требуется авторизация");
+        setErrorKey("verify.errors.authorizationShort");
         return;
       }
 
       const res = await submitVerificationRequest(token, documentUrls);
+
       if (res.success) {
         setStatus("pending");
         setShowModal(true);
       } else {
-        setErrorMsg(res.message || "Ошибка отправки документов");
+        setErrorKey("");
+        setDynamicError(res.message || t("verify.errors.submit"));
       }
     } catch (err) {
       console.error("Submit error:", err);
-      setErrorMsg(err.message || "Ошибка сети при отправке");
+
+      setErrorKey("");
+      setDynamicError(err.message || t("verify.errors.network"));
     } finally {
       setSubmitting(false);
     }
   };
 
+  const errorText = errorKey ? t(errorKey) : dynamicError;
+
   if (loading) {
     return (
       <main className={styles.page}>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <Loader2 size={32} className={styles.spinIcon} style={{ color: "#483df6" }} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "50vh",
+          }}
+        >
+          <Loader2
+            size={32}
+            className={styles.spinIcon}
+            style={{ color: "#483df6" }}
+          />
         </div>
       </main>
     );
@@ -181,16 +224,12 @@ export default function VerifyPage() {
             <CheckCircle />
           </div>
 
-          <h1>Профиль подтверждён</h1>
+          <h1>{t("verify.approved.title")}</h1>
 
-          <p>
-            Ваша компания успешно прошла проверку. Теперь рядом с профилем
-            отображается подтверждающая галочка, а ваши ЖК и объявления доступны
-            другим пользователям.
-          </p>
+          <p>{t("verify.approved.description")}</p>
 
           <a href="/profile" className={styles.primaryButton}>
-            Перейти в профиль
+            {t("verify.approved.profile")}
             <ArrowUpRight />
           </a>
         </section>
@@ -206,13 +245,13 @@ export default function VerifyPage() {
             <AlertCircle />
           </div>
 
-          <h1>Заявка отклонена</h1>
+          <h1>{t("verify.rejected.title")}</h1>
 
-          <p>К сожалению, мы не смогли подтвердить ваш профиль.</p>
+          <p>{t("verify.rejected.description")}</p>
 
           {rejectionReason && (
             <div className={styles.reason}>
-              <strong>Причина отказа</strong>
+              <strong>{t("verify.rejected.reason")}</strong>
               <p>{rejectionReason}</p>
             </div>
           )}
@@ -222,10 +261,11 @@ export default function VerifyPage() {
             className={styles.primaryButton}
             onClick={() => {
               setStatus("none");
-              setErrorMsg("");
+              setErrorKey("");
+              setDynamicError("");
             }}
           >
-            Подать заявку повторно
+            {t("verify.rejected.resubmit")}
             <ArrowUpRight />
           </button>
         </section>
@@ -236,14 +276,10 @@ export default function VerifyPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* BACK */}
-
         <a href="/profile" className={styles.back}>
           <ArrowLeft />
-          Вернуться в профиль
+          {t("verify.back")}
         </a>
-
-        {/* HEADER */}
 
         <section className={styles.hero}>
           <div className={styles.heroIcon}>
@@ -251,19 +287,13 @@ export default function VerifyPage() {
           </div>
 
           <div>
-            <div className={styles.eyebrow}>Проверка профиля</div>
+            <div className={styles.eyebrow}>{t("verify.hero.eyebrow")}</div>
 
-            <h1>Подтвердите профиль застройщика</h1>
+            <h1>{t("verify.hero.title")}</h1>
 
-            <p>
-              Подтверждение помогает покупателям убедиться, что ваш профиль
-              принадлежит реальной строительной компании. После успешной
-              проверки рядом с названием компании появится галочка.
-            </p>
+            <p>{t("verify.hero.description")}</p>
           </div>
         </section>
-
-        {/* WHY */}
 
         <section className={styles.infoCard}>
           <div className={styles.infoIcon}>
@@ -271,36 +301,30 @@ export default function VerifyPage() {
           </div>
 
           <div>
-            <h2>Зачем подтверждать профиль?</h2>
+            <h2>{t("verify.why.title")}</h2>
 
-            <p>
-              Подтверждённые компании вызывают больше доверия у покупателей.
-              После получения галочки ваши жилые комплексы и объявления смогут
-              отображаться другим пользователям платформы.
-            </p>
+            <p>{t("verify.why.description")}</p>
           </div>
         </section>
-
-        {/* DOCUMENTS */}
 
         <section className={styles.documentsSection}>
           <div className={styles.sectionHeading}>
             <div>
-              <span>Шаг 1</span>
-              <h2>Загрузите документы</h2>
-              <p>
-                Для проверки необходимо предоставить 3 документа в формате PDF, JPEG или PNG.
-              </p>
+              <span>{t("verify.documents.step")}</span>
+
+              <h2>{t("verify.documents.title")}</h2>
+
+              <p>{t("verify.documents.description")}</p>
             </div>
 
-            <div className={styles.pdfBadge}>PDF / JPG / PNG</div>
+            <div className={styles.pdfBadge}>{t("verify.documents.types")}</div>
           </div>
 
           <div className={styles.documents}>
             <DocumentUpload
               number="01"
-              title="Документ о регистрации компании"
-              description="Подтверждает официальную регистрацию организации."
+              title={t("verify.documents.items.registration.title")}
+              description={t("verify.documents.items.registration.description")}
               file={documents.document1}
               uploaded={Boolean(documentUrls.document1)}
               uploading={uploadingKey === "document1"}
@@ -310,8 +334,8 @@ export default function VerifyPage() {
 
             <DocumentUpload
               number="02"
-              title="Документ, подтверждающий деятельность"
-              description="Документ, подтверждающий деятельность компании в сфере недвижимости."
+              title={t("verify.documents.items.activity.title")}
+              description={t("verify.documents.items.activity.description")}
               file={documents.document2}
               uploaded={Boolean(documentUrls.document2)}
               uploading={uploadingKey === "document2"}
@@ -321,8 +345,10 @@ export default function VerifyPage() {
 
             <DocumentUpload
               number="03"
-              title="Документ представителя компании"
-              description="Документ, подтверждающий полномочия представителя компании(ID-card/passport)"
+              title={t("verify.documents.items.representative.title")}
+              description={t(
+                "verify.documents.items.representative.description",
+              )}
               file={documents.document3}
               uploaded={Boolean(documentUrls.document3)}
               uploading={uploadingKey === "document3"}
@@ -331,12 +357,18 @@ export default function VerifyPage() {
             />
           </div>
 
-          {errorMsg && (
-            <p style={{ color: "#e05252", fontSize: 13, marginTop: 14 }}>{errorMsg}</p>
+          {errorText && (
+            <p
+              style={{
+                color: "#e05252",
+                fontSize: 13,
+                marginTop: 14,
+              }}
+            >
+              {errorText}
+            </p>
           )}
         </section>
-
-        {/* REQUIREMENTS */}
 
         <section className={styles.requirements}>
           <div className={styles.requirementIcon}>
@@ -344,48 +376,41 @@ export default function VerifyPage() {
           </div>
 
           <div>
-            <strong>Требования к документам</strong>
+            <strong>{t("verify.requirements.title")}</strong>
 
             <ul>
-              <li>PDF, JPEG, PNG или WebP, до 10 МБ</li>
-              <li>Документы должны быть читаемыми</li>
-              <li>Документы должны быть актуальными</li>
-              <li>
-                Информация в документах должна совпадать с данными профиля
-              </li>
+              {t("verify.requirements.items").map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </div>
         </section>
-
-        {/* SUBMIT */}
 
         <section className={styles.submitSection}>
           <div className={styles.submitText}>
             <Clock3 />
 
             <div>
-              <strong>Что произойдёт после отправки?</strong>
+              <strong>{t("verify.submit.title")}</strong>
 
-              <p>
-                Заявку проверит команда UyTap. По результатам проверки вы
-                получите подтверждающую галочку либо отказ с указанием причины.
-              </p>
+              <p>{t("verify.submit.description")}</p>
             </div>
           </div>
 
           <button
             type="button"
             className={styles.submitButton}
-            disabled={!allDocumentsUploaded}
+            disabled={!allDocumentsUploaded || submitting}
             onClick={handleSubmit}
           >
-            Отправить на проверку
+            {submitting
+              ? t("verify.documents.uploading")
+              : t("verify.submit.button")}
+
             <ArrowUpRight />
           </button>
         </section>
       </div>
-
-      {/* PENDING MODAL */}
 
       {showModal && (
         <div className={styles.modalOverlay}>
@@ -394,7 +419,7 @@ export default function VerifyPage() {
               type="button"
               className={styles.modalClose}
               onClick={() => setShowModal(false)}
-              aria-label="Закрыть"
+              aria-label={t("verify.modal.close")}
             >
               <X />
             </button>
@@ -403,29 +428,22 @@ export default function VerifyPage() {
               <Clock3 />
             </div>
 
-            <div className={styles.modalBadge}>На рассмотрении</div>
+            <div className={styles.modalBadge}>{t("verify.modal.badge")}</div>
 
-            <h2>Заявка отправлена</h2>
+            <h2>{t("verify.modal.title")}</h2>
 
-            <p>
-              Спасибо! Мы получили ваши документы и начали проверку профиля.
-            </p>
+            <p>{t("verify.modal.description")}</p>
 
-            <p>
-              После проверки вы получите подтверждающую галочку или отказ с
-              указанием причины.
-            </p>
+            <p>{t("verify.modal.descriptionSecond")}</p>
 
             <div className={styles.modalNote}>
               <ShieldCheck />
-              <span>
-                Пока заявка рассматривается, профиль, ЖК и объявления не будут
-                отображаться другим пользователям.
-              </span>
+
+              <span>{t("verify.modal.note")}</span>
             </div>
 
             <a href="/profile" className={styles.modalButton}>
-              Вернуться в профиль
+              {t("verify.modal.profile")}
               <ArrowUpRight />
             </a>
           </div>
@@ -445,8 +463,12 @@ function DocumentUpload({
   onChange,
   onRemove,
 }) {
+  const { t } = useLanguage();
+
   return (
-    <div className={`${styles.documentCard} ${uploaded ? styles.uploaded : ""}`}>
+    <div
+      className={`${styles.documentCard} ${uploaded ? styles.uploaded : ""}`}
+    >
       <div className={styles.documentTop}>
         <div className={styles.documentNumber}>{number}</div>
 
@@ -466,7 +488,8 @@ function DocumentUpload({
           </div>
 
           <div className={styles.fileName}>
-            <strong>{file ? file.name : "Документ загружен"}</strong>
+            <strong>{file ? file.name : t("verify.documents.uploaded")}</strong>
+
             {file && <span>{(file.size / 1024 / 1024).toFixed(2)} MB</span>}
           </div>
 
@@ -475,6 +498,7 @@ function DocumentUpload({
             className={styles.removeFile}
             onClick={onRemove}
             disabled={uploading}
+            aria-label={t("common.cancel")}
           >
             <X />
           </button>
@@ -482,7 +506,11 @@ function DocumentUpload({
       ) : (
         <label className={styles.uploadButton} aria-disabled={uploading}>
           {uploading ? <Loader2 className={styles.spinIcon} /> : <Upload />}
-          {uploading ? "Загрузка..." : "Загрузить файл"}
+
+          {uploading
+            ? t("verify.documents.uploading")
+            : t("verify.documents.upload")}
+
           <input
             type="file"
             accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
