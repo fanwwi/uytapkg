@@ -1,5 +1,6 @@
 import { supabase } from "../config/db.js";
 import { createComplexSchema, updateComplexSchema } from "../utils/validation.js";
+import { verifyAllOwnedBy } from "../utils/uploadOwnership.js";
 
 // =======================================================
 // 1. Получение списка ЖК (GET /api/complexes)
@@ -238,6 +239,16 @@ export const createComplex = async (req, res) => {
       images,
       features,
     } = validationResult.data;
+
+    // Каждое фото ЖК должно быть загружено именно этим пользователем через
+    // /api/upload/complex-photo (водяной знак) — та же проверка и по той же
+    // причине, что и у photos объявления в listingsController.createListing.
+    if (!(await verifyAllOwnedBy(images, req.user.id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Все фото должны быть загружены вами через форму загрузки ЖК",
+      });
+    }
 
     // Мапинг статусов
     let completion_status = "building";

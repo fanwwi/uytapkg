@@ -6,7 +6,11 @@ import { createPromotionPaymentSchema } from "../utils/validation.js";
 import * as odengi from "../services/odengiService.js";
 import { activateSubscription } from "../services/subscriptionsService.js";
 import { applyPromotion } from "../services/promotionsService.js";
-import { createPromotionOrder, getPromotionOrderByOrderId } from "../utils/promotionOrders.js";
+import {
+  createPromotionOrder,
+  getPromotionOrderByOrderId,
+  markPromotionOrderStatus,
+} from "../utils/promotionOrders.js";
 
 // Разовые покупки продвижения объявления используют ту же таблицу
 // `payments`, что и подписки PRO, но с tariff_id вида "promo_<serviceType>"
@@ -469,9 +473,39 @@ export const cancelPayment = async (req, res) => {
       });
     }
 
-    if (payment.invoice_id) {
+    // Перепроверяем реальный статус в O!Dengi ПЕРЕД отменой — если
+    // пользователь успел оплатить счёт в приложении банка/O!Dengi (сеть
+    // задержала обновление UI) и в этот же момент нажал "Отменить" на
+    // сайте, наивная отмена молча похоронила бы уже прошедший платёж:
+    // reconcilePaymentStatus в дальнейшем сразу выходит по условию
+    // status === "canceled", ничего больше не проверяя, — деньги были бы
+    // списаны у пользователя без активации тарифа/продвижения.
+    let current = payment;
+    try {
+      current = await reconcilePaymentStatus(payment);
+    } catch (providerError) {
+      console.error("Cancel Payment — Reconcile Before Cancel Error:", providerError);
+      // O!Dengi недоступен — не блокируем отмену неоплаченного (по нашим
+      // данным) счёта из-за временной недоступности провайдера.
+    }
+
+    if (current.status === "approved") {
+      return res.status(409).json({
+        success: false,
+        message: "Платёж уже подтверждён и не может быть отменён",
+        data: toPublicPayment(current),
+      });
+    }
+
+    if (current.status !== "processing" && current.status !== "pending") {
+      // reconcilePaymentStatus уже перевёл его в canceled/иной терминальный
+      // статус (например, провайдер сам отменил просроченный счёт).
+      return res.json({ success: true });
+    }
+
+    if (current.invoice_id) {
       try {
-        await odengi.invoiceCancel({ invoiceId: payment.invoice_id });
+        await odengi.invoiceCancel({ invoiceId: current.invoice_id });
       } catch (providerError) {
         console.error("O!Dengi invoiceCancel Error:", providerError);
       }
@@ -480,7 +514,20 @@ export const cancelPayment = async (req, res) => {
     await supabase
       .from("payments")
       .update({ status: "canceled", updated_at: new Date().toISOString() })
-      .eq("id", payment.id);
+      .eq("id", current.id)
+      .neq("status", "approved");
+
+    // Синхронизируем связанный заказ продвижения — иначе он навсегда
+    // остаётся "pending" в promotion-orders.json (безвредно с точки зрения
+    // применения продвижения, т.к. до него доходит только approved-платёж,
+    // но засоряет список заказов в админке устаревшими "зависшими" записями).
+    if (current.tariff_id?.startsWith(PROMOTION_TARIFF_PREFIX)) {
+      try {
+        await markPromotionOrderStatus(current.order_id, "canceled");
+      } catch (orderError) {
+        console.error("Cancel Payment — Mark Promotion Order Canceled Error:", orderError);
+      }
+    }
 
     return res.json({ success: true });
   } catch (error) {

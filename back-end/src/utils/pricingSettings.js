@@ -6,12 +6,22 @@ import { supabase } from "../config/db.js";
 export const APP_SETTINGS_BUCKET = "app-settings";
 const PRICING_OBJECT = "pricing.json";
 
+// Лимиты тарифа — сколько активных объявлений и платных поднятий
+// (VIP/TOP) включено в тариф. Используются при выдаче дефолтного тарифа
+// (см. services/subscriptionsService.js) и должны совпадать по форме с
+// тем, что редактирует админ в /admin/payments (PricingModal).
 const DEFAULT_PRICING = Object.freeze({
   tariffs: {
-    start: 390,
-    optimal: 790,
-    business: 1890,
-    developer: { mode: "individual", value: null },
+    start: { price: 390, activeListings: 5, vipLifts: 1, topLifts: 1 },
+    optimal: { price: 790, activeListings: 15, vipLifts: 2, topLifts: 3 },
+    business: { price: 1890, activeListings: 50, vipLifts: 5, topLifts: 10 },
+    developer: {
+      mode: "individual",
+      value: null,
+      activeListings: 100,
+      vipLifts: 10,
+      topLifts: 20,
+    },
   },
   services: {
     vip: 290,
@@ -26,6 +36,34 @@ const num = (value, fallback) => {
   return Number.isFinite(n) && n >= 0 ? n : fallback;
 };
 
+const int = (value, fallback) => {
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 0 ? n : fallback;
+};
+
+// Нормализует один тарифный план (price + лимиты). Поддерживает старый
+// формат хранения, где план был просто числом (ценой) — так было до
+// того, как в тарифы добавили лимиты по объявлениям/VIP/TOP, чтобы уже
+// сохранённые в бакете цены не терялись при первом обращении после
+// обновления.
+function normalizePlan(raw, fallback) {
+  if (raw && typeof raw === "object") {
+    return {
+      price: num(raw.price, fallback.price),
+      activeListings: int(raw.activeListings, fallback.activeListings),
+      vipLifts: int(raw.vipLifts, fallback.vipLifts),
+      topLifts: int(raw.topLifts, fallback.topLifts),
+    };
+  }
+
+  return {
+    price: num(raw, fallback.price),
+    activeListings: fallback.activeListings,
+    vipLifts: fallback.vipLifts,
+    topLifts: fallback.topLifts,
+  };
+}
+
 // Приводит произвольные (в т.ч. повреждённые/неполные) данные к
 // каноническому виду цен — используется и при чтении, и при записи,
 // чтобы в хранилище никогда не оказалось некорректного значения.
@@ -39,12 +77,15 @@ function normalizePricing(raw) {
 
   return {
     tariffs: {
-      start: num(t.start, DEFAULT_PRICING.tariffs.start),
-      optimal: num(t.optimal, DEFAULT_PRICING.tariffs.optimal),
-      business: num(t.business, DEFAULT_PRICING.tariffs.business),
+      start: normalizePlan(t.start, DEFAULT_PRICING.tariffs.start),
+      optimal: normalizePlan(t.optimal, DEFAULT_PRICING.tariffs.optimal),
+      business: normalizePlan(t.business, DEFAULT_PRICING.tariffs.business),
       developer: {
         mode,
         value: mode === "numeric" ? num(dev.value, 0) : null,
+        activeListings: int(dev.activeListings, DEFAULT_PRICING.tariffs.developer.activeListings),
+        vipLifts: int(dev.vipLifts, DEFAULT_PRICING.tariffs.developer.vipLifts),
+        topLifts: int(dev.topLifts, DEFAULT_PRICING.tariffs.developer.topLifts),
       },
     },
     services: {

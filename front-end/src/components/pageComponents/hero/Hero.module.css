@@ -12,7 +12,6 @@
   background-image: url("/assets/bishkek.png");
   background-size: cover;
   background-position: center;
-
 }
 
 /* =========================================================
@@ -93,10 +92,11 @@
 
   font-size: 64px;
   line-height: 1.08;
-
   font-weight: 900;
-
   letter-spacing: -2.5px;
+
+  transform: scaleX(1.15);
+  transform-origin: left center;
 
   color: #f0efff;
 }

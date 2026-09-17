@@ -163,14 +163,35 @@ CREATE TABLE IF NOT EXISTS banners (
 );
 
 -- 12. Тарифные подписки пользователей (активный PRO-тариф)
+-- Хранит и дефолтные тарифы (start/optimal/business, купленные через
+-- оплату), и индивидуальные тарифы (выданные админом вручную) —
+-- см. controllers/tariffsController.js. У пользователя одновременно
+-- может быть только один тариф (UNIQUE(user_id)).
 CREATE TABLE IF NOT EXISTS subscriptions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tariff_id VARCHAR(30) NOT NULL,
+    started_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Индивидуальный тариф: выдан вручную одному пользователю (оплата по
+    -- реквизитам, вне платёжной системы), со своим названием и лимитами.
+    is_individual BOOLEAN NOT NULL DEFAULT FALSE,
+    custom_name VARCHAR(100),
+    active_listings_limit INT,
+    vip_boosts_limit INT,
+    top_boosts_limit INT,
+    -- Сколько VIP/TOP-поднятий уже списано в текущем периоде — см.
+    -- services/subscriptionsService.js consumeTariffBoost(). Обнуляется
+    -- при каждой новой оплате/выдаче тарифа.
+    vip_boosts_used INT NOT NULL DEFAULT 0,
+    top_boosts_used INT NOT NULL DEFAULT 0,
+    granted_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_subscriptions_is_individual ON subscriptions(is_individual);
 
 -- 13. Платежи через O!Dengi (QR Pay)
 CREATE TABLE IF NOT EXISTS payments (

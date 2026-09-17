@@ -1,0 +1,392 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+  min-height: 100vh;
+  padding: 110px 20px 80px;
+
+  background:
+    radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.09), transparent 30%),
+    radial-gradient(circle at 5% 50%, rgba(72, 61, 246, 0.05), transparent 32%),
+    linear-gradient(180deg, #f8f9fc 0%, #f4f5f9 45%, #f8f9fc 100%);
+
+  color: #171923;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.topBar {
+  width: 100%;
+  max-width: 1050px;
+}
+
+.homeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 19px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  border: 1px solid #e4e6ef;
+  border-radius: 15px;
+
+  color: #626776;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow:
+    0 5px 20px rgba(25, 30, 50, 0.05),
+    0 1px 3px rgba(25, 30, 50, 0.04);
+
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.homeButton svg {
+  width: 18px;
+  color: #483df6;
+}
+
+.homeButton:hover {
+  color: #483df6;
+  background: #fff;
+  border-color: rgba(72, 61, 246, 0.25);
+  transform: translateX(-4px);
+}
+
+.stateMessage {
+  width: 100%;
+  max-width: 1050px;
+
+  padding: 40px;
+
+  text-align: center;
+
+  color: #626776;
+
+  background: #fff;
+  border: 1px solid #e5e7ef;
+  border-radius: 25px;
+}
+
+/* =========================================================
+   STATUS CARD
+========================================================= */
+
+.statusCard {
+  width: 100%;
+  max-width: 1050px;
+
+  position: relative;
+  overflow: hidden;
+
+  padding: 36px 40px;
+
+  background:
+    radial-gradient(circle at 90% 0%, rgba(72, 61, 246, 0.055), transparent 32%),
+    linear-gradient(145deg, #ffffff 0%, #fbfbfd 100%);
+
+  border: 1px solid #e6e8f0;
+  border-radius: 32px;
+
+  box-shadow:
+    0 25px 70px rgba(30, 35, 55, 0.09),
+    0 5px 20px rgba(30, 35, 55, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.topGlow {
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  right: -160px;
+  top: -170px;
+
+  background: #483df6;
+  opacity: 0.07;
+  filter: blur(115px);
+
+  pointer-events: none;
+}
+
+.statusHeader {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.statusIcon {
+  flex-shrink: 0;
+
+  width: 64px;
+  height: 64px;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #7b73ff 0%, #483df6 55%, #3028b8 100%);
+  color: #fff;
+
+  box-shadow: 0 15px 40px rgba(72, 61, 246, 0.25);
+}
+
+.statusIcon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.statusInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.statusBadge {
+  display: inline-flex;
+
+  padding: 6px 13px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.badgeActive {
+  background: rgba(21, 148, 71, 0.1);
+  border: 1px solid rgba(21, 148, 71, 0.22);
+  color: #159447;
+}
+
+.badgeInactive {
+  background: rgba(255, 70, 90, 0.08);
+  border: 1px solid rgba(255, 70, 90, 0.2);
+  color: #ef4f68;
+}
+
+.statusInfo h1 {
+  margin: 10px 0 0;
+
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #171923;
+}
+
+.period {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin: 8px 0 0;
+
+  color: #737887;
+  font-size: 13.5px;
+}
+
+.period svg {
+  color: #483df6;
+  flex-shrink: 0;
+}
+
+.upgradeButton {
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 13px 20px;
+
+  border-radius: 15px;
+
+  background: linear-gradient(135deg, #7b73ff, #483df6);
+  color: #fff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.25);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.upgradeButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(72, 61, 246, 0.32);
+}
+
+/* =========================================================
+   STATS GRID
+========================================================= */
+
+.statsGrid {
+  width: 100%;
+  max-width: 1050px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.statCard {
+  padding: 24px;
+
+  background: linear-gradient(145deg, #ffffff, #fbfbfd);
+  border: 1px solid #e5e7ef;
+  border-radius: 23px;
+
+  box-shadow: 0 15px 40px rgba(30, 35, 55, 0.05);
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #626776;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.statIcon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(145deg, rgba(72, 61, 246, 0.11), rgba(72, 61, 246, 0.045));
+  border: 1px solid rgba(72, 61, 246, 0.13);
+  color: #483df6;
+}
+
+.statNumbers {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+
+  margin: 16px 0 12px;
+}
+
+.statNumbers strong {
+  font-size: 32px;
+  font-weight: 900;
+  color: #171923;
+  letter-spacing: -1px;
+}
+
+.statNumbers span {
+  color: #858a98;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 8px;
+
+  border-radius: 999px;
+
+  background: #eef0f5;
+
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: linear-gradient(90deg, #7b73ff, #483df6);
+
+  transition: width 0.3s ease;
+}
+
+.statFootnote {
+  display: block;
+
+  margin-top: 10px;
+
+  color: #a2a6b3;
+  font-size: 12px;
+}
+
+/* =========================================================
+   HELP NOTE
+========================================================= */
+
+.helpNote {
+  width: 100%;
+  max-width: 1050px;
+
+  padding: 20px 26px;
+
+  background: rgba(72, 61, 246, 0.045);
+  border: 1px solid rgba(72, 61, 246, 0.12);
+  border-radius: 20px;
+}
+
+.helpNote p {
+  margin: 0;
+
+  color: #545a6b;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 750px) {
+  .page {
+    padding: 80px 15px 50px;
+  }
+
+  .statusCard {
+    padding: 26px 22px;
+    border-radius: 25px;
+  }
+
+  .statusHeader {
+    flex-wrap: wrap;
+  }
+
+  .upgradeButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}

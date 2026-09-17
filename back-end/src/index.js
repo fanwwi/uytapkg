@@ -15,6 +15,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import lawyersRoutes from "./routes/lawyersRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import bannersRoutes from "./routes/bannersRoutes.js";
+import subscriptionsRoutes from "./routes/subscriptionsRoutes.js";
 
 dotenv.config();
 
@@ -83,6 +84,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/lawyers", lawyersRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/banners", bannersRoutes);
+app.use("/api/subscriptions", subscriptionsRoutes);
 
 // Глобальный обработчик ошибок (включая Multer)
 app.use((err, req, res, next) => {

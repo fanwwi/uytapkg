@@ -42,7 +42,17 @@ import {
   Building,
   CircleDollarSign,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
+
+// Те же подписи, что и в списке "Мои объявления" (see profile/ads/page.jsx
+// statusMapping) — держим их согласованными между списком и деталями.
+const PUBLICATION_STATUS_LABELS = {
+  active: "Опубликовано",
+  moderation: "На модерации",
+  draft: "Черновик — ждёт оплаты",
+  hidden: "Скрыто",
+};
 
 import styles from "./MyAdsDetails.module.css";
 
@@ -902,6 +912,16 @@ export default function MyProductDetails() {
 
       const normalized = normalizeKey(key);
 
+      /*
+       * Не показываем технические поля. Точное совпадение — для
+       * коротких/общих слов типа "id"/"images", которые не должны резать
+       * реальные характеристики, где такое слово — часть названия.
+       * Паттерн — для составных служебных полей вида
+       * "promotionExpiresAt"/"residentialComplexId", которые пишутся в
+       * features сервером (см. back-end/src/services/promotionsService.js
+       * и listingsController.js), а не являются характеристиками объекта.
+       */
+
       const technicalKeys = [
         "id",
         "listing id",
@@ -916,7 +936,13 @@ export default function MyProductDetails() {
         "photos",
       ];
 
-      if (technicalKeys.includes(normalized)) {
+      const technicalKeyPattern =
+        /\bid$|expires at|verification status|verification docs|rejection reason/;
+
+      if (
+        technicalKeys.includes(normalized) ||
+        technicalKeyPattern.test(normalized)
+      ) {
         return;
       }
 
@@ -1294,6 +1320,19 @@ export default function MyProductDetails() {
                 <CheckCircle2 size={13} />
 
                 {t("myAdsDetails.published")}
+              </span>
+              <span
+                className={`${styles.published} ${
+                  product.publicationStatus === "active" ? "" : styles.pending
+                }`}
+              >
+                {product.publicationStatus === "active" ? (
+                  <CheckCircle2 size={13} />
+                ) : (
+                  <AlertCircle size={13} />
+                )}
+                {PUBLICATION_STATUS_LABELS[product.publicationStatus] ||
+                  "Опубликовано"}
               </span>
             </div>
 

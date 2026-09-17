@@ -642,6 +642,14 @@
   color: #32c878;
 }
 
+.pending {
+  color: #b7791f;
+}
+
+.pending svg {
+  color: #dd9a2b;
+}
+
 .summary h1 {
   margin: 0;
 

@@ -132,6 +132,15 @@ export default function StepListingType({
     });
   };
 
+  // Публикация (в т.ч. для платных типов) полностью решается на бэкенде
+  // (см. add-product/page.jsx submitProduct и
+  // back-end/src/controllers/listingsController.js createListing):
+  // - бесплатные типы (обычное/Instagram) публикуются сразу;
+  // - VIP/ТОП сначала пробуют списаться с лимита тарифа — если получилось,
+  //   тоже публикуются сразу, уже продвинутыми;
+  // - иначе (в т.ч. всегда для "Срочно") объявление создаётся, но не
+  //   публикуется, пока не пройдёт оплата — родитель сам уводит на
+  //   /payment.
   const handlePublish = () => {
     if (!isReady || isSubmitting) return;
 
@@ -154,6 +163,7 @@ export default function StepListingType({
      * 4. Продолжает публикацию.
      */
     router.push(`/add-product/payment?service=${form.listingType}`);
+    onSubmit();
   };
 
   const countryName =

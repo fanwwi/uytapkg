@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CalendarDays,
   CheckCircle2,
   CreditCard,
+  Loader2,
   Pencil,
   Search,
   UserRound,
@@ -17,76 +18,28 @@ import EditDataModal from "./EditDataModal/EditDataModal";
 import styles from "./DefaultTarrifs.module.css";
 import Sidebar from "../components/Sidebar/Sidebar";
 
+import {
+  getDefaultTariffs,
+  toggleDefaultTariff as toggleDefaultTariffRequest,
+  updateDefaultTariffPeriod,
+} from "@/utils/api";
+
 const TARIFF_CONFIG = {
   start: {
     label: "Start",
     color: "#60a5fa",
-    price: "500 сом",
   },
   optimal: {
     label: "Optimal",
     color: "#a78bfa",
-    price: "1 000 сом",
   },
   business: {
     label: "Business",
     color: "#f59e0b",
-    price: "2 000 сом",
   },
 };
 
-const DEFAULT_USERS = [
-  {
-    id: 1,
-    name: "Асанов Бекзат",
-    email: "bekzat@gmail.com",
-    phone: "+996 700 123 456",
-    tariff: "optimal",
-    startDate: "2026-08-01",
-    endDate: "2026-09-01",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Иванова Алина",
-    email: "alina@gmail.com",
-    phone: "+996 555 234 567",
-    tariff: "start",
-    startDate: "2026-08-10",
-    endDate: "2026-09-10",
-    active: true,
-  },
-  {
-    id: 3,
-    name: "Токтогулов Эльдар",
-    email: "eldar@gmail.com",
-    phone: "+996 777 345 678",
-    tariff: "business",
-    startDate: "2026-07-15",
-    endDate: "2026-10-15",
-    active: true,
-  },
-  {
-    id: 4,
-    name: "Садыкова Айдана",
-    email: "aidana@gmail.com",
-    phone: "+996 701 456 789",
-    tariff: "optimal",
-    startDate: "2026-08-05",
-    endDate: "2026-09-05",
-    active: false,
-  },
-  {
-    id: 5,
-    name: "Маматов Нурсултан",
-    email: "nursultan@gmail.com",
-    phone: "+996 550 567 890",
-    tariff: "start",
-    startDate: "2026-08-20",
-    endDate: "2026-09-20",
-    active: true,
-  },
-];
+const FALLBACK_TARIFF = { label: "—", color: "#94a3b8" };
 
 const formatDate = (date) => {
   if (!date) return "—";
@@ -99,9 +52,28 @@ const formatDate = (date) => {
 };
 
 export default function DefaultTarrifs() {
-  const [users, setUsers] = useState(DEFAULT_USERS);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState(null);
+  const [savingPeriod, setSavingPeriod] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("uytap_token");
+
+    getDefaultTariffs(token)
+      .then((data) => {
+        setUsers(data || []);
+      })
+      .catch((err) => {
+        console.error("Ошибка загрузки тарифов:", err);
+        setLoadError(err.message || "Не удалось загрузить тарифы");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -111,8 +83,8 @@ export default function DefaultTarrifs() {
     return users.filter((user) => {
       return (
         user.name.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query) ||
-        user.phone.toLowerCase().includes(query)
+        (user.email || "").toLowerCase().includes(query) ||
+        (user.phone || "").toLowerCase().includes(query)
       );
     });
   }, [users, search]);
@@ -138,17 +110,15 @@ export default function DefaultTarrifs() {
     );
   };
 
-  const toggleUser = (id) => {
-    setUsers((currentUsers) =>
-      currentUsers.map((user) =>
-        user.id === id
-          ? {
-              ...user,
-              active: !user.active,
-            }
-          : user,
-      ),
-    );
+  const toggleUser = async (id) => {
+    const token = localStorage.getItem("uytap_token");
+
+    try {
+      const updated = await toggleDefaultTariffRequest(token, id);
+      updateUser(id, { active: updated.active });
+    } catch (err) {
+      console.error("Ошибка изменения статуса тарифа:", err);
+    }
   };
 
   const openEditModal = (user) => {
@@ -159,15 +129,30 @@ export default function DefaultTarrifs() {
     setEditingUser(null);
   };
 
-  const handleSavePeriod = ({ startDate, endDate }) => {
+  const handleSavePeriod = async ({ startDate, endDate }) => {
     if (!editingUser) return;
 
-    updateUser(editingUser.id, {
-      startDate,
-      endDate,
-    });
+    const token = localStorage.getItem("uytap_token");
 
-    setEditingUser(null);
+    try {
+      setSavingPeriod(true);
+
+      const updated = await updateDefaultTariffPeriod(token, editingUser.id, {
+        startDate,
+        endDate,
+      });
+
+      updateUser(editingUser.id, {
+        startDate: updated.startDate,
+        endDate: updated.endDate,
+      });
+
+      setEditingUser(null);
+    } catch (err) {
+      console.error("Ошибка изменения периода тарифа:", err);
+    } finally {
+      setSavingPeriod(false);
+    }
   };
 
   return (
@@ -270,6 +255,21 @@ export default function DefaultTarrifs() {
             </div>
           </div>
 
+          {loading && (
+            <div className={styles.empty}>
+              <Loader2 size={24} className={styles.spinner} />
+              <span>Загрузка тарифов...</span>
+            </div>
+          )}
+
+          {!loading && loadError && (
+            <div className={styles.empty}>
+              <span>{loadError}</span>
+            </div>
+          )}
+
+          {!loading && !loadError && (
+            <>
           {/* DESKTOP */}
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -286,7 +286,7 @@ export default function DefaultTarrifs() {
 
               <tbody>
                 {filteredUsers.map((user) => {
-                  const tariff = TARIFF_CONFIG[user.tariff];
+                  const tariff = TARIFF_CONFIG[user.tariff] || FALLBACK_TARIFF;
 
                   return (
                     <tr key={user.id}>
@@ -419,8 +419,6 @@ export default function DefaultTarrifs() {
                     <span className={styles.tariffDot} />
 
                     <span>{tariff.label}</span>
-
-                    <span className={styles.mobilePrice}>{tariff.price}</span>
                   </div>
 
                   <div className={styles.mobilePeriod}>
@@ -457,12 +455,15 @@ export default function DefaultTarrifs() {
               <span>Пользователи не найдены</span>
             </div>
           )}
+            </>
+          )}
         </section>
       </main>
 
       {/* EDIT MODAL */}
       <EditDataModal
         isOpen={Boolean(editingUser)}
+        saving={savingPeriod}
         user={editingUser}
         onClose={closeEditModal}
         onSave={handleSavePeriod}

@@ -23,72 +23,12 @@ import AddTariffModal from "./AddTarrifModal/AddTarrifModal";
 import EditTariffModal from "./EditTarrifModal/EditTarrifModal";
 import Sidebar from "../components/Sidebar/Sidebar";
 
-const MOCK_TARIFFS = [
-  {
-    id: 1,
-    name: "Premium",
-    userId: 101,
-    userName: "Азизбек Маматов",
-    phone: "+996 555 123 456",
-    activeListings: 15,
-    vipBoosts: 8,
-    topBoosts: 5,
-    startDate: "2026-08-01",
-    endDate: "2026-08-31",
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: "Business",
-    userId: 102,
-    userName: "Нурбек Садыков",
-    phone: "+996 700 456 789",
-    activeListings: 30,
-    vipBoosts: 15,
-    topBoosts: 10,
-    startDate: "2026-08-10",
-    endDate: "2026-09-10",
-    isActive: true,
-  },
-  {
-    id: 3,
-    name: "Start",
-    userId: 103,
-    userName: "Айдана Токтосунова",
-    phone: "+996 777 321 654",
-    activeListings: 5,
-    vipBoosts: 2,
-    topBoosts: 1,
-    startDate: "2026-07-15",
-    endDate: "2026-08-15",
-    isActive: false,
-  },
-  {
-    id: 4,
-    name: "Premium",
-    userId: 104,
-    userName: "Бекзат Абдрахманов",
-    phone: "+996 550 987 321",
-    activeListings: 20,
-    vipBoosts: 10,
-    topBoosts: 7,
-    startDate: "2026-08-20",
-    endDate: "2026-09-20",
-    isActive: true,
-  },
-];
-
-const getDefaultDates = () => {
-  const start = new Date();
-  const end = new Date();
-
-  end.setDate(end.getDate() + 30);
-
-  return {
-    startDate: start.toISOString().split("T")[0],
-    endDate: end.toISOString().split("T")[0],
-  };
-};
+import {
+  getIndividualTariffs,
+  createIndividualTariff,
+  updateIndividualTariff,
+  toggleIndividualTariff,
+} from "@/utils/api";
 
 const formatDate = (date) => {
   if (!date) return "—";
@@ -118,6 +58,8 @@ export default function Tarrifs() {
   const [tariffs, setTariffs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [loadError, setLoadError] = useState("");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -126,12 +68,19 @@ export default function Tarrifs() {
   const [editingTariff, setEditingTariff] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTariffs(MOCK_TARIFFS);
-      setLoading(false);
-    }, 500);
+    const token = localStorage.getItem("uytap_token");
 
-    return () => clearTimeout(timer);
+    getIndividualTariffs(token)
+      .then((data) => {
+        setTariffs(data || []);
+      })
+      .catch((err) => {
+        console.error("Ошибка загрузки тарифов:", err);
+        setLoadError(err.message || "Не удалось загрузить тарифы");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   /*
@@ -180,17 +129,22 @@ export default function Tarrifs() {
   };
 
   const handleCreateTariff = async (tariff) => {
-    const defaultDates = getDefaultDates();
+    const token = localStorage.getItem("uytap_token");
 
-    const newTariff = {
-      id: Date.now(),
-      ...tariff,
-      startDate: tariff.startDate || defaultDates.startDate,
-      endDate: tariff.endDate || defaultDates.endDate,
-      isActive: true,
-    };
+    const created = await createIndividualTariff(token, {
+      userId: tariff.userId,
+      name: tariff.name,
+      activeListings: tariff.activeListings,
+      vipBoosts: tariff.vipBoosts,
+      topBoosts: tariff.topBoosts,
+      startDate: tariff.startDate,
+      endDate: tariff.endDate,
+    });
 
-    setTariffs((prev) => [newTariff, ...prev]);
+    setTariffs((prev) => [
+      created,
+      ...prev.filter((item) => item.userId !== created.userId),
+    ]);
   };
 
   /*
@@ -199,17 +153,18 @@ export default function Tarrifs() {
    * ---------------------------------------------------------
    */
 
-  const toggleTariff = (tariff) => {
-    setTariffs((prev) =>
-      prev.map((item) =>
-        item.id === tariff.id
-          ? {
-              ...item,
-              isActive: !item.isActive,
-            }
-          : item,
-      ),
-    );
+  const toggleTariff = async (tariff) => {
+    const token = localStorage.getItem("uytap_token");
+
+    try {
+      const updated = await toggleIndividualTariff(token, tariff.id);
+
+      setTariffs((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item)),
+      );
+    } catch (err) {
+      console.error("Ошибка изменения статуса тарифа:", err);
+    }
   };
 
   /*
@@ -226,16 +181,20 @@ export default function Tarrifs() {
     setEditingTariff(null);
   };
 
-  const handleUpdateTariff = (updatedTariff) => {
+  const handleUpdateTariff = async (updatedTariff) => {
+    const token = localStorage.getItem("uytap_token");
+
+    const saved = await updateIndividualTariff(token, updatedTariff.id, {
+      name: updatedTariff.name,
+      activeListings: updatedTariff.activeListings,
+      vipBoosts: updatedTariff.vipBoosts,
+      topBoosts: updatedTariff.topBoosts,
+      startDate: updatedTariff.startDate,
+      endDate: updatedTariff.endDate,
+    });
+
     setTariffs((prev) =>
-      prev.map((item) =>
-        item.id === updatedTariff.id
-          ? {
-              ...item,
-              ...updatedTariff,
-            }
-          : item,
-      ),
+      prev.map((item) => (item.id === saved.id ? saved : item)),
     );
 
     closeEditModal();
@@ -385,6 +344,10 @@ export default function Tarrifs() {
               <Loader2 className={styles.spinner} size={28} />
 
               <span>Загрузка тарифов...</span>
+            </div>
+          ) : loadError ? (
+            <div className={styles.empty}>
+              <span>{loadError}</span>
             </div>
           ) : filteredTariffs.length === 0 ? (
             <div className={styles.empty}>

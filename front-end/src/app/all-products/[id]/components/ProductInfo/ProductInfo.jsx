@@ -892,7 +892,11 @@ function buildCharacteristics(product, t) {
       normalizedKey.endsWith("id") ||
       normalizedKey.includes("createdat") ||
       normalizedKey.includes("updatedat") ||
-      normalizedKey.includes("deletedat")
+      normalizedKey.includes("deletedat") ||
+      normalizedKey.includes("expiresat") ||
+      normalizedKey.includes("verificationstatus") ||
+      normalizedKey.includes("verificationdocs") ||
+      normalizedKey.includes("rejectionreason")
     ) {
       return;
     }

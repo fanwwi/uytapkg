@@ -1,8 +1,65 @@
 import { supabase } from "../config/db.js";
-import { createListingSchema, updateListingSchema } from "../utils/validation.js";
+import {
+  createListingSchema,
+  updateListingSchema,
+  promoteWithTariffSchema,
+} from "../utils/validation.js";
 import { removeImageFromStorage } from "../utils/storage.js";
-import { resolvePromotionExpiry } from "../services/promotionsService.js";
+import { resolvePromotionExpiry, grantPromotion } from "../services/promotionsService.js";
 import { createInstagramRequest } from "../utils/instagramRequests.js";
+import {
+  consumeTariffBoost,
+  refundTariffBoost,
+  getActiveListingsLimit,
+} from "../services/subscriptionsService.js";
+import { verifyAllOwnedBy } from "../utils/uploadOwnership.js";
+
+// Считает текущие активные (status="active") объявления пользователя и
+// сравнивает с лимитом его тарифа — общая проверка для создания
+// объявления и для возврата объявления в статус "active" из PUT.
+// Возвращает null, если лимит не превышен, иначе готовый объект ответа
+// 403 для немедленного return.
+//
+// countIncludesNewRow: false (по умолчанию) — проверка ДО вставки, лимит
+// нарушен, если count уже >= limit (вставлять больше нельзя). true —
+// повторная проверка ПОСЛЕ вставки (см. createListing), когда сам новый
+// ряд уже учтён в count — тогда нарушение только при count > limit,
+// иначе последний разрешённый ряд (count === limit) ошибочно откатывался
+// бы сам на себя.
+async function checkActiveListingsLimit(userId, accountType, { countIncludesNewRow = false } = {}) {
+  const limit = await getActiveListingsLimit(userId, accountType);
+
+  const { count, error } = await supabase
+    .from("listings")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "active");
+
+  if (error) {
+    console.error("Active Listings Limit Count Error:", error);
+    return {
+      status: 500,
+      body: { success: false, message: "Ошибка проверки лимита активных объявлений" },
+    };
+  }
+
+  const isOverLimit = countIncludesNewRow ? (count || 0) > limit : (count || 0) >= limit;
+
+  if (isOverLimit) {
+    return {
+      status: 403,
+      body: {
+        success: false,
+        message:
+          limit === 0
+            ? "Для публикации объявлений необходим активный тариф UyTap PRO"
+            : `Достигнут лимит активных объявлений по вашему тарифу (${limit}). Повысьте тариф или скройте/удалите другое объявление.`,
+      },
+    };
+  }
+
+  return null;
+}
 
 // Купленное продвижение (VIP/ТОП/Срочно) действует ограниченный срок, но
 // в БД нет job'а, который бы его снимал по истечении — вместо cron'а
@@ -191,6 +248,12 @@ export const createListing = async (req, res) => {
     }
 
     const userId = req.user.id;
+
+    const limitError = await checkActiveListingsLimit(userId, req.user.account_type);
+    if (limitError) {
+      return res.status(limitError.status).json(limitError.body);
+    }
+
     const {
       title,
       description,
@@ -215,22 +278,59 @@ export const createListing = async (req, res) => {
       features = {},
       photos = [],
       listingType,
+      days,
       beachDistanceFrom,
       beachDistanceTo,
       developerOrComplex,
       residentialComplexId,
     } = validationResult.data;
 
-    // Мапинг типа размещения (standard, vip, urgent, top)
-    let promotion_status = "regular";
-    let is_urgent = false;
+    // Каждое фото должно быть реально загружено ЭТИМ пользователем через
+    // /api/upload/listing-photo (иначе фото не прошло бы через водяной
+    // знак) — trustedImageUrl в схеме проверяет только хост ссылки, а не
+    // то, кто и как файл загрузил. Без этой проверки можно было бы
+    // подставить публичный URL чужого фото (обход водяного знака и,
+    // отдельно, IDOR на удаление — см. removeImageFromStorage в
+    // deleteListing: она выполняется с сервисными правами и стёрла бы
+    // чужой файл из Storage при удалении/обновлении ЭТОГО объявления).
+    if (!(await verifyAllOwnedBy(photos, userId))) {
+      return res.status(400).json({
+        success: false,
+        message: "Все фото должны быть загружены вами через форму загрузки объявления",
+      });
+    }
 
-    if (listingType === "vip") {
-      promotion_status = "vip";
-    } else if (listingType === "top") {
-      promotion_status = "top";
+    // Объявление ВСЕГДА вставляется как обычное (regular/не срочное) —
+    // клиентский listingType никогда не пишется в promotion_status/is_urgent
+    // напрямую (иначе любой пользователь мог бы бесплатно и без срока
+    // действия присвоить себе платный статус). VIP/ТОП/Срочно применяются
+    // отдельным вызовом grantPromotion НИЖЕ, только после того, как это
+    // подтверждено сервером — списанием поднятия с тарифа (consumeTariffBoost)
+    // либо (для остальных случаев) реальной оплатой через O!Dengi, для
+    // которой объявление создаётся статусом "draft" и становится "active"
+    // только после подтверждения платежа (см. paymentsController.js
+    // reconcilePaymentStatus → promotionsService.applyPromotion →
+    // grantPromotion, который сам переводит "draft"/"hidden" в "active").
+    const promotion_status = "regular";
+    const is_urgent = false;
+    const boostDays = Number.isInteger(days) ? days : 7;
+
+    // Платное продвижение, покрытое лимитом тарифа, списывается ДО
+    // вставки строки — если тарифа/лимита нет, объявление создаётся
+    // "draft" и ждёт оплаты, а не публикуется бесплатно.
+    let tariffGrant = null; // { serviceType, days, remaining } если списано с тарифа
+    let initialStatus = "active";
+
+    if (listingType === "vip" || listingType === "top") {
+      const consumption = await consumeTariffBoost(userId, listingType);
+      if (consumption.granted) {
+        tariffGrant = { serviceType: listingType, days: boostDays, remaining: consumption.remaining };
+      } else {
+        initialStatus = "draft";
+      }
     } else if (listingType === "urgent") {
-      is_urgent = true;
+      // "Срочно" не входит в лимиты тарифа — всегда только платно.
+      initialStatus = "draft";
     }
 
     // Сборка комплексного объекта курортных фильтров
@@ -290,7 +390,7 @@ export const createListing = async (req, res) => {
           is_resort: Boolean(isResort),
           resort_filters: mergedResortFilters,
           features: { ...(features || {}), residentialComplexId: verifiedComplexId },
-          status: "active",
+          status: initialStatus,
           promotion_status,
           is_urgent,
         },
@@ -300,7 +400,42 @@ export const createListing = async (req, res) => {
 
     if (createError || !newListing) {
       console.error("Listing Create Error:", createError);
+
+      // Тариф уже списан выше — раз объявление не создалось, возвращаем
+      // поднятие обратно, иначе пользователь теряет его без результата.
+      if (tariffGrant) {
+        await refundTariffBoost(userId, tariffGrant.serviceType);
+      }
+
       return res.status(500).json({ success: false, message: "Ошибка создания объявления" });
+    }
+
+    // Повторная проверка лимита ПОСЛЕ вставки — сама по себе она не
+    // делает операцию полностью атомарной (между двумя параллельными
+    // запросами возможна гонка: оба проходят первую проверку до того, как
+    // друг друга увидят), но резко сужает окно: пока не появится
+    // Postgres-функция с блокировкой на уровне БД, это не позволяет
+    // превысить лимит больше чем на количество реально одновременных
+    // запросов, а не бесконечно. "draft" (ждущие оплаты) в лимит не
+    // входят — перепроверять их нет смысла.
+    if (initialStatus === "active") {
+      const raceCheck = await checkActiveListingsLimit(userId, req.user.account_type, {
+        countIncludesNewRow: true,
+      });
+      if (raceCheck) {
+        console.warn(
+          "Create Listing: active listings limit race detected, rolling back",
+          newListing.id
+        );
+
+        await supabase.from("listings").delete().eq("id", newListing.id);
+
+        if (tariffGrant) {
+          await refundTariffBoost(userId, tariffGrant.serviceType);
+        }
+
+        return res.status(raceCheck.status).json(raceCheck.body);
+      }
     }
 
     // Сохранение фото
@@ -325,10 +460,48 @@ export const createListing = async (req, res) => {
       }
     }
 
+    let finalListing = newListing;
+
+    // Поднятие уже списано с тарифа (до вставки строки) — применяем
+    // продвижение сразу, объявление публикуется с ним же, без отдельного
+    // шага оплаты.
+    if (tariffGrant) {
+      const applied = await grantPromotion({
+        listingId: newListing.id,
+        serviceType: tariffGrant.serviceType,
+        days: tariffGrant.days,
+      });
+
+      if (applied) {
+        const { data: refreshed } = await supabase
+          .from("listings")
+          .select("*")
+          .eq("id", newListing.id)
+          .single();
+        if (refreshed) finalListing = refreshed;
+      } else {
+        // Само объявление уже создано (активно как обычное) — не роняем
+        // ответ клиенту, но возвращаем поднятие, раз применить его не
+        // получилось, чтобы пользователь не терял его впустую.
+        console.error("Create Listing: grantPromotion failed after tariff consumption", newListing.id);
+        await refundTariffBoost(userId, tariffGrant.serviceType);
+      }
+    }
+
     return res.status(201).json({
       success: true,
-      message: "Объявление успешно создано",
-      data: newListing,
+      message:
+        initialStatus === "draft"
+          ? "Объявление создано и ждёт оплаты продвижения"
+          : "Объявление успешно создано",
+      data: finalListing,
+      // needsPayment/promotion — подсказка фронтенду, что дальше нужно
+      // создать оплату (см. front-end/src/app/add-product/page.jsx) —
+      // объявление в статусе "draft" не публикуется, пока не пройдёт
+      // POST /api/payments/promotion/create → успешная оплата.
+      needsPayment: initialStatus === "draft",
+      promotion:
+        initialStatus === "draft" ? { serviceType: listingType, days: boostDays } : null,
     });
   } catch (error) {
     console.error("Create Listing Error:", error);
@@ -491,6 +664,22 @@ export const updateListing = async (req, res) => {
     delete data.userId;
     delete data.user_id;
 
+    // Та же проверка владельца файла, что и при создании (см. createListing
+    // выше) — без неё в photos при обновлении можно было бы подставить чужое
+    // фото в обход водяного знака и подготовить IDOR на удаление файла.
+    // Admin исключён — модерация может редактировать чужое объявление, и
+    // фото в нём по определению загружены не им.
+    if (
+      userRole !== "admin" &&
+      data.photos !== undefined &&
+      !(await verifyAllOwnedBy(data.photos, userId))
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Все фото должны быть загружены вами через форму загрузки объявления",
+      });
+    }
+
     // Формируем объект обновлений для базы данных (маппинг полей)
     const updates = {
       updated_at: new Date().toISOString(),
@@ -555,17 +744,53 @@ export const updateListing = async (req, res) => {
       updates.features = nextFeatures;
     }
 
-    // TODO(security): сейчас статус/продвижение владелец может менять сам
-    // через этот эндпоинт (временно оставлено открытым для тестирования
-    // по просьбе пользователя, 2026-09-02). Как только появится платная
-    // покупка продвижения (VIP/ТОП/срочно) и реальный воркфлоу модерации,
-    // нужно вернуть проверку userRole === "admin" для status==="moderation",
-    // promotionStatus и isUrgent — иначе любой пользователь может бесплатно
-    // включить себе платное продвижение или снять объявление с модерации
-    // простым PUT-запросом.
+    // promotionStatus/isUrgent отражают ОПЛАЧЕННОЕ продвижение (см.
+    // services/promotionsService.js grantPromotion) — владелец не может
+    // выставлять их напрямую, иначе получал бы платный VIP/ТОП/Срочно
+    // бесплатно через обычный PUT. По той же причине владелец не может
+    // самостоятельно снять объявление со статуса "moderation" (или
+    // отправить его туда) — это решает только модератор/admin.
+    if (userRole !== "admin") {
+      if (data.promotionStatus !== undefined || data.isUrgent !== undefined) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Изменение VIP/ТОП/Срочно доступно только через оплату продвижения или тариф",
+        });
+      }
+
+      if (
+        (data.status !== undefined && data.status === "moderation") ||
+        existingListing.status === "moderation"
+      ) {
+        return res.status(403).json({
+          success: false,
+          message: "Статус модерации может изменить только администратор",
+        });
+      }
+    }
+
+    // Возврат объявления в "active" (например, из "hidden"/"draft")
+    // увеличивает число активных объявлений так же, как и создание нового
+    // — проверяем тот же лимит тарифа, иначе его можно обойти, скрывая и
+    // показывая объявления вместо реального удаления лишних.
+    const isReactivating =
+      userRole !== "admin" &&
+      data.status === "active" &&
+      existingListing.status !== "active";
+
+    if (isReactivating) {
+      const limitError = await checkActiveListingsLimit(userId, req.user.account_type);
+      if (limitError) {
+        return res.status(limitError.status).json(limitError.body);
+      }
+    }
+
     if (data.status !== undefined) updates.status = data.status;
-    if (data.promotionStatus !== undefined) updates.promotion_status = data.promotionStatus;
-    if (data.isUrgent !== undefined) updates.is_urgent = data.isUrgent;
+    if (userRole === "admin") {
+      if (data.promotionStatus !== undefined) updates.promotion_status = data.promotionStatus;
+      if (data.isUrgent !== undefined) updates.is_urgent = data.isUrgent;
+    }
 
     // 4. Обновление записи в таблице listings
     const { data: updatedListing, error: updateError } = await supabase
@@ -578,6 +803,27 @@ export const updateListing = async (req, res) => {
     if (updateError || !updatedListing) {
       console.error("Listing Update Error:", updateError);
       return res.status(500).json({ success: false, message: "Ошибка обновления объявления" });
+    }
+
+    // Та же повторная проверка после записи, что и в createListing — сужает
+    // окно гонки при параллельной реактивации нескольких объявлений сразу.
+    if (isReactivating) {
+      const raceCheck = await checkActiveListingsLimit(userId, req.user.account_type, {
+        countIncludesNewRow: true,
+      });
+      if (raceCheck) {
+        console.warn(
+          "Update Listing: active listings limit race detected, reverting status",
+          updatedListing.id
+        );
+
+        await supabase
+          .from("listings")
+          .update({ status: existingListing.status })
+          .eq("id", id);
+
+        return res.status(raceCheck.status).json(raceCheck.body);
+      }
     }
 
     // 5. Если переданы фотографии — обновим в таблице listing_photos
@@ -664,6 +910,77 @@ export const deleteListing = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Ошибка сервера при удалении объявления" });
+  }
+};
+
+// =======================================================
+// 7. Бесплатное поднятие в VIP/ТОП за счёт лимита тарифа
+//    (POST /api/listings/:id/promote-with-tariff)
+//
+// Если у пользователя есть активный тариф (дефолтный или индивидуальный) с
+// доступным лимитом VIP/TOP-поднятий — списывает одно поднятие и сразу
+// применяет продвижение к объявлению, без оплаты через O!Dengi. Если
+// лимита нет (тариф не активен/лимит исчерпан) — возвращает granted:false
+// и фронтенд должен перейти к обычной платной покупке
+// (POST /api/payments/promotion/create).
+// =======================================================
+export const promoteListingWithTariff = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const result = promoteWithTariffSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        message: result.error.issues[0]?.message || "Некорректные данные запроса",
+      });
+    }
+
+    const { serviceType, days } = result.data;
+
+    const { data: listing, error: fetchError } = await supabase
+      .from("listings")
+      .select("id, user_id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (fetchError || !listing) {
+      return res.status(404).json({ success: false, message: "Объявление не найдено" });
+    }
+
+    if (listing.user_id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Вы можете продвигать только свои объявления",
+      });
+    }
+
+    const consumption = await consumeTariffBoost(userId, serviceType);
+
+    if (!consumption.granted) {
+      return res.json({ success: true, data: { granted: false, reason: consumption.reason } });
+    }
+
+    const applied = await grantPromotion({ listingId: id, serviceType, days });
+
+    if (!applied) {
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось применить продвижение",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: { granted: true, remaining: consumption.remaining },
+    });
+  } catch (error) {
+    console.error("Promote Listing With Tariff Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при применении тарифа",
+    });
   }
 };
 

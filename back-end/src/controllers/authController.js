@@ -7,9 +7,15 @@ import {
   removeImageFromStorage,
   uploadVerificationDocumentToStorage,
   getVerificationDocumentSignedUrl,
+  extractStoragePath,
 } from "../utils/storage.js";
 
 const VERIFICATION_DOC_KEYS = ["document1", "document2", "document3"];
+
+// Фиктивный bcrypt-хэш для холостого сравнения при login с несуществующим
+// email/телефоном — см. login() ниже. Не привязан ни к какому реальному
+// паролю, нужен только чтобы bcrypt.compare занимал сравнимое время.
+const DUMMY_PASSWORD_HASH = "$2b$10$lEkmTFU5DlI2cBvqjktdyeOPlkMnP949VUGStMDpYydnIdHBDaEda";
 
 async function syncDeveloperRecord(userId, accountType, profile, phone, email) {
   try {
@@ -97,29 +103,44 @@ export const register = async (req, res) => {
     const formattedPhone = normalizePhone(phone);
 
     // 1. Проверка существования Email или Телефона в базе
-    const { data: existingUser, error: checkError } = await supabase
+    //
+    // Два отдельных .eq() вместо одного .or(`email.eq.${a},phone.eq.${b}`) —
+    // .or() у supabase-js собирает строку фильтра PostgREST из сырой
+    // конкатенации, а identifier/phone не ограничены по символам (только
+    // минимальная длина в zod), так что запятая в значении превращалась бы
+    // в дополнительное условие фильтра (PostgREST filter injection).
+    const { data: existingByEmail, error: emailCheckError } = await supabase
       .from("users")
-      .select("id, email, phone")
-      .or(`email.eq.${normalizedEmail},phone.eq.${formattedPhone}`)
+      .select("id")
+      .eq("email", normalizedEmail)
       .maybeSingle();
 
-    if (checkError && checkError.code !== "PGRST116") {
-      console.error("Supabase error during user check:", checkError);
+    if (emailCheckError) {
+      console.error("Supabase error during email check:", emailCheckError);
     }
 
-    if (existingUser) {
-      if (existingUser.email === normalizedEmail) {
-        return res.status(409).json({
-          success: false,
-          message: "Пользователь с таким Email уже зарегистрирован",
-        });
-      }
-      if (existingUser.phone === formattedPhone) {
-        return res.status(409).json({
-          success: false,
-          message: "Пользователь с таким номером телефона уже существует",
-        });
-      }
+    if (existingByEmail) {
+      return res.status(409).json({
+        success: false,
+        message: "Пользователь с таким Email уже зарегистрирован",
+      });
+    }
+
+    const { data: existingByPhone, error: phoneCheckError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("phone", formattedPhone)
+      .maybeSingle();
+
+    if (phoneCheckError) {
+      console.error("Supabase error during phone check:", phoneCheckError);
+    }
+
+    if (existingByPhone) {
+      return res.status(409).json({
+        success: false,
+        message: "Пользователь с таким номером телефона уже существует",
+      });
     }
 
     // 2. Хэширование пароля
@@ -245,14 +266,45 @@ export const login = async (req, res) => {
     const normalizedIdentifier = identifier.trim().toLowerCase();
     const formattedPhone = normalizePhone(identifier);
 
-    // Поиск по Email или Телефону
-    const { data: user, error: userError } = await supabase
+    // Поиск по Email или Телефону — два отдельных .eq() вместо одного
+    // .or(`email.eq.${a},phone.eq.${b}`): identifier не ограничен по
+    // символам, и сырая подстановка в .or() позволяла бы внедрить
+    // произвольное дополнительное условие фильтра PostgREST (например,
+    // "x,role.eq.admin" превращалось бы в доп. условие "role.eq.admin").
+    const { data: userByEmail, error: emailLookupError } = await supabase
       .from("users")
       .select("*")
-      .or(`email.eq.${normalizedIdentifier},phone.eq.${formattedPhone}`)
+      .eq("email", normalizedIdentifier)
       .maybeSingle();
 
-    if (userError || !user) {
+    if (emailLookupError) {
+      console.error("Login Lookup By Email Error:", emailLookupError);
+    }
+
+    let user = userByEmail;
+
+    if (!user) {
+      const { data: userByPhone, error: phoneLookupError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("phone", formattedPhone)
+        .maybeSingle();
+
+      if (phoneLookupError) {
+        console.error("Login Lookup By Phone Error:", phoneLookupError);
+      }
+
+      user = userByPhone;
+    }
+
+    if (!user) {
+      // Холостой bcrypt.compare против фиктивного хэша — bcrypt.compare
+      // на найденном пользователе доминирует время ответа (~100мс против
+      // ~2мс без него), и без этого разница во времени ответа выдавала
+      // бы, существует ли email/телефон в базе (timing attack на
+      // перебор базы контактов), даже не зная пароль.
+      await bcrypt.compare(password, DUMMY_PASSWORD_HASH);
+
       return res.status(401).json({
         success: false,
         message: "Неверный Email/телефон или пароль",
@@ -567,9 +619,28 @@ export const updateMe = async (req, res) => {
 
     if (data.avatarUrl !== undefined) {
       const oldAvatarUrl = currentProfile?.avatar_url;
+      const avatarChanged = oldAvatarUrl !== data.avatarUrl;
+
+      // Новый avatarUrl (не то же самое значение, что уже сохранено)
+      // обязан быть загружен именно ЭТИМ пользователем через
+      // /api/auth/avatar — путь объекта там всегда `${userId}/...`.
+      // Без этой проверки trustedImageUrl (validation.js) пропустил бы
+      // ЛЮБУЮ ссылку с нашего Storage-хоста, включая чужой аватар/фото —
+      // а замена аватара удаляет предыдущий файл (см. removeImageFromStorage
+      // ниже) с сервисными правами, т.е. позволяла бы стереть чужой файл.
+      if (avatarChanged && data.avatarUrl) {
+        const objectPath = extractStoragePath(data.avatarUrl);
+        if (!objectPath || !objectPath.startsWith(`${userId}/`)) {
+          return res.status(400).json({
+            success: false,
+            message: "Фото профиля должно быть загружено вами через форму профиля",
+          });
+        }
+      }
+
       profileUpdates.avatar_url = data.avatarUrl;
 
-      if (oldAvatarUrl && oldAvatarUrl !== data.avatarUrl) {
+      if (oldAvatarUrl && avatarChanged) {
         await removeImageFromStorage(oldAvatarUrl);
       }
     }
@@ -776,7 +847,16 @@ export const deleteUserAvatar = async (req, res) => {
 };
 
 // =======================================================
-// 6. Отправка и проверка WhatsApp / SMS OTP кодов (Заготовка)
+// 6. Отправка и проверка WhatsApp / SMS OTP кодов — ЗАГЛУШКА.
+//
+// Реальная отправка (WhatsApp/SMS-провайдер) и генерация/хранение кода
+// ещё не реализованы — эти два эндпоинта сейчас ничего никуда не
+// отправляют и ничего не проверяют. Раньше verifyOtp пропускал
+// фиксированные коды "1111"/"1234" — это был живой бэкдор: если бы
+// verify-otp позже подключили к чему-то чувствительному (смена
+// телефона/сброс пароля) без ревью этого места, любой мог бы подтвердить
+// чужой номер этими кодами. Сейчас оба эндпоинта явно отвечают "не
+// реализовано", пока не подключён реальный провайдер.
 // =======================================================
 export const sendOtp = async (req, res) => {
   const { phone } = req.body;
@@ -784,10 +864,9 @@ export const sendOtp = async (req, res) => {
     return res.status(400).json({ success: false, message: "Укажите номер телефона" });
   }
 
-  // Здесь подключается WhatsApp API (например, Green API / Twilio)
-  return res.json({
-    success: true,
-    message: `Код подтверждения отправлен в WhatsApp на номер ${phone}`,
+  return res.status(501).json({
+    success: false,
+    message: "Отправка кода подтверждения пока не реализована",
   });
 };
 
@@ -797,15 +876,10 @@ export const verifyOtp = async (req, res) => {
     return res.status(400).json({ success: false, message: "Укажите телефон и код" });
   }
 
-  // Проверка тестового кода "1111" или динамического
-  if (code === "1111" || code === "1234") {
-    return res.json({
-      success: true,
-      message: "Код подлинный",
-    });
-  }
-
-  return res.status(400).json({ success: false, message: "Неверный код из SMS/WhatsApp" });
+  return res.status(501).json({
+    success: false,
+    message: "Проверка кода подтверждения пока не реализована",
+  });
 };
 
 // =======================================================

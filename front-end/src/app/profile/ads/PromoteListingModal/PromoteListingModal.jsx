@@ -12,7 +12,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { getPricing } from "@/utils/api";
+import { getPricing, promoteListingWithTariff } from "@/utils/api";
 import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./PromoteListingModal.module.css";
@@ -42,7 +42,14 @@ const SERVICES = [
 
 const DAY_OPTIONS = [1, 3, 7, 14, 30];
 
-export default function PromoteListingModal({ isOpen, onClose, listing }) {
+const TARIFF_BOOSTABLE_SERVICES = ["vip", "top"];
+
+export default function PromoteListingModal({
+  isOpen,
+  onClose,
+  listing,
+  onPromoted,
+}) {
   const router = useRouter();
   const { t } = useLanguage();
 
@@ -50,22 +57,35 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
   const [pricingError, setPricingError] = useState("");
   const [serviceType, setServiceType] = useState("vip");
   const [days, setDays] = useState(7);
+  const [submitting, setSubmitting] = useState(false);
+
+  /*
+   * LOAD PRICING
+   */
 
   useEffect(() => {
     if (!isOpen) return;
 
     setServiceType("vip");
     setDays(7);
+    setPricing(null);
     setPricingError("");
+    setSubmitting(false);
 
     getPricing()
-      .then((data) => setPricing(data))
+      .then((data) => {
+        setPricing(data);
+      })
       .catch((err) => {
         console.error("Ошибка загрузки цен продвижения:", err);
 
         setPricingError("promoteListingModal.errors.pricing");
       });
   }, [isOpen]);
+
+  /*
+   * ESCAPE
+   */
 
   useEffect(() => {
     if (!isOpen) return;
@@ -78,12 +98,17 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
 
     document.addEventListener("keydown", handleEscape);
 
-    return () => document.removeEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen || !listing) return null;
+  if (!isOpen || !listing) {
+    return null;
+  }
 
-  const selected = SERVICES.find((service) => service.id === serviceType);
+  const selected =
+    SERVICES.find((service) => service.id === serviceType) || SERVICES[0];
 
   const pricePerUnit = pricing?.services?.[serviceType];
 
@@ -93,19 +118,9 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
       : Number(pricePerUnit)
     : null;
 
-  const handleSubmit = () => {
-    const params = new URLSearchParams({
-      type: "promotion",
-      listingId: listing.id,
-      serviceType,
-    });
-
-    if (selected.perDay) {
-      params.set("days", String(days));
-    }
-
-    router.push(`/payment?${params.toString()}`);
-  };
+  /*
+   * TRANSLATIONS
+   */
 
   const getServiceTitle = (serviceId) => {
     return t(`promoteListingModal.services.${serviceId}.title`);
@@ -120,6 +135,84 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
       ? t("promoteListingModal.pricing.perDay")
       : t("promoteListingModal.pricing.oneTime");
   };
+
+  /*
+   * PAYMENT
+   */
+
+  const goToPayment = () => {
+    const params = new URLSearchParams({
+      type: "promotion",
+      listingId: String(listing.id),
+      serviceType,
+    });
+
+    if (selected.perDay) {
+      params.set("days", String(days));
+    }
+
+    router.push(`/payment?${params.toString()}`);
+  };
+
+  /*
+   * SUBMIT
+   */
+
+  const handleSubmit = async () => {
+    if (submitting) return;
+
+    /*
+     * VIP и TOP сначала пытаемся списать
+     * бесплатно из лимита тарифа.
+     *
+     * Срочно и Instagram всегда идут
+     * через оплату.
+     */
+
+    if (!TARIFF_BOOSTABLE_SERVICES.includes(serviceType)) {
+      goToPayment();
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const token = localStorage.getItem("uytap_token");
+
+      if (!token) {
+        goToPayment();
+        return;
+      }
+
+      const result = await promoteListingWithTariff(token, listing.id, {
+        serviceType,
+        days,
+      });
+
+      if (result?.granted) {
+        onPromoted?.();
+        onClose();
+        return;
+      }
+
+      goToPayment();
+    } catch (error) {
+      console.error("Ошибка проверки тарифа:", error);
+
+      /*
+       * Даже если проверка тарифа упала,
+       * пользователь всё равно может перейти
+       * к обычной оплате.
+       */
+      goToPayment();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  /*
+   * RENDER
+   */
 
   return (
     <div
@@ -136,6 +229,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
         aria-modal="true"
         aria-labelledby="promote-modal-title"
       >
+        {/* HEADER */}
+
         <div className={styles.header}>
           <div>
             <span>{t("promoteListingModal.header.label")}</span>
@@ -157,6 +252,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
           </button>
         </div>
 
+        {/* BODY */}
+
         <div className={styles.body}>
           {pricingError && (
             <div className={styles.error}>
@@ -168,11 +265,12 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             </div>
           )}
 
+          {/* SERVICES */}
+
           <div className={styles.serviceGrid}>
             {SERVICES.map((service) => {
               const Icon = service.icon;
               const isSelected = serviceType === service.id;
-
               const price = pricing?.services?.[service.id];
 
               return (
@@ -210,6 +308,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             })}
           </div>
 
+          {/* DAYS */}
+
           {selected.perDay && (
             <div className={styles.daysSection}>
               <span className={styles.daysLabel}>
@@ -234,6 +334,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
           )}
         </div>
 
+        {/* FOOTER */}
+
         <div className={styles.footer}>
           <div className={styles.total}>
             <span>{t("promoteListingModal.total.label")}</span>
@@ -251,9 +353,11 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             type="button"
             className={styles.submit}
             onClick={handleSubmit}
-            disabled={!pricing}
+            disabled={!pricing || submitting}
           >
-            {t("promoteListingModal.actions.payment")}
+            {submitting
+              ? t("promoteListingModal.actions.checking")
+              : t("promoteListingModal.actions.payment")}
 
             <ArrowRight size={16} />
           </button>

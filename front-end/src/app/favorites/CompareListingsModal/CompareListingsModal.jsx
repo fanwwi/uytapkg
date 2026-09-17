@@ -40,6 +40,15 @@ function formatFeatureValue(value) {
   return String(value);
 }
 
+// Служебные поля из listings.features — они пишутся туда для внутренней
+// логики (см. back-end/src/services/promotionsService.js
+// grantPromotion/resolvePromotionExpiry и привязку ЖК в
+// listingsController.js), а не для показа пользователю. Без этого
+// фильтра, например, "promotionExpiresAt" превращалось бы в строку
+// сравнения "Promotion Expires At" с сырым ISO-временем.
+const TECHNICAL_FEATURE_KEY_PATTERN =
+  /id$|createdat|updatedat|deletedat|expiresat|verificationstatus|verificationdocs|rejectionreason/i;
+
 function getFeatures(item) {
   const features = item?.rawFeatures || {};
 
@@ -51,6 +60,10 @@ function getFeatures(item) {
         value === "" ||
         value === false
       ) {
+        return false;
+      }
+
+      if (TECHNICAL_FEATURE_KEY_PATTERN.test(key.toLowerCase())) {
         return false;
       }
 

@@ -14,7 +14,7 @@ import {
   UserRoundArrowLeft,
   Rocket,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -32,16 +32,29 @@ import PromoteListingModal from "./PromoteListingModal/PromoteListingModal";
 
 export default function Ads() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const mapBackendListing = (l) => {
+  // DELETE
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedListing, setSelectedListing] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // EDIT
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingListing, setEditingListing] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // PROMOTE
+  const [promotingListing, setPromotingListing] = useState(null);
+
+  const mapBackendListing = useCallback((listing) => {
     const mainPhoto =
-      l.listing_photos?.find((p) => p.is_main)?.url ||
-      l.listing_photos?.[0]?.url ||
+      listing.listing_photos?.find((photo) => photo.is_main)?.url ||
+      listing.listing_photos?.[0]?.url ||
       "";
 
     const propertyTypeMapping = {
@@ -61,27 +74,27 @@ export default function Ads() {
     };
 
     return {
-      id: l.id,
-      title: l.title || t("ads.fallback.noTitle"),
-      type: propertyTypeMapping[l.property_type] || "other",
-      location: l.city || l.region || t("ads.fallback.country"),
-      address: l.address || "",
-      price: `${l.price?.toLocaleString() || 0} ${
-        l.currency === "USD" ? "$" : t("ads.currency.som")
+      id: listing.id,
+      title: listing.title || "",
+      type: propertyTypeMapping[listing.property_type] || "other",
+      location: listing.city || listing.region || "",
+      address: listing.address || "",
+      price: `${listing.price?.toLocaleString() || 0} ${
+        listing.currency === "USD" ? "$" : "сом"
       }`,
       image:
         mainPhoto ||
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400",
-      status: statusMapping[l.status] || "active",
-      likes: l.favorites_count || 0,
-      dealType: l.deal_type === "sale" ? "sale" : "rent",
-      area: l.area ? `${l.area} м²` : "",
-      rooms: l.rooms,
-      floors: l.total_floors,
-      description: l.description || "",
-      raw: l,
+      status: statusMapping[listing.status] || "active",
+      likes: listing.favorites_count || 0,
+      dealType: listing.deal_type === "sale" ? "sale" : "rent",
+      area: listing.area ? `${listing.area} м²` : "",
+      rooms: listing.rooms,
+      floors: listing.total_floors,
+      description: listing.description || "",
+      raw: listing,
     };
-  };
+  }, []);
 
   const translatePropertyType = (type) => {
     return t(`ads.propertyTypes.${type}`);
@@ -95,7 +108,7 @@ export default function Ads() {
     return t(`ads.dealTypes.${dealType}`);
   };
 
-  useEffect(() => {
+  const loadListings = useCallback(async () => {
     const token = localStorage.getItem("uytap_token");
 
     if (!token) {
@@ -106,54 +119,32 @@ export default function Ads() {
     setLoading(true);
     setError("");
 
-    getMyListings(token)
-      .then((res) => {
-        if (res.success && res.data) {
-          setListings(res.data.map(mapBackendListing));
-        } else {
-          setError(res.message || "ads.errors.load");
-        }
-      })
-      .catch((err) => {
-        console.error("Load my listings error:", err);
+    try {
+      const res = await getMyListings(token);
 
-        setError("ads.errors.server");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [router]);
+      if (res.success && res.data) {
+        setListings(res.data.map(mapBackendListing));
+      } else {
+        setError(res.message || "ads.errors.load");
+      }
+    } catch (err) {
+      console.error("Load my listings error:", err);
 
-  // DELETE
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+      setError("ads.errors.server");
+    } finally {
+      setLoading(false);
+    }
+  }, [router, mapBackendListing]);
 
-  const [selectedListing, setSelectedListing] = useState(null);
+  useEffect(() => {
+    loadListings();
+  }, [loadListings, language]);
 
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  // EDIT
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  const [editingListing, setEditingListing] = useState(null);
-
-  const [isSaving, setIsSaving] = useState(false);
-
-  // PROMOTE
-  const [promotingListing, setPromotingListing] = useState(null);
-
-  const activeCount = listings.filter(
-    (item) => item.status === "active",
-  ).length;
-
-  const pendingCount = listings.filter(
-    (item) => item.status === "moderation",
-  ).length;
-
-  const totalLikes = listings.reduce((total, item) => total + item.likes, 0);
-
-  /* =========================
-     DELETE
-  ========================= */
+  /*
+  |--------------------------------------------------------------------------
+  | DELETE
+  |--------------------------------------------------------------------------
+  */
 
   const openDeleteModal = (listing) => {
     setSelectedListing(listing);
@@ -174,7 +165,9 @@ export default function Ads() {
 
     const token = localStorage.getItem("uytap_token");
 
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     try {
       setIsDeleting(true);
@@ -200,9 +193,11 @@ export default function Ads() {
     }
   };
 
-  /* =========================
-     EDIT
-  ========================= */
+  /*
+  |--------------------------------------------------------------------------
+  | EDIT
+  |--------------------------------------------------------------------------
+  */
 
   const openEditModal = (listing) => {
     setEditingListing(listing);
@@ -223,7 +218,9 @@ export default function Ads() {
 
     const token = localStorage.getItem("uytap_token");
 
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     try {
       setIsSaving(true);
@@ -271,7 +268,10 @@ export default function Ads() {
           editingListing.raw?.property_type ||
           "apartment",
 
-        dealType: dealTypeMapping[updatedListing.dealType] || "rent",
+        dealType:
+          dealTypeMapping[updatedListing.dealType] ||
+          editingListing.raw?.deal_type ||
+          "rent",
 
         price: priceVal || 100000,
 
@@ -319,6 +319,18 @@ export default function Ads() {
       setIsSaving(false);
     }
   };
+
+  /*
+  |--------------------------------------------------------------------------
+  | STATISTICS
+  |--------------------------------------------------------------------------
+  */
+
+  const activeCount = listings.filter(
+    (item) => item.status === "active",
+  ).length;
+
+  const totalLikes = listings.reduce((total, item) => total + item.likes, 0);
 
   return (
     <main className={styles.page}>
@@ -432,7 +444,7 @@ export default function Ads() {
                   <Image
                     src={item.image}
                     fill
-                    alt={item.title}
+                    alt={item.title || t("ads.fallback.noTitle")}
                     sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 400px"
                   />
 
@@ -468,12 +480,12 @@ export default function Ads() {
                 {/* CONTENT */}
 
                 <div className={styles.cardContent}>
-                  <h2>{item.title}</h2>
+                  <h2>{item.title || t("ads.fallback.noTitle")}</h2>
 
                   <div className={styles.location}>
                     <MapPin size={17} />
 
-                    <span>{item.location}</span>
+                    <span>{item.location || t("ads.fallback.country")}</span>
                   </div>
 
                   <div className={styles.infoRow}>
@@ -517,8 +529,8 @@ export default function Ads() {
                       className={styles.iconButton}
                       aria-label={t("ads.actions.promoteAria")}
                       title={t("ads.actions.promote")}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={(event) => {
+                        event.stopPropagation();
 
                         setPromotingListing(item);
                       }}
@@ -531,8 +543,8 @@ export default function Ads() {
                       className={styles.iconButton}
                       aria-label={t("ads.actions.editAria")}
                       title={t("ads.actions.edit")}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={(event) => {
+                        event.stopPropagation();
 
                         openEditModal(item);
                       }}
@@ -545,8 +557,8 @@ export default function Ads() {
                       className={`${styles.iconButton} ${styles.deleteButton}`}
                       aria-label={t("ads.actions.deleteAria")}
                       title={t("ads.actions.delete")}
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={(event) => {
+                        event.stopPropagation();
 
                         openDeleteModal(item);
                       }}
@@ -613,6 +625,7 @@ export default function Ads() {
           isOpen={Boolean(promotingListing)}
           onClose={() => setPromotingListing(null)}
           listing={promotingListing}
+          onPromoted={loadListings}
         />
       </div>
     </main>
