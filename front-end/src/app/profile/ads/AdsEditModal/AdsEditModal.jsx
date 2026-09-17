@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   X,
   Save,
@@ -12,11 +12,11 @@ import {
   Layers3,
   FileText,
   Loader2,
-  ChevronDown,
 } from "lucide-react";
 
 import styles from "./AdsEditModal.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+import { useLanguage } from "@/context/LanguageContext";
 
 const typeOptions = [
   "Дом",
@@ -36,6 +36,8 @@ export default function AdsEditModal({
   onSave,
   loading = false,
 }) {
+  const { t } = useLanguage();
+
   const [form, setForm] = useState({
     title: "",
     type: "",
@@ -65,6 +67,38 @@ export default function AdsEditModal({
       description: listing.description || "",
     });
   }, [listing]);
+
+  const translatedTypeOptions = useMemo(() => {
+    return typeOptions.map((type) => {
+      const key = {
+        Дом: "house",
+        Коттедж: "cottage",
+        Квартира: "apartment",
+        Участок: "land",
+        Коммерция: "commercial",
+        Дача: "dacha",
+      }[type];
+
+      return {
+        value: type,
+        label: key ? t(`adsEditModal.propertyTypes.${key}`) : type,
+      };
+    });
+  }, [t]);
+
+  const translatedDealOptions = useMemo(() => {
+    return dealOptions.map((deal) => {
+      const key = {
+        Продажа: "sale",
+        Сдаю: "rent",
+      }[deal];
+
+      return {
+        value: deal,
+        label: key ? t(`adsEditModal.dealTypes.${key}`) : deal,
+      };
+    });
+  }, [t]);
 
   if (!isOpen || !listing) return null;
 
@@ -107,11 +141,13 @@ export default function AdsEditModal({
 
         <div className={styles.header}>
           <div>
-            <span className={styles.label}>УПРАВЛЕНИЕ ОБЪЯВЛЕНИЕМ</span>
+            <span className={styles.label}>
+              {t("adsEditModal.header.label")}
+            </span>
 
-            <h2 id="edit-modal-title">Изменить объявление</h2>
+            <h2 id="edit-modal-title">{t("adsEditModal.header.title")}</h2>
 
-            <p>Измените информацию об объекте и сохраните обновления.</p>
+            <p>{t("adsEditModal.header.description")}</p>
           </div>
 
           <button
@@ -119,7 +155,7 @@ export default function AdsEditModal({
             className={styles.close}
             onClick={onClose}
             disabled={loading}
-            aria-label="Закрыть"
+            aria-label={t("adsEditModal.actions.close")}
           >
             <X size={20} />
           </button>
@@ -135,8 +171,9 @@ export default function AdsEditModal({
               </div>
 
               <div>
-                <span>ОСНОВНАЯ ИНФОРМАЦИЯ</span>
-                <h3>Об объекте</h3>
+                <span>{t("adsEditModal.sections.basic.label")}</span>
+
+                <h3>{t("adsEditModal.sections.basic.title")}</h3>
               </div>
             </div>
 
@@ -144,7 +181,9 @@ export default function AdsEditModal({
               {/* TITLE */}
 
               <div className={`${styles.field} ${styles.full}`}>
-                <label htmlFor="title">Название объявления</label>
+                <label htmlFor="title">
+                  {t("adsEditModal.fields.title.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <FileText size={17} />
@@ -154,7 +193,7 @@ export default function AdsEditModal({
                     name="title"
                     value={form.title}
                     onChange={handleChange}
-                    placeholder="Название объекта"
+                    placeholder={t("adsEditModal.fields.title.placeholder")}
                     required
                   />
                 </div>
@@ -163,12 +202,12 @@ export default function AdsEditModal({
               {/* TYPE */}
 
               <div className={styles.field}>
-                <label>Тип объекта</label>
+                <label>{t("adsEditModal.fields.type.label")}</label>
 
                 <CustomSelect
                   value={form.type}
-                  options={typeOptions}
-                  title="Тип объекта"
+                  options={translatedTypeOptions}
+                  title={t("adsEditModal.fields.type.title")}
                   setValue={(value) =>
                     setForm((prev) => ({
                       ...prev,
@@ -181,12 +220,12 @@ export default function AdsEditModal({
               {/* DEAL TYPE */}
 
               <div className={styles.field}>
-                <label>Тип предложения</label>
+                <label>{t("adsEditModal.fields.dealType.label")}</label>
 
                 <CustomSelect
                   value={form.dealType}
-                  options={dealOptions}
-                  title="Тип предложения"
+                  options={translatedDealOptions}
+                  title={t("adsEditModal.fields.dealType.title")}
                   setValue={(value) =>
                     setForm((prev) => ({
                       ...prev,
@@ -207,14 +246,19 @@ export default function AdsEditModal({
               </div>
 
               <div>
-                <span>РАСПОЛОЖЕНИЕ</span>
-                <h3>Адрес объекта</h3>
+                <span>{t("adsEditModal.sections.location.label")}</span>
+
+                <h3>{t("adsEditModal.sections.location.title")}</h3>
               </div>
             </div>
 
             <div className={styles.fields}>
+              {/* LOCATION */}
+
               <div className={styles.field}>
-                <label htmlFor="location">Город / район</label>
+                <label htmlFor="location">
+                  {t("adsEditModal.fields.location.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <MapPin size={17} />
@@ -224,14 +268,18 @@ export default function AdsEditModal({
                     name="location"
                     value={form.location}
                     onChange={handleChange}
-                    placeholder="Например, Чолпон-Ата"
+                    placeholder={t("adsEditModal.fields.location.placeholder")}
                     required
                   />
                 </div>
               </div>
 
+              {/* ADDRESS */}
+
               <div className={styles.field}>
-                <label htmlFor="address">Адрес</label>
+                <label htmlFor="address">
+                  {t("adsEditModal.fields.address.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <MapPin size={17} />
@@ -241,7 +289,7 @@ export default function AdsEditModal({
                     name="address"
                     value={form.address}
                     onChange={handleChange}
-                    placeholder="Улица, дом"
+                    placeholder={t("adsEditModal.fields.address.placeholder")}
                   />
                 </div>
               </div>
@@ -257,8 +305,9 @@ export default function AdsEditModal({
               </div>
 
               <div>
-                <span>ХАРАКТЕРИСТИКИ</span>
-                <h3>Параметры объекта</h3>
+                <span>{t("adsEditModal.sections.details.label")}</span>
+
+                <h3>{t("adsEditModal.sections.details.title")}</h3>
               </div>
             </div>
 
@@ -266,7 +315,9 @@ export default function AdsEditModal({
               {/* PRICE */}
 
               <div className={styles.field}>
-                <label htmlFor="price">Цена</label>
+                <label htmlFor="price">
+                  {t("adsEditModal.fields.price.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <DollarSign size={17} />
@@ -276,7 +327,7 @@ export default function AdsEditModal({
                     name="price"
                     value={form.price}
                     onChange={handleChange}
-                    placeholder="120 000 $"
+                    placeholder={t("adsEditModal.fields.price.placeholder")}
                     required
                   />
                 </div>
@@ -285,7 +336,9 @@ export default function AdsEditModal({
               {/* AREA */}
 
               <div className={styles.field}>
-                <label htmlFor="area">Площадь</label>
+                <label htmlFor="area">
+                  {t("adsEditModal.fields.area.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <Ruler size={17} />
@@ -295,7 +348,7 @@ export default function AdsEditModal({
                     name="area"
                     value={form.area}
                     onChange={handleChange}
-                    placeholder="180 м²"
+                    placeholder={t("adsEditModal.fields.area.placeholder")}
                   />
                 </div>
               </div>
@@ -303,7 +356,9 @@ export default function AdsEditModal({
               {/* ROOMS */}
 
               <div className={styles.field}>
-                <label htmlFor="rooms">Комнаты</label>
+                <label htmlFor="rooms">
+                  {t("adsEditModal.fields.rooms.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <BedDouble size={17} />
@@ -315,7 +370,7 @@ export default function AdsEditModal({
                     min="0"
                     value={form.rooms}
                     onChange={handleChange}
-                    placeholder="5"
+                    placeholder={t("adsEditModal.fields.rooms.placeholder")}
                   />
                 </div>
               </div>
@@ -323,7 +378,9 @@ export default function AdsEditModal({
               {/* FLOORS */}
 
               <div className={styles.field}>
-                <label htmlFor="floors">Этажность</label>
+                <label htmlFor="floors">
+                  {t("adsEditModal.fields.floors.label")}
+                </label>
 
                 <div className={styles.inputWrapper}>
                   <Layers3 size={17} />
@@ -335,7 +392,7 @@ export default function AdsEditModal({
                     min="1"
                     value={form.floors}
                     onChange={handleChange}
-                    placeholder="2"
+                    placeholder={t("adsEditModal.fields.floors.placeholder")}
                   />
                 </div>
               </div>
@@ -351,20 +408,23 @@ export default function AdsEditModal({
               </div>
 
               <div>
-                <span>ОБЪЕКТ</span>
-                <h3>Описание</h3>
+                <span>{t("adsEditModal.sections.description.label")}</span>
+
+                <h3>{t("adsEditModal.sections.description.title")}</h3>
               </div>
             </div>
 
             <div className={styles.field}>
-              <label htmlFor="description">Описание объявления</label>
+              <label htmlFor="description">
+                {t("adsEditModal.fields.description.label")}
+              </label>
 
               <textarea
                 id="description"
                 name="description"
                 value={form.description}
                 onChange={handleChange}
-                placeholder="Расскажите подробнее об объекте..."
+                placeholder={t("adsEditModal.fields.description.placeholder")}
                 rows={5}
               />
             </div>
@@ -379,19 +439,21 @@ export default function AdsEditModal({
               onClick={onClose}
               disabled={loading}
             >
-              Отмена
+              {t("adsEditModal.actions.cancel")}
             </button>
 
             <button type="submit" className={styles.save} disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 size={17} className={styles.loader} />
-                  Сохранение...
+
+                  {t("adsEditModal.actions.saving")}
                 </>
               ) : (
                 <>
                   <Save size={17} />
-                  Сохранить изменения
+
+                  {t("adsEditModal.actions.save")}
                 </>
               )}
             </button>

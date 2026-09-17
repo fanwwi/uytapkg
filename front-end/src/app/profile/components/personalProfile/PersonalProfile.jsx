@@ -20,16 +20,31 @@ import styles from "./PersonalProfile.module.css";
 
 import ProfileEditModal from "./profileEdit/ProfileEditModal";
 
-export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0 }) {
+import { useLanguage } from "@/context/LanguageContext";
+
+export default function PersonalProfile({
+  user,
+  adsCount = 0,
+  favoritesCount = 0,
+}) {
+  const { t } = useLanguage();
+
   const [openEdit, setOpenEdit] = useState(false);
 
   if (!user) return null;
 
   const profile = user.profile || {};
-  const avatarUrl = profile.avatar_url || profile.avatar || user.avatar_url || user.avatar || null;
 
-  const fullName =
-    `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
+  const avatarUrl =
+    profile.avatar_url ||
+    profile.avatar ||
+    user.avatar_url ||
+    user.avatar ||
+    null;
+
+  const fullName = `${profile.first_name || ""} ${
+    profile.last_name || ""
+  }`.trim();
 
   const whatsappNumber = user.phone?.replace(/\D/g, "") || "";
 
@@ -46,7 +61,8 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
       <div className={styles.topBar}>
         <Link href="/" className={styles.homeButton}>
           <ArrowLeft />
-          На главную
+
+          {t("personalProfile.topBar.home")}
         </Link>
       </div>
 
@@ -66,7 +82,7 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
         <div className={styles.avatarWrapper}>
           <div className={styles.avatar}>
             {avatarUrl ? (
-              <img src={avatarUrl} alt="avatar" />
+              <img src={avatarUrl} alt={t("personalProfile.avatarAlt")} />
             ) : (
               <User />
             )}
@@ -74,39 +90,46 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
         </div>
 
         <div className={styles.info}>
-          <h1>{fullName || "Пользователь"}</h1>
+          <h1>{fullName || t("personalProfile.defaults.user")}</h1>
 
-          <span className={styles.type}>Частное лицо</span>
+          <span className={styles.type}>{t("personalProfile.type")}</span>
 
           <div className={styles.contacts}>
             <div className={styles.phone}>
               <Phone />
 
-              <span>{user.phone || "Нет телефона"}</span>
+              <span>{user.phone || t("personalProfile.defaults.noPhone")}</span>
             </div>
 
             {whatsappNumber && (
               <a
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
+                rel="noopener noreferrer"
                 className={styles.whatsapp}
+                aria-label={t("personalProfile.actions.whatsapp")}
               >
                 <MessageCircle />
-                WhatsApp
+
+                {t("personalProfile.whatsapp")}
               </a>
             )}
           </div>
         </div>
 
-        <button className={styles.edit} onClick={() => setOpenEdit(true)}>
+        <button
+          className={styles.edit}
+          onClick={() => setOpenEdit(true)}
+          aria-label={t("personalProfile.actions.editAria")}
+        >
           <Pencil />
         </button>
       </motion.section>
 
       <section className={styles.about}>
-        <h3>О себе</h3>
+        <h3>{t("personalProfile.about.title")}</h3>
 
-        <p>{profile.about || "Пользователь пока не добавил описание"}</p>
+        <p>{profile.about || t("personalProfile.about.empty")}</p>
       </section>
 
       <section className={styles.actions}>
@@ -116,9 +139,9 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
           </div>
 
           <div>
-            <h3>Мои объявления</h3>
+            <h3>{t("personalProfile.actions.myAds.title")}</h3>
 
-            <p>Управление объектами</p>
+            <p>{t("personalProfile.actions.myAds.description")}</p>
           </div>
         </Link>
 
@@ -128,9 +151,9 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
           </div>
 
           <div>
-            <h3>Избранное</h3>
+            <h3>{t("personalProfile.actions.favorites.title")}</h3>
 
-            <p>Сохраненные объекты</p>
+            <p>{t("personalProfile.actions.favorites.description")}</p>
           </div>
         </Link>
 
@@ -140,9 +163,9 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
           </div>
 
           <div>
-            <h3>Мой тариф</h3>
+            <h3>{t("personalProfile.actions.tariff.title")}</h3>
 
-            <p>Управление подпиской</p>
+            <p>{t("personalProfile.actions.tariff.description")}</p>
           </div>
         </Link>
 
@@ -152,9 +175,9 @@ export default function PersonalProfile({ user, adsCount = 0, favoritesCount = 0
           </div>
 
           <div>
-            <h3>Выйти</h3>
+            <h3>{t("personalProfile.actions.logout.title")}</h3>
 
-            <p>Завершить сессию</p>
+            <p>{t("personalProfile.actions.logout.description")}</p>
           </div>
         </button>
       </section>

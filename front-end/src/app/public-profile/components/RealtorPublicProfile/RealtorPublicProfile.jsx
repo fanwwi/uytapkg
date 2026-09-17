@@ -11,10 +11,10 @@ import {
   Building2,
   CheckCircle,
   ArrowUpRight,
-  ChevronRight,
   ArrowLeft,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./RealtorPublicProfile.module.css";
@@ -26,6 +26,8 @@ export default function RealtorPublicProfile({
   favIds = new Set(),
   onFavoriteClick,
 }) {
+  const { t } = useLanguage();
+
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -39,7 +41,7 @@ export default function RealtorPublicProfile({
 
   const name =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
-    "Риэлтор";
+    t("realtorPublicProfile.defaults.realtor");
 
   const company = profile.company_name || "";
 
@@ -54,7 +56,6 @@ export default function RealtorPublicProfile({
     user.ads || profile.ads || profile.listings || profile.properties || [];
 
   const adsCount = profile.ads_count ?? ads.length;
-  const clientsCount = profile.clients_count ?? 0;
 
   return (
     <main className={styles.page}>
@@ -66,7 +67,7 @@ export default function RealtorPublicProfile({
 
         <Link href="/" className={styles.backButton}>
           <ArrowLeft size={17} />
-          <span>На главную</span>
+          <span>{t("realtorPublicProfile.topBar.home")}</span>
         </Link>
 
         <motion.section
@@ -95,7 +96,7 @@ export default function RealtorPublicProfile({
               {user.isVerified && (
                 <div className={styles.avatarVerified}>
                   <CheckCircle />
-                  Проверенный профиль
+                  {t("realtorPublicProfile.verification.profile")}
                 </div>
               )}
             </motion.div>
@@ -111,13 +112,13 @@ export default function RealtorPublicProfile({
               <div className={styles.topMeta}>
                 <span className={styles.badge}>
                   <span className={styles.badgeDot} />
-                  Риэлтор
+                  {t("realtorPublicProfile.role")}
                 </span>
 
                 {user.isVerified && (
                   <span className={styles.verifiedLabel}>
                     <CheckCircle />
-                    Проверен
+                    {t("realtorPublicProfile.verification.short")}
                   </span>
                 )}
               </div>
@@ -132,15 +133,14 @@ export default function RealtorPublicProfile({
               )}
 
               <p className={styles.description}>
-                {profile.about ||
-                  "Риэлтор пока не добавил описание своей деятельности."}
+                {profile.about || t("realtorPublicProfile.defaults.about")}
               </p>
 
               <div className={styles.actions}>
                 {phone && (
                   <a href={`tel:${phone}`} className={styles.primaryAction}>
                     <Phone />
-                    Позвонить
+                    {t("realtorPublicProfile.actions.call")}
                   </a>
                 )}
 
@@ -152,7 +152,7 @@ export default function RealtorPublicProfile({
                     className={styles.secondaryAction}
                   >
                     <MessageCircle />
-                    WhatsApp
+                    {t("realtorPublicProfile.actions.whatsapp")}
                   </a>
                 )}
 
@@ -162,7 +162,7 @@ export default function RealtorPublicProfile({
                     className={styles.secondaryAction}
                   >
                     <Mail />
-                    Email
+                    {t("realtorPublicProfile.actions.email")}
                   </a>
                 )}
               </div>
@@ -180,7 +180,8 @@ export default function RealtorPublicProfile({
                   </div>
 
                   <div className={styles.detailContent}>
-                    <span>Офис</span>
+                    <span>{t("realtorPublicProfile.details.office")}</span>
+
                     <strong>{officeAddress}</strong>
                   </div>
                 </div>
@@ -200,7 +201,8 @@ export default function RealtorPublicProfile({
                   </div>
 
                   <div className={styles.detailContent}>
-                    <span>Сайт</span>
+                    <span>{t("realtorPublicProfile.details.website")}</span>
+
                     <strong>{website.replace(/^https?:\/\//, "")}</strong>
                   </div>
 
@@ -226,7 +228,8 @@ export default function RealtorPublicProfile({
 
             <div>
               <strong>{adsCount}</strong>
-              <span>Активных объявлений</span>
+
+              <span>{t("realtorPublicProfile.stats.activeAds")}</span>
             </div>
           </div>
         </motion.section>
@@ -241,11 +244,11 @@ export default function RealtorPublicProfile({
         >
           <div className={styles.sectionHeader}>
             <div>
-              <span>Предложения</span>
+              <span>{t("realtorPublicProfile.listings.label")}</span>
 
-              <h2>Объявления риэлтора</h2>
+              <h2>{t("realtorPublicProfile.listings.title")}</h2>
 
-              <p>Актуальные объекты недвижимости и предложения</p>
+              <p>{t("realtorPublicProfile.listings.description")}</p>
             </div>
 
             <div className={styles.count}>{ads.length}</div>
@@ -277,9 +280,9 @@ export default function RealtorPublicProfile({
                 <Home />
               </div>
 
-              <h3>Пока нет объявлений</h3>
+              <h3>{t("realtorPublicProfile.empty.title")}</h3>
 
-              <p>У этого риэлтора сейчас нет активных предложений.</p>
+              <p>{t("realtorPublicProfile.empty.description")}</p>
             </div>
           )}
         </motion.section>

@@ -17,14 +17,16 @@ import {
   Hash,
   Globe,
   MapPin,
-  Briefcase,
 } from "lucide-react";
 
 import styles from "./ProfileEditModal.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ProfileEditModal({ user, close }) {
+  const { t } = useLanguage();
+
   const profile = user?.profile || {};
 
   const initialAvatar =
@@ -45,12 +47,26 @@ export default function ProfileEditModal({ user, close }) {
   const [about, setAbout] = useState(profile.about || "");
 
   const [inn, setInn] = useState(profile.inn || "");
-  const [officeAddress, setOfficeAddress] = useState(profile.office_address || "");
-  const [actualAddress, setActualAddress] = useState(profile.actualAddress || "");
+
+  const [officeAddress, setOfficeAddress] = useState(
+    profile.office_address || "",
+  );
+
+  const [actualAddress, setActualAddress] = useState(
+    profile.actualAddress || "",
+  );
+
   const [website, setWebsite] = useState(profile.website || "");
+
   const [region, setRegion] = useState(profile.region || "");
+
   const [companyName, setCompanyName] = useState(profile.company_name || "");
-  const [fullName, setFullName] = useState(profile.first_name && profile.last_name ? `${profile.first_name} ${profile.last_name}` : profile.first_name || "");
+
+  const [fullName, setFullName] = useState(
+    profile.first_name && profile.last_name
+      ? `${profile.first_name} ${profile.last_name}`
+      : profile.first_name || "",
+  );
 
   const DEFAULT_AVATAR = "/assets/personalImage.png";
 
@@ -60,40 +76,46 @@ export default function ProfileEditModal({ user, close }) {
 
   const [avatarFile, setAvatarFile] = useState(null);
 
-  // true только если пользователь специально удалил аватар
   const [avatarRemoved, setAvatarRemoved] = useState(false);
-
-  const typeMapReverse = {
-    personal: "Частное лицо",
-    realtor: "Риэлтор",
-    agency: "Агентство",
-    developer: "Застройщик",
-  };
-
-  const accountMap = {
-    personal: "Частное лицо",
-    realtor: "Риэлтор",
-    agency: "Агентство",
-    developer: "Застройщик",
-  };
-
-  const [type, setType] = useState(
-    accountMap[user?.accountType] || "Частное лицо",
-  );
-
-  const accountTypes = ["Частное лицо", "Риэлтор", "Агентство", "Застройщик"];
-
-  const reverseMap = {
-    "Частное лицо": "personal",
-    "Риэлтор": "realtor",
-    "Агентство": "agency",
-    "Застройщик": "developer",
-  };
-  const selectedRole = reverseMap[type] || "personal";
 
   /*
    * =========================================================
-   * ВЫБРАТЬ НОВЫЙ АВАТАР
+   * ACCOUNT TYPE
+   * =========================================================
+   *
+   * Храним именно техническое значение:
+   *
+   * personal
+   * realtor
+   * agency
+   * developer
+   *
+   * Поэтому переключение языка не ломает выбранный тип.
+   */
+
+  const [selectedRole, setSelectedRole] = useState(
+    user?.accountType || "personal",
+  );
+
+  const accountTypes = ["personal", "realtor", "agency", "developer"];
+
+  const accountTypeLabels = {
+    personal: t("profileEditModal.accountTypes.personal"),
+    realtor: t("profileEditModal.accountTypes.realtor"),
+    agency: t("profileEditModal.accountTypes.agency"),
+    developer: t("profileEditModal.accountTypes.developer"),
+  };
+
+  const translatedAccountTypes = accountTypes.map(
+    (role) => accountTypeLabels[role],
+  );
+
+  const selectedAccountTypeLabel =
+    accountTypeLabels[selectedRole] || accountTypeLabels.personal;
+
+  /*
+   * =========================================================
+   * SELECT NEW AVATAR
    * =========================================================
    */
 
@@ -103,14 +125,12 @@ export default function ProfileEditModal({ user, close }) {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Размер изображения не должен превышать 5 МБ");
+      alert(t("profileEditModal.errors.imageSize"));
       return;
     }
 
     setAvatarFile(file);
 
-    // Если выбрали новое фото после удаления —
-    // отменяем состояние удаления
     setAvatarRemoved(false);
 
     setAvatar(URL.createObjectURL(file));
@@ -118,7 +138,7 @@ export default function ProfileEditModal({ user, close }) {
 
   /*
    * =========================================================
-   * УДАЛИТЬ АВАТАР
+   * REMOVE AVATAR
    * =========================================================
    */
 
@@ -126,8 +146,6 @@ export default function ProfileEditModal({ user, close }) {
     setAvatar(null);
     setAvatarFile(null);
 
-    // ВАЖНО:
-    // save() теперь отправит personalImage.png
     setAvatarRemoved(true);
   }
 
@@ -141,7 +159,7 @@ export default function ProfileEditModal({ user, close }) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error("Не удалось получить изображение");
+      throw new Error(t("profileEditModal.errors.imageFetch"));
     }
 
     const blob = await response.blob();
@@ -153,17 +171,13 @@ export default function ProfileEditModal({ user, close }) {
 
   /*
    * =========================================================
-   * ПОЛУЧИТЬ АВАТАР ДЛЯ ОТПРАВКИ
+   * GET AVATAR FILE
    * =========================================================
    */
 
   async function getAvatarFile() {
     /*
-     * -------------------------------------------------------
-     * 1. ПОЛЬЗОВАТЕЛЬ УДАЛИЛ АВАТАР
-     *
-     * Всегда отправляем дефолтную картинку.
-     * -------------------------------------------------------
+     * 1. User removed avatar
      */
 
     if (avatarRemoved) {
@@ -174,9 +188,7 @@ export default function ProfileEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 2. ПОЛЬЗОВАТЕЛЬ ВЫБРАЛ НОВЫЙ АВАТАР
-     * -------------------------------------------------------
+     * 2. User selected new avatar
      */
 
     if (avatarFile) {
@@ -184,12 +196,7 @@ export default function ProfileEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 3. АВАТАР НЕ МЕНЯЛИ
-     *
-     * Берём существующую картинку
-     * и отправляем её заново.
-     * -------------------------------------------------------
+     * 3. Avatar was not changed
      */
 
     if (initialAvatar) {
@@ -197,9 +204,7 @@ export default function ProfileEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 4. АВАТАРА ИЗНАЧАЛЬНО НЕ БЫЛО
-     * -------------------------------------------------------
+     * 4. No avatar initially
      */
 
     return await fileFromUrl("/assets/personalImage.png", "personalImage.png");
@@ -220,12 +225,12 @@ export default function ProfileEditModal({ user, close }) {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Сначала войдите в аккаунт");
+        throw new Error(t("profileEditModal.errors.session"));
       }
 
       /*
        * -----------------------------------------------------
-       * Получаем файл аватара
+       * Avatar
        * -----------------------------------------------------
        */
 
@@ -247,24 +252,11 @@ export default function ProfileEditModal({ user, close }) {
 
       form.append("about", about.trim());
 
-      /*
-       * Аватар ВСЕГДА отправляем.
-       *
-       * Если удалили:
-       * personalImage.png
-       *
-       * Если заменили:
-       * новый файл
-       *
-       * Если не меняли:
-       * старый файл
-       */
-
       form.append("avatar", finalAvatarFile);
 
       /*
        * -----------------------------------------------------
-       * Отправляем профиль + аватар
+       * Upload profile + avatar
        * -----------------------------------------------------
        */
 
@@ -281,23 +273,18 @@ export default function ProfileEditModal({ user, close }) {
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Не удалось сохранить профиль");
+        throw new Error(result.message || t("profileEditModal.errors.save"));
       }
 
       /*
        * -----------------------------------------------------
-       * Аватар после сохранения
+       * Saved avatar
        * -----------------------------------------------------
        */
 
       const refreshedProfile = result.profile || {};
 
       let savedAvatar;
-
-      /*
-       * Если пользователь удалил аватар,
-       * показываем именно дефолтную картинку.
-       */
 
       if (avatarRemoved) {
         savedAvatar =
@@ -315,7 +302,7 @@ export default function ProfileEditModal({ user, close }) {
 
       /*
        * -----------------------------------------------------
-       * Обновляем локального пользователя
+       * Update local user
        * -----------------------------------------------------
        */
 
@@ -330,10 +317,13 @@ export default function ProfileEditModal({ user, close }) {
           ...refreshedProfile,
 
           first_name: firstName,
+
           last_name: lastName,
+
           about,
 
           avatar_url: savedAvatar,
+
           avatar: savedAvatar,
         },
       };
@@ -358,17 +348,9 @@ export default function ProfileEditModal({ user, close }) {
 
       /*
        * -----------------------------------------------------
-       * Обновляем остальные данные пользователя
+       * Update additional profile data
        * -----------------------------------------------------
        */
-
-      const reverseMap = {
-        "Частное лицо": "personal",
-        "Риэлтор": "realtor",
-        "Агентство": "agency",
-        "Застройщик": "developer",
-      };
-      const selectedRole = reverseMap[type] || "personal";
 
       const payload = {
         firstName,
@@ -380,13 +362,19 @@ export default function ProfileEditModal({ user, close }) {
 
       if (selectedRole === "realtor") {
         payload.fullName = fullName;
+
         payload.inn = inn;
+
         payload.region = region;
       } else if (selectedRole === "agency" || selectedRole === "developer") {
         payload.companyName = companyName;
+
         payload.inn = inn;
+
         payload.officeAddress = officeAddress;
+
         payload.actualAddress = actualAddress;
+
         payload.website = website;
       }
 
@@ -394,23 +382,18 @@ export default function ProfileEditModal({ user, close }) {
 
       /*
        * -----------------------------------------------------
-       * Получаем полностью свежего пользователя
+       * Fresh user
        * -----------------------------------------------------
        */
 
       const freshUser = await getMe(token);
 
-      /*
-       * Если backend почему-то не вернул
-       * дефолтный avatar после удаления,
-       * сохраняем его на фронте.
-       */
-
       if (avatarRemoved) {
         freshUser.profile = {
           ...(freshUser.profile || {}),
 
-          avatar_url: freshUser?.profile?.avatar_url || "/assets/personalImage.png",
+          avatar_url:
+            freshUser?.profile?.avatar_url || "/assets/personalImage.png",
 
           avatar: freshUser?.profile?.avatar || "/assets/personalImage.png",
         };
@@ -420,18 +403,17 @@ export default function ProfileEditModal({ user, close }) {
 
       /*
        * -----------------------------------------------------
-       * Успешно
+       * SUCCESS
        * -----------------------------------------------------
        */
 
       close();
 
-      // reload ТОЛЬКО если всё успешно
       window.location.reload();
     } catch (error) {
       console.error("PROFILE SAVE ERROR:", error);
 
-      alert(error?.message || "Не удалось сохранить изменения");
+      alert(error?.message || t("profileEditModal.errors.save"));
     } finally {
       setLoading(false);
     }
@@ -440,31 +422,34 @@ export default function ProfileEditModal({ user, close }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
+        {/* CLOSE */}
+
         <button
           type="button"
           className={styles.close}
           onClick={close}
           disabled={loading}
+          aria-label={t("profileEditModal.actions.close")}
         >
           <X />
         </button>
 
         <div className={styles.scroll}>
-          <header className={styles.header}>
-            <h2>Редактирование профиля</h2>
+          {/* HEADER */}
 
-            <p>Обновите личные данные</p>
+          <header className={styles.header}>
+            <h2>{t("profileEditModal.header.title")}</h2>
+
+            <p>{t("profileEditModal.header.description")}</p>
           </header>
 
-          {/* =================================================
-              AVATAR
-          ================================================= */}
+          {/* AVATAR */}
 
           <div className={styles.avatarBlock}>
             <div className={styles.avatarWrapper}>
               <div className={styles.avatar}>
                 {avatar ? (
-                  <img src={avatar} alt="Аватар пользователя" />
+                  <img src={avatar} alt={t("profileEditModal.avatar.alt")} />
                 ) : (
                   <User />
                 )}
@@ -475,7 +460,11 @@ export default function ProfileEditModal({ user, close }) {
               <label className={styles.upload}>
                 <Camera size={17} />
 
-                <span>{avatar ? "Изменить фото" : "Добавить фото"}</span>
+                <span>
+                  {avatar
+                    ? t("profileEditModal.avatar.change")
+                    : t("profileEditModal.avatar.add")}
+                </span>
 
                 <input
                   hidden
@@ -495,28 +484,35 @@ export default function ProfileEditModal({ user, close }) {
                 >
                   <Trash2 size={17} />
 
-                  <span>Удалить фото</span>
+                  <span>{t("profileEditModal.avatar.remove")}</span>
                 </button>
               )}
             </div>
           </div>
 
-          {/* =================================================
-              FIELDS
-          ================================================= */}
+          {/* FIELDS */}
 
           <div className={styles.fields}>
+            {/* ACCOUNT TYPE */}
+
             {user?.accountType === "personal" && (
               <CustomSelect
                 icon={UserRoundCog}
-                title="Тип аккаунта"
-                options={accountTypes}
-                value={type}
-                setValue={setType}
+                title={t("profileEditModal.accountType.title")}
+                options={translatedAccountTypes}
+                value={selectedAccountTypeLabel}
+                setValue={(selectedLabel) => {
+                  const role = accountTypes.find(
+                    (item) => accountTypeLabels[item] === selectedLabel,
+                  );
+
+                  setSelectedRole(role || "personal");
+                }}
               />
             )}
 
-            {/* Персональный профиль */}
+            {/* PERSONAL */}
+
             {selectedRole === "personal" && (
               <div className={styles.row}>
                 <div className={styles.inputBox}>
@@ -525,7 +521,7 @@ export default function ProfileEditModal({ user, close }) {
                   <input
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Имя"
+                    placeholder={t("profileEditModal.fields.firstName")}
                     disabled={loading}
                   />
                 </div>
@@ -536,102 +532,120 @@ export default function ProfileEditModal({ user, close }) {
                   <input
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Фамилия"
+                    placeholder={t("profileEditModal.fields.lastName")}
                     disabled={loading}
                   />
                 </div>
               </div>
             )}
 
-            {/* Риэлтор */}
+            {/* REALTOR */}
+
             {selectedRole === "realtor" && (
               <>
                 <div className={styles.inputBox}>
                   <User />
+
                   <input
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="ФИО (обязательно)"
+                    placeholder={t("profileEditModal.fields.fullNameRequired")}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <Hash />
+
                   <input
                     value={inn}
                     onChange={(e) => setInn(e.target.value)}
-                    placeholder="ИНН (обязательно)"
+                    placeholder={t("profileEditModal.fields.innRequired")}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <MapPin />
+
                   <input
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
-                    placeholder="Регион работы"
+                    placeholder={t("profileEditModal.fields.region")}
                     disabled={loading}
                   />
                 </div>
               </>
             )}
 
-            {/* Агентство или Застройщик */}
+            {/* AGENCY / DEVELOPER */}
+
             {(selectedRole === "agency" || selectedRole === "developer") && (
               <>
                 <div className={styles.inputBox}>
                   <Building />
+
                   <input
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder={selectedRole === "agency" ? "Название агентства (обязательно)" : "Название компании (обязательно)"}
+                    placeholder={t(
+                      selectedRole === "agency"
+                        ? "profileEditModal.fields.agencyNameRequired"
+                        : "profileEditModal.fields.companyNameRequired",
+                    )}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <Hash />
+
                   <input
                     value={inn}
                     onChange={(e) => setInn(e.target.value)}
-                    placeholder="ИНН (обязательно)"
+                    placeholder={t("profileEditModal.fields.innRequired")}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <MapPin />
+
                   <input
                     value={officeAddress}
                     onChange={(e) => setOfficeAddress(e.target.value)}
-                    placeholder="Юридический адрес (обязательно)"
+                    placeholder={t(
+                      "profileEditModal.fields.legalAddressRequired",
+                    )}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <MapPin />
+
                   <input
                     value={actualAddress}
                     onChange={(e) => setActualAddress(e.target.value)}
-                    placeholder="Фактический адрес"
+                    placeholder={t("profileEditModal.fields.actualAddress")}
                     disabled={loading}
                   />
                 </div>
 
                 <div className={styles.inputBox}>
                   <Globe />
+
                   <input
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
-                    placeholder="Сайт компании"
+                    placeholder={t("profileEditModal.fields.companyWebsite")}
                     disabled={loading}
                   />
                 </div>
               </>
             )}
+
+            {/* PHONE */}
 
             <div className={styles.inputBox}>
               <Phone />
@@ -639,10 +653,12 @@ export default function ProfileEditModal({ user, close }) {
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Рабочий телефон (обязательно)"
+                placeholder={t("profileEditModal.fields.phoneRequired")}
                 disabled={loading}
               />
             </div>
+
+            {/* ABOUT */}
 
             <div className={styles.textarea}>
               <FileText />
@@ -650,15 +666,17 @@ export default function ProfileEditModal({ user, close }) {
               <textarea
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder={selectedRole === "personal" ? "Расскажите о себе" : "Описание деятельности (обязательно)"}
+                placeholder={t(
+                  selectedRole === "personal"
+                    ? "profileEditModal.fields.aboutPersonal"
+                    : "profileEditModal.fields.aboutBusiness",
+                )}
                 disabled={loading}
               />
             </div>
           </div>
 
-          {/* =================================================
-              SAVE
-          ================================================= */}
+          {/* SAVE */}
 
           <button
             type="button"
@@ -668,7 +686,9 @@ export default function ProfileEditModal({ user, close }) {
           >
             <Check size={18} />
 
-            {loading ? "Сохраняем..." : "Сохранить изменения"}
+            {loading
+              ? t("profileEditModal.actions.saving")
+              : t("profileEditModal.actions.save")}
           </button>
         </div>
       </div>

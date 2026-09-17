@@ -4200,5 +4200,1561 @@ const ky = {
     home: "Башкы бетке",
     search: "Үй табуу",
   },
+
+  myAdsDetails: {
+    loading: {
+      title: "Жарыя жүктөлүүдө...",
+      description: "Объект тууралуу маалымат алынууда",
+    },
+
+    error: {
+      title: "Жарыя табылган жок",
+      description: "Жарыянын маалыматтарын жүктөө мүмкүн болгон жок.",
+      notFound: "Жарыя табылган жок",
+      load: "Жарыяны жүктөөдө ката кетти",
+    },
+
+    backToAds: "Жарыяларыма кайтуу",
+
+    myAds: "Менин жарыяларым",
+
+    myListing: "МЕНИН ЖАРЫЯМ",
+
+    myProperty: "МЕНИН КЫЙМЫЛСЫЗ МҮЛКҮМ",
+
+    published: "Жарыяланды",
+
+    badges: {
+      urgent: "Шашылыш",
+    },
+
+    actions: {
+      edit: "Өзгөртүү",
+      editFull: "Редакциялоо",
+      delete: "Өчүрүү",
+      deleteListing: "Жарыяны өчүрүү",
+      favorite: "Тандалгандарга кошуу",
+    },
+
+    gallery: {
+      noPhotos: "Сүрөттөр жок",
+      photo: "Сүрөт",
+      previous: "Мурунку сүрөт",
+      next: "Кийинки сүрөт",
+    },
+
+    quickInfo: {
+      rooms: "бөлмө",
+      area: "аянты",
+      floor: "кабат",
+      toBeach: "жээкке чейин",
+    },
+
+    sections: {
+      about: {
+        label: "ОБЪЕКТ ТУУРАЛУУ",
+        title: "Сүрөттөмө",
+      },
+
+      details: {
+        label: "ТОЛУГУРААК",
+        title: "Объекттин мүнөздөмөлөрү",
+      },
+
+      additional: {
+        label: "КОШУМЧА",
+        title: "Ыңгайлуулуктар",
+      },
+
+      location: {
+        label: "ЖАЙГАШКАН ЖЕРИ",
+        title: "Объекттин дареги",
+      },
+    },
+
+    sidebar: {
+      information: "Маалымат",
+      category: "Категория",
+      offerType: "Сунуштун түрү",
+      publishedAt: "Жарыяланган күнү",
+      price: "Баасы",
+      toBeach: "Жээкке чейин",
+      management: "Жарыяны башкаруу",
+    },
+
+    deleteModal: {
+      title: "Жарыяны өчүрөсүзбү?",
+      descriptionStart: "Сиз чын эле өчүргүңүз келеби",
+      descriptionEnd: "Бул аракетти кайра кайтаруу мүмкүн эмес.",
+    },
+
+    fallback: {
+      property: "Кыймылсыз мүлк объектиси",
+    },
+
+    values: {
+      yes: "Бар",
+      no: "Жок",
+    },
+
+    units: {
+      meters: "м",
+      sotkas: "сотых",
+      blocks: "блок",
+    },
+
+    deals: {
+      buy: "Сатуу",
+      rent: "Ижара",
+    },
+
+    propertyTypes: {
+      apartment: "Батир",
+      house: "Үй",
+      cottage: "Коттедж",
+      room: "Бөлмө",
+      land: "Жер тилкеси",
+      commercial: "Коммерциялык кыймылсыз мүлк",
+      parking: "Паркинг",
+      garage: "Гараж",
+      office: "Кеңсе",
+    },
+
+    characteristics: {
+      rooms: "Бөлмөлөр",
+      area: "Аянты",
+      floor: "Кабат",
+      floors: "Кабаттуулугу",
+      propertyType: "Кыймылсыз мүлктүн түрү",
+
+      residentialComplex: "Турак жай комплекси",
+      developer: "Куруучу",
+
+      buildingType: "Үйдүн түрү",
+
+      yearBuilt: "Курулган жылы",
+
+      repair: "Оңдоп-түзөө",
+      condition: "Абалы",
+      furniture: "Эмерек",
+
+      ceilingHeight: "Шыптын бийиктиги",
+
+      bathroom: "Даараткана",
+      bathrooms: "Дааратканалардын саны",
+
+      heating: "Жылытуу",
+      heatingType: "Жылытуунун түрү",
+
+      sewerage: "Канализация",
+
+      water: "Суу менен камсыздоо",
+
+      electricity: "Электр энергиясы",
+      gas: "Газ",
+
+      documents: "Документтер",
+
+      parking: "Унаа токтотуучу жай",
+      parkingType: "Парковканын түрү",
+
+      view: "Көрүнүшү",
+
+      orientation: "Багыты",
+
+      landArea: "Жер тилкесинин аянты",
+      areaSotka: "Жер тилкесинин аянты",
+
+      blocks: "Блоктордун саны",
+
+      construction: "Конструкция",
+      constructionType: "Конструкциянын түрү",
+
+      entrances: "Кире бериштердин саны",
+
+      yardArea: "Короонун аянты",
+
+      landWidth: "Жер тилкесинин туурасы",
+      landLength: "Жер тилкесинин узундугу",
+
+      offerType: "Сунуштун түрү",
+
+      purpose: "Максаты",
+      fence: "Тосмо",
+      terrain: "Жердин рельефи",
+
+      landLocation: "Жер тилкесинин жайгашкан жери",
+      roomLocation: "Бөлмөнүн жайгашкан жери",
+
+      roomsInApartment: "Батирдеги бөлмөлөрдүн саны",
+
+      privateBathroom: "Жеке даараткана",
+
+      premisesType: "Имараттын түрү",
+
+      technicalParameters: "Техникалык параметрлер",
+
+      firstLine: "Биринчи линия",
+
+      separateEntrance: "Өзүнчө кире бериш",
+
+      rentalBusiness: "Даяр ижара бизнеси",
+
+      material: "Материал",
+
+      gates: "Дарбаза",
+
+      truckAccess: "Жүк ташуучу унаалар үчүн кирүү",
+
+      gateType: "Дарбазанын түрү",
+
+      pets: "Үй жаныбарлары",
+
+      internet: "Интернет",
+
+      balcony: "Балкон",
+
+      elevator: "Лифт",
+
+      security: "Күзөт",
+
+      parkingPlace: "Унаа токтотуучу орун",
+
+      beachDistance: "Жээкке чейинки аралык",
+    },
+  },
+
+  adsEditModal: {
+    header: {
+      label: "ЖАРЫЯНЫ БАШКАРУУ",
+      title: "Жарыяны өзгөртүү",
+      description:
+        "Объект тууралуу маалыматты өзгөртүп, жаңыртууларды сактаңыз.",
+    },
+
+    sections: {
+      basic: {
+        label: "НЕГИЗГИ МААЛЫМАТ",
+        title: "Объект тууралуу",
+      },
+
+      location: {
+        label: "ЖАЙГАШКАН ЖЕРИ",
+        title: "Объекттин дареги",
+      },
+
+      details: {
+        label: "МҮНӨЗДӨМӨЛӨР",
+        title: "Объекттин параметрлери",
+      },
+
+      description: {
+        label: "ОБЪЕКТ",
+        title: "Сүрөттөмө",
+      },
+    },
+
+    fields: {
+      title: {
+        label: "Жарыянын аталышы",
+        placeholder: "Объекттин аталышы",
+      },
+
+      type: {
+        label: "Объекттин түрү",
+        title: "Объекттин түрү",
+      },
+
+      dealType: {
+        label: "Сунуштун түрү",
+        title: "Сунуштун түрү",
+      },
+
+      location: {
+        label: "Шаар / район",
+        placeholder: "Мисалы, Чолпон-Ата",
+      },
+
+      address: {
+        label: "Дарек",
+        placeholder: "Көчө, үй",
+      },
+
+      price: {
+        label: "Баасы",
+        placeholder: "120 000 $",
+      },
+
+      area: {
+        label: "Аянты",
+        placeholder: "180 м²",
+      },
+
+      rooms: {
+        label: "Бөлмөлөр",
+        placeholder: "5",
+      },
+
+      floors: {
+        label: "Кабаттуулугу",
+        placeholder: "2",
+      },
+
+      description: {
+        label: "Жарыянын сүрөттөмөсү",
+        placeholder: "Объект тууралуу кененирээк айтып бериңиз...",
+      },
+    },
+
+    propertyTypes: {
+      house: "Үй",
+      cottage: "Коттедж",
+      apartment: "Батир",
+      land: "Жер тилкеси",
+      commercial: "Коммерциялык объект",
+      dacha: "Дача",
+    },
+
+    dealTypes: {
+      sale: "Сатуу",
+      rent: "Ижарага берем",
+    },
+
+    actions: {
+      close: "Жабуу",
+      cancel: "Жокко чыгаруу",
+      save: "Өзгөртүүлөрдү сактоо",
+      saving: "Сакталууда...",
+    },
+  },
+
+  promoteListingModal: {
+    header: {
+      label: "ЖАРЫЯНЫ ЖЫЛДЫРТУУ",
+      title: "Жарыяны жылдыруу",
+    },
+
+    services: {
+      vip: {
+        title: "VIP",
+        description:
+          "Каталогдун эң жогору жагына бекитүү + алтын түстөгү алкак",
+      },
+
+      top: {
+        title: "ТОП",
+        description: "Кадимки жарыялардан жогору көтөрүп, бекитүү",
+      },
+
+      urgent: {
+        title: "Шашылыш",
+        description: "Кызыл белги + «Шашылыш сатуу» чыпкасына кошуу",
+      },
+
+      instagram: {
+        title: "Instagram",
+        description: "Пост + Stories + Telegram'га кошумча жарыялоо",
+      },
+    },
+
+    pricing: {
+      currency: "сом",
+      perDay: "/ күн",
+      oneTime: "бир жолку",
+    },
+
+    days: {
+      label: "Канча күнгө",
+      short: "күн",
+    },
+
+    total: {
+      label: "Жалпы сумма",
+    },
+
+    actions: {
+      close: "Жабуу",
+      payment: "Төлөөгө өтүү",
+    },
+
+    errors: {
+      pricing:
+        "Учурдагы бааларды жүктөө мүмкүн болгон жок. Кийинчерээк аракет кылыңыз.",
+    },
+  },
+
+  ads: {
+    header: {
+      profile: "Профилге",
+      eyebrow: "Жеке кабинет",
+      title: "Менин жарыяларым",
+      description:
+        "Кыймылсыз мүлк объекттериңизди башкарып, жарыяларды өзгөртүп жана алардын абалын көзөмөлдөңүз.",
+    },
+
+    stats: {
+      total: "Бардык жарыялар",
+      active: "Активдүү",
+      favorites: "Бардык тандалгандар",
+    },
+
+    resultBar: {
+      listings: "жарыя",
+    },
+
+    loading: "Жарыяларыңыз жүктөлүүдө...",
+
+    propertyTypes: {
+      apartment: "Батир",
+      house: "Үй",
+      land: "Жер тилкеси",
+      commercial: "Коммерциялык объект",
+      room: "Бөлмө",
+      garage: "Унаа токтотуучу жай/гараж",
+      other: "Башка",
+    },
+
+    statuses: {
+      active: "Активдүү",
+      moderation: "Текшерүүдө",
+      draft: "Каралама",
+      hidden: "Жашырылган",
+    },
+
+    dealTypes: {
+      sale: "Сатуу",
+      rent: "Ижарага берем",
+    },
+
+    currency: {
+      som: "сом",
+    },
+
+    card: {
+      rooms: "бөлмө",
+      price: "Баасы",
+    },
+
+    actions: {
+      add: "Жарыя кошуу",
+      details: "Толук маалымат",
+      promote: "Жылдыруу",
+      promoteAria: "Жарыяны жылдыруу",
+      edit: "Өзгөртүү",
+      editAria: "Жарыяны өзгөртүү",
+      delete: "Өчүрүү",
+      deleteAria: "Жарыяны өчүрүү",
+      cancel: "Жокко чыгаруу",
+    },
+
+    empty: {
+      title: "Азырынча жарыяларыңыз жок",
+      description:
+        "Бул жерде пайда болушу үчүн биринчи кыймылсыз мүлк объектиңизди кошуңуз.",
+    },
+
+    deleteModal: {
+      title: "Жарыяны өчүрөсүзбү?",
+      descriptionStart: "«",
+      descriptionEnd:
+        "» жарыясын чындап өчүргүңүз келеби? Бул аракетти артка кайтаруу мүмкүн эмес.",
+      descriptionFallback:
+        "Бул аракетти артка кайтаруу мүмкүн эмес. Жарыя калыбына келтирүү мүмкүнчүлүгү жок өчүрүлөт.",
+    },
+
+    errors: {
+      load: "Жарыяларыңызды жүктөө мүмкүн болгон жок",
+      server: "Серверге туташууда ката кетти",
+      delete: "Жарыяны өчүрүү мүмкүн болгон жок",
+      update: "Жарыяны жаңыртуу мүмкүн болгон жок",
+    },
+
+    fallback: {
+      noTitle: "Аталышы жок",
+      country: "Кыргызстан",
+    },
+  },
+
+  agencyProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    verified: "Тастыкталган",
+
+    type: "Кыймылсыз мүлк агенттиги",
+
+    director: {
+      label: "Жетекчи:",
+    },
+
+    defaults: {
+      companyName: "Кыймылсыз мүлк агенттиги",
+      director: "Жетекчи",
+    },
+
+    about: {
+      title: "Агенттик жөнүндө",
+      empty: "Агенттик азырынча сүрөттөмө кошо элек.",
+    },
+
+    details: {
+      office: "Кеңсе",
+      website: "Веб-сайт",
+    },
+
+    stats: {
+      ads: "Жарыя",
+      favorites: "Тандалгандар",
+    },
+
+    actions: {
+      editAria: "Профилди өзгөртүү",
+
+      myAds: {
+        title: "Менин жарыяларым",
+        description: "Объекттерди башкаруу",
+      },
+
+      favorites: {
+        title: "Тандалгандар",
+        description: "Сакталган объекттер",
+      },
+
+      tariff: {
+        title: "Менин тарифим",
+        description: "Жазылууну башкаруу",
+      },
+
+      logout: {
+        title: "Чыгуу",
+        description: "Сеансты аяктоо",
+      },
+    },
+  },
+
+  agencyEditModal: {
+    header: {
+      title: "Профилди өзгөртүү",
+      description: "Агенттигиңиздин маалыматтарын жаңыртыңыз",
+    },
+
+    logoAlt: "Агенттиктин логотиби",
+
+    logo: {
+      change: "Логотипти өзгөртүү",
+      remove: "Логотипти өчүрүү",
+    },
+
+    fields: {
+      companyName: "Агенттиктин аталышы",
+      director: "Жетекчи",
+      inn: "ИНН",
+      phone: "Телефон",
+      email: "Email",
+      address: "Кеңсенин дареги",
+      website: "Сайт",
+      about: "Агенттик жөнүндө маалымат",
+    },
+
+    actions: {
+      close: "Жабуу",
+      saving: "Сакталууда...",
+      save: "Өзгөртүүлөрдү сактоо",
+    },
+
+    errors: {
+      logoSize: "Сүрөттүн өлчөмү 5 МБдан ашпашы керек",
+      imageFetch: "Сүрөттү алуу мүмкүн болгон жок",
+      session: "Сессия табылган жок. Каттоо эсебиңизге кайра кириңиз.",
+      logoSave: "Логотипти сактоо мүмкүн болгон жок",
+      save: "Өзгөртүүлөрдү сактоо мүмкүн болгон жок",
+    },
+  },
+
+  developerProfile: {
+    badge: "Куруучу",
+
+    companyType: "Куруучу жана девелопер",
+
+    verification: {
+      verified: "Профиль тастыкталган",
+
+      title: "Куруучунун профилин тастыктаңыз",
+
+      description:
+        "Сатып алуучулар компанияңызды жана турак жай комплекстериңизди көрүшү үчүн профилди тастыктоо керек. Тастыкталгандан кийин ЖКларыңыз жана жарыяларыңыз UyTap колдонуучуларына жеткиликтүү болот.",
+
+      warning:
+        "Профиль тастыкталбаса, ал жана сиздин ЖКларыңыз сатып алуучуларга көрсөтүлбөйт.",
+
+      button: "Профилди тастыктоо",
+    },
+
+    defaults: {
+      company: "Курулуш компаниясы",
+
+      representative: "Компаниянын өкүлү",
+
+      about: "Компания азырынча сүрөттөмө кошо элек.",
+    },
+
+    projectDefaults: {
+      name: "Турак жай комплекси",
+
+      address: "Дареги көрсөтүлгөн эмес",
+
+      status: "Курулуш жүрүүдө",
+    },
+
+    actions: {
+      editAria: "Профилди өзгөртүү",
+
+      whatsapp: "WhatsApp аркылуу жазуу",
+
+      website: "Сайтка өтүү",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      inn: "ИНН",
+      office: "Кеңсе",
+      website: "Сайт",
+    },
+
+    stats: {
+      projects: "ЖК",
+      apartments: "батир",
+      ads: "жарыя",
+    },
+
+    portfolio: {
+      label: "Портфолио",
+
+      title: "Менин турак жай комплекстерим",
+
+      description:
+        "Долбоорлоруңузду башкарып, сатып алуучуларга компанияңыз куруп жаткан ЖКларды көрсөтүңүз.",
+
+      add: "ЖК кошуу",
+    },
+
+    projects: {
+      loading: "Долбоорлор жүктөлүүдө...",
+
+      empty: {
+        title: "Азырынча ЖКларыңыз жок",
+
+        description:
+          "Сатып алуучулар долбоорлоруңузду профилиңизден көрүшү үчүн биринчи турак жай комплексин кошуңуз.",
+
+        button: "Биринчи ЖКны кошуу",
+      },
+    },
+
+    project: {
+      apartments: "батир",
+      details: "Толук маалымат",
+    },
+
+    menu: {
+      home: "Башкы бет",
+      projects: "Менин ЖКларым",
+      ads: "Менин жарыяларым",
+      favorites: "Тандалгандар",
+      tariff: "Менин тарифим",
+      logout: "Чыгуу",
+    },
+  },
+
+  developerEditModal: {
+    header: {
+      badge: "Куруучунун профили",
+      title: "Компанияны өзгөртүү",
+      description: "Компания, өкүл жана байланыш маалыматтарын жаңыртыңыз.",
+    },
+
+    logo: {
+      alt: "Компаниянын логотиби",
+      title: "Компаниянын логотиби",
+      format: "PNG, JPG же WEBP · 5 МБга чейин",
+      upload: "Логотип жүктөө",
+      change: "Өзгөртүү",
+      remove: "Өчүрүү",
+    },
+
+    sections: {
+      company: {
+        title: "Компания",
+        description: "Куруучу жөнүндө негизги маалымат",
+      },
+
+      representative: {
+        title: "Өкүл",
+        description: "Компаниянын байланыш адамы",
+      },
+
+      contacts: {
+        title: "Байланыштар",
+        description: "Сатып алуучулар сиз менен кантип байланыша алышат",
+      },
+
+      about: {
+        title: "Компания жөнүндө",
+        description: "Компанияңыз тууралуу кыскача айтып бериңиз",
+      },
+    },
+
+    fields: {
+      companyName: {
+        label: "Компаниянын аталышы",
+        placeholder: "Мисалы, ОсОО СтройИнвест",
+      },
+
+      inn: {
+        label: "ИНН",
+        placeholder: "Компаниянын ИННин киргизиңиз",
+      },
+
+      firstName: {
+        label: "Аты",
+        placeholder: "Аты",
+      },
+
+      lastName: {
+        label: "Фамилиясы",
+        placeholder: "Фамилиясы",
+      },
+
+      phone: {
+        label: "Телефон",
+        placeholder: "+996 555 123 456",
+      },
+
+      whatsapp: {
+        label: "WhatsApp",
+        placeholder: "+996 555 123 456",
+      },
+
+      website: {
+        label: "Сайт",
+        placeholder: "https://company.kg",
+      },
+
+      officeAddress: {
+        label: "Кеңсенин дареги",
+        placeholder: "Бишкек, көч. ...",
+      },
+
+      about: {
+        placeholder:
+          "Компания, иш тажрыйбаңыз, долбоорлор, адистешүү жана артыкчылыктар тууралуу айтып бериңиз...",
+      },
+    },
+
+    actions: {
+      close: "Жабуу",
+      cancel: "Жокко чыгаруу",
+      saving: "Сакталууда...",
+      save: "Өзгөртүүлөрдү сактоо",
+    },
+
+    errors: {
+      imageType: "Сүрөт гана жүктөөгө болот",
+      imageSize: "Сүрөттүн өлчөмү 5 МБдан ашпашы керек",
+      session: "Сессия аяктады. Каттоо эсебиңизге кайра кириңиз.",
+      companyName: "Компаниянын аталышын киргизиңиз",
+      logoUpload: "Логотипти жүктөө мүмкүн болгон жок",
+      save: "Профильдеги өзгөртүүлөрдү сактоо мүмкүн болгон жок",
+    },
+  },
+
+  personalProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    avatarAlt: "Колдонуучунун аватары",
+
+    type: "Жеке адам",
+
+    whatsapp: "WhatsApp",
+
+    defaults: {
+      user: "Колдонуучу",
+      noPhone: "Телефон жок",
+    },
+
+    about: {
+      title: "Өзүм жөнүндө",
+      empty: "Колдонуучу азырынча сүрөттөмө кошо элек",
+    },
+
+    actions: {
+      editAria: "Профилди өзгөртүү",
+      whatsapp: "WhatsApp аркылуу жазуу",
+
+      myAds: {
+        title: "Менин жарыяларым",
+        description: "Объекттерди башкаруу",
+      },
+
+      favorites: {
+        title: "Тандалгандар",
+        description: "Сакталган объекттер",
+      },
+
+      tariff: {
+        title: "Менин тарифим",
+        description: "Жазылууну башкаруу",
+      },
+
+      logout: {
+        title: "Чыгуу",
+        description: "Сеансты аяктоо",
+      },
+    },
+  },
+
+  profileEditModal: {
+    header: {
+      title: "Профилди өзгөртүү",
+      description: "Жеке маалыматтарыңызды жаңыртыңыз",
+    },
+
+    avatar: {
+      alt: "Колдонуучунун аватары",
+      change: "Сүрөттү өзгөртүү",
+      add: "Сүрөт кошуу",
+      remove: "Сүрөттү өчүрүү",
+    },
+
+    accountType: {
+      title: "Каттоо эсебинин түрү",
+    },
+
+    accountTypes: {
+      personal: "Жеке адам",
+      realtor: "Риэлтор",
+      agency: "Агенттик",
+      developer: "Куруучу",
+    },
+
+    fields: {
+      firstName: "Аты",
+      lastName: "Фамилиясы",
+
+      fullNameRequired: "Аты-жөнү (милдеттүү)",
+
+      innRequired: "ИНН (милдеттүү)",
+
+      region: "Иштөө аймагы",
+
+      agencyNameRequired: "Агенттиктин аталышы (милдеттүү)",
+
+      companyNameRequired: "Компаниянын аталышы (милдеттүү)",
+
+      legalAddressRequired: "Юридикалык дарек (милдеттүү)",
+
+      actualAddress: "Фактылык дарек",
+
+      companyWebsite: "Компаниянын сайты",
+
+      phoneRequired: "Жумуш телефону (милдеттүү)",
+
+      aboutPersonal: "Өзүңүз жөнүндө айтып бериңиз",
+
+      aboutBusiness: "Ишмердүүлүгүңүздүн сүрөттөмөсү (милдеттүү)",
+    },
+
+    actions: {
+      close: "Жабуу",
+      saving: "Сакталууда...",
+      save: "Өзгөртүүлөрдү сактоо",
+    },
+
+    errors: {
+      imageSize: "Сүрөттүн өлчөмү 5 МБдан ашпашы керек",
+
+      imageFetch: "Сүрөттү алуу мүмкүн болгон жок",
+
+      session: "Адегенде аккаунтка кириңиз",
+
+      save: "Профилди сактоо мүмкүн болгон жок",
+    },
+  },
+
+  realtorProfile: {
+    badge: "Риэлтор",
+
+    defaults: {
+      realtor: "Риэлтор",
+      company: "Кыймылсыз мүлк агенттиги",
+      about: "Риэлтор азырынча сүрөттөмө кошо элек",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      office: "Компаниянын дареги",
+      website: "Сайт",
+    },
+
+    actions: {
+      editAria: "Профилди өзгөртүү",
+      whatsapp: "WhatsApp аркылуу жазуу",
+    },
+
+    stats: {
+      ads: "жарыя",
+      favorites: "тандалган",
+    },
+
+    menu: {
+      home: "Башкы бет",
+      ads: "Менин жарыяларым",
+      favorites: "Тандалгандар",
+      tariff: "Менин тарифим",
+      logout: "Чыгуу",
+    },
+  },
+
+  realtorEditModal: {
+    header: {
+      title: "Профилди өзгөртүү",
+      description: "Риэлтордун маалыматтарын жаңыртыңыз",
+    },
+
+    avatar: {
+      alt: "Риэлтордун аватары",
+      change: "Сүрөттү өзгөртүү",
+      add: "Сүрөт кошуу",
+      remove: "Сүрөттү өчүрүү",
+    },
+
+    fields: {
+      firstName: "Аты",
+      lastName: "Фамилиясы",
+      companyName: "Агенттиктин аталышы",
+      phone: "Телефон",
+      inn: "ИНН",
+      website: "Сайт",
+      officeAddress: "Кеңсенин дареги",
+      about: "Өзүңүз жана ишиңиз тууралуу айтып бериңиз",
+    },
+
+    actions: {
+      close: "Жабуу",
+      saving: "Сакталууда...",
+      save: "Өзгөртүүлөрдү сактоо",
+    },
+
+    errors: {
+      imageSize: "Сүрөттүн өлчөмү 5 МБдан ашпашы керек",
+      imageFetch: "Сүрөттү алуу мүмкүн болгон жок",
+      session: "Алгач аккаунтка кириңиз",
+      saveProfile: "Профилди сактоо мүмкүн болгон жок",
+      save: "Өзгөртүүлөрдү сактоо мүмкүн болгон жок",
+    },
+  },
+
+  myComplexDetail: {
+    loading: "Турак жай комплекси тууралуу маалымат жүктөлүүдө...",
+
+    ownerLabel: "КУРУУЧУНУН КАБИНЕТИ",
+
+    back: {
+      myProjects: "Менин ЖКларым",
+    },
+
+    labels: {
+      myComplex: "МЕНИН ТУРАК ЖАЙ КОМПЛЕКСИМ",
+      developer: "КУРУУЧУ",
+      floors: "кабат",
+      blocks: "блок",
+      territory: "аймак",
+    },
+
+    actions: {
+      edit: "Өзгөртүү",
+      editImageAria: "Турак жай комплексинин сүрөттөрүн өзгөртүү",
+      editComplex: "ЖКны өзгөртүү",
+      deleteAria: "Турак жай комплексин өчүрүү",
+    },
+
+    gallery: {
+      previous: "Мурунку сүрөт",
+      next: "Кийинки сүрөт",
+    },
+
+    sections: {
+      availableApartments: {
+        label: "ЖЕТКИЛИКТҮҮ БАТИРЛЕР",
+        title: "Батирлер:",
+      },
+
+      about: {
+        label: "ДОЛБООР ЖӨНҮНДӨ",
+        title: "Турак жай комплекси жөнүндө",
+      },
+
+      details: {
+        label: "НЕГИЗГИ ПАРАМЕТРЛЕР",
+        title: "ЖКнын мүнөздөмөлөрү",
+      },
+
+      infrastructure: {
+        label: "АЙМАК",
+        title: "Комплекстин инфраструктурасы",
+      },
+
+      location: {
+        label: "ЖАЙГАШУУСУ",
+        title: "Жайгашкан жери",
+      },
+
+      documents: {
+        label: "РАСМИЙ МААЛЫМАТ",
+        title: "Турак жай комплексинин документтери",
+      },
+    },
+
+    apartments: {
+      loading: "Жеткиликтүү батирлер жүктөлүүдө...",
+
+      count: {
+        one: "жеткиликтүү батир",
+        few: "жеткиликтүү батир",
+        many: "жеткиликтүү батир",
+      },
+
+      empty: {
+        title: "Азырынча бош батирлер жок",
+        description:
+          "Бул ЖКда азырынча сатуу боюнча жеткиликтүү батирлер тууралуу жарыялар жок.",
+      },
+    },
+
+    details: {
+      class: "Класс",
+      apartments: "Батирлердин саны",
+      floors: "Кабаттуулугу",
+      blocks: "Блоктордун саны",
+      landArea: "Аймактын аянты",
+      ceilingHeight: "Шыптын бийиктиги",
+      construction: "Конструкциясы",
+      parking: "Унаа токтотуучу жай",
+      completion: "Бүткөрүү датасы",
+    },
+
+    documents: {
+      infoTitle: "Объекттин курулушу тууралуу маалымат",
+
+      infoDescription:
+        "Курулуш объекти тууралуу жеткиликтүү маалыматты текшерүү үчүн Курулуш министрлигинин расмий ресурсуна өтүңүз.",
+
+      button: "Документтерди көрүү",
+    },
+
+    deleteModal: {
+      title: "Турак жай комплексин өчүрөсүзбү?",
+      descriptionStart: "«",
+      descriptionEnd:
+        "» комплексин чындап өчүргүңүз келеби? Бул аракетти артка кайтаруу мүмкүн эмес.",
+    },
+
+    errorState: {
+      title: "ЖКны жүктөө мүмкүн болгон жок",
+      notFound: "Турак жай комплекси табылган жок",
+      back: "Менин ЖКларыма кайтуу",
+    },
+
+    errors: {
+      notFound: "Турак жай комплекси табылган жок",
+      processing:
+        "Турак жай комплексинин маалыматтарын иштетүү мүмкүн болгон жок",
+      load: "Турак жай комплексин жүктөөдө ката кетти",
+      unauthorized: "Сиз авторизациядан өткөн эмессиз",
+      save: "Сактоодо ката кетти",
+      refresh:
+        "Өзгөртүүлөр сакталды, бирок маалыматтарды жаңыртуу мүмкүн болгон жок",
+      delete: "Өчүрүүдө ката кетти",
+    },
+
+    fallback: {
+      notSpecified: "Көрсөтүлгөн эмес",
+      country: "Кыргызстан",
+      developer: "Куруучу көрсөтүлгөн эмес",
+      complex: "Турак жай комплекси",
+      apartment: "Турак жай комплексиндеги батир",
+      apartmentType: "Батир",
+      address: "Дареги көрсөтүлгөн эмес",
+      description: "Сүрөттөмө көрсөтүлгөн эмес",
+      askDeveloper: "Куруучудан тактап алыңыз",
+    },
+
+    units: {
+      floors: "кабат",
+      blocks: "блок",
+      apartments: "батир",
+      parking: "орун",
+      meters: "м",
+      sotkas: "сотых",
+      squareMeters: "м²",
+    },
+  },
+
+  editResidentialComplexModal: {
+    header: {
+      eyebrow: "ЖКны өзгөртүү",
+      description:
+        "Турак жай комплекси тууралуу маалыматты өзгөртүп, жаңыртууларды сактаңыз.",
+    },
+
+    fallback: {
+      complex: "Турак жай комплекси",
+    },
+
+    sections: {
+      basic: "Негизги маалымат",
+      characteristics: "Мүнөздөмөлөрү",
+      infrastructure: "Инфраструктура",
+    },
+
+    fields: {
+      name: "ЖКнын аталышы",
+      city: "Шаар",
+      address: "Дарек",
+      description: "Сүрөттөмө",
+      status: "Статус",
+      class: "Класс",
+      construction: "Конструкциясы",
+      completionDate: "Бүткөрүү датасы",
+      floors: "Кабат",
+      blocks: "Блоктордун саны",
+      apartments: "Батирлер",
+      parking: "Унаа токтотуучу жайлар",
+      landArea: "Аймактын аянты, сотых",
+      ceilingHeight: "Шыптын бийиктиги, м",
+    },
+
+    placeholders: {
+      name: "Турак жай комплексинин аталышын киргизиңиз",
+      city: "Шаар",
+      address: "Даректи киргизиңиз",
+      description: "Турак жай комплекси тууралуу айтып бериңиз...",
+    },
+
+    statuses: {
+      project: "Долбоор",
+      construction: "Курулуш жүрүүдө",
+      completed: "Бүткөн",
+    },
+
+    classes: {
+      economy: "Эконом",
+      comfort: "Комфорт",
+      business: "Бизнес",
+      premium: "Премиум",
+    },
+
+    constructions: {
+      monolith: "Монолит",
+      monolithBrick: "Монолит-кирпич",
+      brick: "Кирпич",
+      panel: "Панелдик",
+      frameMonolith: "Каркас-монолит",
+      aeratedConcrete: "Газобетон",
+    },
+
+    amenities: {
+      playground: "Балдар аянтчасы",
+      parking: "Унаа токтотуучу жай",
+      undergroundParking: "Жер алдындагы паркинг",
+      gatedArea: "Жабык аймак",
+      security: "Күзөт",
+      videoSurveillance: "Видеокөзөмөл",
+      elevator: "Лифт",
+      kindergarten: "Бала бакча",
+      school: "Мектеп",
+      fitness: "Фитнес залы",
+      greenArea: "Жашыл аймак",
+      commercial: "Коммерциялык жайлар",
+    },
+
+    actions: {
+      close: "Жабуу",
+      cancel: "Жокко чыгаруу",
+      save: "Өзгөртүүлөрдү сактоо",
+    },
+  },
+
+  residentialComplexes: {
+    header: {
+      profile: "Профилге",
+      eyebrow: "Куруучунун кабинети",
+      title: "Менин турак жай комплекстерим",
+      description:
+        "ЖКларыңызды башкарып, курулуш иштерин көзөмөлдөп жана сатып алуучулар үчүн маалыматты жаңыртыңыз.",
+    },
+
+    actions: {
+      add: "ЖК кошуу",
+      details: "Толук маалымат",
+      edit: "Өзгөртүү",
+      delete: "Өчүрүү",
+      cancel: "Жокко чыгаруу",
+      save: "Өзгөртүүлөрдү сактоо",
+      close: "Жабуу",
+      more: "Кошумча аракеттер",
+    },
+
+    overview: {
+      total: "Бардык ЖК",
+      construction: "Курулуштагы",
+      apartments: "Бардык батирлер",
+    },
+
+    filters: {
+      search: "Аталышы же дареги боюнча издөө...",
+    },
+
+    fields: {
+      status: "Абалы",
+    },
+
+    statuses: {
+      all: "Бардык абалдар",
+      project: "Долбоор",
+      construction: "Курулуш жүрүүдө",
+      completed: "Пайдаланууга берилген",
+    },
+
+    classes: {
+      economy: "Эконом",
+      comfort: "Комфорт",
+      business: "Бизнес",
+      premium: "Премиум",
+    },
+
+    amenities: {
+      parking: "Унаа токтотуучу жай",
+      undergroundParking: "Жер алдындагы паркинг",
+      playground: "Балдар аянтчасы",
+      security: "Күзөт",
+      fitness: "Фитнес-зал",
+      gatedArea: "Жабык аймак",
+      elevator: "Лифт",
+      greenArea: "Жашыл аймак",
+      kindergarten: "Бала бакча",
+      school: "Мектеп",
+      videoSurveillance: "Видеокөзөмөл",
+      commercial: "Коммерциялык жайлар",
+    },
+
+    units: {
+      floors: "кабат",
+      apartments: "батир",
+      completion: "тапшыруу",
+    },
+
+    result: {
+      title: "Сиздин долбоорлоруңуз",
+      hint: "Ар бир турак жай комплексин өзүнчө башкарыңыз",
+    },
+
+    loading: "Турак жай комплекстериңиз жүктөлүүдө...",
+
+    empty: {
+      title: "ЖК табылган жок",
+      description:
+        "Сиздин издөөңүз боюнча эч нерсе табылган жок. Издөө параметрлерин өзгөртүп көрүңүз.",
+    },
+
+    errors: {
+      load: "Турак жай комплекстерин жүктөөдө ката кетти",
+      loadServer: "Турак жай комплекстерин серверден жүктөө мүмкүн болгон жок",
+      unauthorized: "Сиз авторизациядан өткөн жоксуз",
+      delete: "Турак жай комплексин өчүрүү мүмкүн болгон жок",
+      update: "Турак жай комплексин жаңыртуу мүмкүн болгон жок",
+    },
+
+    deleteModal: {
+      title: "Турак жай комплексин өчүрөсүзбү?",
+      descriptionStart: "«",
+      descriptionEnd:
+        "» комплексин чындап өчүргүңүз келеби? Бул аракетти артка кайтаруу мүмкүн эмес.",
+    },
+
+    editModal: {
+      eyebrow: "Өзгөртүү",
+      title: "Турак жай комплексин өзгөртүү",
+      descriptionStart: "Маалыматты жаңыртыңыз",
+
+      fields: {
+        name: "ЖКнын аталышы",
+        address: "Дарек",
+        class: "Турак жайдын классы",
+        completionDate: "Тапшыруу күнү",
+        floors: "Кабаттардын саны",
+        apartments: "Батирлердин саны",
+        parking: "Унаа токтотуучу жайлар",
+        area: "Аймактын аянты, сотых",
+      },
+
+      placeholders: {
+        name: "ЖКнын аталышы",
+        address: "Дарек",
+      },
+    },
+  },
+
+  agencyPublicProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    type: "Кыймылсыз мүлк агенттиги",
+    verified: "Текшерилген",
+
+    defaults: {
+      companyName: "Кыймылсыз мүлк агенттиги",
+      director: "Жетекчи",
+      about:
+        "Кыймылсыз мүлк боюнча кесипкөй агенттик. Объекттерди тандоо, сатуу жана ижарага берүү кызматтары.",
+    },
+
+    director: {
+      label: "Жетекчи",
+    },
+
+    actions: {
+      call: "Чалуу",
+      whatsapp: "WhatsApp",
+      email: "Email",
+    },
+
+    stats: {
+      activeAds: "Активдүү жарыялар",
+      properties: "Бардык объекттер",
+    },
+
+    details: {
+      office: "Кеңсе",
+      website: "Веб-сайт",
+    },
+
+    listings: {
+      title: "Агенттиктин жарыялары",
+      description: "Агенттиктен актуалдуу кыймылсыз мүлк объекттери",
+      count: "объект",
+    },
+
+    empty: {
+      title: "Азырынча активдүү жарыялар жок",
+      description:
+        "Агенттик азырынча кыймылсыз мүлк объекттерин жарыялай элек.",
+    },
+  },
+
+  developerPublicProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    type: "Куруучу",
+    verified: "Текшерилген",
+    verifiedCompany: "Текшерилген компания",
+
+    defaults: {
+      company: "Курулуш компаниясы",
+      representative: "Компаниянын өкүлү",
+      about: "Компания азырынча ишмердүүлүгү тууралуу маалымат кошо элек.",
+      project: "Турак жай комплекси",
+      address: "Дареги көрсөтүлгөн эмес",
+    },
+
+    representative: {
+      label: "Өкүл",
+    },
+
+    about: {
+      label: "Компания жөнүндө",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      office: "Кеңсе",
+      inn: "ИНН",
+      website: "Сайт",
+    },
+
+    actions: {
+      whatsapp: "WhatsApp аркылуу жазуу",
+      website: "Сайтка өтүү",
+    },
+
+    stats: {
+      complexes: "Турак жай комплекстери",
+      ads: "Жарыялар",
+    },
+
+    tabs: {
+      projectsShort: "ДОЛБООРЛОР",
+      realEstateShort: "КЫЙМЫЛСЫЗ МҮЛК",
+    },
+
+    content: {
+      complexes: {
+        title: "Турак жай комплекстери",
+        description: "Компания ишке ашырып жаткан долбоорлор",
+      },
+
+      ads: {
+        title: "Куруучунун жарыялары",
+        description: "Компаниянын актуалдуу сунуштары",
+      },
+
+      count: "объект",
+    },
+
+    projectStatuses: {
+      completed: "Пайдаланууга берилген",
+      building: "Курулуп жатат",
+    },
+
+    project: {
+      apartments: "батир",
+      details: "Комплекс тууралуу толук маалымат",
+    },
+
+    empty: {
+      complexes: {
+        title: "Азырынча турак жай комплекстери жок",
+        description: "Бул компанияда азырынча катталган долбоорлор жок.",
+      },
+
+      ads: {
+        title: "Азырынча активдүү жарыялар жок",
+        description: "Куруучуда азырынча жарыяланган сунуштар жок.",
+      },
+    },
+  },
+
+  personalPublicProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    whatsapp: "WhatsApp",
+
+    defaults: {
+      user: "Колдонуучу",
+    },
+
+    about: {
+      profile: "Профиль",
+    },
+
+    listings: {
+      title: "Кыймылсыз мүлк",
+    },
+
+    empty: {
+      title: "Азырынча жарыялар жок",
+      description:
+        "Колдонуучунун азырынча сатуу боюнча активдүү жарыялары жок.",
+    },
+
+    roles: {
+      developer: {
+        label: "Куруучу",
+        aboutTitle: "Компания жөнүндө",
+        defaultAbout: "Куруучу азырынча сүрөттөмө кошо элек.",
+        adsDescription: "Куруучунун объекттери жана сунуштары",
+      },
+
+      agency: {
+        label: "Кыймылсыз мүлк агенттиги",
+        aboutTitle: "Агенттик жөнүндө",
+        defaultAbout: "Агенттик азырынча сүрөттөмө кошо элек.",
+        adsDescription: "Агенттиктин объекттери",
+      },
+
+      realtor: {
+        label: "Риэлтор",
+        aboutTitle: "Риэлтор жөнүндө",
+        defaultAbout: "Риэлтор азырынча сүрөттөмө кошо элек.",
+        adsDescription: "Риэлтордун объекттери",
+      },
+
+      personal: {
+        label: "Жеке адам",
+        aboutTitle: "Өзүм жөнүндө",
+        defaultAbout: "Колдонуучу азырынча сүрөттөмө кошо элек.",
+        adsDescription: "Колдонуучунун жарыялары",
+      },
+    },
+  },
+
+  realtorPublicProfile: {
+    topBar: {
+      home: "Башкы бетке",
+    },
+
+    role: "Риэлтор",
+
+    verification: {
+      profile: "Тастыкталган профиль",
+      short: "Тастыкталган",
+    },
+
+    defaults: {
+      realtor: "Риэлтор",
+      about: "Риэлтор азырынча ишмердүүлүгү тууралуу сүрөттөмө кошо элек.",
+    },
+
+    actions: {
+      call: "Чалуу",
+      whatsapp: "WhatsApp",
+      email: "Email",
+    },
+
+    details: {
+      office: "Кеңсе",
+      website: "Сайт",
+    },
+
+    stats: {
+      activeAds: "Активдүү жарыялар",
+    },
+
+    listings: {
+      label: "Сунуштар",
+      title: "Риэлтордун жарыялары",
+      description: "Кыймылсыз мүлктүн актуалдуу объекттери жана сунуштары",
+    },
+
+    empty: {
+      title: "Азырынча жарыялар жок",
+      description: "Бул риэлтордун азырынча активдүү сунуштары жок.",
+    },
+  },
+
+  publicProfile: {
+    loading: "Профиль жүктөлүүдө...",
+    errors: {
+      load: "Профиль маалыматтарын жүктөө мүмкүн болгон жок",
+      fetch: "Профилди алуу учурунда ката кетти",
+    },
+    notFound: {
+      title: "Профиль табылган жок",
+      description: "Колдонуучу жок же өчүрүлгөн",
+      home: "Башкы бетке",
+    },
+    unknownType: "Профилдин белгисиз түрү",
+  },
 };
 export default ky;

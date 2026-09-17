@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 
+import { useLanguage } from "@/context/LanguageContext";
 import { mapListingData } from "@/utils/mapListingData";
 
 import styles from "./PersonalPublicProfile.module.css";
@@ -22,6 +23,8 @@ export default function PersonalPublicProfile({
   favIds = new Set(),
   onFavoriteClick,
 }) {
+  const { t } = useLanguage();
+
   if (!user) return null;
 
   const profile = user.profile || {};
@@ -35,7 +38,7 @@ export default function PersonalPublicProfile({
 
   const fullName =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
-    "Пользователь";
+    t("personalPublicProfile.defaults.user");
 
   const phone = user.phone || "";
 
@@ -44,7 +47,7 @@ export default function PersonalPublicProfile({
   const role =
     user.role || user.user_type || profile.role || profile.user_type || "user";
 
-  const profileType = getProfileType(role);
+  const profileType = getProfileType(role, t);
 
   const ads = user.ads || [];
 
@@ -55,7 +58,7 @@ export default function PersonalPublicProfile({
       <div className={styles.container}>
         <Link href="/" className={styles.backButton}>
           <ArrowLeft size={17} />
-          <span>На главную</span>
+          <span>{t("personalPublicProfile.topBar.home")}</span>
         </Link>
 
         {/* PROFILE */}
@@ -109,7 +112,7 @@ export default function PersonalPublicProfile({
                       className={styles.whatsapp}
                     >
                       <MessageCircle size={17} />
-                      <span>WhatsApp</span>
+                      <span>{t("personalPublicProfile.whatsapp")}</span>
                       <ArrowUpRight size={14} />
                     </a>
                   )}
@@ -131,7 +134,9 @@ export default function PersonalPublicProfile({
           }}
         >
           <div className={styles.aboutHeader}>
-            <span className={styles.aboutEyebrow}>Профиль</span>
+            <span className={styles.aboutEyebrow}>
+              {t("personalPublicProfile.about.profile")}
+            </span>
 
             <h2>{profileType.aboutTitle}</h2>
           </div>
@@ -152,7 +157,9 @@ export default function PersonalPublicProfile({
         >
           <div className={styles.sectionHeader}>
             <div>
-              <span className={styles.sectionEyebrow}>Недвижимость</span>
+              <span className={styles.sectionEyebrow}>
+                {t("personalPublicProfile.listings.title")}
+              </span>
 
               <h2>{profileType.adsDescription}</h2>
             </div>
@@ -177,12 +184,9 @@ export default function PersonalPublicProfile({
                 <Home size={25} />
               </div>
 
-              <h3>Пока нет объявлений</h3>
+              <h3>{t("personalPublicProfile.empty.title")}</h3>
 
-              <p>
-                У пользователя пока нет активных объявлений о продаже
-                недвижимости.
-              </p>
+              <p>{t("personalPublicProfile.empty.description")}</p>
             </div>
           )}
         </motion.section>
@@ -191,7 +195,7 @@ export default function PersonalPublicProfile({
   );
 }
 
-function getProfileType(role) {
+function getProfileType(role, t) {
   const normalized = String(role).toLowerCase().trim();
 
   if (
@@ -200,10 +204,10 @@ function getProfileType(role) {
     normalized === "застройщик"
   ) {
     return {
-      label: "Застройщик",
-      aboutTitle: "О компании",
-      defaultAbout: "Застройщик пока не добавил описание.",
-      adsDescription: "Объекты и предложения застройщика",
+      label: t("personalPublicProfile.roles.developer.label"),
+      aboutTitle: t("personalPublicProfile.roles.developer.aboutTitle"),
+      defaultAbout: t("personalPublicProfile.roles.developer.defaultAbout"),
+      adsDescription: t("personalPublicProfile.roles.developer.adsDescription"),
       icon: <Building2 size={14} />,
     };
   }
@@ -214,10 +218,10 @@ function getProfileType(role) {
     normalized === "агентство"
   ) {
     return {
-      label: "Агентство недвижимости",
-      aboutTitle: "Об агентстве",
-      defaultAbout: "Агентство пока не добавило описание.",
-      adsDescription: "Объекты агентства",
+      label: t("personalPublicProfile.roles.agency.label"),
+      aboutTitle: t("personalPublicProfile.roles.agency.aboutTitle"),
+      defaultAbout: t("personalPublicProfile.roles.agency.defaultAbout"),
+      adsDescription: t("personalPublicProfile.roles.agency.adsDescription"),
       icon: <Building2 size={14} />,
     };
   }
@@ -228,19 +232,19 @@ function getProfileType(role) {
     normalized === "риэлтор"
   ) {
     return {
-      label: "Риэлтор",
-      aboutTitle: "О риэлторе",
-      defaultAbout: "Риэлтор пока не добавил описание.",
-      adsDescription: "Объекты риэлтора",
+      label: t("personalPublicProfile.roles.realtor.label"),
+      aboutTitle: t("personalPublicProfile.roles.realtor.aboutTitle"),
+      defaultAbout: t("personalPublicProfile.roles.realtor.defaultAbout"),
+      adsDescription: t("personalPublicProfile.roles.realtor.adsDescription"),
       icon: <User size={14} />,
     };
   }
 
   return {
-    label: "Частное лицо",
-    aboutTitle: "О себе",
-    defaultAbout: "Пользователь пока не добавил описание.",
-    adsDescription: "Объявления пользователя",
+    label: t("personalPublicProfile.roles.personal.label"),
+    aboutTitle: t("personalPublicProfile.roles.personal.aboutTitle"),
+    defaultAbout: t("personalPublicProfile.roles.personal.defaultAbout"),
+    adsDescription: t("personalPublicProfile.roles.personal.adsDescription"),
     icon: <User size={14} />,
   };
 }

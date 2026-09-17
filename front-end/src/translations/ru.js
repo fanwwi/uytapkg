@@ -3783,6 +3783,1538 @@ const ru = {
     home: "На главную",
     search: "Найти жильё",
   },
+
+  myAdsDetails: {
+    loading: {
+      title: "Загрузка объявления...",
+      description: "Получаем информацию об объекте",
+    },
+
+    error: {
+      title: "Объявление не найдено",
+      description: "Не удалось загрузить данные объявления.",
+      notFound: "Объявление не найдено",
+      load: "Ошибка загрузки объявления",
+    },
+
+    backToAds: "Вернуться к объявлениям",
+
+    myAds: "Мои объявления",
+
+    myListing: "МОЁ ОБЪЯВЛЕНИЕ",
+
+    myProperty: "МОЯ НЕДВИЖИМОСТЬ",
+
+    published: "Опубликовано",
+
+    badges: {
+      urgent: "Срочно",
+    },
+
+    actions: {
+      edit: "Изменить",
+      editFull: "Редактировать",
+      delete: "Удалить",
+      deleteListing: "Удалить объявление",
+      favorite: "Добавить в избранное",
+    },
+
+    gallery: {
+      noPhotos: "Нет фотографий",
+      photo: "Фото",
+      previous: "Предыдущее фото",
+      next: "Следующее фото",
+    },
+
+    quickInfo: {
+      rooms: "комнат",
+      area: "площадь",
+      floor: "этаж",
+      toBeach: "до пляжа",
+    },
+
+    sections: {
+      about: {
+        label: "ОБ ОБЪЕКТЕ",
+        title: "Описание",
+      },
+
+      details: {
+        label: "ПОДРОБНОСТИ",
+        title: "Характеристики объекта",
+      },
+
+      additional: {
+        label: "ДОПОЛНИТЕЛЬНО",
+        title: "Удобства",
+      },
+
+      location: {
+        label: "РАСПОЛОЖЕНИЕ",
+        title: "Адрес объекта",
+      },
+    },
+
+    sidebar: {
+      information: "Информация",
+      category: "Категория",
+      offerType: "Тип предложения",
+      publishedAt: "Дата публикации",
+      price: "Стоимость",
+      toBeach: "До пляжа",
+      management: "Управление объявлением",
+    },
+
+    deleteModal: {
+      title: "Удалить объявление?",
+      descriptionStart: "Вы действительно хотите удалить",
+      descriptionEnd: "Это действие нельзя будет отменить.",
+    },
+
+    fallback: {
+      property: "Объект недвижимости",
+    },
+
+    values: {
+      yes: "Есть",
+      no: "Нет",
+    },
+
+    units: {
+      meters: "м",
+      sotkas: "соток",
+      blocks: "блоков",
+    },
+
+    deals: {
+      buy: "Продажа",
+      rent: "Аренда",
+    },
+
+    propertyTypes: {
+      apartment: "Квартира",
+      house: "Дом",
+      cottage: "Коттедж",
+      room: "Комната",
+      land: "Участок",
+      commercial: "Коммерческая недвижимость",
+      parking: "Паркинг",
+      garage: "Гараж",
+      office: "Офис",
+    },
+
+    characteristics: {
+      rooms: "Комнаты",
+      area: "Площадь",
+      floor: "Этаж",
+      floors: "Этажность",
+      propertyType: "Тип недвижимости",
+
+      residentialComplex: "Жилой комплекс",
+      developer: "Застройщик",
+
+      buildingType: "Тип дома",
+
+      yearBuilt: "Год постройки",
+
+      repair: "Ремонт",
+      condition: "Состояние",
+      furniture: "Мебель",
+
+      ceilingHeight: "Высота потолков",
+
+      bathroom: "Санузел",
+      bathrooms: "Количество санузлов",
+
+      heating: "Отопление",
+      heatingType: "Тип отопления",
+
+      sewerage: "Канализация",
+
+      water: "Водоснабжение",
+
+      electricity: "Электричество",
+      gas: "Газ",
+
+      documents: "Документы",
+
+      parking: "Парковка",
+      parkingType: "Тип парковки",
+
+      view: "Вид",
+
+      orientation: "Ориентация",
+
+      landArea: "Площадь участка",
+      areaSotka: "Площадь участка",
+
+      blocks: "Количество блоков",
+
+      construction: "Конструкция",
+      constructionType: "Тип конструкции",
+
+      entrances: "Количество входов",
+
+      yardArea: "Площадь двора",
+
+      landWidth: "Ширина участка",
+      landLength: "Длина участка",
+
+      offerType: "Тип предложения",
+
+      purpose: "Назначение",
+      fence: "Ограждение",
+      terrain: "Рельеф",
+
+      landLocation: "Расположение участка",
+      roomLocation: "Расположение комнаты",
+
+      roomsInApartment: "Комнат в квартире",
+
+      privateBathroom: "Личный санузел",
+
+      premisesType: "Тип помещения",
+
+      technicalParameters: "Технические параметры",
+
+      firstLine: "Первая линия",
+
+      separateEntrance: "Отдельный вход",
+
+      rentalBusiness: "Готовый арендный бизнес",
+
+      material: "Материал",
+
+      gates: "Ворота",
+
+      truckAccess: "Заезд для грузовых",
+
+      gateType: "Тип ворот",
+
+      pets: "Домашние животные",
+
+      internet: "Интернет",
+
+      balcony: "Балкон",
+
+      elevator: "Лифт",
+
+      security: "Охрана",
+
+      parkingPlace: "Парковочное место",
+
+      beachDistance: "Расстояние до пляжа",
+    },
+  },
+
+  adsEditModal: {
+    header: {
+      label: "УПРАВЛЕНИЕ ОБЪЯВЛЕНИЕМ",
+      title: "Изменить объявление",
+      description: "Измените информацию об объекте и сохраните обновления.",
+    },
+
+    sections: {
+      basic: {
+        label: "ОСНОВНАЯ ИНФОРМАЦИЯ",
+        title: "Об объекте",
+      },
+
+      location: {
+        label: "РАСПОЛОЖЕНИЕ",
+        title: "Адрес объекта",
+      },
+
+      details: {
+        label: "ХАРАКТЕРИСТИКИ",
+        title: "Параметры объекта",
+      },
+
+      description: {
+        label: "ОБЪЕКТ",
+        title: "Описание",
+      },
+    },
+
+    fields: {
+      title: {
+        label: "Название объявления",
+        placeholder: "Название объекта",
+      },
+
+      type: {
+        label: "Тип объекта",
+        title: "Тип объекта",
+      },
+
+      dealType: {
+        label: "Тип предложения",
+        title: "Тип предложения",
+      },
+
+      location: {
+        label: "Город / район",
+        placeholder: "Например, Чолпон-Ата",
+      },
+
+      address: {
+        label: "Адрес",
+        placeholder: "Улица, дом",
+      },
+
+      price: {
+        label: "Цена",
+        placeholder: "120 000 $",
+      },
+
+      area: {
+        label: "Площадь",
+        placeholder: "180 м²",
+      },
+
+      rooms: {
+        label: "Комнаты",
+        placeholder: "5",
+      },
+
+      floors: {
+        label: "Этажность",
+        placeholder: "2",
+      },
+
+      description: {
+        label: "Описание объявления",
+        placeholder: "Расскажите подробнее об объекте...",
+      },
+    },
+
+    propertyTypes: {
+      house: "Дом",
+      cottage: "Коттедж",
+      apartment: "Квартира",
+      land: "Участок",
+      commercial: "Коммерция",
+      dacha: "Дача",
+    },
+
+    dealTypes: {
+      sale: "Продажа",
+      rent: "Сдаю",
+    },
+
+    actions: {
+      close: "Закрыть",
+      cancel: "Отмена",
+      save: "Сохранить изменения",
+      saving: "Сохранение...",
+    },
+  },
+
+  promoteListingModal: {
+    header: {
+      label: "ПРОДВИЖЕНИЕ",
+      title: "Продвинуть объявление",
+    },
+
+    services: {
+      vip: {
+        title: "VIP",
+        description: "Закрепление в самом верху каталога + золотая рамка",
+      },
+
+      top: {
+        title: "ТОП",
+        description: "Подъём и закрепление выше стандартных карточек",
+      },
+
+      urgent: {
+        title: "Срочно",
+        description: "Красный бейдж + попадание в фильтр «Срочные продажи»",
+      },
+
+      instagram: {
+        title: "Instagram",
+        description: "Пост + Stories + дублирование в Telegram",
+      },
+    },
+
+    pricing: {
+      currency: "сом",
+      perDay: "/ день",
+      oneTime: "разово",
+    },
+
+    days: {
+      label: "На сколько дней",
+      short: "дн.",
+    },
+
+    total: {
+      label: "Итого",
+    },
+
+    actions: {
+      close: "Закрыть",
+      payment: "Перейти к оплате",
+    },
+
+    errors: {
+      pricing: "Не удалось загрузить актуальные цены. Попробуйте позже.",
+    },
+  },
+
+  ads: {
+    header: {
+      profile: "В профиль",
+      eyebrow: "Личный кабинет",
+      title: "Мои объявления",
+      description:
+        "Управляйте своими объектами недвижимости, редактируйте публикации и следите за их статусом.",
+    },
+
+    stats: {
+      total: "Всего объявлений",
+      active: "Активные",
+      favorites: "Всего избранных",
+    },
+
+    resultBar: {
+      listings: "объявления",
+    },
+
+    loading: "Загрузка ваших объявлений...",
+
+    propertyTypes: {
+      apartment: "Квартира",
+      house: "Дом",
+      land: "Участок",
+      commercial: "Коммерция",
+      room: "Комнаты",
+      garage: "Паркинг/гараж",
+      other: "Другое",
+    },
+
+    statuses: {
+      active: "Активно",
+      moderation: "На модерации",
+      draft: "Черновик",
+      hidden: "Скрыто",
+    },
+
+    dealTypes: {
+      sale: "Продажа",
+      rent: "Сдаю",
+    },
+
+    currency: {
+      som: "сом",
+    },
+
+    card: {
+      rooms: "комнат",
+      price: "Цена",
+    },
+
+    actions: {
+      add: "Добавить объявление",
+      details: "Подробнее",
+      promote: "Продвинуть",
+      promoteAria: "Продвинуть объявление",
+      edit: "Изменить",
+      editAria: "Изменить объявление",
+      delete: "Удалить",
+      deleteAria: "Удалить объявление",
+      cancel: "Отмена",
+    },
+
+    empty: {
+      title: "У вас пока нет объявлений",
+      description:
+        "Добавьте первый объект недвижимости, чтобы он появился здесь.",
+    },
+
+    deleteModal: {
+      title: "Удалить объявление?",
+      descriptionStart: "Вы действительно хотите удалить объявление",
+      descriptionEnd: "Это действие нельзя отменить.",
+      descriptionFallback:
+        "Это действие нельзя отменить. Объявление будет удалено без возможности восстановления.",
+    },
+
+    errors: {
+      load: "Не удалось загрузить ваши объявления",
+      server: "Ошибка при подключении к серверу",
+      delete: "Не удалось удалить объявление",
+      update: "Не удалось обновить объявление",
+    },
+
+    fallback: {
+      noTitle: "Без названия",
+      country: "Кыргызстан",
+    },
+  },
+
+  agencyProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    verified: "Подтверждено",
+
+    type: "Агентство недвижимости",
+
+    director: {
+      label: "Руководитель:",
+    },
+
+    defaults: {
+      companyName: "Агентство недвижимости",
+      director: "Руководитель",
+    },
+
+    about: {
+      title: "Об агентстве",
+      empty: "Агентство пока не добавило описание.",
+    },
+
+    details: {
+      office: "Офис",
+      website: "Веб-сайт",
+    },
+
+    stats: {
+      ads: "Объявлений",
+      favorites: "Избранных",
+    },
+
+    actions: {
+      editAria: "Редактировать профиль",
+
+      myAds: {
+        title: "Мои объявления",
+        description: "Управление объектами",
+      },
+
+      favorites: {
+        title: "Избранное",
+        description: "Сохраненные объекты",
+      },
+
+      tariff: {
+        title: "Мой тариф",
+        description: "Управление подпиской",
+      },
+
+      logout: {
+        title: "Выйти",
+        description: "Завершить сессию",
+      },
+    },
+  },
+
+  agencyEditModal: {
+    header: {
+      title: "Редактирование профиля",
+      description: "Обновите данные вашего агентства",
+    },
+
+    logoAlt: "Логотип агентства",
+
+    logo: {
+      change: "Изменить логотип",
+      remove: "Удалить логотип",
+    },
+
+    fields: {
+      companyName: "Название агентства",
+      director: "Руководитель",
+      inn: "ИНН",
+      phone: "Телефон",
+      email: "Email",
+      address: "Адрес офиса",
+      website: "Сайт",
+      about: "Описание агентства",
+    },
+
+    actions: {
+      close: "Закрыть",
+      saving: "Сохраняем...",
+      save: "Сохранить изменения",
+    },
+
+    errors: {
+      logoSize: "Размер изображения не должен превышать 5 МБ",
+      imageFetch: "Не удалось получить изображение",
+      session: "Сессия не найдена. Пожалуйста, войдите в аккаунт заново.",
+      logoSave: "Не удалось сохранить логотип",
+      save: "Не удалось сохранить изменения",
+    },
+  },
+
+  developerProfile: {
+    badge: "Застройщик",
+
+    companyType: "Застройщик и девелопер",
+
+    verification: {
+      verified: "Профиль подтверждён",
+      title: "Подтвердите профиль застройщика",
+      description:
+        "Чтобы покупатели могли видеть вашу компанию и жилые комплексы, необходимо подтвердить профиль. После подтверждения ваши ЖК и объявления будут доступны пользователям UyTap.",
+      warning:
+        "Если профиль не будет подтверждён, он и ваши ЖК не будут отображаться покупателям.",
+      button: "Подтвердить профиль",
+    },
+
+    defaults: {
+      company: "Строительная компания",
+      representative: "Представитель компании",
+      about: "Компания пока не добавила описание.",
+    },
+
+    projectDefaults: {
+      name: "Жилой комплекс",
+      address: "Адрес не указан",
+      status: "Строительство",
+    },
+
+    actions: {
+      editAria: "Редактировать профиль",
+      whatsapp: "Написать в WhatsApp",
+      website: "Перейти на сайт",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      inn: "ИНН",
+      office: "Офис",
+      website: "Сайт",
+    },
+
+    stats: {
+      projects: "ЖК",
+      apartments: "квартир",
+      ads: "объявлений",
+    },
+
+    portfolio: {
+      label: "Портфолио",
+      title: "Мои жилые комплексы",
+      description:
+        "Управляйте проектами и показывайте покупателям, какие ЖК строит ваша компания.",
+      add: "Добавить ЖК",
+    },
+
+    projects: {
+      loading: "Загрузка проектов...",
+
+      empty: {
+        title: "У вас пока нет ЖК",
+        description:
+          "Добавьте первый жилой комплекс, чтобы покупатели могли увидеть ваши проекты прямо в профиле.",
+        button: "Добавить первый ЖК",
+      },
+    },
+
+    project: {
+      apartments: "квартир",
+      details: "Подробнее",
+    },
+
+    menu: {
+      home: "Главная",
+      projects: "Мои ЖК",
+      ads: "Мои объявления",
+      favorites: "Избранное",
+      tariff: "Мой тариф",
+      logout: "Выйти",
+    },
+  },
+
+  developerEditModal: {
+    header: {
+      badge: "Профиль застройщика",
+      title: "Редактирование компании",
+      description: "Обновите информацию о компании, представителе и контактах.",
+    },
+
+    logo: {
+      alt: "Логотип компании",
+      title: "Логотип компании",
+      format: "PNG, JPG или WEBP · до 5 МБ",
+      upload: "Загрузить логотип",
+      change: "Изменить",
+      remove: "Удалить",
+    },
+
+    sections: {
+      company: {
+        title: "Компания",
+        description: "Основная информация о застройщике",
+      },
+
+      representative: {
+        title: "Представитель",
+        description: "Контактное лицо компании",
+      },
+
+      contacts: {
+        title: "Контакты",
+        description: "Как покупатели смогут связаться с вами",
+      },
+
+      about: {
+        title: "О компании",
+        description: "Коротко расскажите о вашей компании",
+      },
+    },
+
+    fields: {
+      companyName: {
+        label: "Название компании",
+        placeholder: "Например, ОсОО СтройИнвест",
+      },
+
+      inn: {
+        label: "ИНН",
+        placeholder: "Введите ИНН компании",
+      },
+
+      firstName: {
+        label: "Имя",
+        placeholder: "Имя",
+      },
+
+      lastName: {
+        label: "Фамилия",
+        placeholder: "Фамилия",
+      },
+
+      phone: {
+        label: "Телефон",
+        placeholder: "+996 555 123 456",
+      },
+
+      whatsapp: {
+        label: "WhatsApp",
+        placeholder: "+996 555 123 456",
+      },
+
+      website: {
+        label: "Сайт",
+        placeholder: "https://company.kg",
+      },
+
+      officeAddress: {
+        label: "Адрес офиса",
+        placeholder: "Бишкек, ул. ...",
+      },
+
+      about: {
+        placeholder:
+          "Расскажите о компании, опыте работы, проектах, специализации и преимуществах...",
+      },
+    },
+
+    actions: {
+      close: "Закрыть",
+      cancel: "Отмена",
+      saving: "Сохраняем...",
+      save: "Сохранить изменения",
+    },
+
+    errors: {
+      imageType: "Можно загрузить только изображение",
+      imageSize: "Размер изображения не должен превышать 5 МБ",
+      session: "Сессия закончилась. Войдите в аккаунт заново.",
+      companyName: "Введите название компании",
+      logoUpload: "Не удалось загрузить логотип",
+      save: "Не удалось сохранить изменения профиля",
+    },
+  },
+
+  personalProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    avatarAlt: "Аватар пользователя",
+
+    type: "Частное лицо",
+
+    whatsapp: "WhatsApp",
+
+    defaults: {
+      user: "Пользователь",
+      noPhone: "Нет телефона",
+    },
+
+    about: {
+      title: "О себе",
+      empty: "Пользователь пока не добавил описание",
+    },
+
+    actions: {
+      editAria: "Редактировать профиль",
+      whatsapp: "Написать в WhatsApp",
+
+      myAds: {
+        title: "Мои объявления",
+        description: "Управление объектами",
+      },
+
+      favorites: {
+        title: "Избранное",
+        description: "Сохраненные объекты",
+      },
+
+      tariff: {
+        title: "Мой тариф",
+        description: "Управление подпиской",
+      },
+
+      logout: {
+        title: "Выйти",
+        description: "Завершить сессию",
+      },
+    },
+  },
+
+  profileEditModal: {
+    header: {
+      title: "Редактирование профиля",
+      description: "Обновите личные данные",
+    },
+
+    avatar: {
+      alt: "Аватар пользователя",
+      change: "Изменить фото",
+      add: "Добавить фото",
+      remove: "Удалить фото",
+    },
+
+    accountType: {
+      title: "Тип аккаунта",
+    },
+
+    accountTypes: {
+      personal: "Частное лицо",
+      realtor: "Риэлтор",
+      agency: "Агентство",
+      developer: "Застройщик",
+    },
+
+    fields: {
+      firstName: "Имя",
+      lastName: "Фамилия",
+
+      fullNameRequired: "ФИО (обязательно)",
+
+      innRequired: "ИНН (обязательно)",
+
+      region: "Регион работы",
+
+      agencyNameRequired: "Название агентства (обязательно)",
+
+      companyNameRequired: "Название компании (обязательно)",
+
+      legalAddressRequired: "Юридический адрес (обязательно)",
+
+      actualAddress: "Фактический адрес",
+
+      companyWebsite: "Сайт компании",
+
+      phoneRequired: "Рабочий телефон (обязательно)",
+
+      aboutPersonal: "Расскажите о себе",
+
+      aboutBusiness: "Описание деятельности (обязательно)",
+    },
+
+    actions: {
+      close: "Закрыть",
+      saving: "Сохраняем...",
+      save: "Сохранить изменения",
+    },
+
+    errors: {
+      imageSize: "Размер изображения не должен превышать 5 МБ",
+
+      imageFetch: "Не удалось получить изображение",
+
+      session: "Сначала войдите в аккаунт",
+
+      save: "Не удалось сохранить профиль",
+    },
+  },
+
+  realtorProfile: {
+    badge: "Риэлтор",
+
+    defaults: {
+      realtor: "Риэлтор",
+      company: "Агентство недвижимости",
+      about: "Риэлтор пока не добавил описание",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      office: "Адрес компании",
+      website: "Сайт",
+    },
+
+    actions: {
+      editAria: "Редактировать профиль",
+      whatsapp: "Написать в WhatsApp",
+    },
+
+    stats: {
+      ads: "объявлений",
+      favorites: "избранных",
+    },
+
+    menu: {
+      home: "Главная",
+      ads: "Мои объявления",
+      favorites: "Избранное",
+      tariff: "Мой тариф",
+      logout: "Выйти",
+    },
+  },
+
+  realtorEditModal: {
+    header: {
+      title: "Редактирование профиля",
+      description: "Обновите данные риэлтора",
+    },
+
+    avatar: {
+      alt: "Аватар риэлтора",
+      change: "Изменить фото",
+      add: "Добавить фото",
+      remove: "Удалить фото",
+    },
+
+    fields: {
+      firstName: "Имя",
+      lastName: "Фамилия",
+      companyName: "Название агентства",
+      phone: "Телефон",
+      inn: "ИНН",
+      website: "Сайт",
+      officeAddress: "Адрес офиса",
+      about: "Расскажите о себе и своей работе",
+    },
+
+    actions: {
+      close: "Закрыть",
+      saving: "Сохраняем...",
+      save: "Сохранить изменения",
+    },
+
+    errors: {
+      imageSize: "Размер изображения не должен превышать 5 МБ",
+      imageFetch: "Не удалось получить изображение",
+      session: "Сначала войдите в аккаунт",
+      saveProfile: "Не удалось сохранить профиль",
+      save: "Не удалось сохранить изменения",
+    },
+  },
+
+  myComplexDetail: {
+    loading: "Загрузка информации о жилом комплексе...",
+
+    ownerLabel: "КАБИНЕТ ЗАСТРОЙЩИКА",
+
+    back: {
+      myProjects: "Мои ЖК",
+    },
+
+    labels: {
+      myComplex: "МОЙ ЖИЛОЙ КОМПЛЕКС",
+      developer: "ЗАСТРОЙЩИК",
+      floors: "этажей",
+      blocks: "блоков",
+      territory: "территория",
+    },
+
+    actions: {
+      edit: "Изменить",
+      editImageAria: "Изменить изображения жилого комплекса",
+      editComplex: "Редактировать ЖК",
+      deleteAria: "Удалить жилой комплекс",
+    },
+
+    gallery: {
+      previous: "Предыдущее изображение",
+      next: "Следующее изображение",
+    },
+
+    sections: {
+      availableApartments: {
+        label: "ДОСТУПНЫЕ КВАРТИРЫ",
+        title: "Квартиры в",
+      },
+
+      about: {
+        label: "О ПРОЕКТЕ",
+        title: "О жилом комплексе",
+      },
+
+      details: {
+        label: "ОСНОВНЫЕ ПАРАМЕТРЫ",
+        title: "Характеристики ЖК",
+      },
+
+      infrastructure: {
+        label: "ТЕРРИТОРИЯ",
+        title: "Инфраструктура комплекса",
+      },
+
+      location: {
+        label: "ЛОКАЦИЯ",
+        title: "Расположение",
+      },
+
+      documents: {
+        label: "ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ",
+        title: "Документы о жилом комплексе",
+      },
+    },
+
+    apartments: {
+      loading: "Загружаем доступные квартиры...",
+
+      count: {
+        one: "доступная квартира",
+        few: "доступные квартиры",
+        many: "доступных квартир",
+      },
+
+      empty: {
+        title: "Свободных квартир пока нет",
+        description:
+          "В этом ЖК пока нет доступных объявлений о продаже квартир.",
+      },
+    },
+
+    details: {
+      class: "Класс",
+      apartments: "Количество квартир",
+      floors: "Этажность",
+      blocks: "Количество блоков",
+      landArea: "Площадь территории",
+      ceilingHeight: "Высота потолков",
+      construction: "Конструкция",
+      parking: "Паркинг",
+      completion: "Дата сдачи",
+    },
+
+    documents: {
+      infoTitle: "Информация о строительстве объекта",
+
+      infoDescription:
+        "Перейдите на официальный ресурс Министерства строительства, чтобы проверить доступную информацию о строительном объекте.",
+
+      button: "Смотреть документы",
+    },
+
+    deleteModal: {
+      title: "Удалить жилой комплекс?",
+      descriptionStart: "Вы действительно хотите удалить «",
+      descriptionEnd: "»? Это действие нельзя будет отменить.",
+    },
+
+    errorState: {
+      title: "Не удалось загрузить ЖК",
+      notFound: "Жилой комплекс не найден",
+      back: "Вернуться к моим ЖК",
+    },
+
+    errors: {
+      notFound: "Жилой комплекс не найден",
+      processing: "Не удалось обработать данные жилого комплекса",
+      load: "Ошибка загрузки жилого комплекса",
+      unauthorized: "Вы не авторизованы",
+      save: "Ошибка сохранения",
+      refresh: "Изменения сохранены, но данные не удалось обновить",
+      delete: "Ошибка удаления",
+    },
+
+    fallback: {
+      notSpecified: "Не указано",
+      country: "Кыргызстан",
+      developer: "Застройщик не указан",
+      complex: "Жилой комплекс",
+      apartment: "Квартира в жилом комплексе",
+      apartmentType: "Квартира",
+      address: "Адрес не указан",
+      description: "Описание не указано",
+      askDeveloper: "Уточняйте у застройщика",
+    },
+
+    units: {
+      floors: "этажей",
+      blocks: "блоков",
+      apartments: "квартир",
+      parking: "мест",
+      meters: "м",
+      sotkas: "соток",
+      squareMeters: "м²",
+    },
+  },
+
+  editResidentialComplexModal: {
+    header: {
+      eyebrow: "Редактирование ЖК",
+      description:
+        "Измените информацию о жилом комплексе и сохраните обновления.",
+    },
+
+    fallback: {
+      complex: "Жилой комплекс",
+    },
+
+    sections: {
+      basic: "Основная информация",
+      characteristics: "Характеристики",
+      infrastructure: "Инфраструктура",
+    },
+
+    fields: {
+      name: "Название ЖК",
+      city: "Город",
+      address: "Адрес",
+      description: "Описание",
+      status: "Статус",
+      class: "Класс",
+      construction: "Конструкция",
+      completionDate: "Дата сдачи",
+      floors: "Этажей",
+      blocks: "Количество блоков",
+      apartments: "Квартир",
+      parking: "Парковочных мест",
+      landArea: "Площадь территории, соток",
+      ceilingHeight: "Высота потолков, м",
+    },
+
+    placeholders: {
+      name: "Введите название жилого комплекса",
+      city: "Город",
+      address: "Введите адрес",
+      description: "Расскажите о жилом комплексе...",
+    },
+
+    statuses: {
+      project: "Проект",
+      construction: "Строительство",
+      completed: "Сдан",
+    },
+
+    classes: {
+      economy: "Эконом",
+      comfort: "Комфорт",
+      business: "Бизнес",
+      premium: "Премиум",
+    },
+
+    constructions: {
+      monolith: "Монолит",
+      monolithBrick: "Монолитно-кирпичный",
+      brick: "Кирпичный",
+      panel: "Панельный",
+      frameMonolith: "Каркасно-монолитный",
+      aeratedConcrete: "Газобетон",
+    },
+
+    amenities: {
+      playground: "Детская площадка",
+      parking: "Парковка",
+      undergroundParking: "Подземный паркинг",
+      gatedArea: "Закрытая территория",
+      security: "Охрана",
+      videoSurveillance: "Видеонаблюдение",
+      elevator: "Лифт",
+      kindergarten: "Детский сад",
+      school: "Школа",
+      fitness: "Фитнес-зал",
+      greenArea: "Зеленая зона",
+      commercial: "Коммерческие помещения",
+    },
+
+    actions: {
+      close: "Закрыть",
+      cancel: "Отмена",
+      save: "Сохранить изменения",
+    },
+  },
+
+  residentialComplexes: {
+    header: {
+      profile: "В профиль",
+      eyebrow: "Кабинет застройщика",
+      title: "Мои жилые комплексы",
+      description:
+        "Управляйте своими ЖК, следите за строительством и обновляйте информацию для покупателей.",
+    },
+
+    actions: {
+      add: "Добавить ЖК",
+      details: "Подробнее",
+      edit: "Редактировать",
+      delete: "Удалить",
+      cancel: "Отмена",
+      save: "Сохранить изменения",
+      close: "Закрыть",
+      more: "Дополнительные действия",
+    },
+
+    overview: {
+      total: "Всего ЖК",
+      construction: "В строительстве",
+      apartments: "Всего квартир",
+    },
+
+    filters: {
+      search: "Поиск по названию или адресу...",
+    },
+
+    fields: {
+      status: "Статус",
+    },
+
+    statuses: {
+      all: "Все статусы",
+      project: "Проект",
+      construction: "Строительство",
+      completed: "Сдан",
+    },
+
+    classes: {
+      economy: "Эконом",
+      comfort: "Комфорт",
+      business: "Бизнес",
+      premium: "Премиум",
+    },
+
+    amenities: {
+      parking: "Паркинг",
+      undergroundParking: "Подземный паркинг",
+      playground: "Детская площадка",
+      security: "Охрана",
+      fitness: "Фитнес-зал",
+      gatedArea: "Закрытая территория",
+      elevator: "Лифт",
+      greenArea: "Зеленая зона",
+      kindergarten: "Детский сад",
+      school: "Школа",
+      videoSurveillance: "Видеонаблюдение",
+      commercial: "Коммерческие помещения",
+    },
+
+    units: {
+      floors: "этажей",
+      apartments: "квартир",
+      completion: "сдача",
+    },
+
+    result: {
+      title: "Ваши проекты",
+      hint: "Управляйте каждым жилым комплексом отдельно",
+    },
+
+    loading: "Загрузка ваших жилых комплексов...",
+
+    empty: {
+      title: "ЖК не найдены",
+      description:
+        "По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.",
+    },
+
+    errors: {
+      load: "Ошибка загрузки жилых комплексов",
+      loadServer: "Не удалось загрузить жилые комплексы с сервера",
+      unauthorized: "Вы не авторизованы",
+      delete: "Не удалось удалить жилой комплекс",
+      update: "Не удалось обновить жилой комплекс",
+    },
+
+    deleteModal: {
+      title: "Удалить жилой комплекс?",
+      descriptionStart: "Вы действительно хотите удалить «",
+      descriptionEnd: "»? Это действие нельзя будет отменить.",
+    },
+
+    editModal: {
+      eyebrow: "Редактирование",
+      title: "Изменить жилой комплекс",
+      descriptionStart: "Обновите информацию о",
+
+      fields: {
+        name: "Название ЖК",
+        address: "Адрес",
+        class: "Класс жилья",
+        completionDate: "Дата сдачи",
+        floors: "Количество этажей",
+        apartments: "Количество квартир",
+        parking: "Парковочных мест",
+        area: "Площадь территории, соток",
+      },
+
+      placeholders: {
+        name: "Название ЖК",
+        address: "Адрес",
+      },
+    },
+  },
+
+  agencyPublicProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    type: "Агентство недвижимости",
+    verified: "Проверено",
+
+    defaults: {
+      companyName: "Агентство недвижимости",
+      director: "Руководитель",
+      about:
+        "Профессиональное агентство недвижимости. Подбор, продажа и аренда объектов недвижимости.",
+    },
+
+    director: {
+      label: "Руководитель",
+    },
+
+    actions: {
+      call: "Позвонить",
+      whatsapp: "WhatsApp",
+      email: "Email",
+    },
+
+    stats: {
+      activeAds: "Активных объявлений",
+      properties: "Объектов всего",
+    },
+
+    details: {
+      office: "Офис",
+      website: "Веб-сайт",
+    },
+
+    listings: {
+      title: "Объявления агентства",
+      description: "Актуальные объекты недвижимости от",
+      count: "объектов",
+    },
+
+    empty: {
+      title: "Пока нет активных объявлений",
+      description: "Агентство ещё не разместило объекты недвижимости.",
+    },
+  },
+
+  developerPublicProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    type: "Застройщик",
+    verified: "Проверено",
+    verifiedCompany: "Проверенная компания",
+
+    defaults: {
+      company: "Строительная компания",
+      representative: "Представитель компании",
+      about: "Компания пока не добавила описание своей деятельности.",
+      project: "Жилой комплекс",
+      address: "Адрес не указан",
+    },
+
+    representative: {
+      label: "Представитель",
+    },
+
+    about: {
+      label: "О компании",
+    },
+
+    contacts: {
+      phone: "Телефон",
+      email: "Email",
+      office: "Офис",
+      inn: "ИНН",
+      website: "Сайт",
+    },
+
+    actions: {
+      whatsapp: "Написать в WhatsApp",
+      website: "Перейти на сайт",
+    },
+
+    stats: {
+      complexes: "Жилых комплексов",
+      ads: "Объявлений",
+    },
+
+    tabs: {
+      projectsShort: "ПРОЕКТЫ",
+      realEstateShort: "НЕДВИЖИМОСТЬ",
+    },
+
+    content: {
+      complexes: {
+        title: "Жилые комплексы",
+        description: "Проекты, которые развивает компания",
+      },
+
+      ads: {
+        title: "Объявления застройщика",
+        description: "Актуальные предложения компании",
+      },
+
+      count: "объектов",
+    },
+
+    projectStatuses: {
+      completed: "Сдан",
+      building: "Строится",
+    },
+
+    project: {
+      apartments: "квартир",
+      details: "Подробнее о комплексе",
+    },
+
+    empty: {
+      complexes: {
+        title: "Пока нет жилых комплексов",
+        description: "У этой компании пока нет зарегистрированных проектов.",
+      },
+
+      ads: {
+        title: "Пока нет активных объявлений",
+        description: "У застройщика пока нет опубликованных предложений.",
+      },
+    },
+  },
+
+  personalPublicProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    whatsapp: "WhatsApp",
+
+    defaults: {
+      user: "Пользователь",
+    },
+
+    about: {
+      profile: "Профиль",
+    },
+
+    listings: {
+      title: "Недвижимость",
+    },
+
+    empty: {
+      title: "Пока нет объявлений",
+      description:
+        "У пользователя пока нет активных объявлений о продаже недвижимости.",
+    },
+
+    roles: {
+      developer: {
+        label: "Застройщик",
+        aboutTitle: "О компании",
+        defaultAbout: "Застройщик пока не добавил описание.",
+        adsDescription: "Объекты и предложения застройщика",
+      },
+
+      agency: {
+        label: "Агентство недвижимости",
+        aboutTitle: "Об агентстве",
+        defaultAbout: "Агентство пока не добавило описание.",
+        adsDescription: "Объекты агентства",
+      },
+
+      realtor: {
+        label: "Риэлтор",
+        aboutTitle: "О риэлторе",
+        defaultAbout: "Риэлтор пока не добавил описание.",
+        adsDescription: "Объекты риэлтора",
+      },
+
+      personal: {
+        label: "Частное лицо",
+        aboutTitle: "О себе",
+        defaultAbout: "Пользователь пока не добавил описание.",
+        adsDescription: "Объявления пользователя",
+      },
+    },
+  },
+
+  realtorPublicProfile: {
+    topBar: {
+      home: "На главную",
+    },
+
+    role: "Риэлтор",
+
+    verification: {
+      profile: "Проверенный профиль",
+      short: "Проверен",
+    },
+
+    defaults: {
+      realtor: "Риэлтор",
+      about: "Риэлтор пока не добавил описание своей деятельности.",
+    },
+
+    actions: {
+      call: "Позвонить",
+      whatsapp: "WhatsApp",
+      email: "Email",
+    },
+
+    details: {
+      office: "Офис",
+      website: "Сайт",
+    },
+
+    stats: {
+      activeAds: "Активных объявлений",
+    },
+
+    listings: {
+      label: "Предложения",
+      title: "Объявления риэлтора",
+      description: "Актуальные объекты недвижимости и предложения",
+    },
+
+    empty: {
+      title: "Пока нет объявлений",
+      description: "У этого риэлтора сейчас нет активных предложений.",
+    },
+  },
+
+  publicProfile: {
+    loading: "Загрузка профиля...",
+    errors: {
+      load: "Не удалось загрузить данные профиля",
+      fetch: "Ошибка при получении профиля",
+    },
+    notFound: {
+      title: "Профиль не найден",
+      description: "Пользователь не существует или был удален",
+      home: "На главную",
+    },
+    unknownType: "Неизвестный тип профиля",
+  },
 };
 
 export default ru;

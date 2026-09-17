@@ -14,6 +14,7 @@ import {
 import { mapComplexData } from "@/utils/mapComplexData";
 import { mapListingData } from "@/utils/mapListingData";
 
+import { useLanguage } from "@/context/LanguageContext";
 
 import {
   ArrowLeft,
@@ -39,51 +40,41 @@ import ListingCard from "@/components/ui/ListingCard/ListingCard";
 const FALLBACK_IMAGE =
   "https://storage.googleapis.com/bd-kg-02/buildings-v2/800x630/2336.jpg";
 
-const DEFAULT_DEVELOPER = "Застройщик не указан";
+const isEmptyValue = (value) =>
+  value === undefined ||
+  value === null ||
+  value === "" ||
+  value === 0 ||
+  value === "0";
 
-const formatValue = (value, suffix = "") => {
-  if (
-    value === undefined ||
-    value === null ||
-    value === "" ||
-    value === 0 ||
-    value === "0"
-  ) {
-    return "Не указано";
+const formatValue = (value, suffix = "", emptyLabel = "Не указано") => {
+  if (isEmptyValue(value)) {
+    return emptyLabel;
   }
 
   return `${value}${suffix}`;
 };
 
-const formatBlocks = (value) => {
-  if (
-    value === undefined ||
-    value === null ||
-    value === "" ||
-    value === 0 ||
-    value === "0"
-  ) {
-    return "Не указано";
+const formatBlocks = (value, emptyLabel, blocksLabel) => {
+  if (isEmptyValue(value)) {
+    return emptyLabel;
   }
 
   const stringValue = String(value);
 
-  if (stringValue.toLowerCase().includes("блок")) {
+  if (
+    stringValue.toLowerCase().includes("блок") ||
+    stringValue.toLowerCase().includes("block")
+  ) {
     return stringValue;
   }
 
-  return `${stringValue} блоков`;
+  return `${stringValue} ${blocksLabel}`;
 };
 
-const formatHeight = (value) => {
-  if (
-    value === undefined ||
-    value === null ||
-    value === "" ||
-    value === 0 ||
-    value === "0"
-  ) {
-    return "Не указано";
+const formatHeight = (value, emptyLabel, meterLabel) => {
+  if (isEmptyValue(value)) {
+    return emptyLabel;
   }
 
   const stringValue = String(value);
@@ -92,11 +83,11 @@ const formatHeight = (value) => {
     return stringValue;
   }
 
-  return `${stringValue} м`;
+  return `${stringValue} ${meterLabel}`;
 };
 
-const getDateLabel = (date) => {
-  if (!date) return "Уточняйте у застройщика";
+const getDateLabel = (date, language, fallback) => {
+  if (!date) return fallback;
 
   const parsedDate = new Date(date);
 
@@ -104,7 +95,7 @@ const getDateLabel = (date) => {
     return date;
   }
 
-  return parsedDate.toLocaleDateString("ru-RU", {
+  return parsedDate.toLocaleDateString(language === "ky" ? "ky-KG" : "ru-RU", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -213,7 +204,7 @@ function isListingAvailable(item) {
    NORMALIZE APARTMENT
 ========================================================= */
 
-function normalizeApartmentListing(item) {
+function normalizeApartmentListing(item, t) {
   if (!item) return null;
 
   try {
@@ -230,7 +221,10 @@ function normalizeApartmentListing(item) {
       id: item.id ?? mapped.id,
 
       title:
-        mapped.title || item.title || item.name || "Квартира в жилом комплексе",
+        mapped.title ||
+        item.title ||
+        item.name ||
+        t("myComplexDetail.fallback.apartment"),
 
       image:
         mapped.image ||
@@ -246,14 +240,14 @@ function normalizeApartmentListing(item) {
         mapped.address ||
         item.address ||
         item.city ||
-        "Адрес не указан",
+        t("myComplexDetail.fallback.address"),
 
       type:
         mapped.type ||
         item.type ||
         item.category ||
         item.propertyType ||
-        "Квартира",
+        t("myComplexDetail.fallback.apartmentType"),
 
       description: mapped.description || item.description || "",
 
@@ -271,6 +265,8 @@ function normalizeApartmentListing(item) {
 export default function MyComplexDetail() {
   const router = useRouter();
   const params = useParams();
+
+  const { t, language } = useLanguage();
 
   const complexId = params?.id;
 
@@ -321,14 +317,14 @@ export default function MyComplexDetail() {
         ===================================================== */
 
         if (!complexResponse?.success || !complexResponse?.data) {
-          throw new Error("Жилой комплекс не найден");
+          throw new Error(t("myComplexDetail.errors.notFound"));
         }
 
         const raw = complexResponse.data;
         const mapped = mapComplexData(raw);
 
         if (!mapped) {
-          throw new Error("Не удалось обработать данные жилого комплекса");
+          throw new Error(t("myComplexDetail.errors.processing"));
         }
 
         const features = raw.features || {};
@@ -348,49 +344,51 @@ export default function MyComplexDetail() {
           subtitle:
             mapped.housingClass && mapped.address
               ? `${mapped.housingClass} · ${mapped.address}`
-              : "Жилой комплекс",
+              : t("myComplexDetail.fallback.complex"),
 
           class: mapped.housingClass,
 
           status: mapped.completionStatus,
 
-          location: raw.city || raw.region || "Кыргызстан",
+          location:
+            raw.city || raw.region || t("myComplexDetail.fallback.country"),
 
-          city: raw.city || raw.region || "Кыргызстан",
+          city: raw.city || raw.region || t("myComplexDetail.fallback.country"),
 
           address: mapped.address,
 
-          developer: mapped.developer || DEFAULT_DEVELOPER,
+          developer:
+            mapped.developer || t("myComplexDetail.fallback.developer"),
 
           developerId: mapped.developerId,
 
-          completion: getDateLabel(raw.completion_date),
-
           completionDate: raw.completion_date || "",
 
-          floors: formatValue(features.floors),
+          floors: features.floors,
 
-          blocks: formatBlocks(features.blocks),
+          blocks: features.blocks,
 
-          apartments: formatValue(features.apartments, " квартир"),
+          apartments: features.apartments,
 
-          parking: formatValue(features.parking, " мест"),
+          parking: features.parking,
 
-          ceilingHeight: formatHeight(features.ceilingHeight),
+          ceilingHeight: features.ceilingHeight,
 
-          constructionType: features.construction || "Не указано",
+          constructionType: features.construction || "",
 
-          landArea: features.areaSotka
-            ? `${features.areaSotka} соток`
-            : features.area
-              ? `${features.area} м²`
-              : "Не указано",
+          landArea:
+            features.areaSotka || features.area
+              ? {
+                  areaSotka: features.areaSotka || null,
+                  area: features.area || null,
+                }
+              : null,
 
           area: features.area || null,
 
           areaSotka: features.areaSotka || null,
 
-          description: mapped.description || "Описание не указано",
+          description: mapped.description || "",
 
           concept: raw.description || "",
 
@@ -415,7 +413,7 @@ export default function MyComplexDetail() {
           const currentComplexId = String(complexId);
 
           const complexApartments = listingsResponse.data
-            .map(normalizeApartmentListing)
+            .map((item) => normalizeApartmentListing(item, t))
             .filter(Boolean)
             .filter((item) => {
               const propertyType = String(
@@ -451,7 +449,7 @@ export default function MyComplexDetail() {
           setError(
             err instanceof Error
               ? err.message
-              : "Ошибка загрузки жилого комплекса",
+              : t("myComplexDetail.errors.load"),
           );
 
           setApartments([]);
@@ -469,7 +467,7 @@ export default function MyComplexDetail() {
     return () => {
       cancelled = true;
     };
-  }, [complexId]);
+  }, [complexId, t]);
 
   /* =========================================================
      IMAGES
@@ -525,7 +523,7 @@ export default function MyComplexDetail() {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Вы не авторизованы");
+        throw new Error(t("myComplexDetail.errors.unauthorized"));
       }
 
       const parseNum = (value) => {
@@ -584,13 +582,13 @@ export default function MyComplexDetail() {
       );
 
       if (!response?.success) {
-        throw new Error(response?.message || "Ошибка сохранения");
+        throw new Error(response?.message || t("myComplexDetail.errors.save"));
       }
 
       const refreshed = await getComplexById(residentialComplex.id);
 
       if (!refreshed?.success || !refreshed?.data) {
-        throw new Error("Изменения сохранены, но данные не удалось обновить");
+        throw new Error(t("myComplexDetail.errors.refresh"));
       }
 
       const raw = refreshed.data;
@@ -632,35 +630,35 @@ export default function MyComplexDetail() {
 
         developerId: mapped?.developerId || prev.developerId,
 
-        completion: getDateLabel(raw.completion_date),
-
         completionDate: raw.completion_date || prev.completionDate,
 
-        description: mapped?.description || prev.description,
+        floors: features.floors,
 
-        concept: raw.description || prev.concept,
+        blocks: features.blocks,
 
-        floors: formatValue(features.floors),
+        apartments: features.apartments,
 
-        blocks: formatBlocks(features.blocks),
+        parking: features.parking,
 
-        apartments: formatValue(features.apartments, " квартир"),
-
-        parking: formatValue(features.parking, " мест"),
-
-        ceilingHeight: formatHeight(features.ceilingHeight),
+        ceilingHeight: features.ceilingHeight,
 
         constructionType: features.construction || prev.constructionType,
 
-        landArea: features.areaSotka
-          ? `${features.areaSotka} соток`
-          : features.area
-            ? `${features.area} м²`
+        landArea:
+          features.areaSotka || features.area
+            ? {
+                areaSotka: features.areaSotka || null,
+                area: features.area || null,
+              }
             : prev.landArea,
 
         area: features.area || prev.area,
 
         areaSotka: features.areaSotka || prev.areaSotka,
+
+        description: mapped?.description || prev.description,
+
+        concept: raw.description || prev.concept,
 
         images: refreshedImages,
 
@@ -681,7 +679,7 @@ export default function MyComplexDetail() {
       console.error("Ошибка при сохранении ЖК:", err);
 
       alert(
-        err instanceof Error ? err.message : "Не удалось сохранить изменения",
+        err instanceof Error ? err.message : t("myComplexDetail.errors.save"),
       );
     }
   };
@@ -697,13 +695,15 @@ export default function MyComplexDetail() {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Вы не авторизованы");
+        throw new Error(t("myComplexDetail.errors.unauthorized"));
       }
 
       const response = await deleteComplexApi(token, residentialComplex.id);
 
       if (!response?.success) {
-        throw new Error(response?.message || "Ошибка удаления");
+        throw new Error(
+          response?.message || t("myComplexDetail.errors.delete"),
+        );
       }
 
       setShowDeleteModal(false);
@@ -712,7 +712,9 @@ export default function MyComplexDetail() {
     } catch (err) {
       console.error("Ошибка при удалении ЖК:", err);
 
-      alert(err instanceof Error ? err.message : "Не удалось удалить ЖК");
+      alert(
+        err instanceof Error ? err.message : t("myComplexDetail.errors.delete"),
+      );
     }
   };
 
@@ -727,8 +729,8 @@ export default function MyComplexDetail() {
   };
 
   /* =========================================================
-     LOADING
-  ========================================================= */
+   LOADING
+========================================================= */
 
   if (loading) {
     return (
@@ -737,7 +739,7 @@ export default function MyComplexDetail() {
           <div className={styles.loadingState}>
             <span className={styles.loader} />
 
-            <span>Загрузка информации о жилом комплексе...</span>
+            <span>{t("myComplexDetail.loading")}</span>
           </div>
         </div>
       </main>
@@ -745,8 +747,8 @@ export default function MyComplexDetail() {
   }
 
   /* =========================================================
-     ERROR
-  ========================================================= */
+   ERROR
+========================================================= */
 
   if (error || !residentialComplex) {
     return (
@@ -759,21 +761,22 @@ export default function MyComplexDetail() {
               onClick={() => router.push("/profile/projects")}
             >
               <ArrowLeft size={18} />
-              Мои ЖК
+
+              {t("myComplexDetail.back.myProjects")}
             </button>
           </div>
 
           <div className={styles.errorState}>
-            <strong>Не удалось загрузить ЖК</strong>
+            <strong>{t("myComplexDetail.errorState.title")}</strong>
 
-            <span>{error || "Жилой комплекс не найден"}</span>
+            <span>{error || t("myComplexDetail.errorState.notFound")}</span>
 
             <button
               type="button"
               className={styles.errorButton}
               onClick={() => router.push("/profile/projects")}
             >
-              Вернуться к моим ЖК
+              {t("myComplexDetail.errorState.back")}
             </button>
           </div>
         </div>
@@ -782,8 +785,58 @@ export default function MyComplexDetail() {
   }
 
   /* =========================================================
-     RENDER
-  ========================================================= */
+   FORMATTED VALUES
+========================================================= */
+
+  const emptyLabel = t("myComplexDetail.fallback.notSpecified");
+
+  const formattedFloors = formatValue(
+    residentialComplex.floors,
+    ` ${t("myComplexDetail.units.floors")}`,
+    emptyLabel,
+  );
+
+  const formattedBlocks = formatBlocks(
+    residentialComplex.blocks,
+    emptyLabel,
+    t("myComplexDetail.units.blocks"),
+  );
+
+  const formattedApartments = formatValue(
+    residentialComplex.apartments,
+    ` ${t("myComplexDetail.units.apartments")}`,
+    emptyLabel,
+  );
+
+  const formattedParking = formatValue(
+    residentialComplex.parking,
+    ` ${t("myComplexDetail.units.parking")}`,
+    emptyLabel,
+  );
+
+  const formattedCeilingHeight = formatHeight(
+    residentialComplex.ceilingHeight,
+    emptyLabel,
+    t("myComplexDetail.units.meters"),
+  );
+
+  const formattedLandArea = residentialComplex.landArea
+    ? residentialComplex.landArea.areaSotka
+      ? `${residentialComplex.landArea.areaSotka} ${t(
+          "myComplexDetail.units.sotkas",
+        )}`
+      : residentialComplex.landArea.area
+        ? `${residentialComplex.landArea.area} ${t(
+            "myComplexDetail.units.squareMeters",
+          )}`
+        : emptyLabel
+    : emptyLabel;
+
+  const completionLabel = getDateLabel(
+    residentialComplex.completionDate,
+    language,
+    t("myComplexDetail.fallback.askDeveloper"),
+  );
 
   return (
     <main className={styles.page}>
@@ -799,12 +852,14 @@ export default function MyComplexDetail() {
             onClick={() => router.push("/profile/projects")}
           >
             <ArrowLeft size={18} />
-            Мои ЖК
+
+            {t("myComplexDetail.back.myProjects")}
           </button>
 
           <div className={styles.ownerLabel}>
             <Building2 size={16} />
-            <span>КАБИНЕТ ЗАСТРОЙЩИКА</span>
+
+            <span>{t("myComplexDetail.ownerLabel")}</span>
           </div>
         </div>
 
@@ -841,9 +896,11 @@ export default function MyComplexDetail() {
                 type="button"
                 className={styles.editImageButton}
                 onClick={handleEdit}
+                aria-label={t("myComplexDetail.actions.editImageAria")}
               >
                 <Pencil size={17} />
-                Изменить
+
+                {t("myComplexDetail.actions.edit")}
               </button>
 
               {images.length > 1 && (
@@ -852,7 +909,7 @@ export default function MyComplexDetail() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryLeft}`}
                     onClick={previousImage}
-                    aria-label="Предыдущее изображение"
+                    aria-label={t("myComplexDetail.gallery.previous")}
                   >
                     <ArrowLeft />
                   </button>
@@ -861,7 +918,7 @@ export default function MyComplexDetail() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.galleryRight}`}
                     onClick={nextImage}
-                    aria-label="Следующее изображение"
+                    aria-label={t("myComplexDetail.gallery.next")}
                   >
                     <ArrowRight />
                   </button>
@@ -873,7 +930,7 @@ export default function MyComplexDetail() {
               </div>
 
               <div className={styles.heroImageText}>
-                <span>МОЙ ЖИЛОЙ КОМПЛЕКС</span>
+                <span>{t("myComplexDetail.labels.myComplex")}</span>
 
                 <strong>{residentialComplex.name}</strong>
               </div>
@@ -909,7 +966,8 @@ export default function MyComplexDetail() {
           <div className={styles.heroInfo}>
             <div className={styles.eyebrow}>
               <Building2 size={15} />
-              МОЙ ЖИЛОЙ КОМПЛЕКС
+
+              {t("myComplexDetail.labels.myComplex")}
             </div>
 
             <h1>{residentialComplex.name}</h1>
@@ -934,7 +992,7 @@ export default function MyComplexDetail() {
               </div>
 
               <div>
-                <span>ЗАСТРОЙЩИК</span>
+                <span>{t("myComplexDetail.labels.developer")}</span>
 
                 <strong>{residentialComplex.developer}</strong>
               </div>
@@ -947,8 +1005,9 @@ export default function MyComplexDetail() {
                 <Layers3 />
 
                 <span>
-                  <strong>{residentialComplex.floors}</strong>
-                  этажей
+                  <strong>{formattedFloors}</strong>
+
+                  {t("myComplexDetail.labels.floors")}
                 </span>
               </div>
 
@@ -956,8 +1015,9 @@ export default function MyComplexDetail() {
                 <Building2 />
 
                 <span>
-                  <strong>{residentialComplex.blocks}</strong>
-                  блоков
+                  <strong>{formattedBlocks}</strong>
+
+                  {t("myComplexDetail.labels.blocks")}
                 </span>
               </div>
 
@@ -965,8 +1025,9 @@ export default function MyComplexDetail() {
                 <Ruler />
 
                 <span>
-                  <strong>{residentialComplex.landArea}</strong>
-                  территория
+                  <strong>{formattedLandArea}</strong>
+
+                  {t("myComplexDetail.labels.territory")}
                 </span>
               </div>
             </div>
@@ -980,14 +1041,15 @@ export default function MyComplexDetail() {
                 onClick={handleEdit}
               >
                 <Pencil size={18} />
-                Редактировать ЖК
+
+                {t("myComplexDetail.actions.editComplex")}
               </button>
 
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.deleteButton}`}
                 onClick={() => setShowDeleteModal(true)}
-                aria-label="Удалить ЖК"
+                aria-label={t("myComplexDetail.actions.deleteAria")}
               >
                 <Trash2 size={17} />
               </button>
@@ -1009,9 +1071,14 @@ export default function MyComplexDetail() {
             </div>
 
             <div>
-              <span>ДОСТУПНЫЕ КВАРТИРЫ</span>
+              <span>
+                {t("myComplexDetail.sections.availableApartments.label")}
+              </span>
 
-              <h2>Квартиры в {residentialComplex.name}</h2>
+              <h2>
+                {t("myComplexDetail.sections.availableApartments.title")}{" "}
+                {residentialComplex.name}
+              </h2>
             </div>
           </div>
 
@@ -1019,7 +1086,7 @@ export default function MyComplexDetail() {
             <div className={styles.apartmentsLoading}>
               <span className={styles.loader} />
 
-              <span>Загружаем доступные квартиры...</span>
+              <span>{t("myComplexDetail.apartments.loading")}</span>
             </div>
           ) : apartments.length > 0 ? (
             <>
@@ -1029,10 +1096,10 @@ export default function MyComplexDetail() {
 
                   <span>
                     {apartments.length === 1
-                      ? "доступная квартира"
+                      ? t("myComplexDetail.apartments.count.one")
                       : apartments.length < 5
-                        ? "доступные квартиры"
-                        : "доступных квартир"}
+                        ? t("myComplexDetail.apartments.count.few")
+                        : t("myComplexDetail.apartments.count.many")}
                   </span>
                 </div>
               </div>
@@ -1054,9 +1121,9 @@ export default function MyComplexDetail() {
                 <Home />
               </div>
 
-              <h3>Свободных квартир пока нет</h3>
+              <h3>{t("myComplexDetail.apartments.empty.title")}</h3>
 
-              <p>В этом ЖК пока нет доступных объявлений о продаже квартир.</p>
+              <p>{t("myComplexDetail.apartments.empty.description")}</p>
             </div>
           )}
 
@@ -1076,15 +1143,19 @@ export default function MyComplexDetail() {
             </div>
 
             <div>
-              <span>О ПРОЕКТЕ</span>
+              <span>{t("myComplexDetail.sections.about.label")}</span>
 
-              <h2>О жилом комплексе</h2>
+              <h2>{t("myComplexDetail.sections.about.title")}</h2>
             </div>
           </div>
 
           <div className={styles.aboutContent}>
-            {residentialComplex.concept && (
+            {residentialComplex.concept ? (
               <p className={styles.description}>{residentialComplex.concept}</p>
+            ) : (
+              <p className={styles.description}>
+                {t("myComplexDetail.fallback.description")}
+              </p>
             )}
           </div>
         </section>
@@ -1100,58 +1171,67 @@ export default function MyComplexDetail() {
             </div>
 
             <div>
-              <span>ОСНОВНЫЕ ПАРАМЕТРЫ</span>
+              <span>{t("myComplexDetail.sections.details.label")}</span>
 
-              <h2>Характеристики ЖК</h2>
+              <h2>{t("myComplexDetail.sections.details.title")}</h2>
             </div>
           </div>
 
           <div className={styles.projectDetails}>
             <div>
-              <span>Класс</span>
-              <strong>{residentialComplex.class}</strong>
+              <span>{t("myComplexDetail.details.class")}</span>
+
+              <strong>{residentialComplex.class || emptyLabel}</strong>
             </div>
 
             <div>
-              <span>Количество квартир</span>
+              <span>{t("myComplexDetail.details.apartments")}</span>
 
-              <strong>{residentialComplex.apartments}</strong>
+              <strong>{formattedApartments}</strong>
             </div>
 
             <div>
-              <span>Этажность</span>
+              <span>{t("myComplexDetail.details.floors")}</span>
 
-              <strong>{residentialComplex.floors}</strong>
+              <strong>{formattedFloors}</strong>
             </div>
 
             <div>
-              <span>Количество блоков</span>
+              <span>{t("myComplexDetail.details.blocks")}</span>
 
-              <strong>{residentialComplex.blocks}</strong>
+              <strong>{formattedBlocks}</strong>
             </div>
 
             <div>
-              <span>Площадь территории</span>
+              <span>{t("myComplexDetail.details.landArea")}</span>
 
-              <strong>{residentialComplex.landArea}</strong>
+              <strong>{formattedLandArea}</strong>
             </div>
 
             <div>
-              <span>Высота потолков</span>
+              <span>{t("myComplexDetail.details.ceilingHeight")}</span>
 
-              <strong>{residentialComplex.ceilingHeight}</strong>
+              <strong>{formattedCeilingHeight}</strong>
             </div>
 
             <div>
-              <span>Конструкция</span>
+              <span>{t("myComplexDetail.details.construction")}</span>
 
-              <strong>{residentialComplex.constructionType}</strong>
+              <strong>
+                {residentialComplex.constructionType || emptyLabel}
+              </strong>
             </div>
 
             <div>
-              <span>Паркинг</span>
+              <span>{t("myComplexDetail.details.parking")}</span>
 
-              <strong>{residentialComplex.parking}</strong>
+              <strong>{formattedParking}</strong>
+            </div>
+
+            <div>
+              <span>{t("myComplexDetail.details.completion")}</span>
+
+              <strong>{completionLabel}</strong>
             </div>
           </div>
         </section>
@@ -1168,9 +1248,11 @@ export default function MyComplexDetail() {
               </div>
 
               <div>
-                <span>ТЕРРИТОРИЯ</span>
+                <span>
+                  {t("myComplexDetail.sections.infrastructure.label")}
+                </span>
 
-                <h2>Инфраструктура комплекса</h2>
+                <h2>{t("myComplexDetail.sections.infrastructure.title")}</h2>
               </div>
             </div>
 
@@ -1198,16 +1280,16 @@ export default function MyComplexDetail() {
             </div>
 
             <div>
-              <span>ЛОКАЦИЯ</span>
+              <span>{t("myComplexDetail.sections.location.label")}</span>
 
-              <h2>Расположение</h2>
+              <h2>{t("myComplexDetail.sections.location.title")}</h2>
             </div>
           </div>
 
           <div className={styles.addressBlock}>
             <MapPin size={20} />
 
-            <strong>{residentialComplex.address}</strong>
+            <strong>{residentialComplex.address || emptyLabel}</strong>
           </div>
         </section>
 
@@ -1222,9 +1304,9 @@ export default function MyComplexDetail() {
             </div>
 
             <div>
-              <span>ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ</span>
+              <span>{t("myComplexDetail.sections.documents.label")}</span>
 
-              <h2>Документы о жилом комплексе</h2>
+              <h2>{t("myComplexDetail.sections.documents.title")}</h2>
             </div>
           </div>
 
@@ -1235,12 +1317,9 @@ export default function MyComplexDetail() {
               </div>
 
               <div className={styles.ministryText}>
-                <strong>Информация о строительстве объекта</strong>
+                <strong>{t("myComplexDetail.documents.infoTitle")}</strong>
 
-                <p>
-                  Перейдите на официальный ресурс Министерства строительства,
-                  чтобы проверить доступную информацию о строительном объекте.
-                </p>
+                <p>{t("myComplexDetail.documents.infoDescription")}</p>
               </div>
             </div>
 
@@ -1250,7 +1329,9 @@ export default function MyComplexDetail() {
               onClick={openMinstroy}
             >
               <FileCheck size={18} />
-              Смотреть документы
+
+              {t("myComplexDetail.documents.button")}
+
               <ExternalLink size={16} />
             </button>
           </div>
@@ -1265,8 +1346,12 @@ export default function MyComplexDetail() {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        title="Удалить жилой комплекс?"
-        description={`Вы действительно хотите удалить «${residentialComplex.name}»? Это действие нельзя будет отменить.`}
+        title={t("myComplexDetail.deleteModal.title")}
+        description={`${t(
+          "myComplexDetail.deleteModal.descriptionStart",
+        )}${residentialComplex.name}${t(
+          "myComplexDetail.deleteModal.descriptionEnd",
+        )}`}
       />
 
       {/* =====================================================

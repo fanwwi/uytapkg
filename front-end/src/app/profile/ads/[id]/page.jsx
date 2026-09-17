@@ -1,5 +1,4 @@
 // MyProductDetails.jsx
-
 "use client";
 
 import Image from "next/image";
@@ -8,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 
 import { getListingById } from "@/utils/api";
 import { mapListingDetail } from "@/utils/mapListingData";
+import { useLanguage } from "@/context/LanguageContext";
 
 import {
   ArrowLeft,
@@ -53,6 +53,8 @@ export default function MyProductDetails() {
   const router = useRouter();
   const { id } = useParams();
 
+  const { t } = useLanguage();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -80,14 +82,14 @@ export default function MyProductDetails() {
 
           setProduct(mapped);
         } else {
-          setError(res.message || "Объявление не найдено");
+          setError(res.message || "myAdsDetails.error.notFound");
         }
       })
       .catch((err) => {
         console.error("Fetch my listing details error:", err);
 
         if (mounted) {
-          setError("Ошибка загрузки объявления");
+          setError("myAdsDetails.error.load");
         }
       })
       .finally(() => {
@@ -101,28 +103,13 @@ export default function MyProductDetails() {
     };
   }, [id]);
 
-  /*
-   * =========================================================
-   * RAW DATA
-   * =========================================================
-   */
-
   const raw = product?.rawFeatures || {};
-
-  /*
-   * =========================================================
-   * HELPERS
-   * =========================================================
-   */
 
   const hasValue = (value) => {
     if (value === undefined || value === null) return false;
     if (value === "") return false;
     if (value === false) return false;
-
-    if (Array.isArray(value) && value.length === 0) {
-      return false;
-    }
+    if (Array.isArray(value) && value.length === 0) return false;
 
     return true;
   };
@@ -138,137 +125,186 @@ export default function MyProductDetails() {
   const formatKey = (key) => {
     const normalized = normalizeKey(key);
 
-    const labels = {
-      residentialcomplex: "Жилой комплекс",
-      residentialcomplexname: "Жилой комплекс",
-      residential_complex: "Жилой комплекс",
-      residential_complex_name: "Жилой комплекс",
-      developerorcomplex: "Застройщик / ЖК",
-      developer_or_complex: "Застройщик / ЖК",
-      developer: "Застройщик",
-      developername: "Застройщик",
-      developer_name: "Застройщик",
+    const translationKeys = {
+      residentialcomplex: "residentialComplex",
+      residentialcomplexname: "residentialComplex",
+      residential_complex: "residentialComplex",
+      residential_complex_name: "residentialComplex",
 
-      buildingtype: "Тип дома",
-      building_type: "Тип дома",
-      housetype: "Тип дома",
-      house_type: "Тип дома",
+      developerorcomplex: "developer",
+      developer_or_complex: "developer",
 
-      floor: "Этаж",
-      floors: "Этажность",
+      developer: "developer",
+      developername: "developer",
+      developer_name: "developer",
 
-      rooms: "Комнаты",
-      area: "Площадь",
+      buildingtype: "buildingType",
+      building_type: "buildingType",
 
-      year: "Год",
-      yearbuilt: "Год постройки",
-      year_built: "Год постройки",
+      housetype: "buildingType",
+      house_type: "buildingType",
 
-      repair: "Ремонт",
-      condition: "Состояние",
-      furniture: "Мебель",
+      floor: "floor",
+      floors: "floors",
 
-      ceilingheight: "Высота потолков",
-      ceiling_height: "Высота потолков",
+      rooms: "rooms",
+      area: "area",
 
-      bathroom: "Санузел",
-      bathrooms: "Количество санузлов",
+      year: "yearBuilt",
+      yearbuilt: "yearBuilt",
+      year_built: "yearBuilt",
 
-      heating: "Отопление",
-      heatingtype: "Тип отопления",
-      heating_type: "Тип отопления",
+      constructionyear: "yearBuilt",
+      construction_year: "yearBuilt",
 
-      sewerage: "Канализация",
-      sewer: "Канализация",
+      repair: "repair",
+      condition: "condition",
+      state: "condition",
 
-      water: "Водоснабжение",
-      watersupply: "Водоснабжение",
-      water_supply: "Водоснабжение",
+      furniture: "furniture",
+      furnished: "furniture",
 
-      electricity: "Электричество",
-      gas: "Газ",
+      ceilingheight: "ceilingHeight",
+      ceiling_height: "ceilingHeight",
 
-      documents: "Документы",
-      document: "Документы",
+      bathroom: "bathroom",
+      bathroomtype: "bathroom",
+      bathroom_type: "bathroom",
 
-      parking: "Парковка",
-      parkingtype: "Тип парковки",
-      parking_type: "Тип парковки",
+      bathrooms: "bathrooms",
+      bathroomcount: "bathrooms",
+      bathroom_count: "bathrooms",
 
-      view: "Вид",
-      orientation: "Ориентация",
+      heating: "heating",
+      heatingtype: "heating",
+      heating_type: "heating",
 
-      landarea: "Площадь участка",
-      land_area: "Площадь участка",
+      sewerage: "sewerage",
+      sewer: "sewerage",
+      seweragetype: "sewerage",
+      sewerage_type: "sewerage",
 
-      areasotka: "Площадь участка",
-      area_sotka: "Площадь участка",
-      sotka: "Площадь участка",
-      sotok: "Площадь участка",
+      water: "water",
+      watersupply: "water",
+      water_supply: "water",
 
-      blocks: "Количество блоков",
-      blockcount: "Количество блоков",
-      block_count: "Количество блоков",
+      electricity: "electricity",
+      electricitytype: "electricity",
+      electricity_type: "electricity",
 
-      construction: "Конструкция",
-      constructiontype: "Тип конструкции",
-      construction_type: "Тип конструкции",
+      gas: "gas",
 
-      entrances: "Количество входов",
-      entrancecount: "Количество входов",
-      entrance_count: "Количество входов",
+      documents: "documents",
+      document: "documents",
+      documentstatus: "documents",
+      document_status: "documents",
 
-      yardarea: "Площадь двора",
-      yard_area: "Площадь двора",
+      parking: "parking",
+      parkingtype: "parking",
+      parking_type: "parking",
 
-      landwidth: "Ширина участка",
-      land_width: "Ширина участка",
+      view: "view",
+      viewtype: "view",
+      view_type: "view",
 
-      landlength: "Длина участка",
-      land_length: "Длина участка",
+      orientation: "orientation",
+      direction: "orientation",
 
-      offerType: "Тип предложения",
-      offertype: "Тип предложения",
+      landarea: "landArea",
+      land_area: "landArea",
 
-      purpose: "Назначение",
-      fence: "Ограждение",
-      terrain: "Рельеф",
-      landlocation: "Расположение участка",
+      areasotka: "areaSotka",
+      area_sotka: "areaSotka",
+      sotka: "areaSotka",
+      sotok: "areaSotka",
 
-      roomlocation: "Расположение комнаты",
-      roomsinapartment: "Комнат в квартире",
-      privatebathroom: "Личный санузел",
+      blocks: "blocks",
+      blockcount: "blocks",
+      block_count: "blocks",
 
-      premisesType: "Тип помещения",
-      premisestype: "Тип помещения",
-      technicalparameters: "Технические параметры",
-      firstline: "Первая линия",
-      separateentrance: "Отдельный вход",
-      rentalbusiness: "Готовый арендный бизнес",
+      construction: "construction",
+      constructiontype: "constructionType",
+      construction_type: "constructionType",
 
-      material: "Материал",
-      gates: "Ворота",
-      truckaccess: "Заезд для грузовых",
-      gatetype: "Тип ворот",
+      entrances: "entrances",
+      entrancecount: "entrances",
+      entrance_count: "entrances",
 
-      pets: "Домашние животные",
-      internet: "Интернет",
-      balcony: "Балкон",
-      elevator: "Лифт",
-      security: "Охрана",
-      parkingplace: "Парковочное место",
+      yardarea: "yardArea",
+      yard_area: "yardArea",
+
+      landwidth: "landWidth",
+      land_width: "landWidth",
+
+      landlength: "landLength",
+      land_length: "landLength",
+
+      offertype: "offerType",
+      offer_type: "offerType",
+
+      purpose: "purpose",
+      fence: "fence",
+      terrain: "terrain",
+
+      landlocation: "landLocation",
+      land_location: "landLocation",
+
+      roomlocation: "roomLocation",
+      room_location: "roomLocation",
+
+      roomsinapartment: "roomsInApartment",
+      rooms_in_apartment: "roomsInApartment",
+
+      privatebathroom: "privateBathroom",
+      private_bathroom: "privateBathroom",
+
+      premisestype: "premisesType",
+      premises_type: "premisesType",
+
+      technicalparameters: "technicalParameters",
+      technical_parameters: "technicalParameters",
+
+      firstline: "firstLine",
+      first_line: "firstLine",
+
+      separateentrance: "separateEntrance",
+      separate_entrance: "separateEntrance",
+
+      rentalbusiness: "rentalBusiness",
+      rental_business: "rentalBusiness",
+
+      material: "material",
+      gates: "gates",
+
+      truckaccess: "truckAccess",
+      truck_access: "truckAccess",
+
+      gatetype: "gateType",
+      gate_type: "gateType",
+
+      pets: "pets",
+      internet: "internet",
+      balcony: "balcony",
+      elevator: "elevator",
+      security: "security",
+
+      parkingplace: "parkingPlace",
+      parking_place: "parkingPlace",
     };
 
     const compact = normalized.replace(/\s/g, "");
 
-    return (
-      labels[normalized] ||
-      labels[compact] ||
-      String(key)
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/[_-]+/g, " ")
-        .replace(/\b\w/g, (letter) => letter.toUpperCase())
-    );
+    const translationKey =
+      translationKeys[normalized] || translationKeys[compact];
+
+    if (translationKey) {
+      return t(`myAdsDetails.characteristics.${translationKey}`);
+    }
+
+    return String(key)
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/[_-]+/g, " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
   };
 
   const getRaw = (...keys) => {
@@ -285,7 +321,7 @@ export default function MyProductDetails() {
     if (!hasValue(value)) return null;
 
     if (typeof value === "boolean") {
-      return value ? "Есть" : "Нет";
+      return value ? t("myAdsDetails.values.yes") : t("myAdsDetails.values.no");
     }
 
     if (Array.isArray(value)) {
@@ -320,15 +356,84 @@ export default function MyProductDetails() {
     return String(value);
   };
 
-  /*
-   * =========================================================
-   * CHARACTERISTICS
-   *
-   * Основные поля идут первыми.
-   * После них автоматически добавляются все остальные
-   * значения из rawFeatures.
-   * =========================================================
-   */
+  const translatePropertyType = (value) => {
+    if (!hasValue(value)) return value;
+
+    const normalized = String(value).trim().toLowerCase();
+
+    const map = {
+      apartment: "apartment",
+      apartments: "apartment",
+      квартира: "apartment",
+      квартиры: "apartment",
+
+      house: "house",
+      дом: "house",
+      дома: "house",
+
+      cottage: "cottage",
+      коттедж: "cottage",
+      коттеджи: "cottage",
+
+      room: "room",
+      комната: "room",
+      комнаты: "room",
+
+      land: "land",
+      участок: "land",
+      земля: "land",
+
+      commercial: "commercial",
+      коммерция: "commercial",
+      коммерческая: "commercial",
+
+      parking: "parking",
+      паркинг: "parking",
+      парковка: "parking",
+
+      garage: "garage",
+      гараж: "garage",
+
+      office: "office",
+      офис: "office",
+    };
+
+    const key = map[normalized];
+
+    if (key) {
+      return t(`myAdsDetails.propertyTypes.${key}`);
+    }
+
+    return value;
+  };
+
+  const translateDealType = (value) => {
+    if (!hasValue(value)) return value;
+
+    const normalized = String(value).trim().toLowerCase();
+
+    const map = {
+      buy: "buy",
+      купить: "buy",
+      продажа: "buy",
+      продаю: "buy",
+      продам: "buy",
+
+      rent: "rent",
+      аренда: "rent",
+      снять: "rent",
+      сдача: "rent",
+      сдам: "rent",
+    };
+
+    const key = map[normalized];
+
+    if (key) {
+      return t(`myAdsDetails.deals.${key}`);
+    }
+
+    return value;
+  };
 
   const characteristics = useMemo(() => {
     if (!product) return [];
@@ -354,27 +459,35 @@ export default function MyProductDetails() {
       }
     };
 
-    /*
-     * =======================================================
-     * ОСНОВНЫЕ
-     * =======================================================
-     */
+    add(
+      BedDouble,
+      t("myAdsDetails.characteristics.rooms"),
+      product.rooms,
+      "rooms",
+    );
 
-    add(BedDouble, "Комнаты", product.rooms, "rooms");
+    add(Ruler, t("myAdsDetails.characteristics.area"), product.area, "area");
 
-    add(Ruler, "Площадь", product.area, "area");
+    add(
+      Layers3,
+      t("myAdsDetails.characteristics.floor"),
+      getRaw("floor") ?? product.floor,
+      "floor",
+    );
 
-    add(Layers3, "Этаж", getRaw("floor") ?? product.floor, "floor");
+    add(
+      Building2,
+      t("myAdsDetails.characteristics.floors"),
+      getRaw("floors") ?? product.floors,
+      "floors",
+    );
 
-    add(Building2, "Этажность", getRaw("floors") ?? product.floors, "floors");
-
-    add(Home, "Тип недвижимости", product.type, "type");
-
-    /*
-     * =======================================================
-     * ЖК
-     * =======================================================
-     */
+    add(
+      Home,
+      t("myAdsDetails.characteristics.propertyType"),
+      translatePropertyType(product.type),
+      "type",
+    );
 
     const residentialComplex = getRaw(
       "residentialComplex",
@@ -392,7 +505,7 @@ export default function MyProductDetails() {
     if (hasValue(residentialComplex)) {
       add(
         Building2,
-        "Жилой комплекс",
+        t("myAdsDetails.characteristics.residentialComplex"),
         residentialComplex,
         "residentialComplex",
         "residential_complex",
@@ -407,12 +520,6 @@ export default function MyProductDetails() {
       );
     }
 
-    /*
-     * =======================================================
-     * ЗАСТРОЙЩИК
-     * =======================================================
-     */
-
     const developer = getRaw("developer", "developerName", "developer_name");
 
     if (
@@ -421,7 +528,7 @@ export default function MyProductDetails() {
     ) {
       add(
         Building2,
-        "Застройщик",
+        t("myAdsDetails.characteristics.developer"),
         developer,
         "developer",
         "developerName",
@@ -429,15 +536,9 @@ export default function MyProductDetails() {
       );
     }
 
-    /*
-     * =======================================================
-     * ДОМ
-     * =======================================================
-     */
-
     add(
       Building,
-      "Тип дома",
+      t("myAdsDetails.characteristics.buildingType"),
       getRaw("buildingType", "building_type", "houseType", "house_type"),
       "buildingType",
       "building_type",
@@ -445,15 +546,9 @@ export default function MyProductDetails() {
       "house_type",
     );
 
-    /*
-     * =======================================================
-     * ГОД
-     * =======================================================
-     */
-
     add(
       CalendarDays,
-      "Год постройки",
+      t("myAdsDetails.characteristics.yearBuilt"),
       getRaw(
         "yearBuilt",
         "year_built",
@@ -468,15 +563,9 @@ export default function MyProductDetails() {
       "construction_year",
     );
 
-    /*
-     * =======================================================
-     * СОСТОЯНИЕ
-     * =======================================================
-     */
-
     add(
       Sparkles,
-      "Ремонт",
+      t("myAdsDetails.characteristics.repair"),
       getRaw("repair", "condition", "state"),
       "repair",
       "condition",
@@ -485,24 +574,18 @@ export default function MyProductDetails() {
 
     add(
       Sofa,
-      "Мебель",
+      t("myAdsDetails.characteristics.furniture"),
       getRaw("furniture", "furnished"),
       "furniture",
       "furnished",
     );
-
-    /*
-     * =======================================================
-     * ПОТОЛКИ
-     * =======================================================
-     */
 
     const ceilingHeight = getRaw("ceilingHeight", "ceiling_height");
 
     if (hasValue(ceilingHeight)) {
       add(
         Maximize,
-        "Высота потолков",
+        t("myAdsDetails.characteristics.ceilingHeight"),
         String(ceilingHeight).includes("м")
           ? ceilingHeight
           : `${ceilingHeight} м`,
@@ -511,15 +594,9 @@ export default function MyProductDetails() {
       );
     }
 
-    /*
-     * =======================================================
-     * САНУЗЕЛ
-     * =======================================================
-     */
-
     add(
       Bath,
-      "Санузел",
+      t("myAdsDetails.characteristics.bathroom"),
       getRaw("bathroom", "bathroomType", "bathroom_type"),
       "bathroom",
       "bathroomType",
@@ -528,37 +605,25 @@ export default function MyProductDetails() {
 
     add(
       Bath,
-      "Количество санузлов",
+      t("myAdsDetails.characteristics.bathrooms"),
       getRaw("bathrooms", "bathroomCount", "bathroom_count"),
       "bathrooms",
       "bathroomCount",
       "bathroom_count",
     );
 
-    /*
-     * =======================================================
-     * ОТОПЛЕНИЕ
-     * =======================================================
-     */
-
     add(
       Flame,
-      "Отопление",
+      t("myAdsDetails.characteristics.heating"),
       getRaw("heating", "heatingType", "heating_type"),
       "heating",
       "heatingType",
       "heating_type",
     );
 
-    /*
-     * =======================================================
-     * КОММУНИКАЦИИ
-     * =======================================================
-     */
-
     add(
       Droplets,
-      "Канализация",
+      t("myAdsDetails.characteristics.sewerage"),
       getRaw("sewerage", "sewer", "sewerageType", "sewerage_type"),
       "sewerage",
       "sewer",
@@ -568,7 +633,7 @@ export default function MyProductDetails() {
 
     add(
       Droplets,
-      "Водоснабжение",
+      t("myAdsDetails.characteristics.water"),
       getRaw("water", "waterSupply", "water_supply"),
       "water",
       "waterSupply",
@@ -584,8 +649,8 @@ export default function MyProductDetails() {
     if (hasValue(electricity)) {
       add(
         Zap,
-        "Электричество",
-        electricity === true ? "Есть" : electricity,
+        t("myAdsDetails.characteristics.electricity"),
+        electricity === true ? t("myAdsDetails.values.yes") : electricity,
         "electricity",
         "electricityType",
         "electricity_type",
@@ -597,23 +662,17 @@ export default function MyProductDetails() {
     if (hasValue(gas)) {
       add(
         Flame,
-        "Газ",
-        gas === true ? "Есть" : gas,
+        t("myAdsDetails.characteristics.gas"),
+        gas === true ? t("myAdsDetails.values.yes") : gas,
         "gas",
         "gasSupply",
         "gas_supply",
       );
     }
 
-    /*
-     * =======================================================
-     * ДОКУМЕНТЫ
-     * =======================================================
-     */
-
     add(
       FileCheck,
-      "Документы",
+      t("myAdsDetails.characteristics.documents"),
       getRaw("documents", "document", "documentStatus", "document_status"),
       "documents",
       "document",
@@ -621,30 +680,18 @@ export default function MyProductDetails() {
       "document_status",
     );
 
-    /*
-     * =======================================================
-     * ПАРКОВКА
-     * =======================================================
-     */
-
     add(
       CarFront,
-      "Парковка",
+      t("myAdsDetails.characteristics.parking"),
       getRaw("parking", "parkingType", "parking_type"),
       "parking",
       "parkingType",
       "parking_type",
     );
 
-    /*
-     * =======================================================
-     * ВИД
-     * =======================================================
-     */
-
     add(
       Waves,
-      "Вид",
+      t("myAdsDetails.characteristics.view"),
       getRaw("view", "viewType", "view_type"),
       "view",
       "viewType",
@@ -653,22 +700,22 @@ export default function MyProductDetails() {
 
     add(
       Compass,
-      "Ориентация",
+      t("myAdsDetails.characteristics.orientation"),
       getRaw("orientation", "direction"),
       "orientation",
       "direction",
     );
 
-    /*
-     * =======================================================
-     * УЧАСТОК
-     * =======================================================
-     */
-
     const landArea = getRaw("landArea", "land_area");
 
     if (hasValue(landArea)) {
-      add(LandPlot, "Площадь участка", landArea, "landArea", "land_area");
+      add(
+        LandPlot,
+        t("myAdsDetails.characteristics.landArea"),
+        landArea,
+        "landArea",
+        "land_area",
+      );
     }
 
     const areaSotka = getRaw("areaSotka", "area_sotka", "sotka", "sotok");
@@ -676,8 +723,10 @@ export default function MyProductDetails() {
     if (hasValue(areaSotka)) {
       add(
         LandPlot,
-        "Площадь участка",
-        String(areaSotka).includes("сот") ? areaSotka : `${areaSotka} соток`,
+        t("myAdsDetails.characteristics.areaSotka"),
+        String(areaSotka).includes("сот")
+          ? areaSotka
+          : `${areaSotka} ${t("myAdsDetails.units.sotkas")}`,
         "areaSotka",
         "area_sotka",
         "sotka",
@@ -685,49 +734,33 @@ export default function MyProductDetails() {
       );
     }
 
-    /*
-     * =======================================================
-     * БЛОКИ
-     * =======================================================
-     */
-
     const blocks = getRaw("blocks", "blockCount", "block_count");
 
     if (hasValue(blocks)) {
       add(
         Layers3,
-        "Количество блоков",
-        String(blocks).includes("блок") ? blocks : `${blocks} блоков`,
+        t("myAdsDetails.characteristics.blocks"),
+        String(blocks).includes("блок")
+          ? blocks
+          : `${blocks} ${t("myAdsDetails.units.blocks")}`,
         "blocks",
         "blockCount",
         "block_count",
       );
     }
 
-    /*
-     * =======================================================
-     * КОНСТРУКЦИЯ
-     * =======================================================
-     */
-
     add(
       Building2,
-      "Конструкция",
+      t("myAdsDetails.characteristics.construction"),
       getRaw("construction", "constructionType", "construction_type"),
       "construction",
       "constructionType",
       "construction_type",
     );
 
-    /*
-     * =======================================================
-     * ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ
-     * =======================================================
-     */
-
     add(
       DoorOpen,
-      "Количество входов",
+      t("myAdsDetails.characteristics.entrances"),
       getRaw("entrances", "entranceCount", "entrance_count"),
       "entrances",
       "entranceCount",
@@ -736,7 +769,7 @@ export default function MyProductDetails() {
 
     add(
       Trees,
-      "Площадь двора",
+      t("myAdsDetails.characteristics.yardArea"),
       getRaw("yardArea", "yard_area"),
       "yardArea",
       "yard_area",
@@ -744,7 +777,7 @@ export default function MyProductDetails() {
 
     add(
       Ruler,
-      "Ширина участка",
+      t("myAdsDetails.characteristics.landWidth"),
       getRaw("landWidth", "land_width"),
       "landWidth",
       "land_width",
@@ -752,90 +785,101 @@ export default function MyProductDetails() {
 
     add(
       Ruler,
-      "Длина участка",
+      t("myAdsDetails.characteristics.landLength"),
       getRaw("landLength", "land_length"),
       "landLength",
       "land_length",
     );
 
-    /*
-     * =======================================================
-     * СПЕЦИФИЧЕСКИЕ ПОЛЯ
-     * =======================================================
-     */
-
     const specificFields = [
       {
         keys: ["purpose"],
         icon: Tag,
+        translation: "purpose",
       },
       {
         keys: ["fence"],
         icon: Home,
+        translation: "fence",
       },
       {
         keys: ["terrain"],
         icon: LandPlot,
+        translation: "terrain",
       },
       {
         keys: ["landLocation", "land_location"],
         icon: MapPin,
+        translation: "landLocation",
       },
       {
         keys: ["roomLocation", "room_location"],
         icon: Home,
+        translation: "roomLocation",
       },
       {
         keys: ["roomsInApartment", "rooms_in_apartment"],
         icon: BedDouble,
+        translation: "roomsInApartment",
       },
       {
         keys: ["privateBathroom", "private_bathroom"],
         icon: Bath,
+        translation: "privateBathroom",
       },
       {
         keys: ["premisesType", "premises_type"],
         icon: Building,
+        translation: "premisesType",
       },
       {
         keys: ["technicalParameters", "technical_parameters"],
         icon: Ruler,
+        translation: "technicalParameters",
       },
       {
         keys: ["firstLine", "first_line"],
         icon: DoorOpen,
+        translation: "firstLine",
       },
       {
         keys: ["separateEntrance", "separate_entrance"],
         icon: DoorOpen,
+        translation: "separateEntrance",
       },
       {
         keys: ["rentalBusiness", "rental_business"],
         icon: CircleDollarSign,
+        translation: "rentalBusiness",
       },
       {
         keys: ["material"],
         icon: Building2,
+        translation: "material",
       },
       {
         keys: ["gates"],
         icon: DoorOpen,
+        translation: "gates",
       },
       {
         keys: ["truckAccess", "truck_access"],
         icon: CarFront,
+        translation: "truckAccess",
       },
       {
         keys: ["gateType", "gate_type"],
         icon: DoorOpen,
+        translation: "gateType",
       },
       {
         keys: ["offerType", "offer_type"],
         icon: Tag,
+        translation: "offerType",
       },
     ];
 
-    specificFields.forEach(({ keys, icon }) => {
+    specificFields.forEach(({ keys, icon, translation }) => {
       const value = getRaw(...keys);
 
       if (!hasValue(value)) return;
@@ -844,27 +888,19 @@ export default function MyProductDetails() {
 
       if (existingKey) return;
 
-      add(icon, formatKey(keys[0]), value, ...keys);
+      add(
+        icon,
+        t(`myAdsDetails.characteristics.${translation}`),
+        value,
+        ...keys,
+      );
     });
-
-    /*
-     * =======================================================
-     * ВСЕ ОСТАЛЬНЫЕ RAW FEATURES
-     *
-     * Это гарантирует, что новое поле из формы не потеряется.
-     * =======================================================
-     */
 
     Object.entries(raw).forEach(([key, value]) => {
       if (!hasValue(value)) return;
-
       if (usedKeys.has(key)) return;
 
       const normalized = normalizeKey(key);
-
-      /*
-       * Не показываем технические поля.
-       */
 
       const technicalKeys = [
         "id",
@@ -884,10 +920,6 @@ export default function MyProductDetails() {
         return;
       }
 
-      /*
-       * Amenities показываются отдельным блоком.
-       */
-
       if (
         key === "amenities" ||
         normalized === "amenities" ||
@@ -896,27 +928,29 @@ export default function MyProductDetails() {
         return;
       }
 
-      const Icon = key.toLowerCase().includes("floor")
+      const lowerKey = key.toLowerCase();
+
+      const Icon = lowerKey.includes("floor")
         ? Layers3
-        : key.toLowerCase().includes("area")
+        : lowerKey.includes("area")
           ? Ruler
-          : key.toLowerCase().includes("water")
+          : lowerKey.includes("water")
             ? Droplets
-            : key.toLowerCase().includes("heating")
+            : lowerKey.includes("heating")
               ? Flame
-              : key.toLowerCase().includes("parking")
+              : lowerKey.includes("parking")
                 ? CarFront
-                : key.toLowerCase().includes("document")
+                : lowerKey.includes("document")
                   ? FileCheck
-                  : key.toLowerCase().includes("year")
+                  : lowerKey.includes("year")
                     ? CalendarDays
-                    : key.toLowerCase().includes("bath")
+                    : lowerKey.includes("bath")
                       ? Bath
-                      : key.toLowerCase().includes("view")
+                      : lowerKey.includes("view")
                         ? Waves
-                        : key.toLowerCase().includes("electric")
+                        : lowerKey.includes("electric")
                           ? Zap
-                          : key.toLowerCase().includes("entrance")
+                          : lowerKey.includes("entrance")
                             ? DoorOpen
                             : Tag;
 
@@ -933,31 +967,22 @@ export default function MyProductDetails() {
       usedKeys.add(key);
     });
 
-    /*
-     * =======================================================
-     * РАССТОЯНИЕ ДО ПЛЯЖА
-     * =======================================================
-     */
-
     if (
       hasValue(product.beachDistance) &&
-      !items.some((item) => item.label === "Расстояние до пляжа")
+      !items.some(
+        (item) =>
+          item.label === t("myAdsDetails.characteristics.beachDistance"),
+      )
     ) {
       items.push({
         icon: Waves,
-        label: "Расстояние до пляжа",
-        value: `${product.beachDistance} м`,
+        label: t("myAdsDetails.characteristics.beachDistance"),
+        value: `${product.beachDistance} ${t("myAdsDetails.units.meters")}`,
       });
     }
 
     return items;
-  }, [product]);
-
-  /*
-   * =========================================================
-   * AMENITIES
-   * =========================================================
-   */
+  }, [product, t]);
 
   const amenities = useMemo(() => {
     if (!product) return [];
@@ -984,12 +1009,6 @@ export default function MyProductDetails() {
     return [];
   }, [product]);
 
-  /*
-   * =========================================================
-   * GALLERY
-   * =========================================================
-   */
-
   const images = Array.isArray(product?.images) ? product.images : [];
 
   const nextImage = () => {
@@ -1003,12 +1022,6 @@ export default function MyProductDetails() {
 
     setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
-
-  /*
-   * =========================================================
-   * EDIT
-   * =========================================================
-   */
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -1037,29 +1050,16 @@ export default function MyProductDetails() {
     }
   };
 
-  /*
-   * =========================================================
-   * DELETE
-   * =========================================================
-   */
-
   const handleDelete = async () => {
     try {
       console.log("Удаление объявления:", product.id);
 
       setShowDeleteModal(false);
-
       router.push("/profile/ads");
     } catch (err) {
       console.error("Ошибка удаления объявления:", err);
     }
   };
-
-  /*
-   * =========================================================
-   * LOADING
-   * =========================================================
-   */
 
   if (loading) {
     return (
@@ -1067,21 +1067,19 @@ export default function MyProductDetails() {
         <div className={styles.state}>
           <div className={styles.stateLoader} />
 
-          <h2>Загрузка объявления...</h2>
+          <h2>{t("myAdsDetails.loading.title")}</h2>
 
-          <p>Получаем информацию об объекте</p>
+          <p>{t("myAdsDetails.loading.description")}</p>
         </div>
       </main>
     );
   }
 
-  /*
-   * =========================================================
-   * ERROR
-   * =========================================================
-   */
-
   if (error || !product) {
+    const translatedError = error?.startsWith?.("myAdsDetails.")
+      ? t(error)
+      : error || t("myAdsDetails.error.description");
+
     return (
       <main className={styles.page}>
         <div className={styles.state}>
@@ -1089,9 +1087,9 @@ export default function MyProductDetails() {
             <Home size={28} />
           </div>
 
-          <h2>Объявление не найдено</h2>
+          <h2>{t("myAdsDetails.error.title")}</h2>
 
-          <p>{error || "Не удалось загрузить данные объявления."}</p>
+          <p>{translatedError}</p>
 
           <button
             type="button"
@@ -1099,24 +1097,17 @@ export default function MyProductDetails() {
             onClick={() => router.push("/profile/ads")}
           >
             <ArrowLeft size={18} />
-            Вернуться к объявлениям
+
+            {t("myAdsDetails.backToAds")}
           </button>
         </div>
       </main>
     );
   }
 
-  /*
-   * =========================================================
-   * RENDER
-   * =========================================================
-   */
-
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* TOP BAR */}
-
         <div className={styles.topBar}>
           <button
             type="button"
@@ -1124,26 +1115,24 @@ export default function MyProductDetails() {
             onClick={() => router.push("/profile/ads")}
           >
             <ArrowLeft size={18} />
-            Мои объявления
+
+            {t("myAdsDetails.myAds")}
           </button>
 
           <span className={styles.ownerBadge}>
             <Home size={15} />
-            МОЁ ОБЪЯВЛЕНИЕ
+
+            {t("myAdsDetails.myListing")}
           </span>
         </div>
 
-        {/* TOP */}
-
         <section className={styles.top}>
-          {/* GALLERY */}
-
           <div className={styles.gallery}>
             <div className={styles.mainImage}>
               {images.length > 0 ? (
                 <Image
                   src={images[currentImage]}
-                  alt={product.title || "Объект недвижимости"}
+                  alt={product.title || t("myAdsDetails.fallback.property")}
                   fill
                   priority
                   sizes="(max-width: 900px) 100vw, 65vw"
@@ -1151,13 +1140,12 @@ export default function MyProductDetails() {
               ) : (
                 <div className={styles.noImage}>
                   <Home size={48} />
-                  <span>Нет фотографий</span>
+
+                  <span>{t("myAdsDetails.gallery.noPhotos")}</span>
                 </div>
               )}
 
               <div className={styles.imageOverlay} />
-
-              {/* BADGES */}
 
               <div className={styles.badges}>
                 {product.status === "vip" && (
@@ -1170,16 +1158,17 @@ export default function MyProductDetails() {
                 {product.status === "urgent" && (
                   <span className={`${styles.badge} ${styles.urgent}`}>
                     <Flame size={14} />
-                    Срочно
+
+                    {t("myAdsDetails.badges.urgent")}
                   </span>
                 )}
 
                 {product.type && (
-                  <span className={styles.categoryBadge}>{product.type}</span>
+                  <span className={styles.categoryBadge}>
+                    {translatePropertyType(product.type)}
+                  </span>
                 )}
               </div>
-
-              {/* ACTIONS */}
 
               <div className={styles.imageActions}>
                 <button
@@ -1188,20 +1177,19 @@ export default function MyProductDetails() {
                   onClick={handleEdit}
                 >
                   <Pencil size={16} />
-                  Изменить
+
+                  {t("myAdsDetails.actions.edit")}
                 </button>
 
                 <button
                   type="button"
                   className={styles.imageDelete}
                   onClick={() => setShowDeleteModal(true)}
-                  aria-label="Удалить объявление"
+                  aria-label={t("myAdsDetails.actions.deleteListing")}
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
-
-              {/* FAVORITE */}
 
               <button
                 type="button"
@@ -1209,12 +1197,10 @@ export default function MyProductDetails() {
                   isFavorite ? styles.favoriteActive : ""
                 }`}
                 onClick={() => setIsFavorite((prev) => !prev)}
-                aria-label="Добавить в избранное"
+                aria-label={t("myAdsDetails.actions.favorite")}
               >
                 <Heart size={23} fill={isFavorite ? "currentColor" : "none"} />
               </button>
-
-              {/* ARROWS */}
 
               {images.length > 1 && (
                 <>
@@ -1222,7 +1208,7 @@ export default function MyProductDetails() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.left}`}
                     onClick={previousImage}
-                    aria-label="Предыдущее фото"
+                    aria-label={t("myAdsDetails.gallery.previous")}
                   >
                     <ChevronLeft />
                   </button>
@@ -1231,14 +1217,12 @@ export default function MyProductDetails() {
                     type="button"
                     className={`${styles.galleryArrow} ${styles.right}`}
                     onClick={nextImage}
-                    aria-label="Следующее фото"
+                    aria-label={t("myAdsDetails.gallery.next")}
                   >
                     <ChevronRight />
                   </button>
                 </>
               )}
-
-              {/* COUNTER */}
 
               {images.length > 0 && (
                 <div className={styles.imageCounter}>
@@ -1246,16 +1230,12 @@ export default function MyProductDetails() {
                 </div>
               )}
 
-              {/* IMAGE TITLE */}
-
               <div className={styles.imageTitle}>
-                <span>МОЯ НЕДВИЖИМОСТЬ</span>
+                <span>{t("myAdsDetails.myProperty")}</span>
 
                 <strong>{product.title}</strong>
               </div>
             </div>
-
-            {/* THUMBNAILS */}
 
             {images.length > 1 && (
               <>
@@ -1273,7 +1253,7 @@ export default function MyProductDetails() {
                     >
                       <Image
                         src={image}
-                        alt={`Фото ${index + 1}`}
+                        alt={`${t("myAdsDetails.gallery.photo")} ${index + 1}`}
                         fill
                         sizes="100px"
                       />
@@ -1292,7 +1272,9 @@ export default function MyProductDetails() {
                           : styles.dot
                       }
                       onClick={() => setCurrentImage(index)}
-                      aria-label={`Фото ${index + 1}`}
+                      aria-label={`${t(
+                        "myAdsDetails.gallery.photo",
+                      )} ${index + 1}`}
                     />
                   ))}
                 </div>
@@ -1300,17 +1282,18 @@ export default function MyProductDetails() {
             )}
           </div>
 
-          {/* SUMMARY */}
-
           <div className={styles.summary}>
             <div className={styles.summaryTop}>
               {product.dealType && (
-                <span className={styles.deal}>{product.dealType}</span>
+                <span className={styles.deal}>
+                  {translateDealType(product.dealType)}
+                </span>
               )}
 
               <span className={styles.published}>
                 <CheckCircle2 size={13} />
-                Опубликовано
+
+                {t("myAdsDetails.published")}
               </span>
             </div>
 
@@ -1330,16 +1313,13 @@ export default function MyProductDetails() {
 
             <div className={styles.price}>{product.price}</div>
 
-            {/* QUICK INFO */}
-
             <div className={styles.quickInfo}>
               {hasValue(product.rooms) && (
                 <div>
                   <BedDouble />
 
                   <span>
-                    <b>{product.rooms}</b>
-                    комнат
+                    <b>{product.rooms}</b> {t("myAdsDetails.quickInfo.rooms")}
                   </span>
                 </div>
               )}
@@ -1349,8 +1329,7 @@ export default function MyProductDetails() {
                   <Ruler />
 
                   <span>
-                    <b>{product.area}</b>
-                    площадь
+                    <b>{product.area}</b> {t("myAdsDetails.quickInfo.area")}
                   </span>
                 </div>
               )}
@@ -1360,8 +1339,8 @@ export default function MyProductDetails() {
                   <Layers3 />
 
                   <span>
-                    <b>{raw.floor ?? product.floor}</b>
-                    этаж
+                    <b>{raw.floor ?? product.floor}</b>{" "}
+                    {t("myAdsDetails.quickInfo.floor")}
                   </span>
                 </div>
               )}
@@ -1371,14 +1350,14 @@ export default function MyProductDetails() {
                   <Waves />
 
                   <span>
-                    <b>{product.beachDistance} м</b>
-                    до пляжа
+                    <b>
+                      {product.beachDistance} {t("myAdsDetails.units.meters")}
+                    </b>{" "}
+                    {t("myAdsDetails.quickInfo.toBeach")}
                   </span>
                 </div>
               )}
             </div>
-
-            {/* MANAGEMENT */}
 
             <div className={styles.management}>
               <button
@@ -1387,7 +1366,8 @@ export default function MyProductDetails() {
                 onClick={handleEdit}
               >
                 <Pencil size={17} />
-                Редактировать
+
+                {t("myAdsDetails.actions.editFull")}
               </button>
 
               <button
@@ -1396,18 +1376,15 @@ export default function MyProductDetails() {
                 onClick={() => setShowDeleteModal(true)}
               >
                 <Trash2 size={17} />
-                Удалить
+
+                {t("myAdsDetails.actions.delete")}
               </button>
             </div>
           </div>
         </section>
 
-        {/* CONTENT */}
-
         <div className={styles.contentGrid}>
           <div className={styles.mainContent}>
-            {/* DESCRIPTION */}
-
             {product.description && (
               <section className={styles.section}>
                 <div className={styles.sectionHeader}>
@@ -1416,17 +1393,15 @@ export default function MyProductDetails() {
                   </div>
 
                   <div>
-                    <span>ОБ ОБЪЕКТЕ</span>
+                    <span>{t("myAdsDetails.sections.about.label")}</span>
 
-                    <h2>Описание</h2>
+                    <h2>{t("myAdsDetails.sections.about.title")}</h2>
                   </div>
                 </div>
 
                 <p className={styles.description}>{product.description}</p>
               </section>
             )}
-
-            {/* CHARACTERISTICS */}
 
             {characteristics.length > 0 && (
               <section className={styles.section}>
@@ -1436,9 +1411,9 @@ export default function MyProductDetails() {
                   </div>
 
                   <div>
-                    <span>ПОДРОБНОСТИ</span>
+                    <span>{t("myAdsDetails.sections.details.label")}</span>
 
-                    <h2>Характеристики объекта</h2>
+                    <h2>{t("myAdsDetails.sections.details.title")}</h2>
                   </div>
                 </div>
 
@@ -1467,8 +1442,6 @@ export default function MyProductDetails() {
               </section>
             )}
 
-            {/* AMENITIES */}
-
             {amenities.length > 0 && (
               <section className={styles.section}>
                 <div className={styles.sectionHeader}>
@@ -1477,9 +1450,9 @@ export default function MyProductDetails() {
                   </div>
 
                   <div>
-                    <span>ДОПОЛНИТЕЛЬНО</span>
+                    <span>{t("myAdsDetails.sections.additional.label")}</span>
 
-                    <h2>Удобства</h2>
+                    <h2>{t("myAdsDetails.sections.additional.title")}</h2>
                   </div>
                 </div>
 
@@ -1487,14 +1460,13 @@ export default function MyProductDetails() {
                   {amenities.map((item, index) => (
                     <div className={styles.amenity} key={`${item}-${index}`}>
                       <ShieldCheck size={17} />
+
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               </section>
             )}
-
-            {/* ADDRESS */}
 
             {(product.location || product.address) && (
               <section className={styles.section}>
@@ -1504,9 +1476,9 @@ export default function MyProductDetails() {
                   </div>
 
                   <div>
-                    <span>РАСПОЛОЖЕНИЕ</span>
+                    <span>{t("myAdsDetails.sections.location.label")}</span>
 
-                    <h2>Адрес объекта</h2>
+                    <h2>{t("myAdsDetails.sections.location.title")}</h2>
                   </div>
                 </div>
 
@@ -1525,36 +1497,33 @@ export default function MyProductDetails() {
             )}
           </div>
 
-          {/* SIDEBAR */}
-
           <aside className={styles.sidebar}>
-            {/* INFORMATION */}
-
             <div className={styles.sideCard}>
               <div className={styles.sideTop}>
                 <Tag />
-                <span>Информация</span>
+
+                <span>{t("myAdsDetails.sidebar.information")}</span>
               </div>
 
               {product.type && (
                 <div className={styles.sideRow}>
-                  <span>Категория</span>
+                  <span>{t("myAdsDetails.sidebar.category")}</span>
 
-                  <strong>{product.type}</strong>
+                  <strong>{translatePropertyType(product.type)}</strong>
                 </div>
               )}
 
               {product.dealType && (
                 <div className={styles.sideRow}>
-                  <span>Тип предложения</span>
+                  <span>{t("myAdsDetails.sidebar.offerType")}</span>
 
-                  <strong>{product.dealType}</strong>
+                  <strong>{translateDealType(product.dealType)}</strong>
                 </div>
               )}
 
               {product.createdAt && (
                 <div className={styles.sideRow}>
-                  <span>Дата публикации</span>
+                  <span>{t("myAdsDetails.sidebar.publishedAt")}</span>
 
                   <strong>{product.createdAt}</strong>
                 </div>
@@ -1562,7 +1531,7 @@ export default function MyProductDetails() {
 
               {product.price && (
                 <div className={styles.sideRow}>
-                  <span>Стоимость</span>
+                  <span>{t("myAdsDetails.sidebar.price")}</span>
 
                   <strong>{product.price}</strong>
                 </div>
@@ -1570,19 +1539,20 @@ export default function MyProductDetails() {
 
               {product.beachDistance && (
                 <div className={styles.sideRow}>
-                  <span>До пляжа</span>
+                  <span>{t("myAdsDetails.sidebar.toBeach")}</span>
 
-                  <strong>{product.beachDistance} м</strong>
+                  <strong>
+                    {product.beachDistance} {t("myAdsDetails.units.meters")}
+                  </strong>
                 </div>
               )}
             </div>
 
-            {/* MANAGEMENT */}
-
             <div className={styles.ownerCard}>
               <div className={styles.ownerHeader}>
                 <Building2 />
-                Управление объявлением
+
+                {t("myAdsDetails.sidebar.management")}
               </div>
 
               <button
@@ -1591,7 +1561,8 @@ export default function MyProductDetails() {
                 className={styles.sideEdit}
               >
                 <Pencil size={16} />
-                Редактировать
+
+                {t("myAdsDetails.actions.editFull")}
               </button>
 
               <button
@@ -1600,24 +1571,23 @@ export default function MyProductDetails() {
                 className={styles.sideDelete}
               >
                 <Trash2 size={16} />
-                Удалить объявление
+
+                {t("myAdsDetails.actions.deleteListing")}
               </button>
             </div>
           </aside>
         </div>
       </div>
 
-      {/* DELETE */}
-
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        title="Удалить объявление?"
-        description={`Вы действительно хотите удалить «${product.title}»? Это действие нельзя будет отменить.`}
+        title={t("myAdsDetails.deleteModal.title")}
+        description={`${t(
+          "myAdsDetails.deleteModal.descriptionStart",
+        )} «${product.title}»? ${t("myAdsDetails.deleteModal.descriptionEnd")}`}
       />
-
-      {/* EDIT */}
 
       <AdsEditModal
         isOpen={showEditModal}

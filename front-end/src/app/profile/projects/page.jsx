@@ -161,7 +161,11 @@ export default function ResidentialComplexes() {
               floors: parseNumber(compl.features?.floors),
               apartments: parseNumber(compl.features?.apartments),
               parking: parseNumber(compl.features?.parking),
-              area: compl.features?.areaSotka ? `${compl.features.areaSotka} соток` : (compl.features?.area ? `${compl.features.area} м²` : "0 м²"),
+              area: compl.features?.areaSotka
+                ? `${compl.features.areaSotka} соток`
+                : compl.features?.area
+                  ? `${compl.features.area} м²`
+                  : "0 м²",
               image:
                 compl.cover_photo ||
                 "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=85",
@@ -397,8 +401,7 @@ export default function ResidentialComplexes() {
                 className={styles.homeButton}
                 onClick={() => router.push("/profile")}
               >
-                <UserRoundArrowLeft size={18} />
-                В профиль
+                <UserRoundArrowLeft size={18} />В профиль
               </button>
 
               <span className={styles.eyebrow}>

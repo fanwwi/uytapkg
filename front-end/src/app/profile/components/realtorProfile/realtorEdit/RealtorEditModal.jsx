@@ -19,8 +19,11 @@ import {
 import styles from "./RealtorEditModal.module.css";
 
 import { getMe, updateMe } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function RealtorEditModal({ user, close }) {
+  const { t } = useLanguage();
+
   const profile = user?.profile || {};
 
   const initialAvatar =
@@ -71,7 +74,8 @@ export default function RealtorEditModal({ user, close }) {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Размер изображения не должен превышать 5 МБ");
+      alert(t("realtorEditModal.errors.imageSize"));
+
       return;
     }
 
@@ -97,7 +101,7 @@ export default function RealtorEditModal({ user, close }) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error("Не удалось получить изображение");
+      throw new Error(t("realtorEditModal.errors.imageFetch"));
     }
 
     const blob = await response.blob();
@@ -109,7 +113,7 @@ export default function RealtorEditModal({ user, close }) {
 
   /*
    * =========================================================
-   * ПОЛУЧИТЬ АВАТАР ДЛЯ ОТПРАВКИ
+   * GET AVATAR FILE
    * =========================================================
    */
 
@@ -148,19 +152,17 @@ export default function RealtorEditModal({ user, close }) {
       const token = localStorage.getItem("uytap_token");
 
       if (!token) {
-        throw new Error("Сначала войдите в аккаунт");
+        throw new Error(t("realtorEditModal.errors.session"));
       }
 
       /*
        * Получаем финальный avatar file
        */
+
       const finalAvatarFile = await getAvatarFile();
 
       /*
        * FormData
-       *
-       * Используем тот же endpoint,
-       * который уже работает для PersonalProfile.
        */
 
       const formData = new FormData();
@@ -204,7 +206,9 @@ export default function RealtorEditModal({ user, close }) {
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Не удалось сохранить профиль");
+        throw new Error(
+          result.message || t("realtorEditModal.errors.saveProfile"),
+        );
       }
 
       /*
@@ -247,13 +251,16 @@ export default function RealtorEditModal({ user, close }) {
           last_name: lastName,
 
           company_name: companyName,
+
           inn,
           website,
+
           office_address: officeAddress,
 
           about,
 
           avatar_url: savedAvatar,
+
           avatar: savedAvatar,
         },
       };
@@ -265,7 +272,7 @@ export default function RealtorEditModal({ user, close }) {
       localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
 
       /*
-       * Сообщаем всему приложению,
+       * Сообщаем приложению,
        * что пользователь обновился
        */
 
@@ -280,10 +287,7 @@ export default function RealtorEditModal({ user, close }) {
       }
 
       /*
-       * Обновляем обычные данные пользователя.
-       *
-       * Если backend updateMe принимает
-       * только эти поля — оставляем их здесь.
+       * Обновляем обычные данные пользователя
        */
 
       await updateMe(token, {
@@ -327,15 +331,14 @@ export default function RealtorEditModal({ user, close }) {
       close();
 
       /*
-       * Перезагружаем страницу,
-       * как в PersonalProfile.
+       * Перезагружаем страницу
        */
 
       window.location.reload();
     } catch (error) {
       console.error("REALTOR PROFILE SAVE ERROR:", error);
 
-      alert(error?.message || "Не удалось сохранить изменения");
+      alert(error?.message || t("realtorEditModal.errors.save"));
     } finally {
       setLoading(false);
     }
@@ -349,29 +352,30 @@ export default function RealtorEditModal({ user, close }) {
           className={styles.close}
           onClick={close}
           disabled={loading}
+          aria-label={t("realtorEditModal.actions.close")}
         >
           <X />
         </button>
 
         <div className={styles.scroll}>
-          {/* =================================================
-              HEADER
-          ================================================= */}
+          {/* HEADER */}
 
           <header className={styles.header}>
-            <h2>Редактирование профиля</h2>
+            <h2>{t("realtorEditModal.header.title")}</h2>
 
-            <p>Обновите данные риэлтора</p>
+            <p>{t("realtorEditModal.header.description")}</p>
           </header>
 
-          {/* =================================================
-              AVATAR
-          ================================================= */}
+          {/* AVATAR */}
 
           <div className={styles.avatarBlock}>
             <div className={styles.avatarWrapper}>
               <div className={styles.avatar}>
-                {avatar ? <img src={avatar} alt="Аватар риэлтора" /> : <User />}
+                {avatar ? (
+                  <img src={avatar} alt={t("realtorEditModal.avatar.alt")} />
+                ) : (
+                  <User />
+                )}
               </div>
             </div>
 
@@ -379,7 +383,11 @@ export default function RealtorEditModal({ user, close }) {
               <label className={styles.upload}>
                 <Camera size={17} />
 
-                <span>{avatar ? "Изменить фото" : "Добавить фото"}</span>
+                <span>
+                  {avatar
+                    ? t("realtorEditModal.avatar.change")
+                    : t("realtorEditModal.avatar.add")}
+                </span>
 
                 <input
                   hidden
@@ -399,15 +407,13 @@ export default function RealtorEditModal({ user, close }) {
                 >
                   <Trash2 size={17} />
 
-                  <span>Удалить фото</span>
+                  <span>{t("realtorEditModal.avatar.remove")}</span>
                 </button>
               )}
             </div>
           </div>
 
-          {/* =================================================
-              FIELDS
-          ================================================= */}
+          {/* FIELDS */}
 
           <div className={styles.fields}>
             {/* Имя + фамилия */}
@@ -419,7 +425,7 @@ export default function RealtorEditModal({ user, close }) {
                 <input
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Имя"
+                  placeholder={t("realtorEditModal.fields.firstName")}
                   disabled={loading}
                 />
               </div>
@@ -430,7 +436,7 @@ export default function RealtorEditModal({ user, close }) {
                 <input
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Фамилия"
+                  placeholder={t("realtorEditModal.fields.lastName")}
                   disabled={loading}
                 />
               </div>
@@ -444,7 +450,7 @@ export default function RealtorEditModal({ user, close }) {
               <input
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Название агентства"
+                placeholder={t("realtorEditModal.fields.companyName")}
                 disabled={loading}
               />
             </div>
@@ -457,7 +463,7 @@ export default function RealtorEditModal({ user, close }) {
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Телефон"
+                placeholder={t("realtorEditModal.fields.phone")}
                 disabled={loading}
               />
             </div>
@@ -470,7 +476,7 @@ export default function RealtorEditModal({ user, close }) {
               <input
                 value={inn}
                 onChange={(e) => setInn(e.target.value)}
-                placeholder="ИНН"
+                placeholder={t("realtorEditModal.fields.inn")}
                 disabled={loading}
               />
             </div>
@@ -483,7 +489,7 @@ export default function RealtorEditModal({ user, close }) {
               <input
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                placeholder="Сайт"
+                placeholder={t("realtorEditModal.fields.website")}
                 disabled={loading}
               />
             </div>
@@ -496,14 +502,12 @@ export default function RealtorEditModal({ user, close }) {
               <input
                 value={officeAddress}
                 onChange={(e) => setOfficeAddress(e.target.value)}
-                placeholder="Адрес офиса"
+                placeholder={t("realtorEditModal.fields.officeAddress")}
                 disabled={loading}
               />
             </div>
 
-            {/* =================================================
-                ABOUT / TEXTAREA
-            ================================================= */}
+            {/* ABOUT */}
 
             <div className={styles.textarea}>
               <FileText />
@@ -511,15 +515,13 @@ export default function RealtorEditModal({ user, close }) {
               <textarea
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder="Расскажите о себе и своей работе"
+                placeholder={t("realtorEditModal.fields.about")}
                 disabled={loading}
               />
             </div>
           </div>
 
-          {/* =================================================
-              SAVE
-          ================================================= */}
+          {/* SAVE */}
 
           <button
             type="button"
@@ -529,7 +531,9 @@ export default function RealtorEditModal({ user, close }) {
           >
             <Check size={18} />
 
-            {loading ? "Сохраняем..." : "Сохранить изменения"}
+            {loading
+              ? t("realtorEditModal.actions.saving")
+              : t("realtorEditModal.actions.save")}
           </button>
         </div>
       </div>

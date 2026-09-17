@@ -6,11 +6,20 @@ import AgencyPublicProfile from "./AgencyPublicProfile/AgencyPublicProfile";
 import DeveloperPublicProfile from "./DeveloperPublicProfile/DeveloperPublicProfile";
 import PersonalPublicProfile from "./PersonalPublicProfile/PersonalPublicProfile";
 import RealtorPublicProfile from "./RealtorPublicProfile/RealtorPublicProfile";
-import { getUserPublicProfile, getFavorites, addFavorite, removeFavorite } from "@/utils/api";
+import {
+  getUserPublicProfile,
+  getFavorites,
+  addFavorite,
+  removeFavorite,
+} from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PublicProfile({ profileId }) {
+  const { t } = useLanguage();
+
   const id = String(profileId);
   const router = useRouter();
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,32 +28,34 @@ export default function PublicProfile({ profileId }) {
   // Load profile data
   useEffect(() => {
     if (!id) return;
-    
+
     setLoading(true);
     setError("");
-    
+
     getUserPublicProfile(id)
       .then((res) => {
         if (res.success && res.user) {
           const userData = res.user;
+
           // Ensure lists are accessible in profile sub-objects for compatibility
           if (userData.profile) {
             userData.profile.complexes = userData.complexes || [];
             userData.profile.ads = userData.ads || [];
           }
+
           setUser(userData);
         } else {
-          throw new Error("Не удалось загрузить данные профиля");
+          throw new Error(t("publicProfile.errors.load"));
         }
       })
       .catch((err) => {
         console.error("Error loading public profile:", err);
-        setError(err.message || "Ошибка при получении профиля");
+        setError(err.message || t("publicProfile.errors.fetch"));
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [id, t]);
 
   // Load user favorites
   useEffect(() => {
@@ -62,15 +73,18 @@ export default function PublicProfile({ profileId }) {
 
   const handleFavoriteClick = async (clickedItem) => {
     const token = localStorage.getItem("uytap_token");
+
     if (!token) {
       router.push("/login");
       return;
     }
 
     const isFav = favIds.has(clickedItem.id);
+
     try {
       if (isFav) {
         const res = await removeFavorite(token, clickedItem.id);
+
         if (res.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
@@ -80,6 +94,7 @@ export default function PublicProfile({ profileId }) {
         }
       } else {
         const res = await addFavorite(token, clickedItem.id);
+
         if (res.success) {
           setFavIds((prev) => {
             const next = new Set(prev);
@@ -95,18 +110,46 @@ export default function PublicProfile({ profileId }) {
 
   if (loading) {
     return (
-      <main style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh", color: "#666" }}>
-        <div>Загрузка профиля...</div>
+      <main
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          color: "#666",
+        }}
+      >
+        <div>{t("publicProfile.loading")}</div>
       </main>
     );
   }
 
   if (error || !user) {
     return (
-      <main style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh", color: "#e53e3e", flexDirection: "column", gap: "10px" }}>
-        <h1>Профиль не найден</h1>
-        <p>{error || "Пользователь не существует или был удален"}</p>
-        <a href="/" style={{ color: "#3182ce", textDecoration: "underline" }}>На главную</a>
+      <main
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          color: "#e53e3e",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <h1>{t("publicProfile.notFound.title")}</h1>
+
+        <p>{error || t("publicProfile.notFound.description")}</p>
+
+        <a
+          href="/"
+          style={{
+            color: "#3182ce",
+            textDecoration: "underline",
+          }}
+        >
+          {t("publicProfile.notFound.home")}
+        </a>
       </main>
     );
   }
@@ -135,7 +178,7 @@ export default function PublicProfile({ profileId }) {
     default:
       return (
         <main>
-          <h1>Неизвестный тип профиля</h1>
+          <h1>{t("publicProfile.unknownType")}</h1>
         </main>
       );
   }

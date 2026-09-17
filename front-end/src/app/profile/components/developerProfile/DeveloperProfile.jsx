@@ -32,9 +32,11 @@ import {
 import styles from "./DeveloperProfile.module.css";
 
 import DeveloperEditModal from "./developerEdit/DeveloperEditModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DeveloperProfile({ user, adsCount = 0 }) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [edit, setEdit] = useState(false);
   const [dbProjects, setDbProjects] = useState([]);
@@ -82,13 +84,17 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
   const profile = user.profile || {};
 
   const company =
-    profile.company_name || profile.company || "Строительная компания";
+    profile.company_name ||
+    profile.company ||
+    t("developerProfile.defaults.company");
 
   const firstName = profile.first_name || "";
+
   const lastName = profile.last_name || "";
 
   const fullName =
-    `${firstName} ${lastName}`.trim() || "Представитель компании";
+    `${firstName} ${lastName}`.trim() ||
+    t("developerProfile.defaults.representative");
 
   const avatar =
     profile.avatar_url ||
@@ -99,12 +105,6 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
   const whatsapp = user.phone?.replace(/\D/g, "") || "";
 
-  /*
-   * Проверяем статус подтверждения профиля.
-   *
-   * Поддерживаются разные варианты названий поля,
-   * чтобы не ломать текущую структуру API.
-   */
   const isVerified =
     user.isVerified === true ||
     profile.is_verified === true ||
@@ -123,6 +123,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
   function logout() {
     localStorage.removeItem("uytap_user");
+
     localStorage.removeItem("uytap_token");
 
     document.cookie = "uytap_token=; path=/; max-age=0";
@@ -136,7 +137,10 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
   function getProjectName(project) {
     return (
-      project.name || project.title || project.project_name || "Жилой комплекс"
+      project.name ||
+      project.title ||
+      project.project_name ||
+      t("developerProfile.projectDefaults.name")
     );
   }
 
@@ -145,7 +149,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
       project.address ||
       project.location ||
       project.office_address ||
-      "Адрес не указан"
+      t("developerProfile.projectDefaults.address")
     );
   }
 
@@ -164,7 +168,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
       project.completion_status ||
       project.status ||
       project.construction_status ||
-      "Строительство"
+      t("developerProfile.projectDefaults.status")
     );
   }
 
@@ -174,11 +178,17 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
     );
   }
 
+  const totalApartments =
+    dbProjects.length > 0
+      ? dbProjects.reduce(
+          (sum, project) => sum + (Number(project.apartments) || 0),
+          0,
+        )
+      : profile.apartments_count || 0;
+
   return (
     <main className={styles.page}>
-      {/* =====================================================
-          PROFILE
-      ===================================================== */}
+      {/* PROFILE */}
 
       <section className={styles.profileCard}>
         <div className={styles.glow} />
@@ -197,7 +207,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           <div className={styles.info}>
             <div className={styles.badge}>
               <Building2 />
-              Застройщик
+
+              {t("developerProfile.badge")}
             </div>
 
             <div className={styles.titleRow}>
@@ -206,7 +217,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               {isVerified && (
                 <div
                   className={styles.verifiedBadge}
-                  title="Профиль подтверждён"
+                  title={t("developerProfile.verification.verified")}
                 >
                   <CheckCircle2Icon />
                 </div>
@@ -215,16 +226,18 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
             <p className={styles.person}>
               <UserIcon />
+
               {fullName}
             </p>
 
             <p className={styles.companyType}>
               <Landmark />
-              Застройщик и девелопер
+
+              {t("developerProfile.companyType")}
             </p>
 
             <p className={styles.description}>
-              {profile.about || "Компания пока не добавила описание."}
+              {profile.about || t("developerProfile.defaults.about")}
             </p>
           </div>
 
@@ -234,15 +247,13 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             type="button"
             className={styles.edit}
             onClick={() => setEdit(true)}
-            aria-label="Редактировать профиль"
+            aria-label={t("developerProfile.actions.editAria")}
           >
             <Pencil />
           </button>
         </div>
 
-        {/* ===================================================
-            VERIFICATION
-        =================================================== */}
+        {/* VERIFICATION */}
 
         {!isVerified && (
           <div className={styles.verificationBanner}>
@@ -253,19 +264,16 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
             <div className={styles.verificationContent}>
               <div className={styles.verificationTitle}>
                 <AlertCircle />
-                Подтвердите профиль застройщика
+
+                {t("developerProfile.verification.title")}
               </div>
 
-              <p>
-                Чтобы покупатели могли видеть вашу компанию и жилые комплексы,
-                необходимо подтвердить профиль. После подтверждения ваши ЖК и
-                объявления будут доступны пользователям UyTap.
-              </p>
+              <p>{t("developerProfile.verification.description")}</p>
 
               <span className={styles.verificationWarning}>
                 <AlertCircle />
-                Если профиль не будет подтверждён, он и ваши ЖК не будут
-                отображаться покупателям.
+
+                {t("developerProfile.verification.warning")}
               </span>
             </div>
 
@@ -275,15 +283,15 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               onClick={openVerification}
             >
               <ShieldCheck />
-              Подтвердить профиль
+
+              {t("developerProfile.verification.button")}
+
               <ChevronRight />
             </button>
           </div>
         )}
 
-        {/* ===================================================
-            CONTACTS
-        =================================================== */}
+        {/* CONTACTS */}
 
         <div className={styles.contacts}>
           {user.phone && (
@@ -291,7 +299,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Phone />
 
               <div>
-                <small>Телефон</small>
+                <small>{t("developerProfile.contacts.phone")}</small>
+
                 <strong>{user.phone}</strong>
               </div>
             </div>
@@ -302,7 +311,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Mail />
 
               <div>
-                <small>Email</small>
+                <small>{t("developerProfile.contacts.email")}</small>
+
                 <strong>{user.email}</strong>
               </div>
             </div>
@@ -313,7 +323,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Hash />
 
               <div>
-                <small>ИНН</small>
+                <small>{t("developerProfile.contacts.inn")}</small>
+
                 <strong>{profile.inn}</strong>
               </div>
             </div>
@@ -324,7 +335,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <MapPin />
 
               <div>
-                <small>Офис</small>
+                <small>{t("developerProfile.contacts.office")}</small>
+
                 <strong>{profile.office_address}</strong>
               </div>
             </div>
@@ -344,7 +356,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Globe />
 
               <div>
-                <small>Сайт</small>
+                <small>{t("developerProfile.contacts.website")}</small>
 
                 <strong>{profile.website.replace(/^https?:\/\//, "")}</strong>
               </div>
@@ -354,9 +366,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           )}
         </div>
 
-        {/* ===================================================
-            ACTIONS
-        =================================================== */}
+        {/* ACTIONS */}
 
         <div className={styles.actions}>
           {whatsapp && (
@@ -367,7 +377,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               rel="noopener noreferrer"
             >
               <MessageCircle />
-              Написать в WhatsApp
+
+              {t("developerProfile.actions.whatsapp")}
             </a>
           )}
 
@@ -383,16 +394,16 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               rel="noopener noreferrer"
             >
               <Globe />
-              Перейти на сайт
+
+              {t("developerProfile.actions.website")}
+
               <ArrowUpRight />
             </a>
           )}
         </div>
       </section>
 
-      {/* =====================================================
-          STATISTICS
-      ===================================================== */}
+      {/* STATISTICS */}
 
       <section className={styles.stats}>
         <div className={styles.stat}>
@@ -403,7 +414,7 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           <div>
             <strong>{profile.projects_count || projects.length || 0}</strong>
 
-            <span>ЖК</span>
+            <span>{t("developerProfile.stats.projects")}</span>
           </div>
         </div>
 
@@ -413,16 +424,9 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
           </div>
 
           <div>
-            <strong>
-              {dbProjects.length > 0
-                ? dbProjects.reduce(
-                    (sum, project) => sum + (Number(project.apartments) || 0),
-                    0,
-                  )
-                : profile.apartments_count || 0}
-            </strong>
+            <strong>{totalApartments}</strong>
 
-            <span>квартир</span>
+            <span>{t("developerProfile.stats.apartments")}</span>
           </div>
         </div>
 
@@ -433,34 +437,32 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
           <div>
             <strong>{adsCount}</strong>
-            <span>объявлений</span>
+
+            <span>{t("developerProfile.stats.ads")}</span>
           </div>
         </div>
       </section>
 
-      {/* =====================================================
-          PROJECTS
-      ===================================================== */}
+      {/* PROJECTS */}
 
       <section className={styles.projectsSection}>
         <div className={styles.sectionHeader}>
           <div>
             <div className={styles.sectionLabel}>
               <Building2 />
-              Портфолио
+
+              {t("developerProfile.portfolio.label")}
             </div>
 
-            <h2>Мои жилые комплексы</h2>
+            <h2>{t("developerProfile.portfolio.title")}</h2>
 
-            <p>
-              Управляйте проектами и показывайте покупателям, какие ЖК строит
-              ваша компания.
-            </p>
+            <p>{t("developerProfile.portfolio.description")}</p>
           </div>
 
           <a href="/add-residential-complex" className={styles.addProject}>
             <Plus />
-            Добавить ЖК
+
+            {t("developerProfile.portfolio.add")}
           </a>
         </div>
 
@@ -470,15 +472,19 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Building2 />
             </div>
 
-            <h3>Загрузка проектов...</h3>
+            <h3>{t("developerProfile.projects.loading")}</h3>
           </div>
         ) : projects.length > 0 ? (
           <div className={styles.projectsGrid}>
             {projects.map((project, index) => {
               const name = getProjectName(project);
+
               const address = getProjectAddress(project);
+
               const image = getProjectImage(project);
+
               const status = getProjectStatus(project);
+
               const apartments = getProjectApartments(project);
 
               return (
@@ -497,18 +503,20 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
 
                     <p className={styles.projectAddress}>
                       <MapPin />
+
                       {address}
                     </p>
 
                     <div className={styles.projectMeta}>
                       <span>
                         <Home />
-                        {apartments} квартир
+                        {apartments} {t("developerProfile.project.apartments")}
                       </span>
 
                       {project.completion_date && (
                         <span>
                           <CalendarDays />
+
                           {project.completion_date}
                         </span>
                       )}
@@ -522,7 +530,8 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
                       }
                       className={styles.projectLink}
                     >
-                      Подробнее
+                      {t("developerProfile.project.details")}
+
                       <ArrowUpRight />
                     </a>
                   </div>
@@ -536,60 +545,60 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               <Building2 />
             </div>
 
-            <h3>У вас пока нет ЖК</h3>
+            <h3>{t("developerProfile.projects.empty.title")}</h3>
 
-            <p>
-              Добавьте первый жилой комплекс, чтобы покупатели могли увидеть
-              ваши проекты прямо в профиле.
-            </p>
+            <p>{t("developerProfile.projects.empty.description")}</p>
 
             <a href="/add-residential-complex" className={styles.emptyButton}>
               <Plus />
-              Добавить первый ЖК
+
+              {t("developerProfile.projects.empty.button")}
             </a>
           </div>
         )}
       </section>
 
-      {/* =====================================================
-          MENU
-      ===================================================== */}
+      {/* MENU */}
 
       <section className={styles.menu}>
         <a href="/">
           <House />
-          Главная
+
+          {t("developerProfile.menu.home")}
         </a>
 
         <a href="/profile/projects">
           <Building2 />
-          Мои ЖК
+
+          {t("developerProfile.menu.projects")}
         </a>
 
         <a href="/profile/ads">
           <Home />
-          Мои объявления
+
+          {t("developerProfile.menu.ads")}
         </a>
 
         <a href="/favorites">
           <Heart />
-          Избранное
+
+          {t("developerProfile.menu.favorites")}
         </a>
 
         <a href="/profile/tariff">
           <CreditCard />
-          Мой тариф
+
+          {t("developerProfile.menu.tariff")}
         </a>
 
         <button type="button" onClick={logout}>
           <LogOut />
-          Выйти
+
+          {t("developerProfile.menu.logout")}
         </button>
       </section>
 
-      {/* =====================================================
-          EDIT MODAL
-      ===================================================== */}
+      {/* EDIT MODAL */}
 
       {edit && <DeveloperEditModal user={user} close={() => setEdit(false)} />}
     </main>

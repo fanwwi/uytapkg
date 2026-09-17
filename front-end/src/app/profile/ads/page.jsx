@@ -10,18 +10,20 @@ import {
   CheckCircle2,
   AlertCircle,
   Home,
-  Clock3,
   Layers3,
   UserRoundArrowLeft,
   Rocket,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import {
   getMyListings,
   updateListing as updateListingApi,
   deleteListing as deleteListingApi,
 } from "@/utils/api";
+
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./Ads.module.css";
 import DeleteModal from "@/components/ui/deleteModal/DeleteMidal";
@@ -30,6 +32,7 @@ import PromoteListingModal from "./PromoteListingModal/PromoteListingModal";
 
 export default function Ads() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,42 +45,54 @@ export default function Ads() {
       "";
 
     const propertyTypeMapping = {
-      apartment: "Квартира",
-      house: "Дом",
-      land: "Участок",
-      commercial: "Коммерция",
-      room: "Комнаты",
-      garage: "Паркинг/гараж",
+      apartment: "apartment",
+      house: "house",
+      land: "land",
+      commercial: "commercial",
+      room: "room",
+      garage: "garage",
     };
 
     const statusMapping = {
-      active: "Активно",
-      moderation: "На модерации",
-      draft: "Черновик",
-      hidden: "Скрыто",
+      active: "active",
+      moderation: "moderation",
+      draft: "draft",
+      hidden: "hidden",
     };
 
     return {
       id: l.id,
-      title: l.title || "Без названия",
-      type: propertyTypeMapping[l.property_type] || "Другое",
-      location: l.city || l.region || "Кыргызстан",
+      title: l.title || t("ads.fallback.noTitle"),
+      type: propertyTypeMapping[l.property_type] || "other",
+      location: l.city || l.region || t("ads.fallback.country"),
       address: l.address || "",
       price: `${l.price?.toLocaleString() || 0} ${
-        l.currency === "USD" ? "$" : "сом"
+        l.currency === "USD" ? "$" : t("ads.currency.som")
       }`,
       image:
         mainPhoto ||
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400",
-      status: statusMapping[l.status] || "Активно",
+      status: statusMapping[l.status] || "active",
       likes: l.favorites_count || 0,
-      dealType: l.deal_type === "sale" ? "Продажа" : "Сдаю",
+      dealType: l.deal_type === "sale" ? "sale" : "rent",
       area: l.area ? `${l.area} м²` : "",
       rooms: l.rooms,
       floors: l.total_floors,
       description: l.description || "",
       raw: l,
     };
+  };
+
+  const translatePropertyType = (type) => {
+    return t(`ads.propertyTypes.${type}`);
+  };
+
+  const translateStatus = (status) => {
+    return t(`ads.statuses.${status}`);
+  };
+
+  const translateDealType = (dealType) => {
+    return t(`ads.dealTypes.${dealType}`);
   };
 
   useEffect(() => {
@@ -96,12 +111,13 @@ export default function Ads() {
         if (res.success && res.data) {
           setListings(res.data.map(mapBackendListing));
         } else {
-          setError(res.message || "Не удалось загрузить ваши объявления");
+          setError(res.message || "ads.errors.load");
         }
       })
       .catch((err) => {
         console.error("Load my listings error:", err);
-        setError("Ошибка при подключении к серверу");
+
+        setError("ads.errors.server");
       })
       .finally(() => {
         setLoading(false);
@@ -110,23 +126,27 @@ export default function Ads() {
 
   // DELETE
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [selectedListing, setSelectedListing] = useState(null);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   // EDIT
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const [editingListing, setEditingListing] = useState(null);
+
   const [isSaving, setIsSaving] = useState(false);
 
   // PROMOTE
   const [promotingListing, setPromotingListing] = useState(null);
 
   const activeCount = listings.filter(
-    (item) => item.status === "Активно",
+    (item) => item.status === "active",
   ).length;
 
   const pendingCount = listings.filter(
-    (item) => item.status === "На модерации",
+    (item) => item.status === "moderation",
   ).length;
 
   const totalLikes = listings.reduce((total, item) => total + item.likes, 0);
@@ -148,9 +168,12 @@ export default function Ads() {
   };
 
   const handleDelete = async () => {
-    if (!selectedListing || isDeleting) return;
+    if (!selectedListing || isDeleting) {
+      return;
+    }
 
     const token = localStorage.getItem("uytap_token");
+
     if (!token) return;
 
     try {
@@ -166,11 +189,12 @@ export default function Ads() {
         setIsDeleteModalOpen(false);
         setSelectedListing(null);
       } else {
-        alert(res.message || "Не удалось удалить объявление");
+        alert(res.message || t("ads.errors.delete"));
       }
     } catch (error) {
       console.error("Ошибка удаления:", error);
-      alert("Не удалось удалить объявление");
+
+      alert(t("ads.errors.delete"));
     } finally {
       setIsDeleting(false);
     }
@@ -193,9 +217,12 @@ export default function Ads() {
   };
 
   const handleSaveEdit = async (updatedListing) => {
-    if (!editingListing || isSaving) return;
+    if (!editingListing || isSaving) {
+      return;
+    }
 
     const token = localStorage.getItem("uytap_token");
+
     if (!token) return;
 
     try {
@@ -212,12 +239,27 @@ export default function Ads() {
           : Number(updatedListing.area);
 
       const propertyTypeMapping = {
+        apartment: "apartment",
+        house: "house",
+        land: "land",
+        commercial: "commercial",
+        room: "room",
+        garage: "garage",
+
         Квартира: "apartment",
         Дом: "house",
         Участок: "land",
         Коммерция: "commercial",
         Комнаты: "room",
         "Паркинг/гараж": "garage",
+      };
+
+      const dealTypeMapping = {
+        sale: "sale",
+        rent: "rent",
+
+        Продажа: "sale",
+        Сдаю: "rent",
       };
 
       const payload = {
@@ -229,9 +271,10 @@ export default function Ads() {
           editingListing.raw?.property_type ||
           "apartment",
 
-        dealType: updatedListing.dealType === "Продажа" ? "sale" : "rent",
+        dealType: dealTypeMapping[updatedListing.dealType] || "rent",
 
         price: priceVal || 100000,
+
         area: areaVal || null,
 
         rooms: updatedListing.rooms ? Number(updatedListing.rooms) : null,
@@ -241,9 +284,13 @@ export default function Ads() {
           : null,
 
         address: updatedListing.address || "",
+
         region: editingListing.raw?.region || "BISHKEK",
+
         city: editingListing.raw?.city || null,
+
         country: editingListing.raw?.country || "Кыргызстан",
+
         features: {
           ...(editingListing.raw?.features || {}),
           ...(updatedListing.features || {}),
@@ -262,11 +309,12 @@ export default function Ads() {
         setIsEditModalOpen(false);
         setEditingListing(null);
       } else {
-        alert(res.message || "Не удалось обновить объявление");
+        alert(res.message || t("ads.errors.update"));
       }
     } catch (error) {
       console.error("Ошибка обновления:", error);
-      alert("Не удалось обновить объявление");
+
+      alert(t("ads.errors.update"));
     } finally {
       setIsSaving(false);
     }
@@ -275,9 +323,7 @@ export default function Ads() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        {/* =========================
-            HEADER
-        ========================= */}
+        {/* HEADER */}
 
         <header className={styles.header}>
           <div className={styles.headerText}>
@@ -286,37 +332,32 @@ export default function Ads() {
               className={styles.homeButton}
               onClick={() => router.push("/profile")}
             >
-              <UserRoundArrowLeft size={19} />В профиль
+              <UserRoundArrowLeft size={19} />
+
+              {t("ads.header.profile")}
             </button>
-            <span className={styles.eyebrow}>Личный кабинет</span>
 
-            <h1>Мои объявления</h1>
+            <span className={styles.eyebrow}>{t("ads.header.eyebrow")}</span>
 
-            <p>
-              Управляйте своими объектами недвижимости, редактируйте публикации
-              и следите за их статусом.
-            </p>
+            <h1>{t("ads.header.title")}</h1>
+
+            <p>{t("ads.header.description")}</p>
           </div>
 
           <div className={styles.headerActions}>
-            {/* НА ГЛАВНУЮ */}
-
-            {/* ДОБАВИТЬ */}
-
             <button
               type="button"
               className={styles.addButton}
               onClick={() => router.push("/add-product")}
             >
               <Plus size={19} />
-              Добавить объявление
+
+              {t("ads.actions.add")}
             </button>
           </div>
         </header>
 
-        {/* =========================
-            STATISTICS
-        ========================= */}
+        {/* STATISTICS */}
 
         <section className={styles.stats}>
           <div className={styles.statCard}>
@@ -325,7 +366,8 @@ export default function Ads() {
             </div>
 
             <div>
-              <span>Всего объявлений</span>
+              <span>{t("ads.stats.total")}</span>
+
               <strong>{listings.length}</strong>
             </div>
           </div>
@@ -336,7 +378,8 @@ export default function Ads() {
             </div>
 
             <div>
-              <span>Активные</span>
+              <span>{t("ads.stats.active")}</span>
+
               <strong>{activeCount}</strong>
             </div>
           </div>
@@ -347,35 +390,35 @@ export default function Ads() {
             </div>
 
             <div>
-              <span>Всего избранных</span>
+              <span>{t("ads.stats.favorites")}</span>
+
               <strong>{totalLikes}</strong>
             </div>
           </div>
         </section>
 
-        {/* =========================
-            RESULT BAR
-        ========================= */}
+        {/* RESULT BAR */}
 
         <div className={styles.resultBar}>
           <div>
             <strong>{listings.length}</strong>
-            <span> объявления</span>
+
+            <span> {t("ads.resultBar.listings")}</span>
           </div>
         </div>
 
-        {/* =========================
-            LISTINGS
-        ========================= */}
+        {/* LISTINGS */}
 
         {loading ? (
           <div className={styles.loading}>
             <span className={styles.spinner} />
 
-            <div>Загрузка ваших объявлений...</div>
+            <div>{t("ads.loading")}</div>
           </div>
         ) : error ? (
-          <div className={styles.error}>{error}</div>
+          <div className={styles.error}>
+            {error.startsWith("ads.") ? t(error) : error}
+          </div>
         ) : listings.length > 0 ? (
           <section className={styles.grid}>
             {listings.map((item) => (
@@ -396,26 +439,30 @@ export default function Ads() {
                   <div className={styles.imageOverlay} />
 
                   <div className={styles.badges}>
-                    <span className={styles.typeBadge}>{item.type}</span>
+                    <span className={styles.typeBadge}>
+                      {translatePropertyType(item.type)}
+                    </span>
 
                     <span
                       className={`${styles.statusBadge} ${
-                        item.status === "Активно"
+                        item.status === "active"
                           ? styles.statusActive
                           : styles.statusPending
                       }`}
                     >
-                      {item.status === "Активно" ? (
+                      {item.status === "active" ? (
                         <CheckCircle2 size={13} />
                       ) : (
                         <AlertCircle size={13} />
                       )}
 
-                      {item.status}
+                      {translateStatus(item.status)}
                     </span>
                   </div>
 
-                  <div className={styles.imageDeal}>{item.dealType}</div>
+                  <div className={styles.imageDeal}>
+                    {translateDealType(item.dealType)}
+                  </div>
                 </div>
 
                 {/* CONTENT */}
@@ -425,6 +472,7 @@ export default function Ads() {
 
                   <div className={styles.location}>
                     <MapPin size={17} />
+
                     <span>{item.location}</span>
                   </div>
 
@@ -432,7 +480,7 @@ export default function Ads() {
                     {item.rooms && (
                       <span>
                         <Home size={15} />
-                        {item.rooms} комнат
+                        {item.rooms} {t("ads.card.rooms")}
                       </span>
                     )}
 
@@ -440,13 +488,15 @@ export default function Ads() {
 
                     <span>
                       <Heart size={15} />
+
                       {item.likes}
                     </span>
                   </div>
 
                   <div className={styles.priceRow}>
                     <div>
-                      <span>Цена</span>
+                      <span>{t("ads.card.price")}</span>
+
                       <strong>{item.price}</strong>
                     </div>
                   </div>
@@ -459,16 +509,17 @@ export default function Ads() {
                       className={styles.detailsButton}
                       onClick={() => router.push(`/profile/ads/${item.id}`)}
                     >
-                      Подробнее
+                      {t("ads.actions.details")}
                     </button>
 
                     <button
                       type="button"
                       className={styles.iconButton}
-                      aria-label="Продвинуть объявление"
-                      title="Продвинуть"
+                      aria-label={t("ads.actions.promoteAria")}
+                      title={t("ads.actions.promote")}
                       onClick={(e) => {
                         e.stopPropagation();
+
                         setPromotingListing(item);
                       }}
                     >
@@ -478,10 +529,11 @@ export default function Ads() {
                     <button
                       type="button"
                       className={styles.iconButton}
-                      aria-label="Изменить объявление"
-                      title="Изменить"
+                      aria-label={t("ads.actions.editAria")}
+                      title={t("ads.actions.edit")}
                       onClick={(e) => {
                         e.stopPropagation();
+
                         openEditModal(item);
                       }}
                     >
@@ -491,10 +543,11 @@ export default function Ads() {
                     <button
                       type="button"
                       className={`${styles.iconButton} ${styles.deleteButton}`}
-                      aria-label="Удалить объявление"
-                      title="Удалить"
+                      aria-label={t("ads.actions.deleteAria")}
+                      title={t("ads.actions.delete")}
                       onClick={(e) => {
                         e.stopPropagation();
+
                         openDeleteModal(item);
                       }}
                     >
@@ -511,39 +564,40 @@ export default function Ads() {
               <Plus size={29} />
             </div>
 
-            <h2>У вас пока нет объявлений</h2>
+            <h2>{t("ads.empty.title")}</h2>
 
-            <p>Добавьте первый объект недвижимости, чтобы он появился здесь.</p>
+            <p>{t("ads.empty.description")}</p>
 
             <button type="button" onClick={() => router.push("/add-product")}>
               <Plus size={18} />
-              Добавить объявление
+
+              {t("ads.actions.add")}
             </button>
           </div>
         )}
 
-        {/* =========================
-            DELETE MODAL
-        ========================= */}
+        {/* DELETE MODAL */}
 
         <DeleteModal
           isOpen={isDeleteModalOpen}
           onClose={closeDeleteModal}
           onConfirm={handleDelete}
           loading={isDeleting}
-          title="Удалить объявление?"
+          title={t("ads.deleteModal.title")}
           description={
             selectedListing
-              ? `Вы действительно хотите удалить объявление «${selectedListing.title}»? Это действие нельзя отменить.`
-              : "Это действие нельзя отменить. Объявление будет удалено без возможности восстановления."
+              ? `${t(
+                  "ads.deleteModal.descriptionStart",
+                )} «${selectedListing.title}»? ${t(
+                  "ads.deleteModal.descriptionEnd",
+                )}`
+              : t("ads.deleteModal.descriptionFallback")
           }
-          confirmText="Удалить"
-          cancelText="Отмена"
+          confirmText={t("ads.actions.delete")}
+          cancelText={t("ads.actions.cancel")}
         />
 
-        {/* =========================
-            EDIT MODAL
-        ========================= */}
+        {/* EDIT MODAL */}
 
         <AdsEditModal
           isOpen={isEditModalOpen}
@@ -553,9 +607,7 @@ export default function Ads() {
           loading={isSaving}
         />
 
-        {/* =========================
-            PROMOTE MODAL
-        ========================= */}
+        {/* PROMOTE MODAL */}
 
         <PromoteListingModal
           isOpen={Boolean(promotingListing)}

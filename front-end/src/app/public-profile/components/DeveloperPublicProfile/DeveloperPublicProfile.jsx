@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { mapListingData } from "@/utils/mapListingData";
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./DeveloperPublicProfile.module.css";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
@@ -28,6 +29,8 @@ export default function DeveloperPublicProfile({
   favIds = new Set(),
   onFavoriteClick,
 }) {
+  const { t } = useLanguage();
+
   const [activeTab, setActiveTab] = useState("complexes");
 
   if (!user) return null;
@@ -35,11 +38,13 @@ export default function DeveloperPublicProfile({
   const profile = user.profile || {};
 
   const company =
-    profile.company_name || profile.company || "Строительная компания";
+    profile.company_name ||
+    profile.company ||
+    t("developerPublicProfile.defaults.company");
 
   const fullName =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
-    "Представитель компании";
+    t("developerPublicProfile.defaults.representative");
 
   const avatar =
     profile.avatar_url ||
@@ -69,13 +74,16 @@ export default function DeveloperPublicProfile({
     : "";
 
   const getProjectName = (project) =>
-    project.name || project.title || project.project_name || "Жилой комплекс";
+    project.name ||
+    project.title ||
+    project.project_name ||
+    t("developerPublicProfile.defaults.project");
 
   const getProjectAddress = (project) =>
     project.address ||
     project.location ||
     project.office_address ||
-    "Адрес не указан";
+    t("developerPublicProfile.defaults.address");
 
   const getProjectImage = (project) =>
     project.cover_photo ||
@@ -93,10 +101,18 @@ export default function DeveloperPublicProfile({
       status === "complete" ||
       status === "finished"
     ) {
-      return "Сдан";
+      return t("developerPublicProfile.projectStatuses.completed");
     }
 
-    return "Строится";
+    return t("developerPublicProfile.projectStatuses.building");
+  };
+
+  const isProjectCompleted = (project) => {
+    const status = project.completion_status || project.status || "building";
+
+    return (
+      status === "completed" || status === "complete" || status === "finished"
+    );
   };
 
   const getProjectApartments = (project) =>
@@ -113,7 +129,7 @@ export default function DeveloperPublicProfile({
 
       <Link href="/" className={styles.backButton}>
         <ArrowLeft size={17} />
-        <span>На главную</span>
+        <span>{t("developerPublicProfile.topBar.home")}</span>
       </Link>
 
       <section className={styles.profileCard}>
@@ -130,7 +146,7 @@ export default function DeveloperPublicProfile({
             {user.isVerified && (
               <div
                 className={styles.avatarVerified}
-                title="Проверенная компания"
+                title={t("developerPublicProfile.verifiedCompany")}
               >
                 <CheckCircle2 />
               </div>
@@ -143,13 +159,13 @@ export default function DeveloperPublicProfile({
             <div className={styles.badges}>
               <span className={styles.typeBadge}>
                 <Building2 />
-                Застройщик
+                {t("developerPublicProfile.type")}
               </span>
 
               {user.isVerified && (
                 <span className={styles.verifiedBadge}>
                   <CheckCircle2 />
-                  Проверено
+                  {t("developerPublicProfile.verified")}
                 </span>
               )}
             </div>
@@ -159,7 +175,7 @@ export default function DeveloperPublicProfile({
             <div className={styles.representative}>
               <User />
 
-              <span>Представитель</span>
+              <span>{t("developerPublicProfile.representative.label")}</span>
 
               <strong>{fullName}</strong>
             </div>
@@ -172,11 +188,12 @@ export default function DeveloperPublicProfile({
           <span className={styles.sectionNumber}>01</span>
 
           <div>
-            <span className={styles.sectionCaption}>О компании</span>
+            <span className={styles.sectionCaption}>
+              {t("developerPublicProfile.about.label")}
+            </span>
 
             <p className={styles.description}>
-              {profile.about ||
-                "Компания пока не добавила описание своей деятельности."}
+              {profile.about || t("developerPublicProfile.defaults.about")}
             </p>
           </div>
         </div>
@@ -191,7 +208,8 @@ export default function DeveloperPublicProfile({
               </div>
 
               <div className={styles.contactContent}>
-                <span>Телефон</span>
+                <span>{t("developerPublicProfile.contacts.phone")}</span>
+
                 <strong>{phone}</strong>
               </div>
 
@@ -206,7 +224,8 @@ export default function DeveloperPublicProfile({
               </div>
 
               <div className={styles.contactContent}>
-                <span>Email</span>
+                <span>{t("developerPublicProfile.contacts.email")}</span>
+
                 <strong>{email}</strong>
               </div>
 
@@ -221,7 +240,8 @@ export default function DeveloperPublicProfile({
               </div>
 
               <div className={styles.contactContent}>
-                <span>Офис</span>
+                <span>{t("developerPublicProfile.contacts.office")}</span>
+
                 <strong>{profile.office_address}</strong>
               </div>
             </div>
@@ -234,7 +254,8 @@ export default function DeveloperPublicProfile({
               </div>
 
               <div className={styles.contactContent}>
-                <span>ИНН</span>
+                <span>{t("developerPublicProfile.contacts.inn")}</span>
+
                 <strong>{profile.inn}</strong>
               </div>
             </div>
@@ -252,7 +273,7 @@ export default function DeveloperPublicProfile({
               </div>
 
               <div className={styles.contactContent}>
-                <span>Сайт</span>
+                <span>{t("developerPublicProfile.contacts.website")}</span>
 
                 <strong>{profile.website.replace(/^https?:\/\//, "")}</strong>
               </div>
@@ -274,7 +295,9 @@ export default function DeveloperPublicProfile({
                 className={styles.primaryAction}
               >
                 <MessageCircle />
-                Написать в WhatsApp
+
+                {t("developerPublicProfile.actions.whatsapp")}
+
                 <ArrowUpRight />
               </a>
             )}
@@ -287,7 +310,9 @@ export default function DeveloperPublicProfile({
                 className={styles.secondaryAction}
               >
                 <Globe />
-                Перейти на сайт
+
+                {t("developerPublicProfile.actions.website")}
+
                 <ArrowUpRight />
               </a>
             )}
@@ -313,7 +338,8 @@ export default function DeveloperPublicProfile({
 
           <div className={styles.statContent}>
             <strong>{projects.length}</strong>
-            <span>Жилых комплексов</span>
+
+            <span>{t("developerPublicProfile.stats.complexes")}</span>
           </div>
 
           <ChevronRight className={styles.statArrow} />
@@ -332,7 +358,8 @@ export default function DeveloperPublicProfile({
 
           <div className={styles.statContent}>
             <strong>{ads.length}</strong>
-            <span>Объявлений</span>
+
+            <span>{t("developerPublicProfile.stats.ads")}</span>
           </div>
 
           <ChevronRight className={styles.statArrow} />
@@ -349,25 +376,28 @@ export default function DeveloperPublicProfile({
         <div className={styles.contentHeader}>
           <div>
             <span className={styles.contentEyebrow}>
-              {activeTab === "complexes" ? "02 / ПРОЕКТЫ" : "02 / НЕДВИЖИМОСТЬ"}
+              {activeTab === "complexes"
+                ? `02 / ${t("developerPublicProfile.tabs.projectsShort")}`
+                : `02 / ${t("developerPublicProfile.tabs.realEstateShort")}`}
             </span>
 
             <h2>
               {activeTab === "complexes"
-                ? "Жилые комплексы"
-                : "Объявления застройщика"}
+                ? t("developerPublicProfile.content.complexes.title")
+                : t("developerPublicProfile.content.ads.title")}
             </h2>
 
             <p>
               {activeTab === "complexes"
-                ? "Проекты, которые развивает компания"
-                : "Актуальные предложения компании"}
+                ? t("developerPublicProfile.content.complexes.description")
+                : t("developerPublicProfile.content.ads.description")}
             </p>
           </div>
 
           <div className={styles.contentCount}>
             {activeTab === "complexes" ? projects.length : ads.length}
-            <span>объектов</span>
+
+            <span>{t("developerPublicProfile.content.count")}</span>
           </div>
         </div>
 
@@ -393,12 +423,13 @@ export default function DeveloperPublicProfile({
 
                       <div
                         className={`${styles.projectStatus} ${
-                          getProjectStatus(project) === "Сдан"
+                          isProjectCompleted(project)
                             ? styles.completed
                             : styles.building
                         }`}
                       >
                         <span />
+
                         {getProjectStatus(project)}
                       </div>
 
@@ -422,12 +453,18 @@ export default function DeveloperPublicProfile({
                         <div className={styles.projectMeta}>
                           <Home />
 
-                          <span>{getProjectApartments(project)} квартир</span>
+                          <span>
+                            {getProjectApartments(project)}{" "}
+                            {t("developerPublicProfile.project.apartments")}
+                          </span>
                         </div>
                       )}
 
                       <div className={styles.projectLink}>
-                        <span>Подробнее о комплексе</span>
+                        <span>
+                          {t("developerPublicProfile.project.details")}
+                        </span>
+
                         <ArrowUpRight />
                       </div>
                     </div>
@@ -440,9 +477,9 @@ export default function DeveloperPublicProfile({
                   <Building2 />
                 </div>
 
-                <h3>Пока нет жилых комплексов</h3>
+                <h3>{t("developerPublicProfile.empty.complexes.title")}</h3>
 
-                <p>У этой компании пока нет зарегистрированных проектов.</p>
+                <p>{t("developerPublicProfile.empty.complexes.description")}</p>
               </div>
             )}
           </>
@@ -471,9 +508,9 @@ export default function DeveloperPublicProfile({
                   <Home />
                 </div>
 
-                <h3>Пока нет активных объявлений</h3>
+                <h3>{t("developerPublicProfile.empty.ads.title")}</h3>
 
-                <p>У застройщика пока нет опубликованных предложений.</p>
+                <p>{t("developerPublicProfile.empty.ads.description")}</p>
               </div>
             )}
           </>

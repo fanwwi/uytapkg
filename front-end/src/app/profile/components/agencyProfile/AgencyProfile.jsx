@@ -24,7 +24,15 @@ import {
 import styles from "./AgencyProfile.module.css";
 import AgencyEditModal from "./agencyEdit/AgencyEditModal";
 
-export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }) {
+import { useLanguage } from "@/context/LanguageContext";
+
+export default function AgencyProfile({
+  user,
+  adsCount = 0,
+  favoritesCount = 0,
+}) {
+  const { t } = useLanguage();
+
   const [openEdit, setOpenEdit] = useState(false);
 
   if (!user) return null;
@@ -39,11 +47,12 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
     user.avatar ||
     "/assets/AgencyImage.png";
 
-  const companyName = profile.company_name || "Агентство недвижимости";
+  const companyName =
+    profile.company_name || t("agencyProfile.defaults.companyName");
 
   const director =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
-    "Руководитель";
+    t("agencyProfile.defaults.director");
 
   const phone = user.phone || "";
   const whatsappNumber = phone.replace(/\D/g, "");
@@ -67,7 +76,7 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
       <div className={styles.topBar}>
         <Link href="/" className={styles.homeButton}>
           <ArrowLeft />
-          На главную
+          {t("agencyProfile.topBar.home")}
         </Link>
       </div>
 
@@ -105,7 +114,10 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
             <h1>{companyName}</h1>
 
             {user.isVerified && (
-              <span className={styles.verified} title="Подтверждено">
+              <span
+                className={styles.verified}
+                title={t("agencyProfile.verified")}
+              >
                 <Check />
               </span>
             )}
@@ -113,14 +125,14 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
 
           <span className={styles.type}>
             <Building2 />
-            Агентство недвижимости
+            {t("agencyProfile.type")}
           </span>
 
           <div className={styles.director}>
             <User />
 
             <span>
-              Руководитель: <strong>{director}</strong>
+              {t("agencyProfile.director.label")} <strong>{director}</strong>
             </span>
           </div>
 
@@ -161,7 +173,7 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
           type="button"
           className={styles.edit}
           onClick={() => setOpenEdit(true)}
-          aria-label="Редактировать профиль"
+          aria-label={t("agencyProfile.actions.editAria")}
         >
           <Pencil />
         </button>
@@ -172,10 +184,11 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
       <section className={styles.about}>
         <div className={styles.sectionTitle}>
           <Building2 />
-          <h3>Об агентстве</h3>
+
+          <h3>{t("agencyProfile.about.title")}</h3>
         </div>
 
-        <p>{profile.about || "Агентство пока не добавило описание."}</p>
+        <p>{profile.about || t("agencyProfile.about.empty")}</p>
       </section>
 
       {/* COMPANY DETAILS */}
@@ -189,7 +202,8 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
               </div>
 
               <div>
-                <span>Офис</span>
+                <span>{t("agencyProfile.details.office")}</span>
+
                 <strong>{officeAddress}</strong>
               </div>
             </div>
@@ -207,7 +221,8 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
               </div>
 
               <div>
-                <span>Веб-сайт</span>
+                <span>{t("agencyProfile.details.website")}</span>
+
                 <strong>{website}</strong>
               </div>
             </a>
@@ -220,14 +235,17 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
       <section className={styles.stats}>
         <div className={styles.stat}>
           <strong>{adsCount}</strong>
-          <span>Объявлений</span>
+
+          <span>{t("agencyProfile.stats.ads")}</span>
         </div>
 
         <div className={styles.stat}>
           <strong>{favoritesCount}</strong>
-          <span>Избранных</span>
+
+          <span>{t("agencyProfile.stats.favorites")}</span>
         </div>
       </section>
+
       {/* ACTIONS */}
 
       <section className={styles.actions}>
@@ -237,8 +255,9 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
           </div>
 
           <div>
-            <h3>Мои объявления</h3>
-            <p>Управление объектами</p>
+            <h3>{t("agencyProfile.actions.myAds.title")}</h3>
+
+            <p>{t("agencyProfile.actions.myAds.description")}</p>
           </div>
         </Link>
 
@@ -248,8 +267,9 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
           </div>
 
           <div>
-            <h3>Избранное</h3>
-            <p>Сохраненные объекты</p>
+            <h3>{t("agencyProfile.actions.favorites.title")}</h3>
+
+            <p>{t("agencyProfile.actions.favorites.description")}</p>
           </div>
         </Link>
 
@@ -259,8 +279,9 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
           </div>
 
           <div>
-            <h3>Мой тариф</h3>
-            <p>Управление подпиской</p>
+            <h3>{t("agencyProfile.actions.tariff.title")}</h3>
+
+            <p>{t("agencyProfile.actions.tariff.description")}</p>
           </div>
         </Link>
 
@@ -270,8 +291,9 @@ export default function AgencyProfile({ user, adsCount = 0, favoritesCount = 0 }
           </div>
 
           <div>
-            <h3>Выйти</h3>
-            <p>Завершить сессию</p>
+            <h3>{t("agencyProfile.actions.logout.title")}</h3>
+
+            <p>{t("agencyProfile.actions.logout.description")}</p>
           </div>
         </button>
       </section>

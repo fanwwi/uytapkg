@@ -20,8 +20,11 @@ import {
 import styles from "./AgencyEditModal.module.css";
 
 import { getMe, updateMe } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AgencyEditModal({ user, close }) {
+  const { t } = useLanguage();
+
   const profile = user?.profile || {};
 
   const DEFAULT_LOGO = "/assets/AgencyImage.png";
@@ -65,33 +68,16 @@ export default function AgencyEditModal({ user, close }) {
 
   const [about, setAbout] = useState(profile.about || "");
 
-  /*
-   * Дефолтная картинка показывается сразу.
-   */
-
   const [logo, setLogo] = useState(initialLogo || DEFAULT_LOGO);
 
-  /*
-   * Реальный выбранный файл.
-   */
-
   const [logoFile, setLogoFile] = useState(null);
-
-  /*
-   * true только если пользователь нажал
-   * "Удалить логотип".
-   */
 
   const [logoRemoved, setLogoRemoved] = useState(false);
 
   /*
    * =========================================================
-   * НУЖНО ЛИ ПОКАЗЫВАТЬ КНОПКУ "УДАЛИТЬ"
+   * CUSTOM LOGO
    * =========================================================
-   *
-   * Если стоит AgencyImage.png — кнопки нет.
-   *
-   * Если пользовательский логотип — кнопка есть.
    */
 
   const hasCustomLogo =
@@ -112,14 +98,12 @@ export default function AgencyEditModal({ user, close }) {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Размер изображения не должен превышать 5 МБ");
+      alert(t("agencyEditModal.errors.logoSize"));
       return;
     }
 
     setLogoFile(file);
-
     setLogoRemoved(false);
-
     setLogo(URL.createObjectURL(file));
   }
 
@@ -131,13 +115,7 @@ export default function AgencyEditModal({ user, close }) {
 
   function removeLogo() {
     setLogoFile(null);
-
     setLogoRemoved(true);
-
-    /*
-     * Сразу показываем дефолтную картинку.
-     */
-
     setLogo(DEFAULT_LOGO);
   }
 
@@ -151,7 +129,7 @@ export default function AgencyEditModal({ user, close }) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error("Не удалось получить изображение");
+      throw new Error(t("agencyEditModal.errors.imageFetch"));
     }
 
     const blob = await response.blob();
@@ -169,11 +147,7 @@ export default function AgencyEditModal({ user, close }) {
 
   async function getLogoFile() {
     /*
-     * -------------------------------------------------------
-     * 1. ПОЛЬЗОВАТЕЛЬ УДАЛИЛ ЛОГОТИП
-     * -------------------------------------------------------
-     *
-     * Всегда отправляем AgencyImage.png
+     * 1. Пользователь удалил логотип
      */
 
     if (logoRemoved) {
@@ -181,9 +155,7 @@ export default function AgencyEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 2. ВЫБРАЛ НОВЫЙ ЛОГОТИП
-     * -------------------------------------------------------
+     * 2. Выбран новый логотип
      */
 
     if (logoFile) {
@@ -191,11 +163,7 @@ export default function AgencyEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 3. ЛОГОТИП НЕ МЕНЯЛИ
-     * -------------------------------------------------------
-     *
-     * Повторно отправляем существующий.
+     * 3. Логотип не меняли
      */
 
     if (initialLogo && initialLogo !== DEFAULT_LOGO) {
@@ -203,9 +171,7 @@ export default function AgencyEditModal({ user, close }) {
     }
 
     /*
-     * -------------------------------------------------------
-     * 4. ЛОГОТИПА ИЗНАЧАЛЬНО НЕ БЫЛО
-     * -------------------------------------------------------
+     * 4. Логотипа изначально не было
      */
 
     return await fileFromUrl(DEFAULT_LOGO, "AgencyImage.png");
@@ -241,14 +207,12 @@ export default function AgencyEditModal({ user, close }) {
       const token = getToken();
 
       if (!token) {
-        throw new Error(
-          "Сессия не найдена. Пожалуйста, войдите в аккаунт заново.",
-        );
+        throw new Error(t("agencyEditModal.errors.session"));
       }
 
       /*
        * =====================================================
-       * 1. ВСЕГДА ПОЛУЧАЕМ ФАЙЛ ЛОГОТИПА
+       * 1. GET LOGO
        * =====================================================
        */
 
@@ -268,10 +232,6 @@ export default function AgencyEditModal({ user, close }) {
 
       form.append("about", about.trim());
 
-      /*
-       * Логотип отправляем ВСЕГДА.
-       */
-
       form.append("avatar", finalLogoFile);
 
       const avatarResponse = await fetch("/api/auth/avatar", {
@@ -287,7 +247,9 @@ export default function AgencyEditModal({ user, close }) {
       const avatarResult = await avatarResponse.json().catch(() => ({}));
 
       if (!avatarResponse.ok || !avatarResult.success) {
-        throw new Error(avatarResult.message || "Не удалось сохранить логотип");
+        throw new Error(
+          avatarResult.message || t("agencyEditModal.errors.logoSave"),
+        );
       }
 
       /*
@@ -310,18 +272,9 @@ export default function AgencyEditModal({ user, close }) {
         about: about.trim(),
       };
 
-      /*
-       * Телефон обновляем только если изменился.
-       */
-
       if (phone !== user?.phone) {
         payload.phone = phone.trim();
       }
-
-      /*
-       * Email тоже отправляем, если backend поддерживает
-       * это поле.
-       */
 
       if (email !== user?.email) {
         payload.email = email.trim();
@@ -339,11 +292,8 @@ export default function AgencyEditModal({ user, close }) {
 
       /*
        * =====================================================
-       * 5. НОРМАЛИЗУЕМ ЛОГОТИП НА FRONTEND
+       * 5. NORMALIZE LOGO
        * =====================================================
-       *
-       * Если backend не вернул картинку после удаления,
-       * всё равно оставляем AgencyImage.png.
        */
 
       const freshProfile = freshUser?.profile || {};
@@ -433,7 +383,7 @@ export default function AgencyEditModal({ user, close }) {
     } catch (error) {
       console.error("AGENCY PROFILE SAVE ERROR:", error);
 
-      alert(error?.message || "Не удалось сохранить изменения");
+      alert(error?.message || t("agencyEditModal.errors.save"));
     } finally {
       setLoading(false);
     }
@@ -453,27 +403,26 @@ export default function AgencyEditModal({ user, close }) {
           className={styles.close}
           onClick={close}
           disabled={loading}
+          aria-label={t("agencyEditModal.actions.close")}
         >
           <X />
         </button>
 
         <div className={styles.scroll}>
           <header className={styles.header}>
-            <h2>Редактирование профиля</h2>
+            <h2>{t("agencyEditModal.header.title")}</h2>
 
-            <p>Обновите данные вашего агентства</p>
+            <p>{t("agencyEditModal.header.description")}</p>
           </header>
 
-          {/* =================================================
-              LOGO
-          ================================================= */}
+          {/* LOGO */}
 
           <div className={styles.avatarBlock}>
             <div className={styles.avatarWrapper}>
               <div className={styles.avatar}>
                 <img
                   src={logo || DEFAULT_LOGO}
-                  alt={companyName || "Логотип агентства"}
+                  alt={companyName || t("agencyEditModal.logoAlt")}
                 />
               </div>
             </div>
@@ -482,7 +431,7 @@ export default function AgencyEditModal({ user, close }) {
               <label className={styles.upload}>
                 <Camera size={17} />
 
-                <span>Изменить логотип</span>
+                <span>{t("agencyEditModal.logo.change")}</span>
 
                 <input
                   hidden
@@ -502,15 +451,13 @@ export default function AgencyEditModal({ user, close }) {
                 >
                   <Trash2 size={17} />
 
-                  <span>Удалить логотип</span>
+                  <span>{t("agencyEditModal.logo.remove")}</span>
                 </button>
               )}
             </div>
           </div>
 
-          {/* =================================================
-              FIELDS
-          ================================================= */}
+          {/* FIELDS */}
 
           <div className={styles.fields}>
             <div className={styles.inputBox}>
@@ -519,7 +466,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Название агентства"
+                placeholder={t("agencyEditModal.fields.companyName")}
                 disabled={loading}
               />
             </div>
@@ -530,7 +477,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={directorName}
                 onChange={(e) => setDirectorName(e.target.value)}
-                placeholder="Руководитель"
+                placeholder={t("agencyEditModal.fields.director")}
                 disabled={loading}
               />
             </div>
@@ -541,7 +488,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={inn}
                 onChange={(e) => setInn(e.target.value)}
-                placeholder="ИНН"
+                placeholder={t("agencyEditModal.fields.inn")}
                 disabled={loading}
               />
             </div>
@@ -552,7 +499,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Телефон"
+                placeholder={t("agencyEditModal.fields.phone")}
                 disabled={loading}
               />
             </div>
@@ -563,7 +510,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder={t("agencyEditModal.fields.email")}
                 disabled={loading}
               />
             </div>
@@ -574,7 +521,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Адрес офиса"
+                placeholder={t("agencyEditModal.fields.address")}
                 disabled={loading}
               />
             </div>
@@ -585,7 +532,7 @@ export default function AgencyEditModal({ user, close }) {
               <input
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                placeholder="Сайт"
+                placeholder={t("agencyEditModal.fields.website")}
                 disabled={loading}
               />
             </div>
@@ -596,15 +543,13 @@ export default function AgencyEditModal({ user, close }) {
               <textarea
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder="Описание агентства"
+                placeholder={t("agencyEditModal.fields.about")}
                 disabled={loading}
               />
             </div>
           </div>
 
-          {/* =================================================
-              SAVE
-          ================================================= */}
+          {/* SAVE */}
 
           <button
             type="button"
@@ -614,7 +559,9 @@ export default function AgencyEditModal({ user, close }) {
           >
             <Check size={18} />
 
-            {loading ? "Сохраняем..." : "Сохранить изменения"}
+            {loading
+              ? t("agencyEditModal.actions.saving")
+              : t("agencyEditModal.actions.save")}
           </button>
         </div>
       </div>

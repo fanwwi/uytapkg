@@ -2,37 +2,39 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Crown, Zap, Rocket, Camera, ArrowRight, AlertCircle } from "lucide-react";
+import {
+  X,
+  Crown,
+  Zap,
+  Rocket,
+  Camera,
+  ArrowRight,
+  AlertCircle,
+} from "lucide-react";
 
 import { getPricing } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
+
 import styles from "./PromoteListingModal.module.css";
 
 const SERVICES = [
   {
     id: "vip",
-    title: "VIP",
-    description: "Закрепление в самом верху каталога + золотая рамка",
     icon: Crown,
     perDay: true,
   },
   {
     id: "top",
-    title: "ТОП",
-    description: "Подъём и закрепление выше стандартных карточек",
     icon: Rocket,
     perDay: true,
   },
   {
     id: "urgent",
-    title: "Срочно",
-    description: "Красный бейдж + попадание в фильтр «Срочные продажи»",
     icon: Zap,
     perDay: true,
   },
   {
     id: "instagram",
-    title: "Instagram",
-    description: "Пост + Stories + дублирование в Telegram",
     icon: Camera,
     perDay: false,
   },
@@ -42,6 +44,7 @@ const DAY_OPTIONS = [1, 3, 7, 14, 30];
 
 export default function PromoteListingModal({ isOpen, onClose, listing }) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [pricing, setPricing] = useState(null);
   const [pricingError, setPricingError] = useState("");
@@ -59,7 +62,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
       .then((data) => setPricing(data))
       .catch((err) => {
         console.error("Ошибка загрузки цен продвижения:", err);
-        setPricingError("Не удалось загрузить актуальные цены. Попробуйте позже.");
+
+        setPricingError("promoteListingModal.errors.pricing");
       });
   }, [isOpen]);
 
@@ -67,17 +71,22 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
     if (!isOpen) return;
 
     const handleEscape = (event) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+      }
     };
 
     document.addEventListener("keydown", handleEscape);
+
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   if (!isOpen || !listing) return null;
 
-  const selected = SERVICES.find((s) => s.id === serviceType);
+  const selected = SERVICES.find((service) => service.id === serviceType);
+
   const pricePerUnit = pricing?.services?.[serviceType];
+
   const total = pricing
     ? selected.perDay
       ? Number(pricePerUnit) * days
@@ -98,22 +107,52 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
     router.push(`/payment?${params.toString()}`);
   };
 
+  const getServiceTitle = (serviceId) => {
+    return t(`promoteListingModal.services.${serviceId}.title`);
+  };
+
+  const getServiceDescription = (serviceId) => {
+    return t(`promoteListingModal.services.${serviceId}.description`);
+  };
+
+  const getServicePeriod = (service) => {
+    return service.perDay
+      ? t("promoteListingModal.pricing.perDay")
+      : t("promoteListingModal.pricing.oneTime");
+  };
+
   return (
     <div
       className={styles.overlay}
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
       }}
     >
-      <div className={styles.modal}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="promote-modal-title"
+      >
         <div className={styles.header}>
           <div>
-            <span>ПРОДВИЖЕНИЕ</span>
-            <h2>Продвинуть объявление</h2>
+            <span>{t("promoteListingModal.header.label")}</span>
+
+            <h2 id="promote-modal-title">
+              {t("promoteListingModal.header.title")}
+            </h2>
+
             <p>{listing.title}</p>
           </div>
 
-          <button type="button" className={styles.close} onClick={onClose} aria-label="Закрыть">
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label={t("promoteListingModal.actions.close")}
+          >
             <X />
           </button>
         </div>
@@ -122,7 +161,10 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
           {pricingError && (
             <div className={styles.error}>
               <AlertCircle size={14} />
-              {pricingError}
+
+              {pricingError.startsWith("promoteListingModal.")
+                ? t(pricingError)
+                : pricingError}
             </div>
           )}
 
@@ -130,13 +172,16 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             {SERVICES.map((service) => {
               const Icon = service.icon;
               const isSelected = serviceType === service.id;
+
               const price = pricing?.services?.[service.id];
 
               return (
                 <button
                   key={service.id}
                   type="button"
-                  className={`${styles.serviceCard} ${isSelected ? styles.serviceSelected : ""}`}
+                  className={`${styles.serviceCard} ${
+                    isSelected ? styles.serviceSelected : ""
+                  }`}
                   onClick={() => setServiceType(service.id)}
                 >
                   <div className={styles.serviceIcon}>
@@ -144,15 +189,17 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
                   </div>
 
                   <div className={styles.serviceInfo}>
-                    <strong>{service.title}</strong>
-                    <span>{service.description}</span>
+                    <strong>{getServiceTitle(service.id)}</strong>
+
+                    <span>{getServiceDescription(service.id)}</span>
                   </div>
 
                   <div className={styles.servicePrice}>
                     {price !== undefined ? (
                       <>
-                        {Number(price).toLocaleString("ru-RU")} сом
-                        <small>{service.perDay ? "/ день" : "разово"}</small>
+                        {Number(price).toLocaleString("ru-RU")}{" "}
+                        {t("promoteListingModal.pricing.currency")}
+                        <small>{getServicePeriod(service)}</small>
                       </>
                     ) : (
                       "—"
@@ -165,17 +212,21 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
 
           {selected.perDay && (
             <div className={styles.daysSection}>
-              <span className={styles.daysLabel}>На сколько дней</span>
+              <span className={styles.daysLabel}>
+                {t("promoteListingModal.days.label")}
+              </span>
 
               <div className={styles.daysGrid}>
                 {DAY_OPTIONS.map((option) => (
                   <button
                     key={option}
                     type="button"
-                    className={`${styles.dayOption} ${days === option ? styles.dayOptionSelected : ""}`}
+                    className={`${styles.dayOption} ${
+                      days === option ? styles.dayOptionSelected : ""
+                    }`}
                     onClick={() => setDays(option)}
                   >
-                    {option} дн.
+                    {option} {t("promoteListingModal.days.short")}
                   </button>
                 ))}
               </div>
@@ -185,8 +236,15 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
 
         <div className={styles.footer}>
           <div className={styles.total}>
-            <span>Итого</span>
-            <strong>{total !== null ? `${total.toLocaleString("ru-RU")} сом` : "—"}</strong>
+            <span>{t("promoteListingModal.total.label")}</span>
+
+            <strong>
+              {total !== null
+                ? `${total.toLocaleString("ru-RU")} ${t(
+                    "promoteListingModal.pricing.currency",
+                  )}`
+                : "—"}
+            </strong>
           </div>
 
           <button
@@ -195,7 +253,8 @@ export default function PromoteListingModal({ isOpen, onClose, listing }) {
             onClick={handleSubmit}
             disabled={!pricing}
           >
-            Перейти к оплате
+            {t("promoteListingModal.actions.payment")}
+
             <ArrowRight size={16} />
           </button>
         </div>

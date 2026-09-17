@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { mapListingData } from "@/utils/mapListingData";
+import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./AgencyPublicProfile.module.css";
 import ListingCard from "@/components/ui/ListingCard/ListingCard";
@@ -28,6 +29,8 @@ export default function AgencyPublicProfile({
   favIds = new Set(),
   onFavoriteClick,
 }) {
+  const { t } = useLanguage();
+
   if (!profile) return null;
 
   const data = profile.profile || {};
@@ -41,10 +44,13 @@ export default function AgencyPublicProfile({
     "/assets/AgencyImage.png";
 
   const companyName =
-    data.company_name || data.company || "Агентство недвижимости";
+    data.company_name ||
+    data.company ||
+    t("agencyPublicProfile.defaults.companyName");
 
   const director =
-    `${data.first_name || ""} ${data.last_name || ""}`.trim() || "Руководитель";
+    `${data.first_name || ""} ${data.last_name || ""}`.trim() ||
+    t("agencyPublicProfile.defaults.director");
 
   const phone = profile.phone || "";
   const email = profile.email || "";
@@ -67,14 +73,11 @@ export default function AgencyPublicProfile({
         {/* =====================================================
             HERO
         ===================================================== */}
+
         <Link href="/" className={styles.backButton}>
           <ArrowLeft size={17} />
-          <span>На главную</span>
+          <span>{t("agencyPublicProfile.topBar.home")}</span>
         </Link>
-
-        {/* =====================================================
-      HERO
-  ===================================================== */}
 
         <motion.section
           className={styles.hero}
@@ -87,13 +90,13 @@ export default function AgencyPublicProfile({
           <div className={styles.heroTopLine}>
             <span className={styles.heroLabel}>
               <Building2 size={14} />
-              Агентство недвижимости
+              {t("agencyPublicProfile.type")}
             </span>
 
             {profile.isVerified && (
               <span className={styles.verified}>
                 <Check size={14} />
-                Проверено
+                {t("agencyPublicProfile.verified")}
               </span>
             )}
           </div>
@@ -119,21 +122,22 @@ export default function AgencyPublicProfile({
                   <User size={15} />
                 </span>
 
-                <span className={styles.directorLabel}>Руководитель</span>
+                <span className={styles.directorLabel}>
+                  {t("agencyPublicProfile.director.label")}
+                </span>
 
                 <strong>{director}</strong>
               </div>
 
               <p className={styles.heroDescription}>
-                {data.about ||
-                  "Профессиональное агентство недвижимости. Подбор, продажа и аренда объектов недвижимости."}
+                {data.about || t("agencyPublicProfile.defaults.about")}
               </p>
 
               <div className={styles.actions}>
                 {phone && (
                   <a href={`tel:${phone}`} className={styles.primaryButton}>
                     <Phone size={16} />
-                    Позвонить
+                    {t("agencyPublicProfile.actions.call")}
                   </a>
                 )}
 
@@ -145,7 +149,7 @@ export default function AgencyPublicProfile({
                     className={styles.secondaryButton}
                   >
                     <MessageCircle size={16} />
-                    WhatsApp
+                    {t("agencyPublicProfile.actions.whatsapp")}
                     <ArrowUpRight size={14} />
                   </a>
                 )}
@@ -156,7 +160,7 @@ export default function AgencyPublicProfile({
                     className={styles.secondaryButton}
                   >
                     <Mail size={16} />
-                    Email
+                    {t("agencyPublicProfile.actions.email")}
                   </a>
                 )}
               </div>
@@ -173,7 +177,7 @@ export default function AgencyPublicProfile({
 
               <div>
                 <strong>{activeAds}</strong>
-                <span>Активных объявлений</span>
+                <span>{t("agencyPublicProfile.stats.activeAds")}</span>
               </div>
             </div>
 
@@ -186,7 +190,7 @@ export default function AgencyPublicProfile({
 
               <div>
                 <strong>{properties}</strong>
-                <span>Объектов всего</span>
+                <span>{t("agencyPublicProfile.stats.properties")}</span>
               </div>
             </div>
 
@@ -198,7 +202,8 @@ export default function AgencyPublicProfile({
                   <MapPin size={17} />
 
                   <div>
-                    <span>Офис</span>
+                    <span>{t("agencyPublicProfile.details.office")}</span>
+
                     <strong>{officeAddress}</strong>
                   </div>
                 </div>
@@ -226,7 +231,8 @@ export default function AgencyPublicProfile({
                 </div>
 
                 <div>
-                  <span>Офис</span>
+                  <span>{t("agencyPublicProfile.details.office")}</span>
+
                   <strong>{officeAddress}</strong>
                 </div>
               </div>
@@ -246,7 +252,8 @@ export default function AgencyPublicProfile({
                 </div>
 
                 <div>
-                  <span>Веб-сайт</span>
+                  <span>{t("agencyPublicProfile.details.website")}</span>
+
                   <strong>{website.replace(/^https?:\/\//, "")}</strong>
                 </div>
 
@@ -265,14 +272,17 @@ export default function AgencyPublicProfile({
             <div>
               <span className={styles.sectionNumber}>02</span>
 
-              <h2>Объявления агентства</h2>
+              <h2>{t("agencyPublicProfile.listings.title")}</h2>
 
-              <p>Актуальные объекты недвижимости от {companyName}</p>
+              <p>
+                {t("agencyPublicProfile.listings.description")} {companyName}
+              </p>
             </div>
 
             <span className={styles.count}>
               {ads.length}
-              <small>объектов</small>
+
+              <small>{t("agencyPublicProfile.listings.count")}</small>
             </span>
           </div>
 
@@ -319,9 +329,9 @@ export default function AgencyPublicProfile({
                 <Building2 size={24} />
               </div>
 
-              <h3>Пока нет активных объявлений</h3>
+              <h3>{t("agencyPublicProfile.empty.title")}</h3>
 
-              <p>Агентство ещё не разместило объекты недвижимости.</p>
+              <p>{t("agencyPublicProfile.empty.description")}</p>
             </div>
           )}
         </section>

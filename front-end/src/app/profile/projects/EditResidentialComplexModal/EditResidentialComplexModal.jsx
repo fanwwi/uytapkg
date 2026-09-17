@@ -21,6 +21,7 @@ import {
 
 import styles from "./EditResidentialComplexModal.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
+import { useLanguage } from "@/context/LanguageContext";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -75,9 +76,70 @@ export default function EditResidentialComplexModal({
   onClose,
   onSave,
 }) {
+  const { t } = useLanguage();
+
   const [form, setForm] = useState(initialForm);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [images, setImages] = useState([]);
+
+  const translateStatus = (value) => {
+    const map = {
+      Проект: "project",
+      Строительство: "construction",
+      Сдан: "completed",
+    };
+
+    return t(
+      `editResidentialComplexModal.statuses.${map[value] || "construction"}`,
+    );
+  };
+
+  const translateClass = (value) => {
+    const map = {
+      Эконом: "economy",
+      Комфорт: "comfort",
+      Бизнес: "business",
+      Премиум: "premium",
+    };
+
+    return t(`editResidentialComplexModal.classes.${map[value] || "comfort"}`);
+  };
+
+  const translateConstruction = (value) => {
+    const map = {
+      Монолит: "monolith",
+      "Монолитно-кирпичный": "monolithBrick",
+      Кирпичный: "brick",
+      Панельный: "panel",
+      "Каркасно-монолитный": "frameMonolith",
+      Газобетон: "aeratedConcrete",
+    };
+
+    return t(
+      `editResidentialComplexModal.constructions.${map[value] || "monolith"}`,
+    );
+  };
+
+  const translateAmenity = (value) => {
+    const map = {
+      "Детская площадка": "playground",
+      Парковка: "parking",
+      "Подземный паркинг": "undergroundParking",
+      "Закрытая территория": "gatedArea",
+      Охрана: "security",
+      Видеонаблюдение: "videoSurveillance",
+      Лифт: "elevator",
+      "Детский сад": "kindergarten",
+      Школа: "school",
+      "Фитнес-зал": "fitness",
+      "Зеленая зона": "greenArea",
+      "Коммерческие помещения": "commercial",
+    };
+
+    return t(
+      `editResidentialComplexModal.amenities.${map[value] || "playground"}`,
+    );
+  };
 
   useEffect(() => {
     if (!complex) return;
@@ -85,9 +147,23 @@ export default function EditResidentialComplexModal({
     const f = complex.rawFeatures || complex.features || {};
 
     const extractVal = (rawVal, val) => {
-      if (rawVal !== undefined && rawVal !== null && rawVal !== "") return rawVal;
-      if (val === undefined || val === null || val === "" || val === "Не указано") return "";
-      const cleaned = String(val).replace(/[^\d.,]/g, "").replace(",", ".");
+      if (rawVal !== undefined && rawVal !== null && rawVal !== "") {
+        return rawVal;
+      }
+
+      if (
+        val === undefined ||
+        val === null ||
+        val === "" ||
+        val === "Не указано"
+      ) {
+        return "";
+      }
+
+      const cleaned = String(val)
+        .replace(/[^\d.,]/g, "")
+        .replace(",", ".");
+
       return cleaned || "";
     };
 
@@ -98,7 +174,12 @@ export default function EditResidentialComplexModal({
       description: complex.description || "",
       status: complex.status || "Строительство",
       class: complex.class || "Комфорт",
-      construction: f.construction || complex.constructionVal || (complex.constructionType !== "Не указано" ? complex.constructionType : "Монолит"),
+      construction:
+        f.construction ||
+        complex.constructionVal ||
+        (complex.constructionType !== "Не указано"
+          ? complex.constructionType
+          : "Монолит"),
       completionDate: complex.completionDate || "",
       floors: extractVal(f.floors, complex.floors),
       blocks: extractVal(f.blocks, complex.blocks),
@@ -211,8 +292,12 @@ export default function EditResidentialComplexModal({
     event.preventDefault();
 
     const parseNum = (val) => {
-      if (val === undefined || val === null || val === "") return null;
+      if (val === undefined || val === null || val === "") {
+        return null;
+      }
+
       const num = parseFloat(String(val).replace(",", "."));
+
       return isNaN(num) ? val : num;
     };
 
@@ -242,6 +327,26 @@ export default function EditResidentialComplexModal({
     }
   }
 
+  const translatedStatuses = statuses.map(translateStatus);
+
+  const translatedClasses = classes.map(translateClass);
+
+  const translatedConstructions = constructions.map(translateConstruction);
+
+  const getOriginalValue = (translatedValue, values, translator) => {
+    const index = values.findIndex(
+      (value) => translator(value) === translatedValue,
+    );
+
+    return index >= 0 ? values[index] : values[0];
+  };
+
+  const selectedStatusLabel = translateStatus(form.status);
+
+  const selectedClassLabel = translateClass(form.class);
+
+  const selectedConstructionLabel = translateConstruction(form.construction);
+
   return (
     <div
       className={styles.overlay}
@@ -260,21 +365,23 @@ export default function EditResidentialComplexModal({
           <div className={styles.headerContent}>
             <span className={styles.eyebrow}>
               <Building2 />
-              Редактирование ЖК
+
+              {t("editResidentialComplexModal.header.eyebrow")}
             </span>
 
             <h2 id="edit-residential-complex-title">
-              {complex.name || "Жилой комплекс"}
+              {complex.name ||
+                t("editResidentialComplexModal.fallback.complex")}
             </h2>
 
-            <p>Измените информацию о жилом комплексе и сохраните обновления.</p>
+            <p>{t("editResidentialComplexModal.header.description")}</p>
           </div>
 
           <button
             type="button"
             className={styles.closeButton}
             onClick={onClose}
-            aria-label="Закрыть"
+            aria-label={t("editResidentialComplexModal.actions.close")}
           >
             <X />
           </button>
@@ -294,14 +401,15 @@ export default function EditResidentialComplexModal({
 
                 <div>
                   <span>01</span>
-                  <h3>Основная информация</h3>
+
+                  <h3>{t("editResidentialComplexModal.sections.basic")}</h3>
                 </div>
               </div>
 
               <div className={styles.grid}>
                 <div className={`${styles.field} ${styles.full}`}>
                   <label htmlFor="complex-name">
-                    Название ЖК <b>*</b>
+                    {t("editResidentialComplexModal.fields.name")} <b>*</b>
                   </label>
 
                   <input
@@ -310,14 +418,18 @@ export default function EditResidentialComplexModal({
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Введите название жилого комплекса"
+                    placeholder={t(
+                      "editResidentialComplexModal.placeholders.name",
+                    )}
                     autoComplete="off"
                     required
                   />
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-city">Город</label>
+                  <label htmlFor="complex-city">
+                    {t("editResidentialComplexModal.fields.city")}
+                  </label>
 
                   <input
                     id="complex-city"
@@ -325,14 +437,16 @@ export default function EditResidentialComplexModal({
                     type="text"
                     value={form.city}
                     onChange={handleChange}
-                    placeholder="Город"
+                    placeholder={t(
+                      "editResidentialComplexModal.placeholders.city",
+                    )}
                     autoComplete="address-level2"
                   />
                 </div>
 
                 <div className={styles.field}>
                   <label htmlFor="complex-address">
-                    Адрес <b>*</b>
+                    {t("editResidentialComplexModal.fields.address")} <b>*</b>
                   </label>
 
                   <div className={styles.inputWithIcon}>
@@ -344,7 +458,9 @@ export default function EditResidentialComplexModal({
                       type="text"
                       value={form.address}
                       onChange={handleChange}
-                      placeholder="Введите адрес"
+                      placeholder={t(
+                        "editResidentialComplexModal.placeholders.address",
+                      )}
                       autoComplete="street-address"
                       required
                     />
@@ -352,20 +468,25 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={`${styles.field} ${styles.full}`}>
-                  <label htmlFor="complex-description">Описание</label>
+                  <label htmlFor="complex-description">
+                    {t("editResidentialComplexModal.fields.description")}
+                  </label>
 
                   <textarea
                     id="complex-description"
                     name="description"
                     value={form.description}
                     onChange={handleChange}
-                    placeholder="Расскажите о жилом комплексе..."
+                    placeholder={t(
+                      "editResidentialComplexModal.placeholders.description",
+                    )}
                     rows={5}
                     maxLength={1000}
                   />
 
                   <span className={styles.counter}>
-                    {form.description.length}/1000
+                    {form.description.length}
+                    /1000
                   </span>
                 </div>
               </div>
@@ -381,49 +502,77 @@ export default function EditResidentialComplexModal({
 
                 <div>
                   <span>02</span>
-                  <h3>Характеристики</h3>
+
+                  <h3>
+                    {t("editResidentialComplexModal.sections.characteristics")}
+                  </h3>
                 </div>
               </div>
 
               <div className={styles.grid}>
                 <div className={styles.field}>
-                  <label>Статус</label>
+                  <label>
+                    {t("editResidentialComplexModal.fields.status")}
+                  </label>
 
                   <CustomSelect
                     icon={Layers3}
-                    title="Статус"
-                    options={statuses}
-                    value={form.status}
-                    setValue={(value) => setField("status", value)}
+                    title={t("editResidentialComplexModal.fields.status")}
+                    options={translatedStatuses}
+                    value={selectedStatusLabel}
+                    setValue={(value) =>
+                      setField(
+                        "status",
+                        getOriginalValue(value, statuses, translateStatus),
+                      )
+                    }
                   />
                 </div>
 
                 <div className={styles.field}>
-                  <label>Класс</label>
+                  <label>{t("editResidentialComplexModal.fields.class")}</label>
 
                   <CustomSelect
                     icon={Building2}
-                    title="Класс"
-                    options={classes}
-                    value={form.class}
-                    setValue={(value) => setField("class", value)}
+                    title={t("editResidentialComplexModal.fields.class")}
+                    options={translatedClasses}
+                    value={selectedClassLabel}
+                    setValue={(value) =>
+                      setField(
+                        "class",
+                        getOriginalValue(value, classes, translateClass),
+                      )
+                    }
                   />
                 </div>
 
                 <div className={styles.field}>
-                  <label>Конструкция</label>
+                  <label>
+                    {t("editResidentialComplexModal.fields.construction")}
+                  </label>
 
                   <CustomSelect
                     icon={Blocks}
-                    title="Конструкция"
-                    options={constructions}
-                    value={form.construction}
-                    setValue={(value) => setField("construction", value)}
+                    title={t("editResidentialComplexModal.fields.construction")}
+                    options={translatedConstructions}
+                    value={selectedConstructionLabel}
+                    setValue={(value) =>
+                      setField(
+                        "construction",
+                        getOriginalValue(
+                          value,
+                          constructions,
+                          translateConstruction,
+                        ),
+                      )
+                    }
                   />
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="completion-date">Дата сдачи</label>
+                  <label htmlFor="completion-date">
+                    {t("editResidentialComplexModal.fields.completionDate")}
+                  </label>
 
                   <div className={styles.inputWithIcon}>
                     <CalendarDays />
@@ -439,7 +588,9 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-floors">Этажей</label>
+                  <label htmlFor="complex-floors">
+                    {t("editResidentialComplexModal.fields.floors")}
+                  </label>
 
                   <div className={styles.inputWithIcon}>
                     <Layers3 />
@@ -457,7 +608,9 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-blocks">Количество блоков</label>
+                  <label htmlFor="complex-blocks">
+                    {t("editResidentialComplexModal.fields.blocks")}
+                  </label>
 
                   <div className={styles.inputWithIcon}>
                     <Blocks />
@@ -475,7 +628,9 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-apartments">Квартир</label>
+                  <label htmlFor="complex-apartments">
+                    {t("editResidentialComplexModal.fields.apartments")}
+                  </label>
 
                   <div className={styles.inputWithIcon}>
                     <Home />
@@ -493,7 +648,9 @@ export default function EditResidentialComplexModal({
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="complex-parking">Парковочных мест</label>
+                  <label htmlFor="complex-parking">
+                    {t("editResidentialComplexModal.fields.parking")}
+                  </label>
 
                   <div className={styles.inputWithIcon}>
                     <Car />
@@ -512,7 +669,7 @@ export default function EditResidentialComplexModal({
 
                 <div className={styles.field}>
                   <label htmlFor="complex-land-area">
-                    Площадь территории, соток
+                    {t("editResidentialComplexModal.fields.landArea")}
                   </label>
 
                   <div className={styles.inputWithIcon}>
@@ -533,7 +690,7 @@ export default function EditResidentialComplexModal({
 
                 <div className={styles.field}>
                   <label htmlFor="complex-ceiling-height">
-                    Высота потолков, м
+                    {t("editResidentialComplexModal.fields.ceilingHeight")}
                   </label>
 
                   <div className={styles.inputWithIcon}>
@@ -564,7 +721,10 @@ export default function EditResidentialComplexModal({
 
                 <div>
                   <span>03</span>
-                  <h3>Инфраструктура</h3>
+
+                  <h3>
+                    {t("editResidentialComplexModal.sections.infrastructure")}
+                  </h3>
                 </div>
               </div>
 
@@ -586,7 +746,7 @@ export default function EditResidentialComplexModal({
                         {active && <Check />}
                       </span>
 
-                      <span>{item}</span>
+                      <span>{translateAmenity(item)}</span>
                     </button>
                   );
                 })}
@@ -601,7 +761,7 @@ export default function EditResidentialComplexModal({
 
         <div className={styles.actions}>
           <button type="button" className={styles.cancel} onClick={onClose}>
-            Отмена
+            {t("editResidentialComplexModal.actions.cancel")}
           </button>
 
           <button
@@ -616,7 +776,8 @@ export default function EditResidentialComplexModal({
             }}
           >
             <Check />
-            Сохранить изменения
+
+            {t("editResidentialComplexModal.actions.save")}
           </button>
         </div>
       </div>

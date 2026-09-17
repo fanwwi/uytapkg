@@ -21,8 +21,11 @@ import {
 import styles from "./DeveloperEditModal.module.css";
 
 import { getMe, updateMe } from "@/utils/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DeveloperEditModal({ user, close }) {
+  const { t } = useLanguage();
+
   const fileRef = useRef(null);
 
   const profile = user?.profile || {};
@@ -40,6 +43,7 @@ export default function DeveloperEditModal({ user, close }) {
   const [loading, setLoading] = useState(false);
 
   const [firstName, setFirstName] = useState(profile.first_name || "");
+
   const [lastName, setLastName] = useState(profile.last_name || "");
 
   const [companyName, setCompanyName] = useState(
@@ -63,7 +67,9 @@ export default function DeveloperEditModal({ user, close }) {
   const [about, setAbout] = useState(profile.about || "");
 
   const [logo, setLogo] = useState(initialLogo);
+
   const [logoFile, setLogoFile] = useState(null);
+
   const [logoRemoved, setLogoRemoved] = useState(false);
 
   /*
@@ -78,12 +84,12 @@ export default function DeveloperEditModal({ user, close }) {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Можно загрузить только изображение");
+      alert(t("developerEditModal.errors.imageType"));
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Размер изображения не должен превышать 5 МБ");
+      alert(t("developerEditModal.errors.imageSize"));
       return;
     }
 
@@ -125,12 +131,12 @@ export default function DeveloperEditModal({ user, close }) {
     const token = getToken();
 
     if (!token) {
-      alert("Сессия закончилась. Войдите в аккаунт заново.");
+      alert(t("developerEditModal.errors.session"));
       return;
     }
 
     if (!companyName.trim()) {
-      alert("Введите название компании");
+      alert(t("developerEditModal.errors.companyName"));
       return;
     }
 
@@ -138,29 +144,31 @@ export default function DeveloperEditModal({ user, close }) {
       setLoading(true);
 
       /*
-       * -------------------------------------------------------
-       * 1. Сначала обновляем обычные данные профиля
-       * -------------------------------------------------------
+       * 1. UPDATE PROFILE
        */
 
       await updateMe(token, {
         firstName: firstName.trim(),
+
         lastName: lastName.trim(),
+
         phone: phone.trim(),
+
         companyName: companyName.trim(),
+
         inn: inn.trim(),
+
         whatsapp: whatsapp.trim(),
+
         website: website.trim(),
+
         officeAddress: officeAddress.trim(),
+
         about: about.trim(),
       });
 
       /*
-       * -------------------------------------------------------
-       * 2. Если пользователь выбрал новый логотип
-       * -------------------------------------------------------
-       *
-       * Используем существующий endpoint avatar.
+       * 2. UPLOAD LOGO
        */
 
       if (logoFile) {
@@ -170,34 +178,28 @@ export default function DeveloperEditModal({ user, close }) {
 
         const response = await fetch("/api/auth/avatar", {
           method: "POST",
+
           headers: {
             Authorization: `Bearer ${token}`,
           },
+
           body: formData,
         });
 
         const result = await response.json().catch(() => ({}));
 
         if (!response.ok || !result.success) {
-          throw new Error(result.message || "Не удалось загрузить логотип");
+          throw new Error(
+            result.message || t("developerEditModal.errors.logoUpload"),
+          );
         }
       }
 
       /*
-       * -------------------------------------------------------
-       * 3. Получаем полностью свежий профиль
-       * -------------------------------------------------------
+       * 3. GET FRESH USER
        */
 
       const freshUser = await getMe(token);
-
-      /*
-       * Если удалили логотип — оставляем дефолтную картинку
-       * на фронте.
-       *
-       * Если backend умеет удалять avatar, сюда можно добавить
-       * отдельный DELETE endpoint.
-       */
 
       const freshProfile = {
         ...(freshUser.profile || {}),
@@ -210,9 +212,7 @@ export default function DeveloperEditModal({ user, close }) {
       }
 
       /*
-       * -------------------------------------------------------
-       * 4. Сохраняем в localStorage
-       * -------------------------------------------------------
+       * 4. LOCAL STORAGE
        */
 
       const updatedUser = {
@@ -224,6 +224,7 @@ export default function DeveloperEditModal({ user, close }) {
           ...freshProfile,
 
           first_name: firstName.trim(),
+
           last_name: lastName.trim(),
 
           company_name: companyName.trim(),
@@ -243,9 +244,7 @@ export default function DeveloperEditModal({ user, close }) {
       localStorage.setItem("uytap_user", JSON.stringify(updatedUser));
 
       /*
-       * -------------------------------------------------------
-       * 5. Уведомляем приложение
-       * -------------------------------------------------------
+       * 5. EVENT
        */
 
       window.dispatchEvent(
@@ -255,23 +254,20 @@ export default function DeveloperEditModal({ user, close }) {
       );
 
       /*
-       * -------------------------------------------------------
-       * 6. Закрываем
-       * -------------------------------------------------------
+       * 6. CLOSE
        */
 
       close();
 
       /*
-       * Перезагружаем страницу, чтобы профиль гарантированно
-       * подтянул все изменения.
+       * 7. RELOAD
        */
 
       window.location.reload();
     } catch (error) {
       console.error("DEVELOPER PROFILE SAVE ERROR:", error);
 
-      alert(error?.message || "Не удалось сохранить изменения профиля");
+      alert(error?.message || t("developerEditModal.errors.save"));
     } finally {
       setLoading(false);
     }
@@ -280,44 +276,40 @@ export default function DeveloperEditModal({ user, close }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        {/* =====================================================
-            CLOSE
-        ===================================================== */}
+        {/* CLOSE */}
 
         <button
           type="button"
           className={styles.close}
           onClick={close}
           disabled={loading}
+          aria-label={t("developerEditModal.actions.close")}
         >
           <X />
         </button>
 
         <div className={styles.scroll}>
-          {/* =====================================================
-              HEADER
-          ===================================================== */}
+          {/* HEADER */}
 
           <header className={styles.header}>
             <div className={styles.headerBadge}>
               <Landmark />
-              Профиль застройщика
+
+              {t("developerEditModal.header.badge")}
             </div>
 
-            <h2>Редактирование компании</h2>
+            <h2>{t("developerEditModal.header.title")}</h2>
 
-            <p>Обновите информацию о компании, представителе и контактах.</p>
+            <p>{t("developerEditModal.header.description")}</p>
           </header>
 
-          {/* =====================================================
-              LOGO
-          ===================================================== */}
+          {/* LOGO */}
 
           <section className={styles.logoSection}>
             <div className={styles.logoWrapper}>
               <div className={styles.logo}>
                 {logo ? (
-                  <img src={logo} alt="Логотип компании" />
+                  <img src={logo} alt={t("developerEditModal.logo.alt")} />
                 ) : (
                   <Building2 />
                 )}
@@ -329,15 +321,19 @@ export default function DeveloperEditModal({ user, close }) {
             </div>
 
             <div className={styles.logoInfo}>
-              <strong>Логотип компании</strong>
+              <strong>{t("developerEditModal.logo.title")}</strong>
 
-              <span>PNG, JPG или WEBP · до 5 МБ</span>
+              <span>{t("developerEditModal.logo.format")}</span>
 
               <div className={styles.logoActions}>
                 <label className={styles.uploadButton}>
                   <Camera />
 
-                  <span>{logoFile ? "Изменить" : "Загрузить логотип"}</span>
+                  <span>
+                    {logoFile
+                      ? t("developerEditModal.logo.change")
+                      : t("developerEditModal.logo.upload")}
+                  </span>
 
                   <input
                     ref={fileRef}
@@ -357,57 +353,68 @@ export default function DeveloperEditModal({ user, close }) {
                     disabled={loading}
                   >
                     <Trash2 />
-                    Удалить
+
+                    {t("developerEditModal.logo.remove")}
                   </button>
                 )}
               </div>
             </div>
           </section>
 
-          {/* =====================================================
-              COMPANY
-          ===================================================== */}
+          {/* COMPANY */}
 
           <section className={styles.formSection}>
             <div className={styles.sectionTitle}>
               <Building2 />
+
               <div>
-                <strong>Компания</strong>
-                <span>Основная информация о застройщике</span>
+                <strong>
+                  {t("developerEditModal.sections.company.title")}
+                </strong>
+
+                <span>
+                  {t("developerEditModal.sections.company.description")}
+                </span>
               </div>
             </div>
 
             <div className={styles.fields}>
               <Field
                 icon={<Building2 />}
-                label="Название компании"
+                label={t("developerEditModal.fields.companyName.label")}
                 value={companyName}
                 onChange={setCompanyName}
-                placeholder="Например, ОсОО СтройИнвест"
+                placeholder={t(
+                  "developerEditModal.fields.companyName.placeholder",
+                )}
                 disabled={loading}
               />
 
               <Field
                 icon={<Hash />}
-                label="ИНН"
+                label={t("developerEditModal.fields.inn.label")}
                 value={inn}
                 onChange={setInn}
-                placeholder="Введите ИНН компании"
+                placeholder={t("developerEditModal.fields.inn.placeholder")}
                 disabled={loading}
               />
             </div>
           </section>
 
-          {/* =====================================================
-              REPRESENTATIVE
-          ===================================================== */}
+          {/* REPRESENTATIVE */}
 
           <section className={styles.formSection}>
             <div className={styles.sectionTitle}>
               <User />
+
               <div>
-                <strong>Представитель</strong>
-                <span>Контактное лицо компании</span>
+                <strong>
+                  {t("developerEditModal.sections.representative.title")}
+                </strong>
+
+                <span>
+                  {t("developerEditModal.sections.representative.description")}
+                </span>
               </div>
             </div>
 
@@ -415,89 +422,103 @@ export default function DeveloperEditModal({ user, close }) {
               <div className={styles.row}>
                 <Field
                   icon={<User />}
-                  label="Имя"
+                  label={t("developerEditModal.fields.firstName.label")}
                   value={firstName}
                   onChange={setFirstName}
-                  placeholder="Имя"
+                  placeholder={t(
+                    "developerEditModal.fields.firstName.placeholder",
+                  )}
                   disabled={loading}
                 />
 
                 <Field
                   icon={<User />}
-                  label="Фамилия"
+                  label={t("developerEditModal.fields.lastName.label")}
                   value={lastName}
                   onChange={setLastName}
-                  placeholder="Фамилия"
+                  placeholder={t(
+                    "developerEditModal.fields.lastName.placeholder",
+                  )}
                   disabled={loading}
                 />
               </div>
             </div>
           </section>
 
-          {/* =====================================================
-              CONTACTS
-          ===================================================== */}
+          {/* CONTACTS */}
 
           <section className={styles.formSection}>
             <div className={styles.sectionTitle}>
               <Phone />
+
               <div>
-                <strong>Контакты</strong>
-                <span>Как покупатели смогут связаться с вами</span>
+                <strong>
+                  {t("developerEditModal.sections.contacts.title")}
+                </strong>
+
+                <span>
+                  {t("developerEditModal.sections.contacts.description")}
+                </span>
               </div>
             </div>
 
             <div className={styles.fields}>
               <Field
                 icon={<Phone />}
-                label="Телефон"
+                label={t("developerEditModal.fields.phone.label")}
                 value={phone}
                 onChange={setPhone}
-                placeholder="+996 555 123 456"
+                placeholder={t("developerEditModal.fields.phone.placeholder")}
                 type="tel"
                 disabled={loading}
               />
 
               <Field
                 icon={<MessageCircle />}
-                label="WhatsApp"
+                label={t("developerEditModal.fields.whatsapp.label")}
                 value={whatsapp}
                 onChange={setWhatsapp}
-                placeholder="+996 555 123 456"
+                placeholder={t(
+                  "developerEditModal.fields.whatsapp.placeholder",
+                )}
                 type="tel"
                 disabled={loading}
               />
 
               <Field
                 icon={<Globe />}
-                label="Сайт"
+                label={t("developerEditModal.fields.website.label")}
                 value={website}
                 onChange={setWebsite}
-                placeholder="https://company.kg"
+                placeholder={t("developerEditModal.fields.website.placeholder")}
                 disabled={loading}
               />
 
               <Field
                 icon={<MapPin />}
-                label="Адрес офиса"
+                label={t("developerEditModal.fields.officeAddress.label")}
                 value={officeAddress}
                 onChange={setOfficeAddress}
-                placeholder="Бишкек, ул. ..."
+                placeholder={t(
+                  "developerEditModal.fields.officeAddress.placeholder",
+                )}
                 disabled={loading}
               />
             </div>
           </section>
 
-          {/* =====================================================
-              ABOUT
-          ===================================================== */}
+          {/* ABOUT */}
 
           <section className={styles.formSection}>
             <div className={styles.sectionTitle}>
               <FileText />
+
               <div>
-                <strong>О компании</strong>
-                <span>Коротко расскажите о вашей компании</span>
+                <strong>{t("developerEditModal.sections.about.title")}</strong>
+
+                <span>
+                  {t("developerEditModal.sections.about.description")}
+                </span>
               </div>
             </div>
 
@@ -507,7 +528,7 @@ export default function DeveloperEditModal({ user, close }) {
               <textarea
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
-                placeholder="Расскажите о компании, опыте работы, проектах, специализации и преимуществах..."
+                placeholder={t("developerEditModal.fields.about.placeholder")}
                 disabled={loading}
                 maxLength={1000}
               />
@@ -516,9 +537,7 @@ export default function DeveloperEditModal({ user, close }) {
             </div>
           </section>
 
-          {/* =====================================================
-              SAVE
-          ===================================================== */}
+          {/* SAVE */}
 
           <div className={styles.footer}>
             <button
@@ -527,7 +546,7 @@ export default function DeveloperEditModal({ user, close }) {
               onClick={close}
               disabled={loading}
             >
-              Отмена
+              {t("developerEditModal.actions.cancel")}
             </button>
 
             <button
@@ -538,7 +557,9 @@ export default function DeveloperEditModal({ user, close }) {
             >
               <Check />
 
-              {loading ? "Сохраняем..." : "Сохранить изменения"}
+              {loading
+                ? t("developerEditModal.actions.saving")
+                : t("developerEditModal.actions.save")}
             </button>
           </div>
         </div>

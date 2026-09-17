@@ -22,19 +22,33 @@ import styles from "./RealtorProfile.module.css";
 
 import RealtorEditModal from "./realtorEdit/RealtorEditModal";
 
-export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 }) {
+import { useLanguage } from "@/context/LanguageContext";
+
+export default function RealtorProfile({
+  user,
+  adsCount = 0,
+  favoritesCount = 0,
+}) {
+  const { t } = useLanguage();
+
   const [edit, setEdit] = useState(false);
 
   if (!user) return null;
 
   const profile = user.profile || {};
-  const avatarUrl = profile.avatar_url || profile.avatar || user.avatar_url || user.avatar || "/assets/realtorImage.png";
+
+  const avatarUrl =
+    profile.avatar_url ||
+    profile.avatar ||
+    user.avatar_url ||
+    user.avatar ||
+    "/assets/realtorImage.png";
 
   const name =
     `${profile.first_name || ""} ${profile.last_name || ""}`.trim() ||
-    "Риэлтор";
+    t("realtorProfile.defaults.realtor");
 
-  const company = profile.company_name || "Агентство недвижимости";
+  const company = profile.company_name || t("realtorProfile.defaults.company");
 
   const whatsapp = user.phone?.replace(/\D/g, "");
 
@@ -57,7 +71,7 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
           </div>
 
           <div className={styles.info}>
-            <div className={styles.badge}>Риэлтор</div>
+            <div className={styles.badge}>{t("realtorProfile.badge")}</div>
 
             <div className={styles.nameRow}>
               <h1>{name}</h1>
@@ -67,15 +81,20 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
 
             <div className={styles.company}>
               <Building2 />
+
               {company}
             </div>
 
             <p className={styles.description}>
-              {profile.about || "Риэлтор пока не добавил описание"}
+              {profile.about || t("realtorProfile.defaults.about")}
             </p>
           </div>
 
-          <button className={styles.edit} onClick={() => setEdit(true)}>
+          <button
+            className={styles.edit}
+            onClick={() => setEdit(true)}
+            aria-label={t("realtorProfile.actions.editAria")}
+          >
             <Pencil />
           </button>
         </div>
@@ -86,7 +105,8 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
               <Phone />
 
               <div>
-                <small>Телефон</small>
+                <small>{t("realtorProfile.contacts.phone")}</small>
+
                 <strong>{user.phone}</strong>
               </div>
             </div>
@@ -97,7 +117,8 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
               <Mail />
 
               <div>
-                <small>Email</small>
+                <small>{t("realtorProfile.contacts.email")}</small>
+
                 <strong>{user.email}</strong>
               </div>
             </div>
@@ -108,7 +129,8 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
               <MapPin />
 
               <div>
-                <small>Адрес компании</small>
+                <small>{t("realtorProfile.contacts.office")}</small>
+
                 <strong>{profile.office_address}</strong>
               </div>
             </div>
@@ -124,7 +146,8 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
               <Globe />
 
               <div>
-                <small>Сайт</small>
+                <small>{t("realtorProfile.contacts.website")}</small>
+
                 <strong>{profile.website}</strong>
               </div>
             </a>
@@ -139,7 +162,8 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
             className={styles.whatsapp}
           >
             <MessageCircle />
-            Написать в WhatsApp
+
+            {t("realtorProfile.actions.whatsapp")}
           </a>
         )}
       </section>
@@ -147,39 +171,46 @@ export default function RealtorProfile({ user, adsCount = 0, favoritesCount = 0 
       <section className={styles.stats}>
         <div>
           <strong>{adsCount}</strong>
-          <span>объявлений</span>
+
+          <span>{t("realtorProfile.stats.ads")}</span>
         </div>
 
         <div>
           <strong>{favoritesCount}</strong>
-          <span>избранных</span>
+
+          <span>{t("realtorProfile.stats.favorites")}</span>
         </div>
       </section>
 
       <section className={styles.menu}>
         <a href="/">
           <House />
-          Главная
+
+          {t("realtorProfile.menu.home")}
         </a>
 
         <a href="/profile/ads">
           <Home />
-          Мои объявления
+
+          {t("realtorProfile.menu.ads")}
         </a>
 
         <a href="/favorites">
           <Heart />
-          Избранное
+
+          {t("realtorProfile.menu.favorites")}
         </a>
 
         <a href="/profile/tariff">
           <CreditCard />
-          Мой тариф
+
+          {t("realtorProfile.menu.tariff")}
         </a>
 
         <button onClick={logout}>
           <LogOut />
-          Выйти
+
+          {t("realtorProfile.menu.logout")}
         </button>
       </section>
 
