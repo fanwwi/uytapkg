@@ -26,6 +26,7 @@ import {
 import styles from "./AddResidentialComplex.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import { useLanguage } from "@/context/LanguageContext";
+import LoadingScreen from "@/components/ui/loadingScreen/LoadingScreen";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -931,9 +932,7 @@ export default function AddResidentialComplex() {
             <button type="submit" className={styles.submit} disabled={loading}>
               <Building2 size={18} />
 
-              {loading
-                ? t("addResidentialComplex.actions.adding")
-                : t("addResidentialComplex.actions.add")}
+              {loading ? <LoadingScreen /> : <LoadingScreen />}
             </button>
           </div>
         </form>

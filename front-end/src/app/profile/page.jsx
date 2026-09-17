@@ -7,6 +7,7 @@ import PersonalProfile from "./components/personalProfile/PersonalProfile";
 import RealtorProfile from "./components/realtorProfile/RealtorProfile";
 import AgencyProfile from "./components/agencyProfile/AgencyProfile";
 import DeveloperProfile from "./components/developerProfile/DeveloperProfile";
+import LoadingScreen from "@/components/ui/loadingScreen/LoadingScreen";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -57,7 +58,7 @@ export default function ProfilePage() {
   }, []);
 
   if (!user) {
-    return <div>Загрузка...</div>;
+    return <LoadingScreen />;
   }
 
   switch (user.accountType) {

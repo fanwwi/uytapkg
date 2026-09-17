@@ -8,6 +8,7 @@ import { getComplexes } from "@/utils/api";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 
 import styles from "./ResidentialComplexSelect.module.css";
+import LoadingScreen from "@/components/ui/loadingScreen/LoadingScreen";
 
 // Строит уникальную подпись для ЖК в выпадающем списке.
 function buildOptions(complexes) {
@@ -137,7 +138,7 @@ export default function ResidentialComplexSelect({ value, onSelect }) {
 
       {loading && (
         <span className={styles.loading}>
-          {t("residentialComplex.loading")}
+          <LoadingScreen />
         </span>
       )}
     </div>
