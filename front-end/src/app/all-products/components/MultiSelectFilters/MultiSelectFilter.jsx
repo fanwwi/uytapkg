@@ -146,7 +146,8 @@ export default function MultiSelect({
 
     label = selectedOption ? getOptionLabel(selectedOption) : value[0];
   } else {
-    label = `${value.length} ${t("commonFilters.selected")}`;
+    // Вывод текста с количеством цифрой (например: "Выбрано: 3" или можно использовать ваш перевод)
+    label = `Выбрано: ${value.length}`;
   }
 
   /* =========================================================
