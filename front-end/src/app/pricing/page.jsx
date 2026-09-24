@@ -26,19 +26,18 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import { getPricing } from "@/utils/api";
 import { useLanguage } from "@/context/LanguageContext";
 
-// Совпадает по форме с back-end/src/utils/pricingSettings.js
-// DEFAULT_PRICING — реальный /api/settings/pricing всегда отдаёт тарифы
-// как объект { price, activeListings, vipLifts, topLifts }, а не голым
-// числом, поэтому и дефолтная заглушка (до ответа API) должна быть в
-// том же формате — иначе после setPricing(data) с реальными данными
-// pricing.tariffs.start превращается в объект, и getPrice()/getTotal()
-// (которые ждут число) считают NaN.
 const DEFAULT_PRICING = {
   tariffs: {
     start: { price: 390, activeListings: 5, vipLifts: 1, topLifts: 1 },
     optimal: { price: 790, activeListings: 15, vipLifts: 2, topLifts: 3 },
     business: { price: 1890, activeListings: 50, vipLifts: 5, topLifts: 10 },
-    developer: { mode: "individual", value: null, activeListings: 100, vipLifts: 10, topLifts: 20 },
+    developer: {
+      mode: "individual",
+      value: null,
+      activeListings: 100,
+      vipLifts: 10,
+      topLifts: 20,
+    },
   },
   services: {
     vip: 290,
@@ -48,14 +47,13 @@ const DEFAULT_PRICING = {
   },
 };
 
-// Тариф из API/заглушки может прийти как объект { price, activeListings,
-// vipLifts, topLifts } (актуальный формат) — вытаскиваем нужное поле, не
-// завязываясь на то, что весь объект — число.
 const getTariffPrice = (tariff) =>
-  tariff && typeof tariff === "object" ? tariff.price ?? 0 : tariff ?? 0;
+  tariff && typeof tariff === "object" ? (tariff.price ?? 0) : (tariff ?? 0);
 
 const getTariffLimit = (tariff, field, fallback) =>
-  tariff && typeof tariff === "object" && tariff[field] != null ? tariff[field] : fallback;
+  tariff && typeof tariff === "object" && tariff[field] != null
+    ? tariff[field]
+    : fallback;
 
 export default function Pricing() {
   const router = useRouter();
@@ -96,15 +94,12 @@ export default function Pricing() {
         "Поиск и фильтры",
         "Публичный профиль пользователя",
         "Добавление в избранное",
-        "Сравнение объектов в избранном"
+        "Сравнение объектов в избранном",
       ],
     },
-
     {
       id: "start",
       title: t("pricing.tariffs.start.title"),
-      price: pricing.tariffs.start,
-      title: "Старт",
       price: getTariffPrice(pricing.tariffs.start),
       icon: Rocket,
       desc: t("pricing.tariffs.start.description"),
@@ -120,15 +115,12 @@ export default function Pricing() {
         "Публичный профиль специалиста",
         "Поиск и фильтры",
         "Размещение объявлений на карте",
-        "Сравнение объектов в избранном"
+        "Сравнение объектов в избранном",
       ],
     },
-
     {
       id: "optimal",
       title: t("pricing.tariffs.optimal.title"),
-      price: pricing.tariffs.optimal,
-      title: "Оптимальный",
       price: getTariffPrice(pricing.tariffs.optimal),
       icon: Crown,
       popular: true,
@@ -145,15 +137,12 @@ export default function Pricing() {
         "Публичный профиль специалиста",
         "Размещение объектов на карте",
         "Продвижение объявлений",
-        "Сравнение объектов в избранном"
+        "Сравнение объектов в избранном",
       ],
     },
-
     {
       id: "business",
       title: t("pricing.tariffs.business.title"),
-      price: pricing.tariffs.business,
-      title: "Для агентства",
       price: getTariffPrice(pricing.tariffs.business),
       icon: Building2,
       desc: t("pricing.tariffs.business.description"),
@@ -167,10 +156,9 @@ export default function Pricing() {
         `До ${getTariffLimit(pricing.tariffs.business, "vipLifts", DEFAULT_PRICING.tariffs.business.vipLifts)} поднятий в VIP`,
         "Профиль агентства",
         "Размещение объектов агентства",
-        "Сравнение объектов в избранном"
+        "Сравнение объектов в избранном",
       ],
     },
-
     {
       id: "developer",
       title: t("pricing.tariffs.developer.title"),
@@ -217,36 +205,27 @@ export default function Pricing() {
   ];
 
   const selectedPeriod = periods.find((item) => item.id === period);
-
   const discountPercent = selectedPeriod?.discountPercent ?? 0;
-
   const months = Number(period);
 
   const getPrice = (price) => {
     if (price === null) return null;
-
     if (price === 0) return 0;
-
     return Math.round(price * (1 - discountPercent / 100));
   };
 
   const getTotal = (price) => {
     if (price === null) return null;
-
     if (price === 0) return 0;
-
     const monthlyPrice = getPrice(price);
-
     return monthlyPrice * months;
   };
 
-  const hasDiscount = (price) => {
-    return discountPercent > 0 && price !== null && price > 0;
-  };
+  const hasDiscount = (price) =>
+    discountPercent > 0 && price !== null && price > 0;
 
   const handleProfileClick = () => {
     const token = localStorage.getItem("uytap_token");
-
     if (token) {
       router.push("/profile");
     } else {
@@ -260,18 +239,12 @@ export default function Pricing() {
       return;
     }
 
-    // Тариф застройщика оформляется не через онлайн-оплату (backend не
-    // принимает его в /api/payments/create) — независимо от того, задал
-    // ли админ конкретную цену или оставил "Индивидуально". У этого
-    // тарифа отдельная страница-визитка с готовым WhatsApp-сообщением
-    // именно под застройщиков (см. app/connect/page.jsx).
     if (tariff.developer) {
       router.push("/connect");
       return;
     }
 
     const token = localStorage.getItem("uytap_token");
-
     if (!token) {
       router.push("/auth-required");
       return;
@@ -294,7 +267,6 @@ export default function Pricing() {
       <div className={styles.glowTwo} />
 
       {/* HERO */}
-
       <section className={styles.hero}>
         <div className={styles.heroBadge}>
           <Zap size={14} />
@@ -317,7 +289,6 @@ export default function Pricing() {
               onClick={() => setPeriod(item.id)}
             >
               <span>{item.title}</span>
-
               {item.discount && <small>{item.discount}</small>}
             </button>
           ))}
@@ -325,27 +296,21 @@ export default function Pricing() {
       </section>
 
       {/* TARIFFS */}
-
       <section className={styles.cardsSection}>
         <div className={styles.sectionHeader}>
           <div>
             <span className={styles.sectionNumber}>01</span>
-
             <span className={styles.sectionLabel}>
               {t("pricing.sections.tariffs")}
             </span>
           </div>
-
           <p>{t("pricing.tariffsSectionDescription")}</p>
         </div>
 
         <div className={styles.cards}>
           {tariffs.map((item, index) => {
             const Icon = item.icon;
-
             const currentPrice = getPrice(item.price);
-            const total = getTotal(item.price);
-
             const discounted = hasDiscount(item.price);
 
             return (
@@ -368,14 +333,12 @@ export default function Pricing() {
                   <div className={styles.icon}>
                     <Icon size={23} />
                   </div>
-
                   <span className={styles.cardIndex}>
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
 
                 <h2>{item.title}</h2>
-
                 <p className={styles.desc}>{item.desc}</p>
 
                 <div className={styles.price}>
@@ -395,9 +358,7 @@ export default function Pricing() {
                           {item.price} {t("pricing.som")}
                         </span>
                       )}
-
                       <strong>{currentPrice}</strong>
-
                       <span>{t("pricing.somPerMonth")}</span>
                     </>
                   )}
@@ -417,7 +378,6 @@ export default function Pricing() {
                       <span className={styles.check}>
                         <Check size={12} />
                       </span>
-
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -426,17 +386,11 @@ export default function Pricing() {
                 <button
                   type="button"
                   className={styles.cardButton}
-                  onClick={() =>
-                    item.developer
-                      ? router.push("/connect")
-                      : handleTariffClick(item)
-                  }
                   onClick={() => handleTariffClick(item)}
                 >
                   {item.developer
                     ? t("pricing.discussPackage")
                     : t("pricing.chooseTariff")}
-
                   <ArrowRight size={16} />
                 </button>
               </article>
@@ -446,68 +400,50 @@ export default function Pricing() {
       </section>
 
       {/* HOW IT WORKS */}
-
       <section className={styles.how}>
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>02</span>
-
           <span className={styles.sectionLabel}>
             {t("pricing.sections.howItWorks")}
           </span>
-
           <h2>
             {t("pricing.how.title")}
             <span> {t("pricing.how.titleAccent")}</span>
           </h2>
-
           <p>{t("pricing.how.description")}</p>
         </div>
 
         <div className={styles.steps}>
           <div className={styles.step}>
             <div className={styles.stepNumber}>01</div>
-
             <h3>{t("pricing.how.steps.choose.title")}</h3>
-
             <p>{t("pricing.how.steps.choose.description")}</p>
           </div>
-
           <div className={styles.step}>
             <div className={styles.stepNumber}>02</div>
-
             <h3>{t("pricing.how.steps.account.title")}</h3>
-
             <p>{t("pricing.how.steps.account.description")}</p>
           </div>
-
           <div className={styles.step}>
             <div className={styles.stepNumber}>03</div>
-
             <h3>{t("pricing.how.steps.payment.title")}</h3>
-
             <p>{t("pricing.how.steps.payment.description")}</p>
           </div>
-
           <div className={styles.step}>
             <div className={styles.stepNumber}>04</div>
-
             <h3>{t("pricing.how.steps.clients.title")}</h3>
-
             <p>{t("pricing.how.steps.clients.description")}</p>
           </div>
         </div>
       </section>
 
       {/* PAYMENT */}
-
       <section className={styles.payment}>
         <div className={styles.sectionTitle}>
           <span className={styles.sectionNumber}>03</span>
-
           <span className={styles.sectionLabel}>
             {t("pricing.sections.payment")}
           </span>
-
           <h2>
             {t("pricing.payment.title")}
             <span> {t("pricing.payment.titleAccent")}</span>
@@ -519,61 +455,46 @@ export default function Pricing() {
             <div className={styles.smallIcon}>
               <CreditCard size={20} />
             </div>
-
             <h3>{t("pricing.payment.card.title")}</h3>
-
             <p>{t("pricing.payment.card.description")}</p>
           </div>
-
           <div className={styles.paymentCard}>
             <div className={styles.smallIcon}>
               <Smartphone size={20} />
             </div>
-
             <h3>{t("pricing.payment.mobile.title")}</h3>
-
             <p>{t("pricing.payment.mobile.description")}</p>
           </div>
-
           <div className={styles.paymentCard}>
             <div className={styles.smallIcon}>
               <Wallet size={20} />
             </div>
-
             <h3>{t("pricing.payment.business.title")}</h3>
-
             <p>{t("pricing.payment.business.description")}</p>
           </div>
-
           <div className={styles.paymentCard}>
             <div className={styles.smallIcon}>
               <ShieldCheck size={20} />
             </div>
-
             <h3>{t("pricing.payment.security.title")}</h3>
-
             <p>{t("pricing.payment.security.description")}</p>
           </div>
         </div>
       </section>
 
       {/* PROMOTION */}
-
       <section className={styles.promotion}>
         <div className={styles.promotionHeader}>
           <div>
             <span className={styles.sectionNumber}>04</span>
-
             <span className={styles.sectionLabel}>
               {t("pricing.sections.promotion")}
             </span>
-
             <h2>
               {t("pricing.promotion.title")}
               <span> {t("pricing.promotion.titleAccent")}</span>
             </h2>
           </div>
-
           <p>{t("pricing.promotion.description")}</p>
         </div>
 
@@ -582,36 +503,26 @@ export default function Pricing() {
             <div className={styles.promoIcon}>
               <Rocket size={22} />
             </div>
-
             <span className={styles.promoIndex}>01</span>
-
             <h3>ТОП</h3>
-
             <strong>
               {pricing.services.top} {t("pricing.somPerDay")}
             </strong>
-
             <p>{t("pricing.promotion.top")}</p>
           </div>
 
           <div className={styles.promoCard}>
             <div
               className={styles.promoIcon}
-              style={{
-                borderColor: "#9a9a0b7f",
-              }}
+              style={{ borderColor: "#9a9a0b7f" }}
             >
               <Crown size={22} color="#9a9a0b" />
             </div>
-
             <span className={styles.promoIndex}>02</span>
-
             <h3>VIP</h3>
-
             <strong style={{ color: "#9a9a0b" }}>
               {pricing.services.vip} {t("pricing.somPerDay")}
             </strong>
-
             <p>{t("pricing.promotion.vip")}</p>
           </div>
 
@@ -619,15 +530,11 @@ export default function Pricing() {
             <div className={styles.promoIcon}>
               <Zap size={22} />
             </div>
-
             <span className={styles.promoIndex}>03</span>
-
             <h3>{t("pricing.promotion.urgentTitle")}</h3>
-
             <strong>
               {pricing.services.urgent} {t("pricing.somPerDay")}
             </strong>
-
             <p>{t("pricing.promotion.urgent")}</p>
           </div>
         </div>
@@ -636,20 +543,16 @@ export default function Pricing() {
           <div className={styles.smmVisual}>
             <div
               className={styles.smmIcon}
-              style={{
-                borderColor: "#eb23ac6a",
-              }}
+              style={{ borderColor: "#eb23ac6a" }}
             >
               <Camera size={23} color="#eb23ab" />
             </div>
-
             <span className={styles.smmNumber}>05.2</span>
           </div>
 
           <div className={styles.smmContent}>
             <div className={styles.smmTop}>
               <span className={styles.smmLabel}>{t("pricing.smm.label")}</span>
-
               <span className={styles.smmPlatforms}>
                 Instagram · Telegram · Meta Ads
               </span>
@@ -672,17 +575,14 @@ export default function Pricing() {
                 <Check size={12} />
                 {t("pricing.smm.features.layout")}
               </span>
-
               <span>
                 <Check size={12} />
                 {t("pricing.smm.features.post")}
               </span>
-
               <span>
                 <Check size={12} />
                 {t("pricing.smm.features.telegram")}
               </span>
-
               <span>
                 <Check size={12} />
                 {t("pricing.smm.features.api")}
@@ -693,24 +593,19 @@ export default function Pricing() {
       </section>
 
       {/* CTA */}
-
       <section className={styles.cta}>
         <div className={styles.ctaGlow} />
-
         <div className={styles.ctaContent}>
           <div className={styles.ctaBadge}>
             <Sparkles size={14} />
             UyTap
           </div>
-
           <h2>
             {t("pricing.cta.title")}
             <br />
             {t("pricing.cta.titleSecond")} <span>UyTap.</span>
           </h2>
-
           <p>{t("pricing.cta.description")}</p>
-
           <button
             type="button"
             className={styles.ctaButton}
