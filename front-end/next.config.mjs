@@ -1,5 +1,23 @@
+const backendUrl =
+  process.env.BACKEND_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:5000/api";
+
+const normalizedBackendUrl = backendUrl.replace(/\/$/, "");
+const targetApiUrl = normalizedBackendUrl.endsWith("/api")
+  ? normalizedBackendUrl
+  : `${normalizedBackendUrl}/api`;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${targetApiUrl}/:path*`,
+      },
+    ];
+  },
   images: {
     // Список конкретных хостов вместо "**" — next/image проксирует
     // и скачивает изображения на сервере, поэтому разрешение любого

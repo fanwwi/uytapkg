@@ -89,12 +89,6 @@ export default function Pricing() {
         t("pricing.tariffs.private.features.profile"),
         t("pricing.tariffs.private.features.favorites"),
         t("pricing.tariffs.private.features.compare"),
-        "2 бесплатных объявления",
-        "Размещение объявления на 45 дней",
-        "Поиск и фильтры",
-        "Публичный профиль пользователя",
-        "Добавление в избранное",
-        "Сравнение объектов в избранном",
       ],
     },
     {
@@ -104,18 +98,12 @@ export default function Pricing() {
       icon: Rocket,
       desc: t("pricing.tariffs.start.description"),
       features: [
-        t("pricing.tariffs.start.features.listings"),
-        t("pricing.tariffs.start.features.top"),
+        `До ${getTariffLimit(pricing.tariffs.start, "activeListings", DEFAULT_PRICING.tariffs.start.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.start, "topLifts", DEFAULT_PRICING.tariffs.start.topLifts)} поднятий в ТОП`,
         t("pricing.tariffs.start.features.profile"),
         t("pricing.tariffs.start.features.search"),
         t("pricing.tariffs.start.features.map"),
         t("pricing.tariffs.start.features.compare"),
-        `До ${getTariffLimit(pricing.tariffs.start, "activeListings", DEFAULT_PRICING.tariffs.start.activeListings)} активных объявлений`,
-        `До ${getTariffLimit(pricing.tariffs.start, "topLifts", DEFAULT_PRICING.tariffs.start.topLifts)} поднятий в ТОП`,
-        "Публичный профиль специалиста",
-        "Поиск и фильтры",
-        "Размещение объявлений на карте",
-        "Сравнение объектов в избранном",
       ],
     },
     {
@@ -126,18 +114,12 @@ export default function Pricing() {
       popular: true,
       desc: t("pricing.tariffs.optimal.description"),
       features: [
-        t("pricing.tariffs.optimal.features.listings"),
-        t("pricing.tariffs.optimal.features.vip"),
+        `До ${getTariffLimit(pricing.tariffs.optimal, "activeListings", DEFAULT_PRICING.tariffs.optimal.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.optimal, "vipLifts", DEFAULT_PRICING.tariffs.optimal.vipLifts)} поднятий объявления в VIP`,
         t("pricing.tariffs.optimal.features.profile"),
         t("pricing.tariffs.optimal.features.map"),
         t("pricing.tariffs.optimal.features.promotion"),
         t("pricing.tariffs.optimal.features.compare"),
-        `До ${getTariffLimit(pricing.tariffs.optimal, "activeListings", DEFAULT_PRICING.tariffs.optimal.activeListings)} активных объявлений`,
-        `До ${getTariffLimit(pricing.tariffs.optimal, "vipLifts", DEFAULT_PRICING.tariffs.optimal.vipLifts)} поднятий объявления в VIP`,
-        "Публичный профиль специалиста",
-        "Размещение объектов на карте",
-        "Продвижение объявлений",
-        "Сравнение объектов в избранном",
       ],
     },
     {
@@ -147,16 +129,11 @@ export default function Pricing() {
       icon: Building2,
       desc: t("pricing.tariffs.business.description"),
       features: [
-        t("pricing.tariffs.business.features.listings"),
-        t("pricing.tariffs.business.features.vip"),
+        `До ${getTariffLimit(pricing.tariffs.business, "activeListings", DEFAULT_PRICING.tariffs.business.activeListings)} активных объявлений`,
+        `До ${getTariffLimit(pricing.tariffs.business, "vipLifts", DEFAULT_PRICING.tariffs.business.vipLifts)} поднятий в VIP`,
         t("pricing.tariffs.business.features.profile"),
         t("pricing.tariffs.business.features.objects"),
         t("pricing.tariffs.business.features.compare"),
-        `До ${getTariffLimit(pricing.tariffs.business, "activeListings", DEFAULT_PRICING.tariffs.business.activeListings)} активных объявлений`,
-        `До ${getTariffLimit(pricing.tariffs.business, "vipLifts", DEFAULT_PRICING.tariffs.business.vipLifts)} поднятий в VIP`,
-        "Профиль агентства",
-        "Размещение объектов агентства",
-        "Сравнение объектов в избранном",
       ],
     },
     {
@@ -373,8 +350,8 @@ export default function Pricing() {
                 <div className={styles.divider} />
 
                 <ul>
-                  {item.features.map((feature) => (
-                    <li key={feature}>
+                  {item.features.map((feature, idx) => (
+                    <li key={`${feature}-${idx}`}>
                       <span className={styles.check}>
                         <Check size={12} />
                       </span>

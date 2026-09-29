@@ -4,11 +4,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const supabaseUrl = process.env.SUPABASE_URL || "https://kakiuqgjhcunyaxydopx.supabase.co";
-const supabaseKey = process.env.SUPABASE_KEY || process.env.JWT_SECRET;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Ошибка: SUPABASE_URL или SUPABASE_KEY не определены в файле .env!");
+if (!process.env.SUPABASE_KEY) {
+  console.error("❌ CRITICAL ERROR: SUPABASE_KEY environment variable is missing!");
+  throw new Error("SUPABASE_KEY environment variable is not defined in .env");
 }
+
+const supabaseKey = process.env.SUPABASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
