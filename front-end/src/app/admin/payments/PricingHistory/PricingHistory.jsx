@@ -416,41 +416,6 @@ export default function PaymentHistory({
                   </strong>
                 </div>
               </div>
-
-              {/* RECEIPT */}
-
-              {selectedPayment.status === "approved" && (
-                <div className={styles.receiptPreview}>
-                  <div className={styles.receiptHeader}>
-                    <div>
-                      <CalendarDays />
-
-                      <span>Чек об оплате</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={onDownloadReceipt}
-                      disabled={isDownloading}
-                    >
-                      {isDownloading ? (
-                        <LoaderCircle className={styles.spin} />
-                      ) : (
-                        <Download />
-                      )}
-                      Скачать
-                    </button>
-                  </div>
-
-                  <div className={styles.receiptImage}>
-                    <div>
-                      <CreditCard />
-
-                      <span>Чек сформирован — нажмите «Скачать»</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
