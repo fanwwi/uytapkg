@@ -23,7 +23,11 @@
   padding-top: 100px;
 
   background:
-    radial-gradient(circle at 15% 0%, rgba(23, 11, 188, 0.551), transparent 30%),
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(23, 11, 188, 0.551),
+      transparent 30%
+    ),
     radial-gradient(
       circle at 90% 25%,
       rgba(72, 61, 246, 0.055),
@@ -1738,4 +1742,18 @@
 
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.disabledCard:hover {
+  transform: none;
+}
+
+.cardButtonDisabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+.cardButtonDisabled:hover {
+  transform: none;
 }
