@@ -18,10 +18,15 @@ import StepListingType from "./components/StepListingType/StepListingType";
 
 import styles from "./AddProduct.module.css";
 
-// Срок VIP/ТОП/Срочно, применяемый при публикации (со списанием тарифа
-// или после оплаты) — продлить на другой срок можно позже через "Мои
-// объявления" (см. profile/ads/PromoteListingModal), где есть выбор дней.
+/* =========================================================
+   BOOST
+========================================================= */
+
 const DEFAULT_BOOST_DAYS = 7;
+
+/* =========================================================
+   INITIAL FORM
+========================================================= */
 
 const initialForm = {
   title: "",
@@ -29,11 +34,13 @@ const initialForm = {
   // =========================
   // ФОТО
   // =========================
+
   images: [],
 
   // =========================
   // МЕСТОПОЛОЖЕНИЕ
   // =========================
+
   country: "Кыргызстан",
   region: "",
   city: "",
@@ -44,17 +51,20 @@ const initialForm = {
   // =========================
   // СДЕЛКА
   // =========================
+
   dealType: "",
   rentalPeriod: "",
 
   // =========================
   // КАТЕГОРИЯ
   // =========================
+
   category: "",
 
   // =========================
   // ЦЕНА
   // =========================
+
   priceFrom: "",
   priceTo: "",
   price: "",
@@ -62,6 +72,7 @@ const initialForm = {
   // =========================
   // ПЛОЩАДЬ
   // =========================
+
   areaFrom: "",
   areaTo: "",
   area: "",
@@ -69,16 +80,19 @@ const initialForm = {
   // =========================
   // ИССЫК-КУЛЬ
   // =========================
+
   beachDistance: "",
 
   // =========================
   // ЗАСТРОЙЩИК / ЖК
   // =========================
+
   developerOrComplex: "",
 
   // =========================
   // ХАРАКТЕРИСТИКИ
   // =========================
+
   series: "",
   residentialComplex: "",
   residentialComplexId: "",
@@ -103,6 +117,7 @@ const initialForm = {
 
   roomsInApartment: "",
   privateBathroom: "",
+  roomLocation: "",
 
   premisesType: "",
   technicalParameters: "",
@@ -125,11 +140,13 @@ const initialForm = {
   // =========================
   // УДОБСТВА
   // =========================
+
   amenities: [],
 
   // =========================
   // ДОПОЛНИТЕЛЬНЫЕ
   // =========================
+
   wifi: "",
   pool: "",
   bath: "",
@@ -144,6 +161,7 @@ const initialForm = {
   // =========================
   // АДРЕС
   // =========================
+
   address: "",
   latitude: null,
   longitude: null,
@@ -151,26 +169,55 @@ const initialForm = {
   // =========================
   // ТИП РАЗМЕЩЕНИЯ
   // =========================
+
   listingType: "",
 
   // =========================
   // ОПИСАНИЕ
   // =========================
+
   description: "",
 };
 
+/* =========================================================
+   CATEGORY TITLES
+   Для generatedDescription.
+========================================================= */
+
+const russianCategoryTitles = {
+  apartment: "квартира",
+  house: "дом",
+  cottage: "коттедж",
+  land: "земельный участок",
+  room: "комната",
+  commercial: "коммерческое помещение",
+  parking: "паркинг",
+};
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 export default function AddProductPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+
+  const { t, language } = useLanguage();
 
   const [step, setStep] = useState(1);
+
   const [form, setForm] = useState(initialForm);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [submitMessage, setSubmitMessage] = useState("");
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const totalSteps = 6;
+
+  /* =========================================================
+     FORM UPDATE
+  ========================================================= */
 
   function updateForm(values) {
     setForm((prev) => ({
@@ -179,20 +226,52 @@ export default function AddProductPage() {
     }));
   }
 
+  /* =========================================================
+     NAVIGATION
+  ========================================================= */
+
   function nextStep() {
     setStep((prev) => Math.min(prev + 1, totalSteps));
+
     setSubmitMessage("");
     setSubmitSuccess(false);
   }
 
   function prevStep() {
     setStep((prev) => Math.max(prev - 1, 1));
+
     setSubmitMessage("");
     setSubmitSuccess(false);
   }
 
+  /* =========================================================
+     CATEGORY TITLE
+  ========================================================= */
+
+  function getCategoryTitle(category) {
+    if (language === "ru") {
+      return russianCategoryTitles[category] || "объект недвижимости";
+    }
+
+    const translated = t(`addProduct.categoryTitles.${category}`);
+
+    if (translated && translated !== `addProduct.categoryTitles.${category}`) {
+      return translated;
+    }
+
+    return (
+      russianCategoryTitles[category] || t("addProduct.categoryTitles.default")
+    );
+  }
+
+  /* =========================================================
+     SUBMIT
+  ========================================================= */
+
   async function submitProduct() {
-    if (isSubmitting) return null;
+    if (isSubmitting) {
+      return null;
+    }
 
     setIsSubmitting(true);
     setSubmitMessage("");
@@ -203,12 +282,13 @@ export default function AddProductPage() {
 
       if (!token) {
         router.push("/auth-required");
-        return;
+
+        return null;
       }
 
-      // =========================
-      // ВАЛИДАЦИЯ
-      // =========================
+      /* =====================================================
+         ВАЛИДАЦИЯ
+      ===================================================== */
 
       if (!form.title?.trim()) {
         throw new Error(t("addProduct.errors.titleRequired"));
@@ -226,26 +306,25 @@ export default function AddProductPage() {
         throw new Error(t("addProduct.errors.dealRequired"));
       }
 
-      // =========================
-      // ЦЕНА
-      // =========================
+      /* =====================================================
+         ЦЕНА
+      ===================================================== */
 
       const price = Number(form.price);
 
       const derivedPrice = price > 0 ? price : 100000;
 
-      // =========================
-      // ПЛОЩАДЬ
-      // =========================
+      /* =====================================================
+         ПЛОЩАДЬ
+      ===================================================== */
 
       const area = Number(form.area);
 
       const derivedArea = area > 0 ? area : null;
 
-      // =========================
-      // РАССТОЯНИЕ ДО ПЛЯЖА
-      // ТОЛЬКО ДЛЯ ИССЫК-КУЛЯ
-      // =========================
+      /* =====================================================
+         ИССЫК-КУЛЬ
+      ===================================================== */
 
       const isIssykKul =
         form.region === "ISSYK_KUL" ||
@@ -258,26 +337,15 @@ export default function AddProductPage() {
           ? Number(form.beachDistance)
           : null;
 
-      // =========================
-      // НАЗВАНИЕ КАТЕГОРИИ
-      // =========================
+      /* =====================================================
+         КАТЕГОРИЯ
+      ===================================================== */
 
-      const categoryTitles = {
-        apartment: t("addProduct.categoryTitles.apartment"),
-        house: t("addProduct.categoryTitles.house"),
-        cottage: t("addProduct.categoryTitles.cottage"),
-        land: t("addProduct.categoryTitles.land"),
-        room: t("addProduct.categoryTitles.room"),
-        commercial: t("addProduct.categoryTitles.commercial"),
-        parking: t("addProduct.categoryTitles.parking"),
-      };
+      const categoryTitle = getCategoryTitle(form.category);
 
-      const categoryTitle =
-        categoryTitles[form.category] || t("addProduct.categoryTitles.default");
-
-      // =========================
-      // ОПИСАНИЕ
-      // =========================
+      /* =====================================================
+         ОПИСАНИЕ
+      ===================================================== */
 
       const locationText =
         form.location ||
@@ -288,13 +356,19 @@ export default function AddProductPage() {
 
       const generatedDescription = [
         `${t("addProduct.generatedDescription.object")}: ${categoryTitle}.`,
+
         `${t("addProduct.generatedDescription.location")}: ${locationText}.`,
+
         form.district
-          ? `${t("addProduct.generatedDescription.district")}: ${form.district}.`
+          ? `${t(
+              "addProduct.generatedDescription.district",
+            )}: ${form.district}.`
           : "",
+
         form.address
           ? `${t("addProduct.generatedDescription.address")}: ${form.address}.`
           : "",
+
         form.developerOrComplex
           ? `${t(
               "addProduct.generatedDescription.developer",
@@ -306,9 +380,9 @@ export default function AddProductPage() {
 
       const description = form.description?.trim() || generatedDescription;
 
-      // =========================
-      // ФОТО
-      // =========================
+      /* =====================================================
+         ФОТО
+      ===================================================== */
 
       const photos = [];
 
@@ -322,9 +396,9 @@ export default function AddProductPage() {
             console.error("Failed to upload image:", img.file.name, e);
 
             throw new Error(
-              `${t("addProduct.errors.photoUpload")} ${
-                img.file.name
-              }: ${e.message || t("addProduct.errors.unknown")}`,
+              `${t("addProduct.errors.photoUpload")} ${img.file.name}: ${
+                e.message || t("addProduct.errors.unknown")
+              }`,
             );
           }
         } else if (img.url && !img.url.startsWith("blob:")) {
@@ -332,9 +406,9 @@ export default function AddProductPage() {
         }
       }
 
-      // =========================
-      // УДОБСТВА
-      // =========================
+      /* =====================================================
+         УДОБСТВА
+      ===================================================== */
 
       const selectedAmenities = Array.isArray(form.amenities)
         ? form.amenities.filter((item) => item && item !== "Любые")
@@ -342,9 +416,9 @@ export default function AddProductPage() {
           ? [form.amenities]
           : [];
 
-      // =========================
-      // CONSTANTS
-      // =========================
+      /* =====================================================
+         CONSTANTS
+      ===================================================== */
 
       let resortAmenities = [];
 
@@ -358,9 +432,9 @@ export default function AddProductPage() {
         console.error("Failed to fetch constants for amenities split", e);
       }
 
-      // =========================
-      // РАЗДЕЛЕНИЕ УДОБСТВ
-      // =========================
+      /* =====================================================
+         РАЗДЕЛЕНИЕ УДОБСТВ
+      ===================================================== */
 
       const resortSelectedAmenities = selectedAmenities.filter((amenity) =>
         resortAmenities.includes(amenity),
@@ -370,35 +444,52 @@ export default function AddProductPage() {
         (amenity) => !resortAmenities.includes(amenity),
       );
 
-      // =========================
-      // FEATURES
-      // =========================
+      /* =====================================================
+         FEATURES
+      ===================================================== */
 
       const features = {
-        // Общие характеристики
+        // Общие
         series: form.series || null,
+
         residentialComplexName: form.residentialComplex || null,
+
         rooms: form.rooms ? Number(form.rooms) : null,
+
         floor: form.floor || null,
+
         condition: form.condition || null,
+
         walls: form.walls || null,
+
         heating: form.heating || null,
+
         documents: form.documents || null,
+
         furniture: form.furniture || null,
+
         offerType: form.offerType || null,
 
         // Дом
         houseType: form.houseType || null,
+
         floors: form.floors || null,
+
         sewerage: form.sewerage || null,
+
         water: form.water || null,
+
         electricity: form.electricity || null,
 
         // Участок
         purpose: form.purpose || null,
+
         fence: form.fence || null,
+
         location: form.landLocation || null,
+
         terrain: form.terrain || null,
+
         communications: form.communications || null,
 
         // Комната
@@ -407,45 +498,67 @@ export default function AddProductPage() {
           : null,
 
         privateBathroom: form.privateBathroom || null,
+
         roomLocation: form.roomLocation || null,
 
         // Коммерция
         premisesType: form.premisesType || null,
+
         technicalParameters: form.technicalParameters || null,
+
         firstLine: form.firstLine || null,
+
         separateEntrance: form.separateEntrance || null,
+
         rentalBusiness: form.rentalBusiness || null,
 
-        // Паркинг / гараж
+        // Паркинг
         ceilingHeight: form.ceilingHeight || null,
+
         parkingType: form.parkingType || null,
+
         material: form.material || null,
+
         security: form.security || null,
+
         gates: form.gates || null,
+
         inspectionPit: form.inspectionPit || null,
+
         basement: form.basement || null,
+
         truckAccess: form.truckAccess || null,
+
         gateType: form.gateType || null,
 
         // Дополнительные
         wifi: form.wifi || null,
+
         pool: form.pool || null,
+
         bath: form.bath || null,
+
         view: form.view || null,
+
         parking: form.parking || null,
+
         beach: form.beach || null,
+
         pets: form.pets || null,
+
         children: form.children || null,
+
         buildingType: form.buildingType || null,
+
         repair: form.repair || null,
 
         // Общие удобства
         amenities: generalSelectedAmenities,
       };
 
-      // =========================
-      // PAYLOAD
-      // =========================
+      /* =====================================================
+         PAYLOAD
+      ===================================================== */
 
       const payload = {
         // Основное
@@ -517,19 +630,12 @@ export default function AddProductPage() {
         // Тип размещения
         listingType: form.listingType || "standard",
 
-        // Фото
-        // На сколько дней действует VIP/ТОП/Срочно — актуально только
-        // вместе с соответствующим listingType, для остальных бэкенд его
-        // игнорирует (см. back-end/src/controllers/listingsController.js
-        // createListing).
+        // Продвижение
         days: ["vip", "top", "urgent"].includes(form.listingType)
           ? DEFAULT_BOOST_DAYS
           : undefined,
 
-        // =========================
-        // ФОТО
-        // =========================
-
+        // Фото
         photos,
 
         // Основные параметры
@@ -558,9 +664,9 @@ export default function AddProductPage() {
 
       console.log("📦 Данные объявления:", payload);
 
-      // =========================
-      // СОЗДАНИЕ ОБЪЯВЛЕНИЯ
-      // =========================
+      /* =====================================================
+         CREATE LISTING
+      ===================================================== */
 
       const result = await createListing(token, payload);
 
@@ -568,9 +674,9 @@ export default function AddProductPage() {
 
       setSubmitMessage(result?.message || t("addProduct.success"));
 
-      // =========================
-      // ОЧИСТКА BLOB URL
-      // =========================
+      /* =====================================================
+         CLEAN BLOB URLS
+      ===================================================== */
 
       form.images?.forEach((image) => {
         if (image?.url?.startsWith("blob:")) {
@@ -578,38 +684,40 @@ export default function AddProductPage() {
         }
       });
 
-      // =========================
-      // RESET
-      // =========================
+      /* =====================================================
+         RESET
+      ===================================================== */
 
       setForm(initialForm);
 
       setStep(1);
 
-      // =========================
-      // REDIRECT
-      // =========================
-      //
-      // needsPayment=true — бэкенд создал объявление статусом "draft"
-      // (VIP/ТОП без покрытия тарифом либо "Срочно" — платные типы без
-      // бесплатного лимита): оно НЕ опубликовано и не появится в поиске,
-      // пока не пройдёт оплата. Ведём сразу на оплату конкретно этого
-      // объявления — /payment сам создаст счёт по listingId/serviceType/days.
+      /* =====================================================
+         PAYMENT
+      ===================================================== */
+
       if (result?.needsPayment && result?.promotion && result?.data?.id) {
         const params = new URLSearchParams({
           type: "promotion",
+
           listingId: result.data.id,
+
           serviceType: result.promotion.serviceType,
+
           days: String(result.promotion.days),
         });
 
         router.push(`/payment?${params.toString()}`);
+
         return result;
       }
 
-      // Бесплатная публикация ИЛИ VIP/ТОП, сразу списанные с тарифа —
-      // объявление уже активно.
-      setSubmitMessage(result?.message || "Объявление успешно опубликовано");
+      /* =====================================================
+         FREE / ALREADY PAID
+      ===================================================== */
+
+      setSubmitMessage(result?.message || t("addProduct.success"));
+
       router.push("/profile/ads");
 
       return result;
@@ -619,7 +727,6 @@ export default function AddProductPage() {
       setSubmitSuccess(false);
 
       setSubmitMessage(error?.message || t("addProduct.errors.publish"));
-      setSubmitMessage(error?.message || "Не удалось опубликовать объявление");
 
       return null;
     } finally {
@@ -627,11 +734,16 @@ export default function AddProductPage() {
     }
   }
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
         <Link href="/" className={styles.homeButton}>
           <House size={18} />
+
           {t("addProduct.home")}
         </Link>
 

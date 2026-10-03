@@ -4775,7 +4775,7 @@ const ky = {
   developerProfile: {
     badge: "Куруучу",
 
-    companyType: "Куруучу жана девелопер",
+    companyType: "Куруучу",
 
     verification: {
       verified: "Профиль тастыкталган",

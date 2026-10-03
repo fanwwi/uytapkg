@@ -95,6 +95,37 @@ const categoryIcons = {
 };
 
 /* =========================================================
+   RUSSIAN CATEGORY TITLES
+   Используются напрямую для RU,
+   чтобы категории больше не зависели
+   от неправильного fallback в переводах.
+========================================================= */
+
+const russianCategoryTitles = {
+  apartment: "Квартиры",
+  house: "Дома",
+  cottage: "Коттеджи",
+  land: "Земельные участки",
+  room: "Комнаты",
+  commercial: "Коммерческая недвижимость",
+  parking: "Паркинг",
+};
+
+/* =========================================================
+   RUSSIAN CATEGORY DESCRIPTIONS
+========================================================= */
+
+const russianCategoryDescriptions = {
+  apartment: "Квартиры в новостройках и на вторичном рынке",
+  house: "Частные дома, особняки и таунхаусы",
+  cottage: "Коттеджи и загородные объекты у озера",
+  land: "Земельные участки различного назначения",
+  room: "Отдельные комнаты в квартире, доме или общежитии",
+  commercial: "Офисы, магазины, склады и другие помещения",
+  parking: "Паркинги, гаражи и места для автомобилей",
+};
+
+/* =========================================================
    CATEGORIES
 ========================================================= */
 
@@ -533,7 +564,15 @@ function getAmenityLabel(amenity, t) {
   return getTranslation(t, `stepCategory.amenities.items.${amenity}`, amenity);
 }
 
-function getCategoryTitle(category, t) {
+/* =========================================================
+   CATEGORY TRANSLATION
+========================================================= */
+
+function getCategoryTitle(category, t, language) {
+  if (language === "ru") {
+    return russianCategoryTitles[category] || "Объект недвижимости";
+  }
+
   return getTranslation(
     t,
     `stepCategory.categories.${category}.title`,
@@ -541,7 +580,11 @@ function getCategoryTitle(category, t) {
   );
 }
 
-function getCategoryDescription(category, t) {
+function getCategoryDescription(category, t, language) {
+  if (language === "ru") {
+    return russianCategoryDescriptions[category] || "";
+  }
+
   return getTranslation(
     t,
     `stepCategory.categories.${category}.description`,
@@ -554,7 +597,7 @@ function getCategoryDescription(category, t) {
 ========================================================= */
 
 export default function StepCategory({ form, updateForm, onNext, onBack }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [dynamicOptions, setDynamicOptions] = useState({});
   const [apiError, setApiError] = useState(false);
@@ -590,6 +633,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
       })
       .catch((err) => {
         console.error("Failed to fetch constants", err);
+
         setApiError(true);
       });
   }, []);
@@ -647,6 +691,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
   );
 
   const category = categories[form.category];
+
   const CategoryIcon = categoryIcons[form.category];
 
   const isLand = form.category === "land";
@@ -816,9 +861,9 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
                   </div>
 
                   <div className={styles.categoryContent}>
-                    <strong>{getCategoryTitle(key, t)}</strong>
+                    <strong>{getCategoryTitle(key, t, language)}</strong>
 
-                    <span>{getCategoryDescription(key, t)}</span>
+                    <span>{getCategoryDescription(key, t, language)}</span>
                   </div>
 
                   <ArrowRight className={styles.categoryArrow} size={19} />
@@ -842,7 +887,7 @@ export default function StepCategory({ form, updateForm, onNext, onBack }) {
               <div className={styles.selectedCategoryInfo}>
                 <span>{t("stepCategory.selectedCategory")}</span>
 
-                <strong>{getCategoryTitle(form.category, t)}</strong>
+                <strong>{getCategoryTitle(form.category, t, language)}</strong>
               </div>
             </div>
 
