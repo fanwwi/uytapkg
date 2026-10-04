@@ -1,3 +1,12 @@
+/* =========================================================
+   BASE / SAFETY
+========================================================= */
+
+.page,
+.page * {
+  box-sizing: border-box;
+}
+
 .page {
   --bg: #f6f7fb;
 
@@ -22,13 +31,15 @@
   --accent-soft-strong: rgba(72, 61, 246, 0.13);
 
   position: relative;
+  isolation: isolate;
 
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
 
   padding: 105px 24px 90px;
 
-  overflow: hidden;
+  overflow-x: clip;
 
   color: var(--text);
 
@@ -45,12 +56,15 @@
       transparent 25%
     ),
     linear-gradient(180deg, #fafaff 0%, #f6f7fb 50%, #f4f5f9 100%);
-
-  box-sizing: border-box;
 }
 
-.page * {
-  box-sizing: border-box;
+.page img {
+  max-width: 100%;
+}
+
+.page a,
+.page button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* =========================================
@@ -70,7 +84,7 @@
 
   filter: blur(130px);
 
-  z-index: 0;
+  z-index: -1;
 }
 
 .backgroundGlow {
@@ -93,12 +107,14 @@
 
 .container {
   position: relative;
-
   z-index: 1;
 
   width: min(1180px, 100%);
+  max-width: 100%;
 
   margin: 0 auto;
+
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
@@ -106,17 +122,23 @@
   gap: 18px;
 }
 
+.container > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* =========================================
    BACK BUTTON
 ========================================= */
 
 .backButton {
+  width: max-content;
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
 
   gap: 9px;
-
-  width: fit-content;
 
   margin-bottom: 18px;
 
@@ -132,6 +154,7 @@
 
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.3;
 
   text-decoration: none;
 
@@ -140,6 +163,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 
   transition:
     transform 0.2s ease,
@@ -147,6 +171,12 @@
     border-color 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.backButton span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
 }
 
 .backButton:hover {
@@ -167,6 +197,8 @@
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
   color: var(--accent);
 
   transition: transform 0.2s ease;
@@ -184,6 +216,7 @@
   position: relative;
 
   width: 100%;
+  max-width: 100%;
 
   padding: 42px;
 
@@ -254,8 +287,9 @@
 
 .profileTop {
   position: relative;
-
   z-index: 1;
+
+  min-width: 0;
 
   display: grid;
 
@@ -271,6 +305,8 @@
 ========================================= */
 
 .avatarColumn {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -283,8 +319,6 @@
   height: 164px;
 
   padding: 4px;
-
-  box-sizing: border-box;
 
   border-radius: 27px;
 
@@ -308,15 +342,17 @@
 }
 
 .avatar img {
+  display: block;
+
   width: 100%;
   height: 100%;
-
-  display: block;
 
   object-fit: cover;
 }
 
 .avatarVerified {
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
 
@@ -328,11 +364,18 @@
 
   font-size: 10px;
   font-weight: 700;
+  line-height: 1.3;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
 }
 
 .avatarVerified svg {
   width: 13px;
   height: 13px;
+
+  flex-shrink: 0;
 
   color: var(--accent);
 }
@@ -343,15 +386,23 @@
 
 .info {
   min-width: 0;
+  max-width: 100%;
 }
 
 .topMeta {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
   gap: 9px;
 
   flex-wrap: wrap;
+}
+
+.badge,
+.verifiedLabel {
+  max-width: 100%;
 }
 
 .badge {
@@ -373,16 +424,20 @@
   font-size: 10px;
   font-weight: 850;
 
+  line-height: 1.2;
+
   text-transform: uppercase;
 
   letter-spacing: 0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .badgeDot {
   width: 5px;
   height: 5px;
 
-  flex-shrink: 0;
+  flex: 0 0 5px;
 
   border-radius: 50%;
 
@@ -401,16 +456,24 @@
 
   font-size: 10px;
   font-weight: 700;
+
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .verifiedLabel svg {
   width: 14px;
   height: 14px;
 
+  flex-shrink: 0;
+
   color: var(--accent);
 }
 
 .info h1 {
+  max-width: 100%;
+
   margin: 14px 0 0;
 
   color: #17171c;
@@ -423,12 +486,16 @@
 
   letter-spacing: -2px;
 
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .company {
+  min-width: 0;
+  max-width: 100%;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 8px;
 
@@ -438,16 +505,30 @@
 
   font-size: 14px;
   font-weight: 700;
+
+  line-height: 1.45;
 }
 
 .company svg {
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
   color: var(--accent);
 }
 
+.company span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .description {
+  width: 100%;
   max-width: 700px;
 
   margin: 14px 0 0;
@@ -457,6 +538,9 @@
   font-size: 13px;
 
   line-height: 1.7;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================================
@@ -464,6 +548,8 @@
 ========================================= */
 
 .actions {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -476,9 +562,9 @@
 
 .primaryAction,
 .secondaryAction {
-  min-height: 43px;
+  max-width: 100%;
 
-  padding: 0 15px;
+  min-height: 43px;
 
   display: inline-flex;
   align-items: center;
@@ -486,10 +572,14 @@
 
   gap: 8px;
 
+  padding: 0 15px;
+
   border-radius: 11px;
 
   font-size: 12px;
   font-weight: 800;
+
+  line-height: 1.2;
 
   text-decoration: none;
 
@@ -499,6 +589,14 @@
     border-color 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.primaryAction svg,
+.secondaryAction svg {
+  flex-shrink: 0;
+
+  width: 15px;
+  height: 15px;
 }
 
 .primaryAction {
@@ -547,27 +645,15 @@
   transform: translateY(-2px);
 }
 
-.actions svg {
-  width: 15px;
-  height: 15px;
-}
-
-.primaryAction svg {
-  color: #ffffff;
-}
-
-.secondaryAction svg {
-  color: var(--accent);
-}
-
 /* =========================================
    DETAILS
 ========================================= */
 
 .details {
   position: relative;
-
   z-index: 1;
+
+  min-width: 0;
 
   display: grid;
 
@@ -583,6 +669,7 @@
 
 .detail {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   align-items: center;
@@ -593,9 +680,9 @@
 
   color: inherit;
 
-  text-decoration: none;
-
   border-radius: 14px;
+
+  text-decoration: none;
 
   transition:
     background 0.2s ease,
@@ -610,7 +697,7 @@ a.detail:hover {
   width: 40px;
   height: 40px;
 
-  flex-shrink: 0;
+  flex: 0 0 40px;
 
   display: flex;
   align-items: center;
@@ -632,6 +719,7 @@ a.detail:hover {
 
 .detailContent {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -645,22 +733,25 @@ a.detail:hover {
   font-size: 9px;
   font-weight: 800;
 
+  line-height: 1.3;
+
   text-transform: uppercase;
 
   letter-spacing: 0.8px;
 }
 
 .detail strong {
-  overflow: hidden;
+  max-width: 100%;
 
   color: #555762;
 
   font-size: 12px;
   font-weight: 700;
 
-  text-overflow: ellipsis;
+  line-height: 1.45;
 
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .detailArrow {
@@ -669,7 +760,7 @@ a.detail:hover {
 
   margin-left: auto;
 
-  flex-shrink: 0;
+  flex: 0 0 15px;
 
   color: #a1a3ad;
 }
@@ -679,28 +770,28 @@ a.detail:hover {
 ========================================= */
 
 .stats {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 12px;
-
-  width: 100%;
 }
 
 .statCard {
   position: relative;
+
+  min-width: 0;
+  min-height: 90px;
 
   display: flex;
   align-items: center;
 
   gap: 14px;
 
-  min-height: 90px;
-
   padding: 18px 20px;
-
-  box-sizing: border-box;
 
   border-radius: 19px;
 
@@ -732,7 +823,7 @@ a.detail:hover {
   width: 44px;
   height: 44px;
 
-  flex-shrink: 0;
+  flex: 0 0 44px;
 
   display: flex;
   align-items: center;
@@ -752,6 +843,10 @@ a.detail:hover {
   color: var(--accent);
 }
 
+.statCard > div:last-child {
+  min-width: 0;
+}
+
 .statCard strong {
   display: block;
 
@@ -767,6 +862,8 @@ a.detail:hover {
 .statCard span {
   display: block;
 
+  max-width: 100%;
+
   margin-top: 5px;
 
   color: #858792;
@@ -775,9 +872,13 @@ a.detail:hover {
 
   font-weight: 800;
 
+  line-height: 1.35;
+
   text-transform: uppercase;
 
   letter-spacing: 0.55px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================
@@ -786,11 +887,14 @@ a.detail:hover {
 
 .listingsSection {
   width: 100%;
+  min-width: 0;
 
-  margin-top: 28px;
+  margin-top: 10px;
 }
 
 .sectionHeader {
+  min-width: 0;
+
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -800,18 +904,28 @@ a.detail:hover {
   margin-bottom: 18px;
 }
 
+.sectionHeader > div:first-child {
+  min-width: 0;
+}
+
 .sectionHeader > div:first-child > span {
   color: var(--accent);
 
   font-size: 9px;
   font-weight: 900;
 
+  line-height: 1.3;
+
   text-transform: uppercase;
 
   letter-spacing: 1.2px;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionHeader h2 {
+  max-width: 100%;
+
   margin: 6px 0 4px;
 
   color: #18181d;
@@ -823,19 +937,29 @@ a.detail:hover {
   font-weight: 900;
 
   letter-spacing: -1px;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionHeader p {
+  max-width: 760px;
+
   margin: 0;
 
   color: #858792;
 
   font-size: 12px;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 .count {
   min-width: 38px;
   height: 34px;
+
+  flex: 0 0 auto;
 
   padding: 0 10px;
 
@@ -862,13 +986,19 @@ a.detail:hover {
 ========================================= */
 
 .listingsGrid {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 18px;
+}
 
-  width: 100%;
+.listingsGrid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* =========================================
@@ -876,7 +1006,17 @@ a.detail:hover {
 ========================================= */
 
 .empty {
+  width: 100%;
+  min-height: 270px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   padding: 55px 25px;
+
+  box-sizing: border-box;
 
   text-align: center;
 
@@ -899,6 +1039,8 @@ a.detail:hover {
   width: 52px;
   height: 52px;
 
+  flex: 0 0 52px;
+
   margin: 0 auto 14px;
 
   display: flex;
@@ -920,14 +1062,20 @@ a.detail:hover {
 }
 
 .empty h3 {
+  max-width: 100%;
+
   margin: 0;
 
   color: #3b3c44;
 
   font-size: 17px;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .empty p {
+  width: 100%;
   max-width: 330px;
 
   margin: 7px auto 0;
@@ -937,161 +1085,59 @@ a.detail:hover {
   font-size: 12px;
 
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================
-   ALL ADS
+   LARGE DESKTOP
 ========================================= */
 
-.allAds {
-  width: 100%;
+@media (min-width: 1600px) {
+  .page {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
 
-  margin-top: 2px;
-}
+  .container {
+    width: min(1380px, 100%);
+  }
 
-.allAdsButton {
-  width: 100%;
+  .profileCard {
+    padding: 50px;
+  }
 
-  min-height: 82px;
+  .profileTop {
+    grid-template-columns: 190px minmax(0, 1fr);
 
-  padding: 16px 18px;
+    gap: 45px;
+  }
 
-  display: flex;
-  align-items: center;
+  .avatarRing {
+    width: 175px;
+    height: 175px;
+  }
 
-  gap: 14px;
+  .info h1 {
+    font-size: clamp(44px, 4vw, 60px);
+  }
 
-  box-sizing: border-box;
-
-  cursor: pointer;
-
-  text-align: left;
-
-  border-radius: 18px;
-
-  color: #25252c;
-
-  background: linear-gradient(135deg, #ffffff, #fafaff);
-
-  border: 1px solid var(--border);
-
-  box-shadow:
-    0 8px 25px rgba(25, 26, 45, 0.045),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.allAdsButton:hover {
-  transform: translateY(-2px);
-
-  border-color: rgba(72, 61, 246, 0.25);
-
-  background: linear-gradient(135deg, #ffffff, #f8f8ff);
-
-  box-shadow:
-    0 14px 35px rgba(25, 26, 45, 0.075),
-    0 0 0 3px rgba(72, 61, 246, 0.025);
-}
-
-.allAdsIcon {
-  width: 44px;
-  height: 44px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 13px;
-
-  background: var(--accent-soft);
-
-  border: 1px solid rgba(72, 61, 246, 0.12);
-}
-
-.allAdsIcon svg {
-  width: 19px;
-  height: 19px;
-
-  color: var(--accent);
-}
-
-.allAdsText {
-  min-width: 0;
-
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 3px;
-}
-
-.allAdsText strong {
-  color: #3b3c44;
-
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.allAdsText span {
-  color: #858792;
-
-  font-size: 11px;
-}
-
-.allAdsArrow {
-  width: 37px;
-  height: 37px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  color: #777985;
-
-  background: #f3f3f7;
-
-  transition:
-    transform 0.2s ease,
-    color 0.2s ease,
-    background 0.2s ease;
-}
-
-.allAdsArrow svg {
-  width: 18px;
-  height: 18px;
-}
-
-.allAdsButton:hover .allAdsArrow {
-  color: var(--accent);
-
-  background: var(--accent-soft);
-
-  transform: translateX(4px);
+  .listingsGrid {
+    gap: 20px;
+  }
 }
 
 /* =========================================
    TABLET
 ========================================= */
 
-@media (max-width: 950px) {
+@media (max-width: 1000px) {
   .page {
-    padding: 90px 18px 70px;
+    padding: 90px 20px 70px;
   }
 
   .profileCard {
-    padding: 34px;
+    padding: 36px;
   }
 
   .profileTop {
@@ -1105,8 +1151,78 @@ a.detail:hover {
     height: 140px;
   }
 
+  .info h1 {
+    font-size: clamp(34px, 5.5vw, 48px);
+
+    letter-spacing: -1.6px;
+  }
+
+  .details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .listingsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================
+   SMALL TABLET
+========================================= */
+
+@media (max-width: 750px) {
+  .page {
+    padding: 65px 18px 60px;
+  }
+
+  .profileCard {
+    padding: 30px;
+  }
+
+  .profileTop {
+    grid-template-columns: 120px minmax(0, 1fr);
+
+    gap: 24px;
+
+    align-items: start;
+  }
+
+  .avatarRing {
+    width: 116px;
+    height: 116px;
+
+    border-radius: 21px;
+  }
+
+  .avatar {
+    border-radius: 17px;
+  }
+
+  .info h1 {
+    font-size: 34px;
+  }
+
+  .company {
+    font-size: 13px;
+  }
+
+  .description {
+    font-size: 12px;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+
+    margin-top: 25px;
+    padding-top: 18px;
+  }
+
+  .listingsSection {
+    margin-top: 24px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 24px;
   }
 }
 
@@ -1114,98 +1230,198 @@ a.detail:hover {
    MOBILE
 ========================================= */
 
-@media (max-width: 680px) {
+@media (max-width: 620px) {
   .page {
-    padding: 75px 12px 55px;
+    padding: 28px 12px 48px;
+  }
+
+  .backgroundGlow,
+  .backgroundGlowTwo {
+    width: 340px;
+    height: 340px;
+
+    filter: blur(110px);
   }
 
   .container {
     gap: 12px;
   }
 
-  .profileCard {
-    padding: 27px 19px 20px;
+  .backButton {
+    margin-bottom: 12px;
 
-    border-radius: 23px;
+    padding: 10px 13px;
+
+    font-size: 12px;
+  }
+
+  .profileCard {
+    padding: 26px 18px 20px;
+
+    border-radius: 22px;
   }
 
   .profileTop {
     grid-template-columns: 1fr;
 
-    gap: 20px;
+    gap: 19px;
+
+    align-items: center;
 
     text-align: center;
   }
 
+  .avatarColumn {
+    width: 100%;
+  }
+
   .avatarRing {
-    width: 125px;
-    height: 125px;
+    width: 124px;
+    height: 124px;
 
     margin: 0 auto;
 
-    border-radius: 23px;
+    border-radius: 22px;
   }
 
   .avatar {
-    border-radius: 19px;
+    border-radius: 18px;
+  }
+
+  .avatarVerified {
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 9px;
+  }
+
+  .info {
+    width: 100%;
   }
 
   .topMeta {
     justify-content: center;
   }
 
-  .info h1 {
-    font-size: 31px;
+  .badge {
+    min-height: 28px;
 
-    letter-spacing: -1.3px;
+    padding: 6px 9px;
+
+    font-size: 8px;
+  }
+
+  .verifiedLabel {
+    font-size: 9px;
+  }
+
+  .info h1 {
+    margin-top: 11px;
+
+    font-size: clamp(29px, 8vw, 37px);
+
+    line-height: 1.02;
+
+    letter-spacing: -1.2px;
   }
 
   .company {
     justify-content: center;
 
-    font-size: 13px;
+    margin-top: 10px;
+
+    font-size: 11px;
+
+    text-align: center;
   }
 
   .description {
-    max-width: 100%;
+    margin-top: 12px;
 
-    font-size: 12px;
-
+    font-size: 11px;
     line-height: 1.65;
   }
 
   .actions {
-    justify-content: center;
+    flex-direction: column;
+
+    width: 100%;
+
+    margin-top: 18px;
+
+    gap: 7px;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+
+    min-height: 42px;
+
+    font-size: 10px;
   }
 
   .details {
     grid-template-columns: 1fr;
 
-    margin-top: 23px;
-    padding-top: 17px;
+    gap: 6px;
+
+    margin-top: 21px;
+    padding-top: 16px;
   }
 
   .detail {
     padding: 9px;
   }
 
+  .detailIcon {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+  }
+
+  .detailIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .detail span {
+    font-size: 7px;
+  }
+
+  .detail strong {
+    font-size: 10px;
+  }
+
+  .detailArrow {
+    width: 13px;
+    height: 13px;
+
+    flex-basis: 13px;
+  }
+
   .stats {
-    gap: 9px;
+    grid-template-columns: 1fr;
+
+    gap: 8px;
   }
 
   .statCard {
-    min-height: 82px;
+    min-height: 78px;
 
-    padding: 14px;
+    padding: 13px;
 
     gap: 10px;
 
-    border-radius: 16px;
+    border-radius: 15px;
   }
 
   .statIcon {
     width: 38px;
     height: 38px;
+
+    flex-basis: 38px;
 
     border-radius: 11px;
   }
@@ -1220,93 +1436,949 @@ a.detail:hover {
   }
 
   .statCard span {
-    font-size: 8px;
+    margin-top: 4px;
 
-    letter-spacing: 0.3px;
+    font-size: 8px;
   }
 
   .listingsSection {
-    margin-top: 22px;
+    margin-top: 20px;
   }
 
   .sectionHeader {
     align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
   }
 
   .sectionHeader h2 {
-    font-size: 23px;
+    margin-top: 5px;
+
+    font-size: 22px;
   }
 
   .sectionHeader p {
-    font-size: 11px;
+    font-size: 10px;
+  }
+
+  .sectionHeader > div:first-child > span {
+    font-size: 7px;
+  }
+
+  .count {
+    min-width: 34px;
+    height: 30px;
+
+    font-size: 10px;
   }
 
   .listingsGrid {
     grid-template-columns: 1fr;
 
-    gap: 13px;
+    gap: 11px;
   }
 
   .empty {
-    padding: 42px 18px;
+    min-height: 215px;
+
+    padding: 30px 16px;
+  }
+
+  .emptyIcon {
+    width: 48px;
+    height: 48px;
+
+    flex-basis: 48px;
+  }
+
+  .empty h3 {
+    font-size: 15px;
+  }
+
+  .empty p {
+    font-size: 10px;
   }
 }
 
 /* =========================================
-   SMALL MOBILE
+   430 PX
 ========================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
   .page {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 20px 9px 42px;
+  }
+
+  .backButton {
+    padding: 9px 11px;
+
+    gap: 7px;
+
+    font-size: 11px;
+  }
+
+  .backButton svg {
+    width: 15px;
+    height: 15px;
   }
 
   .profileCard {
-    padding: 23px 14px 18px;
+    padding: 21px 14px 17px;
+
+    border-radius: 18px;
   }
 
   .avatarRing {
-    width: 110px;
-    height: 110px;
+    width: 108px;
+    height: 108px;
+
+    padding: 3px;
+
+    border-radius: 19px;
+  }
+
+  .avatar {
+    border-radius: 16px;
+  }
+
+  .avatarVerified {
+    font-size: 8px;
+  }
+
+  .avatarVerified svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .badge {
+    min-height: 26px;
+
+    padding: 5px 8px;
+
+    gap: 6px;
+
+    font-size: 7px;
+  }
+
+  .badgeDot {
+    width: 4px;
+    height: 4px;
+
+    flex-basis: 4px;
+  }
+
+  .verifiedLabel {
+    font-size: 8px;
+  }
+
+  .verifiedLabel svg {
+    width: 12px;
+    height: 12px;
   }
 
   .info h1 {
     font-size: 27px;
+
+    letter-spacing: -1px;
   }
 
-  .actions {
-    flex-direction: column;
+  .company {
+    font-size: 10px;
+  }
 
-    width: 100%;
+  .company svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .description {
+    font-size: 10px;
   }
 
   .primaryAction,
   .secondaryAction {
-    width: 100%;
+    min-height: 40px;
+
+    font-size: 9px;
+  }
+
+  .details {
+    gap: 5px;
+  }
+
+  .detail {
+    padding: 8px;
+
+    gap: 8px;
+  }
+
+  .detailIcon {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+  }
+
+  .detail span {
+    font-size: 6.5px;
+  }
+
+  .detail strong {
+    font-size: 9px;
   }
 
   .stats {
-    grid-template-columns: 1fr 1fr;
+    gap: 7px;
   }
 
   .statCard {
-    padding: 12px;
+    min-height: 72px;
+
+    padding: 11px;
   }
 
   .statIcon {
-    display: none;
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+  }
+
+  .statIcon svg {
+    width: 16px;
+    height: 16px;
   }
 
   .statCard strong {
-    font-size: 21px;
+    font-size: 20px;
   }
 
   .statCard span {
-    line-height: 1.25;
+    font-size: 7px;
   }
 
   .sectionHeader h2 {
-    font-size: 21px;
+    font-size: 20px;
+  }
+
+  .sectionHeader p {
+    font-size: 9px;
+  }
+
+  .count {
+    min-width: 32px;
+    height: 28px;
+
+    font-size: 9px;
+  }
+
+  .empty {
+    min-height: 195px;
+
+    padding: 24px 13px;
+  }
+
+  .emptyIcon {
+    width: 45px;
+    height: 45px;
+
+    flex-basis: 45px;
+  }
+
+  .empty h3 {
+    font-size: 14px;
+  }
+
+  .empty p {
+    font-size: 9px;
+  }
+}
+
+/* =========================================
+   380 PX
+========================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .profileCard {
+    padding: 17px 11px 14px;
+
+    border-radius: 16px;
+  }
+
+  .avatarRing {
+    width: 95px;
+    height: 95px;
+  }
+
+  .avatarVerified {
+    margin-top: 9px;
+
+    font-size: 7px;
+  }
+
+  .info h1 {
+    font-size: 24px;
+
+    letter-spacing: -0.8px;
+  }
+
+  .company {
+    font-size: 9px;
+  }
+
+  .description {
+    font-size: 9px;
+
+    line-height: 1.6;
+  }
+
+  .actions {
+    margin-top: 14px;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    min-height: 38px;
+
+    gap: 6px;
+
+    padding: 0 8px;
+
+    font-size: 8px;
+  }
+
+  .primaryAction svg,
+  .secondaryAction svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .detail {
+    padding: 7px;
+
+    gap: 7px;
+  }
+
+  .detailIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .detailIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .detail span {
+    font-size: 6px;
+  }
+
+  .detail strong {
+    font-size: 8.5px;
+  }
+
+  .stats {
+    gap: 6px;
+  }
+
+  .statCard {
+    min-height: 68px;
+
+    padding: 10px;
+  }
+
+  .statIcon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+  }
+
+  .statCard strong {
+    font-size: 18px;
+  }
+
+  .statCard span {
+    font-size: 6.5px;
+  }
+
+  .listingsSection {
+    margin-top: 17px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 18px;
+  }
+
+  .sectionHeader > div:first-child > span {
+    font-size: 6px;
+  }
+
+  .sectionHeader p {
+    font-size: 8px;
+  }
+
+  .count {
+    min-width: 30px;
+    height: 26px;
+
+    padding: 0 7px;
+
+    font-size: 8px;
+  }
+}
+
+/* =========================================
+   360 PX
+========================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .backButton {
+    padding: 8px 9px;
+
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+  .profileCard {
+    padding: 14px 9px 12px;
+
+    border-radius: 14px;
+  }
+
+  .avatarRing {
+    width: 84px;
+    height: 84px;
+
+    border-radius: 15px;
+  }
+
+  .avatar {
+    border-radius: 12px;
+  }
+
+  .avatarVerified {
+    margin-top: 7px;
+
+    font-size: 6.5px;
+  }
+
+  .avatarVerified svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .badge {
+    min-height: 22px;
+
+    padding: 4px 6px;
+
+    font-size: 6px;
+  }
+
+  .verifiedLabel {
+    font-size: 7px;
+  }
+
+  .info h1 {
+    font-size: 22px;
+
+    letter-spacing: -0.6px;
+  }
+
+  .company {
+    margin-top: 7px;
+
+    font-size: 8px;
+  }
+
+  .description {
+    margin-top: 9px;
+
+    font-size: 8px;
+
+    line-height: 1.55;
+  }
+
+  .actions {
+    margin-top: 11px;
+
+    gap: 5px;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    min-height: 35px;
+
+    gap: 5px;
+
+    padding: 0 6px;
+
+    font-size: 7.5px;
+  }
+
+  .primaryAction svg,
+  .secondaryAction svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .details {
+    margin-top: 15px;
+    padding-top: 12px;
+  }
+
+  .detail {
+    padding: 6px;
+
+    gap: 5px;
+  }
+
+  .detailIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+
+    border-radius: 8px;
+  }
+
+  .detailIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .detail span {
+    font-size: 5.5px;
+  }
+
+  .detail strong {
+    font-size: 7.5px;
+  }
+
+  .detailArrow {
+    width: 11px;
+    height: 11px;
+
+    flex-basis: 11px;
+  }
+
+  .statCard {
+    min-height: 63px;
+
+    padding: 8px;
+  }
+
+  .statIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+
+    border-radius: 8px;
+  }
+
+  .statIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .statCard strong {
+    font-size: 17px;
+  }
+
+  .statCard span {
+    margin-top: 3px;
+
+    font-size: 5.5px;
+  }
+
+  .listingsSection {
+    margin-top: 14px;
+  }
+
+  .sectionHeader {
+    gap: 7px;
+
+    margin-bottom: 10px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 17px;
+  }
+
+  .sectionHeader > div:first-child > span {
+    font-size: 5.5px;
+  }
+
+  .sectionHeader p {
+    font-size: 7px;
+  }
+
+  .count {
+    min-width: 27px;
+    height: 23px;
+
+    padding: 0 6px;
+
+    font-size: 7px;
+  }
+
+  .listingsGrid {
+    gap: 8px;
+  }
+
+  .empty {
+    min-height: 165px;
+
+    padding: 18px 9px;
+  }
+
+  .emptyIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+
+    margin-bottom: 9px;
+  }
+
+  .emptyIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .empty h3 {
+    font-size: 12px;
+  }
+
+  .empty p {
+    font-size: 8px;
+  }
+}
+
+/* =========================================
+   330 PX
+========================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 35px;
+  }
+
+  .backButton {
+    padding: 7px 8px;
+
+    gap: 4px;
+
+    font-size: 9px;
+  }
+
+  .backButton svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .profileCard {
+    padding: 12px 7px 10px;
+
+    border-radius: 12px;
+  }
+
+  .avatarRing {
+    width: 74px;
+    height: 74px;
+
+    padding: 2px;
+
+    border-radius: 13px;
+  }
+
+  .avatar {
+    border-radius: 10px;
+  }
+
+  .avatarVerified {
+    margin-top: 5px;
+
+    font-size: 5.5px;
+  }
+
+  .avatarVerified svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .topMeta {
+    gap: 4px;
+  }
+
+  .badge {
+    min-height: 20px;
+
+    padding: 3px 5px;
+
+    gap: 4px;
+
+    font-size: 5px;
+  }
+
+  .verifiedLabel {
+    font-size: 6px;
+  }
+
+  .verifiedLabel svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .info h1 {
+    margin-top: 6px;
+
+    font-size: 19px;
+
+    letter-spacing: -0.5px;
+  }
+
+  .company {
+    margin-top: 5px;
+
+    gap: 5px;
+
+    font-size: 7px;
+  }
+
+  .company svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .description {
+    margin-top: 6px;
+
+    font-size: 7px;
+
+    line-height: 1.5;
+  }
+
+  .actions {
+    margin-top: 8px;
+
+    gap: 4px;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    min-height: 32px;
+
+    gap: 4px;
+
+    padding: 0 5px;
+
+    font-size: 6.5px;
+  }
+
+  .primaryAction svg,
+  .secondaryAction svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .details {
+    gap: 4px;
+
+    margin-top: 11px;
+    padding-top: 9px;
+  }
+
+  .detail {
+    padding: 5px;
+
+    gap: 4px;
+
+    border-radius: 7px;
+  }
+
+  .detailIcon {
+    width: 25px;
+    height: 25px;
+
+    flex-basis: 25px;
+
+    border-radius: 6px;
+  }
+
+  .detailIcon svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .detail span {
+    font-size: 4.5px;
+  }
+
+  .detail strong {
+    font-size: 6.5px;
+  }
+
+  .detailArrow {
+    width: 9px;
+    height: 9px;
+
+    flex-basis: 9px;
+  }
+
+  .stats {
+    gap: 4px;
+  }
+
+  .statCard {
+    min-height: 57px;
+
+    padding: 7px;
+
+    gap: 6px;
+
+    border-radius: 9px;
+  }
+
+  .statIcon {
+    width: 24px;
+    height: 24px;
+
+    flex-basis: 24px;
+
+    border-radius: 6px;
+  }
+
+  .statIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .statCard strong {
+    font-size: 15px;
+  }
+
+  .statCard span {
+    font-size: 5px;
+
+    letter-spacing: 0.15px;
+  }
+
+  .listingsSection {
+    margin-top: 11px;
+  }
+
+  .sectionHeader {
+    gap: 5px;
+
+    margin-bottom: 8px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 15px;
+  }
+
+  .sectionHeader > div:first-child > span {
+    font-size: 5px;
+  }
+
+  .sectionHeader p {
+    font-size: 6.5px;
+  }
+
+  .count {
+    min-width: 25px;
+    height: 21px;
+
+    padding: 0 5px;
+
+    font-size: 6.5px;
+  }
+
+  .listingsGrid {
+    gap: 7px;
+  }
+
+  .empty {
+    min-height: 140px;
+
+    padding: 15px 7px;
+
+    border-radius: 9px;
+  }
+
+  .emptyIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-basis: 35px;
+
+    margin-bottom: 7px;
+  }
+
+  .emptyIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .empty h3 {
+    font-size: 10px;
+  }
+
+  .empty p {
+    margin-top: 4px;
+
+    font-size: 6.5px;
+  }
+}
+
+/* =========================================
+   TOUCH
+========================================= */
+
+@media (hover: none) {
+  .backButton:hover,
+  .backButton:hover svg,
+  .whatsapp:hover,
+  .primaryAction:hover,
+  .secondaryAction:hover,
+  .detail:hover,
+  .statCard:hover {
+    transform: none;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .backButton,
+  .backButton svg,
+  .whatsapp,
+  .primaryAction,
+  .secondaryAction,
+  .detail,
+  .statCard {
+    transition: none;
   }
 }

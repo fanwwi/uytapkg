@@ -7,16 +7,30 @@
   inset: 0;
   z-index: 9999;
 
+  width: 100%;
+  height: 100dvh;
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 24px;
+  padding: 20px;
 
-  background: rgba(15, 23, 42, 0.38);
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(72, 61, 246, 0.08),
+      transparent 38%
+    ),
+    rgba(15, 23, 42, 0.38);
 
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+
+  box-sizing: border-box;
+
+  overflow: hidden;
 
   animation: overlayIn 0.25s ease;
 }
@@ -36,10 +50,14 @@
 ========================================================= */
 
 .modal {
-  width: min(620px, 100%);
-  max-height: min(850px, calc(100vh - 48px));
-
   position: relative;
+
+  width: min(620px, 100%);
+  min-width: 0;
+  max-width: 100%;
+
+  max-height: calc(100dvh - 40px);
+
   overflow: hidden;
 
   border-radius: 30px;
@@ -56,6 +74,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   color: #111827;
+
+  box-sizing: border-box;
 
   animation: modalIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -100,7 +120,7 @@
   top: 20px;
   right: 20px;
 
-  z-index: 10;
+  z-index: 20;
 
   width: 42px;
   height: 42px;
@@ -108,6 +128,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 13px;
@@ -123,15 +145,18 @@
     border-color 0.2s ease,
     color 0.2s ease,
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .close svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
-.close:hover {
+.close:hover:not(:disabled) {
   background: rgba(72, 61, 246, 0.08);
 
   border-color: rgba(72, 61, 246, 0.22);
@@ -143,13 +168,27 @@
   box-shadow: 0 6px 18px rgba(72, 61, 246, 0.08);
 }
 
+.close:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.close:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
 /* =========================================================
    SCROLL
 ========================================================= */
 
 .scroll {
-  max-height: min(850px, calc(100vh - 48px));
+  width: 100%;
+  min-width: 0;
 
+  max-height: calc(100dvh - 40px);
+
+  overflow-x: hidden;
   overflow-y: auto;
 
   padding: 34px;
@@ -168,7 +207,12 @@
 
 .scroll::-webkit-scrollbar-thumb {
   background: rgba(72, 61, 246, 0.3);
+
   border-radius: 20px;
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(72, 61, 246, 0.5);
 }
 
 /* =========================================================
@@ -176,12 +220,16 @@
 ========================================================= */
 
 .header {
+  min-width: 0;
+
   padding-right: 55px;
 
   margin-bottom: 30px;
 }
 
 .header h2 {
+  min-width: 0;
+
   margin: 0;
 
   color: #111827;
@@ -192,18 +240,25 @@
   font-weight: 900;
 
   letter-spacing: -0.6px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
+  width: 100%;
+
   margin: 7px 0 0;
 
   color: #64748b;
 
   font-size: 13px;
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   AVATAR
+   AVATAR BLOCK
 ========================================================= */
 
 .avatarBlock {
@@ -213,6 +268,8 @@
   align-items: center;
 
   gap: 22px;
+
+  min-width: 0;
 
   margin: 8px 0 30px;
   padding: 18px;
@@ -236,6 +293,8 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 10px 30px rgba(15, 23, 42, 0.05);
+
+  overflow: hidden;
 }
 
 .avatarBlock::before {
@@ -260,12 +319,17 @@
   pointer-events: none;
 }
 
+/* =========================================================
+   AVATAR
+========================================================= */
+
 .avatarWrapper {
   position: relative;
-
   z-index: 1;
 
   flex-shrink: 0;
+
+  min-width: 0;
 }
 
 .avatar {
@@ -316,6 +380,9 @@
 }
 
 .avatar img {
+  position: relative;
+  z-index: 1;
+
   width: 100%;
   height: 100%;
 
@@ -328,6 +395,8 @@
   width: 48px;
   height: 48px;
 
+  flex-shrink: 0;
+
   color: rgba(255, 255, 255, 0.95);
 }
 
@@ -339,6 +408,8 @@
   position: relative;
   z-index: 2;
 
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -349,15 +420,20 @@
 
 .upload,
 .remove {
-  height: 43px;
-
-  padding: 0 17px;
+  min-height: 43px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 8px;
+
+  min-width: 0;
+  max-width: 100%;
+
+  margin: 0;
+
+  padding: 0 17px;
 
   border-radius: 12px;
 
@@ -373,12 +449,9 @@
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
-
-/* =========================================================
-   UPLOAD
-========================================================= */
 
 .upload {
   min-width: 155px;
@@ -393,20 +466,21 @@
 }
 
 .upload svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
   color: #ffffff;
 }
 
-.upload:hover {
+.upload:hover:not(:disabled) {
   transform: translateY(-2px);
 
   background: linear-gradient(135deg, #6a61ff, #483df6);
 
   box-shadow: 0 14px 32px rgba(72, 61, 246, 0.28);
 }
-
-/* =========================================================
-   REMOVE
-========================================================= */
 
 .remove {
   min-width: 155px;
@@ -419,10 +493,15 @@
 }
 
 .remove svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
   color: #483df6;
 }
 
-.remove:hover {
+.remove:hover:not(:disabled) {
   transform: translateY(-2px);
 
   background: rgba(72, 61, 246, 0.05);
@@ -432,24 +511,56 @@
   color: #483df6;
 }
 
+.upload:active:not(:disabled),
+.remove:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.upload:disabled,
+.remove:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
 /* =========================================================
    FIELDS
 ========================================================= */
 
 .fields {
   display: flex;
-
   flex-direction: column;
 
   gap: 12px;
+
+  min-width: 0;
 }
+
+.fields > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* =========================================================
+   NAME ROW
+========================================================= */
 
 .row {
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 12px;
+
+  min-width: 0;
+}
+
+.row > * {
+  min-width: 0;
 }
 
 /* =========================================================
@@ -457,6 +568,7 @@
 ========================================================= */
 
 .inputBox {
+  min-width: 0;
   min-height: 54px;
 
   display: flex;
@@ -517,9 +629,11 @@
 
 .inputBox input {
   width: 100%;
+  min-width: 0;
+
   height: 52px;
 
-  min-width: 0;
+  padding: 0;
 
   border: none;
   outline: none;
@@ -532,11 +646,22 @@
 
   font-size: 13px;
   font-weight: 600;
+
+  text-overflow: ellipsis;
 }
 
 .inputBox input::placeholder,
 .textarea textarea::placeholder {
   color: #94a3b8;
+
+  opacity: 1;
+}
+
+.inputBox input:disabled,
+.textarea textarea:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
 }
 
 /* =========================================================
@@ -544,6 +669,10 @@
 ========================================================= */
 
 .textarea {
+  min-width: 0;
+
+  width: 100%;
+
   min-height: 125px;
 
   display: flex;
@@ -587,8 +716,8 @@
 
 .textarea textarea {
   width: 100%;
-
   min-width: 0;
+
   min-height: 92px;
 
   padding: 0;
@@ -605,9 +734,12 @@
   font-family: inherit;
 
   font-size: 13px;
+
   line-height: 1.6;
 
   font-weight: 500;
+
+  overflow-wrap: anywhere;
 }
 
 .textarea textarea::-webkit-scrollbar {
@@ -626,6 +758,7 @@
 
 .save {
   width: 100%;
+  min-width: 0;
 
   height: 55px;
 
@@ -636,6 +769,8 @@
   justify-content: center;
 
   gap: 9px;
+
+  padding: 0 14px;
 
   border: none;
   border-radius: 14px;
@@ -656,12 +791,15 @@
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    filter 0.2s ease;
+    filter 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .save svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 .save:hover:not(:disabled) {
@@ -682,45 +820,47 @@
   cursor: not-allowed;
 
   box-shadow: none;
+
+  transform: none;
 }
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
   .overlay {
     padding: 10px;
   }
 
   .modal {
-    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
 
     border-radius: 24px;
   }
 
   .scroll {
-    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
 
-    padding: 25px 18px;
+    padding: 28px 18px;
   }
 
   .close {
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
 
-    width: 39px;
-    height: 39px;
+    width: 40px;
+    height: 40px;
   }
 
   .header {
-    padding-right: 45px;
+    padding-right: 46px;
 
     margin-bottom: 25px;
   }
 
   .header h2 {
-    font-size: 21px;
+    font-size: 23px;
   }
 
   .header p {
@@ -728,42 +868,173 @@
   }
 
   .avatarBlock {
+    gap: 18px;
+
+    padding: 18px;
+  }
+
+  .avatar {
+    width: 112px;
+    height: 112px;
+  }
+
+  .upload,
+  .remove {
+    min-width: 145px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .overlay {
+    padding: 7px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 14px);
+
+    border-radius: 22px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 14px);
+
+    padding: 25px 15px;
+  }
+
+  .close {
+    top: 11px;
+    right: 11px;
+
+    width: 37px;
+    height: 37px;
+
+    border-radius: 11px;
+  }
+
+  .close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header {
+    padding-right: 42px;
+
+    margin-bottom: 22px;
+  }
+
+  .header h2 {
+    font-size: 21px;
+
+    letter-spacing: -0.4px;
+  }
+
+  .header p {
+    font-size: 11.5px;
+
+    line-height: 1.55;
+  }
+
+  /* avatar */
+
+  .avatarBlock {
     flex-direction: column;
 
     align-items: center;
 
+    gap: 16px;
+
+    padding: 20px 14px 21px;
+
     text-align: center;
 
-    padding: 22px 18px 25px;
+    border-radius: 19px;
+  }
+
+  .avatar {
+    width: 105px;
+    height: 105px;
   }
 
   .avatarActions {
     width: 100%;
 
-    justify-content: center;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 7px;
   }
 
   .upload,
   .remove {
     width: 100%;
+    min-width: 0;
+    max-width: 280px;
 
-    max-width: 260px;
+    margin-left: auto;
+    margin-right: auto;
   }
+
+  /* name row */
 
   .row {
     grid-template-columns: 1fr;
   }
 
+  /* inputs */
+
   .inputBox {
-    min-height: 52px;
+    min-height: 51px;
+
+    gap: 9px;
+
+    padding: 0 12px;
   }
 
-  .textarea {
-    min-height: 120px;
+  .inputBox input {
+    height: 49px;
+
+    font-size: 13px;
   }
+
+  .inputBox > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* textarea */
+
+  .textarea {
+    min-height: 122px;
+
+    gap: 9px;
+
+    padding: 14px 12px;
+  }
+
+  .textarea > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .textarea textarea {
+    min-height: 90px;
+
+    font-size: 13px;
+  }
+
+  /* save */
 
   .save {
     height: 52px;
+
+    margin-top: 18px;
+
+    font-size: 13px;
   }
 }
 
@@ -772,20 +1043,319 @@
 ========================================================= */
 
 @media (max-width: 400px) {
-  .scroll {
-    padding: 23px 14px;
+  .overlay {
+    padding: 5px;
   }
 
   .modal {
-    border-radius: 21px;
+    max-height: calc(100dvh - 10px);
+
+    border-radius: 20px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 10px);
+
+    padding: 22px 12px;
+  }
+
+  .close {
+    top: 9px;
+    right: 9px;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 10px;
+  }
+
+  .header {
+    padding-right: 39px;
+
+    margin-bottom: 20px;
   }
 
   .header h2 {
     font-size: 20px;
   }
 
+  .header p {
+    font-size: 11px;
+  }
+
+  /* avatar */
+
+  .avatarBlock {
+    padding: 17px 11px 18px;
+
+    border-radius: 17px;
+  }
+
   .avatar {
-    width: 110px;
-    height: 110px;
+    width: 96px;
+    height: 96px;
+  }
+
+  .avatar svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .upload,
+  .remove {
+    min-height: 40px;
+
+    padding: 0 10px;
+
+    font-size: 11px;
+  }
+
+  .upload svg,
+  .remove svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* fields */
+
+  .fields {
+    gap: 9px;
+  }
+
+  .inputBox {
+    min-height: 48px;
+
+    gap: 8px;
+
+    padding: 0 10px;
+
+    border-radius: 12px;
+  }
+
+  .inputBox input {
+    height: 46px;
+
+    font-size: 12px;
+  }
+
+  .inputBox > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .textarea {
+    min-height: 116px;
+
+    padding: 11px 10px;
+
+    border-radius: 12px;
+  }
+
+  .textarea textarea {
+    min-height: 86px;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+  }
+
+  .textarea > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* save */
+
+  .save {
+    height: 48px;
+
+    margin-top: 16px;
+
+    font-size: 12px;
+  }
+
+  .save svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 340px) {
+  .overlay {
+    padding: 3px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 6px);
+
+    border-radius: 18px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 6px);
+
+    padding: 20px 9px;
+  }
+
+  .close {
+    top: 8px;
+    right: 8px;
+
+    width: 33px;
+    height: 33px;
+
+    border-radius: 9px;
+  }
+
+  .close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .header {
+    padding-right: 35px;
+
+    margin-bottom: 18px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+
+    letter-spacing: -0.25px;
+  }
+
+  .header p {
+    font-size: 10px;
+
+    line-height: 1.5;
+  }
+
+  /* avatar */
+
+  .avatarBlock {
+    padding: 15px 8px 16px;
+  }
+
+  .avatar {
+    width: 86px;
+    height: 86px;
+  }
+
+  .avatar svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .upload,
+  .remove {
+    min-height: 37px;
+
+    gap: 6px;
+
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  .upload svg,
+  .remove svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* inputs */
+
+  .inputBox {
+    min-height: 45px;
+
+    gap: 7px;
+
+    padding: 0 8px;
+  }
+
+  .inputBox input {
+    height: 43px;
+
+    font-size: 11px;
+  }
+
+  .inputBox > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* textarea */
+
+  .textarea {
+    min-height: 110px;
+
+    gap: 7px;
+
+    padding: 10px 8px;
+  }
+
+  .textarea > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .textarea textarea {
+    min-height: 82px;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+  }
+
+  /* save */
+
+  .save {
+    height: 44px;
+
+    font-size: 11px;
+  }
+
+  .save svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .close:hover:not(:disabled),
+  .upload:hover:not(:disabled),
+  .remove:hover:not(:disabled),
+  .save:hover:not(:disabled) {
+    transform: none;
+
+    filter: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+
+  .close,
+  .upload,
+  .remove,
+  .save,
+  .inputBox,
+  .textarea {
+    transition: none;
   }
 }

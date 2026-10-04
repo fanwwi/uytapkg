@@ -5,8 +5,11 @@
 ========================================================= */
 
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
-  padding: 48px;
+
+  padding: 50px;
 
   background:
     radial-gradient(circle at 8% 0%, rgba(72, 61, 246, 0.09), transparent 28%),
@@ -18,10 +21,22 @@
     #f7f8fc;
 
   color: #171923;
+
+  box-sizing: border-box;
+
+  overflow-x: clip;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
 }
 
 .container {
   width: min(1400px, 100%);
+  min-width: 0;
+
   margin: 0 auto;
 }
 
@@ -33,27 +48,40 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+
   gap: 30px;
+
+  min-width: 0;
+
   margin-bottom: 36px;
 }
 
 .headerText {
+  min-width: 0;
   max-width: 760px;
 }
 
 .btns {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+
   gap: 10px;
+
   margin-bottom: 17px;
 }
 
 .eyebrow {
+  min-width: 0;
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
 
-  height: 36px;
+  min-height: 36px;
+
   padding: 0 12px;
 
   border: 1px solid rgba(72, 61, 246, 0.14);
@@ -68,63 +96,83 @@
 
   text-transform: uppercase;
   letter-spacing: 1.4px;
+
+  overflow-wrap: anywhere;
 }
 
 .eyebrow svg {
   width: 15px;
   height: 15px;
+
+  flex-shrink: 0;
 }
 
 .header h1 {
+  min-width: 0;
+
   margin: 0;
 
   color: #151722;
 
   font-size: clamp(34px, 4vw, 52px);
   line-height: 1;
+
   font-weight: 900;
 
   letter-spacing: -2.2px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
   max-width: 680px;
+
   margin: 16px 0 0;
 
   color: #737887;
 
   font-size: 15px;
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   BUTTONS
+   HEADER BUTTONS
 ========================================================= */
 
 .headerActions {
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   flex-shrink: 0;
 }
 
 .homeButton,
 .addButton {
+  min-width: 0;
+  min-height: 52px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 9px;
 
-  height: 52px;
   padding: 0 20px;
 
   border-radius: 14px;
 
   font-family: inherit;
+
   font-size: 13px;
   font-weight: 800;
 
   cursor: pointer;
+
+  white-space: nowrap;
 
   transition:
     transform 0.2s ease,
@@ -135,7 +183,9 @@
 
 .homeButton {
   border: 1px solid #e2e4ec;
+
   background: #ffffff;
+
   color: #4e5361;
 
   box-shadow: 0 5px 18px rgba(31, 35, 51, 0.04);
@@ -143,7 +193,9 @@
 
 .homeButton:hover {
   border-color: #cfd2df;
+
   background: #fafaff;
+
   color: #171923;
 
   transform: translateY(-2px);
@@ -177,10 +229,16 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
+.addButton:active {
+  transform: translateY(0);
+}
+
 .addButton svg,
 .homeButton svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -189,18 +247,25 @@
 
 .overview {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
   gap: 14px;
+
+  min-width: 0;
 
   margin-bottom: 28px;
 }
 
 .overviewCard {
+  min-width: 0;
   min-height: 108px;
+
   padding: 20px;
 
   display: flex;
   align-items: center;
+
   gap: 15px;
 
   border: 1px solid #e5e7ef;
@@ -238,6 +303,7 @@
   justify-content: center;
 
   border: 1px solid rgba(72, 61, 246, 0.12);
+
   border-radius: 14px;
 
   background: rgba(72, 61, 246, 0.075);
@@ -250,9 +316,12 @@
   height: 21px;
 }
 
-.overviewCard div:last-child {
+.overviewCard > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   gap: 5px;
 }
 
@@ -261,6 +330,8 @@
 
   font-size: 12px;
   font-weight: 600;
+
+  overflow-wrap: anywhere;
 }
 
 .overviewCard strong {
@@ -268,7 +339,10 @@
 
   font-size: 25px;
   font-weight: 900;
+
   letter-spacing: -0.5px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -277,21 +351,30 @@
 
 .filters {
   display: flex;
+
   gap: 12px;
+
+  min-width: 0;
+
   margin-bottom: 27px;
 }
 
 .search {
   height: 56px;
+
   flex: 1;
+
+  min-width: 0;
 
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   padding: 0 18px;
 
   border: 1px solid #e1e3eb;
+
   border-radius: 15px;
 
   background: #ffffff;
@@ -333,6 +416,10 @@
 
 .search input {
   width: 100%;
+  min-width: 0;
+  height: 100%;
+
+  padding: 0;
 
   border: none;
   outline: none;
@@ -342,6 +429,7 @@
   color: #171923;
 
   font-family: inherit;
+
   font-size: 14px;
 }
 
@@ -351,6 +439,8 @@
 
 .statusSelect {
   width: 240px;
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -362,23 +452,32 @@
   align-items: center;
   justify-content: space-between;
 
+  gap: 15px;
+
+  min-width: 0;
+
   margin-bottom: 16px;
 }
 
-.resultRow div {
+.resultRow > div {
+  min-width: 0;
+
   display: flex;
   align-items: center;
+
   gap: 9px;
 }
 
 .resultRow div span {
   color: #777b89;
+
   font-size: 13px;
 }
 
 .resultRow div strong {
   min-width: 27px;
-  height: 27px;
+  min-height: 27px;
+
   padding: 0 8px;
 
   display: flex;
@@ -388,6 +487,7 @@
   border-radius: 8px;
 
   background: rgba(72, 61, 246, 0.09);
+
   border: 1px solid rgba(72, 61, 246, 0.12);
 
   color: #483df6;
@@ -396,8 +496,13 @@
 }
 
 .resultHint {
+  min-width: 0;
+
   color: #a0a3ae;
+
   font-size: 12px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -406,8 +511,12 @@
 
 .grid {
   display: grid;
+
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 22px;
+
+  min-width: 0;
 }
 
 /* =========================================================
@@ -415,9 +524,12 @@
 ========================================================= */
 
 .card {
+  min-width: 0;
+
   overflow: hidden;
 
   border: 1px solid #e2e4ec;
+
   border-radius: 26px;
 
   background:
@@ -446,9 +558,10 @@
 ========================================================= */
 
 .image {
+  position: relative;
+
   height: 310px;
 
-  position: relative;
   overflow: hidden;
 
   background: #eef0f6;
@@ -475,6 +588,8 @@
     transparent 38%,
     rgba(0, 0, 0, 0.7)
   );
+
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -483,28 +598,40 @@
 
 .topBadges {
   position: absolute;
+
   z-index: 3;
 
   top: 17px;
   left: 17px;
+  right: 62px;
 
   display: flex;
+  flex-wrap: wrap;
+
   gap: 8px;
+
+  min-width: 0;
 }
 
 .status,
 .classBadge {
-  height: 33px;
+  min-width: 0;
+
+  min-height: 33px;
+
   padding: 0 11px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+
   gap: 7px;
 
   border-radius: 10px;
 
   font-size: 10px;
   font-weight: 800;
+
+  white-space: nowrap;
 
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -522,6 +649,8 @@
   width: 7px;
   height: 7px;
 
+  flex-shrink: 0;
+
   border-radius: 50%;
 
   background: #8c8f98;
@@ -529,21 +658,25 @@
 
 .construction i {
   background: #f59e0b;
+
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
 }
 
 .completed i {
   background: #22c55e;
+
   box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
 }
 
 .project i {
   background: #8b7fff;
+
   box-shadow: 0 0 10px rgba(72, 61, 246, 0.65);
 }
 
 .classBadge {
   background: rgba(255, 255, 255, 0.95);
+
   color: #171923;
 }
 
@@ -553,6 +686,7 @@
 
 .moreButton {
   position: absolute;
+
   z-index: 4;
 
   top: 16px;
@@ -565,7 +699,10 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: 1px solid rgba(255, 255, 255, 0.2);
+
   border-radius: 11px;
 
   background: rgba(20, 21, 27, 0.65);
@@ -575,6 +712,7 @@
   cursor: pointer;
 
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
   transition:
     background 0.2s ease,
@@ -584,7 +722,9 @@
 
 .moreButton:hover {
   background: #483df6;
+
   border-color: #5d54f8;
+
   transform: scale(1.06);
 }
 
@@ -598,24 +738,42 @@
 ========================================================= */
 
 .content {
+  min-width: 0;
+
   padding: 23px;
 }
 
+.titleRow {
+  min-width: 0;
+}
+
+.titleRow > div {
+  min-width: 0;
+}
+
 .titleRow h2 {
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
   font-size: 24px;
   line-height: 1.2;
+
   font-weight: 900;
 
   letter-spacing: -0.6px;
+
+  overflow-wrap: anywhere;
 }
 
 .location {
+  min-width: 0;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+
   gap: 7px;
 
   margin-top: 10px;
@@ -623,6 +781,7 @@
   color: #7c808e;
 
   font-size: 13px;
+  line-height: 1.45;
 }
 
 .location svg {
@@ -631,7 +790,15 @@
 
   flex-shrink: 0;
 
+  margin-top: 1px;
+
   color: #483df6;
+}
+
+.location span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -640,15 +807,20 @@
 
 .specs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 8px;
+
+  min-width: 0;
 
   margin-top: 21px;
 }
 
 .specs > div {
+  min-width: 0;
   min-height: 72px;
+
   padding: 11px;
 
   display: flex;
@@ -656,6 +828,7 @@
   justify-content: space-between;
 
   border: 1px solid #e7e8ee;
+
   border-radius: 14px;
 
   background: #f8f9fc;
@@ -665,24 +838,35 @@
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
   color: #737887;
 }
 
 .specs span {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   gap: 2px;
 
   color: #8a8e9a;
 
   font-size: 10px;
+
+  overflow-wrap: anywhere;
 }
 
 .specs b {
+  min-width: 0;
+
   color: #30333e;
 
   font-size: 12px;
   font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -691,16 +875,22 @@
 
 .amenities {
   display: flex;
-  gap: 7px;
   flex-wrap: wrap;
+
+  gap: 7px;
+
+  min-width: 0;
 
   margin-top: 17px;
 }
 
 .amenities span {
+  max-width: 100%;
+
   padding: 7px 10px;
 
   border: 1px solid #e4e5eb;
+
   border-radius: 8px;
 
   background: #f7f8fb;
@@ -709,34 +899,44 @@
 
   font-size: 10px;
   font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   ACTIONS
+   CARD ACTIONS
 ========================================================= */
 
 .actions {
   display: grid;
-  grid-template-columns: 1fr 48px 48px;
+
+  grid-template-columns: minmax(0, 1fr) 48px 48px;
 
   gap: 8px;
+
+  min-width: 0;
 
   margin-top: 21px;
 }
 
 .actions button {
-  height: 45px;
-
-  border-radius: 12px;
+  min-width: 0;
+  min-height: 45px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
+
+  padding: 0 8px;
+
+  border-radius: 12px;
 
   cursor: pointer;
 
   font-family: inherit;
+
   font-size: 12px;
   font-weight: 800;
 
@@ -755,12 +955,15 @@
 .actions svg {
   width: 17px;
   height: 17px;
+
+  flex-shrink: 0;
 }
 
 .primaryAction {
   border: 1px solid #483df6;
 
   background: #483df6;
+
   color: #ffffff;
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.15);
@@ -768,6 +971,7 @@
 
 .primaryAction:hover {
   background: #4035e8;
+
   border-color: #4035e8;
 
   box-shadow: 0 12px 30px rgba(72, 61, 246, 0.23);
@@ -813,6 +1017,7 @@
   padding: 40px;
 
   border: 1px solid #e2e4ec;
+
   border-radius: 26px;
 
   background: #ffffff;
@@ -831,6 +1036,7 @@
   justify-content: center;
 
   border: 1px solid rgba(72, 61, 246, 0.13);
+
   border-radius: 19px;
 
   background: rgba(72, 61, 246, 0.075);
@@ -850,6 +1056,8 @@
 
   font-size: 24px;
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .empty p {
@@ -861,20 +1069,26 @@
 
   font-size: 14px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   EDIT MODAL
+   EDIT MODAL OVERLAY
 ========================================================= */
 
 .editModalOverlay {
   position: fixed;
-  z-index: 9999;
   inset: 0;
+
+  z-index: 9999;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  width: 100%;
+  height: 100dvh;
 
   padding: 24px;
 
@@ -883,12 +1097,23 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
+  box-sizing: border-box;
+
+  overflow: hidden;
+
   animation: editOverlayIn 0.2s ease;
 }
 
+/* =========================================================
+   EDIT MODAL
+========================================================= */
+
 .editModal {
-  width: min(100%, 760px);
-  max-height: calc(100vh - 48px);
+  width: min(760px, 100%);
+  min-width: 0;
+  max-width: 100%;
+
+  max-height: calc(100dvh - 48px);
 
   display: flex;
   flex-direction: column;
@@ -896,6 +1121,7 @@
   overflow: hidden;
 
   border: 1px solid #e0e2eb;
+
   border-radius: 24px;
 
   background:
@@ -911,8 +1137,30 @@
   animation: editModalIn 0.25s ease;
 }
 
+@keyframes editOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes editModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* =========================================================
-   MODAL HEADER
+   EDIT MODAL HEADER
 ========================================================= */
 
 .editModalHeader {
@@ -922,14 +1170,23 @@
 
   gap: 20px;
 
+  min-width: 0;
+
   padding: 28px 30px 24px;
 
   border-bottom: 1px solid #e7e8ee;
 }
 
+.editModalHeader > div {
+  min-width: 0;
+}
+
 .editModalEyebrow {
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
+
   gap: 7px;
 
   margin-bottom: 8px;
@@ -941,32 +1198,45 @@
 
   text-transform: uppercase;
   letter-spacing: 1px;
+
+  overflow-wrap: anywhere;
 }
 
 .editModalEyebrow svg {
   width: 15px;
   height: 15px;
+
+  flex-shrink: 0;
 }
 
 .editModalHeader h2 {
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
   font-size: 25px;
   line-height: 1.15;
+
   font-weight: 850;
 
   letter-spacing: -0.5px;
+
+  overflow-wrap: anywhere;
 }
 
 .editModalHeader p {
+  max-width: 100%;
+
   margin: 7px 0 0;
 
   color: #7d808d;
 
   font-size: 13px;
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 .editModalClose {
@@ -979,7 +1249,10 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: 1px solid #e2e4eb;
+
   border-radius: 11px;
 
   background: #f8f9fc;
@@ -1011,12 +1284,16 @@
 }
 
 /* =========================================================
-   MODAL BODY
+   EDIT MODAL BODY
 ========================================================= */
 
 .editModalBody {
+  min-width: 0;
+  min-height: 0;
+
   padding: 25px 30px;
 
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -1030,6 +1307,7 @@
 
 .editModalBody::-webkit-scrollbar-thumb {
   border-radius: 99px;
+
   background: #d5d7df;
 }
 
@@ -1039,10 +1317,13 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 18px;
+
+  min-width: 0;
 }
 
 .editField {
   min-width: 0;
+  max-width: 100%;
 }
 
 .editFieldFull {
@@ -1052,12 +1333,16 @@
 .editField label {
   display: block;
 
+  min-width: 0;
+
   margin-bottom: 8px;
 
   color: #555966;
 
   font-size: 11px;
   font-weight: 750;
+
+  overflow-wrap: anywhere;
 }
 
 .editField label span {
@@ -1065,7 +1350,7 @@
 }
 
 /* =========================================================
-   INPUTS
+   EDIT INPUT
 ========================================================= */
 
 .editInput {
@@ -1073,6 +1358,8 @@
 
   display: flex;
   align-items: center;
+
+  min-width: 0;
 }
 
 .editInput > svg {
@@ -1083,6 +1370,8 @@
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
   color: #483df6;
 
   pointer-events: none;
@@ -1090,11 +1379,14 @@
 
 .editInput input {
   width: 100%;
+  min-width: 0;
+
   height: 52px;
 
   padding: 0 15px 0 45px;
 
   border: 1px solid #e0e2e9;
+
   border-radius: 13px;
 
   outline: none;
@@ -1104,6 +1396,7 @@
   color: #171923;
 
   font-family: inherit;
+
   font-size: 14px;
 
   transition:
@@ -1143,6 +1436,7 @@
   justify-content: center;
 
   border: 1px solid rgba(72, 61, 246, 0.25);
+
   border-radius: 5px;
 
   color: #483df6;
@@ -1154,7 +1448,7 @@
 }
 
 /* =========================================================
-   MODAL FOOTER
+   EDIT MODAL FOOTER
 ========================================================= */
 
 .editModalFooter {
@@ -1173,6 +1467,7 @@
 
 .editCancel,
 .editSave {
+  min-width: 0;
   min-height: 48px;
 
   display: inline-flex;
@@ -1186,6 +1481,7 @@
   border-radius: 12px;
 
   font-family: inherit;
+
   font-size: 13px;
   font-weight: 750;
 
@@ -1208,7 +1504,9 @@
 
 .editCancel:hover {
   background: #f7f8fb;
+
   border-color: #cfd2dc;
+
   color: #171923;
 }
 
@@ -1230,36 +1528,11 @@
   box-shadow: 0 12px 30px rgba(72, 61, 246, 0.26);
 }
 
-.editSave svg,
-.editCancel svg {
+.editSave svg {
   width: 17px;
   height: 17px;
-}
 
-/* =========================================================
-   ANIMATIONS
-========================================================= */
-
-@keyframes editOverlayIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes editModalIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -1268,15 +1541,109 @@
 
 @media (max-width: 1100px) {
   .page {
-    padding: 35px;
-  }
-
-  .overview {
-    grid-template-columns: repeat(2, 1fr);
+    padding: 40px 30px;
   }
 
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .image {
+    height: 280px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .titleRow h2 {
+    font-size: 22px;
+  }
+}
+
+/* =========================================================
+   TABLET / NARROW
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 32px 24px;
+  }
+
+  .header {
+    align-items: flex-start;
+
+    gap: 22px;
+
+    margin-bottom: 28px;
+  }
+
+  .header h1 {
+    font-size: 42px;
+
+    letter-spacing: -1.7px;
+  }
+
+  .overview {
+    gap: 10px;
+  }
+
+  .overviewCard {
+    min-height: 100px;
+
+    padding: 17px;
+
+    gap: 11px;
+  }
+
+  .overviewIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .overviewCard strong {
+    font-size: 22px;
+  }
+
+  .image {
+    height: 250px;
+  }
+
+  .topBadges {
+    top: 13px;
+    left: 13px;
+  }
+
+  .moreButton {
+    top: 13px;
+    right: 13px;
+  }
+
+  .specs {
+    gap: 6px;
+  }
+
+  .specs > div {
+    padding: 10px;
+  }
+
+  .editModalOverlay {
+    padding: 18px;
+  }
+
+  .editModal {
+    max-height: calc(100dvh - 36px);
+  }
+
+  .editModalHeader,
+  .editModalFooter {
+    padding-left: 23px;
+    padding-right: 23px;
+  }
+
+  .editModalBody {
+    padding-left: 23px;
+    padding-right: 23px;
   }
 }
 
@@ -1286,132 +1653,312 @@
 
 @media (max-width: 700px) {
   .page {
-    padding: 24px 16px;
+    padding: 30px;
   }
 
   .header {
-    align-items: stretch;
     flex-direction: column;
-    gap: 20px;
+
+    align-items: stretch;
+
+    gap: 19px;
+  }
+
+  .headerText {
+    width: 100%;
   }
 
   .btns {
-    flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
   }
 
-  .btns button {
-    width: 100%;
+  .homeButton {
+    width: fit-content;
+
+    min-height: 42px;
   }
 
   .eyebrow {
     width: fit-content;
+
+    min-height: 34px;
   }
 
   .header h1 {
     font-size: 34px;
-    letter-spacing: -1.5px;
+
+    line-height: 1.05;
+
+    letter-spacing: -1.3px;
   }
 
   .header p {
-    font-size: 14px;
+    margin-top: 12px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
   }
 
   .headerActions {
     width: 100%;
-    flex-direction: column;
   }
 
-  .homeButton,
   .addButton {
     width: 100%;
   }
 
+  /* overview */
+
   .overview {
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 20px;
   }
 
   .overviewCard {
-    min-height: 95px;
+    min-height: 88px;
+
     padding: 14px;
-    gap: 11px;
+
+    gap: 10px;
+
+    border-radius: 17px;
   }
 
   .overviewIcon {
-    width: 40px;
-    height: 40px;
+    width: 39px;
+    height: 39px;
+
+    border-radius: 11px;
+  }
+
+  .overviewIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .overviewCard span {
+    font-size: 10px;
   }
 
   .overviewCard strong {
     font-size: 21px;
   }
 
+  /* filters */
+
   .filters {
     flex-direction: column;
+
+    gap: 9px;
+
+    margin-bottom: 20px;
+  }
+
+  .search {
+    width: 100%;
+
+    height: 52px;
+padding: 10px;
   }
 
   .statusSelect {
     width: 100%;
   }
 
+  /* result */
+
   .resultRow {
     align-items: flex-start;
+
     flex-direction: column;
-    gap: 8px;
+
+    gap: 7px;
+
+    margin-bottom: 13px;
   }
 
   .resultHint {
-    font-size: 11px;
+    font-size: 10.5px;
+  }
+
+  /* grid */
+
+  .grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .card {
+    border-radius: 21px;
   }
 
   .image {
-    height: 260px;
+    height: 245px;
+  }
+
+  .topBadges {
+    top: 12px;
+    left: 12px;
+    right: 56px;
+
+    gap: 6px;
+  }
+
+  .status,
+  .classBadge {
+    min-height: 30px;
+
+    padding: 0 9px;
+
+    font-size: 9px;
+  }
+
+  .moreButton {
+    top: 11px;
+    right: 11px;
+
+    width: 37px;
+    height: 37px;
+  }
+
+  .moreButton svg {
+    width: 17px;
+    height: 17px;
   }
 
   .content {
-    padding: 19px;
+    padding: 18px;
   }
 
   .titleRow h2 {
-    font-size: 22px;
+    font-size: 21px;
+
+    line-height: 1.2;
+  }
+
+  .location {
+    margin-top: 8px;
+
+    font-size: 12px;
   }
 
   .specs {
-    gap: 7px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 6px;
+
+    margin-top: 17px;
   }
 
   .specs > div {
-    padding: 10px;
+    min-height: 66px;
+
+    padding: 9px;
+
+    border-radius: 11px;
+  }
+
+  .specs svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .specs span {
+    font-size: 8.5px;
   }
 
   .specs b {
-    font-size: 11px;
+    font-size: 10.5px;
+  }
+
+  .amenities {
+    margin-top: 13px;
+
+    gap: 5px;
+  }
+
+  .amenities span {
+    padding: 6px 8px;
+
+    font-size: 9px;
   }
 
   .actions {
-    grid-template-columns: 1fr 45px 45px;
+    grid-template-columns: minmax(0, 1fr) 43px 43px;
+
+    gap: 6px;
+
+    margin-top: 17px;
   }
 
-  /* MODAL */
+  .actions button {
+    min-height: 43px;
+
+    font-size: 11px;
+  }
+
+  .actions svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* empty */
+
+  .empty {
+    min-height: 300px;
+
+    padding: 30px 18px;
+
+    border-radius: 21px;
+  }
+
+  .empty h2 {
+    font-size: 21px;
+  }
+
+  .empty p {
+    font-size: 12px;
+  }
+
+  /* edit modal */
 
   .editModalOverlay {
     align-items: flex-end;
+
     padding: 0;
   }
 
   .editModal {
     width: 100%;
-    max-height: 94vh;
 
-    border-radius: 24px 24px 0 0;
+    max-height: 94dvh;
+
+    border-radius: 23px 23px 0 0;
 
     animation: editModalMobileIn 0.25s ease;
   }
 
   .editModalHeader {
-    padding: 23px 20px 19px;
+    gap: 12px;
+
+    padding: 20px 17px 17px;
+  }
+
+  .editModalEyebrow {
+    margin-bottom: 6px;
+
+    font-size: 9px;
   }
 
   .editModalHeader h2 {
@@ -1419,30 +1966,70 @@
   }
 
   .editModalHeader p {
-    font-size: 12px;
+    font-size: 11.5px;
+  }
+
+  .editModalClose {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 10px;
   }
 
   .editModalBody {
-    padding: 20px;
+    padding: 18px 17px;
+
+    min-height: 0;
   }
 
   .editGrid {
     grid-template-columns: 1fr;
-    gap: 16px;
+
+    gap: 15px;
   }
 
   .editFieldFull {
     grid-column: auto;
   }
 
+  .editField label {
+    margin-bottom: 6px;
+
+    font-size: 10px;
+  }
+
+  .editInput input {
+    height: 49px;
+
+    padding-left: 42px;
+
+    font-size: 13px;
+  }
+
+  .editInput > svg {
+    left: 13px;
+
+    width: 16px;
+    height: 16px;
+  }
+
+  .editInputSimpleIcon {
+    left: 14px;
+  }
+
   .editModalFooter {
     flex-direction: column-reverse;
-    padding: 15px 20px 20px;
+
+    gap: 7px;
+
+    padding: 13px 17px 17px;
   }
 
   .editCancel,
   .editSave {
     width: 100%;
+
+    min-height: 48px;
   }
 }
 
@@ -1455,6 +2042,797 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 30px;
+  }
+
+  .header h1 {
+    font-size: 31px;
+  }
+
+  .homeButton {
+    min-height: 40px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
+  }
+
+  .eyebrow {
+    padding: 0 10px;
+
+    font-size: 10px;
+  }
+
+  .overview {
+    gap: 7px;
+  }
+
+  .overviewCard {
+    min-height: 80px;
+
+    padding: 11px;
+
+    border-radius: 15px;
+  }
+
+  .overviewIcon {
+    width: 35px;
+    height: 35px;
+
+    border-radius: 9px;
+  }
+
+  .overviewIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .overviewCard span {
+    font-size: 9px;
+  }
+
+  .overviewCard strong {
+    font-size: 19px;
+  }
+
+  .search {
+    height: 49px;
+
+    padding: 0 12px;
+  }
+
+  .search input {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .grid {
+    gap: 11px;
+  }
+
+  .card {
+    border-radius: 19px;
+  }
+
+  .image {
+    height: 220px;
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .titleRow h2 {
+    font-size: 19px;
+  }
+
+  .location {
+    font-size: 11px;
+  }
+
+  .specs {
+    gap: 5px;
+  }
+
+  .specs > div {
+    min-height: 61px;
+
+    padding: 8px;
+
+    border-radius: 10px;
+  }
+
+  .specs svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .specs span {
+    font-size: 8px;
+  }
+
+  .specs b {
+    font-size: 10px;
+  }
+
+  .amenities span {
+    padding: 5px 7px;
+
+    font-size: 8.5px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 40px 40px;
+
+    gap: 5px;
+  }
+
+  .actions button {
+    min-height: 41px;
+
+    font-size: 10px;
+  }
+
+  .actions svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .empty {
+    min-height: 280px;
+
+    padding: 25px 15px;
+  }
+
+  .emptyIcon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .empty h2 {
+    margin-top: 15px;
+
+    font-size: 19px;
+  }
+
+  .empty p {
+    font-size: 11px;
+  }
+
+  /* modal */
+
+  .editModal {
+    max-height: 95dvh;
+  }
+
+  .editModalHeader {
+    padding: 18px 14px 15px;
+  }
+
+  .editModalHeader h2 {
+    font-size: 19px;
+  }
+
+  .editModalHeader p {
+    font-size: 10.5px;
+  }
+
+  .editModalClose {
+    width: 35px;
+    height: 35px;
+  }
+
+  .editModalBody {
+    padding: 16px 14px;
+  }
+
+  .editGrid {
+    gap: 13px;
+  }
+
+  .editInput input {
+    height: 47px;
+
+    padding-left: 40px;
+
+    font-size: 12px;
+  }
+
+  .editInput > svg {
+    left: 12px;
+
+    width: 15px;
+    height: 15px;
+  }
+
+  .editModalFooter {
+    padding: 12px 14px 14px;
+  }
+
+  .editCancel,
+  .editSave {
+    min-height: 46px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 30px;
+  }
+
+  .header {
+    gap: 15px;
+  }
+
+  .btns {
+    margin-bottom: 12px;
+  }
+
+  .homeButton {
+    min-height: 38px;
+
+    padding: 0 10px;
+
+    font-size: 11px;
+  }
+
+  .homeButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .eyebrow {
+    min-height: 32px;
+
+    padding: 0 8px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.8px;
+  }
+
+  .eyebrow svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+
+    letter-spacing: -1px;
+  }
+
+  .header p {
+    font-size: 11px;
+
+    line-height: 1.55;
+  }
+
+  .addButton {
+    min-height: 47px;
+
+    font-size: 12px;
+  }
+
+  /* overview */
+
+  .overviewCard {
+    min-height: 75px;
+
+    gap: 7px;
+
+    padding: 9px;
+  }
+
+  .overviewIcon {
+    width: 31px;
+    height: 31px;
+  }
+
+  .overviewIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .overviewCard span {
+    font-size: 8px;
+  }
+
+  .overviewCard strong {
+    font-size: 17px;
+  }
+
+  /* search */
+
+  .search {
+    height: 46px;
+
+    gap: 8px;
+
+    padding: 0 10px;
+  }
+
+  .search svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .search input {
+    font-size: 11px;
+  }
+
+  /* card */
+
+  .image {
+    height: 200px;
+  }
+
+  .topBadges {
+    top: 9px;
+    left: 9px;
+    right: 50px;
+
+    gap: 5px;
+  }
+
+  .status,
+  .classBadge {
+    min-height: 27px;
+
+    padding: 0 7px;
+
+    font-size: 8px;
+
+    border-radius: 8px;
+  }
+
+  .status i {
+    width: 5px;
+    height: 5px;
+  }
+
+  .moreButton {
+    top: 8px;
+    right: 8px;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+  }
+
+  .moreButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .content {
+    padding: 13px;
+  }
+
+  .titleRow h2 {
+    font-size: 17px;
+  }
+
+  .location {
+    gap: 5px;
+
+    margin-top: 7px;
+
+    font-size: 10px;
+  }
+
+  .location svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .specs {
+    gap: 4px;
+
+    margin-top: 13px;
+  }
+
+  .specs > div {
+    min-height: 56px;
+
+    padding: 7px;
+
+    border-radius: 8px;
+  }
+
+  .specs svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .specs span {
+    font-size: 7px;
+  }
+
+  .specs b {
+    font-size: 9px;
+  }
+
+  .amenities {
+    margin-top: 11px;
+
+    gap: 4px;
+  }
+
+  .amenities span {
+    padding: 4px 6px;
+
+    font-size: 7.5px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 37px 37px;
+
+    gap: 4px;
+
+    margin-top: 13px;
+  }
+
+  .actions button {
+    min-height: 38px;
+
+    padding: 0 5px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+  }
+
+  .actions svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* modal */
+
+  .editModal {
+    max-height: 96dvh;
+
+    border-radius: 19px 19px 0 0;
+  }
+
+  .editModalHeader {
+    padding: 16px 11px 13px;
+
+    gap: 8px;
+  }
+
+  .editModalEyebrow {
+    font-size: 8px;
+
+    letter-spacing: 0.7px;
+  }
+
+  .editModalEyebrow svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .editModalHeader h2 {
+    font-size: 17px;
+  }
+
+  .editModalHeader p {
+    margin-top: 5px;
+
+    font-size: 9.5px;
+  }
+
+  .editModalClose {
+    width: 33px;
+    height: 33px;
+
+    border-radius: 9px;
+  }
+
+  .editModalClose svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .editModalBody {
+    padding: 13px 11px;
+  }
+
+  .editGrid {
+    gap: 11px;
+  }
+
+  .editField label {
+    margin-bottom: 5px;
+
+    font-size: 9px;
+  }
+
+  .editInput input {
+    height: 44px;
+
+    padding-left: 36px;
+
+    font-size: 11px;
+
+    border-radius: 10px;
+  }
+
+  .editInput > svg {
+    left: 10px;
+
+    width: 13px;
+    height: 13px;
+  }
+
+  .editInputSimpleIcon {
+    left: 11px;
+
+    width: 15px;
+    height: 15px;
+  }
+
+  .editModalFooter {
+    gap: 5px;
+
+    padding: 9px 11px 11px;
+  }
+
+  .editCancel,
+  .editSave {
+    min-height: 43px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  .editSave svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* =========================================================
+   320PX SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header p {
+    font-size: 10px;
+  }
+
+  .overview {
+    gap: 5px;
+  }
+
+  .overviewCard {
+    min-height: 70px;
+
+    padding: 8px;
+
+    border-radius: 12px;
+  }
+
+  .overviewIcon {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+  }
+
+  .overviewIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .overviewCard span {
+    font-size: 7px;
+  }
+
+  .overviewCard strong {
+    font-size: 16px;
+  }
+
+  .search {
+    height: 44px;
+
+    padding: 0 8px;
+  }
+
+  .search svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .search input {
+    font-size: 10px;
+  }
+
+  .statusSelect {
+    width: 100%;
+  }
+
+  .resultRow div span {
+    font-size: 10px;
+  }
+
+  .resultRow div strong {
+    min-width: 24px;
+    min-height: 24px;
+
+    font-size: 10px;
+  }
+
+  .resultHint {
+    font-size: 9px;
+  }
+
+  .image {
+    height: 185px;
+  }
+
+  .content {
+    padding: 11px;
+  }
+
+  .titleRow h2 {
+    font-size: 16px;
+  }
+
+  .location {
+    font-size: 9.5px;
+  }
+
+  .specs {
+    gap: 3px;
+  }
+
+  .specs > div {
+    min-height: 52px;
+
+    padding: 6px;
+  }
+
+  .specs span {
+    font-size: 6.5px;
+  }
+
+  .specs b {
+    font-size: 8.5px;
+  }
+
+  .amenities span {
+    font-size: 7px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 35px 35px;
+
+    gap: 3px;
+  }
+
+  .actions button {
+    min-height: 36px;
+
+    padding: 0 4px;
+
+    font-size: 8px;
+  }
+
+  .actions svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* modal */
+
+  .editModal {
+    max-height: 97dvh;
+
+    border-radius: 17px 17px 0 0;
+  }
+
+  .editModalHeader {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .editModalHeader h2 {
+    font-size: 16px;
+  }
+
+  .editModalHeader p {
+    font-size: 9px;
+  }
+
+  .editModalClose {
+    width: 31px;
+    height: 31px;
+  }
+
+  .editModalBody {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .editField label {
+    font-size: 8px;
+  }
+
+  .editInput input {
+    height: 42px;
+
+    padding-left: 34px;
+
+    font-size: 10.5px;
+  }
+
+  .editInput > svg {
+    left: 9px;
+
+    width: 12px;
+    height: 12px;
+  }
+
+  .editInputSimpleIcon {
+    left: 10px;
+  }
+
+  .editModalFooter {
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-bottom: 9px;
+  }
+
+  .editCancel,
+  .editSave {
+    min-height: 41px;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .homeButton:hover,
+  .addButton:hover,
+  .overviewCard:hover,
+  .card:hover,
+  .moreButton:hover,
+  .actions button:hover,
+  .editModalClose:hover,
+  .editCancel:hover,
+  .editSave:hover {
+    transform: none;
   }
 }
 

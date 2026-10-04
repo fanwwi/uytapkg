@@ -3,7 +3,10 @@
 ========================================================= */
 
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
+
   padding: 100px;
 
   color: #171923;
@@ -21,6 +24,24 @@
       transparent 35%
     ),
     #f6f7fb;
+
+  box-sizing: border-box;
+
+  overflow-x: clip;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.page img {
+  max-width: 100%;
+}
+
+.page a {
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -30,15 +51,21 @@
 .topBar {
   display: flex;
   align-items: center;
+
+  min-width: 0;
+
   margin-bottom: 18px;
 }
 
 .homeButton {
-  height: 42px;
+  min-height: 42px;
 
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
+
+  min-width: 0;
 
   padding: 0 15px;
 
@@ -64,11 +91,6 @@
     box-shadow 0.2s ease;
 }
 
-.homeButton svg {
-  width: 16px;
-  height: 16px;
-}
-
 .homeButton:hover {
   transform: translateX(-3px);
 
@@ -81,12 +103,20 @@
   box-shadow: 0 7px 20px rgba(72, 61, 246, 0.08);
 }
 
+.homeButton svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+}
+
 /* =========================================================
    MAIN PROFILE
 ========================================================= */
 
 .profileCard {
   position: relative;
+
   overflow: hidden;
 
   display: grid;
@@ -94,7 +124,11 @@
   grid-template-columns: 180px minmax(0, 1fr) 48px;
 
   gap: 30px;
+
   align-items: center;
+
+  width: 100%;
+  min-width: 0;
 
   padding: 34px;
 
@@ -165,6 +199,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  min-width: 0;
+
+  z-index: 1;
 }
 
 .logo {
@@ -178,6 +216,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
 
   border-radius: 28px;
 
@@ -227,26 +267,37 @@
 
 .info {
   min-width: 0;
+  max-width: 100%;
 }
 
 .heading {
   display: flex;
   align-items: center;
 
+  flex-wrap: wrap;
+
   gap: 10px;
+
+  min-width: 0;
+  max-width: 100%;
 }
 
 .heading h1 {
+  min-width: 0;
+  max-width: 100%;
+
   margin: 0;
 
   color: #171923;
 
   font-size: clamp(28px, 4vw, 43px);
-  line-height: 1.05;
+  line-height: 1.08;
 
   font-weight: 950;
 
   letter-spacing: -1.6px;
+
+  overflow-wrap: anywhere;
 }
 
 .verified {
@@ -275,8 +326,13 @@
   height: 15px;
 }
 
+/* =========================================================
+   TYPE
+========================================================= */
+
 .type {
   width: fit-content;
+  max-width: 100%;
 
   display: inline-flex;
   align-items: center;
@@ -299,31 +355,53 @@
 
   text-transform: uppercase;
   letter-spacing: 0.7px;
+
+  overflow-wrap: anywhere;
 }
 
 .type svg {
   width: 14px;
   height: 14px;
+
+  flex-shrink: 0;
 }
+
+/* =========================================================
+   DIRECTOR
+========================================================= */
 
 .director {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 8px;
+
+  min-width: 0;
 
   margin-top: 13px;
 
   color: #777c8c;
 
   font-size: 15px;
+
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .director svg {
   width: 16px;
   height: 16px;
 
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
   color: #483df6;
+}
+
+.director span {
+  min-width: 0;
 }
 
 .director strong {
@@ -338,20 +416,27 @@
 
 .contacts {
   display: flex;
+  align-items: center;
+
   flex-wrap: wrap;
 
   gap: 8px;
+
+  min-width: 0;
 
   margin-top: 19px;
 }
 
 .contact {
   min-height: 38px;
+  max-width: 100%;
 
   display: inline-flex;
   align-items: center;
 
   gap: 7px;
+
+  min-width: 0;
 
   padding: 0 12px;
 
@@ -368,6 +453,8 @@
 
   text-decoration: none;
 
+  overflow-wrap: anywhere;
+
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
@@ -378,6 +465,8 @@
 .contact svg {
   width: 15px;
   height: 15px;
+
+  flex-shrink: 0;
 
   color: #483df6;
 }
@@ -412,6 +501,10 @@
   align-items: center;
   justify-content: center;
 
+  flex-shrink: 0;
+
+  padding: 0;
+
   border-radius: 14px;
 
   background: #f7f8fb;
@@ -435,6 +528,8 @@
 .edit svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 .edit:hover {
@@ -455,6 +550,10 @@
 
 .about {
   position: relative;
+
+  overflow: hidden;
+
+  min-width: 0;
 
   margin-top: 16px;
 
@@ -481,6 +580,8 @@
 
   gap: 9px;
 
+  min-width: 0;
+
   margin-bottom: 12px;
 }
 
@@ -488,19 +589,28 @@
   width: 18px;
   height: 18px;
 
+  flex-shrink: 0;
+
   color: #483df6;
 }
 
 .sectionTitle h3 {
+  min-width: 0;
+
   margin: 0;
 
   color: #20232e;
 
   font-size: 18px;
+  line-height: 1.3;
+
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .about p {
+  width: 100%;
   max-width: 850px;
 
   margin: 0;
@@ -509,6 +619,8 @@
 
   font-size: 15px;
   line-height: 1.75;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -518,9 +630,11 @@
 .details {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
+
+  min-width: 0;
 
   margin-top: 12px;
 }
@@ -584,10 +698,13 @@
 .detailIcon svg {
   width: 17px;
   height: 17px;
+
+  flex-shrink: 0;
 }
 
 .detail > div:last-child {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -606,15 +723,17 @@
 }
 
 .detail strong {
-  overflow: hidden;
+  min-width: 0;
 
   color: #3b3f4b;
 
   font-size: 15px;
+  line-height: 1.4;
+
   font-weight: 700;
 
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================================================
@@ -624,16 +743,21 @@
 .stats {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 12px;
+
+  min-width: 0;
 
   margin-top: 16px;
 }
 
 .stat {
   position: relative;
+
   overflow: hidden;
+
+  min-width: 0;
 
   padding: 20px 22px;
 
@@ -666,6 +790,8 @@
   opacity: 0.06;
 
   filter: blur(25px);
+
+  pointer-events: none;
 }
 
 .stat strong {
@@ -693,6 +819,8 @@
 
   text-transform: uppercase;
   letter-spacing: 0.5px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -702,15 +830,18 @@
 .actions {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
+
+  min-width: 0;
 
   margin-top: 16px;
 }
 
 .actions > a,
 .logout {
+  min-width: 0;
   min-height: 76px;
 
   display: flex;
@@ -776,24 +907,43 @@
 .icon svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
+}
+
+.actions > a > div:last-child,
+.logout > div:last-child {
+  min-width: 0;
 }
 
 .actions h3 {
+  min-width: 0;
+
   margin: 0;
 
   color: #292d39;
 
   font-size: 15px;
+  line-height: 1.3;
+
   font-weight: 850;
+
+  overflow-wrap: anywhere;
 }
 
 .actions p {
+  min-width: 0;
+
   margin: 4px 0 0;
 
   color: #8a8f9d;
 
   font-size: 13px;
+  line-height: 1.45;
+
   font-weight: 600;
+
+  overflow-wrap: anywhere;
 }
 
 .logout {
@@ -839,31 +989,125 @@
 }
 
 /* =========================================================
-   TABLET
+   LARGE TABLET
 ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .page {
-    padding: 70px 35px;
+    padding: 80px 50px;
   }
 
   .profileCard {
-    grid-template-columns: 135px minmax(0, 1fr) 45px;
+    grid-template-columns: 150px minmax(0, 1fr) 46px;
 
-    gap: 22px;
+    gap: 24px;
+
+    padding: 30px;
+  }
+
+  .logo {
+    width: 140px;
+    height: 140px;
+
+    border-radius: 24px;
+  }
+
+  .heading h1 {
+    font-size: 37px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+  .page {
+    padding: 65px 32px;
+  }
+
+  .profileCard {
+    grid-template-columns: 125px minmax(0, 1fr) 44px;
+
+    gap: 20px;
 
     padding: 27px;
   }
 
   .logo {
-    width: 125px;
-    height: 125px;
+    width: 115px;
+    height: 115px;
 
-    border-radius: 22px;
+    border-radius: 21px;
   }
 
   .heading h1 {
     font-size: 32px;
+
+    letter-spacing: -1.2px;
+  }
+
+  .verified {
+    width: 23px;
+    height: 23px;
+  }
+
+  .verified svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .director {
+    font-size: 14px;
+  }
+
+  .contact {
+    font-size: 12px;
+  }
+
+  .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET / NARROW
+========================================================= */
+
+@media (max-width: 760px) {
+  .profileCard {
+    grid-template-columns: 105px minmax(0, 1fr) 42px;
+
+    gap: 17px;
+
+    padding: 24px;
+  }
+
+  .logo {
+    width: 100px;
+    height: 100px;
+
+    border-radius: 19px;
+  }
+
+  .heading h1 {
+    font-size: 29px;
+  }
+
+  .type {
+    font-size: 11px;
+  }
+
+  .contacts {
+    gap: 7px;
+  }
+
+  .contact {
+    min-height: 36px;
+
+    padding: 0 10px;
+
+    font-size: 11.5px;
   }
 }
 
@@ -873,9 +1117,7 @@
 
 @media (max-width: 650px) {
   .page {
-    width: calc(100% - 20px);
-
-    padding: 20px 0 45px;
+    padding: 20px 10px 45px;
   }
 
   .topBar {
@@ -883,11 +1125,11 @@
   }
 
   .homeButton {
-    height: 39px;
+    min-height: 39px;
 
     padding: 0 11px;
 
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .profileCard {
@@ -895,7 +1137,7 @@
 
     gap: 0;
 
-    padding: 22px 18px;
+    padding: 23px 18px;
 
     border-radius: 24px;
 
@@ -903,24 +1145,34 @@
   }
 
   .logoWrapper {
-    margin-bottom: 19px;
+    margin-bottom: 18px;
   }
 
   .logo {
-    width: 125px;
-    height: 125px;
+    width: 122px;
+    height: 122px;
 
-    border-radius: 23px;
+    border-radius: 22px;
+  }
+
+  .info {
+    width: 100%;
   }
 
   .heading {
     justify-content: center;
+
+    gap: 8px;
   }
 
   .heading h1 {
+    max-width: calc(100% - 38px);
+
     font-size: 27px;
 
-    letter-spacing: -1px;
+    line-height: 1.12;
+
+    letter-spacing: -0.9px;
   }
 
   .verified {
@@ -928,28 +1180,52 @@
     height: 22px;
   }
 
+  .verified svg {
+    width: 13px;
+    height: 13px;
+  }
+
   .type {
     margin-left: auto;
     margin-right: auto;
+
+    font-size: 11px;
   }
 
   .director {
     justify-content: center;
+
+    font-size: 14px;
+
+    text-align: left;
   }
 
   .contacts {
     justify-content: center;
   }
 
+  .contact {
+    min-height: 37px;
+
+    font-size: 12px;
+  }
+
   .edit {
     position: absolute;
 
-    top: 16px;
-    right: 16px;
+    top: 15px;
+    right: 15px;
 
     width: 42px;
     height: 42px;
   }
+
+  .edit svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* about */
 
   .about {
     padding: 21px 18px;
@@ -961,16 +1237,36 @@
     justify-content: center;
   }
 
-  .about p {
-    font-size: 15px;
+  .sectionTitle h3 {
+    font-size: 17px;
   }
+
+  .about p {
+    font-size: 14px;
+
+    line-height: 1.7;
+  }
+
+  /* details */
 
   .details {
     grid-template-columns: 1fr;
   }
 
+  .detail {
+    padding: 14px;
+  }
+
+  .detail strong {
+    font-size: 14px;
+  }
+
+  /* stats */
+
   .stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
   }
 
   .stat {
@@ -981,6 +1277,12 @@
     font-size: 24px;
   }
 
+  .stat span {
+    font-size: 11px;
+  }
+
+  /* actions */
+
   .actions {
     grid-template-columns: 1fr;
   }
@@ -988,6 +1290,8 @@
   .actions > a,
   .logout {
     min-height: 70px;
+
+    padding: 13px 15px;
   }
 }
 
@@ -995,27 +1299,96 @@
    SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
   .page {
-    width: calc(100% - 12px);
+    padding: 16px 7px 40px;
   }
 
   .profileCard {
-    padding: 20px 14px;
+    padding: 21px 14px;
+
+    border-radius: 21px;
+  }
+
+  .logo {
+    width: 108px;
+    height: 108px;
+
+    border-radius: 20px;
   }
 
   .heading h1 {
+    max-width: calc(100% - 35px);
+
     font-size: 25px;
+
+    letter-spacing: -0.7px;
+  }
+
+  .type {
+    padding: 6px 9px;
+
+    font-size: 10px;
+  }
+
+  .director {
+    font-size: 13px;
+  }
+
+  .contacts {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    width: 100%;
   }
 
   .contact {
     width: 100%;
 
     justify-content: center;
+
+    font-size: 12px;
   }
 
-  .stats {
-    gap: 8px;
+  .about {
+    padding: 19px 15px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 10px;
+  }
+
+  .sectionTitle h3 {
+    font-size: 16px;
+  }
+
+  .about p {
+    font-size: 13px;
+  }
+
+  .detail {
+    gap: 10px;
+
+    padding: 13px;
+  }
+
+  .detailIcon {
+    width: 37px;
+    height: 37px;
+  }
+
+  .detailIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .detail span {
+    font-size: 10px;
+  }
+
+  .detail strong {
+    font-size: 13px;
   }
 
   .stat {
@@ -1026,7 +1399,315 @@
     font-size: 23px;
   }
 
+  .stat span {
+    font-size: 10px;
+  }
+
+  .actions > a,
+  .logout {
+    gap: 11px;
+
+    padding: 12px 13px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+  }
+
+  .icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
   .actions h3 {
+    font-size: 14px;
+  }
+
+  .actions p {
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 13px 5px 36px;
+  }
+
+  .homeButton {
+    min-height: 37px;
+
+    padding: 0 9px;
+
+    font-size: 12px;
+  }
+
+  .profileCard {
+    padding: 19px 11px;
+
+    border-radius: 19px;
+  }
+
+  .logo {
+    width: 96px;
+    height: 96px;
+
+    border-radius: 18px;
+  }
+
+  .heading {
+    gap: 6px;
+  }
+
+  .heading h1 {
+    max-width: calc(100% - 31px);
+
+    font-size: 22px;
+  }
+
+  .verified {
+    width: 20px;
+    height: 20px;
+  }
+
+  .verified svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .type {
+    padding: 5px 8px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.5px;
+  }
+
+  .director {
+    gap: 6px;
+
+    font-size: 12px;
+  }
+
+  .director svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .contact {
+    min-height: 35px;
+
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+
+  .contact svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .edit {
+    top: 11px;
+    right: 11px;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 11px;
+  }
+
+  .about {
+    padding: 17px 12px;
+
+    border-radius: 18px;
+  }
+
+  .sectionTitle h3 {
     font-size: 15px;
+  }
+
+  .about p {
+    font-size: 12px;
+
+    line-height: 1.6;
+  }
+
+  .detail {
+    padding: 11px;
+  }
+
+  .detailIcon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+  }
+
+  .detailIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .detail span {
+    font-size: 9px;
+  }
+
+  .detail strong {
+    font-size: 12px;
+  }
+
+  .stats {
+    gap: 7px;
+  }
+
+  .stat {
+    padding: 13px 10px;
+  }
+
+  .stat strong {
+    font-size: 21px;
+  }
+
+  .stat span {
+    font-size: 9px;
+  }
+
+  .actions > a,
+  .logout {
+    min-height: 66px;
+
+    gap: 9px;
+
+    padding: 11px;
+  }
+
+  .icon {
+    width: 37px;
+    height: 37px;
+  }
+
+  .actions h3 {
+    font-size: 13px;
+  }
+
+  .actions p {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   320PX SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .profileCard {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .heading h1 {
+    max-width: calc(100% - 29px);
+
+    font-size: 20px;
+  }
+
+  .verified {
+    width: 19px;
+    height: 19px;
+  }
+
+  .verified svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .edit {
+    top: 9px;
+    right: 9px;
+
+    width: 35px;
+    height: 35px;
+  }
+
+  .contacts {
+    gap: 6px;
+  }
+
+  .contact {
+    min-height: 34px;
+
+    font-size: 10.5px;
+  }
+
+  .about {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .detail {
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+  .detailIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .detail strong {
+    font-size: 11.5px;
+  }
+
+  .actions > a,
+  .logout {
+    padding: 10px;
+  }
+
+  .icon {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .homeButton:hover,
+  .contact:hover,
+  .edit:hover,
+  .detail:hover,
+  .actions > a:hover,
+  .logout:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .homeButton,
+  .contact,
+  .edit,
+  .detail,
+  .actions > a,
+  .logout {
+    transition: none;
   }
 }

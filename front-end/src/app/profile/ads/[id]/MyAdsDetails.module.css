@@ -1,6 +1,16 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
+
   padding: 35px 45px 80px;
+
+  box-sizing: border-box;
+  overflow-x: hidden;
 
   background:
     radial-gradient(circle at 8% 0%, rgba(72, 61, 246, 0.08), transparent 28%),
@@ -14,26 +24,43 @@
   color: #171923;
 }
 
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
 .container {
+  width: 100%;
   max-width: 1320px;
+  min-width: 0;
+
   margin: 0 auto;
 }
 
-/* =========================
+/* =========================================================
    TOP BAR
-========================= */
+========================================================= */
 
 .topBar {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 16px;
 
   margin-bottom: 24px;
 }
 
 .back {
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+
+  display: inline-flex;
   align-items: center;
+
   gap: 9px;
 
   padding: 0;
@@ -43,13 +70,16 @@
 
   color: #697080;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 14px;
   font-weight: 750;
+  line-height: 1.3;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back:hover {
@@ -57,59 +87,83 @@
   transform: translateX(-3px);
 }
 
+.back svg {
+  flex: 0 0 auto;
+}
+
 .ownerBadge {
-  display: flex;
+  flex: 0 0 auto;
+
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 7px;
+
+  min-height: 34px;
 
   padding: 8px 12px;
 
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 10px;
 
   background: rgba(72, 61, 246, 0.07);
-  border: 1px solid rgba(72, 61, 246, 0.14);
 
   color: #483df6;
 
   font-size: 10px;
   font-weight: 900;
+  line-height: 1.2;
+
   letter-spacing: 1px;
+  text-align: center;
 }
 
-/* =========================
+.ownerBadge svg {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
    TOP
-========================= */
+========================================================= */
 
 .top {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns:
     minmax(0, 1.55fr)
-    minmax(380px, 0.85fr);
+    minmax(360px, 0.85fr);
 
   gap: 28px;
+
+  align-items: stretch;
 }
 
-/* =========================
+/* =========================================================
    GALLERY
-========================= */
+========================================================= */
 
 .gallery {
+  width: 100%;
   min-width: 0;
 }
 
 .mainImage {
   position: relative;
 
+  width: 100%;
   height: 600px;
+  min-width: 0;
 
   overflow: hidden;
 
+  border: 1px solid #e2e5ec;
   border-radius: 30px;
 
   background: #e9ebf2;
-
-  border: 1px solid #e2e5ec;
 
   box-shadow:
     0 25px 65px rgba(24, 30, 55, 0.1),
@@ -129,24 +183,22 @@
 .imageOverlay {
   position: absolute;
   inset: 0;
-
   z-index: 1;
 
   pointer-events: none;
 
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.38),
-    transparent 30%,
+    rgba(0, 0, 0, 0.38) 0%,
+    transparent 31%,
     transparent 58%,
-    rgba(0, 0, 0, 0.62)
+    rgba(0, 0, 0, 0.65) 100%
   );
 }
 
 .noImage {
   position: absolute;
   inset: 0;
-
   z-index: 2;
 
   display: flex;
@@ -160,43 +212,51 @@
 
   font-size: 14px;
   font-weight: 700;
+  text-align: center;
 }
 
-/* =========================
+/* =========================================================
    BADGES
-========================= */
+========================================================= */
 
 .badges {
   position: absolute;
-
-  z-index: 3;
-
   top: 22px;
   left: 22px;
+  z-index: 3;
+
+  min-width: 0;
+  max-width: calc(100% - 145px);
 
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  max-width: calc(100% - 150px);
-
   flex-wrap: wrap;
+
+  gap: 8px;
 }
 
 .badge,
 .categoryBadge {
-  height: 35px;
+  min-height: 35px;
+  max-width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
 
   padding: 0 13px;
-
-  display: flex;
-  align-items: center;
-  gap: 7px;
 
   border-radius: 11px;
 
   font-size: 12px;
   font-weight: 900;
+  line-height: 1.2;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -204,7 +264,6 @@
 
 .vip {
   background: linear-gradient(135deg, #3930d8, #483df6);
-
   color: #fff;
 
   box-shadow:
@@ -218,43 +277,45 @@
 }
 
 .categoryBadge {
-  background: rgba(20, 22, 30, 0.78);
-
   border: 1px solid rgba(255, 255, 255, 0.2);
+
+  background: rgba(20, 22, 30, 0.78);
 
   color: #fff;
 }
 
-/* =========================
+/* =========================================================
    IMAGE ACTIONS
-========================= */
+========================================================= */
 
 .imageActions {
   position: absolute;
-
-  z-index: 5;
-
   top: 20px;
   right: 20px;
+  z-index: 5;
 
   display: flex;
   align-items: center;
+
   gap: 8px;
 }
 
 .imageEdit,
 .imageDelete {
-  height: 42px;
+  min-height: 42px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
+  gap: 7px;
+
   border-radius: 12px;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 12px;
   font-weight: 850;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -264,13 +325,12 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .imageEdit {
   padding: 0 14px;
-
-  gap: 7px;
 
   border: 1px solid rgba(255, 255, 255, 0.2);
 
@@ -281,7 +341,6 @@
 
 .imageEdit:hover {
   background: #483df6;
-
   border-color: #483df6;
 
   transform: translateY(-2px);
@@ -291,6 +350,7 @@
 
 .imageDelete {
   width: 42px;
+  padding: 0;
 
   border: 1px solid rgba(255, 100, 115, 0.3);
 
@@ -301,25 +361,21 @@
 
 .imageDelete:hover {
   background: #dc3545;
-
   border-color: #dc3545;
-
   color: #fff;
 
   transform: translateY(-2px);
 }
 
-/* =========================
+/* =========================================================
    FAVORITE
-========================= */
+========================================================= */
 
 .favorite {
   position: absolute;
-
-  z-index: 5;
-
   right: 20px;
   bottom: 73px;
+  z-index: 5;
 
   width: 46px;
   height: 46px;
@@ -327,6 +383,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 14px;
@@ -340,13 +398,15 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .favorite:hover,
 .favoriteActive {
   background: #483df6;
-
   border-color: #483df6;
 
   transform: scale(1.06);
@@ -354,16 +414,14 @@
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.25);
 }
 
-/* =========================
+/* =========================================================
    GALLERY ARROWS
-========================= */
+========================================================= */
 
 .galleryArrow {
   position: absolute;
-
-  z-index: 5;
-
   top: 50%;
+  z-index: 5;
 
   width: 46px;
   height: 46px;
@@ -371,6 +429,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 14px;
@@ -386,11 +446,13 @@
   transform: translateY(-50%);
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   transition:
     opacity 0.25s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .mainImage:hover .galleryArrow {
@@ -399,7 +461,6 @@
 
 .galleryArrow:hover {
   background: #483df6;
-
   border-color: #483df6;
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.25);
@@ -413,17 +474,26 @@
   right: 20px;
 }
 
-/* =========================
+.galleryArrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* =========================================================
    COUNTER
-========================= */
+========================================================= */
 
 .imageCounter {
   position: absolute;
-
-  z-index: 5;
-
   right: 20px;
   bottom: 20px;
+  z-index: 5;
+
+  min-height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   padding: 8px 12px;
 
@@ -435,23 +505,27 @@
 
   font-size: 12px;
   font-weight: 850;
+  line-height: 1;
+
+  white-space: nowrap;
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* =========================
+/* =========================================================
    IMAGE TITLE
-========================= */
+========================================================= */
 
 .imageTitle {
   position: absolute;
-
+  left: 23px;
+  right: 125px;
+  bottom: 21px;
   z-index: 4;
 
-  left: 23px;
-  bottom: 21px;
-
-  max-width: calc(100% - 130px);
+  min-width: 0;
+  max-width: calc(100% - 150px);
 
   display: flex;
   flex-direction: column;
@@ -460,41 +534,65 @@
 }
 
 .imageTitle span {
-  color: #b9b5ff;
+  color: #c4c0ff;
 
   font-size: 9px;
   font-weight: 950;
+  line-height: 1.2;
 
   letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .imageTitle strong {
-  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
 
   color: #fff;
 
   font-size: 16px;
+  font-weight: 850;
   line-height: 1.25;
 
+  overflow: hidden;
   text-overflow: ellipsis;
-
   white-space: nowrap;
 }
 
-/* =========================
+/* =========================================================
    THUMBNAILS
-========================= */
+========================================================= */
 
 .thumbnails {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
+  align-items: center;
 
   gap: 12px;
 
   margin-top: 13px;
+  padding-bottom: 3px;
 
   overflow-x: auto;
+  overflow-y: hidden;
 
   scrollbar-width: thin;
+  scrollbar-color: #c8ccd6 transparent;
+}
+
+.thumbnails::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thumbnails::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #c8ccd6;
+}
+
+.thumbnails::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .thumbnail {
@@ -502,8 +600,9 @@
 
   width: 95px;
   height: 68px;
+  min-width: 95px;
 
-  flex-shrink: 0;
+  flex: 0 0 95px;
 
   overflow: hidden;
 
@@ -515,19 +614,22 @@
   background: #e7e9f0;
 
   cursor: pointer;
-
   opacity: 0.55;
 
-  transition: 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .thumbnail:hover {
   opacity: 0.85;
+  transform: translateY(-1px);
 }
 
 .thumbnailActive {
   border-color: #483df6;
-
   opacity: 1;
 
   box-shadow: 0 5px 22px rgba(72, 61, 246, 0.2);
@@ -537,12 +639,17 @@
   object-fit: cover;
 }
 
-/* =========================
+/* =========================================================
    DOTS
-========================= */
+========================================================= */
 
 .dots {
   display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
 }
 
 .dot {
@@ -558,12 +665,13 @@
 
   cursor: pointer;
 
-  transition: 0.2s;
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
 }
 
 .dotActive {
   width: 20px;
-
   border-radius: 5px;
 
   background: #483df6;
@@ -571,20 +679,20 @@
   box-shadow: 0 0 10px rgba(72, 61, 246, 0.3);
 }
 
-/* =========================
+/* =========================================================
    SUMMARY
-========================= */
+========================================================= */
 
 .summary {
   min-width: 0;
-
-  min-height: 430px;
+  min-height: 600px;
 
   padding: 32px;
 
   display: flex;
   flex-direction: column;
 
+  border: 1px solid #e3e6ee;
   border-radius: 30px;
 
   background:
@@ -595,50 +703,60 @@
     ),
     linear-gradient(145deg, #ffffff, #f8f9fc);
 
-  border: 1px solid #e3e6ee;
-
   box-shadow: 0 25px 65px rgba(24, 30, 55, 0.08);
 }
 
 .summaryTop {
+  min-width: 0;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
 
-  gap: 10px;
+  gap: 8px 10px;
 
   margin-bottom: 20px;
 }
 
 .deal {
+  max-width: 100%;
+
   padding: 7px 13px;
 
+  border: 1px solid rgba(72, 61, 246, 0.15);
   border-radius: 9px;
 
   background: rgba(72, 61, 246, 0.08);
-
-  border: 1px solid rgba(72, 61, 246, 0.15);
 
   color: #483df6;
 
   font-size: 11px;
   font-weight: 900;
+  line-height: 1.2;
 
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .published {
-  display: flex;
+  min-width: 0;
+
+  display: inline-flex;
   align-items: center;
+
   gap: 6px;
 
   color: #24965b;
 
   font-size: 11px;
   font-weight: 750;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .published svg {
+  flex: 0 0 auto;
   color: #32c878;
 }
 
@@ -651,23 +769,30 @@
 }
 
 .summary h1 {
+  width: 100%;
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 35px;
+  font-size: clamp(28px, 2.5vw, 36px);
   line-height: 1.12;
-
   font-weight: 900;
 
   letter-spacing: -1.2px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-========================= */
+========================================================= */
 
 .location {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
 
@@ -679,59 +804,70 @@
 }
 
 .location > svg {
-  flex-shrink: 0;
-
+  flex: 0 0 auto;
   margin-top: 1px;
 }
 
 .location > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
   gap: 3px;
-
-  min-width: 0;
 }
 
 .location strong {
   color: #242733;
 
   font-size: 15px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 }
 
 .location span {
   color: #7b8291;
 
   font-size: 13px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    PRICE
-========================= */
+========================================================= */
 
 .price {
+  max-width: 100%;
+
   margin-top: 27px;
 
   color: #483df6;
 
-  font-size: 38px;
+  font-size: clamp(30px, 3vw, 40px);
   line-height: 1;
 
   font-weight: 950;
 
   letter-spacing: -1px;
 
+  overflow-wrap: anywhere;
+
   text-shadow: 0 0 30px rgba(72, 61, 246, 0.12);
 }
 
-/* =========================
+/* =========================================================
    QUICK INFO
-========================= */
+========================================================= */
 
 .quickInfo {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 9px;
 
@@ -741,24 +877,25 @@
 .quickInfo > div {
   min-width: 0;
 
-  padding: 14px 10px;
-
   display: flex;
   align-items: center;
 
   gap: 8px;
 
+  padding: 14px 10px;
+
+  border: 1px solid #e4e6ed;
   border-radius: 14px;
 
   background: #f1f2f7;
-
-  border: 1px solid #e4e6ed;
 }
 
 .quickInfo svg {
-  flex-shrink: 0;
-
   width: 18px;
+  height: 18px;
+  min-width: 18px;
+
+  flex: 0 0 auto;
 
   color: #483df6;
 }
@@ -772,28 +909,30 @@
   color: #7c8290;
 
   font-size: 10px;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
 .quickInfo b {
   color: #292d38;
 
   font-size: 12px;
+  line-height: 1.25;
 
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    MANAGEMENT
-========================= */
+========================================================= */
 
 .management {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 
@@ -803,7 +942,8 @@
 
 .editButton,
 .deleteButton {
-  height: 46px;
+  min-width: 0;
+  min-height: 46px;
 
   display: flex;
   align-items: center;
@@ -811,19 +951,23 @@
 
   gap: 8px;
 
+  padding: 0 12px;
+
   border-radius: 13px;
 
-  font-family: inherit;
-
+  font: inherit;
   font-size: 12px;
   font-weight: 850;
+  line-height: 1.2;
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .editButton {
@@ -836,9 +980,7 @@
 
 .editButton:hover {
   background: #483df6;
-
   border-color: #483df6;
-
   color: #fff;
 
   transform: translateY(-2px);
@@ -856,19 +998,20 @@
 
 .deleteButton:hover {
   background: #d83c4d;
-
   border-color: #d83c4d;
-
   color: #fff;
 
   transform: translateY(-2px);
 }
 
-/* =========================
+/* =========================================================
    CONTENT
-========================= */
+========================================================= */
 
 .contentGrid {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns:
@@ -884,25 +1027,39 @@
   min-width: 0;
 }
 
-/* =========================
+.sidebar {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  align-self: start;
+}
+
+/* =========================================================
    SECTION
-========================= */
+========================================================= */
 
 .section {
-  margin-bottom: 22px;
+  width: 100%;
+  min-width: 0;
 
+  margin-bottom: 22px;
   padding: 32px;
 
+  border: 1px solid #e4e7ee;
   border-radius: 25px;
 
   background: #fff;
-
-  border: 1px solid #e4e7ee;
 
   box-shadow: 0 15px 40px rgba(24, 30, 55, 0.055);
 }
 
 .sectionHeader {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -914,19 +1071,18 @@
 .sectionIcon {
   width: 46px;
   height: 46px;
+  min-width: 46px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  border: 1px solid rgba(72, 61, 246, 0.13);
   border-radius: 13px;
 
   background: rgba(72, 61, 246, 0.07);
-
-  border: 1px solid rgba(72, 61, 246, 0.13);
-
   color: #483df6;
 }
 
@@ -935,12 +1091,18 @@
 }
 
 .sectionHeader span {
+  display: block;
+
   color: #483df6;
 
   font-size: 10px;
   font-weight: 900;
+  line-height: 1.2;
 
   letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionHeader h2 {
@@ -949,15 +1111,17 @@
   color: #171923;
 
   font-size: 23px;
-
   font-weight: 850;
+  line-height: 1.2;
 
   letter-spacing: -0.4px;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    DESCRIPTION
-========================= */
+========================================================= */
 
 .description {
   margin: 0;
@@ -968,13 +1132,18 @@
   line-height: 1.8;
 
   white-space: pre-wrap;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    CHARACTERISTICS
-========================= */
+========================================================= */
 
 .characteristics {
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -992,11 +1161,10 @@
 
   padding: 15px;
 
+  border: 1px solid #e8eaf0;
   border-radius: 15px;
 
   background: #f7f8fb;
-
-  border: 1px solid #e8eaf0;
 
   transition:
     background 0.2s ease,
@@ -1006,7 +1174,6 @@
 
 .characteristic:hover {
   background: #f1f2f8;
-
   border-color: rgba(72, 61, 246, 0.16);
 
   transform: translateY(-1px);
@@ -1015,8 +1182,9 @@
 .characteristicIcon {
   width: 38px;
   height: 38px;
+  min-width: 38px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -1025,7 +1193,6 @@
   border-radius: 11px;
 
   background: rgba(72, 61, 246, 0.08);
-
   color: #483df6;
 }
 
@@ -1042,8 +1209,9 @@
   color: #858b99;
 
   font-size: 11px;
-
   line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
 .characteristic strong {
@@ -1056,58 +1224,66 @@
   word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    AMENITIES
-========================= */
+========================================================= */
 
 .amenities {
-  display: flex;
+  min-width: 0;
 
+  display: flex;
   flex-wrap: wrap;
 
   gap: 9px;
 }
 
 .amenity {
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+
+  display: inline-flex;
   align-items: center;
 
   gap: 7px;
 
   padding: 10px 13px;
 
+  border: 1px solid #e5e7ee;
   border-radius: 11px;
 
   background: #f5f6fa;
 
-  border: 1px solid #e5e7ee;
-
   color: #626978;
 
   font-size: 13px;
+  line-height: 1.35;
 
-  transition: 0.2s ease;
+  overflow-wrap: anywhere;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .amenity:hover {
   background: rgba(72, 61, 246, 0.06);
-
   border-color: rgba(72, 61, 246, 0.14);
-
   color: #303440;
 }
 
 .amenity svg {
-  flex-shrink: 0;
-
+  flex: 0 0 auto;
   color: #483df6;
 }
 
-/* =========================
+/* =========================================================
    ADDRESS
-========================= */
+========================================================= */
 
 .addressCard {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -1115,6 +1291,7 @@
 
   padding: 18px;
 
+  border: 1px solid rgba(72, 61, 246, 0.13);
   border-radius: 16px;
 
   background: linear-gradient(
@@ -1122,15 +1299,14 @@
     rgba(72, 61, 246, 0.07),
     rgba(72, 61, 246, 0.025)
   );
-
-  border: 1px solid rgba(72, 61, 246, 0.13);
 }
 
 .addressIcon {
   width: 44px;
   height: 44px;
+  min-width: 44px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -1158,6 +1334,7 @@
   color: #242733;
 
   font-size: 15px;
+  line-height: 1.35;
 
   overflow-wrap: anywhere;
 }
@@ -1168,32 +1345,25 @@
   color: #7b8291;
 
   font-size: 13px;
+  line-height: 1.4;
 
   overflow-wrap: anywhere;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-
-  gap: 20px;
-
-  align-self: start;
-}
+/* =========================================================
+   SIDEBAR CARDS
+========================================================= */
 
 .sideCard,
 .ownerCard {
+  min-width: 0;
+
   padding: 25px;
 
+  border: 1px solid #e4e7ee;
   border-radius: 23px;
 
   background: #fff;
-
-  border: 1px solid #e4e7ee;
 
   box-shadow: 0 15px 40px rgba(24, 30, 55, 0.055);
 }
@@ -1215,9 +1385,12 @@
 .sideTop svg {
   width: 18px;
   height: 18px;
+  flex: 0 0 auto;
 }
 
 .sideRow {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -1230,26 +1403,32 @@
 }
 
 .sideRow span {
+  min-width: 0;
+
   color: #858b99;
 
   font-size: 12px;
+  line-height: 1.4;
 }
 
 .sideRow strong {
+  min-width: 0;
   max-width: 58%;
 
   color: #303440;
 
+  font-size: 12px;
+  line-height: 1.4;
+
   text-align: right;
 
-  font-size: 12px;
-
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    OWNER / MANAGEMENT
-========================= */
+========================================================= */
 
 .ownerCard {
   background:
@@ -1278,12 +1457,13 @@
 .ownerHeader svg {
   width: 18px;
   height: 18px;
+  flex: 0 0 auto;
 }
 
 .sideEdit,
 .sideDelete {
   width: 100%;
-  height: 44px;
+  min-height: 44px;
 
   display: flex;
   align-items: center;
@@ -1291,15 +1471,22 @@
 
   gap: 8px;
 
+  padding: 0 10px;
+
   border-radius: 12px;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 12px;
   font-weight: 850;
+  line-height: 1.2;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .sideEdit {
@@ -1312,9 +1499,7 @@
 
 .sideEdit:hover {
   background: #483df6;
-
   border-color: #483df6;
-
   color: #fff;
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.2);
@@ -1334,17 +1519,15 @@
 
 .sideDelete:hover {
   background: #d83c4d;
-
   border-color: #d83c4d;
-
   color: #fff;
 
   transform: translateY(-1px);
 }
 
-/* =========================
-   STATE
-========================= */
+/* =========================================================
+   STATES
+========================================================= */
 
 .state {
   min-height: calc(100vh - 100px);
@@ -1354,52 +1537,64 @@
   align-items: center;
   justify-content: center;
 
+  padding: 30px 15px;
+
   text-align: center;
 }
 
 .state h2 {
+  max-width: 100%;
+
   margin: 18px 0 6px;
 
   color: #171923;
 
   font-size: 22px;
   font-weight: 850;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
 .state p {
+  max-width: 500px;
+
   margin: 0;
 
   color: #7b8291;
 
   font-size: 14px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 .stateIcon {
   width: 64px;
   height: 64px;
+  min-width: 64px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  border: 1px solid rgba(72, 61, 246, 0.13);
   border-radius: 18px;
 
   background: rgba(72, 61, 246, 0.08);
-
-  border: 1px solid rgba(72, 61, 246, 0.13);
-
   color: #483df6;
 }
 
 .stateButton {
+  min-height: 44px;
+
   margin-top: 22px;
-
-  height: 44px;
-
   padding: 0 18px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
 
   border: none;
@@ -1409,7 +1604,7 @@
 
   color: #fff;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 13px;
   font-weight: 800;
 
@@ -1417,12 +1612,13 @@
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.2);
 
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .stateButton:hover {
   background: #3930d8;
-
   transform: translateY(-2px);
 }
 
@@ -1444,21 +1640,101 @@
   }
 }
 
-/* =========================
-   TABLET
-========================= */
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
 
-@media (max-width: 1100px) {
+@media (min-width: 1600px) {
   .page {
-    padding: 30px 25px 60px;
+    padding-left: 55px;
+    padding-right: 55px;
+  }
+
+  .container {
+    max-width: 1440px;
+  }
+
+  .top {
+    gap: 30px;
+  }
+
+  .mainImage {
+    height: 660px;
+  }
+
+  .summary {
+    min-height: 660px;
+    padding: 38px;
+  }
+
+  .section {
+    padding: 36px;
+  }
+}
+
+/* =========================================================
+   SMALL DESKTOP
+========================================================= */
+
+@media (max-width: 1150px) {
+  .page {
+    padding: 32px 28px 70px;
+  }
+
+  .top {
+    grid-template-columns:
+      minmax(0, 1.45fr)
+      minmax(320px, 0.85fr);
+
+    gap: 18px;
+  }
+
+  .mainImage {
+    height: 560px;
+  }
+
+  .summary {
+    min-height: 560px;
+    padding: 28px;
+  }
+
+  .contentGrid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      300px;
+  }
+
+  .section {
+    padding: 28px;
+  }
+
+  .sideCard,
+  .ownerCard {
+    padding: 22px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+  .page {
+    padding: 28px 22px 60px;
   }
 
   .top {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .mainImage {
+    height: clamp(400px, 65vw, 570px);
   }
 
   .summary {
     min-height: auto;
+    padding: 28px;
   }
 
   .contentGrid {
@@ -1467,14 +1743,15 @@
 
   .sidebar {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 700px) {
   .page {
@@ -1482,31 +1759,75 @@
   }
 
   .topBar {
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: stretch;
 
-    gap: 12px;
+    gap: 10px;
+
+    margin-bottom: 17px;
+  }
+
+  .back {
+    font-size: 12.5px;
+  }
+
+  .ownerBadge {
+    align-self: flex-start;
+
+    min-height: 31px;
+
+    padding: 7px 10px;
+
+    font-size: 9px;
+  }
+
+  /* GALLERY */
+
+  .top {
+    gap: 13px;
   }
 
   .mainImage {
-    height: 390px;
+    height: clamp(330px, 88vw, 430px);
 
-    border-radius: 22px;
+    border-radius: 21px;
   }
 
   .badges {
-    top: 14px;
-    left: 14px;
+    top: 12px;
+    left: 12px;
 
-    max-width: calc(100% - 100px);
+    max-width: calc(100% - 92px);
+
+    gap: 6px;
+  }
+
+  .badge,
+  .categoryBadge {
+    min-height: 30px;
+
+    padding: 0 9px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+  }
+
+  .badge svg {
+    width: 12px;
+    height: 12px;
   }
 
   .imageActions {
-    top: 13px;
-    right: 13px;
+    top: 11px;
+    right: 11px;
+
+    gap: 6px;
   }
 
   .imageEdit {
-    width: 42px;
+    width: 40px;
+    min-height: 40px;
 
     padding: 0;
 
@@ -1515,46 +1836,82 @@
 
   .imageEdit svg {
     width: 17px;
+    height: 17px;
   }
 
   .imageDelete {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    min-height: 40px;
+  }
+
+  .imageDelete svg {
+    width: 16px;
+    height: 16px;
   }
 
   .favorite {
-    right: 13px;
-    bottom: 68px;
+    right: 11px;
+    bottom: 62px;
 
-    width: 42px;
-    height: 42px;
-  }
-
-  .galleryArrow {
     width: 40px;
     height: 40px;
 
+    border-radius: 11px;
+  }
+
+  .favorite svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .galleryArrow {
+    width: 39px;
+    height: 39px;
+
     opacity: 1;
+
+    border-radius: 10px;
+  }
+
+  .galleryArrow svg {
+    width: 19px;
+    height: 19px;
   }
 
   .left {
-    left: 13px;
+    left: 11px;
   }
 
   .right {
-    right: 13px;
+    right: 11px;
   }
 
   .imageCounter {
-    right: 13px;
-    bottom: 13px;
+    right: 11px;
+    bottom: 11px;
+
+    min-height: 27px;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 9.5px;
   }
 
   .imageTitle {
-    left: 15px;
-    bottom: 18px;
+    left: 14px;
+    right: 65px;
+    bottom: 14px;
 
-    max-width: calc(100% - 100px);
+    max-width: calc(100% - 90px);
+
+    gap: 4px;
+  }
+
+  .imageTitle span {
+    font-size: 7px;
+    letter-spacing: 1.25px;
   }
 
   .imageTitle strong {
@@ -1562,129 +1919,1698 @@
   }
 
   .thumbnails {
-    padding-bottom: 3px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .thumbnail {
-    width: 82px;
-    height: 60px;
+    width: 76px;
+    height: 55px;
+    min-width: 76px;
+    flex-basis: 76px;
+
+    border-radius: 9px;
   }
 
   .dots {
     display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 6px;
-
-    margin-top: 12px;
   }
+
+  /* SUMMARY */
 
   .summary {
-    padding: 23px;
-
-    border-radius: 22px;
-  }
-
-  .summary h1 {
-    font-size: 28px;
-  }
-
-  .price {
-    font-size: 32px;
-  }
-
-  .quickInfo {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .quickInfo > div:last-child {
-    display: none;
-  }
-
-  .management {
-    grid-template-columns: 1fr;
-
-    margin-top: 25px;
-  }
-
-  .contentGrid {
-    margin-top: 22px;
-  }
-
-  .section {
-    padding: 23px;
+    padding: 21px;
 
     border-radius: 20px;
   }
 
+  .summaryTop {
+    gap: 7px;
+
+    margin-bottom: 16px;
+  }
+
+  .deal {
+    padding: 6px 9px;
+    border-radius: 8px;
+
+    font-size: 9px;
+  }
+
+  .published {
+    font-size: 9px;
+  }
+
+  .summary h1 {
+    font-size: clamp(25px, 7vw, 34px);
+    line-height: 1.08;
+  }
+
+  .location {
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .location > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .location strong {
+    font-size: 12px;
+  }
+
+  .location span {
+    font-size: 10.5px;
+  }
+
+  .price {
+    margin-top: 20px;
+
+    font-size: clamp(27px, 8vw, 34px);
+  }
+
+  .quickInfo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+
+    margin-top: 18px;
+  }
+
+  .quickInfo > div {
+    gap: 7px;
+
+    padding: 11px 8px;
+
+    border-radius: 10px;
+  }
+
+  .quickInfo svg {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+
+  .quickInfo span {
+    font-size: 8.5px;
+  }
+
+  .quickInfo b {
+    font-size: 10.5px;
+  }
+
+  .management {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+
+    margin-top: 20px;
+    padding-top: 18px;
+  }
+
+  .editButton,
+  .deleteButton {
+    min-height: 42px;
+
+    padding: 0 8px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  /* CONTENT */
+
+  .contentGrid {
+    margin-top: 17px;
+
+    gap: 13px;
+  }
+
+  .section {
+    margin-bottom: 13px;
+    padding: 20px;
+
+    border-radius: 18px;
+  }
+
   .sectionHeader {
-    margin-bottom: 20px;
+    gap: 10px;
+
+    margin-bottom: 17px;
+  }
+
+  .sectionIcon {
+    width: 41px;
+    height: 41px;
+    min-width: 41px;
+
+    border-radius: 10px;
+  }
+
+  .sectionIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .sectionHeader span {
+    font-size: 7.5px;
+    letter-spacing: 1px;
   }
 
   .sectionHeader h2 {
-    font-size: 20px;
+    font-size: 19px;
+    letter-spacing: -0.3px;
+  }
+
+  .description {
+    font-size: 12.5px;
+    line-height: 1.7;
   }
 
   .characteristics {
     grid-template-columns: 1fr;
+
+    gap: 7px;
   }
+
+  .characteristic {
+    padding: 11px;
+
+    gap: 9px;
+
+    border-radius: 10px;
+  }
+
+  .characteristicIcon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 9px;
+  }
+
+  .characteristicIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .characteristic > div:last-child {
+    gap: 2px;
+  }
+
+  .characteristic span {
+    font-size: 8.5px;
+  }
+
+  .characteristic strong {
+    font-size: 11px;
+  }
+
+  .amenities {
+    gap: 6px;
+  }
+
+  .amenity {
+    padding: 7px 9px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+
+  .amenity svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .addressCard {
+    gap: 10px;
+    padding: 13px;
+
+    border-radius: 12px;
+  }
+
+  .addressIcon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    border-radius: 10px;
+  }
+
+  .addressIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .addressContent strong {
+    font-size: 12px;
+  }
+
+  .addressContent p {
+    font-size: 10px;
+  }
+
+  /* SIDEBAR */
 
   .sidebar {
     display: flex;
+    flex-direction: column;
+
+    gap: 13px;
   }
 
   .sideCard,
   .ownerCard {
-    padding: 21px;
+    padding: 18px;
+
+    border-radius: 17px;
+  }
+
+  .sideTop {
+    margin-bottom: 15px;
+
+    font-size: 12px;
+  }
+
+  .sideTop svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sideRow {
+    padding: 11px 0;
+
+    gap: 10px;
+  }
+
+  .sideRow span,
+  .sideRow strong {
+    font-size: 10px;
+  }
+
+  .sideRow strong {
+    max-width: 55%;
+  }
+
+  .ownerHeader {
+    margin-bottom: 14px;
+
+    font-size: 12px;
+  }
+
+  .sideEdit,
+  .sideDelete {
+    min-height: 41px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  /* STATES */
+
+  .state {
+    min-height: 70vh;
+  }
+
+  .state h2 {
+    font-size: 19px;
+  }
+
+  .state p {
+    font-size: 11.5px;
+  }
+
+  .stateIcon {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+
+    border-radius: 16px;
+  }
+
+  .stateButton {
+    min-height: 42px;
+
+    padding: 0 14px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
   }
 }
 
-/* =========================
+/* =========================================================
    SMALL MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 430px) {
-  .topBar {
-    flex-direction: column;
-  }
-
-  .ownerBadge {
-    align-self: flex-start;
+  .page {
+    padding: 19px 11px 42px;
   }
 
   .mainImage {
-    height: 350px;
+    height: 330px;
+
+    border-radius: 17px;
+  }
+
+  .topBar {
+    margin-bottom: 14px;
+  }
+
+  .back {
+    font-size: 11px;
+  }
+
+  .ownerBadge {
+    min-height: 29px;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 8px;
+  }
+
+  .badges {
+    top: 9px;
+    left: 9px;
+
+    max-width: calc(100% - 78px);
+
+    gap: 4px;
+  }
+
+  .badge,
+  .categoryBadge {
+    min-height: 26px;
+
+    padding: 0 7px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .imageActions {
+    top: 8px;
+    right: 8px;
+    gap: 5px;
+  }
+
+  .imageEdit,
+  .imageDelete {
+    width: 36px;
+    min-height: 36px;
+
+    border-radius: 8px;
+  }
+
+  .imageEdit svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .imageDelete svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .favorite {
+    right: 8px;
+    bottom: 53px;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 9px;
+  }
+
+  .favorite svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .galleryArrow {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+  }
+
+  .galleryArrow svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .left {
+    left: 8px;
+  }
+
+  .right {
+    right: 8px;
+  }
+
+  .imageCounter {
+    right: 8px;
+    bottom: 8px;
+
+    min-height: 24px;
+
+    padding: 5px 7px;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+  }
+
+  .imageTitle {
+    left: 10px;
+    right: 58px;
+    bottom: 10px;
+  }
+
+  .imageTitle span {
+    font-size: 6px;
+    letter-spacing: 0.9px;
+  }
+
+  .imageTitle strong {
+    font-size: 12px;
+  }
+
+  .thumbnails {
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .thumbnail {
+    width: 65px;
+    height: 47px;
+    min-width: 65px;
+    flex-basis: 65px;
+
+    border-radius: 7px;
+  }
+
+  .dots {
+    margin-top: 8px;
+  }
+
+  .summary {
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .summaryTop {
+    margin-bottom: 13px;
+  }
+
+  .deal {
+    padding: 5px 7px;
+    font-size: 8px;
+  }
+
+  .published {
+    font-size: 8px;
   }
 
   .summary h1 {
-    font-size: 25px;
+    font-size: 22px;
+    letter-spacing: -0.6px;
+  }
+
+  .location {
+    gap: 6px;
+    margin-top: 13px;
+  }
+
+  .location > svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .location strong {
+    font-size: 10.5px;
+  }
+
+  .location span {
+    font-size: 9px;
   }
 
   .price {
-    font-size: 29px;
+    margin-top: 17px;
+    font-size: 26px;
+  }
+
+  .quickInfo {
+    gap: 5px;
+    margin-top: 14px;
   }
 
   .quickInfo > div {
-    padding: 12px 9px;
+    gap: 5px;
+    padding: 9px 6px;
+
+    border-radius: 8px;
+  }
+
+  .quickInfo svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .quickInfo span {
+    font-size: 7px;
+  }
+
+  .quickInfo b {
+    font-size: 9px;
+  }
+
+  .management {
+    gap: 5px;
+
+    margin-top: 14px;
+    padding-top: 13px;
+  }
+
+  .editButton,
+  .deleteButton {
+    min-height: 38px;
+
+    padding: 0 6px;
+
+    border-radius: 8px;
+
+    font-size: 8.8px;
+  }
+
+  .editButton svg,
+  .deleteButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .contentGrid {
+    margin-top: 12px;
+    gap: 10px;
+  }
+
+  .section {
+    margin-bottom: 10px;
+
+    padding: 14px;
+
+    border-radius: 13px;
   }
 
   .sectionHeader {
-    align-items: flex-start;
+    gap: 7px;
+    margin-bottom: 12px;
   }
 
   .sectionIcon {
-    width: 42px;
-    height: 42px;
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+
+    border-radius: 8px;
+  }
+
+  .sectionIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sectionHeader span {
+    font-size: 6.3px;
+    letter-spacing: 0.75px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 15px;
+  }
+
+  .description {
+    font-size: 10.5px;
+    line-height: 1.6;
+  }
+
+  .characteristics {
+    gap: 5px;
   }
 
   .characteristic {
-    padding: 13px;
+    padding: 8px;
+
+    gap: 6px;
+
+    border-radius: 7px;
   }
 
   .characteristicIcon {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+
+    border-radius: 6px;
+  }
+
+  .characteristicIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .characteristic span {
+    font-size: 7px;
+  }
+
+  .characteristic strong {
+    font-size: 8.8px;
+  }
+
+  .amenities {
+    gap: 4px;
+  }
+
+  .amenity {
+    padding: 5px 7px;
+    gap: 4px;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+  }
+
+  .amenity svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .addressCard {
+    gap: 7px;
+    padding: 10px;
+
+    border-radius: 9px;
+  }
+
+  .addressIcon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+
+    border-radius: 8px;
+  }
+
+  .addressIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .addressContent {
+    gap: 2px;
+  }
+
+  .addressContent strong {
+    font-size: 10px;
+  }
+
+  .addressContent p {
+    font-size: 8.5px;
+  }
+
+  .sidebar {
+    gap: 10px;
+  }
+
+  .sideCard,
+  .ownerCard {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .sideTop {
+    gap: 6px;
+    margin-bottom: 11px;
+
+    font-size: 10px;
+  }
+
+  .sideTop svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sideRow {
+    padding: 8px 0;
+    gap: 8px;
+  }
+
+  .sideRow span,
+  .sideRow strong {
+    font-size: 8px;
+  }
+
+  .ownerHeader {
+    gap: 6px;
+
+    margin-bottom: 10px;
+
+    font-size: 10px;
+  }
+
+  .ownerHeader svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .sideEdit,
+  .sideDelete {
+    min-height: 37px;
+
+    border-radius: 8px;
+
+    font-size: 8.5px;
+  }
+
+  .sideEdit svg,
+  .sideDelete svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .state h2 {
+    font-size: 17px;
+  }
+
+  .state p {
+    font-size: 10px;
+  }
+
+  .stateButton {
+    min-height: 39px;
+
+    padding: 0 11px;
+
+    font-size: 9.5px;
+  }
+}
+
+/* =========================================================
+   360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 16px 9px 36px;
+  }
+
+  .mainImage {
+    height: 300px;
+    border-radius: 14px;
+  }
+
+  .badges {
+    top: 7px;
+    left: 7px;
+
+    max-width: calc(100% - 70px);
+  }
+
+  .badge,
+  .categoryBadge {
+    min-height: 23px;
+
+    padding: 0 6px;
+
+    border-radius: 6px;
+
+    font-size: 7px;
+  }
+
+  .imageActions {
+    top: 7px;
+    right: 7px;
+  }
+
+  .imageEdit,
+  .imageDelete {
+    width: 32px;
+    min-height: 32px;
+
+    border-radius: 7px;
+  }
+
+  .imageEdit svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .imageDelete svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .favorite {
+    right: 7px;
+    bottom: 47px;
+
+    width: 33px;
+    height: 33px;
+
+    border-radius: 8px;
+  }
+
+  .favorite svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .galleryArrow {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 7px;
+  }
+
+  .galleryArrow svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .left {
+    left: 7px;
+  }
+
+  .right {
+    right: 7px;
+  }
+
+  .imageCounter {
+    right: 7px;
+    bottom: 7px;
+
+    min-height: 22px;
+
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+  }
+
+  .imageTitle {
+    left: 8px;
+    right: 48px;
+    bottom: 8px;
+  }
+
+  .imageTitle span {
+    font-size: 5.5px;
+    letter-spacing: 0.7px;
+  }
+
+  .imageTitle strong {
+    font-size: 10.5px;
+  }
+
+  .thumbnail {
+    width: 58px;
+    height: 43px;
+    min-width: 58px;
+    flex-basis: 58px;
+  }
+
+  .summary {
+    padding: 13px;
+    border-radius: 13px;
+  }
+
+  .summary h1 {
+    font-size: 20px;
+  }
+
+  .deal {
+    font-size: 7px;
+  }
+
+  .published {
+    font-size: 7px;
+  }
+
+  .location {
+    margin-top: 11px;
+  }
+
+  .location strong {
+    font-size: 9.5px;
+  }
+
+  .location span {
+    font-size: 8px;
+  }
+
+  .price {
+    margin-top: 14px;
+    font-size: 23px;
+  }
+
+  .quickInfo {
+    gap: 4px;
+    margin-top: 12px;
+  }
+
+  .quickInfo > div {
+    padding: 8px 5px;
+    gap: 4px;
+    border-radius: 7px;
+  }
+
+  .quickInfo svg {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+  }
+
+  .quickInfo span {
+    font-size: 6.5px;
+  }
+
+  .quickInfo b {
+    font-size: 8px;
+  }
+
+  .management {
+    gap: 4px;
+    margin-top: 12px;
+    padding-top: 11px;
+  }
+
+  .editButton,
+  .deleteButton {
+    min-height: 35px;
+    padding: 0 5px;
+    border-radius: 7px;
+    font-size: 7.8px;
+  }
+
+  .section {
+    padding: 11px;
+    border-radius: 11px;
+  }
+
+  .sectionHeader {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .sectionIcon {
+    width: 31px;
+    height: 31px;
+    min-width: 31px;
+
+    border-radius: 7px;
+  }
+
+  .sectionIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sectionHeader span {
+    font-size: 5.8px;
+    letter-spacing: 0.6px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 13.5px;
+  }
+
+  .description {
+    font-size: 9.5px;
+    line-height: 1.55;
+  }
+
+  .characteristic {
+    padding: 7px;
+    gap: 5px;
+  }
+
+  .characteristicIcon {
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+    border-radius: 5px;
+  }
+
+  .characteristicIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .characteristic span {
+    font-size: 6.4px;
+  }
+
+  .characteristic strong {
+    font-size: 8px;
+  }
+
+  .amenity {
+    padding: 4px 6px;
+    font-size: 7.3px;
+  }
+
+  .addressCard {
+    padding: 8px;
+  }
+
+  .addressIcon {
+    width: 29px;
+    height: 29px;
+    min-width: 29px;
+  }
+
+  .addressContent strong {
+    font-size: 9px;
+  }
+
+  .addressContent p {
+    font-size: 7.5px;
+  }
+
+  .sideCard,
+  .ownerCard {
+    padding: 11px;
+    border-radius: 10px;
+  }
+
+  .sideRow {
+    padding: 7px 0;
+    gap: 6px;
+  }
+
+  .sideRow span,
+  .sideRow strong {
+    font-size: 7.2px;
+  }
+
+  .sideEdit,
+  .sideDelete {
+    min-height: 34px;
+    border-radius: 7px;
+    font-size: 7.5px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 14px 7px 30px;
+  }
+
+  .topBar {
+    margin-bottom: 11px;
+  }
+
+  .back {
+    gap: 5px;
+    font-size: 9px;
+  }
+
+  .back svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .ownerBadge {
+    min-height: 25px;
+
+    padding: 5px 7px;
+
+    border-radius: 6px;
+
+    font-size: 6.5px;
+  }
+
+  .ownerBadge svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .mainImage {
+    height: 270px;
+    border-radius: 12px;
+  }
+
+  .badges {
+    top: 6px;
+    left: 6px;
+
+    max-width: calc(100% - 63px);
+
+    gap: 3px;
+  }
+
+  .badge,
+  .categoryBadge {
+    min-height: 21px;
+
+    padding: 0 5px;
+
+    gap: 3px;
+
+    border-radius: 5px;
+
+    font-size: 6px;
+  }
+
+  .badge svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .imageActions {
+    top: 6px;
+    right: 6px;
+
+    gap: 4px;
+  }
+
+  .imageEdit,
+  .imageDelete {
+    width: 29px;
+    min-height: 29px;
+
+    border-radius: 6px;
+  }
+
+  .imageEdit svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .imageDelete svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .favorite {
+    right: 6px;
+    bottom: 41px;
+
+    width: 29px;
+    height: 29px;
+
+    border-radius: 6px;
+  }
+
+  .favorite svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .galleryArrow {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 6px;
+  }
+
+  .galleryArrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .left {
+    left: 6px;
+  }
+
+  .right {
+    right: 6px;
+  }
+
+  .imageCounter {
+    right: 6px;
+    bottom: 6px;
+
+    min-height: 20px;
+
+    padding: 4px 5px;
+
+    border-radius: 5px;
+
+    font-size: 6.5px;
+  }
+
+  .imageTitle {
+    left: 7px;
+    right: 43px;
+    bottom: 7px;
+
+    gap: 2px;
+  }
+
+  .imageTitle span {
+    font-size: 5px;
+    letter-spacing: 0.55px;
+  }
+
+  .imageTitle strong {
+    font-size: 9px;
+  }
+
+  .thumbnails {
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  .thumbnail {
+    width: 53px;
+    height: 39px;
+    min-width: 53px;
+    flex-basis: 53px;
+
+    border-radius: 5px;
+  }
+
+  .dots {
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .dotActive {
+    width: 16px;
+  }
+
+  /* SUMMARY */
+
+  .summary {
+    padding: 10px;
+
+    border-radius: 11px;
+  }
+
+  .summaryTop {
+    gap: 5px;
+    margin-bottom: 9px;
+  }
+
+  .deal {
+    padding: 4px 5px;
+    border-radius: 6px;
+    font-size: 6px;
+  }
+
+  .published {
+    gap: 3px;
+    font-size: 6px;
+  }
+
+  .published svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .summary h1 {
+    font-size: 17px;
+    line-height: 1.08;
+    letter-spacing: -0.35px;
+  }
+
+  .location {
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .location > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .location strong {
+    font-size: 8px;
+  }
+
+  .location span {
+    font-size: 7px;
+  }
+
+  .price {
+    margin-top: 11px;
+    font-size: 20px;
+  }
+
+  .quickInfo {
+    gap: 3px;
+    margin-top: 9px;
+  }
+
+  .quickInfo > div {
+    padding: 6px 4px;
+    gap: 3px;
+    border-radius: 6px;
+  }
+
+  .quickInfo svg {
+    width: 11px;
+    height: 11px;
+    min-width: 11px;
+  }
+
+  .quickInfo span {
+    font-size: 5.6px;
+    line-height: 1.1;
+  }
+
+  .quickInfo b {
+    font-size: 7px;
+  }
+
+  .management {
+    gap: 3px;
+    margin-top: 9px;
+    padding-top: 8px;
+  }
+
+  .editButton,
+  .deleteButton {
+    min-height: 31px;
+
+    padding: 0 4px;
+
+    gap: 4px;
+
+    border-radius: 6px;
+
+    font-size: 6.8px;
+  }
+
+  .editButton svg,
+  .deleteButton svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* CONTENT */
+
+  .contentGrid {
+    margin-top: 9px;
+    gap: 7px;
+  }
+
+  .section {
+    margin-bottom: 7px;
+
+    padding: 9px;
+
+    border-radius: 9px;
+  }
+
+  .sectionHeader {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .sectionIcon {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+
+    border-radius: 6px;
+  }
+
+  .sectionIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sectionHeader span {
+    font-size: 5px;
+    letter-spacing: 0.45px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 12px;
+    letter-spacing: -0.15px;
+  }
+
+  .description {
+    font-size: 8.5px;
+    line-height: 1.5;
+  }
+
+  /* CHARACTERISTICS */
+
+  .characteristics {
+    gap: 3px;
+  }
+
+  .characteristic {
+    padding: 5px;
+
+    gap: 4px;
+
+    border-radius: 5px;
+  }
+
+  .characteristicIcon {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+
+    border-radius: 4px;
+  }
+
+  .characteristicIcon svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .characteristic > div:last-child {
+    gap: 1px;
+  }
+
+  .characteristic span {
+    font-size: 5.5px;
+  }
+
+  .characteristic strong {
+    font-size: 6.8px;
+    line-height: 1.2;
+  }
+
+  /* AMENITIES */
+
+  .amenities {
+    gap: 3px;
+  }
+
+  .amenity {
+    padding: 3px 5px;
+    gap: 3px;
+
+    border-radius: 4px;
+
+    font-size: 6.5px;
+  }
+
+  .amenity svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  /* ADDRESS */
+
+  .addressCard {
+    gap: 5px;
+    padding: 7px;
+
+    border-radius: 7px;
+  }
+
+  .addressIcon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+
+    border-radius: 6px;
+  }
+
+  .addressIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .addressContent {
+    gap: 1px;
+  }
+
+  .addressContent strong {
+    font-size: 7.5px;
+  }
+
+  .addressContent p {
+    font-size: 6.5px;
+  }
+
+  /* SIDEBAR */
+
+  .sidebar {
+    gap: 7px;
+  }
+
+  .sideCard,
+  .ownerCard {
+    padding: 9px;
+    border-radius: 8px;
+  }
+
+  .sideTop {
+    gap: 5px;
+    margin-bottom: 8px;
+
+    font-size: 8px;
+  }
+
+  .sideTop svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sideRow {
+    padding: 6px 0;
+    gap: 5px;
+  }
+
+  .sideRow span,
+  .sideRow strong {
+    font-size: 6.5px;
+    line-height: 1.25;
+  }
+
+  .sideRow strong {
+    max-width: 57%;
+  }
+
+  .ownerHeader {
+    gap: 5px;
+    margin-bottom: 8px;
+
+    font-size: 8px;
+  }
+
+  .ownerHeader svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sideEdit,
+  .sideDelete {
+    min-height: 31px;
+
+    gap: 4px;
+
+    border-radius: 6px;
+
+    font-size: 6.8px;
+  }
+
+  .sideEdit svg,
+  .sideDelete svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* STATE */
+
+  .state {
+    min-height: 70vh;
+    padding: 20px 8px;
+  }
+
+  .stateIcon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+
+    border-radius: 13px;
+  }
+
+  .state h2 {
+    margin-top: 12px;
+
+    font-size: 14px;
+  }
+
+  .state p {
+    font-size: 8px;
+    line-height: 1.4;
+  }
+
+  .stateButton {
+    min-height: 35px;
+
+    margin-top: 14px;
+    padding: 0 9px;
+
+    gap: 5px;
+
+    border-radius: 7px;
+
+    font-size: 7.8px;
+  }
+
+  .stateButton svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .stateLoader {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .mainImage:hover img {
+    transform: none;
+  }
+
+  .mainImage .galleryArrow {
+    opacity: 1;
+  }
+
+  .favorite:hover,
+  .galleryArrow:hover,
+  .imageEdit:hover,
+  .imageDelete:hover,
+  .editButton:hover,
+  .deleteButton:hover,
+  .sideEdit:hover,
+  .sideDelete:hover,
+  .back:hover,
+  .stateButton:hover,
+  .characteristic:hover {
+    transform: none;
   }
 }

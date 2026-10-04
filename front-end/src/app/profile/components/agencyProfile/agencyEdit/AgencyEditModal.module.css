@@ -11,7 +11,11 @@
   align-items: center;
   justify-content: center;
 
-  padding: 24px;
+  width: 100%;
+  min-width: 0;
+  height: 100dvh;
+
+  padding: 20px;
 
   background:
     radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.12), transparent 38%),
@@ -21,6 +25,10 @@
   -webkit-backdrop-filter: blur(18px);
 
   animation: overlayIn 0.25s ease;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 @keyframes overlayIn {
@@ -41,7 +49,9 @@
   position: relative;
 
   width: min(680px, 100%);
-  max-height: min(880px, calc(100vh - 48px));
+  min-width: 0;
+  max-width: 100%;
+  max-height: calc(100dvh - 40px);
 
   overflow: hidden;
 
@@ -61,6 +71,8 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 
   animation: modalIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+
+  box-sizing: border-box;
 }
 
 .modal::before {
@@ -141,9 +153,11 @@
 .close svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
-.close:hover {
+.close:hover:not(:disabled) {
   color: #483df6;
 
   background: rgba(72, 61, 246, 0.07);
@@ -155,12 +169,13 @@
   transform: rotate(5deg);
 }
 
-.close:active {
+.close:active:not(:disabled) {
   transform: scale(0.95);
 }
 
 .close:disabled {
   opacity: 0.45;
+
   cursor: not-allowed;
 }
 
@@ -169,8 +184,12 @@
 ========================================================= */
 
 .scroll {
-  max-height: min(880px, calc(100vh - 48px));
+  width: 100%;
+  min-width: 0;
 
+  max-height: calc(100dvh - 40px);
+
+  overflow-x: hidden;
   overflow-y: auto;
 
   padding: 34px;
@@ -201,11 +220,16 @@
 ========================================================= */
 
 .header {
+  min-width: 0;
+
   padding-right: 60px;
+
   margin-bottom: 28px;
 }
 
 .header h2 {
+  min-width: 0;
+
   margin: 0;
 
   color: #111827;
@@ -216,15 +240,22 @@
   font-weight: 900;
 
   letter-spacing: -0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
+  width: 100%;
+  max-width: 480px;
+
   margin: 8px 0 0;
 
   color: #7b8495;
 
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -238,6 +269,8 @@
   align-items: center;
 
   gap: 22px;
+
+  min-width: 0;
 
   margin-bottom: 26px;
   padding: 20px;
@@ -280,15 +313,16 @@
 }
 
 /* =========================================================
-   LOGO
+   AVATAR
 ========================================================= */
 
 .avatarWrapper {
   position: relative;
-
   z-index: 2;
 
   flex-shrink: 0;
+
+  min-width: 0;
 }
 
 .avatar {
@@ -351,31 +385,39 @@
 }
 
 /* =========================================================
-   LOGO ACTIONS
+   AVATAR ACTIONS
 ========================================================= */
 
 .avatarActions {
   position: relative;
-
   z-index: 3;
 
   display: flex;
   align-items: center;
 
+  flex-wrap: wrap;
+
   gap: 9px;
 
-  flex-wrap: wrap;
+  min-width: 0;
 }
+
+/* =========================================================
+   UPLOAD / REMOVE
+========================================================= */
 
 .upload,
 .remove {
-  height: 43px;
+  min-height: 43px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 8px;
+
+  min-width: 0;
+  max-width: 100%;
 
   padding: 0 16px;
 
@@ -393,12 +435,9 @@
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
-
-/* =========================================================
-   UPLOAD
-========================================================= */
 
 .upload {
   min-width: 165px;
@@ -414,12 +453,17 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+.upload svg,
+.remove svg {
+  flex-shrink: 0;
+}
+
 .upload svg {
   width: 17px;
   height: 17px;
 }
 
-.upload:hover {
+.upload:hover:not(:disabled) {
   transform: translateY(-2px);
 
   background: linear-gradient(135deg, #6860ff, #5146f7, #4237df);
@@ -428,14 +472,6 @@
     0 14px 32px rgba(72, 61, 246, 0.3),
     0 0 22px rgba(72, 61, 246, 0.1);
 }
-
-.upload:active {
-  transform: translateY(0);
-}
-
-/* =========================================================
-   REMOVE
-========================================================= */
 
 .remove {
   min-width: 155px;
@@ -454,7 +490,7 @@
   color: #483df6;
 }
 
-.remove:hover {
+.remove:hover:not(:disabled) {
   transform: translateY(-2px);
 
   color: #483df6;
@@ -466,7 +502,8 @@
   box-shadow: 0 8px 22px rgba(72, 61, 246, 0.08);
 }
 
-.remove:active {
+.upload:active:not(:disabled),
+.remove:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -488,7 +525,10 @@
 .fields {
   display: flex;
   flex-direction: column;
+
   gap: 12px;
+
+  min-width: 0;
 }
 
 /* =========================================================
@@ -496,6 +536,7 @@
 ========================================================= */
 
 .inputBox {
+  min-width: 0;
   min-height: 55px;
 
   display: flex;
@@ -514,8 +555,7 @@
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .inputBox:hover {
@@ -551,6 +591,8 @@
 
 .inputBox input {
   width: 100%;
+  min-width: 0;
+
   height: 53px;
 
   padding: 0;
@@ -566,14 +608,19 @@
 
   font-size: 13px;
   font-weight: 600;
+
+  text-overflow: ellipsis;
 }
 
 .inputBox input::placeholder {
   color: #9aa2b1;
+
+  opacity: 1;
 }
 
 .inputBox input:disabled {
   opacity: 0.5;
+
   cursor: not-allowed;
 }
 
@@ -583,6 +630,7 @@
 
 .textarea {
   width: 100%;
+  min-width: 0;
   min-height: 128px;
 
   display: flex;
@@ -591,8 +639,6 @@
   gap: 11px;
 
   padding: 16px 15px;
-
-  box-sizing: border-box;
 
   border-radius: 14px;
 
@@ -641,6 +687,7 @@
 
 .textarea textarea {
   width: 100%;
+  min-width: 0;
   min-height: 94px;
 
   padding: 0;
@@ -661,15 +708,18 @@
 
   line-height: 1.6;
 
-  box-sizing: border-box;
+  overflow-wrap: anywhere;
 }
 
 .textarea textarea::placeholder {
   color: #9aa2b1;
+
+  opacity: 1;
 }
 
 .textarea textarea:disabled {
   opacity: 0.55;
+
   cursor: not-allowed;
 }
 
@@ -679,9 +729,11 @@
 
 .save {
   position: relative;
+
   overflow: hidden;
 
   width: 100%;
+  min-width: 0;
   height: 56px;
 
   margin-top: 22px;
@@ -691,6 +743,8 @@
   justify-content: center;
 
   gap: 9px;
+
+  padding: 0 15px;
 
   border: 1px solid rgba(72, 61, 246, 0.35);
   border-radius: 14px;
@@ -713,7 +767,8 @@
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    filter 0.2s ease;
+    filter 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .save::before {
@@ -737,15 +792,19 @@
   transform: skewX(-20deg);
 
   transition: left 0.6s ease;
+
+  pointer-events: none;
 }
 
-.save:hover::before {
+.save:hover:not(:disabled)::before {
   left: 140%;
 }
 
 .save svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 .save:hover:not(:disabled) {
@@ -768,90 +827,208 @@
   cursor: not-allowed;
 
   box-shadow: none;
+
+  transform: none;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 700px) {
+  .overlay {
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 20px);
+
+    border-radius: 24px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 20px);
+
+    padding: 28px 18px;
+  }
+
+  .close {
+    top: 14px;
+    right: 14px;
+
+    width: 40px;
+    height: 40px;
+  }
+
+  .header {
+    padding-right: 47px;
+
+    margin-bottom: 24px;
+  }
+
+  .header h2 {
+    font-size: 23px;
+  }
+
+  .header p {
+    font-size: 12.5px;
+  }
+
+  .avatarBlock {
+    gap: 18px;
+
+    padding: 18px;
+  }
+
+  .avatar {
+    width: 112px;
+    height: 112px;
+  }
+
+  .upload,
+  .remove {
+    min-width: 145px;
+  }
 }
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 560px) {
   .overlay {
-    padding: 10px;
+    padding: 7px;
   }
 
   .modal {
-    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 14px);
 
-    border-radius: 24px;
+    border-radius: 22px;
   }
 
   .scroll {
-    max-height: calc(100vh - 20px);
+    max-height: calc(100dvh - 14px);
 
-    padding: 25px 18px;
+    padding: 25px 15px;
   }
 
   .close {
-    top: 15px;
-    right: 15px;
+    top: 11px;
+    right: 11px;
 
-    width: 39px;
-    height: 39px;
+    width: 37px;
+    height: 37px;
+
+    border-radius: 11px;
+  }
+
+  .close svg {
+    width: 16px;
+    height: 16px;
   }
 
   .header {
-    padding-right: 45px;
+    padding-right: 42px;
 
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .header h2 {
     font-size: 21px;
+
+    letter-spacing: -0.5px;
   }
 
   .header p {
     font-size: 12px;
+
+    line-height: 1.55;
   }
+
+  /* logo */
 
   .avatarBlock {
     flex-direction: column;
 
     align-items: center;
 
+    gap: 16px;
+
+    padding: 20px 14px 21px;
+
     text-align: center;
 
-    padding: 24px 18px 25px;
-
-    gap: 18px;
+    border-radius: 19px;
   }
 
   .avatar {
-    width: 110px;
-    height: 110px;
+    width: 105px;
+    height: 105px;
   }
 
   .avatarActions {
     width: 100%;
 
-    justify-content: center;
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 7px;
   }
 
   .upload,
   .remove {
     width: 100%;
-    max-width: 280px;
+    min-width: 0;
+    max-width: none;
   }
 
+  /* inputs */
+
   .inputBox {
-    min-height: 52px;
+    min-height: 51px;
+
+    gap: 9px;
+
+    padding: 0 12px;
   }
 
   .inputBox input {
-    height: 50px;
+    height: 49px;
+
+    font-size: 13px;
+  }
+
+  .inputBox > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .textarea {
+    min-height: 122px;
+
+    gap: 9px;
+
+    padding: 14px 12px;
+  }
+
+  .textarea > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .textarea textarea {
+    min-height: 90px;
+
+    font-size: 13px;
   }
 
   .save {
     height: 52px;
+
+    margin-top: 18px;
+
+    font-size: 13px;
   }
 }
 
@@ -860,25 +1037,299 @@
 ========================================================= */
 
 @media (max-width: 400px) {
-  .scroll {
-    padding: 23px 14px;
+  .overlay {
+    padding: 5px;
   }
 
   .modal {
-    border-radius: 21px;
+    max-height: calc(100dvh - 10px);
+
+    border-radius: 20px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 10px);
+
+    padding: 22px 12px;
+  }
+
+  .close {
+    top: 9px;
+    right: 9px;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 10px;
+  }
+
+  .header {
+    padding-right: 39px;
+
+    margin-bottom: 20px;
   }
 
   .header h2 {
     font-size: 20px;
   }
 
+  .header p {
+    font-size: 11.5px;
+  }
+
+  /* logo */
+
+  .avatarBlock {
+    gap: 14px;
+
+    padding: 17px 11px 18px;
+
+    border-radius: 17px;
+  }
+
   .avatar {
-    width: 100px;
-    height: 100px;
+    width: 96px;
+    height: 96px;
   }
 
   .upload,
   .remove {
-    max-width: none;
+    min-height: 40px;
+
+    padding: 0 10px;
+
+    font-size: 11px;
+  }
+
+  .upload svg,
+  .remove svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* fields */
+
+  .fields {
+    gap: 9px;
+  }
+
+  .inputBox {
+    min-height: 48px;
+
+    gap: 8px;
+
+    padding: 0 10px;
+
+    border-radius: 12px;
+  }
+
+  .inputBox input {
+    height: 46px;
+
+    font-size: 12px;
+  }
+
+  .inputBox > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .textarea {
+    min-height: 116px;
+
+    padding: 11px 10px;
+
+    border-radius: 12px;
+  }
+
+  .textarea textarea {
+    min-height: 86px;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+  }
+
+  .textarea > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .save {
+    height: 48px;
+
+    margin-top: 16px;
+
+    font-size: 12px;
+  }
+
+  .save svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 340px) {
+  .overlay {
+    padding: 3px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 6px);
+
+    border-radius: 18px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 6px);
+
+    padding: 20px 9px;
+  }
+
+  .close {
+    top: 8px;
+    right: 8px;
+
+    width: 33px;
+    height: 33px;
+  }
+
+  .close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .header {
+    padding-right: 36px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+
+    letter-spacing: -0.3px;
+  }
+
+  .header p {
+    font-size: 10.5px;
+  }
+
+  .avatarBlock {
+    padding: 15px 8px 16px;
+  }
+
+  .avatar {
+    width: 86px;
+    height: 86px;
+  }
+
+  .upload,
+  .remove {
+    min-height: 37px;
+
+    gap: 6px;
+
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  .upload svg,
+  .remove svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .inputBox {
+    min-height: 45px;
+
+    padding: 0 8px;
+  }
+
+  .inputBox input {
+    height: 43px;
+
+    font-size: 11px;
+  }
+
+  .inputBox > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .textarea {
+    min-height: 110px;
+
+    gap: 7px;
+
+    padding: 10px 8px;
+  }
+
+  .textarea > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .textarea textarea {
+    min-height: 82px;
+
+    font-size: 11px;
+  }
+
+  .save {
+    height: 44px;
+
+    font-size: 11px;
+  }
+
+  .save svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .close:hover:not(:disabled),
+  .upload:hover:not(:disabled),
+  .remove:hover:not(:disabled),
+  .save:hover:not(:disabled) {
+    transform: none;
+
+    filter: none;
+  }
+
+  .save:hover:not(:disabled)::before {
+    left: -100%;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+
+  .close,
+  .upload,
+  .remove,
+  .save,
+  .inputBox,
+  .textarea {
+    transition: none;
+  }
+
+  .save::before {
+    transition: none;
   }
 }

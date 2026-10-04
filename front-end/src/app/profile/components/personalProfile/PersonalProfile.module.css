@@ -3,20 +3,42 @@
 ========================================================= */
 
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
-  padding: 110px 20px 80px;
+
+  padding: 100px 24px 70px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 18px;
+
+  color: #171923;
 
   background:
     radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.09), transparent 30%),
     radial-gradient(circle at 5% 50%, rgba(72, 61, 246, 0.05), transparent 32%),
     linear-gradient(180deg, #f8f9fc 0%, #f4f5f9 45%, #f8f9fc 100%);
 
-  color: #171923;
+  box-sizing: border-box;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  overflow-x: clip;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.page a {
+  max-width: 100%;
+}
+
+.page img {
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -26,14 +48,21 @@
 .topBar {
   width: 100%;
   max-width: 1050px;
+
+  min-width: 0;
 }
 
 .homeButton {
+  min-height: 42px;
+
   display: inline-flex;
   align-items: center;
+
   gap: 10px;
 
-  padding: 13px 19px;
+  max-width: 100%;
+
+  padding: 0 16px;
 
   background: rgba(255, 255, 255, 0.9);
 
@@ -61,6 +90,10 @@
 
 .homeButton svg {
   width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
   color: #483df6;
 }
 
@@ -83,18 +116,20 @@
 ========================================================= */
 
 .profileCard {
+  position: relative;
+
+  overflow: hidden;
+
   width: 100%;
   max-width: 1050px;
-
-  padding: 42px;
-
-  position: relative;
-  overflow: hidden;
+  min-width: 0;
 
   display: flex;
   align-items: center;
 
   gap: 35px;
+
+  padding: 42px;
 
   background:
     radial-gradient(
@@ -133,6 +168,8 @@
   );
 
   opacity: 0.7;
+
+  pointer-events: none;
 }
 
 .topGlow {
@@ -143,6 +180,8 @@
 
   right: -160px;
   top: -170px;
+
+  border-radius: 50%;
 
   background: #483df6;
 
@@ -160,19 +199,21 @@
 .avatarWrapper {
   position: relative;
   z-index: 1;
+
+  flex-shrink: 0;
 }
 
 .avatar {
   width: 150px;
   height: 150px;
 
-  border-radius: 50%;
-
   overflow: hidden;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border-radius: 50%;
 
   background: linear-gradient(135deg, #7b73ff 0%, #483df6 55%, #3028b8 100%);
 
@@ -190,12 +231,16 @@
   width: 100%;
   height: 100%;
 
+  display: block;
+
   object-fit: cover;
 }
 
 .avatar svg {
   width: 56px;
   height: 56px;
+
+  flex-shrink: 0;
 
   opacity: 0.95;
 }
@@ -205,27 +250,43 @@
 ========================================================= */
 
 .info {
-  flex: 1;
-
   position: relative;
   z-index: 1;
+
+  flex: 1;
+
+  min-width: 0;
+  max-width: 100%;
 }
 
 .info h1 {
+  min-width: 0;
+  max-width: 100%;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 38px;
+  font-size: clamp(28px, 4vw, 38px);
   line-height: 1.1;
 
   font-weight: 900;
 
   letter-spacing: -1px;
+
+  overflow-wrap: anywhere;
 }
 
+/* =========================================================
+   TYPE
+========================================================= */
+
 .type {
+  width: fit-content;
+  max-width: 100%;
+
   display: inline-flex;
+  align-items: center;
 
   margin-top: 13px;
 
@@ -246,6 +307,8 @@
   text-transform: uppercase;
 
   letter-spacing: 0.4px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -254,25 +317,32 @@
 
 .contacts {
   display: flex;
+  align-items: center;
+
   flex-wrap: wrap;
 
   gap: 10px;
+
+  min-width: 0;
 
   margin-top: 22px;
 }
 
 .phone,
 .whatsapp {
-  height: 48px;
+  min-height: 48px;
+  max-width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
 
   padding: 0 17px;
 
   border-radius: 14px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 9px;
 
   font-size: 13px;
   font-weight: 700;
@@ -286,8 +356,18 @@
   color: #555b6b;
 }
 
+.phone span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
+
 .phone svg {
   width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+
   color: #483df6;
 }
 
@@ -308,6 +388,9 @@
 
 .whatsapp svg {
   width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
 }
 
 .whatsapp:hover {
@@ -325,11 +408,17 @@
 .edit {
   position: absolute;
 
+  z-index: 5;
+
   right: 27px;
   top: 27px;
 
   width: 50px;
   height: 50px;
+
+  flex-shrink: 0;
+
+  padding: 0;
 
   border: 1px solid rgba(72, 61, 246, 0.18);
 
@@ -355,6 +444,9 @@
 
 .edit svg {
   width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
 }
 
 .edit:hover {
@@ -369,13 +461,22 @@
   box-shadow: 0 12px 30px rgba(72, 61, 246, 0.25);
 }
 
+.edit:active {
+  transform: translateY(0);
+}
+
 /* =========================================================
    ABOUT
 ========================================================= */
 
 .about {
+  position: relative;
+
+  overflow: hidden;
+
   width: 100%;
   max-width: 1050px;
+  min-width: 0;
 
   padding: 28px 32px;
 
@@ -394,8 +495,6 @@
   box-shadow:
     0 15px 45px rgba(30, 35, 55, 0.065),
     0 3px 12px rgba(30, 35, 55, 0.025);
-
-  position: relative;
 }
 
 .about::before {
@@ -412,6 +511,8 @@
   background: #483df6;
 
   box-shadow: 0 0 12px rgba(72, 61, 246, 0.3);
+
+  pointer-events: none;
 }
 
 .about h3 {
@@ -420,9 +521,17 @@
   color: #20222d;
 
   font-size: 18px;
+  line-height: 1.3;
+
+  font-weight: 850;
+
+  overflow-wrap: anywhere;
 }
 
 .about p {
+  width: 100%;
+  max-width: 850px;
+
   margin: 0;
 
   color: #737887;
@@ -430,6 +539,8 @@
   font-size: 14px;
 
   line-height: 1.75;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -439,24 +550,26 @@
 .actions {
   width: 100%;
   max-width: 1050px;
+  min-width: 0;
 
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 15px;
 }
 
 .actions a,
 .logout {
+  min-width: 0;
   min-height: 105px;
-
-  padding: 22px;
 
   display: flex;
   align-items: center;
 
   gap: 17px;
+
+  padding: 22px;
 
   background:
     radial-gradient(
@@ -474,7 +587,11 @@
 
   text-decoration: none;
 
+  text-align: left;
+
   cursor: pointer;
+
+  box-shadow: 0 5px 18px rgba(30, 35, 55, 0.025);
 
   transition:
     transform 0.25s ease,
@@ -503,8 +620,14 @@
 }
 
 /* =========================================================
-   ICON
+   ACTION CONTENT
 ========================================================= */
+
+.actions a > div:last-child,
+.logout > div:last-child {
+  min-width: 0;
+  max-width: 100%;
+}
 
 .icon {
   width: 56px;
@@ -529,6 +652,7 @@
 
 .icon svg {
   width: 25px;
+  height: 25px;
 
   color: #483df6;
 
@@ -541,8 +665,11 @@
   color: #20222d;
 
   font-size: 16px;
+  line-height: 1.3;
 
   font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .actions p {
@@ -551,6 +678,9 @@
   color: #858a98;
 
   font-size: 12px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -559,8 +689,6 @@
 
 .logout {
   font-family: inherit;
-
-  text-align: left;
 }
 
 .logout .icon {
@@ -594,83 +722,92 @@
 }
 
 /* =========================================================
-   MOBILE
+   LARGE TABLET
 ========================================================= */
 
-@media (max-width: 750px) {
+@media (max-width: 1100px) {
   .page {
-    padding: 80px 15px 50px;
+    padding: 80px 40px 60px;
+  }
 
-    gap: 16px;
+  .profileCard,
+  .about,
+  .actions,
+  .topBar {
+    max-width: 100%;
   }
 
   .profileCard {
-    flex-direction: column;
+    gap: 27px;
 
-    text-align: center;
-
-    padding: 32px 20px 27px;
-
-    border-radius: 25px;
-
-    gap: 20px;
+    padding: 34px;
   }
 
   .avatar {
-    width: 125px;
-    height: 125px;
+    width: 135px;
+    height: 135px;
+  }
+
+  .edit {
+    right: 22px;
+    top: 22px;
+  }
+
+  .actions {
+    gap: 11px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 70px 30px 55px;
+  }
+
+  .profileCard {
+    gap: 22px;
+
+    padding: 29px;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
   }
 
   .info h1 {
-    font-size: 28px;
-
-    letter-spacing: -0.6px;
+    font-size: 32px;
   }
 
-  .contacts {
-    flex-direction: column;
+  .edit {
+    width: 46px;
+    height: 46px;
 
-    width: 100%;
+    right: 18px;
+    top: 18px;
   }
 
   .phone,
   .whatsapp {
-    width: 100%;
+    min-height: 44px;
 
-    justify-content: center;
-  }
+    padding: 0 13px;
 
-  .edit {
-    right: 15px;
-    top: 15px;
-
-    width: 43px;
-    height: 43px;
+    font-size: 12px;
   }
 
   .about {
-    padding: 23px;
-
-    border-radius: 21px;
-  }
-
-  .about::before {
-    left: 23px;
-  }
-
-  .actions {
-    grid-template-columns: 1fr;
-
-    gap: 11px;
+    padding: 24px 26px;
   }
 
   .actions a,
   .logout {
-    min-height: 90px;
+    min-height: 96px;
 
-    padding: 17px;
-
-    border-radius: 19px;
+    padding: 18px;
   }
 
   .icon {
@@ -678,5 +815,584 @@
     height: 50px;
 
     border-radius: 15px;
+  }
+
+  .icon svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .page {
+    padding: 28px 14px 45px;
+
+    gap: 14px;
+  }
+
+  .topBar {
+    width: 100%;
+  }
+
+  .homeButton {
+    min-height: 40px;
+
+    padding: 0 12px;
+
+    font-size: 13px;
+  }
+
+  .homeButton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* profile */
+
+  .profileCard {
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 0;
+
+    padding: 29px 20px 24px;
+
+    border-radius: 25px;
+
+    text-align: center;
+  }
+
+  .avatarWrapper {
+    margin-bottom: 20px;
+  }
+
+  .avatar {
+    width: 125px;
+    height: 125px;
+  }
+
+  .avatar svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .info {
+    width: 100%;
+  }
+
+  .info h1 {
+    max-width: calc(100% - 36px);
+
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 28px;
+
+    line-height: 1.12;
+
+    letter-spacing: -0.7px;
+  }
+
+  .type {
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 11px;
+  }
+
+  .contacts {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    width: 100%;
+
+    margin-top: 19px;
+  }
+
+  .phone,
+  .whatsapp {
+    width: 100%;
+
+    justify-content: center;
+
+    min-height: 45px;
+  }
+
+  .edit {
+    right: 15px;
+    top: 15px;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+  }
+
+  .edit svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* about */
+
+  .about {
+    padding: 22px 19px;
+
+    border-radius: 21px;
+  }
+
+  .about::before {
+    left: 20px;
+
+    width: 38px;
+  }
+
+  .about h3 {
+    font-size: 17px;
+  }
+
+  .about p {
+    font-size: 14px;
+
+    line-height: 1.7;
+  }
+
+  /* actions */
+
+  .actions {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+  }
+
+  .actions a,
+  .logout {
+    min-height: 86px;
+
+    padding: 16px;
+
+    border-radius: 19px;
+  }
+
+  .icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 14px;
+  }
+
+  .icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .actions h3 {
+    font-size: 15px;
+  }
+
+  .actions p {
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 20px 9px 38px;
+  }
+
+  .homeButton {
+    min-height: 38px;
+
+    padding: 0 10px;
+
+    font-size: 12px;
+  }
+
+  .profileCard {
+    padding: 24px 14px 21px;
+
+    border-radius: 22px;
+  }
+
+  .avatarWrapper {
+    margin-bottom: 17px;
+  }
+
+  .avatar {
+    width: 108px;
+    height: 108px;
+  }
+
+  .info h1 {
+    max-width: calc(100% - 32px);
+
+    font-size: 25px;
+
+    letter-spacing: -0.55px;
+  }
+
+  .type {
+    padding: 6px 10px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.3px;
+  }
+
+  .contacts {
+    gap: 7px;
+  }
+
+  .phone,
+  .whatsapp {
+    min-height: 42px;
+
+    padding: 0 11px;
+
+    font-size: 11.5px;
+  }
+
+  .phone svg,
+  .whatsapp svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .edit {
+    right: 12px;
+    top: 12px;
+
+    width: 39px;
+    height: 39px;
+
+    border-radius: 11px;
+  }
+
+  .edit svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .about {
+    padding: 19px 15px;
+
+    border-radius: 19px;
+  }
+
+  .about h3 {
+    font-size: 16px;
+  }
+
+  .about p {
+    font-size: 13px;
+
+    line-height: 1.65;
+  }
+
+  .actions a,
+  .logout {
+    min-height: 78px;
+
+    gap: 12px;
+
+    padding: 13px;
+  }
+
+  .icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 12px;
+  }
+
+  .icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .actions h3 {
+    font-size: 14px;
+  }
+
+  .actions p {
+    margin-top: 3px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 15px 6px 34px;
+
+    gap: 11px;
+  }
+
+  .homeButton {
+    min-height: 36px;
+
+    gap: 7px;
+
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+
+  .homeButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .profileCard {
+    padding: 21px 11px 18px;
+
+    border-radius: 19px;
+  }
+
+  .avatarWrapper {
+    margin-bottom: 15px;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+
+    border-width: 4px;
+  }
+
+  .avatar svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .info h1 {
+    max-width: calc(100% - 29px);
+
+    font-size: 22px;
+
+    letter-spacing: -0.4px;
+  }
+
+  .type {
+    margin-top: 10px;
+
+    padding: 5px 8px;
+
+    font-size: 9px;
+  }
+
+  .contacts {
+    margin-top: 15px;
+  }
+
+  .phone,
+  .whatsapp {
+    min-height: 39px;
+
+    gap: 7px;
+
+    padding: 0 9px;
+
+    font-size: 10.5px;
+
+    border-radius: 11px;
+  }
+
+  .phone svg,
+  .whatsapp svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .edit {
+    right: 9px;
+    top: 9px;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+  }
+
+  .edit svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .about {
+    padding: 16px 11px;
+
+    border-radius: 17px;
+  }
+
+  .about::before {
+    left: 11px;
+
+    width: 34px;
+  }
+
+  .about h3 {
+    margin-bottom: 8px;
+
+    font-size: 14px;
+  }
+
+  .about p {
+    font-size: 11.5px;
+
+    line-height: 1.6;
+  }
+
+  .actions {
+    gap: 7px;
+  }
+
+  .actions a,
+  .logout {
+    min-height: 69px;
+
+    gap: 9px;
+
+    padding: 10px;
+
+    border-radius: 16px;
+  }
+
+  .icon {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 10px;
+  }
+
+  .icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .actions h3 {
+    font-size: 12.5px;
+  }
+
+  .actions p {
+    margin-top: 2px;
+
+    font-size: 10px;
+    line-height: 1.35;
+  }
+}
+
+/* =========================================================
+   320PX SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .profileCard {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .info h1 {
+    max-width: calc(100% - 27px);
+
+    font-size: 20px;
+  }
+
+  .type {
+    font-size: 8.5px;
+  }
+
+  .phone,
+  .whatsapp {
+    min-height: 37px;
+
+    font-size: 10px;
+  }
+
+  .edit {
+    right: 8px;
+    top: 8px;
+
+    width: 34px;
+    height: 34px;
+  }
+
+  .about {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .actions a,
+  .logout {
+    min-height: 65px;
+
+    padding: 9px;
+  }
+
+  .icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+  }
+
+  .icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .actions h3 {
+    font-size: 12px;
+  }
+
+  .actions p {
+    font-size: 9.5px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .homeButton:hover,
+  .whatsapp:hover,
+  .edit:hover,
+  .actions a:hover,
+  .logout:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .homeButton,
+  .whatsapp,
+  .edit,
+  .actions a,
+  .logout {
+    transition: none;
   }
 }

@@ -230,12 +230,6 @@ export default function DeveloperProfile({ user, adsCount = 0 }) {
               {fullName}
             </p>
 
-            <p className={styles.companyType}>
-              <Landmark />
-
-              {t("developerProfile.companyType")}
-            </p>
-
             <p className={styles.description}>
               {profile.about || t("developerProfile.defaults.about")}
             </p>

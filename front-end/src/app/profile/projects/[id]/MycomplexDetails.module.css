@@ -1,6 +1,10 @@
 .page {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   padding: 34px 45px 90px;
+
+  box-sizing: border-box;
 
   color: #111118;
 
@@ -12,11 +16,16 @@
       transparent 30%
     ),
     #f7f7fb;
+
+  overflow-x: clip;
 }
 
 .container {
   width: min(1380px, 100%);
+  max-width: 100%;
   margin: 0 auto;
+
+  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -24,14 +33,22 @@
 ========================================================= */
 
 .topBar {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
+
   margin-bottom: 24px;
 }
 
 .back {
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+
+  display: inline-flex;
   align-items: center;
   gap: 9px;
 
@@ -44,6 +61,7 @@
 
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.4;
 
   cursor: pointer;
 
@@ -52,12 +70,18 @@
     transform 0.2s ease;
 }
 
+.back svg {
+  flex-shrink: 0;
+}
+
 .back:hover {
   color: #483df6;
   transform: translateX(-3px);
 }
 
 .ownerLabel {
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -68,9 +92,11 @@
   font-weight: 900;
 
   letter-spacing: 1.7px;
+  text-transform: uppercase;
 }
 
 .ownerLabel svg {
+  flex-shrink: 0;
   color: #483df6;
 }
 
@@ -80,6 +106,7 @@
 
 .loadingState {
   min-height: 70vh;
+  min-height: 70dvh;
 
   display: flex;
   flex-direction: column;
@@ -88,14 +115,21 @@
 
   gap: 16px;
 
+  padding: 30px;
+
+  box-sizing: border-box;
+
   color: #777784;
 
   font-size: 14px;
+  text-align: center;
 }
 
 .loader {
   width: 34px;
   height: 34px;
+
+  flex-shrink: 0;
 
   border: 3px solid #e8e8f0;
   border-top-color: #483df6;
@@ -107,6 +141,7 @@
 
 .errorState {
   min-height: 500px;
+  max-width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -114,6 +149,8 @@
   justify-content: center;
 
   padding: 40px;
+
+  box-sizing: border-box;
 
   text-align: center;
 
@@ -129,6 +166,8 @@
 .errorIcon {
   width: 58px;
   height: 58px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -150,9 +189,13 @@
   color: #111118;
 
   font-size: 24px;
+  line-height: 1.2;
+
+  overflow-wrap: anywhere;
 }
 
 .errorState p {
+  width: 100%;
   max-width: 500px;
 
   margin: 0;
@@ -161,17 +204,23 @@
 
   font-size: 14px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 .errorButton {
-  height: 46px;
+  max-width: 100%;
+  min-height: 46px;
 
   margin-top: 24px;
-  padding: 0 18px;
+  padding: 10px 18px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+
+  box-sizing: border-box;
 
   border: 1px solid rgba(72, 61, 246, 0.18);
   border-radius: 12px;
@@ -182,6 +231,7 @@
 
   font-size: 13px;
   font-weight: 800;
+  line-height: 1.3;
 
   cursor: pointer;
 
@@ -205,13 +255,18 @@
 ========================================================= */
 
 .hero {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns:
     minmax(0, 1.55fr)
-    minmax(380px, 0.85fr);
+    minmax(0, 0.85fr);
 
   gap: 22px;
+
+  align-items: stretch;
 }
 
 /* =========================================================
@@ -219,13 +274,16 @@
 ========================================================= */
 
 .heroGallery {
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
 }
 
 .mainImage {
   position: relative;
 
-  height: 650px;
+  width: 100%;
+  height: clamp(480px, 43vw, 650px);
 
   overflow: hidden;
 
@@ -253,6 +311,7 @@
 .imageGradient {
   position: absolute;
   inset: 0;
+  z-index: 1;
 
   background: linear-gradient(
     180deg,
@@ -274,29 +333,38 @@
 
   top: 22px;
   left: 22px;
+  right: 100px;
 
-  z-index: 2;
+  z-index: 3;
 
   display: flex;
+  flex-wrap: wrap;
   gap: 9px;
+
+  min-width: 0;
 }
 
 .premiumBadge,
 .statusBadge {
-  height: 36px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 36px;
 
-  padding: 0 14px;
+  padding: 8px 14px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
+
+  box-sizing: border-box;
 
   border-radius: 11px;
 
   font-size: 11px;
   font-weight: 900;
+  line-height: 1.25;
 
-  backdrop-filter: blur(16px);
+  overflow-wrap: anywhere;
 }
 
 .premiumBadge {
@@ -329,13 +397,17 @@
 
   z-index: 4;
 
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
 
   padding: 0 14px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+
+  box-sizing: border-box;
 
   border-radius: 11px;
 
@@ -347,6 +419,7 @@
 
   font-size: 11px;
   font-weight: 800;
+  line-height: 1.25;
 
   cursor: pointer;
 
@@ -356,6 +429,10 @@
     background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
+}
+
+.editImageButton svg {
+  flex-shrink: 0;
 }
 
 .editImageButton:hover {
@@ -372,9 +449,12 @@
   position: absolute;
 
   left: 28px;
+  right: 120px;
   bottom: 28px;
 
-  z-index: 2;
+  z-index: 3;
+
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
@@ -392,12 +472,16 @@
 }
 
 .heroImageText strong {
+  min-width: 0;
+
   color: #fff;
 
-  font-size: 34px;
-  line-height: 1;
+  font-size: clamp(24px, 2.3vw, 34px);
+  line-height: 1.05;
 
   letter-spacing: -1.2px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -410,7 +494,9 @@
   right: 22px;
   bottom: 22px;
 
-  z-index: 3;
+  z-index: 4;
+
+  max-width: calc(100% - 44px);
 
   padding: 8px 12px;
 
@@ -422,6 +508,8 @@
 
   font-size: 11px;
   font-weight: 800;
+
+  white-space: nowrap;
 
   backdrop-filter: blur(12px);
 }
@@ -435,10 +523,12 @@
 
   top: 50%;
 
-  z-index: 3;
+  z-index: 4;
 
   width: 46px;
   height: 46px;
+
+  padding: 0;
 
   display: flex;
   align-items: center;
@@ -465,6 +555,11 @@
     border-color 0.2s ease;
 }
 
+.galleryArrow svg {
+  width: 20px;
+  height: 20px;
+}
+
 .mainImage:hover .galleryArrow {
   opacity: 1;
 }
@@ -487,15 +582,19 @@
 ========================================================= */
 
 .thumbnails {
-  display: flex;
+  width: 100%;
+  max-width: 100%;
 
+  display: flex;
   gap: 10px;
 
   margin-top: 12px;
 
   overflow-x: auto;
+  overflow-y: hidden;
 
   scrollbar-width: none;
+  overscroll-behavior-x: contain;
 }
 
 .thumbnails::-webkit-scrollbar {
@@ -508,7 +607,7 @@
   width: 105px;
   height: 70px;
 
-  flex-shrink: 0;
+  flex: 0 0 105px;
 
   padding: 0;
 
@@ -552,12 +651,15 @@
 ========================================================= */
 
 .heroInfo {
+  min-width: 0;
   min-height: 650px;
 
   padding: 38px;
 
   display: flex;
   flex-direction: column;
+
+  box-sizing: border-box;
 
   border-radius: 28px;
 
@@ -569,6 +671,8 @@
 }
 
 .eyebrow {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -579,14 +683,21 @@
   font-weight: 900;
 
   letter-spacing: 1.8px;
+  line-height: 1.4;
+}
+
+.eyebrow svg {
+  flex-shrink: 0;
 }
 
 .heroInfo h1 {
+  max-width: 100%;
+
   margin: 18px 0 8px;
 
   color: #111118;
 
-  font-size: clamp(42px, 4vw, 62px);
+  font-size: clamp(36px, 4vw, 62px);
 
   line-height: 0.98;
 
@@ -596,12 +707,16 @@
 }
 
 .heroSubtitle {
+  max-width: 100%;
+
   margin: 0;
 
   color: #777784;
 
   font-size: 15px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -609,6 +724,8 @@
 ========================================================= */
 
 .heroLocation {
+  min-width: 0;
+
   display: flex;
 
   gap: 11px;
@@ -618,7 +735,14 @@
   color: #483df6;
 }
 
-.heroLocation div {
+.heroLocation > svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.heroLocation > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -628,6 +752,9 @@
   color: #18181f;
 
   font-size: 14px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .heroLocation span {
@@ -636,6 +763,8 @@
   font-size: 12px;
 
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -645,6 +774,8 @@
 .heroDivider {
   width: 100%;
   height: 1px;
+
+  flex-shrink: 0;
 
   margin: 27px 0;
 
@@ -656,6 +787,8 @@
 ========================================================= */
 
 .developer {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   gap: 12px;
@@ -665,7 +798,7 @@
   width: 43px;
   height: 43px;
 
-  flex-shrink: 0;
+  flex: 0 0 43px;
 
   display: flex;
   align-items: center;
@@ -680,12 +813,17 @@
   border: 1px solid rgba(72, 61, 246, 0.14);
 }
 
+.developerIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
 .developer > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
-
-  min-width: 0;
 }
 
 .developer span,
@@ -696,13 +834,17 @@
   font-weight: 900;
 
   letter-spacing: 1.3px;
+  line-height: 1.3;
 }
 
 .developer strong,
 .completion strong {
+  max-width: 100%;
+
   color: #17171e;
 
   font-size: 14px;
+  line-height: 1.4;
 
   overflow-wrap: anywhere;
 }
@@ -712,9 +854,11 @@
 ========================================================= */
 
 .heroStats {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 9px;
 
@@ -730,6 +874,8 @@
   align-items: center;
 
   gap: 9px;
+
+  box-sizing: border-box;
 
   border-radius: 14px;
 
@@ -752,6 +898,7 @@
   flex-shrink: 0;
 
   width: 18px;
+  height: 18px;
 
   color: #483df6;
 }
@@ -765,12 +912,18 @@
   color: #858591;
 
   font-size: 9px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 }
 
 .heroStats strong {
+  max-width: 100%;
+
   color: #17171e;
 
   font-size: 13px;
+  line-height: 1.35;
 
   overflow-wrap: anywhere;
 }
@@ -780,6 +933,8 @@
 ========================================================= */
 
 .completion {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -788,6 +943,8 @@
   margin-top: 18px;
 
   padding: 15px;
+
+  box-sizing: border-box;
 
   border-radius: 15px;
 
@@ -804,7 +961,7 @@
   width: 42px;
   height: 42px;
 
-  flex-shrink: 0;
+  flex: 0 0 42px;
 
   display: flex;
   align-items: center;
@@ -819,13 +976,13 @@
   box-shadow: 0 10px 25px rgba(72, 61, 246, 0.2);
 }
 
-.completion div:last-child {
+.completion > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
   gap: 4px;
-
-  min-width: 0;
 }
 
 /* =========================================================
@@ -833,6 +990,8 @@
 ========================================================= */
 
 .managementButtons {
+  min-width: 0;
+
   display: flex;
 
   gap: 10px;
@@ -841,17 +1000,21 @@
 }
 
 .primaryButton {
+  min-width: 0;
   flex: 1;
 
-  height: 54px;
+  min-height: 54px;
 
   margin-top: 20px;
+  padding: 0 18px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   gap: 10px;
+
+  box-sizing: border-box;
 
   border: 0;
   border-radius: 14px;
@@ -862,6 +1025,7 @@
 
   font-size: 13px;
   font-weight: 900;
+  line-height: 1.25;
 
   cursor: pointer;
 
@@ -871,6 +1035,10 @@
     transform 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.primaryButton svg {
+  flex-shrink: 0;
 }
 
 .primaryButton:hover {
@@ -885,13 +1053,17 @@
   width: 54px;
   height: 54px;
 
-  flex-shrink: 0;
+  flex: 0 0 54px;
 
   margin-top: 20px;
+
+  padding: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  box-sizing: border-box;
 
   border-radius: 14px;
 
@@ -926,9 +1098,14 @@
 ========================================================= */
 
 .section {
+  width: 100%;
+  min-width: 0;
+
   margin-top: 22px;
 
   padding: 34px;
+
+  box-sizing: border-box;
 
   border-radius: 24px;
 
@@ -940,6 +1117,8 @@
 }
 
 .sectionHeader {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -952,7 +1131,7 @@
   width: 46px;
   height: 46px;
 
-  flex-shrink: 0;
+  flex: 0 0 46px;
 
   display: flex;
   align-items: center;
@@ -967,23 +1146,42 @@
   color: #483df6;
 }
 
+.sectionIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.sectionHeader > div:last-child {
+  min-width: 0;
+}
+
 .sectionHeader span {
+  display: block;
+
   color: #483df6;
 
   font-size: 9px;
   font-weight: 900;
 
   letter-spacing: 1.8px;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionHeader h2 {
+  max-width: 100%;
+
   margin: 4px 0 0;
 
   color: #111118;
 
   font-size: 24px;
+  line-height: 1.18;
 
   letter-spacing: -0.7px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -991,16 +1189,25 @@
 ========================================================= */
 
 .aboutGrid {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: 1fr 290px;
+  grid-template-columns: minmax(0, 1fr) 290px;
 
   gap: 35px;
 
   align-items: center;
 }
 
+.aboutContent {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .description {
+  max-width: 100%;
+
   margin: 0;
 
   color: #686874;
@@ -1008,15 +1215,21 @@
   font-size: 15px;
 
   line-height: 1.85;
+
+  overflow-wrap: anywhere;
 }
 
 .aboutHighlight {
+  min-width: 0;
+
   padding: 25px;
 
   display: flex;
   flex-direction: column;
 
   gap: 14px;
+
+  box-sizing: border-box;
 
   border-radius: 18px;
 
@@ -1037,8 +1250,9 @@
   color: #17171e;
 
   font-size: 20px;
-
   line-height: 1.2;
+
+  overflow-wrap: anywhere;
 }
 
 .aboutHighlight span {
@@ -1047,6 +1261,8 @@
   font-size: 12px;
 
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -1054,14 +1270,17 @@
 ========================================================= */
 
 .projectDetails {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 10px;
 }
 
 .projectDetails > div {
+  min-width: 0;
   min-height: 82px;
 
   padding: 18px;
@@ -1072,6 +1291,8 @@
   justify-content: center;
 
   gap: 6px;
+
+  box-sizing: border-box;
 
   border-radius: 15px;
 
@@ -1097,12 +1318,18 @@
   color: #858591;
 
   font-size: 10px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .projectDetails strong {
+  max-width: 100%;
+
   color: #17171e;
 
   font-size: 13px;
+  line-height: 1.4;
 
   overflow-wrap: anywhere;
 }
@@ -1112,20 +1339,25 @@
 ========================================================= */
 
 .infrastructure {
+  min-width: 0;
+
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 9px;
 }
 
 .infrastructureItem {
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+
+  display: inline-flex;
   align-items: center;
 
   gap: 7px;
 
   padding: 11px 14px;
+
+  box-sizing: border-box;
 
   border-radius: 11px;
 
@@ -1136,6 +1368,9 @@
   color: #62626e;
 
   font-size: 12px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 
   transition:
     background 0.2s ease,
@@ -1159,15 +1394,21 @@
 ========================================================= */
 
 .layoutsGrid {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 12px;
 }
 
 .layoutCard {
+  min-width: 0;
+
   padding: 20px;
+
+  box-sizing: border-box;
 
   border-radius: 17px;
 
@@ -1190,6 +1431,8 @@
 }
 
 .layoutTop {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -1198,10 +1441,15 @@
 }
 
 .layoutTop span {
+  min-width: 0;
+
   color: #17171e;
 
   font-size: 14px;
   font-weight: 800;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .layoutTop strong {
@@ -1222,7 +1470,11 @@
 }
 
 .layoutInfo span {
+  max-width: 100%;
+
   padding: 7px 9px;
+
+  box-sizing: border-box;
 
   border-radius: 8px;
 
@@ -1231,6 +1483,8 @@
   color: #777784;
 
   font-size: 10px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -1238,6 +1492,7 @@
 ========================================================= */
 
 .addressBlock {
+  min-width: 0;
   min-height: 76px;
 
   padding: 22px 25px;
@@ -1246,6 +1501,8 @@
   align-items: center;
 
   gap: 12px;
+
+  box-sizing: border-box;
 
   border-radius: 18px;
 
@@ -1274,11 +1531,15 @@
 }
 
 .addressBlock strong {
+  min-width: 0;
+
   color: #17171e;
 
   font-size: 17px;
 
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -1288,6 +1549,8 @@
 .ministryCard {
   position: relative;
 
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1295,6 +1558,8 @@
   gap: 30px;
 
   padding: 24px;
+
+  box-sizing: border-box;
 
   overflow: hidden;
 
@@ -1335,6 +1600,7 @@
 
 .ministryInfo {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   align-items: center;
@@ -1346,7 +1612,7 @@
   width: 48px;
   height: 48px;
 
-  flex-shrink: 0;
+  flex: 0 0 48px;
 
   display: flex;
   align-items: center;
@@ -1363,6 +1629,7 @@
 
 .ministryText {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -1371,15 +1638,20 @@
 }
 
 .ministryText strong {
+  max-width: 100%;
+
   color: #17171e;
 
   font-size: 15px;
   font-weight: 800;
 
   line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .ministryText p {
+  width: 100%;
   max-width: 720px;
 
   margin: 0;
@@ -1389,20 +1661,24 @@
   font-size: 12px;
 
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 .ministryButton {
   flex-shrink: 0;
 
-  height: 48px;
+  min-height: 48px;
 
   padding: 0 18px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 9px;
+
+  box-sizing: border-box;
 
   border: 1px solid rgba(72, 61, 246, 0.16);
 
@@ -1449,6 +1725,7 @@
 
 .apartmentsSection {
   position: relative;
+
   overflow: hidden;
 
   background:
@@ -1484,18 +1761,26 @@
   position: relative;
   z-index: 1;
 
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 15px;
 
   margin-bottom: 20px;
 }
 
 .apartmentsHeader > div {
+  min-width: 0;
+
   display: flex;
   align-items: baseline;
 
   gap: 8px;
+
+  flex-wrap: wrap;
 }
 
 .apartmentsHeader strong {
@@ -1511,11 +1796,15 @@
   color: #858591;
 
   font-size: 12px;
+
+  overflow-wrap: anywhere;
 }
 
 .apartmentsGrid {
   position: relative;
   z-index: 1;
+
+  min-width: 0;
 
   display: grid;
 
@@ -1526,6 +1815,7 @@
 
 .apartmentsGrid > * {
   min-width: 0;
+  max-width: 100%;
 }
 
 .apartmentsLoading {
@@ -1537,9 +1827,14 @@
 
   gap: 12px;
 
+  padding: 25px;
+
+  box-sizing: border-box;
+
   color: #777784;
 
   font-size: 12px;
+  text-align: center;
 }
 
 .noApartments {
@@ -1556,6 +1851,8 @@
 
   padding: 30px;
 
+  box-sizing: border-box;
+
   text-align: center;
 
   border: 1px dashed #dcdce5;
@@ -1568,6 +1865,8 @@
 .noApartmentsIcon {
   width: 58px;
   height: 58px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -1585,15 +1884,21 @@
 }
 
 .noApartments h3 {
+  max-width: 100%;
+
   margin: 0 0 7px;
 
   color: #202027;
 
   font-size: 16px;
   font-weight: 850;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 }
 
 .noApartments p {
+  width: 100%;
   max-width: 480px;
 
   margin: 0;
@@ -1603,12 +1908,18 @@
   font-size: 11px;
 
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 .apartmentsError {
+  max-width: 100%;
+
   margin-top: 15px;
 
   padding: 12px 14px;
+
+  box-sizing: border-box;
 
   border-radius: 11px;
 
@@ -1619,39 +1930,140 @@
   color: #dc5b5b;
 
   font-size: 11px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+  .page {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .container {
+    width: min(1500px, 100%);
+  }
+
+  .hero {
+    grid-template-columns:
+      minmax(0, 1.6fr)
+      minmax(420px, 0.85fr);
+  }
+
+  .mainImage {
+    height: 700px;
+  }
+
+  .heroInfo {
+    min-height: 700px;
+    padding: 42px;
+  }
+
+  .heroInfo h1 {
+    font-size: clamp(50px, 3.2vw, 68px);
+  }
+
+  .section {
+    padding: 38px;
+  }
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .page {
-    padding: 30px 25px 70px;
+    padding: 30px 28px 75px;
   }
 
   .hero {
     grid-template-columns: 1fr;
   }
 
+  .mainImage {
+    height: min(62vw, 620px);
+  }
+
   .heroInfo {
     min-height: auto;
   }
 
-  .aboutGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .projectDetails {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .layoutsGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .heroInfo h1 {
+    font-size: clamp(42px, 6vw, 58px);
   }
 
   .apartmentsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .projectDetails {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .layoutsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET SMALL
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 26px 22px 65px;
+  }
+
+  .topBar {
+    margin-bottom: 20px;
+  }
+
+  .mainImage {
+    height: min(65vw, 560px);
+    border-radius: 24px;
+  }
+
+  .heroInfo {
+    padding: 30px;
+
+    border-radius: 24px;
+  }
+
+  .heroInfo h1 {
+    font-size: clamp(40px, 7vw, 54px);
+    letter-spacing: -2.2px;
+  }
+
+  .heroStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .section {
+    padding: 28px;
+    border-radius: 22px;
+  }
+
+  .projectDetails {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ministryCard {
+    align-items: flex-start;
+  }
+
+  .ministryInfo {
+    flex: 1;
+  }
+
+  .ministryButton {
+    white-space: normal;
+    text-align: center;
   }
 }
 
@@ -1664,12 +2076,27 @@
     padding: 20px 14px 55px;
   }
 
+  .container {
+    width: 100%;
+  }
+
   .topBar {
     align-items: flex-start;
+    margin-bottom: 18px;
   }
 
   .ownerLabel {
     display: none;
+  }
+
+  .back {
+    gap: 7px;
+
+    font-size: 12px;
+  }
+
+  .hero {
+    gap: 14px;
   }
 
   .mainImage {
@@ -1678,33 +2105,63 @@
     border-radius: 22px;
   }
 
-  .heroInfo {
-    padding: 25px;
+  .heroBadges {
+    top: 16px;
+    left: 16px;
+    right: 90px;
 
-    border-radius: 22px;
+    gap: 7px;
   }
 
-  .heroInfo h1 {
-    font-size: 42px;
+  .premiumBadge,
+  .statusBadge {
+    min-height: 34px;
+    padding: 7px 11px;
 
-    letter-spacing: -2px;
+    font-size: 10px;
+  }
+
+  .editImageButton {
+    top: 16px;
+    right: 16px;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+  }
+
+  .editImageButton {
+    font-size: 0;
+  }
+
+  .editImageButton svg {
+    width: 17px;
+    height: 17px;
   }
 
   .heroImageText {
     left: 20px;
+    right: 95px;
     bottom: 20px;
   }
 
+  .heroImageText span {
+    font-size: 9px;
+  }
+
   .heroImageText strong {
-    font-size: 27px;
+    font-size: clamp(23px, 7vw, 29px);
+    letter-spacing: -0.8px;
   }
 
-  .heroStats {
-    grid-template-columns: 1fr 1fr;
-  }
+  .imageCounter {
+    right: 16px;
+    bottom: 16px;
 
-  .heroStats > div:last-child {
-    grid-column: span 2;
+    padding: 7px 10px;
+
+    font-size: 10px;
   }
 
   .galleryArrow {
@@ -1712,46 +2169,194 @@
 
     width: 40px;
     height: 40px;
+
+    border-radius: 12px;
+  }
+
+  .galleryArrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .galleryLeft {
+    left: 12px;
+  }
+
+  .galleryRight {
+    right: 12px;
+  }
+
+  .thumbnail {
+    width: 88px;
+    height: 60px;
+
+    flex-basis: 88px;
+
+    border-radius: 10px;
+  }
+
+  .heroInfo {
+    padding: 24px;
+
+    border-radius: 22px;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+
+  .heroInfo h1 {
+    margin-top: 15px;
+
+    font-size: 40px;
+    line-height: 1;
+    letter-spacing: -1.8px;
+  }
+
+  .heroLocation {
+    margin-top: 20px;
+  }
+
+  .heroLocation strong {
+    font-size: 13px;
+  }
+
+  .heroLocation span {
+    font-size: 11px;
+  }
+
+  .heroDivider {
+    margin: 22px 0;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 22px;
+  }
+
+  .heroStats > div {
+    padding: 13px 10px;
+  }
+
+  .heroStats > div:last-child {
+    grid-column: span 2;
+  }
+
+  .managementButtons {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .primaryButton {
+    min-height: 50px;
+
+    margin-top: 18px;
+    padding: 0 14px;
+
+    gap: 8px;
+
+    font-size: 12px;
+  }
+
+  .actionButton {
+    width: 50px;
+    height: 50px;
+
+    flex-basis: 50px;
+
+    margin-top: 18px;
   }
 
   .section {
+    margin-top: 14px;
     padding: 23px;
 
     border-radius: 20px;
   }
 
+  .sectionHeader {
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-bottom: 21px;
+  }
+
+  .sectionIcon {
+    width: 42px;
+    height: 42px;
+
+    flex-basis: 42px;
+
+    border-radius: 12px;
+  }
+
+  .sectionIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .sectionHeader span {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
   .sectionHeader h2 {
     font-size: 20px;
+    letter-spacing: -0.45px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutHighlight {
+    padding: 20px;
   }
 
   .projectDetails {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .projectDetails > div {
+    min-height: 72px;
+    padding: 16px;
   }
 
   .layoutsGrid {
     grid-template-columns: 1fr;
   }
 
-  .managementButtons {
-    flex-direction: row;
+  .infrastructure {
+    gap: 8px;
   }
 
-  .primaryButton {
-    min-width: 0;
+  .infrastructureItem {
+    padding: 10px 12px;
+    font-size: 11px;
   }
 
-  .actionButton {
-    flex-shrink: 0;
-  }
+  .addressBlock {
+    min-height: 68px;
 
-  .apartmentsHeader {
+    padding: 18px 17px;
+
     align-items: flex-start;
-
-    flex-direction: column;
   }
 
-  .apartmentsGrid {
-    grid-template-columns: 1fr;
+  .addressBlock strong {
+    font-size: 14px;
+    line-height: 1.45;
   }
 
   .ministryCard {
@@ -1759,18 +2364,21 @@
 
     flex-direction: column;
 
-    gap: 20px;
+    gap: 18px;
 
     padding: 20px;
   }
 
   .ministryInfo {
     align-items: flex-start;
+    gap: 12px;
   }
 
   .ministryIcon {
     width: 44px;
     height: 44px;
+
+    flex-basis: 44px;
   }
 
   .ministryText strong {
@@ -1779,90 +2387,24 @@
 
   .ministryText p {
     font-size: 11px;
+    line-height: 1.6;
   }
 
   .ministryButton {
     width: 100%;
-  }
-}
+    min-height: 46px;
 
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
+    padding: 0 14px;
 
-@media (max-width: 430px) {
-  .page {
-    padding-left: 10px;
-    padding-right: 10px;
+    font-size: 11px;
   }
 
-  .mainImage {
-    height: 350px;
-  }
+  .apartmentsHeader {
+    align-items: flex-start;
 
-  .heroInfo {
-    padding: 20px;
-  }
-
-  .heroInfo h1 {
-    font-size: 36px;
-  }
-
-  .heroStats {
-    grid-template-columns: 1fr;
-  }
-
-  .heroStats > div:last-child {
-    grid-column: auto;
-  }
-
-  .managementButtons {
     flex-direction: column;
-  }
 
-  .actionButton {
-    width: 100%;
-  }
-
-  .heroBadges {
-    top: 14px;
-    left: 14px;
-
-    flex-wrap: wrap;
-  }
-
-  .editImageButton {
-    top: 14px;
-    right: 14px;
-  }
-
-  .heroImageText strong {
-    font-size: 24px;
-  }
-
-  .sectionHeader {
-    align-items: flex-start;
-  }
-
-  .sectionIcon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .sectionHeader span {
-    font-size: 8px;
-  }
-
-  .sectionHeader h2 {
-    font-size: 18px;
-  }
-
-  .addressBlock {
-    align-items: flex-start;
-  }
-
-  .addressBlock strong {
-    font-size: 15px;
+    gap: 5px;
   }
 
   .apartmentsHeader strong {
@@ -1873,7 +2415,799 @@
     font-size: 11px;
   }
 
+  .apartmentsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .apartmentsLoading {
+    min-height: 180px;
+  }
+
   .noApartments {
-    padding: 25px 15px;
+    min-height: 205px;
+
+    padding: 25px 16px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 16px 10px 45px;
+  }
+
+  .topBar {
+    margin-bottom: 15px;
+  }
+
+  .back {
+    font-size: 11px;
+  }
+
+  .mainImage {
+    height: 350px;
+
+    border-radius: 18px;
+  }
+
+  .heroBadges {
+    top: 12px;
+    left: 12px;
+    right: 68px;
+  }
+
+  .premiumBadge,
+  .statusBadge {
+    min-height: 31px;
+
+    padding: 6px 9px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+  }
+
+  .editImageButton {
+    top: 12px;
+    right: 12px;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+  }
+
+  .heroImageText {
+    left: 15px;
+    right: 78px;
+    bottom: 15px;
+  }
+
+  .heroImageText span {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .heroImageText strong {
+    font-size: 23px;
+  }
+
+  .imageCounter {
+    right: 12px;
+    bottom: 12px;
+
+    padding: 6px 8px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+  }
+
+  .galleryArrow {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+  }
+
+  .galleryLeft {
+    left: 9px;
+  }
+
+  .galleryRight {
+    right: 9px;
+  }
+
+  .galleryArrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .thumbnail {
+    width: 76px;
+    height: 52px;
+
+    flex-basis: 76px;
+  }
+
+  .heroInfo {
+    padding: 20px;
+
+    border-radius: 18px;
+  }
+
+  .heroInfo h1 {
+    font-size: 34px;
+    letter-spacing: -1.5px;
+  }
+
+  .heroLocation {
+    gap: 8px;
+  }
+
+  .developer {
+    gap: 10px;
+  }
+
+  .developerIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+  }
+
+  .developer strong {
+    font-size: 13px;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr;
+
+    gap: 7px;
+  }
+
+  .heroStats > div:last-child {
+    grid-column: auto;
+  }
+
+  .heroStats > div {
+    padding: 12px 10px;
+  }
+
+  .managementButtons {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .primaryButton {
+    width: 100%;
+    min-height: 48px;
+
+    margin-top: 16px;
+  }
+
+  .actionButton {
+    width: 100%;
+    height: 48px;
+
+    flex-basis: 48px;
+
+    margin-top: 0;
+  }
+
+  .section {
+    padding: 19px 16px;
+
+    border-radius: 17px;
+  }
+
+  .sectionHeader {
+    gap: 9px;
+  }
+
+  .sectionIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+
+    border-radius: 10px;
+  }
+
+  .sectionIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 18px;
+  }
+
+  .sectionHeader span {
+    font-size: 7px;
+    letter-spacing: 1.2px;
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .projectDetails > div {
+    min-height: 68px;
+    padding: 14px;
+  }
+
+  .projectDetails span {
+    font-size: 9px;
+  }
+
+  .projectDetails strong {
+    font-size: 12px;
+  }
+
+  .addressBlock {
+    padding: 16px 14px;
+    gap: 9px;
+  }
+
+  .addressBlock svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .addressBlock strong {
+    font-size: 13px;
+  }
+
+  .ministryCard {
+    padding: 17px;
+    gap: 16px;
+  }
+
+  .ministryIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+  }
+
+  .ministryIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .ministryText strong {
+    font-size: 13px;
+  }
+
+  .ministryText p {
+    font-size: 10px;
+  }
+
+  .ministryButton {
+    min-height: 44px;
+    font-size: 10px;
+    gap: 7px;
+  }
+
+  .noApartments {
+    min-height: 190px;
+
+    padding: 20px 12px;
+  }
+
+  .noApartmentsIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .noApartments h3 {
+    font-size: 15px;
+  }
+
+  .noApartments p {
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   380 PX
+========================================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .back {
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  .mainImage {
+    height: 315px;
+  }
+
+  .heroBadges {
+    right: 60px;
+  }
+
+  .premiumBadge,
+  .statusBadge {
+    padding: 5px 8px;
+    font-size: 8px;
+  }
+
+  .editImageButton {
+    width: 36px;
+    height: 36px;
+
+    top: 10px;
+    right: 10px;
+  }
+
+  .heroImageText {
+    left: 12px;
+    right: 65px;
+    bottom: 12px;
+  }
+
+  .heroImageText strong {
+    font-size: 20px;
+  }
+
+  .imageCounter {
+    right: 10px;
+    bottom: 10px;
+
+    font-size: 8px;
+  }
+
+  .galleryArrow {
+    width: 34px;
+    height: 34px;
+  }
+
+  .heroInfo {
+    padding: 17px;
+  }
+
+  .heroInfo h1 {
+    font-size: 30px;
+  }
+
+  .heroStats > div {
+    padding: 11px 9px;
+  }
+
+  .primaryButton {
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .section {
+    padding: 17px 13px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 17px;
+  }
+
+  .sectionHeader span {
+    font-size: 6.5px;
+  }
+
+  .infrastructureItem {
+    width: 100%;
+
+    padding: 9px 10px;
+
+    font-size: 10px;
+  }
+
+  .ministryInfo {
+    gap: 9px;
+  }
+
+  .ministryIcon {
+    width: 37px;
+    height: 37px;
+
+    flex-basis: 37px;
+  }
+}
+
+/* =========================================================
+   360 PX
+========================================================= */
+
+@media (max-width: 360px) {
+  .mainImage {
+    height: 295px;
+  }
+
+  .heroImageText strong {
+    font-size: 19px;
+  }
+
+  .heroInfo {
+    padding: 15px;
+  }
+
+  .heroInfo h1 {
+    font-size: 28px;
+    letter-spacing: -1.2px;
+  }
+
+  .eyebrow {
+    font-size: 8px;
+  }
+
+  .heroLocation strong {
+    font-size: 12px;
+  }
+
+  .heroLocation span {
+    font-size: 10px;
+  }
+
+  .developer strong {
+    font-size: 12px;
+  }
+
+  .developer span {
+    font-size: 8px;
+  }
+
+  .section {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .sectionIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-basis: 35px;
+  }
+
+  .sectionHeader {
+    gap: 7px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 16px;
+  }
+
+  .sectionHeader span {
+    font-size: 6px;
+  }
+
+  .description {
+    font-size: 12px;
+  }
+
+  .addressBlock strong {
+    font-size: 12px;
+  }
+
+  .ministryCard {
+    padding: 14px;
+  }
+
+  .ministryButton {
+    padding: 0 10px;
+    font-size: 9px;
+  }
+}
+
+/* =========================================================
+   330 PX
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 35px;
+  }
+
+  .mainImage {
+    height: 270px;
+    border-radius: 15px;
+  }
+
+  .heroBadges {
+    top: 8px;
+    left: 8px;
+    right: 52px;
+
+    gap: 5px;
+  }
+
+  .premiumBadge,
+  .statusBadge {
+    min-height: 27px;
+
+    padding: 4px 6px;
+
+    font-size: 7px;
+
+    border-radius: 8px;
+  }
+
+  .editImageButton {
+    top: 8px;
+    right: 8px;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 8px;
+  }
+
+  .heroImageText {
+    left: 9px;
+    right: 55px;
+    bottom: 9px;
+  }
+
+  .heroImageText span {
+    font-size: 7px;
+  }
+
+  .heroImageText strong {
+    font-size: 17px;
+  }
+
+  .imageCounter {
+    right: 8px;
+    bottom: 8px;
+
+    padding: 5px 6px;
+
+    font-size: 7px;
+  }
+
+  .galleryArrow {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+  }
+
+  .galleryArrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .galleryLeft {
+    left: 7px;
+  }
+
+  .galleryRight {
+    right: 7px;
+  }
+
+  .thumbnail {
+    width: 68px;
+    height: 47px;
+
+    flex-basis: 68px;
+  }
+
+  .heroInfo {
+    padding: 13px;
+
+    border-radius: 15px;
+  }
+
+  .heroInfo h1 {
+    font-size: 25px;
+  }
+
+  .heroLocation {
+    gap: 6px;
+  }
+
+  .heroStats {
+    gap: 6px;
+  }
+
+  .heroStats > div {
+    gap: 6px;
+    padding: 9px 7px;
+  }
+
+  .heroStats svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .heroStats span {
+    font-size: 7px;
+  }
+
+  .heroStats strong {
+    font-size: 10px;
+  }
+
+  .developer {
+    gap: 7px;
+  }
+
+  .developerIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-basis: 35px;
+
+    border-radius: 9px;
+  }
+
+  .developerIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .primaryButton {
+    min-height: 45px;
+
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  .actionButton {
+    height: 45px;
+    flex-basis: 45px;
+  }
+
+  .section {
+    padding: 14px 10px;
+
+    border-radius: 14px;
+  }
+
+  .sectionHeader {
+    gap: 6px;
+    margin-bottom: 17px;
+  }
+
+  .sectionIcon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+
+    border-radius: 8px;
+  }
+
+  .sectionIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 14px;
+  }
+
+  .sectionHeader span {
+    font-size: 5.5px;
+    letter-spacing: 0.9px;
+  }
+
+  .description {
+    font-size: 11px;
+  }
+
+  .projectDetails > div {
+    min-height: 62px;
+    padding: 12px;
+  }
+
+  .projectDetails span {
+    font-size: 8px;
+  }
+
+  .projectDetails strong {
+    font-size: 10px;
+  }
+
+  .addressBlock {
+    padding: 13px 11px;
+    gap: 7px;
+  }
+
+  .addressBlock svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .addressBlock strong {
+    font-size: 11px;
+  }
+
+  .ministryCard {
+    padding: 12px;
+  }
+
+  .ministryIcon {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+  }
+
+  .ministryText strong {
+    font-size: 11px;
+  }
+
+  .ministryText p {
+    font-size: 9px;
+  }
+
+  .ministryButton {
+    min-height: 40px;
+
+    padding: 0 7px;
+
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .back:hover,
+  .mainImage:hover img,
+  .thumbnail:hover,
+  .primaryButton:hover,
+  .deleteButton:hover,
+  .section:hover,
+  .projectDetails > div:hover,
+  .layoutCard:hover,
+  .addressBlock:hover,
+  .infrastructureItem:hover,
+  .ministryCard:hover,
+  .ministryButton:hover {
+    transform: none;
+  }
+
+  .galleryArrow {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .mainImage img,
+  .galleryArrow,
+  .thumbnail,
+  .back,
+  .primaryButton,
+  .actionButton,
+  .projectDetails > div,
+  .layoutCard,
+  .addressBlock,
+  .infrastructureItem,
+  .ministryCard,
+  .ministryButton {
+    transition: none;
+  }
+
+  .loader {
+    animation: none;
   }
 }

@@ -3,8 +3,14 @@
 ========================================================= */
 
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
-  padding: 45px 40px 80px;
+
+  padding: 50;
+
+  box-sizing: border-box;
+  overflow-x: hidden;
 
   background:
     radial-gradient(circle at 8% 0%, rgba(72, 61, 246, 0.08), transparent 28%),
@@ -18,9 +24,17 @@
   color: #171923;
 }
 
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
 .container {
   width: 100%;
   max-width: 1280px;
+  min-width: 0;
+
   margin: 0 auto;
 }
 
@@ -29,70 +43,25 @@
 ========================================================= */
 
 .header {
+  min-width: 0;
+
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
 
   gap: 35px;
+
   margin-bottom: 32px;
 }
 
 .headerText {
+  min-width: 0;
   max-width: 720px;
 }
 
-.eyebrow {
-  display: block;
-
-  margin-bottom: 9px;
-
-  color: #483df6;
-
-  font-size: 12px;
-  font-weight: 900;
-
-  text-transform: uppercase;
-  letter-spacing: 1.8px;
-}
-
-.header h1 {
-  margin: 0;
-
-  color: #151722;
-
-  font-size: 43px;
-  line-height: 1.05;
-  font-weight: 900;
-
-  letter-spacing: -1.5px;
-}
-
-.header p {
-  margin: 13px 0 0;
-
-  color: #737887;
-
-  font-size: 15px;
-  line-height: 1.65;
-}
-
-/* =========================================================
-   HEADER ACTIONS
-========================================================= */
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  flex-shrink: 0;
-}
-
-/* =========================================================
-   BACK BUTTON
-========================================================= */
-
 .homeButton {
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -101,19 +70,19 @@
 
   min-height: 46px;
 
+  margin-bottom: 20px;
   padding: 0 18px;
 
   border: 1px solid #e4e6ee;
   border-radius: 13px;
 
   background: #ffffff;
-
   color: #686d7b;
 
-  font-family: inherit;
-
+  font: inherit;
   font-size: 13px;
   font-weight: 750;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -125,21 +94,16 @@
     color 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
-
-  margin-bottom: 20px;
 }
 
 .homeButton svg {
+  flex: 0 0 auto;
   color: #483df6;
-
-  transition: color 0.2s ease;
 }
 
 .homeButton:hover {
   background: #f5f4ff;
-
   border-color: rgba(72, 61, 246, 0.25);
-
   color: #171923;
 
   transform: translateY(-2px);
@@ -147,38 +111,84 @@
   box-shadow: 0 8px 22px rgba(72, 61, 246, 0.08);
 }
 
-.homeButton:hover svg {
+.eyebrow {
+  display: block;
+
+  margin-bottom: 9px;
+
   color: #483df6;
+
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+
+  overflow-wrap: anywhere;
+}
+
+.header h1 {
+  margin: 0;
+
+  color: #151722;
+
+  font-size: clamp(34px, 3.1vw, 43px);
+  line-height: 1.05;
+  font-weight: 900;
+
+  letter-spacing: -1.5px;
+
+  overflow-wrap: anywhere;
+}
+
+.header p {
+  max-width: 680px;
+
+  margin: 13px 0 0;
+
+  color: #737887;
+
+  font-size: 15px;
+  line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   ADD BUTTON
+   HEADER ACTIONS
 ========================================================= */
 
+.headerActions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .addButton {
-  height: 53px;
+  min-width: 0;
+  min-height: 53px;
 
   padding: 0 20px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 9px;
 
-  flex-shrink: 0;
-
   border: 1px solid #483df6;
   border-radius: 15px;
 
   background: #483df6;
-
   color: #ffffff;
 
-  font-family: inherit;
-
+  font: inherit;
   font-size: 14px;
   font-weight: 850;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -211,9 +221,12 @@
 ========================================================= */
 
 .stats {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 14px;
 
@@ -221,14 +234,15 @@
 }
 
 .statCard {
+  min-width: 0;
   min-height: 92px;
-
-  padding: 18px;
 
   display: flex;
   align-items: center;
 
   gap: 13px;
+
+  padding: 18px;
 
   border: 1px solid #e7e9f0;
   border-radius: 19px;
@@ -258,8 +272,9 @@
 .statIcon {
   width: 45px;
   height: 45px;
+  min-width: 45px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -268,35 +283,23 @@
   border-radius: 13px;
 }
 
-/* MAIN BLUE */
-
 .statIcon.pink {
   background: rgba(72, 61, 246, 0.09);
-
   color: #483df6;
 }
 
-/* GREEN */
-
 .statIcon.green {
   background: rgba(34, 174, 96, 0.09);
-
   color: #1ba65b;
 }
 
-/* ORANGE */
-
 .statIcon.orange {
   background: rgba(245, 158, 11, 0.1);
-
   color: #e89608;
 }
 
-/* RED */
-
 .statIcon.red {
   background: rgba(239, 75, 88, 0.09);
-
   color: #e54855;
 }
 
@@ -314,6 +317,9 @@
 
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .statCard strong {
@@ -326,10 +332,12 @@
 }
 
 /* =========================================================
-   RESULT
+   RESULT BAR
 ========================================================= */
 
 .resultBar {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -338,11 +346,15 @@
   color: #858a98;
 
   font-size: 13px;
+  line-height: 1.4;
+}
+
+.resultBar > div {
+  min-width: 0;
 }
 
 .resultBar strong {
   color: #171923;
-
   font-size: 16px;
 }
 
@@ -351,6 +363,9 @@
 ========================================================= */
 
 .grid {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -363,6 +378,8 @@
 ========================================================= */
 
 .card {
+  min-width: 0;
+
   overflow: hidden;
 
   border: 1px solid #e5e7ee;
@@ -397,6 +414,7 @@
 .imageWrapper {
   position: relative;
 
+  width: 100%;
   height: 245px;
 
   overflow: hidden;
@@ -416,7 +434,6 @@
 
 .card:hover .imageWrapper img {
   transform: scale(1.045);
-
   filter: brightness(1.03);
 }
 
@@ -424,14 +441,14 @@
   position: absolute;
   inset: 0;
 
+  pointer-events: none;
+
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0.34),
     transparent 40%,
     rgba(0, 0, 0, 0.38)
   );
-
-  pointer-events: none;
 }
 
 /* =========================================================
@@ -447,67 +464,65 @@
 
   z-index: 2;
 
+  min-width: 0;
+
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   gap: 7px;
-
-  flex-wrap: wrap;
 }
 
 .typeBadge,
 .statusBadge {
-  height: 32px;
+  max-width: 100%;
 
-  padding: 0 10px;
+  min-height: 32px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 5px;
 
+  padding: 0 10px;
+
   border-radius: 10px;
 
   font-size: 11px;
   font-weight: 850;
+  line-height: 1.2;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
 
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* TYPE */
-
 .typeBadge {
-  background: rgba(255, 255, 255, 0.94);
-
   border: 1px solid rgba(255, 255, 255, 0.7);
+
+  background: rgba(255, 255, 255, 0.94);
 
   color: #252832;
 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* ACTIVE */
-
 .statusActive {
   background: rgba(27, 166, 91, 0.94);
-
   color: #ffffff;
 }
-
-/* PENDING */
 
 .statusPending {
   background: rgba(232, 150, 8, 0.94);
-
   color: #ffffff;
 }
 
-/* OTHER STATUSES */
-
 .statusBadge {
   background: rgba(90, 94, 106, 0.9);
-
   color: #ffffff;
 }
 
@@ -519,20 +534,26 @@
 
   z-index: 2;
 
+  max-width: calc(100% - 30px);
+
   padding: 7px 11px;
 
   border-radius: 9px;
 
   background: rgba(17, 18, 23, 0.68);
-
   color: #ffffff;
 
   font-size: 10px;
   font-weight: 850;
+  line-height: 1.25;
 
   text-transform: uppercase;
+  text-align: center;
+
+  overflow-wrap: anywhere;
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* =========================================================
@@ -540,10 +561,13 @@
 ========================================================= */
 
 .cardContent {
+  min-width: 0;
+
   padding: 21px;
 }
 
 .cardContent h2 {
+  min-width: 0;
   min-height: 54px;
 
   margin: 0;
@@ -552,10 +576,12 @@
 
   font-size: 19px;
   line-height: 1.4;
-
   font-weight: 800;
 
   letter-spacing: -0.25px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================================================
@@ -563,8 +589,10 @@
 ========================================================= */
 
 .location {
+  min-width: 0;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 7px;
 
@@ -573,12 +601,21 @@
   color: #777d8c;
 
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .location svg {
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   color: #483df6;
+
+  margin-top: 1px;
+}
+
+.location span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -586,21 +623,26 @@
 ========================================================= */
 
 .infoRow {
+  min-width: 0;
+
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
-  gap: 12px;
+  gap: 9px;
 
   margin-top: 16px;
 }
 
 .infoRow span {
-  display: flex;
+  min-width: 0;
+
+  display: inline-flex;
   align-items: center;
 
   gap: 5px;
 
-  padding-right: 12px;
+  padding-right: 10px;
 
   border-right: 1px solid #e6e8ee;
 
@@ -608,11 +650,14 @@
 
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .infoRow span:last-child {
   border-right: none;
-
+  padding-right: 0;
   color: #676d7b;
 }
 
@@ -620,19 +665,26 @@
   color: #483df6;
 }
 
+.infoRow svg {
+  flex: 0 0 auto;
+}
+
 /* =========================================================
    PRICE
 ========================================================= */
 
 .priceRow {
-  margin-top: 17px;
+  min-width: 0;
 
+  margin-top: 17px;
   padding-top: 16px;
 
   border-top: 1px solid #e7e9ef;
 }
 
 .priceRow > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -644,20 +696,25 @@
 
   font-size: 10px;
   font-weight: 700;
+  line-height: 1.2;
 
   text-transform: uppercase;
   letter-spacing: 0.7px;
 }
 
 .priceRow strong {
+  min-width: 0;
+
   color: #483df6;
 
-  font-size: 24px;
-  line-height: 1;
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.15;
 
   font-weight: 950;
 
   letter-spacing: -0.5px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -665,6 +722,8 @@
 ========================================================= */
 
 .actions {
+  min-width: 0;
+
   display: grid;
 
   grid-template-columns: minmax(0, 1fr) 44px 44px 44px;
@@ -675,11 +734,12 @@
 }
 
 .actions button {
-  height: 44px;
+  min-width: 0;
+  min-height: 44px;
 
   border-radius: 12px;
 
-  font-family: inherit;
+  font: inherit;
 
   cursor: pointer;
 
@@ -692,25 +752,29 @@
 }
 
 /* =========================================================
-   DETAILS
+   DETAILS BUTTON
 ========================================================= */
 
 .detailsButton {
+  min-width: 0;
+
   border: 1px solid #483df6;
 
   background: #483df6;
-
   color: #ffffff;
 
   font-size: 13px;
   font-weight: 850;
 
   box-shadow: 0 7px 20px rgba(72, 61, 246, 0.14);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .detailsButton:hover {
   background: #3d33df;
-
   border-color: #3d33df;
 
   transform: translateY(-2px);
@@ -723,14 +787,17 @@
 ========================================================= */
 
 .iconButton {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: 1px solid #e3e5eb;
 
   background: #f8f9fb;
-
   color: #747987;
 }
 
@@ -742,6 +809,10 @@
   color: #483df6;
 
   transform: translateY(-2px);
+}
+
+.iconButton svg {
+  flex: 0 0 auto;
 }
 
 /* =========================================================
@@ -758,9 +829,7 @@
 
 .deleteButton:hover {
   background: #e54855;
-
   border-color: #e54855;
-
   color: #ffffff;
 }
 
@@ -770,6 +839,7 @@
 
 .empty {
   min-height: 390px;
+  min-width: 0;
 
   padding: 60px 25px;
 
@@ -793,6 +863,7 @@
 .emptyIcon {
   width: 66px;
   height: 66px;
+  min-width: 66px;
 
   margin-bottom: 18px;
 
@@ -812,15 +883,21 @@
 }
 
 .empty h2 {
+  max-width: 100%;
+
   margin: 0;
 
   color: #171923;
 
   font-size: 24px;
+  line-height: 1.25;
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .empty p {
+  width: 100%;
   max-width: 440px;
 
   margin: 10px 0 23px;
@@ -829,15 +906,19 @@
 
   font-size: 14px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 .empty button {
-  height: 45px;
+  min-height: 45px;
+  max-width: 100%;
 
   padding: 0 19px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   gap: 8px;
 
@@ -845,11 +926,9 @@
   border-radius: 13px;
 
   background: #483df6;
-
   color: #ffffff;
 
-  font-family: inherit;
-
+  font: inherit;
   font-size: 13px;
   font-weight: 850;
 
@@ -888,11 +967,14 @@
   color: #777d8c;
 
   font-size: 13px;
+
+  text-align: center;
 }
 
 .spinner {
   width: 34px;
   height: 34px;
+  flex: 0 0 auto;
 
   border: 3px solid #e5e7ee;
   border-top-color: #483df6;
@@ -913,6 +995,7 @@
 ========================================================= */
 
 .error {
+  width: 100%;
   min-height: 220px;
 
   display: flex;
@@ -931,10 +1014,40 @@
   text-align: center;
 
   font-size: 14px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   TABLET
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+  .page {
+    padding-left: 55px;
+    padding-right: 55px;
+  }
+
+  .container {
+    max-width: 1400px;
+  }
+
+  .grid {
+    gap: 22px;
+  }
+
+  .cardContent {
+    padding: 23px;
+  }
+
+  .imageWrapper {
+    height: 255px;
+  }
+}
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
 ========================================================= */
 
 @media (max-width: 1100px) {
@@ -942,24 +1055,47 @@
     padding: 35px 25px 65px;
   }
 
+  .header {
+    align-items: flex-start;
+  }
+
+  .header h1 {
+    font-size: 37px;
+  }
+
   .stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .statCard {
+    padding: 14px;
   }
 
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+  }
+
+  .imageWrapper {
+    height: 230px;
+  }
+
+  .cardContent {
+    padding: 18px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 42px 42px 42px;
+    gap: 7px;
   }
 }
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
-@media (max-width: 700px) {
-  .page {
-    padding: 25px 16px 50px;
-  }
-
+@media (max-width: 900px) {
   .header {
     flex-direction: column;
     align-items: stretch;
@@ -973,52 +1109,110 @@
     max-width: none;
   }
 
-  .header h1 {
-    font-size: 32px;
-  }
-
-  .header p {
-    font-size: 14px;
-  }
-
   .headerActions {
     width: 100%;
-
-    flex-direction: column;
-
-    align-items: stretch;
   }
 
-  .homeButton,
   .addButton {
     width: 100%;
-  }
-
-  .addButton {
-    height: 51px;
   }
 
   .stats {
-    grid-template-columns: 1fr 1fr;
-
-    gap: 9px;
-
-    margin-bottom: 25px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .statCard {
     min-height: 82px;
-
     padding: 13px;
+  }
+
+  .statIcon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .detailsButton {
+    font-size: 13px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .header {
+    gap: 18px;
+  }
+
+  .homeButton {
+    width: 100%;
+
+    min-height: 44px;
+
+    margin-bottom: 17px;
+
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    font-size: 12px;
+  }
+
+  .eyebrow {
+    margin-bottom: 8px;
+
+    font-size: 10px;
+    letter-spacing: 1.4px;
+  }
+
+  .header h1 {
+    font-size: 31px;
+    line-height: 1.08;
+
+    letter-spacing: -1px;
+  }
+
+  .header p {
+    margin-top: 10px;
+
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .addButton {
+    min-height: 50px;
+
+    border-radius: 13px;
+
+    font-size: 13px;
+  }
+
+  /* STATS */
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 9px;
 
-    border-radius: 16px;
+    margin-bottom: 23px;
+  }
+
+  .statCard {
+    min-height: 79px;
+
+    padding: 12px;
+
+    gap: 9px;
+
+    border-radius: 15px;
   }
 
   .statIcon {
     width: 38px;
     height: 38px;
+    min-width: 38px;
 
     border-radius: 11px;
   }
@@ -1028,46 +1222,206 @@
     height: 18px;
   }
 
+  .statCard > div:last-child {
+    gap: 4px;
+  }
+
   .statCard span {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .statCard strong {
     font-size: 20px;
   }
 
+  /* RESULT */
+
+  .resultBar {
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+
+  .resultBar strong {
+    font-size: 15px;
+  }
+
+  /* GRID */
+
   .grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
 
-    gap: 17px;
+  /* CARD */
+
+  .card {
+    border-radius: 20px;
   }
 
   .imageWrapper {
-    height: 225px;
+    height: 230px;
+  }
+
+  .badges {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    gap: 6px;
+  }
+
+  .typeBadge,
+  .statusBadge {
+    min-height: 29px;
+
+    padding: 0 9px;
+
+    border-radius: 9px;
+
+    font-size: 9.5px;
+  }
+
+  .typeBadge svg,
+  .statusBadge svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .imageDeal {
+    right: 12px;
+    bottom: 12px;
+
+    max-width: calc(100% - 24px);
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
   }
 
   .cardContent {
-    padding: 19px;
+    padding: 17px;
   }
 
   .cardContent h2 {
-    min-height: auto;
+    min-height: 0;
 
-    font-size: 19px;
+    font-size: 18px;
+    line-height: 1.38;
+  }
+
+  .location {
+    margin-top: 9px;
+
+    font-size: 12px;
+  }
+
+  .location svg {
+    width: 16px;
+    height: 16px;
   }
 
   .infoRow {
-    gap: 9px;
+    gap: 8px;
+    margin-top: 14px;
   }
 
   .infoRow span {
-    padding-right: 9px;
-
+    padding-right: 8px;
     font-size: 10px;
   }
 
+  .priceRow {
+    margin-top: 15px;
+    padding-top: 14px;
+  }
+
+  .priceRow span {
+    font-size: 9px;
+  }
+
   .priceRow strong {
-    font-size: 23px;
+    font-size: 22px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 42px 42px 42px;
+
+    gap: 7px;
+
+    margin-top: 16px;
+  }
+
+  .actions button {
+    min-height: 42px;
+    border-radius: 10px;
+  }
+
+  .detailsButton {
+    font-size: 11.5px;
+  }
+
+  .iconButton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* EMPTY */
+
+  .empty {
+    min-height: 330px;
+
+    padding: 40px 18px;
+
+    border-radius: 20px;
+  }
+
+  .emptyIcon {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+
+    margin-bottom: 15px;
+
+    border-radius: 16px;
+  }
+
+  .empty h2 {
+    font-size: 21px;
+  }
+
+  .empty p {
+    margin-top: 9px;
+    margin-bottom: 19px;
+
+    font-size: 12px;
+  }
+
+  .empty button {
+    min-height: 43px;
+    padding: 0 16px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+  }
+
+  /* ERROR */
+
+  .error {
+    min-height: 180px;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    font-size: 12px;
+  }
+
+  .loading {
+    min-height: 240px;
+    font-size: 12px;
   }
 }
 
@@ -1075,12 +1429,933 @@
    SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 520px) {
+  .page {
+    padding: 30px;
+  }
+  .header {
+    gap: 16px;
+    margin-bottom: 21px;
+  }
+
+  .homeButton {
+    min-height: 42px;
+    margin-bottom: 14px;
+
+    border-radius: 10px;
+
+    font-size: 11.5px;
+  }
+
+  .eyebrow {
+    font-size: 8.5px;
+    letter-spacing: 1.1px;
+  }
+
+  .header h1 {
+    font-size: 27px;
+    letter-spacing: -0.8px;
+  }
+
+  .header p {
+    font-size: 11.5px;
+    line-height: 1.55;
+  }
+
+  .addButton {
+    min-height: 47px;
+
+    border-radius: 11px;
+
+    font-size: 11.5px;
+  }
+
   .stats {
-    grid-template-columns: 1fr;
+    gap: 7px;
   }
 
   .statCard {
-    min-height: 72px;
+    min-height: 73px;
+
+    padding: 10px;
+
+    gap: 8px;
+
+    border-radius: 13px;
+  }
+
+  .statIcon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 9px;
+  }
+
+  .statIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .statCard span {
+    font-size: 8px;
+  }
+
+  .statCard strong {
+    font-size: 18px;
+  }
+
+  .resultBar {
+    margin-bottom: 10px;
+
+    font-size: 10.5px;
+  }
+
+  .resultBar strong {
+    font-size: 14px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .card {
+    border-radius: 17px;
+  }
+
+  .imageWrapper {
+    height: 210px;
+  }
+
+  .badges {
+    top: 9px;
+    left: 9px;
+    right: 9px;
+    gap: 5px;
+  }
+
+  .typeBadge,
+  .statusBadge {
+    min-height: 26px;
+
+    padding: 0 7px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .typeBadge svg,
+  .statusBadge svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .imageDeal {
+    right: 9px;
+    bottom: 9px;
+
+    padding: 5px 7px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .cardContent {
+    padding: 14px;
+  }
+
+  .cardContent h2 {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .location {
+    gap: 5px;
+    margin-top: 8px;
+
+    font-size: 10.5px;
+  }
+
+  .location svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .infoRow {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .infoRow span {
+    gap: 4px;
+
+    padding-right: 7px;
+
+    font-size: 9px;
+  }
+
+  .infoRow svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .priceRow {
+    margin-top: 13px;
+    padding-top: 12px;
+  }
+
+  .priceRow span {
+    font-size: 8px;
+  }
+
+  .priceRow strong {
+    font-size: 20px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 39px 39px 39px;
+
+    gap: 6px;
+
+    margin-top: 13px;
+  }
+
+  .actions button {
+    min-height: 39px;
+    border-radius: 9px;
+  }
+
+  .detailsButton {
+    font-size: 10.5px;
+  }
+
+  .iconButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .empty {
+    min-height: 285px;
+
+    padding: 30px 14px;
+
+    border-radius: 16px;
+  }
+
+  .emptyIcon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+
+    margin-bottom: 13px;
+
+    border-radius: 14px;
+  }
+
+  .emptyIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .empty h2 {
+    font-size: 18px;
+  }
+
+  .empty p {
+    max-width: 310px;
+
+    margin: 8px 0 16px;
+
+    font-size: 10.5px;
+  }
+
+  .empty button {
+    min-height: 40px;
+
+    padding: 0 13px;
+
+    border-radius: 9px;
+
+    font-size: 10.5px;
+  }
+
+  .error {
+    min-height: 150px;
+    padding: 18px;
+
+    border-radius: 13px;
+
+    font-size: 10.5px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding: 30;
+  }
+
+  .header {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .homeButton {
+    min-height: 40px;
+
+    margin-bottom: 12px;
+
+    padding: 0 10px;
+
+    font-size: 10.5px;
+  }
+
+  .homeButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .eyebrow {
+    margin-bottom: 6px;
+
+    font-size: 7.5px;
+    letter-spacing: 0.85px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+    letter-spacing: -0.6px;
+  }
+
+  .header p {
+    margin-top: 7px;
+
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .addButton {
+    min-height: 44px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  .addButton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* STATS */
+
+  .stats {
+    gap: 6px;
+  }
+
+  .statCard {
+    min-height: 66px;
+
+    padding: 8px;
+
+    gap: 6px;
+
+    border-radius: 11px;
+  }
+
+  .statIcon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+
+    border-radius: 8px;
+  }
+
+  .statIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .statCard > div:last-child {
+    gap: 3px;
+  }
+
+  .statCard span {
+    font-size: 7px;
+  }
+
+  .statCard strong {
+    font-size: 16px;
+  }
+
+  .resultBar {
+    margin-bottom: 8px;
+
+    font-size: 9px;
+  }
+
+  .resultBar strong {
+    font-size: 12.5px;
+  }
+
+  /* CARD */
+
+  .grid {
+    gap: 10px;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+
+  .imageWrapper {
+    height: 190px;
+  }
+
+  .badges {
+    top: 7px;
+    left: 7px;
+    right: 7px;
+
+    gap: 4px;
+  }
+
+  .typeBadge,
+  .statusBadge {
+    min-height: 23px;
+
+    padding: 0 6px;
+
+    gap: 4px;
+
+    border-radius: 6px;
+
+    font-size: 7px;
+  }
+
+  .typeBadge svg,
+  .statusBadge svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .imageDeal {
+    right: 7px;
+    bottom: 7px;
+
+    max-width: calc(100% - 14px);
+
+    padding: 4px 6px;
+
+    border-radius: 6px;
+
+    font-size: 7px;
+  }
+
+  .cardContent {
+    padding: 11px;
+  }
+
+  .cardContent h2 {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .location {
+    gap: 4px;
+    margin-top: 7px;
+
+    font-size: 9px;
+  }
+
+  .location svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .infoRow {
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .infoRow span {
+    gap: 3px;
+
+    padding-right: 5px;
+
+    font-size: 7.8px;
+  }
+
+  .infoRow svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .priceRow {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .priceRow span {
+    font-size: 7px;
+    letter-spacing: 0.4px;
+  }
+
+  .priceRow strong {
+    font-size: 18px;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 35px 35px 35px;
+
+    gap: 5px;
+
+    margin-top: 11px;
+  }
+
+  .actions button {
+    min-height: 35px;
+    border-radius: 7px;
+  }
+
+  .detailsButton {
+    font-size: 11px !important;
+  }
+
+  .iconButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* EMPTY */
+
+  .empty {
+    min-height: 250px;
+
+    padding: 25px 10px;
+
+    border-radius: 13px;
+  }
+
+  .emptyIcon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+
+    margin-bottom: 11px;
+
+    border-radius: 12px;
+  }
+
+  .emptyIcon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .empty h2 {
+    font-size: 16px;
+  }
+
+  .empty p {
+    margin: 7px 0 13px;
+
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  .empty button {
+    min-height: 37px;
+
+    padding: 0 11px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+  }
+
+  .empty button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .error {
+    min-height: 130px;
+    padding: 14px;
+
+    border-radius: 11px;
+
+    font-size: 9px;
+  }
+
+  .loading {
+    min-height: 190px;
+    gap: 10px;
+
+    font-size: 9.5px;
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 20;
+  }
+
+  .header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .homeButton {
+    min-height: 37px;
+
+    margin-bottom: 10px;
+
+    padding: 0 8px;
+
+    border-radius: 8px;
+
+    font-size: 9.5px;
+  }
+
+  .homeButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .eyebrow {
+    margin-bottom: 5px;
+
+    font-size: 6.8px;
+    letter-spacing: 0.65px;
+  }
+
+  .header h1 {
+    font-size: 21px;
+    line-height: 1.1;
+
+    letter-spacing: -0.45px;
+  }
+
+  .header p {
+    margin-top: 6px;
+
+    font-size: 8.8px;
+    line-height: 1.45;
+  }
+
+  .addButton {
+    min-height: 41px;
+
+    padding: 0 10px;
+
+    border-radius: 8px;
+
+    gap: 5px;
+
+    font-size: 9px;
+  }
+
+  .addButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* STATS */
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 5px;
+
+    margin-bottom: 16px;
+  }
+
+  .statCard {
+    min-height: 57px;
+
+    padding: 7px 8px;
+
+    gap: 7px;
+
+    border-radius: 9px;
+  }
+
+  .statIcon {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+
+    border-radius: 7px;
+  }
+
+  .statIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .statCard > div:last-child {
+    gap: 2px;
+  }
+
+  .statCard span {
+    font-size: 6.5px;
+  }
+
+  .statCard strong {
+    font-size: 14px;
+  }
+
+  /* RESULT */
+
+  .resultBar {
+    margin-bottom: 7px;
+
+    font-size: 8px;
+  }
+
+  .resultBar strong {
+    font-size: 11px;
+  }
+
+  /* GRID */
+
+  .grid {
+    gap: 8px;
+  }
+
+  .card {
+    border-radius: 11px;
+  }
+
+  .imageWrapper {
+    height: 170px;
+  }
+
+  .badges {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+
+    gap: 3px;
+  }
+
+  .typeBadge,
+  .statusBadge {
+    min-height: 21px;
+
+    padding: 0 5px;
+
+    gap: 3px;
+
+    border-radius: 5px;
+
+    font-size: 6.2px;
+  }
+
+  .typeBadge svg,
+  .statusBadge svg {
+    width: 8px;
+    height: 8px;
+  }
+
+  .imageDeal {
+    right: 6px;
+    bottom: 6px;
+
+    padding: 3px 5px;
+
+    border-radius: 5px;
+
+    font-size: 6.2px;
+  }
+
+  .cardContent {
+    padding: 9px;
+  }
+
+  .cardContent h2 {
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+
+  .location {
+    gap: 4px;
+    margin-top: 6px;
+
+    font-size: 8px;
+  }
+
+  .location svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .infoRow {
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .infoRow span {
+    gap: 2px;
+
+    padding-right: 4px;
+
+    font-size: 6.8px;
+  }
+
+  .infoRow svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .priceRow {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .priceRow span {
+    font-size: 6px;
+    letter-spacing: 0.25px;
+  }
+
+  .priceRow strong {
+    font-size: 16px;
+  }
+
+  /* ACTIONS */
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr) 32px 32px 32px;
+
+    gap: 4px;
+
+    margin-top: 9px;
+  }
+
+  .actions button {
+    min-height: 32px;
+    border-radius: 6px;
+  }
+
+  .detailsButton {
+    font-size: 10px !important; 
+  }
+
+  .iconButton svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* EMPTY */
+
+  .empty {
+    min-height: 220px;
+
+    padding: 20px 8px;
+
+    border-radius: 10px;
+  }
+
+  .emptyIcon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    margin-bottom: 9px;
+
+    border-radius: 10px;
+  }
+
+  .emptyIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .empty h2 {
+    font-size: 14px;
+  }
+
+  .empty p {
+    max-width: 250px;
+
+    margin: 6px 0 11px;
+
+    font-size: 7.8px;
+  }
+
+  .empty button {
+    min-height: 34px;
+
+    padding: 0 9px;
+
+    gap: 4px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .empty button svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .error {
+    min-height: 110px;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    font-size: 8px;
+  }
+
+  .loading {
+    min-height: 160px;
+
+    gap: 8px;
+
+    font-size: 8px;
+  }
+
+  .spinner {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .statCard:hover,
+  .card:hover,
+  .homeButton:hover,
+  .addButton:hover,
+  .detailsButton:hover,
+  .iconButton:hover,
+  .empty button:hover {
+    transform: none;
+  }
+
+  .card:hover .imageWrapper img {
+    transform: none;
+    filter: none;
   }
 }

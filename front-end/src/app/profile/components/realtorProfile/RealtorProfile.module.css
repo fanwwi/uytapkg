@@ -1,21 +1,40 @@
-.page {
-  min-height: 100vh;
-  width: 100%;
+/* =========================================================
+   PAGE
+========================================================= */
 
-  padding: 110px 20px 80px;
+.page {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+
+  padding: 100px 40px 70px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  gap: 24px;
+  gap: 18px;
+
+  color: #171923;
 
   background:
     radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.1), transparent 30%),
     radial-gradient(circle at 5% 50%, rgba(72, 61, 246, 0.06), transparent 32%),
     linear-gradient(180deg, #f8f9fc 0%, #f4f6fb 45%, #ffffff 100%);
 
-  color: #171923;
+  box-sizing: border-box;
+
+  overflow-x: clip;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+.page a {
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -25,6 +44,7 @@
 .profileCard {
   width: 100%;
   max-width: 1050px;
+  min-width: 0;
 
   position: relative;
   overflow: hidden;
@@ -47,10 +67,6 @@
     0 0 50px rgba(72, 61, 246, 0.035),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
-
-/* =========================================================
-   BOTTOM BLUE LINE
-========================================================= */
 
 .profileCard::after {
   content: "";
@@ -112,6 +128,8 @@
 
   gap: 35px;
 
+  min-width: 0;
+
   padding-right: 65px;
 }
 
@@ -158,10 +176,19 @@
 
 .info {
   min-width: 0;
+  max-width: 100%;
+
   flex: 1;
 }
 
+/* =========================================================
+   BADGE
+========================================================= */
+
 .badge {
+  width: fit-content;
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
 
@@ -183,6 +210,8 @@
   text-transform: uppercase;
 
   letter-spacing: 0.6px;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -193,22 +222,30 @@
   display: flex;
   align-items: center;
 
+  flex-wrap: wrap;
+
   gap: 9px;
+
+  min-width: 0;
+  max-width: 100%;
 }
 
 .nameRow h1 {
+  min-width: 0;
+  max-width: 100%;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 38px;
+  font-size: clamp(30px, 4vw, 38px);
   line-height: 1.1;
 
   font-weight: 900;
 
   letter-spacing: -1px;
 
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .verify {
@@ -227,8 +264,10 @@
 ========================================================= */
 
 .company {
+  min-width: 0;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 8px;
 
@@ -238,7 +277,11 @@
 
   font-size: 14px;
 
+  line-height: 1.45;
+
   font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 .company svg {
@@ -246,6 +289,8 @@
   height: 17px;
 
   flex-shrink: 0;
+
+  margin-top: 1px;
 
   color: #483df6;
 }
@@ -255,6 +300,7 @@
 ========================================================= */
 
 .description {
+  width: 100%;
   max-width: 700px;
 
   margin: 14px 0 0;
@@ -264,6 +310,8 @@
   font-size: 14px;
 
   line-height: 1.7;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -284,6 +332,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid rgba(72, 61, 246, 0.16);
 
@@ -306,6 +356,8 @@
 .edit svg {
   width: 19px;
   height: 19px;
+
+  flex-shrink: 0;
 }
 
 .edit:hover {
@@ -320,6 +372,10 @@
   box-shadow: 0 12px 35px rgba(72, 61, 246, 0.22);
 }
 
+.edit:active {
+  transform: translateY(0);
+}
+
 /* =========================================================
    CONTACTS
 ========================================================= */
@@ -330,9 +386,11 @@
 
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 12px;
+
+  min-width: 0;
 
   margin-top: 32px;
 }
@@ -398,8 +456,9 @@
   color: #483df6;
 }
 
-.contactCard div {
+.contactCard > div {
   min-width: 0;
+  max-width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -417,10 +476,13 @@
   text-transform: uppercase;
 
   letter-spacing: 0.6px;
+
+  overflow-wrap: anywhere;
 }
 
 .contactCard strong {
-  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
 
   color: #303746;
 
@@ -430,9 +492,8 @@
 
   line-height: 1.35;
 
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================================================
@@ -444,8 +505,9 @@
   z-index: 1;
 
   width: 100%;
+  min-width: 0;
 
-  height: 52px;
+  min-height: 52px;
 
   margin-top: 14px;
 
@@ -454,6 +516,8 @@
   justify-content: center;
 
   gap: 9px;
+
+  padding: 0 15px;
 
   background: rgba(37, 211, 102, 0.055);
 
@@ -479,6 +543,8 @@
 .whatsapp svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 .whatsapp:hover {
@@ -498,15 +564,21 @@
 .stats {
   width: 100%;
   max-width: 1050px;
+  min-width: 0;
 
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 15px;
 }
 
 .stats > div {
+  position: relative;
+
+  overflow: hidden;
+
+  min-width: 0;
   min-height: 100px;
 
   padding: 22px;
@@ -535,6 +607,28 @@
     box-shadow 0.25s ease;
 }
 
+.stats > div::after {
+  content: "";
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  right: -50px;
+  bottom: -55px;
+
+  border-radius: 50%;
+
+  background: #483df6;
+
+  opacity: 0.045;
+
+  filter: blur(28px);
+
+  pointer-events: none;
+}
+
 .stats > div:hover {
   transform: translateY(-3px);
 
@@ -551,6 +645,8 @@
   line-height: 1;
 
   font-weight: 900;
+
+  letter-spacing: -0.6px;
 }
 
 .stats span {
@@ -561,6 +657,8 @@
   font-size: 12px;
 
   font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -570,124 +668,162 @@
 .menu {
   width: 100%;
   max-width: 1050px;
+  min-width: 0;
 
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 
-  gap: 15px;
+  gap: 10px;
 }
 
 .menu a,
 .menu button {
-  min-height: 105px;
-
-  padding: 22px;
+  min-width: 0;
+  min-height: 62px;
 
   display: flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 17px;
+  gap: 8px;
 
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(72, 61, 246, 0.04),
-      transparent 45%
-    ),
-    linear-gradient(145deg, #ffffff, #f8f9fc);
+  padding: 0 10px;
+
+  border-radius: 15px;
+
+  background: #ffffff;
 
   border: 1px solid rgba(15, 23, 42, 0.065);
 
-  border-radius: 23px;
-
-  color: #242936;
-
-  text-decoration: none;
+  color: #747985;
 
   font-family: inherit;
 
-  font-size: 15px;
+  font-size: 13px;
+
   font-weight: 800;
 
-  text-align: left;
+  text-decoration: none;
+
+  text-align: center;
 
   cursor: pointer;
 
+  box-shadow: 0 5px 18px rgba(30, 41, 59, 0.035);
+
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 0.22s ease,
+    color 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .menu a:hover,
 .menu button:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 
-  border-color: rgba(72, 61, 246, 0.2);
+  color: #483df6;
 
-  background: linear-gradient(145deg, rgba(72, 61, 246, 0.045), #ffffff);
+  background: rgba(72, 61, 246, 0.045);
 
-  box-shadow:
-    0 20px 55px rgba(30, 41, 59, 0.1),
-    0 0 35px rgba(72, 61, 246, 0.045);
+  border-color: rgba(72, 61, 246, 0.18);
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.07);
 }
 
 .menu a svg,
 .menu button svg {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
 
   flex-shrink: 0;
 
   color: #483df6;
-
-  filter: drop-shadow(0 0 7px rgba(72, 61, 246, 0.16));
 }
-
-/* =========================================================
-   LOGOUT
-========================================================= */
 
 .menu button {
-  color: #4b5361;
-}
-
-.menu button svg {
-  color: #7d8593;
-
-  filter: none;
-}
-
-.menu button:hover {
-  border-color: rgba(72, 61, 246, 0.18);
-}
-
-.menu button:hover svg {
-  color: #483df6;
+  color: #747985;
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 1100px) {
+  .page {
+    padding: 80px 35px 60px;
+  }
+
+  .profileCard,
+  .stats,
+  .menu {
+    max-width: 100%;
+  }
+
   .profileCard {
-    padding: 35px 30px;
+    padding: 35px;
   }
 
   .top {
-    gap: 25px;
+    gap: 27px;
   }
 
   .avatar {
-    width: 130px;
-    height: 130px;
+    width: 135px;
+    height: 135px;
   }
 
   .nameRow h1 {
-    font-size: 32px;
+    font-size: 34px;
+  }
+
+  .menu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET / NARROW
+========================================================= */
+
+@media (max-width: 900px) {
+  .page {
+    padding: 70px 28px 55px;
+  }
+
+  .profileCard {
+    padding: 30px;
+  }
+
+  .top {
+    gap: 22px;
+
+    padding-right: 55px;
+  }
+
+  .avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .nameRow h1 {
+    font-size: 31px;
+  }
+
+  .contacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contactCard {
+    min-height: 66px;
+
+    padding: 13px 14px;
+  }
+
+  .contactCard strong {
+    font-size: 12px;
   }
 }
 
@@ -697,13 +833,13 @@
 
 @media (max-width: 650px) {
   .page {
-    padding: 80px 15px 50px;
+    padding: 24px 14px 45px;
 
-    gap: 16px;
+    gap: 14px;
   }
 
   .profileCard {
-    padding: 32px 20px 25px;
+    padding: 28px 18px 22px;
 
     border-radius: 25px;
   }
@@ -713,11 +849,11 @@
 
     align-items: center;
 
-    text-align: center;
-
-    gap: 20px;
+    gap: 19px;
 
     padding-right: 0;
+
+    text-align: center;
   }
 
   .avatar {
@@ -729,64 +865,117 @@
     width: 100%;
   }
 
+  .badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .nameRow {
     justify-content: center;
   }
 
   .nameRow h1 {
+    max-width: calc(100% - 34px);
+
     font-size: 28px;
+
+    line-height: 1.12;
 
     letter-spacing: -0.6px;
   }
 
-  .badge {
-    margin-bottom: 10px;
+  .verify {
+    width: 20px;
+    height: 20px;
   }
 
   .company {
     justify-content: center;
 
     font-size: 13px;
+
+    text-align: left;
   }
 
   .description {
+    max-width: 100%;
+
     font-size: 13px;
 
     line-height: 1.65;
   }
 
   .edit {
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
 
     width: 43px;
     height: 43px;
+
+    border-radius: 12px;
   }
+
+  .edit svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* contacts */
 
   .contacts {
     grid-template-columns: 1fr;
 
-    margin-top: 25px;
+    gap: 8px;
+
+    margin-top: 24px;
   }
 
   .contactCard {
-    min-height: 64px;
+    min-height: 62px;
+
+    padding: 12px 13px;
+
+    text-align: left;
+  }
+
+  .contactCard > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .contactCard small {
+    font-size: 9px;
+  }
+
+  .contactCard strong {
+    font-size: 12px;
   }
 
   .whatsapp {
-    height: 50px;
+    min-height: 49px;
+
+    margin-top: 10px;
+
+    font-size: 12px;
   }
 
-  .stats {
-    grid-template-columns: 1fr 1fr;
+  .whatsapp svg {
+    width: 17px;
+    height: 17px;
+  }
 
-    gap: 10px;
+  /* stats */
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
   }
 
   .stats > div {
-    min-height: 90px;
+    min-height: 88px;
 
-    padding: 18px;
+    padding: 17px;
 
     border-radius: 19px;
   }
@@ -795,19 +984,35 @@
     font-size: 23px;
   }
 
-  .menu {
-    grid-template-columns: 1fr;
+  .stats span {
+    margin-top: 6px;
 
-    gap: 11px;
+    font-size: 10px;
+  }
+
+  /* menu */
+
+  .menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
   }
 
   .menu a,
   .menu button {
-    min-height: 90px;
+    min-height: 55px;
 
-    padding: 17px;
+    padding: 0 8px;
 
-    border-radius: 19px;
+    border-radius: 13px;
+
+    font-size: 11px;
+  }
+
+  .menu a svg,
+  .menu button svg {
+    width: 15px;
+    height: 15px;
   }
 }
 
@@ -815,49 +1020,441 @@
    SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
   .page {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding: 18px 9px 40px;
   }
 
   .profileCard {
-    padding: 28px 16px 22px;
+    padding: 24px 14px 20px;
 
-    border-radius: 21px;
+    border-radius: 22px;
   }
 
   .avatar {
     width: 110px;
     height: 110px;
+
+    border-width: 4px;
+  }
+
+  .nameRow {
+    gap: 6px;
   }
 
   .nameRow h1 {
-    font-size: 24px;
+    max-width: calc(100% - 31px);
+
+    font-size: 25px;
+  }
+
+  .verify {
+    width: 19px;
+    height: 19px;
+  }
+
+  .badge {
+    padding: 6px 10px;
+
+    font-size: 10px;
   }
 
   .company {
     font-size: 12px;
   }
 
+  .company svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .description {
     font-size: 12px;
   }
 
+  .edit {
+    top: 11px;
+    right: 11px;
+
+    width: 39px;
+    height: 39px;
+
+    border-radius: 11px;
+  }
+
+  .contactCard {
+    min-height: 60px;
+
+    gap: 10px;
+
+    padding: 11px 12px;
+  }
+
   .contactCard strong {
-    font-size: 12px;
+    font-size: 11.5px;
+  }
+
+  .contactCard small {
+    font-size: 8.5px;
+  }
+
+  .whatsapp {
+    min-height: 46px;
+
+    font-size: 11.5px;
+  }
+
+  .stats {
+    gap: 7px;
   }
 
   .stats > div {
-    padding: 16px;
+    min-height: 82px;
+
+    padding: 14px 12px;
+
+    border-radius: 17px;
   }
 
   .stats strong {
     font-size: 21px;
   }
 
+  .stats span {
+    font-size: 9.5px;
+  }
+
+  .menu {
+    gap: 7px;
+  }
+
   .menu a,
   .menu button {
-    min-height: 82px;
+    min-height: 52px;
+
+    gap: 6px;
+
+    padding: 0 6px;
+
+    font-size: 10px;
+  }
+
+  .menu a svg,
+  .menu button svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 14px 6px 36px;
+
+    gap: 11px;
+  }
+
+  .profileCard {
+    padding: 21px 11px 17px;
+
+    border-radius: 19px;
+  }
+
+  .avatar {
+    width: 98px;
+    height: 98px;
+  }
+
+  .nameRow h1 {
+    max-width: calc(100% - 28px);
+
+    font-size: 22px;
+
+    letter-spacing: -0.35px;
+  }
+
+  .verify {
+    width: 18px;
+    height: 18px;
+  }
+
+  .badge {
+    padding: 5px 8px;
+
+    font-size: 9px;
+  }
+
+  .company {
+    gap: 6px;
+
+    font-size: 11px;
+  }
+
+  .company svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .description {
+    font-size: 11px;
+
+    line-height: 1.55;
+  }
+
+  .edit {
+    top: 9px;
+    right: 9px;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+  }
+
+  .edit svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .contacts {
+    gap: 6px;
+
+    margin-top: 18px;
+  }
+
+  .contactCard {
+    min-height: 56px;
+
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+  .contactCard > svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .contactCard small {
+    font-size: 8px;
+
+    letter-spacing: 0.45px;
+  }
+
+  .contactCard strong {
+    font-size: 10.5px;
+  }
+
+  .whatsapp {
+    min-height: 43px;
+
+    margin-top: 8px;
+
+    gap: 7px;
+
+    font-size: 10.5px;
+  }
+
+  .whatsapp svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .stats {
+    gap: 6px;
+  }
+
+  .stats > div {
+    min-height: 76px;
+
+    padding: 12px 10px;
+
+    border-radius: 15px;
+  }
+
+  .stats strong {
+    font-size: 20px;
+  }
+
+  .stats span {
+    margin-top: 5px;
+
+    font-size: 9px;
+  }
+
+  .menu {
+    gap: 6px;
+  }
+
+  .menu a,
+  .menu button {
+    min-height: 48px;
+
+    padding: 0 5px;
+
+    font-size: 9.5px;
+
+    border-radius: 11px;
+  }
+
+  .menu a svg,
+  .menu button svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+/* =========================================================
+   320PX SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .profileCard {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .avatar {
+    width: 88px;
+    height: 88px;
+  }
+
+  .nameRow {
+    gap: 5px;
+  }
+
+  .nameRow h1 {
+    max-width: calc(100% - 26px);
+
+    font-size: 20px;
+  }
+
+  .verify {
+    width: 17px;
+    height: 17px;
+  }
+
+  .badge {
+    max-width: calc(100% - 30px);
+
+    font-size: 8.5px;
+  }
+
+  .company {
+    font-size: 10px;
+  }
+
+  .description {
+    font-size: 10.5px;
+  }
+
+  .edit {
+    top: 8px;
+    right: 8px;
+
+    width: 34px;
+    height: 34px;
+  }
+
+  .contacts {
+    margin-top: 16px;
+  }
+
+  .contactCard {
+    min-height: 53px;
+
+    padding: 9px;
+  }
+
+  .contactCard > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .contactCard small {
+    font-size: 7.5px;
+  }
+
+  .contactCard strong {
+    font-size: 10px;
+
+    line-height: 1.3;
+  }
+
+  .whatsapp {
+    min-height: 41px;
+
+    font-size: 10px;
+  }
+
+  .stats > div {
+    min-height: 72px;
+
+    padding: 11px 9px;
+  }
+
+  .stats strong {
+    font-size: 19px;
+  }
+
+  .stats span {
+    font-size: 8.5px;
+  }
+
+  .menu {
+    gap: 5px;
+  }
+
+  .menu a,
+  .menu button {
+    min-height: 45px;
+
+    padding: 0 4px;
+
+    font-size: 9px;
+  }
+
+  .menu a svg,
+  .menu button svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .edit:hover,
+  .contactCard:hover,
+  .whatsapp:hover,
+  .stats > div:hover,
+  .menu a:hover,
+  .menu button:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .edit,
+  .contactCard,
+  .whatsapp,
+  .stats > div,
+  .menu a,
+  .menu button {
+    transition: none;
   }
 }

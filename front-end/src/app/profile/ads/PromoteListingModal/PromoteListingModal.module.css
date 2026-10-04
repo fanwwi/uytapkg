@@ -1,322 +1,1344 @@
+/* =========================================================
+   OVERLAY
+========================================================= */
+
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: 1000;
+
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+
+  padding: 24px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 25px;
+  overflow-x: hidden;
+  overflow-y: auto;
 
-  background: rgba(15, 23, 42, 0.38);
+  background: rgba(15, 23, 42, 0.52);
 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  animation: overlayIn 0.2s ease;
 }
 
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
 .modal {
-  width: min(640px, 100%);
-  max-height: calc(100vh - 50px);
+  width: min(760px, 100%);
+  margin: 20px;
+
+
+  min-width: 0;
+  max-height: calc(100dvh - 48px);
 
   display: flex;
   flex-direction: column;
 
   overflow: hidden;
 
-  border: 1px solid #e7e9f2;
-  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 26px;
 
   background: #ffffff;
-  color: #111827;
 
   box-shadow:
-    0 30px 80px rgba(15, 23, 42, 0.18),
-    0 8px 30px rgba(15, 23, 42, 0.08);
+    0 30px 80px rgba(15, 23, 42, 0.2),
+    0 8px 30px rgba(72, 61, 246, 0.07);
+
+  animation: modalIn 0.25s ease;
 }
 
-/* HEADER */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
 
-  padding: 24px 24px 18px;
+  gap: 20px;
 
-  border-bottom: 1px solid #eef0f6;
+  padding: 28px 30px 22px;
+
+  border-bottom: 1px solid #eef0f4;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(72, 61, 246, 0.07), transparent 40%),
+    #ffffff;
 }
 
-.header span {
+.header > div:first-child {
+  min-width: 0;
+}
+
+.header > div:first-child > span {
+  display: block;
+
+  margin-bottom: 7px;
+
   color: #483df6;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
+
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.2;
+
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
 }
 
 .header h2 {
-  margin: 6px 0 0;
-  font-size: 20px;
-  font-weight: 850;
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1.15;
+
+  letter-spacing: -0.7px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
-  margin: 4px 0 0;
-  color: #6b7280;
-  font-size: 13px;
+  max-width: 560px;
 
-  max-width: 420px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin: 8px 0 0;
+
+  color: #717887;
+
+  font-size: 12px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .close {
-  flex-shrink: 0;
-
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: none;
-  border-radius: 10px;
+  padding: 0;
 
-  background: #f3f4f8;
-  color: #6b7280;
+  border: 1px solid #e6e8ee;
+  border-radius: 11px;
+
+  background: #f8f9fb;
+
+  color: #707582;
 
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .close:hover {
-  background: #e9ebf3;
+  background: #f1efff;
+  border-color: rgba(72, 61, 246, 0.2);
+  color: #483df6;
+
+  transform: rotate(3deg);
 }
 
 .close svg {
-  width: 17px;
-  height: 17px;
+  width: 19px;
+  height: 19px;
 }
 
-/* BODY */
+/* =========================================================
+   BODY
+========================================================= */
 
 .body {
-  padding: 20px 24px;
+  min-width: 0;
+
+  padding: 24px 30px;
+
   overflow-y: auto;
+  overflow-x: hidden;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cfd3df transparent;
 }
+
+.body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.body::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #cfd3df;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
 
 .error {
+  min-width: 0;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+
   gap: 8px;
 
-  margin-bottom: 14px;
-  padding: 10px 12px;
+  margin-bottom: 16px;
+  padding: 11px 13px;
 
-  border-radius: 10px;
-  background: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.14);
+  border-radius: 11px;
 
-  font-size: 13px;
+  background: rgba(254, 242, 242, 0.92);
+
+  color: #b91c1c;
+
+  font-size: 11px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
+.error svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
 .serviceGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 11px;
 }
 
 .serviceCard {
-  display: flex;
+  position: relative;
+
+  min-width: 0;
+  min-height: 115px;
+
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
 
-  padding: 14px;
+  gap: 11px;
 
-  border: 1.5px solid #e7e9f2;
-  border-radius: 14px;
+  padding: 15px;
+
+  border: 1px solid #e5e7ed;
+  border-radius: 16px;
 
   background: #ffffff;
 
   text-align: left;
+
   cursor: pointer;
 
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .serviceCard:hover {
-  border-color: rgba(72, 61, 246, 0.35);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  background: #fbfaff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.08);
 }
 
 .serviceSelected {
   border-color: #483df6;
-  background: rgba(72, 61, 246, 0.05);
+
+  background: linear-gradient(
+    135deg,
+    rgba(72, 61, 246, 0.07),
+    rgba(72, 61, 246, 0.02)
+  );
+
+  box-shadow:
+    0 0 0 2px rgba(72, 61, 246, 0.07),
+    0 10px 25px rgba(72, 61, 246, 0.08);
 }
 
 .serviceIcon {
-  flex-shrink: 0;
-
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 10px;
-  background: rgba(72, 61, 246, 0.08);
+  border: 1px solid rgba(72, 61, 246, 0.13);
+  border-radius: 12px;
+
+  background: rgba(72, 61, 246, 0.07);
   color: #483df6;
 }
 
+.serviceSelected .serviceIcon {
+  background: #483df6;
+  border-color: #483df6;
+  color: #ffffff;
+}
+
 .serviceInfo {
-  flex: 1;
   min-width: 0;
 
   display: flex;
   flex-direction: column;
-  gap: 2px;
+
+  gap: 5px;
 }
 
 .serviceInfo strong {
-  font-size: 14px;
-  font-weight: 800;
+  min-width: 0;
+
+  color: #171923;
+
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
 .serviceInfo span {
-  color: #6b7280;
-  font-size: 12px;
-  line-height: 1.35;
+  min-width: 0;
+
+  color: #7b808d;
+
+  font-size: 10px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .servicePrice {
-  flex-shrink: 0;
+  min-width: 0;
+  max-width: 105px;
 
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 
-  font-size: 13px;
-  font-weight: 800;
-  color: #111827;
+  color: #483df6;
 
-  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.25;
+
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .servicePrice small {
-  color: #9ca3af;
-  font-size: 10px;
-  font-weight: 600;
+  margin-top: 3px;
+
+  color: #969aa7;
+
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  white-space: normal;
 }
 
-/* DAYS */
+/* =========================================================
+   DAYS
+========================================================= */
 
 .daysSection {
-  margin-top: 16px;
+  min-width: 0;
+
+  margin-top: 22px;
 }
 
 .daysLabel {
   display: block;
-  margin-bottom: 8px;
 
-  color: #6b7280;
-  font-size: 12px;
-  font-weight: 700;
+  margin-bottom: 10px;
+
+  color: #525866;
+
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .daysGrid {
-  display: flex;
-  flex-wrap: wrap;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
   gap: 8px;
 }
 
 .dayOption {
-  padding: 8px 14px;
+  min-width: 0;
+  min-height: 43px;
 
-  border: 1.5px solid #e7e9f2;
-  border-radius: 10px;
+  padding: 0 8px;
 
-  background: #ffffff;
-  color: #374151;
+  border: 1px solid #e2e5eb;
+  border-radius: 11px;
 
-  font-size: 13px;
-  font-weight: 700;
+  background: #f8f9fb;
+
+  color: #6e7481;
+
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+
+  white-space: nowrap;
 
   cursor: pointer;
 
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .dayOption:hover {
-  border-color: rgba(72, 61, 246, 0.35);
+  border-color: rgba(72, 61, 246, 0.25);
+
+  background: #f2f0ff;
+
+  color: #483df6;
+
+  transform: translateY(-1px);
 }
 
 .dayOptionSelected {
   border-color: #483df6;
+
   background: #483df6;
+
   color: #ffffff;
+
+  box-shadow: 0 7px 18px rgba(72, 61, 246, 0.16);
 }
 
-/* FOOTER */
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .footer {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
 
-  padding: 18px 24px;
+  gap: 20px;
 
-  border-top: 1px solid #eef0f6;
-  background: #fafbff;
+  padding: 18px 30px 24px;
+
+  border-top: 1px solid #eef0f4;
+
+  background: #ffffff;
 }
 
 .total {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 2px;
+
+  gap: 4px;
 }
 
 .total span {
-  color: #6b7280;
-  font-size: 11px;
-  font-weight: 700;
+  color: #8a8f9c;
+
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.2;
+
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .total strong {
-  font-size: 19px;
-  font-weight: 900;
+  min-width: 0;
+
+  color: #171923;
+
+  font-size: 23px;
+  font-weight: 950;
+  line-height: 1.15;
+
+  overflow-wrap: anywhere;
 }
 
 .submit {
-  display: flex;
+  min-width: 210px;
+  min-height: 50px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 
-  padding: 12px 20px;
+  gap: 9px;
 
-  border: none;
-  border-radius: 12px;
+  border: 1px solid #483df6;
+  border-radius: 13px;
 
   background: #483df6;
   color: #ffffff;
 
-  font-size: 14px;
-  font-weight: 800;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
 
   cursor: pointer;
 
-  transition: background 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.2);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .submit:hover:not(:disabled) {
-  background: #3d32dc;
-  transform: translateY(-1px);
+  background: #3930d8;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 14px 30px rgba(72, 61, 246, 0.27);
 }
 
 .submit:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
+}
+
+.submit svg {
+  flex: 0 0 auto;
+
+  transition: transform 0.2s ease;
+}
+
+.submit:hover:not(:disabled) svg {
+  transform: translateX(3px);
+}
+
+/* =========================================================
+   SMALL DESKTOP
+========================================================= */
+
+@media (max-width: 760px) {
+  .overlay {
+    padding: 18px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 36px);
+    border-radius: 22px;
+  }
+
+  .header {
+    padding: 23px 22px 18px;
+  }
+
+  .header h2 {
+    font-size: 24px;
+  }
+
+  .body {
+    padding: 20px 22px;
+  }
+
+  .footer {
+    padding: 16px 22px 20px;
+  }
+
+  .serviceCard {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .servicePrice {
+    grid-column: 2;
+    align-items: flex-start;
+
+    max-width: none;
+
+    margin-top: -2px;
+
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .overlay {
+    align-items: flex-start;
+
+    padding: 12px;
+  }
+
+  .modal {
+    width: 100%;
+
+    max-height: calc(100dvh - 24px);
+
+    border-radius: 18px;
+  }
+
+  .header {
+    padding: 18px 17px 15px;
+
+    gap: 12px;
+  }
+
+  .header > div:first-child > span {
+    margin-bottom: 5px;
+
+    font-size: 7.5px;
+    letter-spacing: 1.2px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+    line-height: 1.15;
+  }
+
+  .header p {
+    margin-top: 6px;
+
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .close {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+
+    border-radius: 9px;
+  }
+
+  .close svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .body {
+    padding: 16px 17px;
+  }
+
+  .error {
+    margin-bottom: 12px;
+    padding: 9px 10px;
+
+    border-radius: 9px;
+
+    font-size: 9px;
+  }
+
+  .serviceGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .serviceCard {
+    min-height: 86px;
+
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+
+    gap: 9px;
+
+    padding: 11px;
+
+    border-radius: 13px;
+  }
+
+  .serviceIcon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    border-radius: 10px;
+  }
+
+  .serviceIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .serviceInfo {
+    gap: 3px;
+  }
+
+  .serviceInfo strong {
+    font-size: 11px;
+  }
+
+  .serviceInfo span {
+    font-size: 8.8px;
+    line-height: 1.4;
+  }
+
+  .servicePrice {
+    grid-column: auto;
+
+    max-width: 80px;
+
+    margin-top: 0;
+
+    align-items: flex-end;
+
+    font-size: 10.5px;
+
+    text-align: right;
+  }
+
+  .servicePrice small {
+    font-size: 7px;
+  }
+
+  .daysSection {
+    margin-top: 16px;
+  }
+
+  .daysLabel {
+    margin-bottom: 8px;
+
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+
+  .daysGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .dayOption {
+    min-height: 37px;
+
+    padding: 0 4px;
+
+    border-radius: 8px;
+
+    font-size: 8.5px;
+  }
+
+  .footer {
+    padding: 13px 17px 16px;
+
+    gap: 12px;
+  }
+
+  .total {
+    gap: 3px;
+  }
+
+  .total span {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+
+  .total strong {
+    font-size: 18px;
+  }
+
+  .submit {
+    min-width: 145px;
+    min-height: 43px;
+
+    padding: 0 11px;
+
+    gap: 6px;
+
+    border-radius: 10px;
+
+    font-size: 9.5px;
+  }
+
+  .submit svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .overlay {
+    padding: 8px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 16px);
+    border-radius: 15px;
+  }
+
+  .header {
+    padding: 15px 13px 12px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+  }
+
+  .header p {
+    font-size: 9px;
+  }
+
+  .close {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+
+    border-radius: 8px;
+  }
+
+  .close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .body {
+    padding: 13px;
+  }
+
+  .serviceGrid {
+    gap: 6px;
+  }
+
+  .serviceCard {
+    min-height: 78px;
+
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+
+    gap: 7px;
+
+    padding: 9px;
+
+    border-radius: 11px;
+  }
+
+  .serviceIcon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 8px;
+  }
+
+  .serviceIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .serviceInfo strong {
+    font-size: 10px;
+  }
+
+  .serviceInfo span {
+    font-size: 8px;
+  }
+
+  .servicePrice {
+    max-width: 66px;
+
+    font-size: 9px;
+  }
+
+  .servicePrice small {
+    margin-top: 2px;
+    font-size: 6.5px;
+  }
+
+  .daysSection {
+    margin-top: 13px;
+  }
+
+  .daysLabel {
+    font-size: 7.5px;
+  }
+
+  .daysGrid {
+    gap: 4px;
+  }
+
+  .dayOption {
+    min-height: 34px;
+
+    padding: 0 2px;
+
+    border-radius: 7px;
+
+    font-size: 7.8px;
+  }
+
+  .footer {
+    padding: 11px 13px 13px;
+
+    gap: 8px;
+  }
+
+  .total span {
+    font-size: 6.5px;
+  }
+
+  .total strong {
+    font-size: 16px;
+  }
+
+  .submit {
+    min-width: 125px;
+    min-height: 39px;
+
+    padding: 0 8px;
+
+    border-radius: 8px;
+
+    font-size: 8.5px;
+  }
+
+  .submit svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* =========================================================
+   360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .overlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 10px);
+    border-radius: 13px;
+  }
+
+  .header {
+    padding: 12px 10px 10px;
+    gap: 8px;
+  }
+
+  .header > div:first-child > span {
+    font-size: 6.5px;
+    letter-spacing: 0.9px;
+  }
+
+  .header h2 {
+    font-size: 16px;
+  }
+
+  .header p {
+    margin-top: 4px;
+    font-size: 8px;
+  }
+
+  .close {
+    width: 29px;
+    height: 29px;
+    min-width: 29px;
+  }
+
+  .close svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .body {
+    padding: 10px;
+  }
+
+  .error {
+    padding: 7px 8px;
+    margin-bottom: 9px;
+
+    font-size: 7.5px;
+  }
+
+  .serviceCard {
+    min-height: 70px;
+
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+
+    gap: 6px;
+
+    padding: 7px;
+
+    border-radius: 9px;
+  }
+
+  .serviceIcon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+
+    border-radius: 7px;
+  }
+
+  .serviceIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .serviceInfo {
+    gap: 2px;
+  }
+
+  .serviceInfo strong {
+    font-size: 8.7px;
+  }
+
+  .serviceInfo span {
+    font-size: 7px;
+    line-height: 1.3;
+  }
+
+  .servicePrice {
+    max-width: 55px;
+
+    font-size: 7.8px;
+  }
+
+  .servicePrice small {
+    font-size: 5.8px;
+  }
+
+  .daysSection {
+    margin-top: 10px;
+  }
+
+  .daysLabel {
+    margin-bottom: 6px;
+    font-size: 6.8px;
+  }
+
+  .daysGrid {
+    gap: 3px;
+  }
+
+  .dayOption {
+    min-height: 30px;
+
+    border-radius: 6px;
+
+    font-size: 6.8px;
+  }
+
+  .footer {
+    padding: 9px 10px 10px;
+    gap: 6px;
+  }
+
+  .total {
+    gap: 2px;
+  }
+
+  .total span {
+    font-size: 5.8px;
+  }
+
+  .total strong {
+    font-size: 14px;
+  }
+
+  .submit {
+    min-width: 108px;
+    min-height: 35px;
+
+    padding: 0 6px;
+
+    gap: 4px;
+
+    border-radius: 7px;
+
+    font-size: 7px;
+  }
+
+  .submit svg {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE
+========================================================= */
+
+@media (max-width: 330px) {
+  .overlay {
+    padding: 3px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 6px);
+    border-radius: 11px;
+  }
+
+  .header {
+    padding: 10px 8px 8px;
+    gap: 6px;
+  }
+
+  .header > div:first-child > span {
+    margin-bottom: 3px;
+
+    font-size: 5.8px;
+    letter-spacing: 0.7px;
+  }
+
+  .header h2 {
+    font-size: 14px;
+    letter-spacing: -0.2px;
+  }
+
+  .header p {
+    margin-top: 3px;
+
+    font-size: 7px;
+    line-height: 1.3;
+  }
+
+  .close {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+
+    border-radius: 6px;
+  }
+
+  .close svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .body {
+    padding: 8px;
+  }
+
+  .error {
+    gap: 5px;
+
+    margin-bottom: 7px;
+    padding: 6px 7px;
+
+    border-radius: 6px;
+
+    font-size: 6.8px;
+  }
+
+  .error svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .serviceGrid {
+    gap: 5px;
+  }
+
+  .serviceCard {
+    min-height: 63px;
+
+    grid-template-columns: 27px minmax(0, 1fr) 48px;
+
+    gap: 5px;
+
+    padding: 6px;
+
+    border-radius: 8px;
+  }
+
+  .serviceIcon {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+
+    border-radius: 6px;
+  }
+
+  .serviceIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .serviceInfo {
+    gap: 1px;
+  }
+
+  .serviceInfo strong {
+    font-size: 8px;
+    line-height: 1.15;
+  }
+
+  .serviceInfo span {
+    font-size: 6.3px;
+    line-height: 1.25;
+  }
+
+  .servicePrice {
+    max-width: 48px;
+
+    font-size: 7px;
+    line-height: 1.15;
+  }
+
+  .servicePrice small {
+    margin-top: 1px;
+
+    font-size: 5.2px;
+    line-height: 1.15;
+  }
+
+  .daysSection {
+    margin-top: 8px;
+  }
+
+  .daysLabel {
+    margin-bottom: 5px;
+
+    font-size: 6.2px;
+    letter-spacing: 0.55px;
+  }
+
+  .daysGrid {
+    gap: 2px;
+  }
+
+  .dayOption {
+    min-height: 27px;
+
+    padding: 0 1px;
+
+    border-radius: 5px;
+
+    font-size: 6.2px;
+  }
+
+  .footer {
+    padding: 7px 8px 8px;
+    gap: 5px;
+  }
+
+  .total {
+    gap: 1px;
+  }
+
+  .total span {
+    font-size: 5.2px;
+    letter-spacing: 0.4px;
+  }
+
+  .total strong {
+    font-size: 12px;
+  }
+
+  .submit {
+    min-width: 96px;
+    min-height: 32px;
+
+    padding: 0 5px;
+
+    gap: 3px;
+
+    border-radius: 6px;
+
+    font-size: 6.5px;
+  }
+
+  .submit svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .serviceCard:hover,
+  .dayOption:hover,
+  .close:hover,
+  .submit:hover:not(:disabled) {
+    transform: none;
+  }
 }

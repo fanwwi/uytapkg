@@ -7,16 +7,22 @@
   inset: 0;
   z-index: 9998;
 
+  width: 100%;
+  height: 100dvh;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 25px;
+  padding: 24px;
 
-  background: rgba(15, 23, 42, 0.38);
+  overflow-x: hidden;
+  overflow-y: auto;
 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(15, 23, 42, 0.4);
+
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
 
   animation: overlayIn 0.2s ease;
 }
@@ -27,8 +33,11 @@
 
 .modal {
   width: min(760px, 100%);
-  max-height: calc(100vh - 50px);
+  min-width: 0;
+  max-height: calc(100dvh - 48px);
+  margin: 20px;
 
+  overflow-x: hidden;
   overflow-y: auto;
 
   padding: 32px;
@@ -57,7 +66,7 @@
 }
 
 .modal::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .modal::-webkit-scrollbar-track {
@@ -65,8 +74,8 @@
 }
 
 .modal::-webkit-scrollbar-thumb {
-  background: #d5d8e4;
   border-radius: 10px;
+  background: #d5d8e4;
 }
 
 /* =========================================================
@@ -74,15 +83,21 @@
 ========================================================= */
 
 .header {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 
   gap: 20px;
 
-  padding-bottom: 25px;
+  padding-bottom: 24px;
 
   border-bottom: 1px solid #eef0f5;
+}
+
+.header > div:first-child {
+  min-width: 0;
 }
 
 .label {
@@ -94,8 +109,12 @@
 
   font-size: 9px;
   font-weight: 900;
+  line-height: 1.2;
 
   letter-spacing: 1.8px;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
 }
 
 .header h2 {
@@ -104,18 +123,25 @@
   color: #111827;
 
   font-size: 26px;
+  font-weight: 900;
   line-height: 1.15;
 
   letter-spacing: -0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
+  max-width: 580px;
+
   margin: 8px 0 0;
 
   color: #7b8190;
 
   font-size: 13px;
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -125,12 +151,15 @@
 .close {
   width: 40px;
   height: 40px;
+  min-width: 40px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid #e5e7ee;
   border-radius: 11px;
@@ -164,92 +193,11 @@
 }
 
 /* =========================================================
-   IMAGE
+   FORM
 ========================================================= */
 
-.imageSection {
-  display: grid;
-  grid-template-columns: 210px 1fr;
-
-  gap: 22px;
-
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
-.imagePreview {
-  position: relative;
-
-  height: 145px;
-
-  overflow: hidden;
-
-  border-radius: 18px;
-
-  background: #f3f4f8;
-
-  border: 1px solid #e4e7ef;
-}
-
-.imagePreview img {
-  object-fit: cover;
-}
-
-.imageOverlay {
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(180deg, transparent 45%, rgba(15, 23, 42, 0.12));
-
-  pointer-events: none;
-}
-
-.imagePlaceholder {
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 8px;
-
-  color: #9aa0ad;
-
-  font-size: 11px;
-}
-
-.imageInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.fieldLabel {
-  color: #483df6;
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: 1.5px;
-}
-
-.imageInfo h3 {
-  margin: 5px 0;
-
-  color: #1f2937;
-
-  font-size: 17px;
-}
-
-.imageInfo p {
-  margin: 0 0 13px;
-
-  color: #7b8190;
-
-  font-size: 12px;
-  line-height: 1.5;
+.modal form {
+  min-width: 0;
 }
 
 /* =========================================================
@@ -257,18 +205,20 @@
 ========================================================= */
 
 .section {
-  margin-top: 18px;
+  min-width: 0;
 
+  margin-top: 18px;
   padding: 22px;
 
+  border: 1px solid #e8eaf1;
   border-radius: 19px;
 
   background: #f8f9fc;
-
-  border: 1px solid #e8eaf1;
 }
 
 .sectionTitle {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -280,20 +230,24 @@
 .sectionIcon {
   width: 39px;
   height: 39px;
+  min-width: 39px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 11px;
 
   background: rgba(72, 61, 246, 0.08);
 
-  border: 1px solid rgba(72, 61, 246, 0.14);
-
   color: #483df6;
+}
+
+.sectionTitle > div:last-child {
+  min-width: 0;
 }
 
 .sectionTitle span {
@@ -303,8 +257,12 @@
 
   font-size: 8px;
   font-weight: 900;
+  line-height: 1.2;
 
   letter-spacing: 1.4px;
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionTitle h3 {
@@ -314,6 +272,9 @@
 
   font-size: 16px;
   font-weight: 800;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -321,9 +282,11 @@
 ========================================================= */
 
 .fields {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 14px;
 }
@@ -342,10 +305,15 @@
 }
 
 .field label {
+  min-width: 0;
+
   color: #596170;
 
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -353,6 +321,8 @@
 ========================================================= */
 
 .inputWrapper {
+  width: 100%;
+  min-width: 0;
   min-height: 46px;
 
   display: flex;
@@ -388,7 +358,11 @@
 }
 
 .inputWrapper svg {
-  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+
+  flex: 0 0 auto;
 
   color: #969daa;
 
@@ -399,10 +373,12 @@
   color: #483df6;
 }
 
-.inputWrapper input,
-.inputWrapper select {
+.inputWrapper input {
   width: 100%;
   min-width: 0;
+  height: 44px;
+
+  padding: 0;
 
   border: none;
   outline: none;
@@ -411,8 +387,12 @@
 
   color: #1f2937;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 13px;
+  line-height: 1.3;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .inputWrapper input::placeholder {
@@ -420,11 +400,20 @@
 }
 
 /* =========================================================
-   SELECT
+   CUSTOM SELECT CONTAINER
+========================================================= */
+
+.field > :global(*) {
+  min-width: 0;
+}
+
+/* =========================================================
+   NATIVE SELECT FALLBACK
 ========================================================= */
 
 .field select {
   width: 100%;
+  min-width: 0;
   height: 46px;
 
   padding: 0 13px;
@@ -438,7 +427,7 @@
 
   color: #1f2937;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 13px;
 
   cursor: pointer;
@@ -469,6 +458,7 @@
 
 .field textarea {
   width: 100%;
+  min-width: 0;
 
   min-height: 125px;
 
@@ -485,9 +475,11 @@
 
   color: #1f2937;
 
-  font-family: inherit;
+  font: inherit;
   font-size: 13px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 
   transition:
     border-color 0.2s ease,
@@ -515,9 +507,11 @@
 ========================================================= */
 
 .actions {
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 
@@ -526,20 +520,23 @@
 
 .cancel,
 .save {
-  height: 50px;
+  min-width: 0;
+  min-height: 50px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 8px;
 
+  padding: 0 14px;
+
   border-radius: 13px;
 
-  font-family: inherit;
-
+  font: inherit;
   font-size: 13px;
   font-weight: 900;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -547,7 +544,8 @@
     transform 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 /* =========================================================
@@ -568,6 +566,8 @@
   background: #f7f8fb;
 
   border-color: #cfd3df;
+
+  transform: translateY(-1px);
 }
 
 /* =========================================================
@@ -601,7 +601,6 @@
 .cancel:disabled,
 .save:disabled {
   opacity: 0.5;
-
   cursor: not-allowed;
 }
 
@@ -610,6 +609,8 @@
 ========================================================= */
 
 .loader {
+  flex: 0 0 auto;
+
   animation: spin 0.8s linear infinite;
 }
 
@@ -630,7 +631,7 @@
 @keyframes modalIn {
   from {
     opacity: 0;
-    transform: translateY(15px) scale(0.97);
+    transform: translateY(14px) scale(0.975);
   }
 
   to {
@@ -646,47 +647,577 @@
 }
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
   .overlay {
-    padding: 12px;
+    padding: 16px;
   }
 
   .modal {
-    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 32px);
 
-    padding: 22px 18px;
+    padding: 24px 20px;
 
-    border-radius: 21px;
+    border-radius: 22px;
+  }
+
+  .header {
+    gap: 14px;
+    padding-bottom: 20px;
   }
 
   .header h2 {
-    font-size: 22px;
+    font-size: 23px;
   }
 
-  .imageSection {
-    grid-template-columns: 1fr;
+  .header p {
+    font-size: 12px;
   }
 
-  .imagePreview {
-    height: 190px;
+  .section {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .fields {
+    gap: 11px;
+  }
+
+  .field label {
+    font-size: 10px;
+  }
+
+  .inputWrapper,
+  .field select {
+    min-height: 44px;
+    height: 44px;
+
+    border-radius: 10px;
+  }
+
+  .inputWrapper input {
+    height: 42px;
+    font-size: 12px;
+  }
+
+  .field textarea {
+    min-height: 115px;
+
+    padding: 11px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+  }
+
+  .actions {
+    margin-top: 20px;
+  }
+
+  .cancel,
+  .save {
+    min-height: 47px;
+    border-radius: 11px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .overlay {
+    align-items: flex-start;
+
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 20px);
+
+    padding: 19px 15px;
+
+    border-radius: 18px;
+  }
+
+  .header {
+    padding-bottom: 16px;
+  }
+
+  .label {
+    margin-bottom: 6px;
+
+    font-size: 7.5px;
+    letter-spacing: 1.2px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .header p {
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  .close {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    border-radius: 9px;
+  }
+
+  .close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .section {
+    margin-top: 13px;
+    padding: 14px;
+
+    border-radius: 13px;
+  }
+
+  .sectionTitle {
+    gap: 8px;
+    margin-bottom: 13px;
+  }
+
+  .sectionIcon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+
+    border-radius: 9px;
+  }
+
+  .sectionIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sectionTitle span {
+    font-size: 6.5px;
+    letter-spacing: 1px;
+  }
+
+  .sectionTitle h3 {
+    font-size: 14px;
   }
 
   .fields {
     grid-template-columns: 1fr;
+
+    gap: 10px;
   }
 
   .full {
     grid-column: auto;
   }
 
+  .field {
+    gap: 5px;
+  }
+
+  .field label {
+    font-size: 9px;
+  }
+
+  .inputWrapper,
+  .field select {
+    min-height: 42px;
+    height: 42px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    gap: 7px;
+
+    border-radius: 9px;
+  }
+
+  .inputWrapper svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+
+  .inputWrapper input {
+    height: 40px;
+
+    font-size: 11px;
+  }
+
+  .field textarea {
+    min-height: 105px;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
   .actions {
     grid-template-columns: 1fr;
+
+    gap: 7px;
+
+    margin-top: 17px;
   }
 
   .save {
     order: -1;
+  }
+
+  .cancel,
+  .save {
+    min-height: 43px;
+
+    border-radius: 9px;
+
+    font-size: 10.5px;
+  }
+
+  .cancel svg,
+  .save svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .overlay {
+    padding: 7px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 14px);
+
+    padding: 15px 11px;
+
+    border-radius: 15px;
+  }
+
+  .header {
+    gap: 8px;
+    padding-bottom: 13px;
+  }
+
+  .label {
+    margin-bottom: 4px;
+
+    font-size: 6.5px;
+    letter-spacing: 0.9px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+    letter-spacing: -0.4px;
+  }
+
+  .header p {
+    margin-top: 4px;
+
+    font-size: 8.5px;
+    line-height: 1.4;
+  }
+
+  .close {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+
+    border-radius: 8px;
+  }
+
+  .close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .section {
+    margin-top: 10px;
+    padding: 11px;
+
+    border-radius: 11px;
+  }
+
+  .sectionTitle {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .sectionIcon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+
+    border-radius: 7px;
+  }
+
+  .sectionIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sectionTitle span {
+    font-size: 5.8px;
+    letter-spacing: 0.7px;
+  }
+
+  .sectionTitle h3 {
+    font-size: 12.5px;
+  }
+
+  .fields {
+    gap: 8px;
+  }
+
+  .field {
+    gap: 4px;
+  }
+
+  .field label {
+    font-size: 8px;
+  }
+
+  .inputWrapper,
+  .field select {
+    min-height: 39px;
+    height: 39px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    gap: 6px;
+
+    border-radius: 8px;
+  }
+
+  .inputWrapper svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .inputWrapper input {
+    height: 37px;
+
+    font-size: 10px;
+  }
+
+  .field textarea {
+    min-height: 95px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+
+  .actions {
+    gap: 5px;
+    margin-top: 13px;
+  }
+
+  .cancel,
+  .save {
+    min-height: 39px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+  }
+
+  .cancel svg,
+  .save svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE
+========================================================= */
+
+@media (max-width: 330px) {
+  .overlay {
+    padding: 4px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 8px);
+
+    padding: 11px 8px;
+
+    border-radius: 12px;
+  }
+
+  .header {
+    gap: 6px;
+    padding-bottom: 9px;
+  }
+
+  .label {
+    margin-bottom: 3px;
+
+    font-size: 5.8px;
+    letter-spacing: 0.65px;
+  }
+
+  .header h2 {
+    font-size: 15px;
+    line-height: 1.12;
+  }
+
+  .header p {
+    margin-top: 3px;
+
+    font-size: 7px;
+    line-height: 1.3;
+  }
+
+  .close {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+
+    border-radius: 6px;
+  }
+
+  .close svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .section {
+    margin-top: 7px;
+    padding: 8px;
+
+    border-radius: 8px;
+  }
+
+  .sectionTitle {
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+
+  .sectionIcon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+
+    border-radius: 6px;
+  }
+
+  .sectionIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sectionTitle span {
+    font-size: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  .sectionTitle h3 {
+    margin-top: 2px;
+
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .fields {
+    gap: 6px;
+  }
+
+  .field {
+    gap: 3px;
+  }
+
+  .field label {
+    font-size: 7px;
+  }
+
+  .inputWrapper,
+  .field select {
+    min-height: 36px;
+    height: 36px;
+
+    padding-left: 6px;
+    padding-right: 6px;
+
+    gap: 5px;
+
+    border-radius: 6px;
+  }
+
+  .inputWrapper svg {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+  }
+
+  .inputWrapper input {
+    height: 34px;
+
+    font-size: 8.5px;
+  }
+
+  .field textarea {
+    min-height: 82px;
+
+    padding: 7px;
+
+    border-radius: 6px;
+
+    font-size: 8.5px;
+    line-height: 1.4;
+  }
+
+  .actions {
+    gap: 4px;
+    margin-top: 9px;
+  }
+
+  .cancel,
+  .save {
+    min-height: 34px;
+
+    border-radius: 6px;
+
+    font-size: 7.8px;
+  }
+
+  .cancel svg,
+  .save svg {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .close:hover:not(:disabled),
+  .cancel:hover:not(:disabled),
+  .save:hover:not(:disabled) {
+    transform: none;
   }
 }

@@ -3,82 +3,116 @@
 ========================================================= */
 
 .page {
+  width: 100%;
   min-height: 100vh;
-  padding: 110px 20px 80px;
+  max-width: 100%;
+
+  padding: 34px 45px 90px;
+
+  box-sizing: border-box;
+
+  color: #111118;
 
   background:
-    radial-gradient(circle at 85% 5%, rgba(72, 61, 246, 0.09), transparent 30%),
-    radial-gradient(circle at 5% 50%, rgba(72, 61, 246, 0.05), transparent 32%),
-    linear-gradient(180deg, #f8f9fc 0%, #f4f5f9 45%, #f8f9fc 100%);
+    radial-gradient(circle at 7% 0%, rgba(72, 61, 246, 0.085), transparent 28%),
+    radial-gradient(
+      circle at 93% 18%,
+      rgba(72, 61, 246, 0.055),
+      transparent 30%
+    ),
+    #f7f7fb;
 
-  color: #171923;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  overflow-x: clip;
 }
 
+.page > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
 .topBar {
-  width: 100%;
-  max-width: 1050px;
+  width: min(1180px, 100%);
+
+  margin: 0 auto 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  min-width: 0;
 }
 
 .homeButton {
+  min-width: 0;
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
-  gap: 10px;
 
-  padding: 13px 19px;
+  gap: 8px;
 
-  background: rgba(255, 255, 255, 0.9);
+  color: #777784;
 
-  border: 1px solid #e4e6ef;
-  border-radius: 15px;
-
-  color: #626776;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
 
   text-decoration: none;
 
-  font-size: 14px;
-  font-weight: 700;
-
-  box-shadow:
-    0 5px 20px rgba(25, 30, 50, 0.05),
-    0 1px 3px rgba(25, 30, 50, 0.04);
-
   transition:
-    color 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease,
-    transform 0.25s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .homeButton svg {
   width: 18px;
-  color: #483df6;
+  height: 18px;
+
+  flex-shrink: 0;
 }
 
 .homeButton:hover {
   color: #483df6;
-  background: #fff;
-  border-color: rgba(72, 61, 246, 0.25);
-  transform: translateX(-4px);
+  transform: translateX(-3px);
 }
 
-.stateMessage {
-  width: 100%;
-  max-width: 1050px;
+/* =========================================================
+   STATE
+========================================================= */
 
-  padding: 40px;
+.stateMessage {
+  width: min(1180px, 100%);
+  min-height: 280px;
+
+  margin: 0 auto;
+
+  padding: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e7e7ef;
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  color: #777784;
+
+  font-size: 14px;
+  line-height: 1.6;
 
   text-align: center;
 
-  color: #626776;
+  overflow-wrap: anywhere;
 
-  background: #fff;
-  border: 1px solid #e5e7ef;
-  border-radius: 25px;
+  box-shadow: 0 15px 45px rgba(24, 24, 40, 0.05);
 }
 
 /* =========================================================
@@ -86,157 +120,258 @@
 ========================================================= */
 
 .statusCard {
-  width: 100%;
-  max-width: 1050px;
-
   position: relative;
+
+  width: min(1180px, 100%);
+
+  margin: 0 auto;
+
+  min-width: 0;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
   overflow: hidden;
 
-  padding: 36px 40px;
+  border-radius: 24px;
+
+  border: 1px solid rgba(72, 61, 246, 0.14);
 
   background:
-    radial-gradient(circle at 90% 0%, rgba(72, 61, 246, 0.055), transparent 32%),
-    linear-gradient(145deg, #ffffff 0%, #fbfbfd 100%);
-
-  border: 1px solid #e6e8f0;
-  border-radius: 32px;
+    radial-gradient(circle at 0% 0%, rgba(72, 61, 246, 0.13), transparent 35%),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(72, 61, 246, 0.065),
+      transparent 35%
+    ),
+    #ffffff;
 
   box-shadow:
-    0 25px 70px rgba(30, 35, 55, 0.09),
-    0 5px 20px rgba(30, 35, 55, 0.035),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 20px 60px rgba(24, 24, 40, 0.07),
+    0 0 50px rgba(72, 61, 246, 0.045);
 }
 
 .topGlow {
   position: absolute;
 
-  width: 360px;
-  height: 360px;
+  top: -130px;
+  right: -120px;
 
-  right: -160px;
-  top: -170px;
+  width: 280px;
+  height: 280px;
 
-  background: #483df6;
-  opacity: 0.07;
-  filter: blur(115px);
+  border-radius: 50%;
+
+  background: rgba(72, 61, 246, 0.09);
+
+  filter: blur(70px);
 
   pointer-events: none;
 }
+
+/* =========================================================
+   STATUS HEADER
+========================================================= */
 
 .statusHeader {
   position: relative;
   z-index: 1;
 
-  display: flex;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns: auto minmax(0, 1fr) auto;
+
   align-items: center;
-  gap: 24px;
+
+  gap: 20px;
 }
 
 .statusIcon {
+  width: 58px;
+  height: 58px;
+
   flex-shrink: 0;
-
-  width: 64px;
-  height: 64px;
-
-  border-radius: 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(135deg, #7b73ff 0%, #483df6 55%, #3028b8 100%);
-  color: #fff;
+  box-sizing: border-box;
 
-  box-shadow: 0 15px 40px rgba(72, 61, 246, 0.25);
+  border-radius: 17px;
+
+  color: #483df6;
+
+  background: rgba(72, 61, 246, 0.08);
+
+  border: 1px solid rgba(72, 61, 246, 0.13);
+
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.1);
 }
 
 .statusIcon svg {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
 }
 
+/* =========================================================
+   STATUS INFO
+========================================================= */
+
 .statusInfo {
-  flex: 1;
   min-width: 0;
+  max-width: 100%;
 }
 
 .statusBadge {
+  max-width: 100%;
+
   display: inline-flex;
+  align-items: center;
 
-  padding: 6px 13px;
+  min-height: 28px;
 
-  border-radius: 999px;
+  padding: 6px 10px;
 
-  font-size: 11px;
-  font-weight: 800;
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  line-height: 1.2;
+
+  letter-spacing: 1px;
+
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+
+  overflow-wrap: anywhere;
 }
 
 .badgeActive {
-  background: rgba(21, 148, 71, 0.1);
-  border: 1px solid rgba(21, 148, 71, 0.22);
-  color: #159447;
+  color: #483df6;
+
+  background: rgba(72, 61, 246, 0.08);
+
+  border: 1px solid rgba(72, 61, 246, 0.15);
 }
 
 .badgeInactive {
-  background: rgba(255, 70, 90, 0.08);
-  border: 1px solid rgba(255, 70, 90, 0.2);
-  color: #ef4f68;
+  color: #777784;
+
+  background: #f4f4f7;
+
+  border: 1px solid #e5e5eb;
 }
 
 .statusInfo h1 {
-  margin: 10px 0 0;
+  max-width: 100%;
 
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: -0.5px;
-  color: #171923;
+  margin: 9px 0 0;
+
+  color: #111118;
+
+  font-size: clamp(30px, 3vw, 42px);
+  line-height: 1.05;
+
+  font-weight: 850;
+
+  letter-spacing: -1.5px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .period {
+  max-width: 760px;
+
+  margin: 10px 0 0;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+
   gap: 7px;
 
-  margin: 8px 0 0;
+  color: #777784;
 
-  color: #737887;
-  font-size: 13.5px;
+  font-size: 12px;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 .period svg {
-  color: #483df6;
   flex-shrink: 0;
+
+  margin-top: 2px;
+
+  color: #483df6;
 }
 
+/* =========================================================
+   UPGRADE
+========================================================= */
+
 .upgradeButton {
-  flex-shrink: 0;
+  min-width: 0;
+  min-height: 48px;
+
+  padding: 0 18px;
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
 
-  padding: 13px 20px;
+  box-sizing: border-box;
 
-  border-radius: 15px;
+  border-radius: 12px;
 
-  background: linear-gradient(135deg, #7b73ff, #483df6);
-  color: #fff;
+  border: 1px solid #483df6;
+
+  background: #483df6;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 850;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
 
   text-decoration: none;
 
-  font-size: 14px;
-  font-weight: 800;
+  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.2);
 
-  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.25);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
 
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+.upgradeButton svg {
+  flex-shrink: 0;
 }
 
 .upgradeButton:hover {
+  border-color: #3d32e5;
+
+  background: #3d32e5;
+
   transform: translateY(-2px);
-  box-shadow: 0 16px 38px rgba(72, 61, 246, 0.32);
+
+  box-shadow: 0 14px 32px rgba(72, 61, 246, 0.28);
+}
+
+.upgradeButton:active {
+  transform: translateY(0);
 }
 
 /* =========================================================
@@ -244,100 +379,183 @@
 ========================================================= */
 
 .statsGrid {
-  width: 100%;
-  max-width: 1050px;
+  width: min(1180px, 100%);
+
+  margin: 18px auto 0;
+
+  min-width: 0;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
 }
+
+/* =========================================================
+   STAT CARD
+========================================================= */
 
 .statCard {
-  padding: 24px;
+  min-width: 0;
 
-  background: linear-gradient(145deg, #ffffff, #fbfbfd);
-  border: 1px solid #e5e7ef;
-  border-radius: 23px;
+  padding: 22px;
 
-  box-shadow: 0 15px 40px rgba(30, 35, 55, 0.05);
+  box-sizing: border-box;
+
+  border: 1px solid #e7e7ef;
+  border-radius: 19px;
+
+  background: #ffffff;
+
+  box-shadow: 0 12px 35px rgba(24, 24, 40, 0.045);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+.statCard:hover {
+  border-color: rgba(72, 61, 246, 0.16);
+
+  background: #fdfdff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 17px 42px rgba(24, 24, 40, 0.07);
+}
+
+/* =========================================================
+   STAT HEADER
+========================================================= */
+
 .statHeader {
+  min-width: 0;
+
   display: flex;
   align-items: center;
-  gap: 10px;
 
-  color: #626776;
-  font-size: 13px;
-  font-weight: 700;
+  gap: 10px;
 }
 
 .statIcon {
   width: 38px;
   height: 38px;
 
-  flex-shrink: 0;
-
-  border-radius: 13px;
+  flex: 0 0 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(145deg, rgba(72, 61, 246, 0.11), rgba(72, 61, 246, 0.045));
-  border: 1px solid rgba(72, 61, 246, 0.13);
+  border-radius: 11px;
+
+  background: rgba(72, 61, 246, 0.07);
+
+  border: 1px solid rgba(72, 61, 246, 0.12);
+
   color: #483df6;
 }
 
+.statIcon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.statHeader > span {
+  min-width: 0;
+
+  color: #777784;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   STAT NUMBERS
+========================================================= */
+
 .statNumbers {
+  min-width: 0;
+
+  margin-top: 19px;
+
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  flex-wrap: wrap;
 
-  margin: 16px 0 12px;
+  gap: 7px;
 }
 
 .statNumbers strong {
-  font-size: 32px;
+  color: #17171e;
+
+  font-size: 30px;
+  line-height: 1;
+
   font-weight: 900;
-  color: #171923;
+
   letter-spacing: -1px;
 }
 
 .statNumbers span {
-  color: #858a98;
-  font-size: 13px;
-  font-weight: 600;
+  color: #858591;
+
+  font-size: 11px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
+
+/* =========================================================
+   PROGRESS
+========================================================= */
 
 .progressTrack {
   width: 100%;
-  height: 8px;
+  height: 7px;
+
+  margin-top: 17px;
+
+  overflow: hidden;
 
   border-radius: 999px;
 
-  background: #eef0f5;
-
-  overflow: hidden;
+  background: #ececf2;
 }
 
 .progressFill {
+  width: 0;
   height: 100%;
 
-  border-radius: 999px;
+  border-radius: inherit;
 
-  background: linear-gradient(90deg, #7b73ff, #483df6);
+  background: linear-gradient(90deg, #6b63f8 0%, #483df6 100%);
 
-  transition: width 0.3s ease;
+  transition: width 0.5s ease;
 }
+
+/* =========================================================
+   FOOTNOTE
+========================================================= */
 
 .statFootnote {
   display: block;
 
-  margin-top: 10px;
+  margin-top: 9px;
 
-  color: #a2a6b3;
-  font-size: 12px;
+  color: #9999a4;
+
+  font-size: 10px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -345,48 +563,703 @@
 ========================================================= */
 
 .helpNote {
-  width: 100%;
-  max-width: 1050px;
+  width: min(1180px, 100%);
 
-  padding: 20px 26px;
+  margin: 14px auto 0;
+
+  padding: 17px 20px;
+
+  box-sizing: border-box;
+
+  border-radius: 15px;
 
   background: rgba(72, 61, 246, 0.045);
-  border: 1px solid rgba(72, 61, 246, 0.12);
-  border-radius: 20px;
+
+  border: 1px solid rgba(72, 61, 246, 0.1);
 }
 
 .helpNote p {
   margin: 0;
 
-  color: #545a6b;
-  font-size: 13.5px;
+  color: #777784;
+
+  font-size: 11px;
   line-height: 1.7;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+  .page {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .topBar,
+  .statusCard,
+  .statsGrid,
+  .helpNote {
+    width: min(1280px, 100%);
+  }
+
+  .statusCard {
+    padding: 34px;
+  }
+
+  .statusHeader {
+    gap: 24px;
+  }
+
+  .statusIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .statusInfo h1 {
+    font-size: clamp(38px, 2.6vw, 48px);
+  }
+
+  .statCard {
+    padding: 25px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .page {
+    padding: 30px 28px 70px;
+  }
+
+  .statusHeader {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .upgradeButton {
+    grid-column: 2;
+    justify-self: start;
+
+    margin-top: 5px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .statCard:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================
+   TABLET SMALL
+========================================================= */
+
+@media (max-width: 760px) {
+  .page {
+    padding: 24px 20px 60px;
+  }
+
+  .statusCard {
+    padding: 24px;
+    border-radius: 21px;
+  }
+
+  .statusHeader {
+    gap: 16px;
+  }
+
+  .statusIcon {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 15px;
+  }
+
+  .statusIcon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .statusInfo h1 {
+    font-size: clamp(28px, 6vw, 38px);
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard:last-child {
+    grid-column: auto;
+  }
 }
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
-@media (max-width: 750px) {
+@media (max-width: 600px) {
   .page {
-    padding: 80px 15px 50px;
+    padding: 18px 14px 48px;
+  }
+
+  .topBar {
+    margin-bottom: 16px;
+  }
+
+  .homeButton {
+    font-size: 12px;
+  }
+
+  .homeButton svg {
+    width: 17px;
+    height: 17px;
   }
 
   .statusCard {
-    padding: 26px 22px;
-    border-radius: 25px;
+    padding: 20px;
+
+    border-radius: 19px;
   }
 
   .statusHeader {
-    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 14px;
+  }
+
+  .statusIcon {
+    width: 48px;
+    height: 48px;
+
+    flex-basis: 48px;
+  }
+
+  .statusInfo h1 {
+    margin-top: 8px;
+
+    font-size: 32px;
+    letter-spacing: -1.2px;
+  }
+
+  .period {
+    font-size: 11px;
   }
 
   .upgradeButton {
     width: 100%;
-    justify-content: center;
+
+    margin-top: 2px;
+
+    min-height: 47px;
   }
 
   .statsGrid {
-    grid-template-columns: 1fr;
+    margin-top: 12px;
+
+    gap: 10px;
+  }
+
+  .statCard {
+    padding: 18px;
+
+    border-radius: 16px;
+  }
+
+  .statNumbers {
+    margin-top: 16px;
+  }
+
+  .statNumbers strong {
+    font-size: 27px;
+  }
+
+  .progressTrack {
+    margin-top: 15px;
+  }
+
+  .helpNote {
+    margin-top: 10px;
+
+    padding: 15px 16px;
+
+    border-radius: 14px;
+  }
+
+  .helpNote p {
+    font-size: 10px;
+    line-height: 1.65;
+  }
+
+  .stateMessage {
+    min-height: 220px;
+
+    padding: 25px 18px;
+
+    border-radius: 18px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .page {
+    padding: 15px 10px 42px;
+  }
+
+  .statusCard {
+    padding: 17px;
+
+    border-radius: 17px;
+  }
+
+  .topGlow {
+    top: -150px;
+    right: -150px;
+
+    width: 260px;
+    height: 260px;
+  }
+
+  .statusIcon {
+    width: 44px;
+    height: 44px;
+
+    flex-basis: 44px;
+
+    border-radius: 13px;
+  }
+
+  .statusIcon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .statusBadge {
+    min-height: 26px;
+
+    padding: 5px 8px;
+
+    font-size: 8px;
+
+    letter-spacing: 0.8px;
+  }
+
+  .statusInfo h1 {
+    font-size: 28px;
+    letter-spacing: -1px;
+  }
+
+  .period {
+    gap: 6px;
+
+    font-size: 10px;
+    line-height: 1.55;
+  }
+
+  .period svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .upgradeButton {
+    min-height: 45px;
+
+    padding: 0 14px;
+
+    font-size: 11px;
+  }
+
+  .statCard {
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .statIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-basis: 35px;
+  }
+
+  .statIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .statHeader {
+    gap: 8px;
+  }
+
+  .statHeader > span {
+    font-size: 10px;
+  }
+
+  .statNumbers strong {
+    font-size: 25px;
+  }
+
+  .statNumbers span {
+    font-size: 10px;
+  }
+
+  .statFootnote {
+    font-size: 9px;
+  }
+
+  .helpNote {
+    padding: 13px 14px;
+  }
+
+  .helpNote p {
+    font-size: 9px;
+  }
+}
+
+/* =========================================================
+   380 PX
+========================================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .homeButton {
+    font-size: 11px;
+  }
+
+  .statusCard {
+    padding: 15px;
+  }
+
+  .statusInfo h1 {
+    font-size: 25px;
+  }
+
+  .statusBadge {
+    font-size: 7px;
+  }
+
+  .period {
+    font-size: 9px;
+  }
+
+  .upgradeButton {
+    min-height: 43px;
+
+    font-size: 10px;
+  }
+
+  .statCard {
+    padding: 14px;
+  }
+
+  .statHeader > span {
+    font-size: 9px;
+  }
+
+  .statNumbers {
+    gap: 5px;
+  }
+
+  .statNumbers strong {
+    font-size: 23px;
+  }
+
+  .statNumbers span {
+    font-size: 9px;
+  }
+
+  .statFootnote {
+    font-size: 8px;
+  }
+
+  .helpNote {
+    padding: 12px;
+  }
+
+  .helpNote p {
+    font-size: 8.5px;
+  }
+
+  .stateMessage {
+    padding: 20px 14px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   360 PX
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .statusCard {
+    padding: 13px;
+    border-radius: 15px;
+  }
+
+  .statusIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+  }
+
+  .statusIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .statusInfo h1 {
+    font-size: 23px;
+  }
+
+  .period {
+    font-size: 8.5px;
+  }
+
+  .upgradeButton {
+    min-height: 42px;
+
+    padding: 0 10px;
+
+    font-size: 9px;
+  }
+
+  .statCard {
+    padding: 12px;
+  }
+
+  .statIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .statHeader > span {
+    font-size: 8.5px;
+  }
+
+  .statNumbers strong {
+    font-size: 21px;
+  }
+
+  .statNumbers span {
+    font-size: 8px;
+  }
+
+  .progressTrack {
+    height: 6px;
+  }
+
+  .statFootnote {
+    font-size: 7.5px;
+  }
+
+  .helpNote {
+    padding: 10px;
+  }
+
+  .helpNote p {
+    font-size: 8px;
+    line-height: 1.6;
+  }
+}
+
+/* =========================================================
+   330 PX
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 35px;
+  }
+
+  .homeButton {
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  .homeButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .statusCard {
+    padding: 11px;
+
+    border-radius: 13px;
+  }
+
+  .statusHeader {
+    gap: 11px;
+  }
+
+  .statusIcon {
+    width: 37px;
+    height: 37px;
+
+    flex-basis: 37px;
+  }
+
+  .statusIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .statusBadge {
+    min-height: 23px;
+
+    padding: 4px 6px;
+
+    font-size: 6.5px;
+  }
+
+  .statusInfo h1 {
+    font-size: 21px;
+  }
+
+  .period {
+    gap: 4px;
+
+    font-size: 7.5px;
+  }
+
+  .period svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .upgradeButton {
+    min-height: 39px;
+
+    padding: 0 8px;
+
+    font-size: 8px;
+  }
+
+  .upgradeButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .statCard {
+    padding: 11px;
+
+    border-radius: 12px;
+  }
+
+  .statIcon {
+    width: 29px;
+    height: 29px;
+
+    flex-basis: 29px;
+  }
+
+  .statIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .statHeader {
+    gap: 6px;
+  }
+
+  .statHeader > span {
+    font-size: 8px;
+  }
+
+  .statNumbers {
+    margin-top: 13px;
+  }
+
+  .statNumbers strong {
+    font-size: 20px;
+  }
+
+  .statNumbers span {
+    font-size: 7.5px;
+  }
+
+  .progressTrack {
+    height: 5px;
+
+    margin-top: 12px;
+  }
+
+  .statFootnote {
+    margin-top: 7px;
+
+    font-size: 7px;
+  }
+
+  .helpNote {
+    padding: 9px;
+
+    border-radius: 10px;
+  }
+
+  .helpNote p {
+    font-size: 7.5px;
+  }
+
+  .stateMessage {
+    min-height: 180px;
+
+    padding: 15px 10px;
+
+    border-radius: 13px;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+@media (hover: none) {
+  .homeButton:hover,
+  .upgradeButton:hover,
+  .statCard:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .homeButton,
+  .upgradeButton,
+  .statCard,
+  .progressFill {
+    transition: none;
   }
 }

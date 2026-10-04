@@ -11,6 +11,9 @@
   align-items: center;
   justify-content: center;
 
+  width: 100%;
+  min-width: 0;
+
   padding: 20px;
 
   background:
@@ -21,6 +24,10 @@
   -webkit-backdrop-filter: blur(18px);
 
   animation: overlayIn 0.2s ease;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 @keyframes overlayIn {
@@ -41,7 +48,10 @@
   position: relative;
 
   width: min(680px, 100%);
-  max-height: calc(100vh - 40px);
+  min-width: 0;
+  max-width: 100%;
+
+  max-height: calc(100dvh - 40px);
 
   overflow: hidden;
 
@@ -65,6 +75,8 @@
     0 0 70px rgba(72, 61, 246, 0.07);
 
   animation: modalIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+
+  box-sizing: border-box;
 }
 
 .modal::before {
@@ -120,14 +132,18 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: 1px solid #e7e8f0;
   border-radius: 12px;
 
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
 
   color: #7b8190;
 
   cursor: pointer;
+
+  box-shadow: 0 5px 15px rgba(15, 23, 42, 0.035);
 
   transition:
     color 0.2s ease,
@@ -149,9 +165,20 @@
   transform: rotate(5deg);
 }
 
+.close:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .close svg {
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -159,8 +186,12 @@
 ========================================================= */
 
 .scroll {
-  max-height: calc(100vh - 40px);
+  width: 100%;
+  min-width: 0;
 
+  max-height: calc(100dvh - 40px);
+
+  overflow-x: hidden;
   overflow-y: auto;
 
   padding: 34px;
@@ -191,15 +222,20 @@
 ========================================================= */
 
 .header {
+  min-width: 0;
+
   padding-right: 55px;
+
   margin-bottom: 28px;
 }
 
 .headerBadge {
   width: fit-content;
+  max-width: 100%;
 
   display: inline-flex;
   align-items: center;
+
   gap: 6px;
 
   margin-bottom: 10px;
@@ -218,14 +254,20 @@
 
   text-transform: uppercase;
   letter-spacing: 0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .headerBadge svg {
   width: 13px;
   height: 13px;
+
+  flex-shrink: 0;
 }
 
 .header h2 {
+  min-width: 0;
+
   margin: 0;
 
   color: #171b2b;
@@ -236,9 +278,12 @@
   font-weight: 950;
 
   letter-spacing: -0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
+  width: 100%;
   max-width: 480px;
 
   margin: 8px 0 0;
@@ -247,6 +292,8 @@
 
   font-size: 15px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -260,6 +307,8 @@
   align-items: center;
 
   gap: 22px;
+
+  min-width: 0;
 
   margin-bottom: 28px;
   padding: 19px;
@@ -334,9 +383,9 @@
   width: 100%;
   height: 100%;
 
-  object-fit: cover;
-
   display: block;
+
+  object-fit: cover;
 }
 
 .logo > svg {
@@ -381,6 +430,9 @@
   position: relative;
   z-index: 1;
 
+  min-width: 0;
+  max-width: 100%;
+
   display: flex;
   flex-direction: column;
 
@@ -392,17 +444,24 @@
 
   font-size: 20px;
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .logoInfo > span {
   color: #858b99;
 
   font-size: 13px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .logoActions {
   display: flex;
   align-items: center;
+
+  flex-wrap: wrap;
 
   gap: 8px;
 
@@ -411,13 +470,15 @@
 
 .uploadButton,
 .removeButton {
-  height: 38px;
+  min-height: 38px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 7px;
+
+  min-width: 0;
 
   padding: 0 13px;
 
@@ -434,7 +495,8 @@
     transform 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .uploadButton {
@@ -477,10 +539,19 @@
   box-shadow: 0 5px 15px rgba(72, 61, 246, 0.07);
 }
 
+.uploadButton:disabled,
+.removeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .uploadButton svg,
 .removeButton svg {
   width: 15px;
   height: 15px;
+
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -488,6 +559,8 @@
 ========================================================= */
 
 .formSection {
+  min-width: 0;
+
   margin-top: 22px;
 
   padding: 20px;
@@ -505,9 +578,11 @@
 
 .sectionTitle {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 11px;
+
+  min-width: 0;
 
   margin-bottom: 16px;
 }
@@ -516,10 +591,16 @@
   width: 18px;
   height: 18px;
 
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
   color: #483df6;
 }
 
-.sectionTitle div {
+.sectionTitle > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -531,12 +612,17 @@
 
   font-size: 17px;
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionTitle span {
   color: #858b99;
 
   font-size: 13px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -548,24 +634,32 @@
   flex-direction: column;
 
   gap: 11px;
+
+  min-width: 0;
 }
 
 .row {
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 11px;
+
+  min-width: 0;
 }
 
 .field {
   display: flex;
   flex-direction: column;
 
+  min-width: 0;
+
   gap: 6px;
 }
 
 .fieldLabel {
+  min-width: 0;
+
   padding-left: 3px;
 
   color: #747b8b;
@@ -575,9 +669,12 @@
 
   text-transform: uppercase;
   letter-spacing: 0.55px;
+
+  overflow-wrap: anywhere;
 }
 
 .inputBox {
+  min-width: 0;
   min-height: 51px;
 
   display: flex;
@@ -636,6 +733,8 @@
 
   height: 49px;
 
+  padding: 0;
+
   border: none;
   outline: none;
 
@@ -647,14 +746,19 @@
 
   font-size: 15px;
   font-weight: 650;
+
+  text-overflow: ellipsis;
 }
 
 .inputBox input::placeholder {
   color: #a4a9b5;
+
+  opacity: 1;
 }
 
 .inputBox input:disabled {
   opacity: 0.5;
+
   cursor: not-allowed;
 }
 
@@ -665,6 +769,7 @@
 .textareaBox {
   position: relative;
 
+  min-width: 0;
   min-height: 135px;
 
   display: flex;
@@ -720,7 +825,7 @@
   min-width: 0;
   min-height: 102px;
 
-  padding: 0 0 20px;
+  padding: 0 0 22px;
 
   resize: vertical;
 
@@ -735,10 +840,20 @@
 
   font-size: 15px;
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 .textareaBox textarea::placeholder {
   color: #a4a9b5;
+
+  opacity: 1;
+}
+
+.textareaBox textarea:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
 }
 
 .textareaBox > span {
@@ -750,6 +865,8 @@
   color: #9ca1ad;
 
   font-size: 12px;
+
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -759,15 +876,18 @@
 .footer {
   display: grid;
 
-  grid-template-columns: 130px 1fr;
+  grid-template-columns: 130px minmax(0, 1fr);
 
   gap: 10px;
+
+  min-width: 0;
 
   margin-top: 24px;
 }
 
 .cancel,
 .save {
+  min-width: 0;
   height: 52px;
 
   display: flex;
@@ -775,6 +895,8 @@
   justify-content: center;
 
   gap: 8px;
+
+  padding: 0 14px;
 
   border-radius: 12px;
 
@@ -836,52 +958,60 @@
 .save svg {
   width: 16px;
   height: 16px;
+
+  flex-shrink: 0;
 }
 
 .cancel:disabled,
 .save:disabled {
   opacity: 0.5;
+
   cursor: not-allowed;
+
   box-shadow: none;
+
+  transform: none;
 }
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
   .overlay {
-    padding: 8px;
-
-    background: rgba(15, 23, 42, 0.48);
+    padding: 10px;
   }
 
   .modal {
-    max-height: calc(100vh - 16px);
+    width: 100%;
 
-    border-radius: 22px;
+    max-height: calc(100dvh - 20px);
+
+    border-radius: 23px;
   }
 
   .scroll {
-    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 20px);
 
-    padding: 25px 16px;
+    padding: 28px 18px;
   }
 
   .close {
     top: 13px;
     right: 13px;
 
-    width: 38px;
-    height: 38px;
+    width: 39px;
+    height: 39px;
   }
 
   .header {
-    padding-right: 45px;
+    padding-right: 48px;
+
+    margin-bottom: 24px;
   }
 
   .header h2 {
-    font-size: 24px;
+    font-size: 25px;
   }
 
   .header p {
@@ -889,37 +1019,223 @@
   }
 
   .logoSection {
+    gap: 18px;
+
+    padding: 18px;
+  }
+
+  .logo {
+    width: 100px;
+    height: 100px;
+
+    border-radius: 21px;
+  }
+
+  .logoCamera {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 10px;
+  }
+
+  .logoCamera svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .logoInfo strong {
+    font-size: 18px;
+  }
+
+  .formSection {
+    padding: 18px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .overlay {
+    padding: 7px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 14px);
+
+    border-radius: 21px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 14px);
+
+    padding: 25px 15px;
+  }
+
+  .close {
+    top: 11px;
+    right: 11px;
+
+    width: 37px;
+    height: 37px;
+  }
+
+  .close svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .header {
+    padding-right: 43px;
+
+    margin-bottom: 22px;
+  }
+
+  .headerBadge {
+    font-size: 11px;
+  }
+
+  .header h2 {
+    font-size: 23px;
+
+    letter-spacing: -0.5px;
+  }
+
+  .header p {
+    font-size: 13px;
+
+    line-height: 1.55;
+  }
+
+  /* logo */
+
+  .logoSection {
     flex-direction: column;
 
-    text-align: center;
+    align-items: center;
 
-    padding: 22px 16px;
+    gap: 14px;
+
+    padding: 20px 15px;
+
+    text-align: center;
   }
 
   .logoInfo {
+    width: 100%;
+
     align-items: center;
+  }
+
+  .logoInfo strong {
+    font-size: 18px;
+  }
+
+  .logoInfo > span {
+    font-size: 12px;
   }
 
   .logoActions {
     width: 100%;
+
     flex-direction: column;
+
+    gap: 7px;
+
+    margin-top: 9px;
   }
 
   .uploadButton,
   .removeButton {
     width: 100%;
+
+    min-height: 40px;
   }
 
+  /* sections */
+
   .formSection {
-    padding: 16px;
+    margin-top: 18px;
+
+    padding: 15px;
+
+    border-radius: 16px;
   }
+
+  .sectionTitle {
+    gap: 9px;
+
+    margin-bottom: 14px;
+  }
+
+  .sectionTitle > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .sectionTitle strong {
+    font-size: 15px;
+  }
+
+  .sectionTitle span {
+    font-size: 12px;
+  }
+
+  /* fields */
 
   .row {
     grid-template-columns: 1fr;
   }
 
+  .fieldLabel {
+    font-size: 11px;
+  }
+
+  .inputBox {
+    min-height: 49px;
+
+    gap: 9px;
+
+    padding: 0 12px;
+  }
+
+  .inputBox input {
+    height: 47px;
+
+    font-size: 14px;
+  }
+
+  .inputBox > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* textarea */
+
+  .textareaBox {
+    min-height: 128px;
+
+    padding: 13px;
+  }
+
+  .textareaBox textarea {
+    min-height: 96px;
+
+    font-size: 14px;
+  }
+
+  .textareaBox > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* footer */
+
   .footer {
     grid-template-columns: 1fr;
+
+    gap: 8px;
   }
 
   .cancel {
@@ -929,27 +1245,435 @@
   .save {
     order: 1;
   }
+
+  .cancel,
+  .save {
+    height: 49px;
+
+    font-size: 13px;
+  }
 }
 
 /* =========================================================
    SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
+  .overlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 10px);
+
+    border-radius: 19px;
+  }
+
   .scroll {
+    max-height: calc(100dvh - 10px);
+
     padding: 22px 12px;
   }
 
-  .formSection {
-    padding: 14px;
+  .close {
+    top: 9px;
+    right: 9px;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 10px;
   }
 
-  .logo {
-    width: 100px;
-    height: 100px;
+  .header {
+    padding-right: 40px;
+
+    margin-bottom: 20px;
+  }
+
+  .headerBadge {
+    padding: 6px 8px;
+
+    font-size: 10px;
+  }
+
+  .headerBadge svg {
+    width: 12px;
+    height: 12px;
   }
 
   .header h2 {
-    font-size: 22px;
+    font-size: 21px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  /* logo */
+
+  .logoSection {
+    padding: 18px 12px;
+
+    border-radius: 16px;
+  }
+
+  .logo {
+    width: 94px;
+    height: 94px;
+
+    border-radius: 19px;
+  }
+
+  .logo > svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logoCamera {
+    right: -5px;
+    bottom: -5px;
+
+    width: 29px;
+    height: 29px;
+  }
+
+  .logoCamera svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .logoInfo strong {
+    font-size: 16px;
+  }
+
+  .logoInfo > span {
+    font-size: 11px;
+  }
+
+  .uploadButton,
+  .removeButton {
+    min-height: 38px;
+
+    padding: 0 10px;
+
+    font-size: 12px;
+  }
+
+  /* sections */
+
+  .formSection {
+    padding: 13px;
+
+    border-radius: 15px;
+  }
+
+  .sectionTitle {
+    margin-bottom: 12px;
+  }
+
+  .sectionTitle strong {
+    font-size: 14px;
+  }
+
+  .sectionTitle span {
+    font-size: 11px;
+  }
+
+  .fields {
+    gap: 9px;
+  }
+
+  .field {
+    gap: 5px;
+  }
+
+  .fieldLabel {
+    font-size: 10px;
+  }
+
+  .inputBox {
+    min-height: 47px;
+
+    padding: 0 10px;
+  }
+
+  .inputBox input {
+    height: 45px;
+
+    font-size: 13px;
+  }
+
+  .inputBox > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .textareaBox {
+    min-height: 120px;
+
+    padding: 11px;
+  }
+
+  .textareaBox textarea {
+    min-height: 89px;
+
+    padding-bottom: 20px;
+
+    font-size: 13px;
+  }
+
+  .textareaBox > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .textareaBox > span {
+    right: 10px;
+    bottom: 8px;
+
+    font-size: 10px;
+  }
+
+  /* footer */
+
+  .footer {
+    margin-top: 18px;
+  }
+
+  .cancel,
+  .save {
+    height: 47px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 340px) {
+  .overlay {
+    padding: 3px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 6px);
+
+    border-radius: 17px;
+  }
+
+  .scroll {
+    max-height: calc(100dvh - 6px);
+
+    padding: 20px 9px;
+  }
+
+  .close {
+    top: 8px;
+    right: 8px;
+
+    width: 33px;
+    height: 33px;
+
+    border-radius: 9px;
+  }
+
+  .close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .header {
+    padding-right: 38px;
+  }
+
+  .headerBadge {
+    max-width: calc(100% - 5px);
+
+    font-size: 9px;
+
+    letter-spacing: 0.5px;
+  }
+
+  .header h2 {
+    font-size: 19px;
+
+    letter-spacing: -0.35px;
+  }
+
+  .header p {
+    font-size: 11px;
+
+    line-height: 1.5;
+  }
+
+  .logoSection {
+    padding: 15px 9px;
+  }
+
+  .logo {
+    width: 84px;
+    height: 84px;
+
+    border-radius: 17px;
+  }
+
+  .logo > svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logoCamera {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 8px;
+  }
+
+  .logoInfo strong {
+    font-size: 15px;
+  }
+
+  .logoInfo > span {
+    font-size: 10px;
+  }
+
+  .uploadButton,
+  .removeButton {
+    min-height: 36px;
+
+    gap: 5px;
+
+    padding: 0 8px;
+
+    font-size: 11px;
+  }
+
+  .uploadButton svg,
+  .removeButton svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .formSection {
+    padding: 11px;
+  }
+
+  .sectionTitle {
+    gap: 7px;
+  }
+
+  .sectionTitle > svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .sectionTitle strong {
+    font-size: 13px;
+  }
+
+  .sectionTitle span {
+    font-size: 10px;
+  }
+
+  .fieldLabel {
+    font-size: 9px;
+  }
+
+  .inputBox {
+    min-height: 45px;
+
+    gap: 7px;
+
+    padding: 0 9px;
+  }
+
+  .inputBox input {
+    height: 43px;
+
+    font-size: 12px;
+  }
+
+  .inputBox > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .textareaBox {
+    min-height: 115px;
+
+    gap: 7px;
+
+    padding: 10px;
+  }
+
+  .textareaBox textarea {
+    min-height: 84px;
+
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .textareaBox > svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .textareaBox > span {
+    right: 8px;
+    bottom: 7px;
+
+    font-size: 9px;
+  }
+
+  .cancel,
+  .save {
+    height: 45px;
+
+    gap: 6px;
+
+    font-size: 11px;
+  }
+
+  .save svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+  .close:hover:not(:disabled),
+  .uploadButton:hover,
+  .removeButton:hover,
+  .cancel:hover:not(:disabled),
+  .save:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+
+  .close,
+  .uploadButton,
+  .removeButton,
+  .cancel,
+  .save,
+  .inputBox,
+  .textareaBox {
+    transition: none;
   }
 }
