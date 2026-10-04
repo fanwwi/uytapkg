@@ -358,8 +358,9 @@ export const createIndividualTariff = async (req, res) => {
           active_listings_limit: activeListings,
           vip_boosts_limit: vipBoosts,
           top_boosts_limit: topBoosts,
-          // Свежая выдача тарифа — счётчики использованных поднятий
+          // Свежая выдача тарифа — счётчики использованных поднятий и слотов
           // начинаются заново, даже если у пользователя уже был тариф.
+          listings_used: 0,
           vip_boosts_used: 0,
           top_boosts_used: 0,
           started_at: startOfDayIso(startDate),

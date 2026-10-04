@@ -181,6 +181,9 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     active_listings_limit INT,
     vip_boosts_limit INT,
     top_boosts_limit INT,
+    -- Сколько обычных объявлений уже списано по тарифу в текущем периоде (одноразовый расход слота).
+    -- Не возвращается при удалении объявления.
+    listings_used INT NOT NULL DEFAULT 0,
     -- Сколько VIP/TOP-поднятий уже списано в текущем периоде — см.
     -- services/subscriptionsService.js consumeTariffBoost(). Обнуляется
     -- при каждой новой оплате/выдаче тарифа.
