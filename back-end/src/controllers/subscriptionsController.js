@@ -70,6 +70,7 @@ export const getMySubscription = async (req, res) => {
 
     const vipUsed = subscription.vip_boosts_used || 0;
     const topUsed = subscription.top_boosts_used || 0;
+    const tariffListingsUsed = subscription.listings_used != null ? subscription.listings_used : activeListingsUsed;
 
     return res.json({
       success: true,
@@ -86,12 +87,12 @@ export const getMySubscription = async (req, res) => {
           topBoosts: boostLimits.top,
         },
         used: {
-          activeListings: activeListingsUsed,
+          activeListings: tariffListingsUsed,
           vipBoosts: vipUsed,
           topBoosts: topUsed,
         },
         remaining: {
-          activeListings: Math.max(activeListingsLimit - activeListingsUsed, 0),
+          activeListings: Math.max(activeListingsLimit - tariffListingsUsed, 0),
           vipBoosts: Math.max(boostLimits.vip - vipUsed, 0),
           topBoosts: Math.max(boostLimits.top - topUsed, 0),
         },

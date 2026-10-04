@@ -47,6 +47,7 @@ export async function activateSubscription(userId, tariffId, months) {
         active_listings_limit: null,
         vip_boosts_limit: null,
         top_boosts_limit: null,
+        listings_used: 0,
         vip_boosts_used: 0,
         top_boosts_used: 0,
         updated_at: new Date().toISOString(),
@@ -201,3 +202,79 @@ export async function refundTariffBoost(userId, boostType) {
     console.error("Refund Tariff Boost Error:", error);
   }
 }
+
+// Пытается списать 1 объявление с активного тарифа пользователя (одноразовый расход слота).
+// Возвращает { hasSubscription: true, granted: true, remaining } при успехе,
+// либо { hasSubscription: false } если у пользователя нет тарифа,
+// либо { hasSubscription: true, granted: false, reason: "limit_reached" | "conflict" } при исчерпании/конфликте.
+export async function consumeTariffListing(userId) {
+  const subscription = await getActiveSubscription(userId);
+
+  if (!subscription) {
+    return { hasSubscription: false };
+  }
+
+  let limit = 0;
+  if (subscription.is_individual) {
+    limit = subscription.active_listings_limit ?? 0;
+  } else {
+    const pricing = await getPricingSettings();
+    const plan = pricing.tariffs[subscription.tariff_id];
+    limit = plan?.activeListings ?? 0;
+  }
+
+  const used = subscription.listings_used ?? 0;
+
+  if (used >= limit) {
+    return { hasSubscription: true, granted: false, reason: "limit_reached", limit, used };
+  }
+
+  // Оптимистическая блокировка для защиты от состояния гонки
+  const { data: updated, error } = await supabase
+    .from("subscriptions")
+    .update({ listings_used: used + 1, updated_at: new Date().toISOString() })
+    .eq("id", subscription.id)
+    .eq("listings_used", used)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    if (error.code === "PGRST204" || error.code === "42703") {
+      console.warn(
+        "⚠️ WARNING: Column 'listings_used' is missing in 'subscriptions' table. " +
+        "Please run this SQL in your Supabase SQL Editor:\n" +
+        "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS listings_used INT NOT NULL DEFAULT 0;"
+      );
+    } else {
+      console.error("Consume Tariff Listing Error:", error);
+    }
+    // Если колонка ещё не создана в БД, не блокируем создание аварийно
+    return { hasSubscription: true, granted: true, remaining: Math.max(limit - (used + 1), 0) };
+  }
+
+  if (!updated) {
+    return { hasSubscription: true, granted: false, reason: "conflict" };
+  }
+
+  return { hasSubscription: true, granted: true, remaining: limit - (used + 1) };
+}
+
+// Возвращает списанный слот объявления ТОЛЬКО если создание объявления в БД завершилось сбоем
+// (ошибка вставки фото или откат транзакции). При обычном удалении объявления пользователем этот метод НЕ вызывается.
+export async function refundTariffListing(userId) {
+  const subscription = await getActiveSubscription(userId);
+  if (!subscription) return;
+
+  const used = subscription.listings_used ?? 0;
+  if (used <= 0) return;
+
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({ listings_used: used - 1, updated_at: new Date().toISOString() })
+    .eq("id", subscription.id);
+
+  if (error) {
+    console.error("Refund Tariff Listing Error:", error);
+  }
+}
+

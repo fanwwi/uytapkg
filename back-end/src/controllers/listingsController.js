@@ -11,22 +11,38 @@ import {
   consumeTariffBoost,
   refundTariffBoost,
   getActiveListingsLimit,
+  getActiveSubscription,
+  consumeTariffListing,
+  refundTariffListing,
 } from "../services/subscriptionsService.js";
 import { verifyAllOwnedBy } from "../utils/uploadOwnership.js";
 
-// Считает текущие активные (status="active") объявления пользователя и
-// сравнивает с лимитом его тарифа — общая проверка для создания
-// объявления и для возврата объявления в статус "active" из PUT.
-// Возвращает null, если лимит не превышен, иначе готовый объект ответа
-// 403 для немедленного return.
-//
-// countIncludesNewRow: false (по умолчанию) — проверка ДО вставки, лимит
-// нарушен, если count уже >= limit (вставлять больше нельзя). true —
-// повторная проверка ПОСЛЕ вставки (см. createListing), когда сам новый
-// ряд уже учтён в count — тогда нарушение только при count > limit,
-// иначе последний разрешённый ряд (count === limit) ошибочно откатывался
-// бы сам на себя.
+// Проверяет лимиты объявлений пользователя. Если у пользователя активен тариф,
+// проверяется несгораемый счётчик израсходованных слотов тарифа (listings_used).
+// Для пользователей без тарифа проверяется лимит одновременно активных объявлений.
+// Возвращает null, если лимит не превышен, иначе готовый объект ответа 403.
 async function checkActiveListingsLimit(userId, accountType, { countIncludesNewRow = false } = {}) {
+  const subscription = await getActiveSubscription(userId);
+
+  if (subscription) {
+    const limit = await getActiveListingsLimit(userId, accountType);
+    const used = subscription.listings_used ?? null;
+
+    if (used != null) {
+      const isOverLimit = countIncludesNewRow ? used > limit : used >= limit;
+      if (isOverLimit) {
+        return {
+          status: 403,
+          body: {
+            success: false,
+            message: `Лимит объявлений по вашему тарифу исчерпан (${limit} из ${limit}). Для размещения новых объявлений продлите тариф или выберите другой план.`,
+          },
+        };
+      }
+      return null;
+    }
+  }
+
   const limit = await getActiveListingsLimit(userId, accountType);
 
   const { count, error } = await supabase
@@ -333,6 +349,25 @@ export const createListing = async (req, res) => {
       initialStatus = "draft";
     }
 
+    // Если объявление создается как активное (initialStatus === "active"):
+    // списываем 1 слот размещения с тарифа (одноразовый расход квоты)
+    let tariffListingGrant = false;
+    if (initialStatus === "active") {
+      const listingConsumption = await consumeTariffListing(userId);
+      if (listingConsumption.hasSubscription) {
+        if (!listingConsumption.granted) {
+          if (tariffGrant) {
+            await refundTariffBoost(userId, tariffGrant.serviceType);
+          }
+          return res.status(403).json({
+            success: false,
+            message: `Лимит объявлений по вашему тарифу исчерпан (${listingConsumption.limit} из ${listingConsumption.limit}). Для размещения новых объявлений продлите тариф или выберите другой план.`,
+          });
+        }
+        tariffListingGrant = true;
+      }
+    }
+
     // Сборка комплексного объекта курортных фильтров
     const mergedResortFilters = {
       ...resortFilters,
@@ -402,9 +437,12 @@ export const createListing = async (req, res) => {
       console.error("Listing Create Error:", createError);
 
       // Тариф уже списан выше — раз объявление не создалось, возвращаем
-      // поднятие обратно, иначе пользователь теряет его без результата.
+      // поднятие и слот обратно, иначе пользователь теряет их без результата.
       if (tariffGrant) {
         await refundTariffBoost(userId, tariffGrant.serviceType);
+      }
+      if (tariffListingGrant) {
+        await refundTariffListing(userId);
       }
 
       return res.status(500).json({ success: false, message: "Ошибка создания объявления" });
@@ -432,6 +470,9 @@ export const createListing = async (req, res) => {
 
         if (tariffGrant) {
           await refundTariffBoost(userId, tariffGrant.serviceType);
+        }
+        if (tariffListingGrant) {
+          await refundTariffListing(userId);
         }
 
         return res.status(raceCheck.status).json(raceCheck.body);
