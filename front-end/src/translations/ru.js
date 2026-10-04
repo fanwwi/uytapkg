@@ -4353,6 +4353,7 @@ const ru = {
     actions: {
       close: "Закрыть",
       payment: "Перейти к оплате",
+      checking: "Проверяем...",
     },
 
     errors: {

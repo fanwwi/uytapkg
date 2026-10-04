@@ -1,21 +1,39 @@
 .page {
+  --bg: #f7f8f7;
+  --card: #ffffff;
+
+  --border: #e0e5e2;
+  --border-light: #e8ece9;
+
+  --text: #1f2421;
+  --text-secondary: #555e58;
+  --text-muted: #737c76;
+  --placeholder: #9aa19d;
+
+  --accent: #483df6;
+  --accent-dark: #392ee0;
+
   position: relative;
   z-index: 0;
 
   width: 100%;
+  min-width: 0;
   min-height: 100vh;
 
-  padding: 42px 20px 90px;
-
-  overflow: hidden;
   box-sizing: border-box;
+
+  padding: clamp(95px, 8vw, 125px) 20px 90px;
+
+  overflow-x: hidden;
 
   background: #f7f8f7;
 
-  color: #1f2421;
+  color: var(--text);
 }
 
-.page * {
+.page *,
+.page *::before,
+.page *::after {
   box-sizing: border-box;
 }
 
@@ -36,7 +54,6 @@
   border-radius: 50%;
 
   background: #483df6;
-
   opacity: 0.035;
 
   filter: blur(120px);
@@ -59,7 +76,6 @@
   border-radius: 50%;
 
   background: #483df6;
-
   opacity: 0.025;
 
   filter: blur(120px);
@@ -82,6 +98,7 @@
 
 .headerText {
   width: 100%;
+  min-width: 0;
 }
 
 .topActions {
@@ -96,13 +113,13 @@
 
 .homeButton,
 .regionBadge {
+  min-height: 40px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 8px;
-
-  min-height: 40px;
 
   padding: 0 14px;
 
@@ -111,6 +128,8 @@
   font-family: inherit;
   font-size: 13px;
   font-weight: 650;
+
+  white-space: nowrap;
 }
 
 .homeButton {
@@ -133,35 +152,36 @@
 }
 
 .homeButton:hover {
-  background: #f7f8f7;
+  border-color: var(--accent);
 
-  border-color: #483df6;
+  background: #f9f8ff;
 
-  color: #483df6;
+  color: var(--accent);
 
   box-shadow: 0 7px 20px rgba(31, 36, 33, 0.07);
 
   transform: translateY(-1px);
 }
 
-.homeButton:active {
-  transform: translateY(0);
-}
-
 .regionBadge {
-  border: 1px solid rgba(72, 61, 246, 0.3);
+  border: 1px solid rgba(72, 61, 246, 0.24);
 
   background: #ffffff;
 
-  color: #483df6;
+  color: var(--accent);
 
   box-shadow: 0 3px 12px rgba(31, 36, 33, 0.03);
+}
+
+.homeButton svg,
+.regionBadge svg {
+  flex-shrink: 0;
 }
 
 .header h1 {
   margin: 0;
 
-  color: #1f2421;
+  color: var(--text);
 
   font-size: clamp(36px, 5vw, 62px);
   line-height: 1.02;
@@ -169,10 +189,12 @@
   font-weight: 850;
 
   letter-spacing: -2.5px;
+
+  overflow-wrap: anywhere;
 }
 
 .header h1 span {
-  color: #483df6;
+  color: var(--accent);
 }
 
 .header p {
@@ -184,6 +206,8 @@
 
   font-size: 15px;
   line-height: 1.7;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -194,51 +218,53 @@
   position: relative;
   z-index: 5;
 
+  width: min(100%, 1240px);
+
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
 
   gap: 12px;
 
-  width: min(100%, 1240px);
-
   margin: 0 auto 18px;
 }
 
 .search {
+  min-width: 0;
+  min-height: 58px;
+
   display: flex;
   align-items: center;
 
   gap: 12px;
-
-  min-height: 58px;
 
   padding: 0 17px;
 
   border: 1px solid #dfe4e1;
   border-radius: 15px;
 
-  background: #ffffff;
+  background: #fff;
 
   color: #7a827d;
 
   box-shadow:
     0 8px 28px rgba(31, 36, 33, 0.055),
-    inset 0 1px 0 #ffffff;
+    inset 0 1px 0 #fff;
 
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .search:focus-within {
-  border-color: #483df6;
-
-  background: #ffffff;
+  border-color: var(--accent);
 
   box-shadow:
     0 10px 30px rgba(31, 36, 33, 0.07),
     0 0 0 3px rgba(72, 61, 246, 0.08);
+}
+
+.search > svg {
+  flex-shrink: 0;
 }
 
 .search input,
@@ -251,10 +277,10 @@
   margin: 0;
   padding: 0;
 
-  border: 0;
+  border: 0 !important;
   outline: 0 !important;
 
-  background: transparent;
+  background: transparent !important;
 
   color: #252a27;
 
@@ -267,20 +293,13 @@
   box-shadow: none !important;
 }
 
-.search input::selection {
-  background: #483df6;
-  color: #ffffff;
-}
-
 .search input::placeholder {
-  color: #9aa19d;
+  color: var(--placeholder);
 }
 
-.search input::-webkit-search-decoration,
-.search input::-webkit-search-cancel-button,
-.search input::-webkit-search-results-button,
-.search input::-webkit-search-results-decoration {
-  display: none;
+.search input::selection {
+  background: var(--accent);
+  color: #fff;
 }
 
 /* =========================================================
@@ -288,12 +307,12 @@
 ========================================================= */
 
 .clearSearch {
+  width: 29px;
+  height: 29px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 29px;
-  height: 29px;
 
   flex-shrink: 0;
 
@@ -315,35 +334,35 @@
 }
 
 .clearSearch:hover {
-  background: #483df6;
+  background: var(--accent);
 
-  color: #ffffff;
+  color: #fff;
 
   transform: rotate(90deg);
 }
 
 /* =========================================================
-   PRIMARY BUTTON
+   SEARCH BUTTON
 ========================================================= */
 
 .filterButton {
+  min-width: 132px;
+  min-height: 58px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 9px;
 
-  min-width: 132px;
-  min-height: 58px;
-
   padding: 0 20px;
 
-  border: 1px solid #483df6;
+  border: 1px solid var(--accent);
   border-radius: 15px;
 
-  background: #483df6;
+  background: var(--accent);
 
-  color: #ffffff;
+  color: #fff;
 
   font-family: inherit;
   font-size: 14px;
@@ -362,9 +381,9 @@
 }
 
 .filterButton:hover:not(:disabled) {
-  background: #483df6;
+  background: var(--accent-dark);
 
-  border-color: #483df6;
+  border-color: var(--accent-dark);
 
   box-shadow:
     0 10px 28px rgba(72, 61, 246, 0.22),
@@ -386,7 +405,7 @@
 }
 
 /* =========================================================
-   FILTERS
+   FILTERS CONTAINER
 ========================================================= */
 
 .filtersContainer {
@@ -402,12 +421,16 @@
   border: 1px solid #e0e5e2;
   border-radius: 20px;
 
-  background: #ffffff;
+  background: #fff;
 
   box-shadow:
     0 15px 45px rgba(31, 36, 33, 0.06),
-    inset 0 1px 0 #ffffff;
+    inset 0 1px 0 #fff;
 }
+
+/* =========================================================
+   FILTER BLOCK
+========================================================= */
 
 .filterBlock + .filterBlock {
   margin-top: 25px;
@@ -434,6 +457,8 @@
   flex-wrap: wrap;
 
   gap: 8px;
+
+  min-width: 0;
 }
 
 .categories button,
@@ -453,6 +478,8 @@
   font-size: 13px;
   font-weight: 650;
 
+  white-space: nowrap;
+
   cursor: pointer;
 
   transition:
@@ -464,22 +491,22 @@
 
 .categories button:hover,
 .dealTypes button:hover {
-  border-color: #483df6;
+  border-color: var(--accent);
 
-  background: #ffffff;
+  background: #fff;
 
-  color: #483df6;
+  color: var(--accent);
 
   transform: translateY(-1px);
 }
 
 .categories .categoryActive,
 .dealTypes .dealActive {
-  border-color: #483df6;
+  border-color: var(--accent);
 
-  background: #483df6;
+  background: var(--accent);
 
-  color: #ffffff;
+  color: #fff;
 
   box-shadow: 0 6px 18px rgba(72, 61, 246, 0.14);
 }
@@ -502,6 +529,12 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 14px;
+
+  min-width: 0;
+}
+
+.advancedGrid > * {
+  min-width: 0;
 }
 
 .rangeField {
@@ -529,13 +562,14 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 8px;
+
+  min-width: 0;
 }
 
 .rangeInputs input {
   width: 100%;
-  height: 44px;
-
   min-width: 0;
+  height: 44px;
 
   padding: 0 12px;
 
@@ -554,8 +588,6 @@
   appearance: none;
   -webkit-appearance: none;
 
-  box-shadow: none;
-
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
@@ -567,11 +599,9 @@
 }
 
 .rangeInputs input:focus {
-  border-color: #483df6;
+  border-color: var(--accent);
 
-  background: #ffffff;
-
-  outline: none;
+  background: #fff;
 
   box-shadow: 0 0 0 3px rgba(72, 61, 246, 0.08);
 }
@@ -586,7 +616,7 @@
 }
 
 /* =========================================================
-   ACTIONS
+   FILTER ACTIONS
 ========================================================= */
 
 .filtersActions {
@@ -606,8 +636,6 @@
   min-width: 132px;
   min-height: 46px;
 
-  padding: 0 22px;
-
   border-radius: 12px;
 }
 
@@ -616,13 +644,13 @@
 ========================================================= */
 
 .resetButton {
+  min-height: 34px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 6px;
-
-  min-height: 34px;
 
   padding: 0 12px;
 
@@ -637,6 +665,8 @@
   font-size: 12px;
   font-weight: 650;
 
+  white-space: nowrap;
+
   cursor: pointer;
 
   transition:
@@ -647,22 +677,24 @@
 }
 
 .resetButton:hover {
-  border-color: #483df6;
+  border-color: var(--accent);
 
-  background: #ffffff;
+  background: #fff;
 
-  color: #483df6;
+  color: var(--accent);
 
   transform: translateY(-1px);
 }
 
 /* =========================================================
-   RESULTS
+   RESULTS HEADER
 ========================================================= */
 
 .resultsHeader {
   position: relative;
   z-index: 1;
+
+  width: min(100%, 1240px);
 
   display: flex;
   align-items: center;
@@ -670,12 +702,12 @@
 
   gap: 15px;
 
-  width: min(100%, 1240px);
-
   margin: 0 auto 20px;
 }
 
 .result {
+  min-width: 0;
+
   display: flex;
   align-items: baseline;
 
@@ -687,7 +719,7 @@
 }
 
 .result strong {
-  color: #1f2421;
+  color: var(--text);
 
   font-size: 21px;
   font-weight: 800;
@@ -701,14 +733,14 @@
   position: relative;
   z-index: 1;
 
+  min-height: 320px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   gap: 15px;
-
-  min-height: 320px;
 
   color: #7a827d;
 
@@ -720,7 +752,7 @@
   height: 36px;
 
   border: 3px solid #e3e7e4;
-  border-top-color: #483df6;
+  border-top-color: var(--accent);
 
   border-radius: 50%;
 
@@ -741,35 +773,45 @@
   position: relative;
   z-index: 1;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 10px;
-
   width: min(100%, 1240px);
+
+  min-width: 0;
 
   margin: 20px auto;
 
   padding: 16px;
 
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 10px;
+
   border: 1px solid rgba(72, 61, 246, 0.25);
   border-radius: 13px;
 
-  background: #ffffff;
+  background: #fff;
 
-  color: #483df6;
+  color: var(--accent);
 
   font-size: 14px;
+
+  overflow-wrap: anywhere;
+}
+
+.error span {
+  min-width: 0;
 }
 
 /* =========================================================
-   GRID
+   LISTINGS GRID
 ========================================================= */
 
 .grid {
   position: relative;
   z-index: 1;
+
+  width: min(100%, 1240px);
 
   display: grid;
 
@@ -777,9 +819,14 @@
 
   gap: 20px;
 
-  width: min(100%, 1240px);
-
   margin: 0 auto;
+
+  min-width: 0;
+}
+
+.grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -792,27 +839,29 @@
 
   width: min(100%, 600px);
 
+  min-width: 0;
+
   margin: 75px auto;
 
   text-align: center;
 }
 
 .emptyIcon {
+  width: 72px;
+  height: 72px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 72px;
-  height: 72px;
 
   margin: 0 auto 20px;
 
   border: 1px solid rgba(72, 61, 246, 0.25);
   border-radius: 50%;
 
-  background: #ffffff;
+  background: #fff;
 
-  color: #483df6;
+  color: var(--accent);
 
   box-shadow: 0 8px 25px rgba(72, 61, 246, 0.08);
 }
@@ -820,10 +869,12 @@
 .empty h2 {
   margin: 0 0 10px;
 
-  color: #1f2421;
+  color: var(--text);
 
   font-size: 25px;
   font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .empty p {
@@ -835,6 +886,8 @@
 
   font-size: 14px;
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
 .empty button {
@@ -842,12 +895,12 @@
 
   padding: 0 18px;
 
-  border: 1px solid #483df6;
+  border: 1px solid var(--accent);
   border-radius: 10px;
 
-  background: #483df6;
+  background: var(--accent);
 
-  color: #ffffff;
+  color: #fff;
 
   font-family: inherit;
   font-size: 13px;
@@ -862,7 +915,7 @@
 }
 
 .empty button:hover {
-  background: #483df6;
+  background: var(--accent-dark);
 
   box-shadow: 0 10px 28px rgba(72, 61, 246, 0.18);
 
@@ -880,21 +933,55 @@
 .dealTypes button:focus-visible,
 .resetButton:focus-visible,
 .empty button:focus-visible {
-  outline: 2px solid #483df6;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-.search input:focus-visible,
-.search input:focus {
+.search input:focus-visible {
   outline: none !important;
-  box-shadow: none !important;
 }
 
 /* =========================================================
-   RESPONSIVE
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+  .page {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .toolbar,
+  .filtersContainer,
+  .resultsHeader,
+  .grid,
+  .error,
+  .header {
+    width: min(100%, 1360px);
+  }
+
+  .filtersContainer {
+    padding: 30px;
+  }
+
+  .advancedGrid {
+    gap: 16px;
+  }
+
+  .grid {
+    gap: 22px;
+  }
+}
+
+/* =========================================================
+   1100px
 ========================================================= */
 
 @media (max-width: 1100px) {
+  .page {
+    padding: 50px;
+  }
+
   .advancedGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -904,19 +991,52 @@
   }
 }
 
+/* =========================================================
+   850px
+========================================================= */
+
+@media (max-width: 850px) {
+  .filtersContainer {
+    padding: 21px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar .filterButton {
+    width: 100%;
+  }
+
+  .resultsHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+}
+
+/* =========================================================
+   760px
+========================================================= */
+
 @media (max-width: 760px) {
   .page {
-    padding: 28px 14px 60px;
+    padding-top: 92px;
+    padding-bottom: 65px;
   }
 
   .header {
-    margin-bottom: 25px;
+    margin-bottom: 26px;
+  }
+
+  .topActions {
+    margin-bottom: 20px;
   }
 
   .header h1 {
-    font-size: 38px;
+    font-size: 40px;
 
-    letter-spacing: -1.6px;
+    letter-spacing: -1.7px;
   }
 
   .header p {
@@ -925,24 +1045,12 @@
     font-size: 14px;
   }
 
-  .toolbar {
-    grid-template-columns: 1fr;
-
-    gap: 9px;
-  }
-
-  .toolbar .filterButton {
-    width: 100%;
-
-    min-height: 50px;
-
-    border-radius: 13px;
-  }
-
   .filtersContainer {
-    padding: 19px;
+    margin-bottom: 24px;
 
-    border-radius: 16px;
+    padding: 18px;
+
+    border-radius: 17px;
   }
 
   .advancedGrid {
@@ -954,8 +1062,7 @@
 
     flex-direction: column;
 
-    margin-top: 22px;
-    padding-top: 19px;
+    gap: 8px;
   }
 
   .filtersActions .filterButton,
@@ -964,64 +1071,61 @@
   }
 
   .filtersActions .filterButton {
-    min-height: 50px;
+    min-height: 49px;
   }
 
   .filtersActions .resetButton {
-    min-height: 46px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-
-    gap: 16px;
-  }
-
-  .resultsHeader {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    margin-bottom: 16px;
+    min-height: 44px;
   }
 }
 
-@media (max-width: 520px) {
+/* =========================================================
+   560px
+========================================================= */
+
+@media (max-width: 560px) {
   .page {
-    padding: 22px 11px 50px;
+    padding: 30;
   }
 
   .topActions {
     gap: 7px;
-
-    margin-bottom: 20px;
   }
 
   .homeButton,
   .regionBadge {
-    min-height: 37px;
+    min-height: 36px;
 
-    padding: 0 11px;
+    padding: 0 10px;
 
     font-size: 11px;
   }
 
   .header h1 {
-    font-size: 31px;
+    font-size: 32px;
 
     letter-spacing: -1.2px;
   }
 
   .header p {
-    font-size: 13px;
+    margin-top: 12px;
 
+    font-size: 13px;
     line-height: 1.6;
   }
 
-  .search {
-    min-height: 52px;
+  .toolbar {
+    gap: 8px;
 
-    padding: 0 14px;
+    margin-bottom: 14px;
+  }
+
+  .search {
+    min-height: 51px;
+
+    padding: 0 13px;
+
+    gap: 9px;
 
     border-radius: 13px;
   }
@@ -1039,13 +1143,19 @@
   }
 
   .filtersContainer {
-    padding: 15px;
+    padding: 14px;
 
     border-radius: 15px;
   }
 
   .filterBlock + .filterBlock {
     margin-top: 21px;
+  }
+
+  .filterHeading {
+    margin-bottom: 10px;
+
+    font-size: 10px;
   }
 
   .categories,
@@ -1055,58 +1165,65 @@
 
   .categories button,
   .dealTypes button {
-    min-height: 36px;
-
-    padding: 0 11px;
-
-    font-size: 12px;
-  }
-
-  .advancedFilters {
-    margin-top: 21px;
-
-    padding-top: 21px;
-  }
-
-  .rangeInputs {
-    gap: 7px;
-  }
-
-  .rangeInputs input {
-    height: 42px;
+    min-height: 35px;
 
     padding: 0 10px;
 
-    font-size: 12px;
+    border-radius: 9px;
+
+    font-size: 11.5px;
+  }
+
+  .advancedFilters {
+    margin-top: 20px;
+
+    padding-top: 19px;
+  }
+
+  .advancedGrid {
+    gap: 12px;
+  }
+
+  .rangeField {
+    gap: 7px;
+  }
+
+  .rangeField label {
+    font-size: 10px;
+  }
+
+  .rangeInputs {
+    gap: 6px;
+  }
+
+  .rangeInputs input {
+    height: 41px;
+
+    padding: 0 10px;
+
+    border-radius: 9px;
+
+    font-size: 11.5px;
   }
 
   .filtersActions {
-    gap: 8px;
-
     margin-top: 20px;
-    padding-top: 18px;
-  }
 
-  .filtersActions .filterButton {
-    min-height: 48px;
-
-    border-radius: 12px;
-
-    font-size: 13px;
-  }
-
-  .filtersActions .resetButton {
-    min-height: 43px;
-
-    font-size: 12px;
+    padding-top: 17px;
   }
 
   .result {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .result strong {
-    font-size: 19px;
+    font-size: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
   }
 
   .empty {
@@ -1114,18 +1231,359 @@
   }
 
   .emptyIcon {
-    width: 64px;
-    height: 64px;
+    width: 62px;
+    height: 62px;
   }
 
   .empty h2 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .empty p {
-    font-size: 13px;
+    font-size: 12.5px;
   }
 }
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .header h1 {
+    font-size: 28px;
+
+    letter-spacing: -1px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .homeButton,
+  .regionBadge {
+    min-height: 34px;
+
+    padding: 0 9px;
+
+    font-size: 10px;
+  }
+
+  .filtersContainer {
+    padding: 12px;
+  }
+
+  .categories button,
+  .dealTypes button {
+    min-height: 34px;
+
+    padding: 0 9px;
+
+    font-size: 10.5px;
+  }
+
+  .search {
+    min-height: 49px;
+
+    padding: 0 11px;
+  }
+
+  .toolbar .filterButton {
+    min-height: 46px;
+  }
+
+  .advancedFilters {
+    margin-top: 18px;
+
+    padding-top: 17px;
+  }
+
+  .rangeInputs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .resetButton {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   330px
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 20px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .topActions {
+    gap: 5px;
+
+    margin-bottom: 16px;
+  }
+
+  .homeButton,
+  .regionBadge {
+    min-height: 32px;
+
+    padding: 0 7px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+  }
+
+  .homeButton svg,
+  .regionBadge svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+
+    letter-spacing: -0.8px;
+  }
+
+  .header p {
+    margin-top: 8px;
+
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+
+  .toolbar {
+    gap: 6px;
+  }
+
+  .search {
+    min-height: 46px;
+
+    gap: 7px;
+
+    padding: 0 9px;
+
+    border-radius: 11px;
+  }
+
+  .search > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .search input {
+    font-size: 11px;
+  }
+
+  .clearSearch {
+    width: 25px;
+    height: 25px;
+  }
+
+  .toolbar .filterButton {
+    min-height: 43px;
+
+    gap: 6px;
+
+    padding: 0 10px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+  }
+
+  .toolbar .filterButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .filtersContainer {
+    margin-bottom: 19px;
+
+    padding: 10px;
+
+    border-radius: 13px;
+  }
+
+  .filterBlock + .filterBlock {
+    margin-top: 17px;
+  }
+
+  .filterHeading {
+    margin-bottom: 8px;
+
+    font-size: 8.5px;
+
+    letter-spacing: 0.4px;
+  }
+
+  .categories,
+  .dealTypes {
+    gap: 5px;
+  }
+
+  .categories button,
+  .dealTypes button {
+    min-height: 31px;
+
+    padding: 0 8px;
+
+    border-radius: 8px;
+
+    font-size: 9.5px;
+  }
+
+  .advancedFilters {
+    margin-top: 17px;
+
+    padding-top: 16px;
+  }
+
+  .advancedGrid {
+    gap: 10px;
+  }
+
+  .rangeField {
+    gap: 6px;
+  }
+
+  .rangeField label {
+    font-size: 8.5px;
+  }
+
+  .rangeInputs {
+    gap: 5px;
+  }
+
+  .rangeInputs input {
+    height: 37px;
+
+    padding: 0 8px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+
+  .filtersActions {
+    gap: 6px;
+
+    margin-top: 16px;
+
+    padding-top: 14px;
+  }
+
+  .filtersActions .filterButton {
+    min-height: 42px;
+
+    font-size: 10.5px;
+  }
+
+  .filtersActions .resetButton {
+    min-height: 39px;
+
+    font-size: 9.5px;
+  }
+
+  .resultsHeader {
+    gap: 8px;
+
+    margin-bottom: 13px;
+  }
+
+  .result {
+    gap: 5px;
+
+    font-size: 10.5px;
+  }
+
+  .result strong {
+    font-size: 16px;
+  }
+
+  .resultsHeader .resetButton {
+    min-height: 31px;
+
+    padding: 0 9px;
+
+    font-size: 9px;
+  }
+
+  .grid {
+    gap: 11px;
+  }
+
+  .loading {
+    min-height: 240px;
+
+    gap: 11px;
+
+    font-size: 11px;
+  }
+
+  .spinner {
+    width: 29px;
+    height: 29px;
+
+    border-width: 2.5px;
+  }
+
+  .error {
+    padding: 12px 9px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  .empty {
+    margin: 40px auto;
+  }
+
+  .emptyIcon {
+    width: 54px;
+    height: 54px;
+
+    margin-bottom: 14px;
+  }
+
+  .emptyIcon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .empty h2 {
+    margin-bottom: 7px;
+
+    font-size: 18px;
+  }
+
+  .empty p {
+    margin-bottom: 17px;
+
+    font-size: 10.5px;
+    line-height: 1.55;
+  }
+
+  .empty button {
+    min-height: 37px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .homeButton,
@@ -1137,8 +1595,7 @@
   .resetButton,
   .empty button,
   .spinner {
-    animation: none;
-
     transition: none;
+    animation: none;
   }
 }

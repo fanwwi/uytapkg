@@ -1,6 +1,8 @@
 .step {
   width: 100%;
+  min-width: 0;
   animation: stepEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  padding: 30px;
 }
 
 @keyframes stepEnter {
@@ -15,9 +17,9 @@
   }
 }
 
-/* =========================
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .header {
   margin-bottom: 30px;
@@ -28,24 +30,26 @@
   align-items: center;
   margin-bottom: 14px;
   padding: 8px 13px;
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 999px;
   background: linear-gradient(135deg, #f5f0ff, #eee7ff);
   color: #483df6;
   font-size: 11px;
   font-weight: 800;
+  line-height: 1;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  box-shadow: 0 5px 18px rgba(124, 58, 237, 0.07);
+  box-shadow: 0 5px 18px rgba(72, 61, 246, 0.07);
 }
 
 .header h1 {
   margin: 0;
   color: #1c1820;
-  font-size: 36px;
+  font-size: clamp(27px, 3vw, 36px);
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
 }
 
 .header p {
@@ -56,12 +60,13 @@
   line-height: 1.65;
 }
 
-/* =========================
+/* =========================================================
    ADDRESS SEARCH
-========================= */
+========================================================= */
 
 .addressSearch {
   position: relative;
+  width: 100%;
   margin-bottom: 24px;
 }
 
@@ -73,27 +78,24 @@
   font-weight: 750;
 }
 
-/* =========================
+/* =========================================================
    SEARCH INPUT
-========================= */
+========================================================= */
 
 .searchInput {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
+  min-width: 0;
   height: 66px;
   box-sizing: border-box;
-
   border: 1px solid #e9e4ee;
   border-radius: 20px;
-
   background: #fff;
-
   box-shadow:
     0 3px 12px rgba(25, 15, 35, 0.025),
     0 12px 30px rgba(25, 15, 35, 0.035);
-
   transition:
     border-color 0.22s ease,
     box-shadow 0.22s ease,
@@ -106,31 +108,25 @@
 
 .searchInput:focus-within {
   border-color: #483df6;
-
   box-shadow:
-    0 0 0 4px rgba(124, 58, 237, 0.08),
-    0 14px 35px rgba(124, 58, 237, 0.09);
-
+    0 0 0 4px rgba(72, 61, 246, 0.08),
+    0 14px 35px rgba(72, 61, 246, 0.09);
   transform: translateY(-1px);
 }
 
 .searchInput input {
   width: 100%;
+  min-width: 0;
   height: 100%;
   box-sizing: border-box;
-
   padding: 0 56px;
-
   border: none !important;
   outline: none !important;
-
   background: transparent !important;
-
   color: #211d25 !important;
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
-
   box-shadow: none !important;
   appearance: none;
   -webkit-appearance: none;
@@ -154,12 +150,10 @@
 .searchIcon {
   position: absolute;
   left: 19px;
-
   width: 21px;
   height: 21px;
-
+  flex-shrink: 0;
   color: #483df6;
-
   pointer-events: none;
 }
 
@@ -167,12 +161,10 @@
 .loader {
   position: absolute;
   right: 19px;
-
   width: 20px;
   height: 20px;
-
+  flex-shrink: 0;
   color: #aaa4ae;
-
   pointer-events: none;
 }
 
@@ -187,9 +179,9 @@
   }
 }
 
-/* =========================
+/* =========================================================
    SUGGESTIONS
-========================= */
+========================================================= */
 
 .suggestions {
   position: absolute;
@@ -197,23 +189,20 @@
   left: 0;
   right: 0;
   z-index: 2000;
-
+  width: 100%;
   max-height: 320px;
+  overflow-x: hidden;
   overflow-y: auto;
-
+  box-sizing: border-box;
   padding: 8px;
-
   border: 1px solid #e9e1f0;
   border-radius: 20px;
-
   background: rgba(255, 255, 255, 0.98);
-
   box-shadow:
     0 25px 60px rgba(25, 15, 35, 0.14),
-    0 8px 25px rgba(124, 58, 237, 0.08);
-
+    0 8px 25px rgba(72, 61, 246, 0.08);
   backdrop-filter: blur(16px);
-
+  -webkit-backdrop-filter: blur(16px);
   animation: suggestionsShow 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -238,20 +227,16 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 13px 12px;
-
   border: none;
   border-radius: 14px;
-
   background: transparent;
   color: #222;
-
   text-align: left;
-
   cursor: pointer;
-
   transition:
     background 0.18s ease,
     transform 0.18s ease;
@@ -269,10 +254,8 @@
 .suggestion > svg {
   width: 19px;
   height: 19px;
-
-  flex-shrink: 0;
+  flex: 0 0 19px;
   margin-top: 2px;
-
   color: #483df6;
 }
 
@@ -280,28 +263,29 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-
   min-width: 0;
+  flex: 1;
 }
 
 .suggestion strong {
+  display: block;
+  max-width: 100%;
   overflow: hidden;
-
   color: #211d25;
   font-size: 14px;
   font-weight: 700;
-
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .suggestion span {
+  display: block;
+  max-width: 100%;
   overflow: hidden;
-
   color: #92909a;
   font-size: 12px;
   line-height: 1.45;
-
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -318,24 +302,21 @@
   }
 }
 
-/* =========================
+/* =========================================================
    MAP
-========================= */
+========================================================= */
 
 .map {
   position: relative;
-
+  width: 100%;
+  height: clamp(300px, 45vw, 500px);
+  min-height: 300px;
   margin-top: 24px;
-
   overflow: hidden;
-
-  min-height: 420px;
-
+  box-sizing: border-box;
   border: 1px solid #e9e4ee;
   border-radius: 24px;
-
   background: #f7f6f9;
-
   box-shadow:
     0 4px 15px rgba(25, 15, 35, 0.03),
     0 18px 45px rgba(25, 15, 35, 0.06);
@@ -343,33 +324,41 @@
 
 .map > * {
   width: 100%;
+  max-width: 100%;
 }
 
-/* =========================
+/* Prevent common map wrappers from overflowing */
+.map :global(.leaflet-container),
+.map :global(.mapboxgl-map),
+.map iframe {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* =========================================================
    COORDINATES
-========================= */
+========================================================= */
 
 .coordinatesPreview {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
   margin-top: 12px;
   padding: 14px 17px;
-
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 15px;
-
   background: linear-gradient(135deg, #f7f3ff 0%, #fcfaff 100%);
-
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.04);
+  box-shadow: 0 6px 20px rgba(72, 61, 246, 0.04);
 }
 
 .coordinatesPreview span {
   display: flex;
   align-items: center;
   gap: 7px;
-
+  min-width: 0;
   color: #88818f;
   font-size: 12px;
   font-weight: 600;
@@ -377,59 +366,54 @@
 
 .coordinatesPreview span::before {
   content: "";
-
   width: 7px;
   height: 7px;
-
+  flex: 0 0 7px;
   border-radius: 50%;
-
   background: #483df6;
-
   box-shadow:
-    0 0 0 4px rgba(124, 58, 237, 0.09),
-    0 0 10px rgba(124, 58, 237, 0.2);
+    0 0 0 4px rgba(72, 61, 246, 0.09),
+    0 0 10px rgba(72, 61, 246, 0.2);
 }
 
 .coordinatesPreview strong {
+  min-width: 0;
   color: #483df6;
   font-size: 13px;
   font-weight: 750;
   font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    ACTIONS
-========================= */
+========================================================= */
 
 .actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 12px;
-
+  width: 100%;
   margin-top: 30px;
 }
 
 .primary,
 .secondary {
   min-height: 52px;
-
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-
   padding: 0 26px;
-
   border-radius: 14px;
-
   font-family: inherit;
   font-size: 14px;
   font-weight: 750;
-
+  white-space: nowrap;
   cursor: pointer;
-
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -439,23 +423,18 @@
 
 .primary {
   margin-left: auto;
-
   border: none;
-
   background: linear-gradient(135deg, #483df6 0%, #9b5cf6 100%);
-
   color: #fff;
-
   box-shadow:
-    0 8px 22px rgba(124, 58, 237, 0.2),
-    0 2px 5px rgba(124, 58, 237, 0.1);
+    0 8px 22px rgba(72, 61, 246, 0.2),
+    0 2px 5px rgba(72, 61, 246, 0.1);
 }
 
 .primary:hover:not(:disabled) {
   box-shadow:
-    0 12px 28px rgba(124, 58, 237, 0.27),
-    0 3px 8px rgba(124, 58, 237, 0.12);
-
+    0 12px 28px rgba(72, 61, 246, 0.27),
+    0 3px 8px rgba(72, 61, 246, 0.12);
   transform: translateY(-2px);
 }
 
@@ -479,23 +458,21 @@
   border-color: #cdb8ef;
   background: #faf7ff;
   color: #483df6;
-
   transform: translateY(-1px);
-
-  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.07);
+  box-shadow: 0 8px 20px rgba(72, 61, 246, 0.07);
 }
 
 .secondary:active {
   transform: translateY(0);
 }
 
-/* =========================
+/* =========================================================
    ACCESSIBILITY
-========================= */
+========================================================= */
 
 .primary:focus-visible,
 .secondary:focus-visible {
-  outline: 3px solid rgba(124, 58, 237, 0.16);
+  outline: 3px solid rgba(72, 61, 246, 0.16);
   outline-offset: 2px;
 }
 
@@ -505,50 +482,140 @@
   box-shadow: none !important;
 }
 
-/* =========================
+/* =========================================================
    ATTRIBUTION
-========================= */
+========================================================= */
 
 .mapAttribution {
   margin-top: 8px;
-
   color: #aaa4ae;
   font-size: 10px;
+  line-height: 1.4;
   text-align: right;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+  .header {
+    margin-bottom: 34px;
+  }
+
+  .addressSearch {
+    margin-bottom: 28px;
+  }
+
+  .map {
+    height: 540px;
+    border-radius: 26px;
+  }
+
+  .actions {
+    margin-top: 34px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .header h1 {
+    font-size: 32px;
+  }
+
+  .map {
+    height: 420px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .header > span {
+    margin-bottom: 12px;
+    padding: 7px 11px;
+    font-size: 10px;
+  }
+
   .header h1 {
     font-size: 28px;
   }
 
+  .header p {
+    max-width: none;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .addressSearch {
+    margin-bottom: 20px;
+  }
+
+  .searchInput {
+    height: 62px;
+    border-radius: 18px;
+  }
+
   .map {
-    min-height: 350px;
+    height: 360px;
+    min-height: 320px;
+    margin-top: 20px;
     border-radius: 20px;
   }
 
   .coordinatesPreview {
     align-items: flex-start;
     flex-direction: column;
-    gap: 7px;
+    gap: 8px;
+    padding: 13px 15px;
+  }
+
+  .coordinatesPreview strong {
+    width: 100%;
+    text-align: left;
+    font-size: 12px;
+  }
+
+  .actions {
+    margin-top: 24px;
   }
 }
 
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
   .header {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+  }
+
+  .header > span {
+    margin-bottom: 11px;
   }
 
   .header h1 {
     font-size: 25px;
+    line-height: 1.12;
   }
 
   .header p {
-    font-size: 14px;
+    font-size: 13.5px;
+  }
+
+  .addressSearch > label {
+    margin-bottom: 8px;
+    font-size: 12px;
   }
 
   .searchInput {
@@ -557,37 +624,188 @@
   }
 
   .searchInput input {
-    padding: 0 48px;
+    padding: 0 46px;
     font-size: 14px;
   }
 
   .searchIcon {
-    left: 16px;
+    left: 15px;
+    width: 19px;
+    height: 19px;
   }
 
   .searchRightIcon,
   .loader {
-    right: 16px;
+    right: 15px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .suggestions {
+    top: calc(100% + 7px);
+    max-height: 280px;
+    padding: 6px;
+    border-radius: 16px;
+  }
+
+  .suggestion {
+    gap: 9px;
+    padding: 11px 9px;
+    border-radius: 12px;
+  }
+
+  .suggestion > svg {
+    width: 17px;
+    height: 17px;
+    flex-basis: 17px;
+  }
+
+  .suggestion strong {
+    font-size: 13px;
+  }
+
+  .suggestion span {
+    font-size: 11px;
   }
 
   .map {
-    min-height: 300px;
+    height: 310px;
+    min-height: 290px;
+    margin-top: 18px;
     border-radius: 18px;
+  }
+
+  .coordinatesPreview {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  .coordinatesPreview span {
+    font-size: 11px;
+  }
+
+  .coordinatesPreview strong {
+    font-size: 11.5px;
   }
 
   .actions {
     flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 22px;
   }
 
   .primary,
   .secondary {
     width: 100%;
+    min-height: 50px;
+    padding: 0 20px;
   }
 
   .primary {
     margin-left: 0;
   }
+
+  .mapAttribution {
+    margin-top: 7px;
+    font-size: 9px;
+    text-align: center;
+  }
 }
+
+/* =========================================================
+   VERY SMALL — 320px
+========================================================= */
+
+@media (max-width: 360px) {
+  .header h1 {
+    font-size: 23px;
+  }
+
+  .step {
+    padding: 20px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  .header > span {
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+
+  .searchInput {
+    height: 55px;
+    border-radius: 15px;
+  }
+
+  .searchInput input {
+    padding: 0 42px;
+    font-size: 13px;
+  }
+
+  .searchIcon {
+    left: 13px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .searchRightIcon,
+  .loader {
+    right: 13px;
+    width: 17px;
+    height: 17px;
+  }
+
+  .suggestion {
+    gap: 8px;
+    padding: 10px 8px;
+  }
+
+  .suggestion strong {
+    font-size: 12px;
+  }
+
+  .suggestion span {
+    font-size: 10.5px;
+  }
+
+  .map {
+    height: 270px;
+    min-height: 260px;
+    border-radius: 16px;
+  }
+
+  .coordinatesPreview {
+    padding: 11px 12px;
+  }
+
+  .coordinatesPreview span {
+    font-size: 10.5px;
+  }
+
+  .coordinatesPreview strong {
+    font-size: 10.5px;
+  }
+
+  .primary,
+  .secondary {
+    min-height: 48px;
+    padding: 0 16px;
+    font-size: 13px;
+    border-radius: 13px;
+  }
+
+  .mapAttribution {
+    font-size: 8.5px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .step,
@@ -597,5 +815,40 @@
   .searchInput {
     transition: none;
     animation: none;
+  }
+
+  .loader {
+    animation: none;
+  }
+}
+
+.map {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 330px) {
+  .map {
+    min-width: 0;
+  }
+
+  .map > * {
+    min-width: 0 !important;
+    max-width: none;
+  }
+
+  .map :global(.leaflet-control) {
+    max-width: calc(100% - 16px);
+    box-sizing: border-box;
+  }
+
+  .map :global(.leaflet-control-container) {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .map :global(.leaflet-control-container > *) {
+    pointer-events: auto;
   }
 }

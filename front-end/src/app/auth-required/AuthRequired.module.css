@@ -1,9 +1,20 @@
+/* =========================================================
+   AUTH REQUIRED
+========================================================= */
+
 .page {
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
+
   padding: 40px 20px;
+  box-sizing: border-box;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  overflow-x: hidden;
 
   background:
     radial-gradient(
@@ -21,10 +32,18 @@
   color: #171923;
 }
 
+/* =========================================================
+   CARD
+========================================================= */
+
 .card {
   width: 100%;
   max-width: 480px;
+  min-width: 0;
+
   padding: 42px 38px;
+
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
@@ -32,7 +51,8 @@
 
   text-align: center;
 
-  background: #ffffff;
+  background: #fff;
+
   border: 1px solid #e4e6ed;
   border-radius: 28px;
 
@@ -48,17 +68,20 @@
 .icon {
   width: 68px;
   height: 68px;
+  min-width: 68px;
+
+  margin-bottom: 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 22px;
+  box-sizing: border-box;
 
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 20px;
 
   background: rgba(72, 61, 246, 0.08);
-  border: 1px solid rgba(72, 61, 246, 0.14);
 
   color: #483df6;
 
@@ -68,6 +91,9 @@
 .icon svg {
   width: 30px;
   height: 30px;
+
+  flex: 0 0 auto;
+
   stroke-width: 2;
 }
 
@@ -76,26 +102,36 @@
 ========================================================= */
 
 .card h1 {
+  width: 100%;
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 28px;
-  line-height: 1.2;
+  font-size: clamp(24px, 3vw, 28px);
   font-weight: 850;
+  line-height: 1.2;
 
   letter-spacing: -0.6px;
+
+  overflow-wrap: anywhere;
 }
 
 .card p {
+  width: 100%;
   max-width: 390px;
+  min-width: 0;
 
   margin: 13px 0 0;
 
   color: #73788a;
 
   font-size: 14px;
+  font-weight: 500;
   line-height: 1.7;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -104,18 +140,25 @@
 
 .buttons {
   width: 100%;
+  min-width: 0;
+
+  margin-top: 28px;
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
-  margin-top: 28px;
+  gap: 10px;
 }
 
 .login,
 .home {
   width: 100%;
+  min-width: 0;
   min-height: 48px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -125,10 +168,13 @@
 
   border-radius: 13px;
 
+  font-family: inherit;
   font-size: 13px;
   font-weight: 800;
+  line-height: 1.25;
 
   text-decoration: none;
+  text-align: center;
 
   transition:
     background 0.2s ease,
@@ -138,10 +184,20 @@
     box-shadow 0.2s ease;
 }
 
+.login span,
+.home span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .login svg,
 .home svg {
   width: 17px;
   height: 17px;
+
+  min-width: 17px;
+
+  flex: 0 0 auto;
 }
 
 /* =========================================================
@@ -151,8 +207,7 @@
 .login {
   background: #483df6;
   border: 1px solid #483df6;
-
-  color: #ffffff;
+  color: #fff;
 
   box-shadow: 0 8px 22px rgba(72, 61, 246, 0.2);
 }
@@ -171,16 +226,14 @@
 ========================================================= */
 
 .home {
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #e2e4eb;
-
   color: #555a6b;
 }
 
 .home:hover {
   background: #f7f8fb;
   border-color: rgba(72, 61, 246, 0.2);
-
   color: #483df6;
 
   transform: translateY(-1px);
@@ -197,23 +250,49 @@
 }
 
 /* =========================================================
-   MOBILE
+   LARGE DESKTOP
 ========================================================= */
 
-@media (max-width: 600px) {
+@media (min-width: 1440px) {
+  .card {
+    max-width: 500px;
+    padding: 46px 42px;
+  }
+
+  .icon {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+  }
+
+  .icon svg {
+    width: 31px;
+    height: 31px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 700px) {
   .page {
-    padding: 25px 15px;
+    padding: 30px 16px;
   }
 
   .card {
-    padding: 34px 23px;
+    max-width: 450px;
+    padding: 35px 25px;
     border-radius: 23px;
   }
 
   .icon {
     width: 62px;
     height: 62px;
+    min-width: 62px;
+
     margin-bottom: 19px;
+
     border-radius: 18px;
   }
 
@@ -224,24 +303,234 @@
 
   .card h1 {
     font-size: 25px;
+    letter-spacing: -0.5px;
   }
 
   .card p {
+    margin-top: 11px;
+
     font-size: 13px;
     line-height: 1.65;
   }
 
   .buttons {
     margin-top: 24px;
+    gap: 9px;
+  }
+
+  .login,
+  .home {
+    min-height: 46px;
+    border-radius: 12px;
+    font-size: 12.5px;
   }
 }
 
-@media (max-width: 380px) {
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+  .page {
+    padding: 24px 12px;
+  }
+
   .card {
-    padding: 30px 19px;
+    padding: 29px 18px;
+    border-radius: 19px;
+  }
+
+  .icon {
+    width: 57px;
+    height: 57px;
+    min-width: 57px;
+
+    margin-bottom: 17px;
+
+    border-radius: 16px;
+  }
+
+  .icon svg {
+    width: 25px;
+    height: 25px;
   }
 
   .card h1 {
     font-size: 23px;
+    line-height: 1.18;
+    letter-spacing: -0.4px;
+  }
+
+  .card p {
+    max-width: 360px;
+
+    margin-top: 10px;
+
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .buttons {
+    margin-top: 21px;
+    gap: 8px;
+  }
+
+  .login,
+  .home {
+    min-height: 44px;
+
+    padding: 0 12px;
+
+    border-radius: 11px;
+
+    gap: 7px;
+
+    font-size: 12px;
+  }
+
+  .login svg,
+  .home svg {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+}
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding: 20px 10px;
+  }
+
+  .card {
+    padding: 25px 15px;
+    border-radius: 17px;
+  }
+
+  .icon {
+    width: 53px;
+    height: 53px;
+    min-width: 53px;
+
+    margin-bottom: 15px;
+
+    border-radius: 15px;
+  }
+
+  .icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .card h1 {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  .card p {
+    margin-top: 9px;
+
+    font-size: 11.5px;
+    line-height: 1.58;
+  }
+
+  .buttons {
+    margin-top: 19px;
+    gap: 7px;
+  }
+
+  .login,
+  .home {
+    min-height: 42px;
+
+    padding: 0 10px;
+
+    border-radius: 10px;
+
+    font-size: 11.5px;
+  }
+
+  .login svg,
+  .home svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE MODE
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 16px 8px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 21px 11px;
+
+    border-radius: 14px;
+  }
+
+  .icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    margin-bottom: 13px;
+
+    border-radius: 13px;
+  }
+
+  .icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .card h1 {
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: -0.25px;
+  }
+
+  .card p {
+    max-width: 285px;
+
+    margin-top: 8px;
+
+    font-size: 10.5px;
+    line-height: 1.55;
+  }
+
+  .buttons {
+    margin-top: 17px;
+    gap: 6px;
+  }
+
+  .login,
+  .home {
+    min-height: 40px;
+
+    padding: 0 8px;
+
+    border-radius: 9px;
+
+    gap: 6px;
+
+    font-size: 10.5px;
+  }
+
+  .login svg,
+  .home svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
   }
 }

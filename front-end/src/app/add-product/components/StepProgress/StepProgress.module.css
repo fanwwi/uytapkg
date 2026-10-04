@@ -1,57 +1,98 @@
+/* =========================================================
+   PROGRESS
+========================================================= */
+
 .progress {
   position: relative;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
   width: 100%;
 
-  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 28px;
+
+  box-sizing: border-box;
 }
 
-/* =========================
+/* =========================================================
+   CONNECTING LINE
+========================================================= */
+
+.progress::before {
+  content: "";
+
+  position: absolute;
+
+  top: 15px;
+  left: 15px;
+  right: 15px;
+
+  height: 1px;
+
+  background: linear-gradient(90deg, #dedee6 0%, #dedee6 100%);
+
+  z-index: 0;
+}
+
+/* =========================================================
    ITEM
-========================= */
+========================================================= */
 
 .progressItem {
   position: relative;
 
+  z-index: 1;
+
+  min-width: 0;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
 
   gap: 8px;
 
   color: #a1a1aa;
 
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.25;
   font-weight: 650;
 
-  z-index: 1;
+  text-align: center;
 
   transition:
-    color 0.3s ease,
-    transform 0.3s ease;
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .progressItem span {
+  display: block;
+
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* =========================
+/* =========================================================
    CIRCLE
-========================= */
+========================================================= */
 
 .progressCircle {
-  display: flex;
-
   width: 31px;
   height: 31px;
 
-  flex-shrink: 0;
+  flex: 0 0 31px;
 
+  display: flex;
   align-items: center;
   justify-content: center;
+
+  box-sizing: border-box;
 
   border: 1px solid #e5e3e9;
   border-radius: 50%;
@@ -60,23 +101,25 @@
 
   color: #96949d;
 
-  font-size: 12px;
-  font-weight: 750;
+  font-size: 11px;
+  font-weight: 800;
+
+  box-shadow: 0 1px 3px rgba(20, 20, 30, 0.03);
 
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
-/* =========================
+/* =========================================================
    ACTIVE
-========================= */
+========================================================= */
 
 .active {
-  color: #7c3aed;
+  color: #483df6;
 }
 
 .active .progressCircle {
@@ -87,29 +130,31 @@
   color: #ffffff;
 
   box-shadow:
-    0 5px 15px rgba(139, 92, 246, 0.22),
-    0 0 0 4px rgba(139, 92, 246, 0.07);
+    0 5px 16px rgba(72, 61, 246, 0.22),
+    0 0 0 4px rgba(72, 61, 246, 0.07);
 
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
-/* =========================
+/* =========================================================
    HOVER
-========================= */
+========================================================= */
 
 .progressItem:hover {
   color: #483df6;
 }
 
 .progressItem:hover .progressCircle {
-  border-color: rgba(139, 92, 246, 0.45);
+  border-color: rgba(72, 61, 246, 0.42);
 
-  background: rgba(139, 92, 246, 0.06);
+  background: rgba(72, 61, 246, 0.06);
 
   color: #483df6;
+
+  transform: translateY(-1px);
 }
 
-/* Don't override active state on hover */
+/* Keep active state on hover */
 
 .progressItem.active:hover .progressCircle {
   border-color: #483df6;
@@ -117,50 +162,208 @@
   background: #483df6;
 
   color: #ffffff;
+
+  transform: scale(1.06);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   TABLET
+========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .progress {
-    margin-bottom: 25px;
+    gap: 6px;
+
+    margin-bottom: 24px;
   }
 
-  .progressItem span {
-    display: none;
-  }
-
-  .progressItem {
-    gap: 0;
-  }
-}
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media (max-width: 480px) {
-  .progress {
-    margin-bottom: 22px;
+  .progress::before {
+    left: 14px;
+    right: 14px;
   }
 
   .progressCircle {
     width: 29px;
     height: 29px;
 
-    font-size: 11px;
+    flex-basis: 29px;
+
+    font-size: 10px;
+  }
+
+  .progressItem {
+    gap: 7px;
+
+    font-size: 10px;
+  }
+
+  /*
+     Показываем название только активного шага.
+  */
+
+  .progressItem span {
+    display: none;
+  }
+
+  .progressItem.active span {
+    display: block;
+
+    max-width: 110px;
+
+    color: #483df6;
+
+    font-size: 10px;
+    font-weight: 750;
   }
 }
 
-/* =========================
-   ACCESSIBILITY
-========================= */
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .progress {
+    margin-bottom: 22px;
+
+    gap: 4px;
+  }
+
+  .progress::before {
+    top: 14px;
+
+    left: 13px;
+    right: 13px;
+  }
+
+  .progressCircle {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+  }
+
+  .progressItem {
+    gap: 6px;
+  }
+
+  .progressItem.active span {
+    max-width: 90px;
+
+    font-size: 9px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 450px) {
+  .progress {
+    margin-bottom: 20px;
+  }
+
+  .progress::before {
+    left: 12px;
+    right: 12px;
+  }
+
+  .progressCircle {
+    width: 26px;
+    height: 26px;
+
+    flex-basis: 26px;
+
+    font-size: 9px;
+  }
+
+  .progressItem.active span {
+    max-width: 75px;
+
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL — 380px
+========================================================= */
+
+@media (max-width: 380px) {
+  .progress {
+    gap: 2px;
+
+    margin-bottom: 18px;
+  }
+
+  .progress::before {
+    top: 12px;
+
+    left: 11px;
+    right: 11px;
+  }
+
+  .progressCircle {
+    width: 24px;
+    height: 24px;
+
+    flex-basis: 24px;
+
+    font-size: 8px;
+  }
+
+  .progressItem {
+    gap: 5px;
+  }
+
+  .progressItem.active span {
+    max-width: 65px;
+
+    font-size: 7px;
+  }
+
+  .active .progressCircle {
+    box-shadow:
+      0 4px 12px rgba(72, 61, 246, 0.2),
+      0 0 0 3px rgba(72, 61, 246, 0.07);
+  }
+}
+
+/* =========================================================
+   320px SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .progress {
+    gap: 1px;
+  }
+
+  .progress::before {
+    left: 10px;
+    right: 10px;
+  }
+
+  .progressCircle {
+    width: 22px;
+    height: 22px;
+
+    flex-basis: 22px;
+
+    font-size: 7px;
+  }
+
+  .progressItem.active span {
+    max-width: 57px;
+
+    font-size: 6.5px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .progressCircle,
-  .progressItem {
+  .progressItem,
+  .progressCircle {
     transition: none;
   }
 }

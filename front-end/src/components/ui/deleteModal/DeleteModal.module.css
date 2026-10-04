@@ -4,11 +4,17 @@
 
   z-index: 9999;
 
+  width: 100%;
+  min-height: 100%;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
   padding: 20px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 
   background: rgba(15, 18, 32, 0.42);
 
@@ -16,6 +22,14 @@
   -webkit-backdrop-filter: blur(10px);
 
   animation: overlayIn 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+.overlay *,
+.overlay *::before,
+.overlay *::after {
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -26,6 +40,12 @@
   position: relative;
 
   width: min(440px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  max-height: 92vh;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 
   padding: 34px;
 
@@ -60,6 +80,8 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: 1px solid #e5e7eb;
   border-radius: 11px;
 
@@ -73,7 +95,8 @@
     color 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .close:hover:not(:disabled) {
@@ -92,11 +115,20 @@
   cursor: not-allowed;
 }
 
+.close svg {
+  width: 19px;
+  height: 19px;
+
+  flex-shrink: 0;
+}
+
 /* =========================
    ICON
 ========================= */
 
 .iconWrapper {
+  width: 100%;
+
   display: flex;
   justify-content: center;
 
@@ -129,11 +161,21 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.icon svg {
+  width: 25px;
+  height: 25px;
+
+  flex-shrink: 0;
+}
+
 /* =========================
    CONTENT
 ========================= */
 
 .content {
+  width: 100%;
+  min-width: 0;
+
   text-align: center;
 }
 
@@ -145,12 +187,17 @@
   color: #483df6;
 
   font-size: 9px;
+  line-height: 1.3;
   font-weight: 900;
 
   letter-spacing: 2px;
+
+  overflow-wrap: anywhere;
 }
 
 .content h2 {
+  max-width: 100%;
+
   margin: 0 0 11px;
 
   color: #111827;
@@ -161,9 +208,12 @@
   font-weight: 850;
 
   letter-spacing: -0.8px;
+
+  overflow-wrap: anywhere;
 }
 
 .content p {
+  width: 100%;
   max-width: 340px;
 
   margin: 0 auto;
@@ -172,6 +222,9 @@
 
   font-size: 13px;
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================
@@ -179,9 +232,12 @@
 ========================= */
 
 .actions {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 10px;
 
@@ -190,7 +246,12 @@
 
 .cancel,
 .delete {
-  height: 49px;
+  min-width: 0;
+
+  min-height: 49px;
+  height: auto;
+
+  padding: 10px 12px;
 
   display: flex;
   align-items: center;
@@ -203,15 +264,29 @@
   font-family: inherit;
 
   font-size: 12px;
+  line-height: 1.25;
   font-weight: 800;
 
+  text-align: center;
+
   cursor: pointer;
+
+  overflow-wrap: anywhere;
 
   transition:
     transform 0.2s ease,
     background 0.2s ease,
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.cancel svg,
+.delete svg {
+  width: 17px;
+  height: 17px;
+
+  flex: 0 0 17px;
 }
 
 /* =========================
@@ -271,6 +346,8 @@
   cursor: not-allowed;
 
   transform: none;
+
+  box-shadow: none;
 }
 
 /* =========================
@@ -314,25 +391,41 @@
 }
 
 /* =========================
-   MOBILE
+   TABLET
 ========================= */
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .overlay {
     padding: 14px;
   }
 
   .modal {
-    padding: 28px 21px 21px;
+    width: 100%;
+    max-width: 440px;
 
-    border-radius: 20px;
+    padding: 29px 21px 21px;
+
+    border-radius: 21px;
+  }
+
+  .close {
+    top: 13px;
+    right: 13px;
+
+    width: 35px;
+    height: 35px;
   }
 
   .icon {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
 
-    border-radius: 16px;
+    border-radius: 17px;
+  }
+
+  .icon svg {
+    width: 23px;
+    height: 23px;
   }
 
   .content h2 {
@@ -344,10 +437,224 @@
   }
 
   .actions {
+    margin-top: 24px;
+
     grid-template-columns: 1fr;
   }
 
   .delete {
     order: -1;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+  .overlay {
+    padding: 9px;
+  }
+
+  .modal {
+    max-height: 93vh;
+
+    padding: 26px 15px 17px;
+
+    border-radius: 19px;
+  }
+
+  .close {
+    top: 10px;
+    right: 10px;
+
+    width: 33px;
+    height: 33px;
+
+    border-radius: 9px;
+  }
+
+  .close svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 18px;
+  }
+
+  .icon {
+    width: 54px;
+    height: 54px;
+
+    border-radius: 16px;
+  }
+
+  .icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .label {
+    margin-bottom: 7px;
+
+    font-size: 8px;
+
+    letter-spacing: 1.6px;
+  }
+
+  .content h2 {
+    margin-bottom: 9px;
+
+    font-size: 20px;
+  }
+
+  .content p {
+    max-width: 300px;
+
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .actions {
+    gap: 8px;
+
+    margin-top: 20px;
+  }
+
+  .cancel,
+  .delete {
+    min-height: 46px;
+
+    padding: 9px 10px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   320PX SAFETY
+========================= */
+
+@media (max-width: 330px) {
+  .overlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: 94vh;
+
+    padding: 23px 10px 14px;
+
+    border-radius: 16px;
+  }
+
+  .close {
+    top: 7px;
+    right: 7px;
+
+    width: 29px;
+    height: 29px;
+
+    border-radius: 8px;
+  }
+
+  .close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 14px;
+  }
+
+  .icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 14px;
+  }
+
+  .icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .label {
+    margin-bottom: 6px;
+
+    font-size: 7px;
+
+    letter-spacing: 1.3px;
+  }
+
+  .content h2 {
+    margin-bottom: 7px;
+
+    font-size: 18px;
+
+    letter-spacing: -0.4px;
+  }
+
+  .content p {
+    max-width: 280px;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+  }
+
+  .actions {
+    gap: 7px;
+
+    margin-top: 17px;
+  }
+
+  .cancel,
+  .delete {
+    min-height: 43px;
+
+    padding: 8px 8px;
+
+    gap: 6px;
+
+    border-radius: 10px;
+
+    font-size: 10px;
+  }
+
+  .cancel svg,
+  .delete svg {
+    width: 15px;
+    height: 15px;
+
+    flex-basis: 15px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .overlay,
+  .cancel,
+  .delete,
+  .close {
+    animation: none;
+    transition: none;
+  }
+
+  .cancel:hover,
+  .delete:hover,
+  .close:hover {
+    transform: none;
+  }
+
+  .loader {
+    animation-duration: 1.5s;
   }
 }

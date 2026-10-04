@@ -1,13 +1,15 @@
 .page {
   width: 100%;
   min-height: 100vh;
+
   box-sizing: border-box;
+
+  padding: clamp(14px, 2.2vw, 32px) clamp(14px, 3.2vw, 48px) 0;
+
   overflow-x: hidden;
 
   background: #ffffff;
   color: #171827;
-
-  padding: 32px 48px 0;
 }
 
 /* =========================================================
@@ -17,14 +19,16 @@
 .hero {
   position: relative;
 
-  width: 100%;
-  height: 650px;
+  width: min(100%, 1800px);
+  height: clamp(520px, 42vw, 650px);
+
+  margin: 0 auto;
 
   overflow: hidden;
 
-  border-radius: 28px;
+  border-radius: clamp(18px, 2vw, 28px);
 
-  background: url("/assets/issykKul.webp") center / cover no-repeat;
+  background: url("/assets/issykKul.webp") center center / cover no-repeat;
 
   box-shadow: 0 18px 50px rgba(30, 35, 60, 0.12);
 }
@@ -36,9 +40,9 @@
   background:
     linear-gradient(
       180deg,
-      rgba(15, 18, 35, 0.05) 0%,
+      rgba(15, 18, 35, 0.04) 0%,
       rgba(15, 18, 35, 0.12) 35%,
-      rgba(15, 18, 35, 0.72) 100%
+      rgba(15, 18, 35, 0.75) 100%
     ),
     linear-gradient(90deg, rgba(72, 61, 246, 0.18), transparent 65%);
 }
@@ -47,10 +51,12 @@
   position: relative;
   z-index: 2;
 
+  width: 100%;
   height: 100%;
-  box-sizing: border-box;
 
-  padding: 50px;
+  padding: clamp(25px, 5vw, 50px);
+
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
@@ -69,18 +75,24 @@
 .badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
 
-  padding: 9px 15px;
+  max-width: 100%;
+
+  padding: 8px 14px;
+
+  box-sizing: border-box;
 
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
 
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.15);
 
   color: #ffffff;
 
-  font-size: 11px;
+  font-size: clamp(9px, 0.8vw, 11px);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -92,6 +104,8 @@
   width: 16px;
   height: 16px;
 
+  flex-shrink: 0;
+
   color: #ffffff;
 }
 
@@ -100,27 +114,31 @@
 ========================================================= */
 
 .hero h1 {
-  margin: 27px 0 20px;
+  max-width: 1100px;
+
+  margin: clamp(20px, 2.4vw, 27px) 0 clamp(15px, 1.8vw, 20px);
 
   color: #ffffff;
 
-  font-size: clamp(50px, 6vw, 80px);
+  font-size: clamp(40px, 6vw, 80px);
+
   line-height: 0.98;
 
   font-weight: 900;
-  letter-spacing: -4px;
+
+  letter-spacing: clamp(-2px, -0.25vw, -4px);
 
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
 }
 
 .hero p {
-  max-width: 720px;
+  width: min(100%, 720px);
 
   margin: 0;
 
   color: rgba(255, 255, 255, 0.86);
 
-  font-size: 16px;
+  font-size: clamp(13px, 1.1vw, 16px);
   line-height: 1.65;
 }
 
@@ -129,28 +147,33 @@
 ========================================================= */
 
 .buttons {
+  width: min(100%, 900px);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   flex-wrap: wrap;
 
   gap: 10px;
 
-  margin-top: 32px;
+  margin-top: clamp(22px, 2.5vw, 32px);
 }
 
 .mainButton,
 .whiteButton,
 .homeButton {
-  height: 54px;
+  min-height: 54px;
 
-  padding: 0 22px;
+  padding: 0 21px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   gap: 9px;
+
+  box-sizing: border-box;
 
   border-radius: 13px;
 
@@ -159,6 +182,8 @@
   font-weight: 800;
 
   cursor: pointer;
+
+  white-space: nowrap;
 
   transition:
     transform 0.2s ease,
@@ -192,6 +217,7 @@
   border: 1px solid rgba(255, 255, 255, 0.4);
 
   background: rgba(255, 255, 255, 0.92);
+
   color: #171827;
 
   backdrop-filter: blur(10px);
@@ -201,12 +227,15 @@
   transform: translateY(-3px);
 
   background: #ffffff;
+
   border-color: #ffffff;
 }
 
 .whiteButton span {
   width: 30px;
   height: 30px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -215,6 +244,7 @@
   border-radius: 8px;
 
   background: #483df6;
+
   color: #ffffff;
 }
 
@@ -234,6 +264,7 @@
   transform: translateY(-3px);
 
   background: rgba(255, 255, 255, 0.22);
+
   border-color: rgba(255, 255, 255, 0.7);
 }
 
@@ -244,11 +275,13 @@
 .section,
 .intro,
 .benefitsSection {
-  margin: 100px auto 0;
+  width: min(100%, 1800px);
+
+  margin: clamp(65px, 7vw, 100px) auto 0;
 }
 
 .sectionHeading {
-  margin-bottom: 36px;
+  margin-bottom: clamp(25px, 3vw, 36px);
 }
 
 .sectionHeading > span,
@@ -265,30 +298,36 @@
   font-weight: 900;
 
   letter-spacing: 2px;
+
+  line-height: 1.4;
 }
 
 .sectionHeading h2 {
-  max-width: 780px;
+  width: 100%;
+  max-width: 850px;
 
   margin: 0;
 
   color: #171827;
 
-  font-size: 42px;
+  font-size: clamp(30px, 3.3vw, 42px);
+
   line-height: 1.05;
 
   font-weight: 900;
-  letter-spacing: -2px;
+
+  letter-spacing: clamp(-1px, -0.13vw, -2px);
 }
 
 .sectionHeading p {
-  max-width: 700px;
+  width: min(100%, 700px);
 
   margin: 14px 0 0;
 
   color: #727587;
 
-  font-size: 15px;
+  font-size: clamp(13px, 1vw, 15px);
+
   line-height: 1.7;
 }
 
@@ -299,17 +338,22 @@
 .introGrid {
   display: grid;
 
-  grid-template-columns: 1.45fr 0.85fr;
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(280px, 0.85fr);
 
   gap: 18px;
 }
 
-.introText {
-  padding: 38px;
+.introText,
+.introCard {
+  border-radius: clamp(17px, 2vw, 22px);
 
   box-sizing: border-box;
+}
 
-  border-radius: 22px;
+.introText {
+  padding: clamp(24px, 3vw, 38px);
 
   background: #f7f8fc;
 
@@ -321,16 +365,19 @@
 
   color: #626778;
 
-  font-size: 15px;
+  font-size: clamp(13px, 1vw, 15px);
+
   line-height: 1.8;
 }
 
 .textButton {
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
 
-  margin-top: 15px;
+  margin-top: 10px;
+
   padding: 0;
 
   border: none;
@@ -353,21 +400,18 @@
 
 .textButton:hover {
   gap: 12px;
+
   color: #3d32e8;
 }
 
 /* =========================================================
-   INTRO FEATURE
+   INTRO CARD
 ========================================================= */
 
 .introCard {
   min-height: 280px;
 
-  padding: 34px;
-
-  box-sizing: border-box;
-
-  border-radius: 22px;
+  padding: clamp(24px, 2.7vw, 34px);
 
   background: #eef0ff;
 
@@ -377,7 +421,10 @@
 }
 
 .introCard svg {
-  margin-bottom: 52px;
+  width: 34px;
+  height: 34px;
+
+  margin-bottom: clamp(35px, 4vw, 52px);
 
   color: #483df6;
 }
@@ -387,7 +434,10 @@
 
   margin-bottom: 9px;
 
-  font-size: 25px;
+  font-size: clamp(21px, 2vw, 25px);
+
+  line-height: 1.2;
+
   font-weight: 900;
 }
 
@@ -398,7 +448,8 @@
 
   color: #666b80;
 
-  font-size: 14px;
+  font-size: clamp(13px, 0.95vw, 14px);
+
   line-height: 1.65;
 }
 
@@ -409,7 +460,7 @@
 .propertyGrid {
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 15px;
 }
@@ -417,7 +468,7 @@
 .propertyCard {
   min-height: 260px;
 
-  padding: 27px;
+  padding: clamp(21px, 2vw, 27px);
 
   box-sizing: border-box;
 
@@ -450,6 +501,8 @@
   width: 46px;
   height: 46px;
 
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,28 +517,33 @@
 }
 
 .propertyCard h3 {
-  margin: 23px 0 9px;
+  margin: 21px 0 9px;
 
   color: #171827;
 
-  font-size: 18px;
+  font-size: clamp(16px, 1.3vw, 18px);
+
+  line-height: 1.25;
+
   font-weight: 850;
 }
 
 .propertyCard p {
-  min-height: 80px;
+  min-height: 78px;
 
   margin: 0 0 18px;
 
   color: #767b8d;
 
-  font-size: 13px;
+  font-size: clamp(12px, 0.95vw, 13px);
+
   line-height: 1.65;
 }
 
 .propertyCard button {
   display: inline-flex;
   align-items: center;
+
   gap: 7px;
 
   padding: 0;
@@ -510,6 +568,7 @@
 
 .propertyCard button:hover {
   gap: 11px;
+
   color: #3d32e8;
 }
 
@@ -518,11 +577,11 @@
 ========================================================= */
 
 .benefitsSection {
-  padding: 58px;
+  padding: clamp(30px, 4vw, 58px);
 
   box-sizing: border-box;
 
-  border-radius: 26px;
+  border-radius: clamp(20px, 2vw, 26px);
 
   background: #f7f8fc;
 
@@ -532,13 +591,13 @@
 }
 
 .benefitsSection .sectionHeading {
-  margin-bottom: 34px;
+  margin-bottom: clamp(25px, 3vw, 34px);
 }
 
 .benefitsGrid {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 12px;
 }
@@ -546,9 +605,11 @@
 .benefit {
   display: flex;
 
-  gap: 17px;
+  gap: 15px;
 
-  padding: 22px;
+  min-width: 0;
+
+  padding: clamp(17px, 2vw, 22px);
 
   border-radius: 17px;
 
@@ -570,10 +631,13 @@
   box-shadow: 0 10px 25px rgba(35, 38, 65, 0.06);
 }
 
-.benefitIcon {
-  flex-shrink: 0;
+.benefit > div:last-child {
+  min-width: 0;
+}
 
+.benefitIcon {
   background: #483df6;
+
   color: #ffffff;
 
   border-color: transparent;
@@ -586,7 +650,10 @@
 
   color: #171827;
 
-  font-size: 17px;
+  font-size: clamp(15px, 1.2vw, 17px);
+
+  line-height: 1.3;
+
   font-weight: 850;
 }
 
@@ -595,18 +662,20 @@
 
   color: #777c8d;
 
-  font-size: 13px;
+  font-size: clamp(12px, 0.95vw, 13px);
+
   line-height: 1.65;
 }
 
 /* =========================================================
    LOCATIONS
+   (оставил адаптивным на случай, если блок вернёшь)
 ========================================================= */
 
 .locationsGrid {
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 15px;
 }
@@ -628,6 +697,7 @@
 .locationImage {
   position: relative;
 
+  width: 100%;
   height: 320px;
 
   overflow: hidden;
@@ -714,6 +784,7 @@
   color: rgba(255, 255, 255, 0.75);
 
   font-size: 12px;
+
   line-height: 1.5;
 }
 
@@ -729,7 +800,6 @@
 }
 
 .locationCard:hover .locationArrow {
-  color: #ffffff;
   transform: translateX(4px);
 }
 
@@ -740,13 +810,15 @@
 .investment {
   position: relative;
 
-  min-height: 400px;
+  width: min(100%, 1800px);
 
-  margin: 100px auto 0;
+  min-height: clamp(330px, 30vw, 400px);
+
+  margin: clamp(65px, 7vw, 100px) auto 0;
 
   overflow: hidden;
 
-  border-radius: 26px;
+  border-radius: clamp(20px, 2vw, 26px);
 
   background: url("/assets/issykKul.webp") center / cover;
 
@@ -761,8 +833,8 @@
 
   background: linear-gradient(
     90deg,
-    rgba(17, 20, 35, 0.9) 0%,
-    rgba(17, 20, 35, 0.68) 55%,
+    rgba(17, 20, 35, 0.91) 0%,
+    rgba(17, 20, 35, 0.7) 55%,
     rgba(72, 61, 246, 0.18) 100%
   );
 }
@@ -771,9 +843,11 @@
   position: relative;
   z-index: 2;
 
-  max-width: 700px;
+  width: min(100%, 720px);
 
-  padding: 65px;
+  padding: clamp(35px, 5vw, 65px);
+
+  box-sizing: border-box;
 
   color: #ffffff;
 }
@@ -782,7 +856,7 @@
   width: 52px;
   height: 52px;
 
-  margin-bottom: 28px;
+  margin-bottom: 25px;
 
   display: flex;
   align-items: center;
@@ -806,26 +880,29 @@
 
   color: #ffffff;
 
-  font-size: 43px;
+  font-size: clamp(30px, 3.5vw, 43px);
+
   line-height: 1.08;
 
   font-weight: 900;
+
   letter-spacing: -2px;
 }
 
 .investmentContent p {
-  margin: 20px 0 30px;
+  margin: clamp(16px, 2vw, 20px) 0 clamp(22px, 2.5vw, 30px);
 
   color: rgba(255, 255, 255, 0.78);
 
-  font-size: 15px;
+  font-size: clamp(13px, 1vw, 15px);
+
   line-height: 1.7;
 }
 
 .investmentContent button,
 .quickSearch button,
 .addSection button {
-  height: 53px;
+  min-height: 53px;
 
   padding: 0 21px;
 
@@ -834,6 +911,8 @@
   justify-content: center;
 
   gap: 9px;
+
+  box-sizing: border-box;
 
   border: none;
   border-radius: 13px;
@@ -872,15 +951,17 @@
 ========================================================= */
 
 .quickSearch {
-  margin: 70px auto 0;
+  width: min(100%, 1800px);
 
-  padding: 25px;
+  margin: clamp(50px, 5vw, 70px) auto 0;
+
+  padding: clamp(18px, 2vw, 25px);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 30px;
+  gap: 25px;
 
   box-sizing: border-box;
 
@@ -894,6 +975,8 @@
 }
 
 .quickSearch > div {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -904,7 +987,7 @@
   width: 49px;
   height: 49px;
 
-  flex-shrink: 0;
+  flex: 0 0 49px;
 
   display: flex;
   align-items: center;
@@ -919,6 +1002,10 @@
   border: 1px solid #dfe1ff;
 }
 
+.quickSearch > div > div:last-child {
+  min-width: 0;
+}
+
 .quickSearch span {
   margin-bottom: 4px;
 }
@@ -928,7 +1015,10 @@
 
   color: #171827;
 
-  font-size: 21px;
+  font-size: clamp(18px, 1.5vw, 21px);
+
+  line-height: 1.3;
+
   font-weight: 900;
 }
 
@@ -938,6 +1028,8 @@
   color: #777c8d;
 
   font-size: 13px;
+
+  line-height: 1.5;
 }
 
 /* =========================================================
@@ -945,15 +1037,17 @@
 ========================================================= */
 
 .addSection {
-  margin: 70px auto 100px;
+  width: min(100%, 1800px);
 
-  padding: 46px;
+  margin: clamp(50px, 5vw, 70px) auto clamp(55px, 7vw, 100px);
+
+  padding: clamp(30px, 4vw, 46px);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 40px;
+  gap: 35px;
 
   box-sizing: border-box;
 
@@ -962,6 +1056,10 @@
   background: #eef0ff;
 
   border: 1px solid #dfe1ff;
+}
+
+.addSection > div {
+  min-width: 0;
 }
 
 .addSection > div > span {
@@ -973,20 +1071,24 @@
 
   color: #171827;
 
-  font-size: 32px;
+  font-size: clamp(25px, 2.6vw, 32px);
+
+  line-height: 1.15;
+
   font-weight: 900;
 
   letter-spacing: -1px;
 }
 
 .addSection p {
-  max-width: 650px;
+  width: min(100%, 650px);
 
   margin: 12px 0 0;
 
   color: #666b80;
 
-  font-size: 14px;
+  font-size: clamp(13px, 1vw, 14px);
+
   line-height: 1.65;
 }
 
@@ -1001,139 +1103,653 @@
 button:focus-visible,
 a:focus-visible {
   outline: 3px solid rgba(72, 61, 246, 0.25);
+
   outline-offset: 3px;
 }
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
 ========================================================= */
 
-@media (max-width: 1200px) {
-  .page {
-    padding: 28px 32px 0;
-  }
-
+@media (max-width: 1100px) {
   .propertyGrid,
   .locationsGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
 
-@media (max-width: 800px) {
-  .page {
-    padding: 18px 18px 0;
+  .introGrid {
+    grid-template-columns:
+      minmax(0, 1.2fr)
+      minmax(260px, 0.8fr);
   }
 
   .hero {
-    height: auto;
-    min-height: 620px;
+    height: 600px;
+  }
+}
 
-    border-radius: 22px;
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 850px) {
+  .hero {
+    min-height: 570px;
+    height: auto;
   }
 
   .heroContent {
-    padding: 35px 22px;
+    min-height: 570px;
   }
 
   .hero h1 {
-    font-size: 48px;
-    letter-spacing: -2.5px;
-  }
-
-  .hero p {
-    font-size: 15px;
+    font-size: clamp(38px, 7vw, 56px);
   }
 
   .buttons {
     width: 100%;
-    flex-direction: column;
+    max-width: 540px;
   }
 
   .mainButton,
   .whiteButton,
   .homeButton {
-    width: 100%;
+    flex: 1 1 auto;
   }
 
   .introGrid {
     grid-template-columns: 1fr;
   }
 
-  .benefitsSection {
-    padding: 38px 25px;
+  .introCard {
+    min-height: auto;
+  }
+
+  .introCard svg {
+    margin-bottom: 28px;
   }
 
   .benefitsGrid {
     grid-template-columns: 1fr;
   }
 
-  .sectionHeading h2 {
-    font-size: 32px;
-  }
-
-  .investmentContent {
-    padding: 48px 30px;
-  }
-
-  .investmentContent h2 {
-    font-size: 34px;
+  .quickSearch {
+    align-items: flex-start;
   }
 
   .quickSearch,
   .addSection {
     flex-direction: column;
-    align-items: flex-start;
+  }
+
+  .quickSearch > div {
+    width: 100%;
   }
 
   .quickSearch button,
   .addSection button {
     width: 100%;
   }
+
+  .addSection {
+    align-items: flex-start;
+  }
 }
 
-@media (max-width: 550px) {
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .page {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hero {
+    min-height: 570px;
+
+    border-radius: 20px;
+
+    background-position: 62% center;
+  }
+
+  .heroContent {
+    min-height: 570px;
+
+    padding: 30px 18px;
+  }
+
+  .badge {
+    font-size: 9px;
+
+    padding: 8px 12px;
+  }
+
+  .hero h1 {
+    margin-top: 19px;
+
+    font-size: clamp(34px, 10vw, 48px);
+
+    letter-spacing: -2px;
+
+    line-height: 1;
+  }
+
+  .hero p {
+    max-width: 480px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+  }
+
+  .buttons {
+    margin-top: 24px;
+
+    flex-direction: column;
+
+    gap: 9px;
+  }
+
+  .mainButton,
+  .whiteButton,
+  .homeButton {
+    width: 100%;
+
+    flex: none;
+
+    min-height: 51px;
+  }
+
+  .section,
+  .intro,
+  .benefitsSection {
+    margin-top: 58px;
+  }
+
+  .sectionHeading {
+    margin-bottom: 25px;
+  }
+
+  .sectionHeading > span,
+  .investmentContent > span,
+  .addSection > div > span,
+  .quickSearch span {
+    font-size: 9px;
+
+    letter-spacing: 1.7px;
+  }
+
+  .sectionHeading h2 {
+    font-size: clamp(27px, 8vw, 34px);
+
+    letter-spacing: -1.2px;
+  }
+
+  .sectionHeading p {
+    font-size: 13px;
+  }
+
+  .introText {
+    padding: 22px;
+  }
+
+  .introText p {
+    font-size: 13px;
+  }
+
+  .introCard {
+    padding: 22px;
+  }
+
+  .introCard strong {
+    font-size: 21px;
+  }
+
   .propertyGrid,
   .locationsGrid {
     grid-template-columns: 1fr;
   }
 
-  .section,
-  .intro,
-  .quickSearch,
-  .addSection,
-  .investment {
-    margin-top: 65px;
-  }
-
   .propertyCard {
     min-height: auto;
+
+    padding: 22px;
   }
 
-  .locationImage {
-    height: 280px;
+  .propertyCard p {
+    min-height: 0;
+
+    margin-bottom: 17px;
   }
 
-  .introText {
-    padding: 25px;
+  .benefitsSection {
+    padding: 24px 20px;
   }
 
-  .introCard {
-    min-height: 260px;
+  .benefit {
+    padding: 17px;
+
+    gap: 12px;
   }
 
-  .addSection {
-    padding: 35px 25px;
+  .benefitIcon {
+    width: 42px;
+    height: 42px;
   }
 
-  .hero h1 {
-    font-size: 41px;
+  .benefit h3 {
+    font-size: 15px;
   }
 
-  .sectionHeading h2 {
-    font-size: 29px;
+  .benefit p {
+    font-size: 12px;
+  }
+
+  .investment {
+    min-height: 460px;
+
+    margin-top: 58px;
+
+    border-radius: 20px;
+
+    background-position: 63% center;
+  }
+
+  .investmentOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(17, 20, 35, 0.55) 0%,
+      rgba(17, 20, 35, 0.93) 100%
+    );
+  }
+
+  .investmentContent {
+    width: 100%;
+
+    padding: 32px 24px;
   }
 
   .investmentContent h2 {
-    font-size: 30px;
+    font-size: clamp(28px, 8vw, 34px);
+
+    letter-spacing: -1.4px;
+  }
+
+  .investmentContent p {
+    font-size: 13px;
+  }
+
+  .investmentContent button {
+    width: 100%;
+  }
+
+  .quickSearch {
+    margin-top: 48px;
+
+    padding: 18px;
+
+    border-radius: 17px;
+  }
+
+  .quickSearch > div {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .quickIcon {
+    width: 43px;
+    height: 43px;
+
+    flex-basis: 43px;
+  }
+
+  .quickSearch h2 {
+    font-size: 18px;
+  }
+
+  .quickSearch p {
+    font-size: 12px;
+  }
+
+  .addSection {
+    margin-top: 48px;
+
+    margin-bottom: 60px;
+
+    padding: 26px 20px;
+
+    border-radius: 18px;
+  }
+
+  .addSection h2 {
+    font-size: 25px;
+  }
+
+  .addSection p {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+   320px — 400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .hero {
+    min-height: 555px;
+
+    border-radius: 17px;
+  }
+
+  .heroContent {
+    min-height: 555px;
+
+    padding: 25px 14px;
+  }
+
+  .badge {
+    max-width: calc(100% - 10px);
+
+    padding: 7px 10px;
+
+    font-size: 8px;
+
+    gap: 6px;
+  }
+
+  .badge svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .hero h1 {
+    width: 100%;
+
+    font-size: clamp(31px, 10vw, 40px);
+
+    letter-spacing: -1.7px;
+  }
+
+  .hero p {
+    width: 100%;
+
+    font-size: 12px;
+  }
+
+  .mainButton,
+  .whiteButton,
+  .homeButton {
+    min-height: 49px;
+
+    padding: 0 14px;
+
+    font-size: 12px;
+
+    border-radius: 11px;
+  }
+
+  .whiteButton span {
+    width: 27px;
+    height: 27px;
+  }
+
+  .section,
+  .intro,
+  .benefitsSection {
+    margin-top: 50px;
+  }
+
+  .sectionHeading h2 {
+    font-size: 26px;
+  }
+
+  .sectionHeading p {
+    font-size: 12px;
+  }
+
+  .introText {
+    padding: 19px;
+  }
+
+  .introText p {
+    font-size: 12px;
+
+    line-height: 1.7;
+  }
+
+  .textButton {
+    font-size: 12px;
+  }
+
+  .introCard {
+    padding: 19px;
+
+    min-height: 230px;
+  }
+
+  .introCard svg {
+    width: 30px;
+    height: 30px;
+
+    margin-bottom: 27px;
+  }
+
+  .introCard strong {
+    font-size: 19px;
+  }
+
+  .introCard p {
+    font-size: 12px;
+  }
+
+  .propertyCard {
+    padding: 19px;
+
+    border-radius: 17px;
+  }
+
+  .cardIcon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .propertyCard h3 {
+    margin-top: 17px;
+
+    font-size: 16px;
+  }
+
+  .propertyCard p {
+    font-size: 12px;
+  }
+
+  .propertyCard button {
+    font-size: 12px;
+  }
+
+  .benefitsSection {
+    padding: 20px 15px;
+
+    border-radius: 18px;
+  }
+
+  .benefit {
+    padding: 14px;
+
+    gap: 10px;
+
+    border-radius: 14px;
+  }
+
+  .benefitIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+  }
+
+  .benefit h3 {
+    font-size: 14px;
+  }
+
+  .benefit p {
+    font-size: 11px;
+  }
+
+  .investment {
+    min-height: 450px;
+
+    border-radius: 17px;
+  }
+
+  .investmentContent {
+    padding: 27px 18px;
+  }
+
+  .investmentIcon {
+    width: 46px;
+    height: 46px;
+
+    margin-bottom: 21px;
+  }
+
+  .investmentContent h2 {
+    font-size: 27px;
+
+    letter-spacing: -1px;
+  }
+
+  .investmentContent p {
+    font-size: 12px;
+  }
+
+  .investmentContent button,
+  .quickSearch button,
+  .addSection button {
+    min-height: 49px;
+
+    padding: 0 14px;
+
+    font-size: 12px;
+
+    border-radius: 11px;
+  }
+
+  .quickSearch {
+    padding: 15px;
+
+    border-radius: 15px;
+  }
+
+  .quickSearch > div {
+    gap: 10px;
+  }
+
+  .quickIcon {
+    width: 39px;
+    height: 39px;
+
+    flex-basis: 39px;
+  }
+
+  .quickSearch h2 {
+    font-size: 16px;
+  }
+
+  .quickSearch p {
+    font-size: 11px;
+  }
+
+  .addSection {
+    padding: 23px 17px;
+
+    border-radius: 16px;
+  }
+
+  .addSection h2 {
+    font-size: 22px;
+  }
+
+  .addSection p {
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   320px SAFETY
+========================================================= */
+
+@media (max-width: 340px) {
+  .page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .heroContent {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .hero h1 {
+    font-size: 29px;
+  }
+
+  .hero p {
+    font-size: 11px;
+  }
+
+  .mainButton,
+  .whiteButton,
+  .homeButton {
+    font-size: 11px;
+  }
+
+  .sectionHeading h2 {
+    font-size: 24px;
+  }
+
+  .introText,
+  .introCard,
+  .propertyCard {
+    padding: 17px;
+  }
+
+  .benefitsSection {
+    padding: 18px 13px;
+  }
+
+  .investmentContent {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .mainButton,
+  .whiteButton,
+  .homeButton,
+  .textButton,
+  .propertyCard,
+  .propertyCard button,
+  .benefit,
+  .locationImage,
+  .locationArrow,
+  .investmentContent button,
+  .quickSearch button,
+  .addSection button {
+    transition: none;
   }
 }

@@ -18,6 +18,8 @@ import {
   User,
   Menu,
   X,
+  Globe2,
+  ArrowRight,
 } from "lucide-react";
 
 import { useLanguage } from "@/context/LanguageContext";
@@ -59,7 +61,11 @@ export default function Header() {
     checkAuth();
 
     window.addEventListener("storage", checkAuth);
-    const handleUserUpdated = () => checkAuth();
+
+    const handleUserUpdated = () => {
+      checkAuth();
+    };
+
     window.addEventListener("uytap:user-updated", handleUserUpdated);
 
     const handleScroll = () => {
@@ -76,15 +82,17 @@ export default function Header() {
     };
   }, []);
 
-  // Блокировка скролла страницы при открытом мобильном меню
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previousOverflow;
     }
+
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previousOverflow;
     };
   }, [mobileMenuOpen]);
 
@@ -92,28 +100,32 @@ export default function Header() {
     setOpenMenu(openMenu === menu ? null : menu);
   }
 
-  function protectedRoute(path) {
+  function closeMobileMenu() {
     setMobileMenuOpen(false);
+    setOpenMenu(null);
+  }
+
+  function protectedRoute(path) {
+    closeMobileMenu();
+
     if (!isAuth) {
       router.push("/auth-required");
       return;
     }
+
     router.push(path);
   }
 
   function handleNavClick(path) {
-    setMobileMenuOpen(false);
+    closeMobileMenu();
     router.push(path);
   }
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.container}>
-        <Link
-          href="/"
-          className={styles.logo}
-          onClick={() => setMobileMenuOpen(false)}
-        >
+        {/* LOGO */}
+        <Link href="/" className={styles.logo} onClick={closeMobileMenu}>
           <Image
             src={scrolled ? "/assets/logo.png" : "/assets/logo2.png"}
             width={140}
@@ -123,19 +135,29 @@ export default function Header() {
           />
         </Link>
 
-        {/* ДЕСКТОПНАЯ НАВИГАЦИЯ */}
+        {/* =====================================================
+            DESKTOP NAVIGATION
+        ====================================================== */}
+
         <nav className={styles.nav}>
+          {/* LOCATIONS */}
           <div className={styles.dropdown}>
-            <button onClick={() => toggleMenu("location")}>
+            <button
+              type="button"
+              onClick={() => toggleMenu("location")}
+              aria-expanded={openMenu === "location"}
+            >
               <MapPin />
               {t("header.locations")}
               <ChevronDown />
             </button>
+
             {openMenu === "location" && (
               <div className={styles.menu}>
                 <Link href="/issyk-kul" onClick={() => setOpenMenu(null)}>
                   Иссык-Куль
                 </Link>
+
                 <Link href="/search-map" onClick={() => setOpenMenu(null)}>
                   {t("header.searchOnMap")}
                 </Link>
@@ -143,17 +165,24 @@ export default function Header() {
             )}
           </div>
 
+          {/* NEW BUILDINGS */}
           <div className={styles.dropdown}>
-            <button onClick={() => toggleMenu("new")}>
+            <button
+              type="button"
+              onClick={() => toggleMenu("new")}
+              aria-expanded={openMenu === "new"}
+            >
               <Building2 />
               {t("header.newBuildings")}
               <ChevronDown />
             </button>
+
             {openMenu === "new" && (
               <div className={styles.menu}>
                 <Link href="/complexes" onClick={() => setOpenMenu(null)}>
                   {t("header.residentialComplexes")}
                 </Link>
+
                 <Link href="/developers" onClick={() => setOpenMenu(null)}>
                   {t("header.developers")}
                 </Link>
@@ -161,20 +190,28 @@ export default function Header() {
             )}
           </div>
 
+          {/* MORE */}
           <div className={styles.dropdown}>
-            <button onClick={() => toggleMenu("more")}>
+            <button
+              type="button"
+              onClick={() => toggleMenu("more")}
+              aria-expanded={openMenu === "more"}
+            >
               <Users />
               {t("header.more")}
               <ChevronDown />
             </button>
+
             {openMenu === "more" && (
               <div className={styles.menu}>
                 <Link href="/pricing" onClick={() => setOpenMenu(null)}>
                   {t("header.pricing")}
                 </Link>
+
                 <Link href="/all-products" onClick={() => setOpenMenu(null)}>
                   {t("header.allListings")}
                 </Link>
+
                 <Link href="/lawyers" onClick={() => setOpenMenu(null)}>
                   {t("header.lawyers")}
                 </Link>
@@ -182,7 +219,9 @@ export default function Header() {
             )}
           </div>
 
+          {/* FAVORITES */}
           <button
+            type="button"
             className={styles.favorite}
             onClick={() => protectedRoute("/favorites")}
           >
@@ -191,11 +230,17 @@ export default function Header() {
           </button>
         </nav>
 
-        {/* ДЕСКТОПНЫЕ ДЕЙСТВИЯ */}
+        {/* =====================================================
+            DESKTOP ACTIONS
+        ====================================================== */}
+
         <div className={styles.actions}>
-          <LanguageSwitcher />
+          <div className={styles.desktopLanguage}>
+            <LanguageSwitcher />
+          </div>
 
           <button
+            type="button"
             className={styles.add}
             onClick={() => protectedRoute("/add-product")}
           >
@@ -204,6 +249,7 @@ export default function Header() {
           </button>
 
           <button
+            type="button"
             className={styles.free}
             onClick={() => protectedRoute("/add-product")}
           >
@@ -223,99 +269,202 @@ export default function Header() {
             </Link>
           )}
 
-          {/* КНОПКА БУРГЕР МЕНЮ */}
+          {/* BURGER */}
           <button
+            type="button"
             className={styles.burgerButton}
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => {
+              setOpenMenu(null);
+              setMobileMenuOpen(true);
+            }}
             aria-label="Open menu"
+            aria-expanded={mobileMenuOpen}
           >
             <Menu />
           </button>
         </div>
       </div>
 
-      {/* МОБИЛЬНЫЙ САЙДБАР */}
-      <div
-        className={`${styles.mobileOverlay} ${mobileMenuOpen ? styles.open : ""}`}
-        onClick={() => setMobileMenuOpen(false)}
-      />
+      {/* =====================================================
+          MOBILE OVERLAY
+      ====================================================== */}
 
       <div
-        className={`${styles.mobileSidebar} ${mobileMenuOpen ? styles.open : ""}`}
+        className={`${styles.mobileOverlay} ${
+          mobileMenuOpen ? styles.open : ""
+        }`}
+        onClick={closeMobileMenu}
+        aria-hidden="true"
+      />
+
+      {/* =====================================================
+          MOBILE SIDEBAR
+      ====================================================== */}
+
+      <aside
+        className={`${styles.mobileSidebar} ${
+          mobileMenuOpen ? styles.open : ""
+        }`}
+        aria-hidden={!mobileMenuOpen}
       >
+        {/* SIDEBAR HEADER */}
         <div className={styles.sidebarHeader}>
           <Link
             href="/"
-            className={styles.logo}
-            onClick={() => setMobileMenuOpen(false)}
+            className={styles.sidebarLogo}
+            onClick={closeMobileMenu}
           >
             <Image src="/assets/logo.png" width={120} height={70} alt="UyTap" />
           </Link>
+
           <button
+            type="button"
             className={styles.closeButton}
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={closeMobileMenu}
+            aria-label="Close menu"
           >
             <X />
           </button>
         </div>
 
         <div className={styles.sidebarContent}>
+          {/* =================================================
+              ACCOUNT
+          ================================================= */}
+
+          <div className={styles.accountBlock}>
+            <Link
+              href={isAuth ? "/profile" : "/login"}
+              className={styles.accountCard}
+              onClick={closeMobileMenu}
+            >
+              <span className={styles.accountIcon}>
+                {isAuth ? <User /> : <LogIn />}
+              </span>
+
+              <span className={styles.accountText}>
+                <strong>
+                  {isAuth ? t("header.profile") : t("header.login")}
+                </strong>
+
+                <small>
+                  {isAuth ? t("header.profile") : t("header.login")}
+                </small>
+              </span>
+
+              <ArrowRight className={styles.accountArrow} />
+            </Link>
+
+            <div className={styles.languageCard}>
+              <div className={styles.languageIcon}>
+                <Globe2 />
+              </div>
+
+              <div className={styles.languageLabel}>
+                <strong>Language</strong>
+                <small>Выберите язык</small>
+              </div>
+
+              <div className={styles.languageSwitcher}>
+                <LanguageSwitcher />
+              </div>
+            </div>
+          </div>
+
+          {/* =================================================
+              LOCATIONS
+          ================================================= */}
+
           <div className={styles.sidebarSection}>
             <span className={styles.sidebarTitle}>{t("header.locations")}</span>
-            <button onClick={() => handleNavClick("/issyk-kul")}>
-              <MapPin /> Иссык-Куль
+
+            <button type="button" onClick={() => handleNavClick("/issyk-kul")}>
+              <MapPin />
+              <span>Иссык-Куль</span>
             </button>
-            <button onClick={() => handleNavClick("/search-map")}>
-              <MapPin /> {t("header.searchOnMap")}
+
+            <button type="button" onClick={() => handleNavClick("/search-map")}>
+              <MapPin />
+              <span>{t("header.searchOnMap")}</span>
             </button>
           </div>
+
+          {/* =================================================
+              NEW BUILDINGS
+          ================================================= */}
 
           <div className={styles.sidebarSection}>
             <span className={styles.sidebarTitle}>
               {t("header.newBuildings")}
             </span>
-            <button onClick={() => handleNavClick("/complexes")}>
-              <Building2 /> {t("header.residentialComplexes")}
+
+            <button type="button" onClick={() => handleNavClick("/complexes")}>
+              <Building2 />
+              <span>{t("header.residentialComplexes")}</span>
             </button>
-            <button onClick={() => handleNavClick("/developers")}>
-              <Building2 /> {t("header.developers")}
+
+            <button type="button" onClick={() => handleNavClick("/developers")}>
+              <Building2 />
+              <span>{t("header.developers")}</span>
             </button>
           </div>
+
+          {/* =================================================
+              MORE
+          ================================================= */}
 
           <div className={styles.sidebarSection}>
             <span className={styles.sidebarTitle}>{t("header.more")}</span>
-            <button onClick={() => handleNavClick("/all-products")}>
-              <Users /> {t("header.allListings")}
+
+            <button
+              type="button"
+              onClick={() => handleNavClick("/all-products")}
+            >
+              <Users />
+              <span>{t("header.allListings")}</span>
             </button>
-            <button onClick={() => handleNavClick("/pricing")}>
-              <Users /> {t("header.pricing")}
+
+            <button type="button" onClick={() => handleNavClick("/pricing")}>
+              <Users />
+              <span>{t("header.pricing")}</span>
             </button>
-            <button onClick={() => handleNavClick("/lawyers")}>
-              <Users /> {t("header.lawyers")}
+
+            <button type="button" onClick={() => handleNavClick("/lawyers")}>
+              <Users />
+              <span>{t("header.lawyers")}</span>
             </button>
-            <button onClick={() => protectedRoute("/favorites")}>
-              <Heart /> {t("header.favorites")}
+
+            <button type="button" onClick={() => protectedRoute("/favorites")}>
+              <Heart />
+              <span>{t("header.favorites")}</span>
             </button>
           </div>
 
+          {/* =================================================
+              ACTIONS
+          ================================================= */}
+
           <div className={styles.sidebarActions}>
             <button
+              type="button"
               className={styles.sidebarAdd}
               onClick={() => protectedRoute("/add-product")}
             >
               <PlusCircle />
-              {t("header.addListing")}
+              <span>{t("header.addListing")}</span>
             </button>
+
             <button
+              type="button"
               className={styles.sidebarFree}
               onClick={() => protectedRoute("/add-product")}
             >
               <Flame />
-              {t("header.freeListing")}
+              <span>{t("header.freeListing")}</span>
             </button>
           </div>
         </div>
-      </div>
+      </aside>
     </header>
   );
 }

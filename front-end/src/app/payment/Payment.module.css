@@ -13,11 +13,11 @@
   --purple-dark: #362bd8;
 
   min-height: 100vh;
-
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 
-  padding: 35px 30px 80px;
+  padding: 50px;
 
   background:
     radial-gradient(circle at 10% 0%, rgba(72, 61, 246, 0.11), transparent 32%),
@@ -29,6 +29,13 @@
     var(--bg);
 
   color: var(--text);
+  box-sizing: border-box;
+}
+
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -37,7 +44,6 @@
 
 .backgroundGlow {
   position: absolute;
-
   width: 550px;
   height: 550px;
 
@@ -49,9 +55,7 @@
   border-radius: 50%;
 
   background: var(--purple);
-
   opacity: 0.045;
-
   filter: blur(150px);
 
   pointer-events: none;
@@ -65,22 +69,34 @@
   position: relative;
   z-index: 2;
 
+  width: 100%;
   max-width: 1200px;
 
   margin: 0 auto 80px;
 
-  display: flex;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
+
+  gap: 20px;
 }
 
 .logo {
+  justify-self: center;
+
+  margin: 0;
+
+  color: #171827;
+
   font-size: 25px;
+  line-height: 1;
   font-weight: 900;
 
   letter-spacing: -0.06em;
 
-  color: #171827;
+  white-space: nowrap;
 }
 
 .logo span {
@@ -88,12 +104,16 @@
 }
 
 .backButton {
+  justify-self: start;
+
+  min-width: 0;
   height: 42px;
 
   padding: 0 15px;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 
   border: 1px solid var(--border);
@@ -122,7 +142,6 @@
   color: var(--purple);
 
   border-color: rgba(72, 61, 246, 0.25);
-
   background: #fff;
 
   transform: translateX(-2px);
@@ -131,6 +150,10 @@
 }
 
 .secure {
+  justify-self: end;
+
+  min-width: 0;
+
   display: flex;
   align-items: center;
   gap: 7px;
@@ -139,9 +162,12 @@
 
   font-size: 13px;
   font-weight: 600;
+
+  white-space: nowrap;
 }
 
 .secure svg {
+  flex-shrink: 0;
   color: var(--purple);
 }
 
@@ -153,9 +179,12 @@
   position: relative;
   z-index: 1;
 
+  width: 100%;
   max-width: 1100px;
 
   margin: 0 auto;
+
+  min-width: 0;
 }
 
 /* =========================
@@ -170,10 +199,17 @@
   gap: 40px;
 
   margin-bottom: 45px;
+
+  min-width: 0;
+}
+
+.top > div:first-child {
+  min-width: 0;
 }
 
 .badge {
   width: fit-content;
+  max-width: 100%;
 
   display: flex;
   align-items: center;
@@ -189,22 +225,32 @@
   color: var(--purple);
 
   font-size: 11px;
+  line-height: 1.2;
   font-weight: 900;
 
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
+  overflow-wrap: anywhere;
+}
+
+.badge svg {
+  flex-shrink: 0;
 }
 
 .top h1 {
+  max-width: 100%;
+
   margin: 20px 0 12px;
 
   color: #171827;
 
   font-size: clamp(42px, 6vw, 68px);
-
   line-height: 0.95;
 
   letter-spacing: -0.06em;
+
+  overflow-wrap: anywhere;
 }
 
 .top p {
@@ -223,6 +269,9 @@
 ========================= */
 
 .paymentId {
+  min-width: 0;
+  max-width: 280px;
+
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -236,13 +285,16 @@
   color: #9a9dac;
 
   font-size: 11px;
+  line-height: 1.2;
 
   text-transform: uppercase;
-
   letter-spacing: 0.1em;
 }
 
 .paymentId button {
+  min-width: 0;
+  max-width: 100%;
+
   display: flex;
   align-items: center;
   gap: 7px;
@@ -258,6 +310,7 @@
 
   font-family: monospace;
   font-size: 10px;
+  line-height: 1.3;
 
   cursor: pointer;
 
@@ -277,18 +330,30 @@
   box-shadow: 0 6px 20px rgba(72, 61, 246, 0.08);
 }
 
+.paymentId button svg {
+  flex-shrink: 0;
+}
+
 /* =========================
    PAYMENT LAYOUT
 ========================= */
 
 .paymentLayout {
-  display: grid;
+  width: 100%;
+  min-width: 0;
 
-  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.25fr)
+    minmax(300px, 0.75fr);
 
   gap: 18px;
 
   align-items: stretch;
+}
+
+.paymentLayout > * {
+  min-width: 0;
 }
 
 /* =========================
@@ -296,6 +361,9 @@
 ========================= */
 
 .qrCard {
+  width: 100%;
+  min-width: 0;
+
   padding: 35px;
 
   display: flex;
@@ -325,10 +393,10 @@
 
 .qrHeader {
   width: 100%;
+  min-width: 0;
 
   display: flex;
   align-items: center;
-
   gap: 13px;
 
   margin-bottom: 30px;
@@ -337,6 +405,8 @@
 .qrIcon {
   width: 44px;
   height: 44px;
+
+  flex: 0 0 44px;
 
   display: grid;
   place-items: center;
@@ -348,12 +418,19 @@
   color: var(--purple);
 }
 
+.qrHeader > div:last-child {
+  min-width: 0;
+}
+
 .qrHeader h2 {
   margin: 0 0 3px;
 
   color: #202131;
 
   font-size: 17px;
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
 }
 
 .qrHeader p {
@@ -362,6 +439,9 @@
   color: var(--muted);
 
   font-size: 13px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -369,10 +449,14 @@
 ========================= */
 
 .qrWrapper {
+  width: min(100%, 284px);
+
   padding: 17px;
 
-  border: 1px solid #ececf2;
+  display: flex;
+  justify-content: center;
 
+  border: 1px solid #ececf2;
   border-radius: 22px;
 
   background: #fff;
@@ -383,7 +467,10 @@
 }
 
 .qr {
-  display: block;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
 
   line-height: 0;
 }
@@ -391,17 +478,20 @@
 .qr img {
   display: block;
 
-  width: 250px;
-  height: 250px;
+  width: min(250px, 100%);
+  height: auto;
+  aspect-ratio: 1;
+
+  object-fit: contain;
 }
 
 .qrSkeleton {
+  width: min(250px, 100%);
+  aspect-ratio: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 250px;
-  height: 250px;
 
   color: var(--purple);
 }
@@ -415,6 +505,8 @@
 ========================= */
 
 .amount {
+  width: 100%;
+
   margin-top: 25px;
 
   text-align: center;
@@ -428,6 +520,7 @@
   color: var(--muted);
 
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .amount strong {
@@ -436,8 +529,11 @@
   color: #171827;
 
   font-size: 31px;
+  line-height: 1.15;
 
   letter-spacing: -0.05em;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -445,6 +541,9 @@
 ========================= */
 
 .status {
+  width: 100%;
+  max-width: 100%;
+
   min-height: 36px;
 
   margin-top: 15px;
@@ -458,10 +557,14 @@
   color: var(--purple);
 
   font-size: 14px;
+  line-height: 1.4;
   font-weight: 700;
+
+  text-align: center;
 }
 
 .status svg {
+  flex-shrink: 0;
   color: var(--purple);
 }
 
@@ -497,12 +600,14 @@
 
 .actionButton {
   width: 100%;
-
   max-width: 360px;
+  min-width: 0;
 
-  height: 48px;
+  min-height: 48px;
+  height: auto;
 
   margin-top: 10px;
+  padding: 12px 16px;
 
   display: flex;
   align-items: center;
@@ -515,11 +620,13 @@
 
   background: var(--purple);
 
-  color: white;
+  color: #fff;
 
   font-size: 14px;
+  line-height: 1.25;
   font-weight: 800;
 
+  text-align: center;
   text-decoration: none;
 
   cursor: pointer;
@@ -530,6 +637,10 @@
     background 0.25s ease,
     transform 0.25s ease,
     box-shadow 0.25s ease;
+}
+
+.actionButton svg {
+  flex-shrink: 0;
 }
 
 .actionButton:hover {
@@ -554,10 +665,10 @@
 
 .cancelLink {
   width: 100%;
-
   max-width: 360px;
 
   margin-top: 10px;
+  padding: 6px 10px;
 
   background: none;
   border: none;
@@ -565,15 +676,21 @@
   color: #858898;
 
   font-size: 13px;
+  line-height: 1.3;
   font-weight: 600;
 
   cursor: pointer;
 
-  transition: 0.2s;
+  transition: color 0.2s ease;
 }
 
 .cancelLink:hover {
   color: #ef4444;
+}
+
+.cancelLink:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 /* =========================
@@ -581,6 +698,7 @@
 ========================= */
 
 .hint {
+  width: 100%;
   max-width: 400px;
 
   margin: 13px auto 0;
@@ -588,10 +706,11 @@
   color: #9a9dac;
 
   font-size: 11px;
-
   line-height: 1.5;
 
   text-align: center;
+
+  overflow-wrap: anywhere;
 }
 
 .errorHint {
@@ -605,6 +724,9 @@
 ========================= */
 
 .summary {
+  width: 100%;
+  min-width: 0;
+
   padding: 28px;
 
   border: 1px solid var(--border);
@@ -624,6 +746,8 @@
   justify-content: space-between;
   align-items: center;
 
+  gap: 12px;
+
   padding-bottom: 20px;
 
   border-bottom: 1px solid var(--border);
@@ -631,6 +755,7 @@
   color: #737687;
 
   font-size: 13px;
+  line-height: 1.3;
   font-weight: 800;
 
   text-transform: uppercase;
@@ -638,10 +763,13 @@
 }
 
 .summaryHeader svg {
+  flex-shrink: 0;
   color: var(--purple);
 }
 
 .tariff {
+  min-width: 0;
+
   margin: 25px 0;
 
   display: flex;
@@ -654,6 +782,8 @@
   width: 48px;
   height: 48px;
 
+  flex: 0 0 48px;
+
   display: grid;
   place-items: center;
 
@@ -664,7 +794,13 @@
   color: var(--purple);
 }
 
-.tariff div:last-child {
+.tariffIcon svg {
+  flex-shrink: 0;
+}
+
+.tariff > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -675,12 +811,16 @@
   color: #9699a8;
 
   font-size: 10px;
+  line-height: 1.3;
 }
 
 .tariff strong {
   color: #202131;
 
   font-size: 17px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -688,6 +828,8 @@
 ========================= */
 
 .details {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -695,21 +837,37 @@
 }
 
 .details > div {
+  min-width: 0;
+
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+
+  gap: 20px;
 }
 
 .details span {
+  min-width: 0;
+
   color: var(--muted);
 
   font-size: 13px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .details strong {
+  min-width: 0;
+
   color: #343646;
 
   font-size: 14px;
+  line-height: 1.4;
+
+  text-align: right;
+
+  overflow-wrap: anywhere;
 }
 
 .discount {
@@ -721,12 +879,16 @@
 ========================= */
 
 .total {
+  min-width: 0;
+
   margin-top: 25px;
   padding-top: 22px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 20px;
 
   border-top: 1px solid var(--border);
 }
@@ -735,14 +897,20 @@
   color: var(--muted);
 
   font-size: 14px;
+  line-height: 1.4;
 }
 
 .total strong {
   color: #171827;
 
   font-size: 24px;
+  line-height: 1.2;
+
+  text-align: right;
 
   letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -750,10 +918,13 @@
 ========================= */
 
 .info {
+  min-width: 0;
+
   margin-top: 25px;
   padding: 13px;
 
   display: flex;
+  align-items: flex-start;
 
   gap: 9px;
 
@@ -764,18 +935,21 @@
 }
 
 .info svg {
-  flex-shrink: 0;
-
+  flex: 0 0 auto;
   color: var(--purple);
 }
 
 .info p {
+  min-width: 0;
+
   margin: 0;
 
   color: #7d8090;
 
   font-size: 10px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -788,6 +962,9 @@
 
   z-index: 100;
 
+  width: 100%;
+  min-height: 100%;
+
   padding: 20px;
 
   display: grid;
@@ -798,6 +975,8 @@
   backdrop-filter: blur(12px);
 
   animation: fadeIn 0.2s ease;
+
+  overflow-y: auto;
 }
 
 .modal {
@@ -805,9 +984,11 @@
 
   width: min(500px, 100%);
 
-  max-height: 90vh;
+  max-width: 100%;
+  max-height: min(90vh, 900px);
 
   overflow-y: auto;
+  overflow-x: hidden;
 
   padding: 35px;
 
@@ -816,7 +997,7 @@
 
   background:
     radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.08), transparent 45%),
-    #ffffff;
+    #fff;
 
   box-shadow:
     0 40px 100px rgba(25, 30, 65, 0.18),
@@ -925,16 +1106,22 @@
 }
 
 .modal h2 {
+  max-width: 100%;
+
   margin: 10px 0 8px;
 
   color: #171827;
 
   font-size: 27px;
+  line-height: 1.15;
 
   letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
 }
 
 .modalDescription {
+  width: 100%;
   max-width: 370px;
 
   margin: 0 auto 25px;
@@ -943,6 +1130,8 @@
 
   font-size: 13px;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -950,6 +1139,9 @@
 ========================= */
 
 .receipt {
+  width: 100%;
+  min-width: 0;
+
   padding: 22px;
 
   border: 1px solid #e8e9f0;
@@ -961,25 +1153,35 @@
 }
 
 .receiptBrand {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 15px;
 
   margin-bottom: 15px;
 }
 
 .receiptBrand strong {
+  min-width: 0;
+
   color: #202131;
 
   font-size: 18px;
+  line-height: 1.25;
 
   letter-spacing: -0.05em;
 }
 
 .receiptBrand span {
+  flex-shrink: 0;
+
   color: #999baa;
 
   font-size: 10px;
+  line-height: 1.2;
   font-weight: 800;
 
   letter-spacing: 0.08em;
@@ -987,6 +1189,7 @@
 
 .receiptStatus {
   width: fit-content;
+  max-width: 100%;
 
   display: flex;
   align-items: center;
@@ -1002,7 +1205,14 @@
   color: var(--purple);
 
   font-size: 10px;
+  line-height: 1.25;
   font-weight: 900;
+
+  overflow-wrap: anywhere;
+}
+
+.receiptStatus svg {
+  flex-shrink: 0;
 }
 
 .receiptLine {
@@ -1014,8 +1224,11 @@
 }
 
 .receiptRow {
+  min-width: 0;
+
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 
   gap: 20px;
 
@@ -1023,41 +1236,57 @@
 }
 
 .receiptRow span {
+  min-width: 0;
+
   color: #838696;
 
   font-size: 10px;
+  line-height: 1.4;
 }
 
 .receiptRow strong {
+  min-width: 0;
   max-width: 220px;
 
   color: #3c3e4d;
 
   font-size: 10px;
+  line-height: 1.4;
 
   text-align: right;
 
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .receiptTotal {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 15px;
 }
 
 .receiptTotal span {
   color: var(--muted);
 
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .receiptTotal strong {
   color: #171827;
 
   font-size: 21px;
+  line-height: 1.2;
+
+  text-align: right;
 
   letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -1066,10 +1295,13 @@
 
 .downloadButton {
   width: 100%;
+  min-width: 0;
 
-  height: 50px;
+  min-height: 50px;
+  height: auto;
 
   margin-top: 20px;
+  padding: 12px 16px;
 
   display: flex;
   align-items: center;
@@ -1082,10 +1314,13 @@
 
   background: var(--purple);
 
-  color: white;
+  color: #fff;
 
   font-size: 14px;
+  line-height: 1.25;
   font-weight: 800;
+
+  text-align: center;
 
   cursor: pointer;
 
@@ -1107,10 +1342,13 @@
 
 .profileButton {
   width: 100%;
+  min-width: 0;
 
-  height: 46px;
+  min-height: 46px;
+  height: auto;
 
   margin-top: 9px;
+  padding: 11px 14px;
 
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1120,7 +1358,10 @@
   color: #727586;
 
   font-size: 13px;
+  line-height: 1.25;
   font-weight: 700;
+
+  text-align: center;
 
   cursor: pointer;
 
@@ -1139,16 +1380,44 @@
 }
 
 /* =========================
-   RESPONSIVE
+   TABLET
 ========================= */
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   .page {
-    padding: 25px 18px 60px;
+    padding: 50px;
   }
 
   .header {
-    margin-bottom: 55px;
+    margin-bottom: 65px;
+  }
+
+  .paymentLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  }
+
+  .qrCard {
+    padding: 28px;
+  }
+
+  .summary {
+    padding: 24px;
+  }
+}
+
+/* =========================
+   MOBILE TABLET
+========================= */
+
+@media (max-width: 800px) {
+  .header {
+    margin-bottom: 50px;
+
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .logo {
+    justify-self: end;
   }
 
   .secure {
@@ -1157,51 +1426,971 @@
 
   .top {
     display: block;
+
+    margin-bottom: 32px;
+  }
+
+  .top h1 {
+    margin-top: 17px;
+
+    font-size: clamp(38px, 9vw, 52px);
+  }
+
+  .top p {
+    max-width: 650px;
+
+    font-size: 13px;
   }
 
   .paymentId {
-    margin-top: 25px;
+    width: 100%;
+    max-width: none;
+
+    margin-top: 22px;
 
     align-items: flex-start;
   }
 
+  .paymentId button {
+    max-width: 100%;
+  }
+
   .paymentLayout {
     grid-template-columns: 1fr;
+
+    gap: 16px;
   }
 
   .qrCard {
     padding: 25px 18px;
+    border-radius: 22px;
   }
 
   .summary {
-    padding: 23px;
+    padding: 23px 20px;
+    border-radius: 22px;
+  }
+
+  .modalOverlay {
+    padding: 16px;
+  }
+
+  .modal {
+    padding: 30px 20px;
+    border-radius: 22px;
   }
 }
 
-@media (max-width: 500px) {
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .header {
+    gap: 12px;
+
+    margin-bottom: 38px;
+  }
+
+  .backButton {
+    height: 40px;
+
+    padding: 0 12px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+  }
+
+  .backButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .top {
+    margin-bottom: 27px;
+  }
+
+  .badge {
+    padding: 6px 9px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.08em;
+  }
+
   .top h1 {
-    font-size: 43px;
+    margin: 15px 0 10px;
+
+    font-size: clamp(35px, 10vw, 46px);
+    line-height: 0.98;
+  }
+
+  .top p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .paymentId {
+    margin-top: 19px;
+  }
+
+  .paymentId > span {
+    font-size: 9px;
+  }
+
+  .paymentId button {
+    width: 100%;
+
+    justify-content: space-between;
+
+    padding: 9px 10px;
+
+    font-size: 9px;
+  }
+
+  .qrCard {
+    padding: 20px 14px;
+
+    border-radius: 20px;
+  }
+
+  .qrHeader {
+    gap: 10px;
+
+    margin-bottom: 22px;
+  }
+
+  .qrIcon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+
+    border-radius: 11px;
+  }
+
+  .qrIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .qrHeader h2 {
+    font-size: 15px;
+  }
+
+  .qrHeader p {
+    font-size: 11px;
   }
 
   .qrWrapper {
+    width: min(100%, 250px);
+
     padding: 12px;
+
+    border-radius: 18px;
   }
 
   .qr img,
   .qrSkeleton {
-    width: 210px;
-    height: 210px;
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .amount {
+    margin-top: 20px;
+  }
+
+  .amount span {
+    font-size: 12px;
   }
 
   .amount strong {
-    font-size: 27px;
+    font-size: clamp(24px, 8vw, 29px);
+  }
+
+  .status {
+    min-height: 34px;
+
+    margin-top: 12px;
+
+    font-size: 12px;
+  }
+
+  .actionButton {
+    max-width: 100%;
+
+    min-height: 46px;
+
+    padding: 11px 14px;
+
+    border-radius: 12px;
+
+    font-size: 13px;
+  }
+
+  .cancelLink {
+    max-width: 100%;
+
+    font-size: 12px;
+  }
+
+  .hint {
+    font-size: 10px;
+  }
+
+  .summary {
+    padding: 19px 16px;
+
+    border-radius: 20px;
+  }
+
+  .summaryHeader {
+    padding-bottom: 16px;
+
+    font-size: 11px;
+  }
+
+  .summaryHeader svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tariff {
+    margin: 19px 0;
+
+    gap: 10px;
+  }
+
+  .tariffIcon {
+    width: 43px;
+    height: 43px;
+    flex-basis: 43px;
+
+    border-radius: 12px;
+  }
+
+  .tariffIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .tariff span {
+    font-size: 9px;
+  }
+
+  .tariff strong {
+    font-size: 15px;
+  }
+
+  .details {
+    gap: 12px;
+  }
+
+  .details > div {
+    gap: 14px;
+  }
+
+  .details span {
+    font-size: 11px;
+  }
+
+  .details strong {
+    font-size: 12px;
+  }
+
+  .total {
+    margin-top: 20px;
+    padding-top: 17px;
+
+    gap: 14px;
+  }
+
+  .total span {
+    font-size: 12px;
+  }
+
+  .total strong {
+    font-size: 21px;
+  }
+
+  .info {
+    margin-top: 19px;
+    padding: 11px;
+
+    gap: 8px;
+
+    border-radius: 11px;
+  }
+
+  .info svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .info p {
+    font-size: 9px;
+    line-height: 1.55;
+  }
+
+  .modalOverlay {
+    padding: 12px;
   }
 
   .modal {
-    padding: 28px 18px;
+    width: 100%;
+    max-height: 92vh;
+
+    padding: 27px 15px 20px;
+
+    border-radius: 19px;
+  }
+
+  .closeButton {
+    top: 11px;
+    right: 11px;
+
+    width: 32px;
+    height: 32px;
+  }
+
+  .successIcon {
+    width: 56px;
+    height: 56px;
+
+    margin-bottom: 14px;
+  }
+
+  .modalLabel {
+    font-size: 9px;
+  }
+
+  .modal h2 {
+    margin-top: 8px;
+
+    font-size: 23px;
+  }
+
+  .modalDescription {
+    margin-bottom: 20px;
+
+    font-size: 11px;
   }
 
   .receipt {
-    padding: 17px;
+    padding: 15px;
+
+    border-radius: 14px;
+  }
+
+  .receiptBrand {
+    gap: 10px;
+
+    margin-bottom: 13px;
+  }
+
+  .receiptBrand strong {
+    font-size: 15px;
+  }
+
+  .receiptBrand span {
+    font-size: 8px;
+  }
+
+  .receiptStatus {
+    padding: 4px 7px;
+
+    font-size: 9px;
+  }
+
+  .receiptLine {
+    margin: 14px 0;
+  }
+
+  .receiptRow {
+    gap: 12px;
+
+    margin-bottom: 10px;
+  }
+
+  .receiptRow span,
+  .receiptRow strong {
+    font-size: 9px;
+  }
+
+  .receiptRow strong {
+    max-width: 58%;
+  }
+
+  .receiptTotal {
+    gap: 12px;
+  }
+
+  .receiptTotal span {
+    font-size: 11px;
+  }
+
+  .receiptTotal strong {
+    font-size: 18px;
+  }
+
+  .downloadButton {
+    min-height: 46px;
+
+    margin-top: 16px;
+
+    padding: 11px 13px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+  }
+
+  .profileButton {
+    min-height: 43px;
+
+    padding: 10px 12px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding: 30px;
+  }
+
+  .header {
+    margin-bottom: 31px;
+  }
+
+  .backButton {
+    height: 37px;
+
+    padding: 0 10px;
+
+    gap: 6px;
+
+    font-size: 12px;
+  }
+
+  .backButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .top h1 {
+    font-size: clamp(32px, 11vw, 40px);
+  }
+
+  .top p {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .paymentId button {
+    padding: 8px 9px;
+    font-size: 8px;
+  }
+
+  .qrCard {
+    padding: 17px 11px;
+
+    border-radius: 18px;
+  }
+
+  .qrHeader {
+    margin-bottom: 18px;
+  }
+
+  .qrIcon {
+    width: 37px;
+    height: 37px;
+    flex-basis: 37px;
+  }
+
+  .qrHeader h2 {
+    font-size: 14px;
+  }
+
+  .qrHeader p {
+    font-size: 10px;
+  }
+
+  .qrWrapper {
+    width: min(100%, 225px);
+
+    padding: 10px;
+
+    border-radius: 16px;
+  }
+
+  .qr img,
+  .qrSkeleton {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .amount strong {
+    font-size: 24px;
+  }
+
+  .status {
+    font-size: 11px;
+  }
+
+  .actionButton {
+    min-height: 44px;
+
+    padding: 10px 11px;
+
+    font-size: 12px;
+  }
+
+  .summary {
+    padding: 17px 13px;
+
+    border-radius: 18px;
+  }
+
+  .summaryHeader {
+    font-size: 10px;
+  }
+
+  .tariff {
+    margin: 17px 0;
+  }
+
+  .tariffIcon {
+    width: 39px;
+    height: 39px;
+    flex-basis: 39px;
+  }
+
+  .tariff strong {
+    font-size: 14px;
+  }
+
+  .details {
+    gap: 11px;
+  }
+
+  .details > div {
+    gap: 10px;
+  }
+
+  .details span {
+    font-size: 10px;
+  }
+
+  .details strong {
+    font-size: 11px;
+  }
+
+  .total {
+    margin-top: 17px;
+    padding-top: 15px;
+  }
+
+  .total span {
+    font-size: 11px;
+  }
+
+  .total strong {
+    font-size: 19px;
+  }
+
+  .info {
+    margin-top: 16px;
+    padding: 10px;
+  }
+
+  .info p {
+    font-size: 8.5px;
+  }
+
+  .modalOverlay {
+    padding: 8px;
+  }
+
+  .modal {
+    padding: 25px 12px 16px;
+
+    border-radius: 17px;
+  }
+
+  .receipt {
+    padding: 13px;
+  }
+
+  .receiptBrand strong {
+    font-size: 14px;
+  }
+
+  .receiptBrand span {
+    font-size: 7px;
+  }
+
+  .receiptRow {
+    gap: 9px;
+  }
+
+  .receiptRow span,
+  .receiptRow strong {
+    font-size: 8px;
+  }
+
+  .receiptTotal span {
+    font-size: 10px;
+  }
+
+  .receiptTotal strong {
+    font-size: 17px;
+  }
+
+  .downloadButton {
+    min-height: 44px;
+
+    font-size: 11px;
+  }
+
+  .profileButton {
+    min-height: 41px;
+
+    font-size: 10px;
+  }
+}
+
+/* =========================
+   320PX SAFETY
+========================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 20px;
+  }
+
+  .header {
+    gap: 8px;
+    margin-bottom: 27px;
+  }
+
+  .backButton {
+    padding: 0 8px;
+
+    font-size: 11px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .top h1 {
+    margin-top: 13px;
+    font-size: 31px;
+  }
+
+  .top p {
+    font-size: 10px;
+  }
+
+  .badge {
+    padding: 5px 8px;
+
+    font-size: 8px;
+  }
+
+  .paymentId {
+    margin-top: 16px;
+  }
+
+  .paymentId button {
+    font-size: 7.5px;
+  }
+
+  .qrCard {
+    padding: 15px 9px;
+
+    border-radius: 16px;
+  }
+
+  .qrHeader {
+    gap: 8px;
+
+    margin-bottom: 15px;
+  }
+
+  .qrIcon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+
+    border-radius: 10px;
+  }
+
+  .qrHeader h2 {
+    font-size: 13px;
+  }
+
+  .qrHeader p {
+    font-size: 9px;
+  }
+
+  .qrWrapper {
+    width: min(100%, 208px);
+
+    padding: 8px;
+
+    border-radius: 14px;
+  }
+
+  .qr img,
+  .qrSkeleton {
+    max-width: 190px;
+  }
+
+  .amount {
+    margin-top: 17px;
+  }
+
+  .amount span {
+    font-size: 10px;
+  }
+
+  .amount strong {
+    font-size: 22px;
+  }
+
+  .status {
+    min-height: 30px;
+
+    font-size: 10px;
+  }
+
+  .actionButton {
+    min-height: 42px;
+
+    padding: 9px 9px;
+
+    font-size: 11px;
+  }
+
+  .cancelLink {
+    font-size: 10px;
+  }
+
+  .hint {
+    font-size: 8.5px;
+  }
+
+  .summary {
+    padding: 15px 11px;
+
+    border-radius: 16px;
+  }
+
+  .summaryHeader {
+    padding-bottom: 13px;
+
+    font-size: 9px;
+  }
+
+  .tariff {
+    margin: 15px 0;
+
+    gap: 8px;
+  }
+
+  .tariffIcon {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+
+    border-radius: 10px;
+  }
+
+  .tariffIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tariff span {
+    font-size: 8px;
+  }
+
+  .tariff strong {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .details {
+    gap: 10px;
+  }
+
+  .details > div {
+    gap: 8px;
+  }
+
+  .details span {
+    font-size: 9px;
+  }
+
+  .details strong {
+    max-width: 55%;
+
+    font-size: 10px;
+  }
+
+  .total {
+    margin-top: 15px;
+    padding-top: 13px;
+
+    gap: 10px;
+  }
+
+  .total span {
+    font-size: 10px;
+  }
+
+  .total strong {
+    font-size: 17px;
+  }
+
+  .info {
+    margin-top: 14px;
+    padding: 8px;
+
+    gap: 6px;
+
+    border-radius: 9px;
+  }
+
+  .info svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .info p {
+    font-size: 8px;
+  }
+
+  .modalOverlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: 94vh;
+
+    padding: 23px 9px 14px;
+
+    border-radius: 15px;
+  }
+
+  .closeButton {
+    top: 8px;
+    right: 8px;
+
+    width: 29px;
+    height: 29px;
+  }
+
+  .successIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .modalLabel {
+    font-size: 8px;
+  }
+
+  .modal h2 {
+    font-size: 20px;
+  }
+
+  .modalDescription {
+    font-size: 10px;
+  }
+
+  .receipt {
+    padding: 11px;
+
+    border-radius: 12px;
+  }
+
+  .receiptBrand {
+    gap: 7px;
+  }
+
+  .receiptBrand strong {
+    font-size: 13px;
+  }
+
+  .receiptBrand span {
+    font-size: 6.5px;
+  }
+
+  .receiptStatus {
+    padding: 4px 6px;
+
+    font-size: 8px;
+  }
+
+  .receiptLine {
+    margin: 12px 0;
+  }
+
+  .receiptRow {
+    gap: 7px;
+    margin-bottom: 8px;
+  }
+
+  .receiptRow span,
+  .receiptRow strong {
+    font-size: 7.5px;
+  }
+
+  .receiptRow strong {
+    max-width: 56%;
+  }
+
+  .receiptTotal {
+    gap: 8px;
+  }
+
+  .receiptTotal span {
+    font-size: 9px;
+  }
+
+  .receiptTotal strong {
+    font-size: 15px;
+  }
+
+  .downloadButton {
+    min-height: 41px;
+
+    margin-top: 13px;
+
+    padding: 9px 8px;
+
+    font-size: 10px;
+  }
+
+  .profileButton {
+    min-height: 38px;
+
+    font-size: 9px;
   }
 }

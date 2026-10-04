@@ -1,8 +1,10 @@
 .wrapper {
   position: relative;
   width: 100%;
+  min-width: 0;
   height: 420px;
   overflow: hidden;
+  box-sizing: border-box;
 
   border: 1px solid #e9e4ee;
   border-radius: 24px;
@@ -17,11 +19,12 @@
 .map {
   width: 100%;
   height: 100%;
+  min-width: 0;
 }
 
-/* =========================
+/* =========================================================
    CUSTOM MARKER
-========================= */
+========================================================= */
 
 .customMarker {
   background: transparent !important;
@@ -62,9 +65,9 @@
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
 }
 
-/* =========================
+/* =========================================================
    MAP HINT
-========================= */
+========================================================= */
 
 .hint {
   position: absolute;
@@ -72,13 +75,17 @@
   left: 50%;
   bottom: 18px;
 
-  z-index: 500;
-
-  transform: translateX(-50%);
+  z-index: 1000;
 
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+
+  width: max-content;
+  max-width: calc(100% - 32px);
+
+  box-sizing: border-box;
 
   padding: 10px 16px;
 
@@ -95,17 +102,20 @@
 
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.35;
+
+  text-align: center;
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
-  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 .hintDot {
   width: 8px;
   height: 8px;
-
-  flex-shrink: 0;
+  flex: 0 0 8px;
 
   border-radius: 50%;
 
@@ -116,14 +126,9 @@
     0 0 10px rgba(124, 58, 237, 0.2);
 }
 
-/* =========================
+/* =========================================================
    LEAFLET UI
-========================= */
-
-/*
- * Немного приводим стандартные элементы Leaflet
- * к общей светлой стилистике сайта.
- */
+========================================================= */
 
 .wrapper :global(.leaflet-control-zoom) {
   border: 1px solid #e4dfe8 !important;
@@ -170,15 +175,16 @@
   font-size: 10px !important;
 
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .wrapper :global(.leaflet-control-attribution a) {
   color: #483df6 !important;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 768px) {
   .wrapper {
@@ -202,6 +208,10 @@
   }
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
   .wrapper {
     height: 300px;
@@ -209,10 +219,91 @@
   }
 
   .hint {
+    bottom: 10px;
+
     max-width: calc(100% - 20px);
 
     padding: 8px 12px;
 
     font-size: 11px;
+  }
+
+  .hintDot {
+    width: 7px;
+    height: 7px;
+    flex-basis: 7px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL — 330px
+========================================================= */
+
+@media (max-width: 330px) {
+  .wrapper {
+    height: 270px;
+    border-radius: 16px;
+  }
+
+  .hint {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+    width: auto;
+    max-width: none;
+
+    padding: 8px 10px;
+
+    border-radius: 12px;
+
+    font-size: 10px;
+    line-height: 1.3;
+
+    white-space: normal;
+
+    transform: none;
+  }
+
+  .hintDot {
+    width: 6px;
+    height: 6px;
+    flex-basis: 6px;
+  }
+
+  .wrapper :global(.leaflet-control-zoom) {
+    margin-top: 8px !important;
+    margin-left: 8px !important;
+  }
+
+  .wrapper :global(.leaflet-control-zoom a) {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .wrapper :global(.leaflet-control-attribution) {
+    max-width: calc(100% - 70px);
+    font-size: 8px !important;
+  }
+}
+
+/* =========================================================
+   320px
+========================================================= */
+
+@media (max-width: 320px) {
+  .wrapper {
+    height: 260px;
+    border-radius: 15px;
+  }
+
+  .hint {
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+
+    padding: 7px 9px;
+
+    font-size: 9.5px;
   }
 }

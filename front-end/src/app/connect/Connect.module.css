@@ -1,20 +1,31 @@
-/* Connect.module.css */
+/* =========================================================
+   CONNECT
+========================================================= */
 
 .page {
   position: relative;
+
+  width: 100%;
+  min-width: 0;
   min-height: 100vh;
+
+  padding: 50px 24px 80px;
+
+  box-sizing: border-box;
 
   display: flex;
   justify-content: center;
 
-  padding: 44px 24px 80px;
-
-  overflow: hidden;
+  overflow-x: hidden;
 
   background: #f7f8fc;
 
   color: #171827;
 }
+
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
 
 .backgroundGlow {
   position: absolute;
@@ -36,53 +47,85 @@
   pointer-events: none;
 }
 
+/* =========================================================
+   CONTAINER
+========================================================= */
+
 .container {
   position: relative;
 
   width: 100%;
   max-width: 760px;
+  min-width: 0;
 
   z-index: 1;
 }
 
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
 .backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
+  min-width: 0;
+  min-height: 42px;
 
   margin-bottom: 28px;
+  padding: 10px 15px;
 
-  padding: 11px 16px;
+  box-sizing: border-box;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
 
   border: 1px solid #e2e4ef;
   border-radius: 12px;
 
-  background: #ffffff;
+  background: #fff;
 
   color: #505264;
 
-  font-size: 15px;
-  font-weight: 600;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.2;
 
   cursor: pointer;
 
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .backButton:hover {
   background: #f3f2ff;
+  border-color: rgba(72, 61, 246, 0.15);
   color: #483df6;
 
   transform: translateX(-2px);
 }
 
+.backButton svg {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
 .card {
   position: relative;
 
+  width: 100%;
+  min-width: 0;
+
   padding: 48px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e5e6ef;
   border-radius: 28px;
@@ -94,15 +137,22 @@
     0 2px 8px rgba(32, 31, 61, 0.03);
 }
 
+/* =========================================================
+   ICON
+========================================================= */
+
 .iconBox {
   width: 64px;
   height: 64px;
+  min-width: 64px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   margin-bottom: 22px;
+
+  box-sizing: border-box;
 
   border-radius: 18px;
 
@@ -111,56 +161,99 @@
   color: #483df6;
 }
 
+.iconBox svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* =========================================================
+   BADGE
+========================================================= */
+
 .badge {
   display: inline-block;
 
+  max-width: 100%;
+
   margin-bottom: 14px;
 
+  color: #483df6;
+
   font-size: 12px;
-  line-height: 16px;
+  font-weight: 800;
+  line-height: 1.35;
 
   letter-spacing: 1.5px;
-  font-weight: 800;
+  text-transform: uppercase;
 
-  color: #483df6;
+  overflow-wrap: anywhere;
 }
 
+/* =========================================================
+   TITLE
+========================================================= */
+
 .title {
+  width: 100%;
   max-width: 650px;
+  min-width: 0;
 
   margin: 0 0 18px;
 
-  font-size: 42px;
+  color: #171827;
+
+  font-size: clamp(34px, 4vw, 42px);
+  font-weight: 750;
   line-height: 1.13;
 
   letter-spacing: -1.2px;
-  font-weight: 750;
 
-  color: #171827;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .title span {
   color: #483df6;
 }
 
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
 .description {
+  width: 100%;
   max-width: 650px;
+  min-width: 0;
 
   margin: 0 0 32px;
 
+  color: #646678;
+
   font-size: 18px;
+  font-weight: 450;
   line-height: 1.65;
 
-  color: #646678;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
+/* =========================================================
+   CONTACT CARD
+========================================================= */
+
 .contactCard {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
   align-items: center;
+
   gap: 16px;
 
   margin-bottom: 18px;
   padding: 19px 20px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e7e8f0;
   border-radius: 17px;
@@ -171,8 +264,9 @@
 .contactIcon {
   width: 48px;
   height: 48px;
+  min-width: 48px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   display: flex;
   align-items: center;
@@ -185,53 +279,75 @@
   color: #483df6;
 }
 
+.contactIcon svg {
+  width: 23px;
+  height: 23px;
+}
+
 .contactInfo {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   gap: 4px;
 }
 
 .contactLabel {
+  color: #898b9b;
+
   font-size: 11px;
-  line-height: 15px;
+  font-weight: 800;
+  line-height: 1.35;
 
   letter-spacing: 1.2px;
-  font-weight: 800;
+  text-transform: uppercase;
 
-  color: #898b9b;
+  overflow-wrap: anywhere;
 }
 
 .phone {
-  font-size: 20px;
-  line-height: 27px;
-
-  font-weight: 700;
-
   color: #202131;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
+
+/* =========================================================
+   WHATSAPP BUTTON
+========================================================= */
 
 .whatsappButton {
   width: 100%;
+  min-width: 0;
   min-height: 62px;
+
+  margin-bottom: 28px;
+  padding: 16px 24px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 11px;
 
-  margin-bottom: 28px;
-  padding: 16px 24px;
+  gap: 11px;
 
   border-radius: 16px;
 
   background: #483df6;
 
-  color: #ffffff;
+  color: #fff;
 
   font-size: 17px;
-  line-height: 23px;
   font-weight: 750;
+  line-height: 1.3;
 
+  text-align: center;
   text-decoration: none;
 
   box-shadow: 0 10px 24px rgba(72, 61, 246, 0.22);
@@ -254,8 +370,21 @@
   transform: translateY(0);
 }
 
+.whatsappButton svg {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   MESSAGE PREVIEW
+========================================================= */
+
 .messagePreview {
+  width: 100%;
+  min-width: 0;
+
   padding: 22px 24px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e5e6ef;
   border-radius: 17px;
@@ -268,68 +397,117 @@
 
   margin-bottom: 10px;
 
+  color: #483df6;
+
   font-size: 11px;
-  line-height: 15px;
+  font-weight: 800;
+  line-height: 1.35;
 
   letter-spacing: 1.2px;
-  font-weight: 800;
+  text-transform: uppercase;
 
-  color: #483df6;
+  overflow-wrap: anywhere;
 }
 
 .messagePreview p {
   margin: 0;
 
+  color: #5f6170;
+
   font-size: 15px;
+  font-weight: 450;
   line-height: 1.65;
 
-  color: #5f6170;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 .footerText {
   margin: 18px 0 0;
 
-  text-align: center;
+  color: #9698a5;
 
   font-size: 13px;
-  line-height: 19px;
+  font-weight: 450;
+  line-height: 1.5;
 
-  color: #9698a5;
+  text-align: center;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
 
-@media (max-width: 640px) {
+@media (min-width: 1440px) {
   .page {
-    padding: 24px 16px 50px;
+    padding-top: 60px;
+  }
+
+  .card {
+    padding: 54px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 760px) {
+  .page {
+    padding: 32px 18px 55px;
   }
 
   .backButton {
     margin-bottom: 20px;
 
-    font-size: 14px;
+    min-height: 40px;
+
+    padding: 9px 13px;
+
+    font-size: 13px;
   }
 
   .card {
-    padding: 30px 22px;
+    padding: 34px 25px;
 
-    border-radius: 22px;
+    border-radius: 23px;
   }
 
   .iconBox {
     width: 58px;
     height: 58px;
+    min-width: 58px;
+
+    margin-bottom: 19px;
 
     border-radius: 16px;
   }
 
+  .iconBox svg {
+    width: 29px;
+    height: 29px;
+  }
+
   .badge {
-    font-size: 11px;
+    margin-bottom: 12px;
+
+    font-size: 10.5px;
+    letter-spacing: 1.3px;
   }
 
   .title {
+    margin-bottom: 15px;
+
     font-size: 32px;
     line-height: 1.16;
 
@@ -337,12 +515,36 @@
   }
 
   .description {
+    margin-bottom: 25px;
+
     font-size: 16px;
     line-height: 1.6;
   }
 
   .contactCard {
+    gap: 13px;
+
+    margin-bottom: 15px;
     padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .contactIcon {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+
+    border-radius: 13px;
+  }
+
+  .contactIcon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .contactLabel {
+    font-size: 10px;
   }
 
   .phone {
@@ -352,14 +554,488 @@
   .whatsappButton {
     min-height: 58px;
 
+    margin-bottom: 23px;
+
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
     font-size: 16px;
   }
 
   .messagePreview {
     padding: 18px;
+
+    border-radius: 15px;
+  }
+
+  .previewLabel {
+    font-size: 10px;
   }
 
   .messagePreview p {
     font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .footerText {
+    margin-top: 15px;
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .page {
+    padding: 25px 13px 45px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  .backButton {
+    margin-bottom: 16px;
+
+    min-height: 39px;
+
+    padding: 8px 12px;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    font-size: 12.5px;
+  }
+
+  .backButton svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card {
+    padding: 27px 18px;
+
+    border-radius: 19px;
+  }
+
+  .iconBox {
+    width: 55px;
+    height: 55px;
+    min-width: 55px;
+
+    margin-bottom: 17px;
+
+    border-radius: 15px;
+  }
+
+  .iconBox svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .badge {
+    margin-bottom: 10px;
+
+    font-size: 9.5px;
+    letter-spacing: 1.1px;
+  }
+
+  .title {
+    margin-bottom: 13px;
+
+    font-size: 27px;
+    line-height: 1.16;
+
+    letter-spacing: -0.5px;
+  }
+
+  .description {
+    margin-bottom: 21px;
+
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .contactCard {
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 13px;
+    padding: 13px;
+
+    border-radius: 13px;
+  }
+
+  .contactIcon {
+    width: 41px;
+    height: 41px;
+    min-width: 41px;
+
+    border-radius: 11px;
+  }
+
+  .contactIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .contactInfo {
+    gap: 3px;
+  }
+
+  .contactLabel {
+    font-size: 8.5px;
+    letter-spacing: 0.9px;
+  }
+
+  .phone {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .whatsappButton {
+    min-height: 53px;
+
+    margin-bottom: 19px;
+    padding: 12px 14px;
+
+    gap: 8px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+  }
+
+  .whatsappButton svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .messagePreview {
+    padding: 15px;
+
+    border-radius: 13px;
+  }
+
+  .previewLabel {
+    margin-bottom: 8px;
+
+    font-size: 8.5px;
+    letter-spacing: 0.9px;
+  }
+
+  .messagePreview p {
+    font-size: 12px;
+    line-height: 1.58;
+  }
+
+  .footerText {
+    margin-top: 13px;
+
+    font-size: 10.5px;
+    line-height: 1.45;
+  }
+}
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding: 20px 10px 38px;
+  }
+
+  .backButton {
+    margin-bottom: 13px;
+
+    min-height: 37px;
+    padding: 7px 10px;
+
+    gap: 6px;
+
+    border-radius: 9px;
+
+    font-size: 11.5px;
+  }
+
+  .backButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .card {
+    padding: 23px 14px;
+
+    border-radius: 17px;
+  }
+
+  .iconBox {
+    width: 51px;
+    height: 51px;
+    min-width: 51px;
+
+    margin-bottom: 15px;
+
+    border-radius: 14px;
+  }
+
+  .iconBox svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .badge {
+    margin-bottom: 9px;
+
+    font-size: 8.5px;
+    letter-spacing: 0.95px;
+  }
+
+  .title {
+    margin-bottom: 11px;
+
+    font-size: 23px;
+    line-height: 1.17;
+
+    letter-spacing: -0.35px;
+  }
+
+  .description {
+    margin-bottom: 18px;
+
+    font-size: 12.5px;
+    line-height: 1.58;
+  }
+
+  .contactCard {
+    gap: 9px;
+
+    margin-bottom: 11px;
+    padding: 11px;
+
+    border-radius: 11px;
+  }
+
+  .contactIcon {
+    width: 37px;
+    height: 37px;
+    min-width: 37px;
+
+    border-radius: 10px;
+  }
+
+  .contactIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .contactLabel {
+    font-size: 7.5px;
+    letter-spacing: 0.75px;
+  }
+
+  .phone {
+    font-size: 14px;
+  }
+
+  .whatsappButton {
+    min-height: 48px;
+
+    margin-bottom: 16px;
+    padding: 10px 11px;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    font-size: 12.5px;
+  }
+
+  .whatsappButton svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .messagePreview {
+    padding: 12px;
+
+    border-radius: 11px;
+  }
+
+  .previewLabel {
+    margin-bottom: 7px;
+
+    font-size: 7.5px;
+    letter-spacing: 0.75px;
+  }
+
+  .messagePreview p {
+    font-size: 10.5px;
+    line-height: 1.55;
+  }
+
+  .footerText {
+    margin-top: 11px;
+
+    font-size: 9.5px;
+    line-height: 1.4;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE MODE
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 16px 8px 30px;
+  }
+
+  .backButton {
+    margin-bottom: 10px;
+
+    min-height: 35px;
+
+    padding: 6px 9px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 10.5px;
+  }
+
+  .backButton svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .card {
+    padding: 19px 10px;
+
+    border-radius: 14px;
+  }
+
+  .iconBox {
+    width: 47px;
+    height: 47px;
+    min-width: 47px;
+
+    margin-bottom: 13px;
+
+    border-radius: 12px;
+  }
+
+  .iconBox svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .badge {
+    margin-bottom: 7px;
+
+    font-size: 7.5px;
+    letter-spacing: 0.75px;
+  }
+
+  .title {
+    margin-bottom: 9px;
+
+    font-size: 19px;
+    line-height: 1.18;
+
+    letter-spacing: -0.25px;
+  }
+
+  .description {
+    margin-bottom: 15px;
+
+    font-size: 10.5px;
+    line-height: 1.55;
+  }
+
+  .contactCard {
+    gap: 7px;
+
+    margin-bottom: 9px;
+    padding: 9px;
+
+    border-radius: 9px;
+  }
+
+  .contactIcon {
+    width: 33px;
+    height: 33px;
+    min-width: 33px;
+
+    border-radius: 8px;
+  }
+
+  .contactIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .contactInfo {
+    gap: 2px;
+  }
+
+  .contactLabel {
+    font-size: 6.5px;
+    letter-spacing: 0.6px;
+  }
+
+  .phone {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .whatsappButton {
+    min-height: 43px;
+
+    margin-bottom: 13px;
+    padding: 8px 9px;
+
+    gap: 6px;
+
+    border-radius: 9px;
+
+    font-size: 10.5px;
+  }
+
+  .whatsappButton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .messagePreview {
+    padding: 10px;
+
+    border-radius: 9px;
+  }
+
+  .previewLabel {
+    margin-bottom: 6px;
+
+    font-size: 6.5px;
+    letter-spacing: 0.6px;
+  }
+
+  .messagePreview p {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  .footerText {
+    margin-top: 9px;
+
+    font-size: 8px;
+    line-height: 1.35;
   }
 }

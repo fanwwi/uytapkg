@@ -1,10 +1,10 @@
 .wrapper {
   width: 100%;
+  min-width: 0;
 
   height: 62px;
 
   display: flex;
-
   align-items: center;
 
   gap: 14px;
@@ -16,7 +16,6 @@
   background: #f8f8fc;
 
   border: 1px solid #e4e4ee;
-
   border-radius: 18px;
 
   transition:
@@ -26,12 +25,18 @@
     background 0.25s ease;
 }
 
+.wrapper *,
+.wrapper *::before,
+.wrapper *::after {
+  box-sizing: border-box;
+}
+
 /* =========================================
    HOVER
 ========================================= */
 
 .wrapper:hover {
-  background: #ffffff;
+  background: #fff;
 
   border-color: rgba(72, 61, 246, 0.25);
 
@@ -45,7 +50,7 @@
 ========================================= */
 
 .wrapper:focus-within {
-  background: #ffffff;
+  background: #fff;
 
   border-color: #483df6;
 
@@ -60,12 +65,11 @@
 
 .icon {
   width: 21px;
-
   height: 21px;
 
-  color: #483df6;
+  flex: 0 0 21px;
 
-  flex-shrink: 0;
+  color: #483df6;
 
   stroke-width: 2.2;
 
@@ -88,29 +92,32 @@
 ========================================= */
 
 .wrapper input {
-  flex: 1;
-
+  width: 100%;
   min-width: 0;
-
   height: 100%;
 
-  border: none;
+  flex: 1 1 auto;
 
+  padding: 0;
+
+  border: none;
   outline: none;
 
   background: transparent;
 
-  font-size: 14px;
+  color: #17182b;
 
   font-family: inherit;
-
-  color: #17182b;
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 .wrapper input::placeholder {
   color: #999bac;
 
   transition: color 0.25s ease;
+
+  opacity: 1;
 }
 
 .wrapper:focus-within input::placeholder {
@@ -122,23 +129,25 @@
 ========================================= */
 
 .eye {
-  border: none;
+  width: 34px;
+  height: 34px;
 
-  background: transparent;
-
-  cursor: pointer;
+  flex: 0 0 34px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   padding: 5px;
 
+  border: none;
   border-radius: 8px;
 
+  background: transparent;
+
   color: #999bac;
+
+  cursor: pointer;
 
   transition:
     color 0.2s ease,
@@ -154,8 +163,156 @@
   transform: scale(1.08);
 }
 
+.eye:focus-visible {
+  outline: 2px solid rgba(72, 61, 246, 0.35);
+
+  outline-offset: 2px;
+}
+
 .eye svg {
   width: 20px;
-
   height: 20px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 600px) {
+  .wrapper {
+    height: 56px;
+
+    gap: 11px;
+
+    padding: 0 15px;
+
+    border-radius: 15px;
+  }
+
+  .icon {
+    width: 19px;
+    height: 19px;
+
+    flex-basis: 19px;
+  }
+
+  .wrapper input {
+    font-size: 14px;
+  }
+
+  .eye {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+
+    padding: 4px;
+  }
+
+  .eye svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+  .wrapper {
+    height: 53px;
+
+    gap: 9px;
+
+    padding: 0 13px;
+
+    border-radius: 13px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+
+    flex-basis: 18px;
+  }
+
+  .wrapper input {
+    font-size: 13px;
+  }
+
+  .eye {
+    width: 29px;
+    height: 29px;
+
+    flex-basis: 29px;
+  }
+
+  .eye svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* =========================================
+   320PX SAFETY
+========================================= */
+
+@media (max-width: 330px) {
+  .wrapper {
+    height: 48px;
+
+    gap: 7px;
+
+    padding: 0 10px;
+
+    border-radius: 11px;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+
+    flex-basis: 16px;
+  }
+
+  .wrapper input {
+    font-size: 11px;
+  }
+
+  .eye {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+
+    padding: 3px;
+  }
+
+  .eye svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper,
+  .icon,
+  .eye {
+    transition: none;
+  }
+
+  .wrapper:hover {
+    transform: none;
+  }
+
+  .eye:hover {
+    transform: none;
+  }
 }

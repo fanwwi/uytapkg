@@ -1,6 +1,11 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   --bg: #f7f8fc;
   --bg-soft: #ffffff;
+
   --card: #ffffff;
   --card-hover: #ffffff;
 
@@ -16,18 +21,19 @@
   --purple-dark: #382fd4;
 
   position: relative;
+
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
 
-  overflow: hidden;
+  overflow-x: hidden;
 
-  padding-top: 100px;
+  padding: clamp(75px, 8vw, 100px) clamp(10px, 2.5vw, 24px) 70px;
+
+  box-sizing: border-box;
 
   background:
-    radial-gradient(
-      circle at 15% 0%,
-      rgba(23, 11, 188, 0.551),
-      transparent 30%
-    ),
+    radial-gradient(circle at 15% 0%, rgba(23, 11, 188, 0.13), transparent 30%),
     radial-gradient(
       circle at 90% 25%,
       rgba(72, 61, 246, 0.055),
@@ -38,15 +44,22 @@
   color: var(--text);
 }
 
-/* =========================
+.page *,
+.page *::before,
+.page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
    BACKGROUND
-========================= */
+========================================================= */
 
 .noise {
   position: fixed;
   inset: 0;
 
   z-index: 0;
+
   pointer-events: none;
 
   opacity: 0.018;
@@ -58,14 +71,15 @@
 .glowTwo {
   position: absolute;
 
-  width: 500px;
-  height: 500px;
+  width: clamp(280px, 36vw, 500px);
+  height: clamp(280px, 36vw, 500px);
 
   border-radius: 50%;
 
   pointer-events: none;
 
   filter: blur(120px);
+
   opacity: 0.08;
 }
 
@@ -83,17 +97,17 @@
   background: var(--purple);
 }
 
-/* =========================
+/* =========================================================
    HERO
-========================= */
+========================================================= */
 
 .hero {
   position: relative;
   z-index: 1;
 
-  max-width: 950px;
+  width: min(100%, 950px);
 
-  margin: 0 auto 90px;
+  margin: 0 auto clamp(60px, 7vw, 90px);
 
   text-align: center;
 }
@@ -101,11 +115,14 @@
 .heroBadge,
 .ctaBadge {
   width: fit-content;
+  max-width: 100%;
 
   margin: 0 auto;
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
 
   padding: 8px 14px;
@@ -117,31 +134,44 @@
 
   color: var(--purple);
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
 
   letter-spacing: 0.1em;
+
   text-transform: uppercase;
 }
 
+.heroBadge svg,
+.ctaBadge svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+}
+
 .hero h1 {
-  margin: 28px 0 20px;
+  max-width: 950px;
+
+  margin: clamp(22px, 3vw, 28px) auto 20px;
 
   color: #111827;
 
-  font-size: clamp(52px, 7vw, 88px);
+  font-size: clamp(42px, 7vw, 88px);
 
   line-height: 0.94;
 
-  letter-spacing: -0.065em;
+  letter-spacing: clamp(-2px, -0.065em, -5px);
 
   font-weight: 900;
+
+  overflow-wrap: anywhere;
 }
 
 .hero h1 span {
   display: block;
 
-  background-color: #ffff;
+  background: linear-gradient(135deg, #111827, var(--purple));
 
   -webkit-background-clip: text;
   background-clip: text;
@@ -150,29 +180,32 @@
 }
 
 .hero > p {
-  max-width: 620px;
+  width: min(100%, 620px);
 
   margin: 0 auto;
 
   color: var(--muted);
 
-  font-size: 17px;
+  font-size: clamp(13px, 1.2vw, 17px);
+
   line-height: 1.7;
 }
 
-/* =========================
+/* =========================================================
    PERIODS
-========================= */
+========================================================= */
 
 .periods {
-  max-width: 650px;
+  width: min(100%, 650px);
 
-  margin: 42px auto 0;
+  margin: clamp(28px, 4vw, 42px) auto 0;
 
   padding: 5px;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
   gap: 5px;
 
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -181,6 +214,7 @@
   background: rgba(255, 255, 255, 0.82);
 
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
   box-shadow:
     0 20px 50px rgba(15, 23, 42, 0.07),
@@ -188,7 +222,10 @@
 }
 
 .periods button {
+  min-width: 0;
   min-height: 54px;
+
+  padding: 8px 6px;
 
   border: none;
   border-radius: 13px;
@@ -197,10 +234,12 @@
 
   color: #737987;
 
-  cursor: pointer;
+  font-family: inherit;
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+
+  cursor: pointer;
 
   transition:
     background 0.25s ease,
@@ -211,6 +250,10 @@
 .periods button span,
 .periods button small {
   display: block;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .periods button small {
@@ -218,7 +261,7 @@
 
   color: #9ca3af;
 
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .periods button:hover {
@@ -230,24 +273,24 @@
 .periods .activePeriod {
   background: linear-gradient(135deg, var(--purple-dark), var(--purple));
 
-  color: white;
+  color: #ffffff;
 
   box-shadow: 0 10px 25px rgba(72, 61, 246, 0.22);
 }
 
-.activePeriod small {
+.periods .activePeriod small {
   color: #e8e6ff;
 }
 
-/* =========================
+/* =========================================================
    SECTION HEADER
-========================= */
+========================================================= */
 
 .cardsSection {
   position: relative;
   z-index: 1;
 
-  max-width: 1420px;
+  width: min(100%, 1420px);
 
   margin: 0 auto;
 }
@@ -257,6 +300,8 @@
   justify-content: space-between;
   align-items: flex-end;
 
+  gap: 30px;
+
   margin-bottom: 30px;
 
   padding: 0 5px;
@@ -264,15 +309,18 @@
 
 .sectionHeader > div,
 .promotionHeader > div {
+  min-width: 0;
+
   display: flex;
   align-items: center;
+
   gap: 12px;
 }
 
 .sectionNumber {
   color: var(--purple);
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
 
   letter-spacing: 0.1em;
@@ -281,29 +329,38 @@
 .sectionLabel {
   color: #7b8190;
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
 
   text-transform: uppercase;
+
   letter-spacing: 0.1em;
 }
 
 .sectionHeader p {
+  max-width: 450px;
+
   margin: 0;
 
   color: var(--muted);
 
-  font-size: 13px;
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  text-align: right;
 }
 
-/* =========================
-   CARDS
-========================= */
+/* =========================================================
+   TARIFF CARDS
+========================================================= */
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
+  gap: 13px;
 
   align-items: stretch;
 }
@@ -311,9 +368,10 @@
 .card {
   position: relative;
 
+  min-width: 0;
   min-height: 555px;
 
-  padding: 25px;
+  padding: clamp(19px, 2vw, 25px);
 
   overflow: hidden;
 
@@ -361,6 +419,8 @@
   opacity: 0.055;
 
   filter: blur(50px);
+
+  pointer-events: none;
 }
 
 .card:hover {
@@ -375,6 +435,10 @@
     0 0 40px rgba(72, 61, 246, 0.06);
 }
 
+/* =========================================================
+   CARD TOP
+========================================================= */
+
 .cardTop {
   position: relative;
   z-index: 1;
@@ -382,11 +446,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  gap: 10px;
 }
 
 .icon {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
 
   display: grid;
   place-items: center;
@@ -399,26 +467,41 @@
   color: var(--purple);
 }
 
+.icon svg {
+  width: 22px;
+  height: 22px;
+}
+
 .cardIndex {
   color: #b0b5c0;
 
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 900;
 
   letter-spacing: 0.08em;
 }
 
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
 .card h2 {
   position: relative;
   z-index: 1;
 
-  margin: 30px 0 10px;
+  margin: 28px 0 10px;
 
   color: #111827;
 
-  font-size: 21px;
+  font-size: clamp(18px, 1.55vw, 21px);
+
+  line-height: 1.15;
 
   letter-spacing: -0.035em;
+
+  font-weight: 850;
+
+  overflow-wrap: anywhere;
 }
 
 .desc {
@@ -431,9 +514,14 @@
 
   color: #737987;
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.6;
 }
+
+/* =========================================================
+   PRICE
+========================================================= */
 
 .price {
   position: relative;
@@ -441,33 +529,38 @@
 
   min-height: 62px;
 
-  margin: 25px 0 18px;
+  margin: 23px 0 17px;
 
   display: flex;
   align-items: baseline;
+
   gap: 6px;
 
   flex-wrap: wrap;
 }
 
 .price strong {
+  max-width: 100%;
+
   color: #111827;
 
-  font-size: 34px;
+  font-size: clamp(28px, 2.5vw, 34px);
 
   line-height: 1;
 
   letter-spacing: -0.05em;
+
+  overflow-wrap: anywhere;
 }
 
 .price > span {
   color: #8b919d;
 
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .individualPrice {
-  font-size: 22px !important;
+  font-size: 21px !important;
 
   background: linear-gradient(120deg, var(--purple), #746cf9);
 
@@ -477,10 +570,57 @@
   color: transparent !important;
 }
 
+.oldPrice {
+  width: 100%;
+
+  color: #a1a5af !important;
+
+  font-size: 11px !important;
+  font-weight: 600;
+
+  line-height: 1;
+
+  text-decoration: line-through;
+}
+
+.discountInfo {
+  position: relative;
+  z-index: 1;
+
+  width: fit-content;
+  max-width: 100%;
+
+  margin: -7px 0 12px;
+
+  padding: 4px 7px;
+
+  border-radius: 6px;
+
+  background: rgba(72, 61, 246, 0.08);
+
+  color: var(--purple);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+
+  text-transform: uppercase;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   DIVIDER + FEATURES
+========================================================= */
+
 .divider {
+  width: 100%;
   height: 1px;
 
-  margin-bottom: 20px;
+  flex-shrink: 0;
+
+  margin-bottom: 18px;
 
   background: rgba(15, 23, 42, 0.08);
 }
@@ -491,6 +631,8 @@
 
   flex: 1;
 
+  min-width: 0;
+
   padding: 0;
   margin: 0;
 
@@ -498,24 +640,33 @@
 }
 
 .card li {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
 
-  gap: 9px;
+  gap: 8px;
 
-  margin-bottom: 13px;
+  margin-bottom: 12px;
 
   color: #5f6673;
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.5;
 }
 
-.check {
-  flex-shrink: 0;
+.card li > span:last-child {
+  min-width: 0;
 
+  overflow-wrap: anywhere;
+}
+
+.check {
   width: 19px;
   height: 19px;
+
+  flex: 0 0 19px;
 
   display: grid;
   place-items: center;
@@ -529,19 +680,31 @@
   color: var(--purple);
 }
 
+.check svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* =========================================================
+   CARD BUTTON
+========================================================= */
+
 .cardButton {
   position: relative;
   z-index: 1;
 
   width: 100%;
-  height: 48px;
+  min-height: 48px;
 
-  margin-top: 20px;
+  margin-top: 18px;
+
+  padding: 8px 10px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+
+  gap: 8px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
   border-radius: 13px;
@@ -550,7 +713,9 @@
 
   color: #20242d;
 
-  font-size: 12px;
+  font-family: inherit;
+
+  font-size: 11px;
   font-weight: 800;
 
   cursor: pointer;
@@ -575,9 +740,29 @@
   transform: translateY(-2px);
 }
 
-/* =========================
+.cardButtonDisabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+
+  filter: grayscale(0.7);
+}
+
+.cardButtonDisabled:hover {
+  transform: none;
+
+  box-shadow: none;
+
+  border-color: rgba(15, 23, 42, 0.09);
+
+  background: #f8f8fb;
+
+  color: #20242d;
+}
+
+/* =========================================================
    POPULAR
-========================= */
+========================================================= */
 
 .popular {
   border-color: rgba(72, 61, 246, 0.45);
@@ -596,14 +781,16 @@
 .badge {
   position: absolute;
 
-  top: 15px;
-  right: 15px;
+  top: 14px;
+  right: 14px;
 
-  padding: 6px 9px;
+  max-width: calc(100% - 28px);
+
+  padding: 6px 8px;
 
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 
   border-radius: 100px;
 
@@ -611,15 +798,24 @@
 
   color: white;
 
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 900;
 
   letter-spacing: 0.05em;
+
+  white-space: nowrap;
 }
 
-/* =========================
+.badge svg {
+  width: 11px;
+  height: 11px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
    DEVELOPER
-========================= */
+========================================================= */
 
 .developer {
   background:
@@ -648,22 +844,22 @@
   color: transparent;
 }
 
-/* =========================
-   HOW
-========================= */
+/* =========================================================
+   HOW / PAYMENT
+========================================================= */
 
 .how,
 .payment {
   position: relative;
   z-index: 1;
 
-  max-width: 1200px;
+  width: min(100%, 1200px);
 
-  margin: 150px auto 0;
+  margin: clamp(100px, 12vw, 150px) auto 0;
 }
 
 .sectionTitle {
-  max-width: 760px;
+  width: min(100%, 760px);
 }
 
 .sectionTitle > .sectionNumber,
@@ -672,15 +868,17 @@
 }
 
 .sectionTitle h2 {
-  margin: 25px 0 15px;
+  margin: clamp(20px, 2.5vw, 25px) 0 15px;
 
   color: #111827;
 
-  font-size: clamp(40px, 5vw, 60px);
+  font-size: clamp(34px, 5vw, 60px);
 
   line-height: 0.98;
 
   letter-spacing: -0.055em;
+
+  overflow-wrap: anywhere;
 }
 
 .sectionTitle h2 span {
@@ -692,27 +890,31 @@
 
   color: var(--muted);
 
-  font-size: 15px;
+  font-size: clamp(12px, 1vw, 15px);
+
   line-height: 1.7;
 }
 
 .steps {
   position: relative;
 
-  margin-top: 55px;
+  margin-top: 45px;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 12px;
 }
 
 .step {
-  min-height: 230px;
+  min-width: 0;
+  min-height: 220px;
 
-  padding: 25px;
+  padding: clamp(19px, 2vw, 25px);
 
   border: 1px solid var(--border);
+
   border-radius: 20px;
 
   background: rgba(255, 255, 255, 0.75);
@@ -736,16 +938,18 @@
 .stepNumber {
   color: var(--purple);
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
 }
 
 .step h3 {
-  margin: 55px 0 10px;
+  margin: 48px 0 10px;
 
   color: #171b25;
 
-  font-size: 17px;
+  font-size: 16px;
+
+  line-height: 1.3;
 }
 
 .step p {
@@ -753,27 +957,32 @@
 
   color: var(--muted);
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.65;
 }
 
-/* =========================
+/* =========================================================
    PAYMENT
-========================= */
+========================================================= */
 
 .paymentGrid {
-  margin-top: 55px;
+  margin-top: 45px;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 12px;
 }
 
 .paymentCard {
-  padding: 25px;
+  min-width: 0;
+
+  padding: clamp(19px, 2vw, 25px);
 
   border: 1px solid var(--border);
+
   border-radius: 20px;
 
   background: rgba(255, 255, 255, 0.75);
@@ -806,11 +1015,13 @@
 }
 
 .paymentCard h3 {
-  margin: 25px 0 8px;
+  margin: 23px 0 8px;
 
   color: #171b25;
 
-  font-size: 15px;
+  font-size: 14px;
+
+  line-height: 1.3;
 }
 
 .paymentCard p {
@@ -818,28 +1029,30 @@
 
   color: var(--muted);
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.6;
 }
 
-/* =========================
+/* =========================================================
    PROMOTION
-========================= */
+========================================================= */
 
 .promotion {
   position: relative;
   z-index: 1;
 
-  max-width: 1200px;
+  width: min(100%, 1200px);
 
-  margin: 150px auto 0;
+  margin: clamp(100px, 12vw, 150px) auto 0;
 
-  padding: 60px;
+  padding: clamp(30px, 5vw, 60px);
 
   overflow: hidden;
 
   border: 1px solid rgba(72, 61, 246, 0.13);
-  border-radius: 28px;
+
+  border-radius: clamp(21px, 2vw, 28px);
 
   background:
     radial-gradient(circle at 15% 0%, rgba(72, 61, 246, 0.09), transparent 38%),
@@ -887,10 +1100,6 @@
 }
 
 .promotionHeader > div {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
   flex-wrap: wrap;
 }
 
@@ -899,15 +1108,17 @@
 
   max-width: 600px;
 
-  margin: 25px 0 0;
+  margin: 23px 0 0;
 
   color: #111827;
 
-  font-size: clamp(38px, 5vw, 58px);
+  font-size: clamp(36px, 5vw, 58px);
 
   line-height: 0.98;
 
   letter-spacing: -0.055em;
+
+  overflow-wrap: anywhere;
 }
 
 .promotionHeader h2 span {
@@ -921,22 +1132,24 @@
 
   color: var(--muted);
 
-  font-size: 13px;
+  font-size: 12px;
+
   line-height: 1.7;
 }
 
-/* =========================
+/* =========================================================
    PROMO GRID
-========================= */
+========================================================= */
 
 .promoGrid {
   position: relative;
   z-index: 1;
 
-  margin-top: 50px;
+  margin-top: 45px;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 12px;
 }
@@ -944,9 +1157,10 @@
 .promoCard {
   position: relative;
 
-  min-height: 265px;
+  min-width: 0;
+  min-height: 250px;
 
-  padding: 25px;
+  padding: clamp(20px, 2vw, 25px);
 
   overflow: hidden;
 
@@ -954,6 +1168,7 @@
   flex-direction: column;
 
   border: 1px solid rgba(15, 23, 42, 0.075);
+
   border-radius: 20px;
 
   background: linear-gradient(145deg, #ffffff, #f9f9fc);
@@ -1001,10 +1216,6 @@
     0 0 35px rgba(72, 61, 246, 0.05);
 }
 
-/* =========================
-   PROMO ICON
-========================= */
-
 .promoIcon {
   position: relative;
   z-index: 1;
@@ -1012,10 +1223,13 @@
   width: 45px;
   height: 45px;
 
+  flex: 0 0 45px;
+
   display: grid;
   place-items: center;
 
   border: 1px solid rgba(72, 61, 246, 0.15);
+
   border-radius: 13px;
 
   background: rgba(72, 61, 246, 0.07);
@@ -1036,10 +1250,6 @@
   color: white;
 }
 
-/* =========================
-   PROMO INDEX
-========================= */
-
 .promoIndex {
   position: absolute;
 
@@ -1048,25 +1258,21 @@
 
   color: #a8adb7;
 
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 900;
 
   letter-spacing: 0.08em;
 }
 
-/* =========================
-   PROMO CONTENT
-========================= */
-
 .promoCard h3 {
   position: relative;
   z-index: 1;
 
-  margin: 27px 0 5px;
+  margin: 25px 0 5px;
 
   color: #171b25;
 
-  font-size: 20px;
+  font-size: 19px;
 
   letter-spacing: -0.035em;
 }
@@ -1077,7 +1283,7 @@
 
   color: var(--purple);
 
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -1085,17 +1291,18 @@
   position: relative;
   z-index: 1;
 
-  margin: 15px 0 0;
+  margin: 14px 0 0;
 
   color: var(--muted);
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.65;
 }
 
-/* =========================
+/* =========================================================
    URGENT
-========================= */
+========================================================= */
 
 .urgentCard {
   border-color: rgba(239, 68, 68, 0.12);
@@ -1129,24 +1336,28 @@
   color: #ef4444;
 }
 
-/* =========================
-   SMM MODULE
-========================= */
+/* =========================================================
+   SMM
+========================================================= */
 
 .smmModule {
   position: relative;
   z-index: 1;
 
-  margin-top: 14px;
+  margin-top: 13px;
 
-  padding: 27px;
+  padding: clamp(20px, 2.3vw, 27px);
 
   display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
 
-  gap: 22px;
+  grid-template-columns:
+    70px
+    minmax(0, 1fr);
+
+  gap: 20px;
 
   border: 1px solid rgba(72, 61, 246, 0.15);
+
   border-radius: 21px;
 
   background:
@@ -1177,10 +1388,6 @@
     rgba(72, 61, 246, 0.035);
 }
 
-/* =========================
-   SMM VISUAL
-========================= */
-
 .smmVisual {
   position: relative;
 
@@ -1197,6 +1404,7 @@
   place-items: center;
 
   border: 1px solid rgba(72, 61, 246, 0.2);
+
   border-radius: 17px;
 
   background: linear-gradient(
@@ -1213,19 +1421,16 @@
 }
 
 .smmNumber {
-  margin-top: 12px;
+  margin-top: 10px;
 
   color: #a5a9b3;
 
-  font-size: 9px;
+  font-size: 8px;
+
   font-weight: 900;
 
   letter-spacing: 0.08em;
 }
-
-/* =========================
-   SMM CONTENT
-========================= */
 
 .smmContent {
   min-width: 0;
@@ -1234,7 +1439,8 @@
 .smmTop {
   display: flex;
   align-items: center;
-  gap: 12px;
+
+  gap: 10px;
 
   flex-wrap: wrap;
 }
@@ -1242,7 +1448,7 @@
 .smmLabel {
   color: var(--purple);
 
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
 
   letter-spacing: 0.09em;
@@ -1251,25 +1457,32 @@
 }
 
 .smmPlatforms {
+  max-width: 100%;
+
   padding: 5px 9px;
 
   border: 1px solid rgba(15, 23, 42, 0.07);
+
   border-radius: 100px;
 
   background: rgba(15, 23, 42, 0.025);
 
   color: #7c818c;
 
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 .smmContent h3 {
-  margin: 14px 0 5px;
+  margin: 13px 0 5px;
 
   color: #171b25;
 
-  font-size: 22px;
+  font-size: 21px;
+
+  line-height: 1.2;
 
   letter-spacing: -0.04em;
 }
@@ -1277,18 +1490,19 @@
 .smmPrice {
   color: var(--purple) !important;
 
-  font-size: 13px;
+  font-size: 12px;
+
   font-weight: 800;
 }
 
 .smmContent > p {
   max-width: 850px;
 
-  margin: 13px 0 0;
+  margin: 12px 0 0;
 
   color: var(--muted);
 
-  font-size: 12px;
+  font-size: 11px;
 
   line-height: 1.7;
 }
@@ -1299,16 +1513,13 @@
   font-weight: 800;
 }
 
-/* =========================
-   SMM FEATURES
-========================= */
-
 .smmFeatures {
-  margin-top: 19px;
+  margin-top: 17px;
 
   display: flex;
   align-items: center;
-  gap: 8px;
+
+  gap: 7px;
 
   flex-wrap: wrap;
 }
@@ -1316,144 +1527,41 @@
 .smmFeatures span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
 
-  padding: 7px 10px;
+  gap: 5px;
+
+  padding: 6px 8px;
 
   border: 1px solid rgba(72, 61, 246, 0.1);
-  border-radius: 9px;
+
+  border-radius: 8px;
 
   background: rgba(72, 61, 246, 0.045);
 
   color: #6f7480;
 
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
 }
 
 .smmFeatures svg {
+  width: 12px;
+  height: 12px;
+
   color: var(--purple);
 }
 
-/* =========================
-   PROMOTION RESPONSIVE
-========================= */
-
-@media (max-width: 900px) {
-  .promotion {
-    padding: 45px;
-  }
-
-  .promotionHeader {
-    display: block;
-  }
-
-  .promotionHeader > p {
-    margin-top: 25px;
-  }
-
-  .promoGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .promoCard:last-child {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 650px) {
-  .promotion {
-    margin-top: 100px;
-
-    padding: 35px 22px;
-
-    border-radius: 23px;
-  }
-
-  .promotionHeader h2 {
-    font-size: 42px;
-  }
-
-  .promoGrid {
-    grid-template-columns: 1fr;
-
-    margin-top: 35px;
-  }
-
-  .promoCard {
-    min-height: 220px;
-  }
-
-  .promoCard:last-child {
-    grid-column: span 1;
-  }
-
-  .smmModule {
-    grid-template-columns: 1fr;
-
-    gap: 18px;
-
-    padding: 22px;
-  }
-
-  .smmVisual {
-    flex-direction: row;
-    align-items: center;
-
-    gap: 12px;
-  }
-
-  .smmNumber {
-    margin-top: 0;
-  }
-
-  .smmContent h3 {
-    font-size: 20px;
-  }
-
-  .smmFeatures {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .smmFeatures span {
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
-
-@media (max-width: 400px) {
-  .promotion {
-    padding: 30px 18px;
-  }
-
-  .promotionHeader h2 {
-    font-size: 37px;
-  }
-
-  .smmTop {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .smmPlatforms {
-    border-radius: 8px;
-  }
-}
-
-/* =========================
+/* =========================================================
    CTA
-========================= */
+========================================================= */
 
 .cta {
   position: relative;
   z-index: 1;
 
-  max-width: 1200px;
+  width: min(100%, 1200px);
 
-  margin: 100px auto 0;
-
-  margin-bottom: 100px;
+  margin: clamp(70px, 10vw, 100px) auto 0;
 }
 
 .ctaContent {
@@ -1461,12 +1569,13 @@
 
   overflow: hidden;
 
-  padding: 100px 30px;
+  padding: clamp(50px, 8vw, 100px) clamp(18px, 4vw, 30px);
 
   text-align: center;
 
   border: 1px solid rgba(72, 61, 246, 0.16);
-  border-radius: 30px;
+
+  border-radius: clamp(22px, 2.3vw, 30px);
 
   background:
     radial-gradient(circle at 50% 0%, rgba(72, 61, 246, 0.11), transparent 50%),
@@ -1504,17 +1613,20 @@
 .cta h2 {
   position: relative;
 
-  margin: 28px auto 20px;
-
+  width: 100%;
   max-width: 800px;
+
+  margin: 25px auto 18px;
 
   color: #111827;
 
-  font-size: clamp(43px, 6vw, 72px);
+  font-size: clamp(36px, 6vw, 72px);
 
   line-height: 0.95;
 
   letter-spacing: -0.06em;
+
+  overflow-wrap: anywhere;
 }
 
 .cta h2 span {
@@ -1524,27 +1636,29 @@
 .cta p {
   position: relative;
 
-  max-width: 550px;
+  width: min(100%, 550px);
 
-  margin: 0 auto 35px;
+  margin: 0 auto 30px;
 
   color: var(--muted);
 
-  font-size: 14px;
+  font-size: clamp(12px, 1vw, 14px);
+
   line-height: 1.7;
 }
 
 .ctaButton {
   position: relative;
 
-  height: 54px;
+  min-height: 53px;
 
-  padding: 0 24px;
+  padding: 0 22px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+
+  gap: 9px;
 
   border: none;
   border-radius: 14px;
@@ -1553,14 +1667,19 @@
 
   color: white;
 
-  font-size: 13px;
+  font-family: inherit;
+
+  font-size: 12px;
   font-weight: 800;
 
   cursor: pointer;
 
   box-shadow: 0 15px 40px rgba(72, 61, 246, 0.2);
 
-  transition: 0.25s;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .ctaButton:hover {
@@ -1571,13 +1690,18 @@
   box-shadow: 0 20px 50px rgba(72, 61, 246, 0.27);
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+.ctaButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================================================
+   1250
+========================================================= */
 
 @media (max-width: 1250px) {
   .cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .popular {
@@ -1593,17 +1717,21 @@
   }
 }
 
-@media (max-width: 900px) {
+/* =========================================================
+   1000
+========================================================= */
+
+@media (max-width: 1000px) {
   .cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .steps {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .paymentGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .promotionHeader {
@@ -1611,29 +1739,53 @@
   }
 
   .promotionHeader > p {
-    margin-top: 25px;
+    margin-top: 22px;
   }
 }
 
-@media (max-width: 650px) {
+/* =========================================================
+   760
+========================================================= */
+
+@media (max-width: 760px) {
   .page {
-    padding: 75px 18px 70px;
+    padding: 70px 14px 55px;
   }
 
   .hero {
-    margin-bottom: 65px;
+    margin-bottom: 60px;
   }
 
   .hero h1 {
-    font-size: 48px;
+    font-size: clamp(36px, 9vw, 50px);
   }
 
   .hero > p {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .periods {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    border-radius: 15px;
+  }
+
+  .periods button {
+    min-height: 50px;
+
+    font-size: 11px;
+  }
+
+  .sectionHeader {
+    display: block;
+
+    padding: 0;
+  }
+
+  .sectionHeader p {
+    margin-top: 13px;
+
+    text-align: left;
   }
 
   .cards {
@@ -1641,47 +1793,66 @@
   }
 
   .card {
-    min-height: 500px;
+    min-height: 0;
   }
 
-  .sectionHeader {
-    display: block;
+  .popular {
+    transform: none;
   }
 
-  .sectionHeader p {
-    margin-top: 15px;
+  .popular:hover {
+    transform: translateY(-6px);
   }
 
-  .how,
-  .payment {
-    margin-top: 100px;
-  }
-
-  .sectionTitle h2,
-  .promotionHeader h2 {
-    font-size: 42px;
-  }
-
-  .steps,
-  .paymentGrid,
-  .promoGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .step {
-    min-height: 190px;
-  }
-
-  .step h3 {
-    margin-top: 40px;
+  .sectionTitle h2 {
+    font-size: clamp(34px, 8vw, 48px);
   }
 
   .promotion {
     margin-top: 100px;
+  }
 
-    padding: 35px 22px;
+  .promotionHeader h2 {
+    font-size: clamp(34px, 8vw, 46px);
+  }
 
-    border-radius: 23px;
+  .promoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .promoCard {
+    min-height: 220px;
+  }
+
+  .smmModule {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .smmVisual {
+    flex-direction: row;
+    align-items: center;
+
+    gap: 12px;
+  }
+
+  .smmNumber {
+    margin-top: 0;
+  }
+
+  .smmContent h3 {
+    font-size: 20px;
+  }
+
+  .smmFeatures {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .smmFeatures span {
+    width: 100%;
   }
 
   .cta {
@@ -1689,13 +1860,11 @@
   }
 
   .ctaContent {
-    padding: 70px 20px;
-
-    border-radius: 23px;
+    padding: 60px 18px;
   }
 
   .cta h2 {
-    font-size: 45px;
+    font-size: clamp(36px, 9vw, 50px);
   }
 
   .ctaButton {
@@ -1703,57 +1872,896 @@
   }
 }
 
-/* =========================
-   DISCOUNT
-========================= */
+/* =========================================================
+   600
+========================================================= */
 
-.oldPrice {
-  width: 100%;
+@media (max-width: 600px) {
+  .page {
+    padding: 65px 10px 50px;
+  }
 
-  color: #a1a5af !important;
+  .heroBadge,
+  .ctaBadge {
+    padding: 7px 11px;
 
-  font-size: 12px !important;
-  font-weight: 600;
+    font-size: 8px;
+  }
 
-  line-height: 1;
+  .hero h1 {
+    margin-top: 18px;
 
-  text-decoration: line-through;
+    font-size: clamp(31px, 9.7vw, 42px);
+
+    letter-spacing: -1.8px;
+  }
+
+  .hero > p {
+    font-size: 12px;
+
+    line-height: 1.6;
+  }
+
+  .periods {
+    width: 100%;
+
+    margin-top: 25px;
+
+    gap: 4px;
+
+    padding: 4px;
+  }
+
+  .periods button {
+    min-height: 47px;
+
+    padding: 7px 5px;
+
+    border-radius: 11px;
+
+    font-size: 10px;
+  }
+
+  .periods button small {
+    font-size: 8px;
+  }
+
+  .sectionHeader {
+    margin-bottom: 23px;
+  }
+
+  .sectionNumber,
+  .sectionLabel {
+    font-size: 8px;
+  }
+
+  .sectionHeader p {
+    font-size: 11px;
+  }
+
+  .card {
+    padding: 19px;
+
+    border-radius: 20px;
+  }
+
+  .icon {
+    width: 47px;
+    height: 47px;
+
+    flex-basis: 47px;
+
+    border-radius: 13px;
+  }
+
+  .cardIndex {
+    font-size: 8px;
+  }
+
+  .card h2 {
+    margin-top: 23px;
+
+    font-size: 20px;
+  }
+
+  .desc {
+    min-height: 0;
+
+    font-size: 11px;
+  }
+
+  .price {
+    min-height: 0;
+
+    margin-top: 21px;
+  }
+
+  .price strong {
+    font-size: 30px;
+  }
+
+  .divider {
+    margin-bottom: 17px;
+  }
+
+  .card li {
+    font-size: 11px;
+  }
+
+  .cardButton {
+    min-height: 47px;
+
+    margin-top: 16px;
+  }
+
+  .how,
+  .payment {
+    margin-top: 90px;
+  }
+
+  .steps,
+  .paymentGrid {
+    grid-template-columns: 1fr;
+
+    margin-top: 32px;
+  }
+
+  .step {
+    min-height: 0;
+
+    padding: 18px;
+
+    border-radius: 16px;
+  }
+
+  .step h3 {
+    margin-top: 35px;
+
+    font-size: 15px;
+  }
+
+  .step p {
+    font-size: 10px;
+  }
+
+  .paymentCard {
+    padding: 18px;
+
+    border-radius: 17px;
+  }
+
+  .paymentCard h3 {
+    margin-top: 20px;
+  }
+
+  .paymentCard p {
+    font-size: 10px;
+  }
+
+  .promotion {
+    margin-top: 90px;
+
+    padding: 28px 17px;
+
+    border-radius: 20px;
+  }
+
+  .promotionHeader h2 {
+    font-size: 36px;
+  }
+
+  .promotionHeader > p {
+    font-size: 11px;
+  }
+
+  .promoGrid {
+    margin-top: 28px;
+  }
+
+  .promoCard {
+    min-height: 210px;
+
+    padding: 19px;
+
+    border-radius: 17px;
+  }
+
+  .promoIndex {
+    top: 19px;
+    right: 19px;
+  }
+
+  .promoCard h3 {
+    margin-top: 22px;
+  }
+
+  .smmModule {
+    padding: 18px;
+
+    border-radius: 17px;
+  }
+
+  .smmIcon {
+    width: 51px;
+    height: 51px;
+
+    border-radius: 14px;
+  }
+
+  .smmTop {
+    gap: 7px;
+  }
+
+  .smmPlatforms {
+    border-radius: 8px;
+
+    font-size: 8px;
+  }
+
+  .smmContent h3 {
+    font-size: 18px;
+  }
+
+  .smmContent > p {
+    font-size: 10px;
+  }
+
+  .smmFeatures span {
+    font-size: 8px;
+  }
+
+  .cta {
+    margin-top: 60px;
+  }
+
+  .ctaContent {
+    padding: 50px 15px;
+
+    border-radius: 19px;
+  }
+
+  .cta h2 {
+    margin-top: 21px;
+
+    font-size: 37px;
+
+    letter-spacing: -1.8px;
+  }
+
+  .cta p {
+    font-size: 11px;
+  }
+
+  .ctaButton {
+    min-height: 50px;
+
+    font-size: 11px;
+  }
 }
 
-.discountInfo {
-  position: relative;
-  z-index: 1;
+/* =========================================================
+   400
+========================================================= */
 
-  width: fit-content;
+@media (max-width: 400px) {
+  .page {
+    padding: 60px 8px 45px;
+  }
 
-  margin-top: -8px;
-  margin-bottom: 12px;
+  .heroBadge,
+  .ctaBadge {
+    padding: 6px 9px;
 
-  padding: 4px 8px;
+    font-size: 7px;
 
-  border-radius: 6px;
+    gap: 6px;
+  }
 
-  background: rgba(72, 61, 246, 0.08);
+  .heroBadge svg,
+  .ctaBadge svg {
+    width: 12px;
+    height: 12px;
+  }
 
-  color: var(--purple);
+  .hero h1 {
+    font-size: 29px;
 
-  font-size: 9px;
-  font-weight: 800;
+    letter-spacing: -1.2px;
+  }
 
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  .hero > p {
+    font-size: 10.5px;
+  }
+
+  .periods button {
+    min-height: 45px;
+
+    font-size: 9px;
+  }
+
+  .periods button small {
+    font-size: 7px;
+  }
+
+  .sectionHeader > div {
+    gap: 8px;
+  }
+
+  .sectionNumber,
+  .sectionLabel {
+    font-size: 7px;
+  }
+
+  .sectionHeader p {
+    font-size: 10px;
+  }
+
+  .card {
+    padding: 16px;
+
+    border-radius: 17px;
+  }
+
+  .icon {
+    width: 43px;
+    height: 43px;
+
+    flex-basis: 43px;
+
+    border-radius: 12px;
+  }
+
+  .icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .card h2 {
+    margin-top: 20px;
+
+    font-size: 18px;
+  }
+
+  .desc {
+    font-size: 10px;
+  }
+
+  .price {
+    margin-top: 18px;
+  }
+
+  .price strong {
+    font-size: 27px;
+  }
+
+  .price > span {
+    font-size: 8px;
+  }
+
+  .individualPrice {
+    font-size: 18px !important;
+  }
+
+  .oldPrice {
+    font-size: 10px !important;
+  }
+
+  .discountInfo {
+    font-size: 7px;
+  }
+
+  .card li {
+    gap: 7px;
+
+    font-size: 10px;
+  }
+
+  .check {
+    width: 18px;
+    height: 18px;
+
+    flex-basis: 18px;
+  }
+
+  .cardButton {
+    min-height: 45px;
+
+    font-size: 10px;
+  }
+
+  .badge {
+    top: 11px;
+    right: 11px;
+
+    padding: 5px 7px;
+
+    font-size: 6px;
+  }
+
+  .how,
+  .payment {
+    margin-top: 78px;
+  }
+
+  .sectionTitle h2 {
+    font-size: 31px;
+  }
+
+  .sectionTitle > p {
+    font-size: 10px;
+  }
+
+  .steps,
+  .paymentGrid {
+    margin-top: 27px;
+  }
+
+  .step,
+  .paymentCard {
+    padding: 15px;
+
+    border-radius: 15px;
+  }
+
+  .step h3 {
+    margin-top: 30px;
+
+    font-size: 14px;
+  }
+
+  .step p,
+  .paymentCard p {
+    font-size: 9px;
+  }
+
+  .paymentCard h3 {
+    font-size: 14px;
+  }
+
+  .promotion {
+    margin-top: 78px;
+
+    padding: 24px 13px;
+
+    border-radius: 17px;
+  }
+
+  .promotionHeader h2 {
+    margin-top: 18px;
+
+    font-size: 32px;
+  }
+
+  .promotionHeader > p {
+    font-size: 10px;
+  }
+
+  .promoCard {
+    min-height: 195px;
+
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .promoIcon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+  }
+
+  .promoIndex {
+    top: 16px;
+    right: 16px;
+
+    font-size: 8px;
+  }
+
+  .promoCard h3 {
+    font-size: 18px;
+  }
+
+  .promoCard strong {
+    font-size: 11px;
+  }
+
+  .promoCard > p {
+    font-size: 10px;
+  }
+
+  .smmModule {
+    padding: 15px;
+
+    border-radius: 15px;
+  }
+
+  .smmIcon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 12px;
+  }
+
+  .smmLabel {
+    font-size: 7px;
+  }
+
+  .smmPlatforms {
+    padding: 5px 7px;
+
+    font-size: 7px;
+  }
+
+  .smmContent h3 {
+    font-size: 17px;
+  }
+
+  .smmPrice {
+    font-size: 11px;
+  }
+
+  .smmContent > p {
+    font-size: 9px;
+  }
+
+  .smmFeatures {
+    gap: 6px;
+  }
+
+  .smmFeatures span {
+    padding: 5px 7px;
+
+    font-size: 7px;
+  }
+
+  .cta {
+    margin-top: 55px;
+  }
+
+  .ctaContent {
+    padding: 42px 12px;
+
+    border-radius: 17px;
+  }
+
+  .cta h2 {
+    margin-top: 18px;
+
+    font-size: 31px;
+
+    letter-spacing: -1.2px;
+  }
+
+  .cta p {
+    font-size: 9px;
+  }
+
+  .ctaButton {
+    min-height: 47px;
+
+    font-size: 10px;
+  }
 }
 
-.disabledCard:hover {
-  transform: none;
+/* =========================================================
+   360
+========================================================= */
+
+@media (max-width: 360px) {
+  .page {
+    padding: 55px 7px 40px;
+  }
+
+  .hero h1 {
+    font-size: 27px;
+  }
+
+  .hero > p {
+    font-size: 10px;
+  }
+
+  .periods {
+    gap: 3px;
+
+    padding: 3px;
+  }
+
+  .periods button {
+    min-height: 43px;
+
+    border-radius: 9px;
+
+    font-size: 8px;
+  }
+
+  .periods button small {
+    font-size: 6.5px;
+  }
+
+  .sectionTitle h2 {
+    font-size: 29px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .card h2 {
+    font-size: 17px;
+  }
+
+  .desc {
+    font-size: 9px;
+  }
+
+  .price strong {
+    font-size: 25px;
+  }
+
+  .card li {
+    font-size: 9px;
+  }
+
+  .cardButton {
+    min-height: 43px;
+
+    font-size: 9px;
+  }
+
+  .promotion {
+    padding: 21px 11px;
+  }
+
+  .promotionHeader h2 {
+    font-size: 29px;
+  }
+
+  .promoCard {
+    padding: 14px;
+  }
+
+  .promoCard h3 {
+    font-size: 17px;
+  }
+
+  .promoCard > p {
+    font-size: 9px;
+  }
+
+  .smmModule {
+    padding: 13px;
+  }
+
+  .smmContent h3 {
+    font-size: 16px;
+  }
+
+  .smmContent > p {
+    font-size: 8.5px;
+  }
+
+  .ctaContent {
+    padding: 37px 10px;
+  }
+
+  .cta h2 {
+    font-size: 28px;
+  }
 }
 
-.cardButtonDisabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-  filter: grayscale(0.7);
+/* =========================================================
+   320PX SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .heroBadge,
+  .ctaBadge {
+    padding: 5px 7px;
+
+    font-size: 6px;
+  }
+
+  .hero h1 {
+    font-size: 25px;
+  }
+
+  .hero > p {
+    font-size: 9px;
+  }
+
+  .periods button {
+    font-size: 7.5px;
+  }
+
+  .periods button small {
+    font-size: 6px;
+  }
+
+  .sectionNumber,
+  .sectionLabel {
+    font-size: 6px;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+  }
+
+  .icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card h2 {
+    font-size: 16px;
+  }
+
+  .desc {
+    font-size: 8.5px;
+  }
+
+  .price strong {
+    font-size: 23px;
+  }
+
+  .price > span {
+    font-size: 7px;
+  }
+
+  .individualPrice {
+    font-size: 16px !important;
+  }
+
+  .card li {
+    font-size: 8.5px;
+  }
+
+  .check {
+    width: 17px;
+    height: 17px;
+
+    flex-basis: 17px;
+  }
+
+  .cardButton {
+    min-height: 41px;
+
+    font-size: 8px;
+
+    gap: 5px;
+  }
+
+  .sectionTitle h2 {
+    font-size: 27px;
+  }
+
+  .sectionTitle > p {
+    font-size: 8px;
+  }
+
+  .step,
+  .paymentCard {
+    padding: 13px;
+  }
+
+  .step h3,
+  .paymentCard h3 {
+    font-size: 12px;
+  }
+
+  .step p,
+  .paymentCard p {
+    font-size: 8px;
+  }
+
+  .promotionHeader h2 {
+    font-size: 27px;
+  }
+
+  .promoCard {
+    min-height: 185px;
+
+    padding: 12px;
+  }
+
+  .promoIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .promoCard h3 {
+    font-size: 15px;
+  }
+
+  .promoCard strong {
+    font-size: 9px;
+  }
+
+  .promoCard > p {
+    font-size: 8px;
+  }
+
+  .smmModule {
+    padding: 11px;
+  }
+
+  .smmIcon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .smmContent h3 {
+    font-size: 15px;
+  }
+
+  .smmPrice {
+    font-size: 10px;
+  }
+
+  .smmContent > p {
+    font-size: 8px;
+  }
+
+  .smmFeatures span {
+    font-size: 6.5px;
+  }
+
+  .ctaContent {
+    padding: 32px 8px;
+  }
+
+  .cta h2 {
+    font-size: 25px;
+  }
+
+  .cta p {
+    font-size: 8px;
+  }
+
+  .ctaButton {
+    min-height: 44px;
+
+    font-size: 8.5px;
+  }
 }
 
-.cardButtonDisabled:hover {
-  transform: none;
+/* =========================================================
+   FOCUS
+========================================================= */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .periods button,
+  .card,
+  .cardButton,
+  .step,
+  .paymentCard,
+  .promoCard,
+  .promoIcon,
+  .smmModule,
+  .ctaButton {
+    transition: none !important;
+  }
 }

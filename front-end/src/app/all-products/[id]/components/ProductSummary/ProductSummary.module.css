@@ -1,13 +1,20 @@
-.summary {
-  min-width: 0;
+/* =========================================================
+   PRODUCT SUMMARY
+========================================================= */
 
+.summary {
+  width: 100%;
+  min-width: 0;
   min-height: 430px;
 
   padding: 32px;
 
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
 
+  border: 1px solid #e3e6ee;
   border-radius: 30px;
 
   background:
@@ -16,28 +23,31 @@
       rgba(72, 61, 246, 0.08),
       transparent 35%
     ),
-    linear-gradient(145deg, #ffffff, #f8f9fc);
-
-  border: 1px solid #e3e6ee;
+    linear-gradient(145deg, #fff, #f8f9fc);
 
   box-shadow: 0 25px 65px rgba(24, 30, 55, 0.08);
 }
 
-/* =========================
+/* =========================================================
    TOP
-========================= */
+========================================================= */
 
 .summaryTop {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   gap: 10px;
+
+  width: 100%;
+  min-width: 0;
 
   margin-bottom: 20px;
 }
 
 .summaryLabels {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -47,52 +57,65 @@
 
 .deal,
 .listingType {
+  max-width: 100%;
+  min-height: 30px;
+
   padding: 7px 13px;
+
+  box-sizing: border-box;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 9px;
 
   font-size: 11px;
   font-weight: 900;
+  line-height: 1.2;
 
   text-transform: uppercase;
+  white-space: normal;
+  text-align: center;
 }
 
 .deal {
   background: rgba(72, 61, 246, 0.08);
-
   border: 1px solid rgba(72, 61, 246, 0.15);
-
   color: #483df6;
 }
 
 .listingType {
   background: #f1f2f7;
-
   border: 1px solid #e1e4eb;
-
   color: #697080;
 }
 
-/* =========================
+/* =========================================================
    TITLE
-========================= */
+========================================================= */
 
 .summary h1 {
+  width: 100%;
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 35px;
+  font-size: clamp(27px, 2.7vw, 35px);
+  font-weight: 900;
   line-height: 1.12;
 
-  font-weight: 900;
-
   letter-spacing: -1.2px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-========================= */
+========================================================= */
 
 .location {
   display: flex;
@@ -100,18 +123,28 @@
 
   gap: 11px;
 
+  width: 100%;
+  min-width: 0;
+
   margin-top: 20px;
 
   color: #483df6;
 }
 
 .location > svg {
-  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+
+  min-width: 20px;
+
+  flex: 0 0 auto;
 
   margin-top: 1px;
 }
 
 .location > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -119,73 +152,111 @@
 }
 
 .location strong {
+  min-width: 0;
+
   color: #242733;
 
   font-size: 15px;
+  font-weight: 750;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .location span {
+  min-width: 0;
+
   color: #7b8291;
 
   font-size: 13px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
+/* =========================================================
    PRICE
-========================= */
+========================================================= */
 
 .price {
+  width: 100%;
+  min-width: 0;
+
   margin-top: 27px;
 
   color: #483df6;
 
-  font-size: 38px;
+  font-size: clamp(30px, 3vw, 38px);
+  font-weight: 950;
   line-height: 1;
 
-  font-weight: 950;
-
   letter-spacing: -1px;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 
   text-shadow: 0 0 30px rgba(72, 61, 246, 0.12);
 }
 
-/* =========================
+/* =========================================================
    RENTAL
-========================= */
+========================================================= */
 
 .rentalInfo {
+  width: 100%;
+  min-width: 0;
+
   margin-top: 14px;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 7px;
 
   color: #697080;
 
   font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .rentalInfo svg {
-  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+
+  min-width: 16px;
+
+  flex: 0 0 auto;
+
+  margin-top: 1px;
 
   color: #483df6;
+}
+
+.rentalInfo span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
 }
 
 .rentalInfo strong {
   color: #303440;
 }
 
-/* =========================
+/* =========================================================
    QUICK INFO
-========================= */
+========================================================= */
 
 .quickInfo {
   display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 9px;
+
+  width: 100%;
+  min-width: 0;
 
   margin-top: 25px;
 }
@@ -199,22 +270,26 @@
 
   padding: 14px 10px;
 
+  box-sizing: border-box;
+
   display: flex;
   align-items: center;
 
   gap: 8px;
 
+  border: 1px solid #e4e6ed;
   border-radius: 14px;
 
   background: #f1f2f7;
-
-  border: 1px solid #e4e6ed;
 }
 
 .quickInfo svg {
-  flex-shrink: 0;
-
   width: 18px;
+  height: 18px;
+
+  min-width: 18px;
+
+  flex: 0 0 auto;
 
   color: #483df6;
 }
@@ -225,64 +300,527 @@
   display: flex;
   flex-direction: column;
 
+  gap: 2px;
+
   color: #7c8290;
 
   font-size: 10px;
+  line-height: 1.25;
 }
 
 .quickInfo b {
+  display: block;
+
+  min-width: 0;
+
   color: #292d38;
 
   font-size: 12px;
+  font-weight: 800;
+  line-height: 1.3;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.quickInfo small {
+  display: block;
+
+  color: #7c8290;
+
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
+  .summary {
+    padding: 34px;
+  }
+
+  .summaryTop {
+    margin-bottom: 22px;
+  }
+
+  .location {
+    margin-top: 22px;
+  }
+
+  .price {
+    margin-top: 30px;
+  }
+
+  .quickInfo {
+    margin-top: 27px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 1100px) {
   .summary {
     min-height: auto;
   }
+
+  .quickInfo {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 700px) {
   .summary {
-    padding: 23px;
+    min-height: auto;
 
-    border-radius: 22px;
+    padding: 22px;
+
+    border-radius: 21px;
+  }
+
+  .summaryTop {
+    gap: 8px;
+    margin-bottom: 17px;
+  }
+
+  .summaryLabels {
+    gap: 6px;
+  }
+
+  .deal,
+  .listingType {
+    min-height: 29px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
   }
 
   .summary h1 {
-    font-size: 28px;
+    font-size: clamp(25px, 6.5vw, 29px);
+    line-height: 1.14;
+    letter-spacing: -0.7px;
+  }
+
+  .location {
+    gap: 9px;
+    margin-top: 16px;
+  }
+
+  .location > svg {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+  }
+
+  .location strong {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .location span {
+    font-size: 11.5px;
+    line-height: 1.45;
   }
 
   .price {
-    font-size: 32px;
+    margin-top: 21px;
+
+    font-size: clamp(28px, 7vw, 32px);
+    line-height: 1;
+
+    letter-spacing: -0.8px;
+  }
+
+  .rentalInfo {
+    margin-top: 11px;
+
+    gap: 6px;
+
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .rentalInfo svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
   }
 
   .quickInfo {
-    grid-template-columns: 1fr 1fr;
-  }
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  .quickInfo > div:last-child {
-    display: none;
-  }
-}
+    gap: 8px;
 
-@media (max-width: 430px) {
-  .summary h1 {
-    font-size: 25px;
-  }
-
-  .price {
-    font-size: 29px;
+    margin-top: 19px;
   }
 
   .quickInfo > div {
-    padding: 12px 9px;
+    padding: 11px 9px;
+
+    gap: 7px;
+
+    border-radius: 11px;
+  }
+
+  .quickInfo svg {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+  }
+
+  .quickInfo span {
+    font-size: 9.5px;
+  }
+
+  .quickInfo b {
+    font-size: 11.5px;
+  }
+
+  .quickInfo small {
+    font-size: 8.5px;
+  }
+
+  /* Keep a possible fifth item instead of hiding data */
+  .quickInfo > div:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+  .summary {
+    padding: 18px;
+
+    border-radius: 18px;
+  }
+
+  .summaryTop {
+    margin-bottom: 15px;
+  }
+
+  .summaryLabels {
+    gap: 5px;
+  }
+
+  .deal,
+  .listingType {
+    min-height: 27px;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    font-size: 9px;
+  }
+
+  .summary h1 {
+    font-size: 23px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+  }
+
+  .location {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .location > svg {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+  }
+
+  .location strong {
+    font-size: 12px;
+  }
+
+  .location span {
+    font-size: 11px;
+  }
+
+  .price {
+    margin-top: 18px;
+    font-size: 27px;
+  }
+
+  .rentalInfo {
+    margin-top: 10px;
+    font-size: 10.5px;
+  }
+
+  .quickInfo {
+    gap: 7px;
+    margin-top: 17px;
+  }
+
+  .quickInfo > div {
+    min-height: 51px;
+
+    padding: 9px 8px;
+
+    gap: 6px;
+
+    border-radius: 10px;
+  }
+
+  .quickInfo svg {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+
+  .quickInfo span {
+    font-size: 9px;
+  }
+
+  .quickInfo b {
+    font-size: 11px;
+  }
+
+  .quickInfo small {
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .summary {
+    padding: 15px;
+
+    border-radius: 16px;
+  }
+
+  .summaryTop {
+    margin-bottom: 13px;
+  }
+
+  .deal,
+  .listingType {
+    min-height: 25px;
+
+    padding: 5px 7px;
+
+    border-radius: 6px;
+
+    font-size: 8.5px;
+  }
+
+  .summary h1 {
+    font-size: 20px;
+    line-height: 1.16;
+  }
+
+  .location {
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .location > svg {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+
+  .location strong {
+    font-size: 11px;
+  }
+
+  .location span {
+    font-size: 10px;
+  }
+
+  .price {
+    margin-top: 16px;
+    font-size: 24px;
+  }
+
+  .rentalInfo {
+    margin-top: 9px;
+
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+  .rentalInfo svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .quickInfo {
+    gap: 6px;
+    margin-top: 15px;
+  }
+
+  .quickInfo > div {
+    min-height: 47px;
+
+    padding: 8px 7px;
+
+    gap: 5px;
+
+    border-radius: 9px;
+  }
+
+  .quickInfo svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+
+  .quickInfo span {
+    font-size: 8.5px;
+  }
+
+  .quickInfo b {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .quickInfo small {
+    font-size: 7.5px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE MODE
+========================================================= */
+
+@media (max-width: 330px) {
+  .summary {
+    padding: 12px;
+
+    border-radius: 14px;
+  }
+
+  .summaryTop {
+    gap: 5px;
+    margin-bottom: 11px;
+  }
+
+  .summaryLabels {
+    gap: 4px;
+  }
+
+  .deal,
+  .listingType {
+    min-height: 23px;
+
+    padding: 4px 6px;
+
+    border-radius: 6px;
+
+    font-size: 7.5px;
+    line-height: 1.15;
+  }
+
+  .summary h1 {
+    font-size: 18px;
+    line-height: 1.18;
+
+    letter-spacing: -0.35px;
+  }
+
+  .location {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .location > svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+
+  .location strong {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .location span {
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .price {
+    margin-top: 14px;
+
+    font-size: 21px;
+    line-height: 1;
+
+    letter-spacing: -0.5px;
+  }
+
+  .rentalInfo {
+    margin-top: 8px;
+    gap: 4px;
+
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .rentalInfo svg {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+
+  .quickInfo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 5px;
+
+    margin-top: 12px;
+  }
+
+  .quickInfo > div {
+    min-height: 43px;
+
+    padding: 7px 6px;
+
+    gap: 4px;
+
+    border-radius: 8px;
+  }
+
+  .quickInfo svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .quickInfo span {
+    font-size: 7.5px;
+  }
+
+  .quickInfo b {
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .quickInfo small {
+    font-size: 7px;
+    line-height: 1.15;
+  }
+
+  .quickInfo > div:nth-child(5) {
+    grid-column: 1 / -1;
   }
 }

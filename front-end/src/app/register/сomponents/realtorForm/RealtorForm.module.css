@@ -1,31 +1,43 @@
 .wrapper {
+  width: 100%;
+  min-width: 0;
+
   padding: 35px;
 
+  border: 1px solid #e8e9f2;
   border-radius: 32px;
 
-  background: #ffffff;
-
-  border: 1px solid #e8e9f2;
+  background: #fff;
 
   box-shadow:
     0 25px 70px rgba(30, 35, 60, 0.08),
     0 5px 20px rgba(30, 35, 60, 0.04);
 
+  color: #111827;
+
   animation: appear 0.4s ease;
 
-  color: #111827;
+  box-sizing: border-box;
 }
+
+.wrapper *,
+.wrapper *::before,
+.wrapper *::after {
+  box-sizing: border-box;
+}
+
+/* =========================
+   ANIMATION
+========================= */
 
 @keyframes appear {
   from {
     opacity: 0;
-
     transform: translateY(20px);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0);
   }
 }
@@ -35,8 +47,10 @@
 ========================= */
 
 .header {
-  display: flex;
+  width: 100%;
+  min-width: 0;
 
+  display: flex;
   align-items: center;
 
   gap: 18px;
@@ -46,14 +60,15 @@
 
 .header > svg {
   width: 55px;
-
   height: 55px;
+
+  flex: 0 0 55px;
 
   padding: 12px;
 
   border-radius: 20px;
 
-  color: #ffffff;
+  color: #fff;
 
   background: #483df6;
 
@@ -62,16 +77,22 @@
     0 0 20px rgba(72, 61, 246, 0.08);
 }
 
+.header > div {
+  min-width: 0;
+}
+
 .header h2 {
   margin: 0;
 
-  font-size: 22px;
-
-  font-weight: 900;
-
   color: #111827;
 
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 900;
+
   letter-spacing: -0.4px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
@@ -80,6 +101,9 @@
   color: #7a8192;
 
   font-size: 14px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -87,8 +111,10 @@
 ========================= */
 
 .grid {
-  display: flex;
+  width: 100%;
+  min-width: 0;
 
+  display: flex;
   flex-direction: column;
 
   gap: 15px;
@@ -96,24 +122,21 @@
 
 .inputBox {
   width: 100%;
+  min-width: 0;
 
   height: 62px;
 
   display: flex;
-
   align-items: center;
 
   gap: 14px;
 
   padding: 0 20px;
 
+  border: 1px solid #e5e7ef;
   border-radius: 20px;
 
-  box-sizing: border-box;
-
   background: #f8f9fc;
-
-  border: 1px solid #e5e7ef;
 
   transition:
     transform 0.3s ease,
@@ -123,7 +146,7 @@
 }
 
 .inputBox:hover {
-  background: #ffffff;
+  background: #fff;
 
   border-color: rgba(72, 61, 246, 0.25);
 
@@ -131,7 +154,7 @@
 }
 
 .inputBox:focus-within {
-  background: #ffffff;
+  background: #fff;
 
   border-color: #483df6;
 
@@ -140,14 +163,13 @@
     0 8px 25px rgba(72, 61, 246, 0.08);
 }
 
-.inputBox svg {
+.inputBox > svg {
   width: 22px;
-
   height: 22px;
 
-  color: #483df6;
+  flex: 0 0 auto;
 
-  flex-shrink: 0;
+  color: #483df6;
 
   transition:
     color 0.3s ease,
@@ -164,27 +186,28 @@
 }
 
 .inputBox input {
-  flex: 1;
-
+  width: 100%;
   min-width: 0;
-
   height: 100%;
 
-  border: none;
+  padding: 0;
 
+  border: none;
   outline: none;
 
   background: transparent;
 
-  font-size: 15px;
-
   color: #111827;
 
   font-family: inherit;
+  font-size: 15px;
+  line-height: 1.3;
 }
 
 .inputBox input::placeholder {
   color: #9aa1b1;
+
+  opacity: 1;
 }
 
 /* =========================
@@ -192,31 +215,28 @@
 ========================= */
 
 .textarea {
-  margin-top: 16px;
-
   width: 100%;
+  min-width: 0;
 
   height: 130px;
 
-  box-sizing: border-box;
-
-  resize: none;
-
+  margin-top: 16px;
   padding: 20px;
 
+  resize: vertical;
+
+  border: 1px solid #e5e7ef;
   border-radius: 22px;
 
   background: #f8f9fc;
 
-  border: 1px solid #e5e7ef;
-
   outline: none;
 
-  font-size: 15px;
+  color: #111827;
 
   font-family: inherit;
-
-  color: #111827;
+  font-size: 15px;
+  line-height: 1.5;
 
   transition:
     background 0.3s ease,
@@ -227,11 +247,11 @@
 .textarea:hover {
   border-color: rgba(72, 61, 246, 0.25);
 
-  background: #ffffff;
+  background: #fff;
 }
 
 .textarea:focus {
-  background: #ffffff;
+  background: #fff;
 
   border-color: #483df6;
 
@@ -242,6 +262,8 @@
 
 .textarea::placeholder {
   color: #9aa1b1;
+
+  opacity: 1;
 }
 
 /* =========================
@@ -249,28 +271,30 @@
 ========================= */
 
 .eye {
-  border: none;
+  flex: 0 0 auto;
 
-  background: transparent;
+  width: 34px;
+  height: 34px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  cursor: pointer;
 
   padding: 5px;
 
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
   color: #9aa1b1;
+
+  cursor: pointer;
 
   transition:
     color 0.3s ease,
     transform 0.3s ease,
     background 0.3s ease;
-
-  border-radius: 8px;
 }
 
 .eye:hover {
@@ -278,13 +302,62 @@
 
   background: rgba(72, 61, 246, 0.07);
 
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .eye svg {
   width: 22px;
-
   height: 22px;
+
+  flex-shrink: 0;
+}
+
+/* =========================
+   ERROR / SUCCESS
+========================= */
+
+.wrapper > div[style*="ef4444"],
+.wrapper > div[style*="10b981"] {
+  width: 100%;
+  min-width: 0;
+
+  margin-top: 12px;
+
+  padding: 11px 14px;
+
+  border-radius: 12px;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.wrapper > div[style*="ef4444"] {
+  background: rgba(239, 68, 68, 0.06);
+
+  border: 1px solid rgba(239, 68, 68, 0.14);
+
+  color: #dc2626 !important;
+}
+
+.wrapper > div[style*="10b981"] {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 6px;
+
+  background: rgba(16, 185, 129, 0.06);
+
+  border: 1px solid rgba(16, 185, 129, 0.14);
+
+  color: #059669 !important;
+}
+
+.wrapper > div[style*="10b981"] svg {
+  flex: 0 0 auto;
+
+  margin-top: 1px;
 }
 
 /* =========================
@@ -292,25 +365,30 @@
 ========================= */
 
 .submit {
-  margin-top: 22px;
-
   width: 100%;
+  min-width: 0;
 
   height: 62px;
 
-  border: none;
+  margin-top: 22px;
 
+  padding: 0 18px;
+
+  border: none;
   border-radius: 22px;
 
-  cursor: pointer;
+  background: #483df6;
 
-  color: #ffffff;
+  color: #fff;
 
+  font-family: inherit;
   font-size: 16px;
-
+  line-height: 1.2;
   font-weight: 900;
 
-  background: #483df6;
+  text-align: center;
+
+  cursor: pointer;
 
   box-shadow:
     0 14px 35px rgba(72, 61, 246, 0.22),
@@ -319,7 +397,8 @@
   transition:
     transform 0.35s ease,
     box-shadow 0.35s ease,
-    filter 0.35s ease;
+    filter 0.35s ease,
+    opacity 0.2s ease;
 }
 
 .submit:hover {
@@ -344,59 +423,36 @@
   transform: none;
 
   box-shadow: none;
+
+  filter: none;
 }
 
 /* =========================
-   ERROR / SUCCESS
+   TABLET
 ========================= */
 
-.wrapper > div[style*="ef4444"] {
-  padding: 11px 14px;
-
-  margin-top: 12px;
-
-  border-radius: 12px;
-
-  background: rgba(239, 68, 68, 0.06);
-
-  border: 1px solid rgba(239, 68, 68, 0.14);
-
-  color: #dc2626 !important;
-
-  line-height: 1.5;
-}
-
-.wrapper > div[style*="10b981"] {
-  padding: 11px 14px;
-
-  margin-top: 12px;
-
-  border-radius: 12px;
-
-  background: rgba(16, 185, 129, 0.06);
-
-  border: 1px solid rgba(16, 185, 129, 0.14);
-
-  color: #059669 !important;
-
-  line-height: 1.5;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .wrapper {
-    padding: 22px;
+    padding: 28px;
 
-    border-radius: 24px;
+    border-radius: 27px;
   }
 
   .header {
     gap: 14px;
 
-    margin-bottom: 24px;
+    margin-bottom: 25px;
+  }
+
+  .header > svg {
+    width: 52px;
+    height: 52px;
+
+    flex-basis: 52px;
+
+    padding: 11px;
+
+    border-radius: 18px;
   }
 
   .header h2 {
@@ -407,14 +463,8 @@
     font-size: 12px;
   }
 
-  .header > svg {
-    width: 52px;
-
-    height: 52px;
-
-    padding: 11px;
-
-    border-radius: 18px;
+  .grid {
+    gap: 13px;
   }
 
   .inputBox {
@@ -422,7 +472,14 @@
 
     padding: 0 17px;
 
+    gap: 12px;
+
     border-radius: 17px;
+  }
+
+  .inputBox > svg {
+    width: 20px;
+    height: 20px;
   }
 
   .textarea {
@@ -437,5 +494,352 @@
     height: 56px;
 
     border-radius: 18px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 520px) {
+  .wrapper {
+    padding: 22px 18px;
+
+    border-radius: 23px;
+  }
+
+  .header {
+    gap: 11px;
+
+    margin-bottom: 21px;
+  }
+
+  .header > svg {
+    width: 46px;
+    height: 46px;
+
+    flex-basis: 46px;
+
+    padding: 10px;
+
+    border-radius: 15px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+  }
+
+  .header p {
+    margin-top: 4px;
+
+    font-size: 11px;
+  }
+
+  .grid {
+    gap: 11px;
+  }
+
+  .inputBox {
+    height: 54px;
+
+    padding: 0 13px;
+
+    gap: 10px;
+
+    border-radius: 15px;
+  }
+
+  .inputBox > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .inputBox input {
+    font-size: 14px;
+  }
+
+  .eye {
+    width: 31px;
+    height: 31px;
+
+    padding: 4px;
+  }
+
+  .eye svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .textarea {
+    height: 110px;
+
+    margin-top: 13px;
+
+    padding: 14px;
+
+    border-radius: 16px;
+
+    font-size: 14px;
+  }
+
+  .wrapper > div[style*="ef4444"],
+  .wrapper > div[style*="10b981"] {
+    margin-top: 10px;
+
+    padding: 9px 11px;
+
+    font-size: 12px;
+  }
+
+  .submit {
+    height: 53px;
+
+    margin-top: 17px;
+
+    padding: 0 13px;
+
+    border-radius: 16px;
+
+    font-size: 14px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+  .wrapper {
+    padding: 18px 14px;
+
+    border-radius: 20px;
+  }
+
+  .header {
+    gap: 9px;
+
+    margin-bottom: 18px;
+  }
+
+  .header > svg {
+    width: 42px;
+    height: 42px;
+
+    flex-basis: 42px;
+
+    padding: 9px;
+
+    border-radius: 13px;
+  }
+
+  .header h2 {
+    font-size: 16px;
+  }
+
+  .header p {
+    font-size: 10px;
+  }
+
+  .grid {
+    gap: 10px;
+  }
+
+  .inputBox {
+    height: 51px;
+
+    padding: 0 11px;
+
+    gap: 8px;
+
+    border-radius: 13px;
+  }
+
+  .inputBox > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .inputBox input {
+    font-size: 13px;
+  }
+
+  .eye {
+    width: 29px;
+    height: 29px;
+  }
+
+  .eye svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .textarea {
+    height: 100px;
+
+    margin-top: 11px;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    font-size: 13px;
+  }
+
+  .wrapper > div[style*="ef4444"],
+  .wrapper > div[style*="10b981"] {
+    padding: 8px 9px;
+
+    font-size: 10px;
+
+    border-radius: 9px;
+  }
+
+  .submit {
+    height: 50px;
+
+    margin-top: 15px;
+
+    padding: 0 10px;
+
+    border-radius: 14px;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================
+   320PX SAFETY
+========================= */
+
+@media (max-width: 330px) {
+  .wrapper {
+    padding: 15px 10px;
+
+    border-radius: 17px;
+  }
+
+  .header {
+    gap: 8px;
+
+    margin-bottom: 16px;
+  }
+
+  .header > svg {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+
+    padding: 8px;
+
+    border-radius: 11px;
+  }
+
+  .header h2 {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .header p {
+    margin-top: 3px;
+
+    font-size: 8.5px;
+  }
+
+  .grid {
+    gap: 8px;
+  }
+
+  .inputBox {
+    height: 48px;
+
+    padding: 0 9px;
+
+    gap: 7px;
+
+    border-radius: 11px;
+  }
+
+  .inputBox > svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .inputBox input {
+    font-size: 11px;
+  }
+
+  .eye {
+    width: 27px;
+    height: 27px;
+
+    padding: 3px;
+  }
+
+  .eye svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .textarea {
+    height: 90px;
+
+    margin-top: 9px;
+
+    padding: 10px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+  }
+
+  .wrapper > div[style*="ef4444"],
+  .wrapper > div[style*="10b981"] {
+    margin-top: 8px;
+
+    padding: 7px 8px;
+
+    font-size: 8px;
+
+    border-radius: 8px;
+  }
+
+  .submit {
+    height: 47px;
+
+    margin-top: 12px;
+
+    padding: 0 8px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper,
+  .inputBox,
+  .inputBox > svg,
+  .eye,
+  .submit {
+    animation: none;
+    transition: none;
+  }
+
+  .inputBox:hover {
+    transform: none;
+  }
+
+  .submit:hover {
+    transform: none;
+  }
+
+  .eye:hover {
+    transform: none;
   }
 }

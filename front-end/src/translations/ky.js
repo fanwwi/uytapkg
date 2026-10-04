@@ -4575,6 +4575,7 @@ const ky = {
     actions: {
       close: "Жабуу",
       payment: "Төлөөгө өтүү",
+      checking: "Текшерүү...",
     },
 
     errors: {

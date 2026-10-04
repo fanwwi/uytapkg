@@ -4,6 +4,9 @@
 
   z-index: 100;
 
+  width: 100%;
+  min-height: 100%;
+
   padding: 20px;
 
   display: grid;
@@ -13,15 +16,24 @@
 
   backdrop-filter: blur(14px);
 
+  overflow-y: auto;
+  overflow-x: hidden;
+
   animation: fadeIn 0.2s ease;
 }
+
+/* =========================
+   MODAL
+========================= */
 
 .modal {
   position: relative;
 
   width: min(510px, 100%);
+  max-width: 100%;
   max-height: 92vh;
 
+  overflow-x: hidden;
   overflow-y: auto;
 
   padding: 34px;
@@ -39,7 +51,15 @@
 
   text-align: center;
 
+  box-sizing: border-box;
+
   animation: modalIn 0.25s ease;
+}
+
+.modal *,
+.modal *::before,
+.modal *::after {
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -84,6 +104,10 @@
   transform: rotate(3deg);
 }
 
+.closeButton svg {
+  flex-shrink: 0;
+}
+
 /* =========================
    SUCCESS
 ========================= */
@@ -112,28 +136,48 @@
     0 0 50px rgba(72, 61, 246, 0.12);
 }
 
+.successIcon svg {
+  flex-shrink: 0;
+}
+
+/* =========================
+   TEXT
+========================= */
+
 .modalLabel {
+  display: block;
+  max-width: 100%;
+
   color: #483df6;
 
   font-size: 11px;
+  line-height: 1.3;
   font-weight: 900;
 
   letter-spacing: 0.12em;
 
   text-transform: uppercase;
+
+  overflow-wrap: anywhere;
 }
 
 .modal h2 {
+  max-width: 100%;
+
   margin: 10px 0 8px;
 
   color: #111827;
 
   font-size: 28px;
+  line-height: 1.15;
 
   letter-spacing: -0.045em;
+
+  overflow-wrap: anywhere;
 }
 
 .modalDescription {
+  width: 100%;
   max-width: 380px;
 
   margin: 0 auto 25px;
@@ -141,8 +185,9 @@
   color: #73788a;
 
   font-size: 13px;
-
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================
@@ -151,6 +196,9 @@
 
 .receipt {
   position: relative;
+
+  width: 100%;
+  min-width: 0;
 
   overflow: hidden;
 
@@ -197,9 +245,15 @@
   pointer-events: none;
 }
 
+/* =========================
+   RECEIPT TOP
+========================= */
+
 .receiptTop {
   position: relative;
   z-index: 1;
+
+  min-width: 0;
 
   display: flex;
   align-items: flex-start;
@@ -209,6 +263,8 @@
 }
 
 .brand {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -216,23 +272,33 @@
 }
 
 .brand strong {
+  min-width: 0;
+
   color: #111827;
 
   font-size: 22px;
+  line-height: 1.15;
 
   letter-spacing: -0.06em;
+
+  overflow-wrap: anywhere;
 }
 
 .brand span {
   color: #969baa;
 
   font-size: 8px;
+  line-height: 1.3;
   font-weight: 800;
 
   letter-spacing: 0.09em;
+
+  overflow-wrap: anywhere;
 }
 
 .paidStamp {
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
 
@@ -248,16 +314,29 @@
   color: #483df6;
 
   font-size: 9px;
+  line-height: 1.2;
   font-weight: 900;
 
   letter-spacing: 0.08em;
 
+  white-space: nowrap;
+
   transform: rotate(-2deg);
 }
+
+.paidStamp svg {
+  flex-shrink: 0;
+}
+
+/* =========================
+   RECEIPT TITLE
+========================= */
 
 .receiptTitle {
   position: relative;
   z-index: 1;
+
+  min-width: 0;
 
   margin-top: 27px;
 
@@ -271,15 +350,24 @@
   color: #9297a6;
 
   font-size: 9px;
+  line-height: 1.3;
   font-weight: 800;
 
   letter-spacing: 0.12em;
+
+  overflow-wrap: anywhere;
 }
 
 .receiptTitle strong {
+  min-width: 0;
+
   color: #252b3a;
 
   font-size: 16px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .line {
@@ -290,9 +378,15 @@
   background: rgba(15, 23, 42, 0.08);
 }
 
+/* =========================
+   RECEIPT ROWS
+========================= */
+
 .receiptRows {
   position: relative;
   z-index: 1;
+
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
@@ -301,6 +395,8 @@
 }
 
 .receiptRow {
+  min-width: 0;
+
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -309,20 +405,28 @@
 }
 
 .receiptRow span {
+  min-width: 0;
+
   color: #7c8190;
 
   font-size: 10px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .receiptRow strong {
+  min-width: 0;
   max-width: 250px;
 
   color: #303645;
 
   font-size: 10px;
+  line-height: 1.45;
 
   text-align: right;
 
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
@@ -330,15 +434,22 @@
   font-family: monospace;
 
   font-size: 9px !important;
+  word-break: break-all !important;
 }
 
 .discount {
   color: #483df6 !important;
 }
 
+/* =========================
+   TOTAL
+========================= */
+
 .total {
   position: relative;
   z-index: 1;
+
+  min-width: 0;
 
   display: flex;
   align-items: center;
@@ -348,34 +459,51 @@
 }
 
 .total span {
+  min-width: 0;
+
   color: #686d7b;
 
   font-size: 12px;
+  line-height: 1.4;
   font-weight: 800;
 
   letter-spacing: 0.05em;
+
+  overflow-wrap: anywhere;
 }
 
 .total strong {
+  min-width: 0;
+
   color: #111827;
 
   font-size: 24px;
+  line-height: 1.2;
+
+  text-align: right;
 
   letter-spacing: -0.045em;
 
   text-shadow: 0 0 25px rgba(72, 61, 246, 0.08);
+
+  overflow-wrap: anywhere;
 }
+
+/* =========================
+   RECEIPT FOOTER
+========================= */
 
 .receiptFooter {
   position: relative;
   z-index: 1;
 
-  margin-top: 22px;
+  min-width: 0;
 
+  margin-top: 22px;
   padding-top: 15px;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 7px;
 
@@ -384,10 +512,13 @@
   color: #858a99;
 
   font-size: 9px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 .receiptFooter svg {
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   color: #483df6;
 }
@@ -403,10 +534,14 @@
   font-family: monospace;
 
   font-size: 8px;
+  line-height: 1.4;
 
   text-align: center;
 
   letter-spacing: 0.08em;
+
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 
 /* =========================
@@ -415,9 +550,13 @@
 
 .downloadButton {
   width: 100%;
-  height: 50px;
+  min-width: 0;
+
+  min-height: 50px;
+  height: auto;
 
   margin-top: 20px;
+  padding: 12px 16px;
 
   display: flex;
   align-items: center;
@@ -433,7 +572,10 @@
   color: #ffffff;
 
   font-size: 14px;
+  line-height: 1.25;
   font-weight: 800;
+
+  text-align: center;
 
   cursor: pointer;
 
@@ -444,6 +586,10 @@
     box-shadow 0.2s,
     background 0.2s,
     opacity 0.2s;
+}
+
+.downloadButton svg {
+  flex-shrink: 0;
 }
 
 .downloadButton:hover {
@@ -464,9 +610,13 @@
 
 .profileButton {
   width: 100%;
-  height: 46px;
+  min-width: 0;
+
+  min-height: 46px;
+  height: auto;
 
   margin-top: 9px;
+  padding: 11px 14px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
   border-radius: 12px;
@@ -476,7 +626,10 @@
   color: #606575;
 
   font-size: 13px;
+  line-height: 1.25;
   font-weight: 700;
+
+  text-align: center;
 
   cursor: pointer;
 
@@ -521,19 +674,17 @@
 @keyframes modalIn {
   from {
     opacity: 0;
-
     transform: translateY(18px) scale(0.97);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0) scale(1);
   }
 }
 
 /* =========================
-   RESPONSIVE
+   TABLET
 ========================= */
 
 @media (max-width: 550px) {
@@ -542,20 +693,394 @@
   }
 
   .modal {
-    padding: 27px 16px;
+    padding: 28px 17px;
 
     border-radius: 22px;
   }
 
   .receipt {
-    padding: 18px;
+    padding: 19px;
+  }
+
+  .receiptRow {
+    gap: 15px;
   }
 
   .receiptRow strong {
-    max-width: 180px;
+    max-width: 200px;
   }
 
   .total strong {
     font-size: 21px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 400px) {
+  .overlay {
+    padding: 8px;
+  }
+
+  .modal {
+    max-height: 93vh;
+
+    padding: 26px 13px 18px;
+
+    border-radius: 19px;
+  }
+
+  .closeButton {
+    top: 11px;
+    right: 11px;
+
+    width: 32px;
+    height: 32px;
+  }
+
+  .successIcon {
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 14px;
+  }
+
+  .successIcon svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .modalLabel {
+    font-size: 9px;
+  }
+
+  .modal h2 {
+    margin-top: 8px;
+
+    font-size: 23px;
+  }
+
+  .modalDescription {
+    margin-bottom: 20px;
+
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .receipt {
+    padding: 16px;
+
+    border-radius: 15px;
+  }
+
+  .receiptTop {
+    gap: 10px;
+  }
+
+  .brand {
+    gap: 4px;
+  }
+
+  .brand strong {
+    font-size: 17px;
+  }
+
+  .brand span {
+    font-size: 7px;
+  }
+
+  .paidStamp {
+    padding: 5px 7px;
+
+    font-size: 7px;
+  }
+
+  .receiptTitle {
+    margin-top: 21px;
+  }
+
+  .receiptTitle span {
+    font-size: 8px;
+  }
+
+  .receiptTitle strong {
+    font-size: 14px;
+  }
+
+  .line {
+    margin: 15px 0;
+  }
+
+  .receiptRows {
+    gap: 11px;
+  }
+
+  .receiptRow {
+    gap: 10px;
+  }
+
+  .receiptRow span,
+  .receiptRow strong {
+    font-size: 8.5px;
+  }
+
+  .receiptRow strong {
+    max-width: 58%;
+  }
+
+  .mono {
+    font-size: 8px !important;
+  }
+
+  .total {
+    gap: 10px;
+  }
+
+  .total span {
+    font-size: 10px;
+  }
+
+  .total strong {
+    font-size: 19px;
+  }
+
+  .receiptFooter {
+    margin-top: 17px;
+    padding-top: 12px;
+
+    font-size: 8px;
+  }
+
+  .receiptNumber {
+    font-size: 7px;
+  }
+
+  .downloadButton {
+    min-height: 46px;
+
+    margin-top: 16px;
+    padding: 11px 12px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+  }
+
+  .downloadButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .profileButton {
+    min-height: 43px;
+
+    padding: 10px 12px;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   320PX
+========================= */
+
+@media (max-width: 330px) {
+  .overlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: 94vh;
+
+    padding: 24px 9px 14px;
+
+    border-radius: 16px;
+  }
+
+  .closeButton {
+    top: 8px;
+    right: 8px;
+
+    width: 29px;
+    height: 29px;
+
+    border-radius: 8px;
+  }
+
+  .closeButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .successIcon {
+    width: 50px;
+    height: 50px;
+
+    margin-bottom: 12px;
+
+    box-shadow:
+      0 0 0 6px rgba(72, 61, 246, 0.045),
+      0 0 35px rgba(72, 61, 246, 0.1);
+  }
+
+  .successIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .modalLabel {
+    font-size: 8px;
+
+    letter-spacing: 0.1em;
+  }
+
+  .modal h2 {
+    margin: 7px 0 7px;
+
+    font-size: 20px;
+  }
+
+  .modalDescription {
+    margin-bottom: 16px;
+
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  .receipt {
+    padding: 12px;
+
+    border-radius: 13px;
+  }
+
+  .receiptTop {
+    gap: 7px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand strong {
+    font-size: 14px;
+  }
+
+  .brand span {
+    font-size: 6px;
+  }
+
+  .paidStamp {
+    gap: 3px;
+
+    padding: 4px 5px;
+
+    font-size: 6px;
+  }
+
+  .paidStamp svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .receiptTitle {
+    margin-top: 17px;
+
+    gap: 4px;
+  }
+
+  .receiptTitle span {
+    font-size: 7px;
+  }
+
+  .receiptTitle strong {
+    font-size: 12px;
+  }
+
+  .line {
+    margin: 12px 0;
+  }
+
+  .receiptRows {
+    gap: 9px;
+  }
+
+  .receiptRow {
+    gap: 7px;
+  }
+
+  .receiptRow span,
+  .receiptRow strong {
+    font-size: 7px;
+    line-height: 1.4;
+  }
+
+  .receiptRow strong {
+    max-width: 57%;
+  }
+
+  .mono {
+    font-size: 6.8px !important;
+  }
+
+  .total {
+    gap: 7px;
+  }
+
+  .total span {
+    font-size: 8px;
+  }
+
+  .total strong {
+    font-size: 16px;
+  }
+
+  .receiptFooter {
+    margin-top: 14px;
+    padding-top: 10px;
+
+    gap: 5px;
+
+    font-size: 7px;
+    line-height: 1.45;
+  }
+
+  .receiptFooter svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .receiptNumber {
+    margin-top: 8px;
+
+    font-size: 6px;
+  }
+
+  .downloadButton {
+    min-height: 42px;
+
+    margin-top: 12px;
+    padding: 9px 8px;
+
+    gap: 6px;
+
+    font-size: 10px;
+  }
+
+  .downloadButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .profileButton {
+    min-height: 39px;
+
+    margin-top: 7px;
+    padding: 9px 8px;
+
+    font-size: 9px;
   }
 }

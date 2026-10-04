@@ -1,16 +1,23 @@
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
 .page {
-  min-height: 100vh;
+  position: relative;
+
   width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+
+  padding: 30px 20px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  position: relative;
   overflow: hidden;
-
-  padding: 30px 20px;
-  box-sizing: border-box;
 
   background:
     radial-gradient(
@@ -28,21 +35,22 @@
   color: #171923;
 }
 
-/* =========================
+/* =========================================================
    CARD
-========================= */
+========================================================= */
 
 .card {
   position: relative;
   z-index: 2;
 
-  width: 100%;
-  max-width: 470px;
+  width: min(470px, 100%);
+  min-width: 0;
 
   padding: 44px;
 
   box-sizing: border-box;
 
+  border: 1px solid #e5e7ef;
   border-radius: 30px;
 
   background: linear-gradient(
@@ -51,19 +59,16 @@
     rgba(250, 250, 253, 0.98)
   );
 
-  border: 1px solid #e5e7ef;
-
   box-shadow:
     0 35px 100px rgba(30, 34, 55, 0.1),
     0 0 70px rgba(72, 61, 246, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
   backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 
   color: #171923;
 }
-
-/* тонкая подсветка сверху */
 
 .card::before {
   content: "";
@@ -86,9 +91,9 @@
   opacity: 0.8;
 }
 
-/* =========================
+/* =========================================================
    BRAND
-========================= */
+========================================================= */
 
 .brand {
   display: inline-block;
@@ -99,51 +104,66 @@
 
   font-size: 14px;
   font-weight: 900;
+  line-height: 1;
 
   letter-spacing: 0.22em;
 
   text-transform: uppercase;
 }
 
-/* =========================
+/* =========================================================
    TITLE
-========================= */
+========================================================= */
 
 .title {
+  width: 100%;
+  min-width: 0;
+
   margin: 0;
 
   color: #171923;
 
-  font-size: 42px;
+  font-size: clamp(34px, 4vw, 42px);
+  font-weight: 900;
   line-height: 1.05;
 
-  font-weight: 900;
-
   letter-spacing: -0.04em;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .subtitle {
+  width: 100%;
+  min-width: 0;
+
   margin: 12px 0 30px;
 
   color: #737887;
 
   font-size: 14px;
-
+  font-weight: 500;
   line-height: 1.6;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    ACCOUNT TABS
-========================= */
+========================================================= */
 
 .accountTabs {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
 
   gap: 7px;
 
   padding: 5px;
-
   margin-bottom: 22px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e2e4ec;
   border-radius: 17px;
@@ -152,9 +172,14 @@
 }
 
 .accountTabs button {
+  min-width: 0;
   flex: 1;
 
   height: 48px;
+
+  padding: 0 8px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -172,6 +197,7 @@
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -184,18 +210,20 @@
 
 .accountTabs button:hover {
   color: #343846;
-
   background: #e9eaf0;
 }
 
-.accountTabs svg {
+.accountTabs button svg {
   width: 18px;
   height: 18px;
+
+  min-width: 18px;
+
+  flex: 0 0 auto;
 }
 
 .activeTab {
   background: #483df6 !important;
-
   color: #fff !important;
 
   box-shadow:
@@ -203,18 +231,22 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-/* =========================
+/* =========================================================
    METHODS
-========================= */
+========================================================= */
 
 .methods {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
 
   gap: 6px;
 
   padding: 5px;
-
   margin-bottom: 22px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e2e4ec;
   border-radius: 16px;
@@ -224,9 +256,14 @@
 
 .method,
 .activeMethod {
+  min-width: 0;
   flex: 1;
 
   height: 45px;
+
+  padding: 0 8px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -240,27 +277,28 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.2;
 
   cursor: pointer;
 
-  transition: 0.25s ease;
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .method {
   background: transparent;
-
   color: #7a7f8d;
 }
 
 .method:hover {
   color: #363a47;
-
   background: #e9eaf0;
 }
 
 .activeMethod {
   background: rgba(72, 61, 246, 0.1);
-
   color: #483df6;
 
   box-shadow:
@@ -272,26 +310,33 @@
 .activeMethod svg {
   width: 17px;
   height: 17px;
+
+  min-width: 17px;
+
+  flex: 0 0 auto;
 }
 
-/* =========================
+/* =========================================================
    FORM
-========================= */
+========================================================= */
 
 .form {
-  display: flex;
+  width: 100%;
+  min-width: 0;
 
+  display: flex;
   flex-direction: column;
 
   gap: 15px;
 }
 
-/* =========================
+/* =========================================================
    INPUT
-========================= */
+========================================================= */
 
 .inputBox {
   width: 100%;
+  min-width: 0;
   height: 60px;
 
   display: flex;
@@ -311,20 +356,17 @@
   transition:
     border-color 0.25s ease,
     box-shadow 0.25s ease,
-    background 0.25s ease,
-    transform 0.25s ease;
+    background 0.25s ease;
 }
 
 .inputBox:hover {
   border-color: #cdd1dd;
-
-  background: #ffffff;
+  background: #fff;
 }
 
 .inputBox:focus-within {
   border-color: #483df6;
-
-  background: #ffffff;
+  background: #fff;
 
   box-shadow:
     0 0 0 4px rgba(72, 61, 246, 0.08),
@@ -335,7 +377,9 @@
   width: 20px;
   height: 20px;
 
-  flex-shrink: 0;
+  min-width: 20px;
+
+  flex: 0 0 auto;
 
   color: #483df6;
 
@@ -343,18 +387,17 @@
 }
 
 .inputBox:focus-within > svg {
-  color: #483df6;
-
   filter: drop-shadow(0 0 5px rgba(72, 61, 246, 0.25));
 }
 
 .inputBox input {
-  flex: 1;
-
   min-width: 0;
+  flex: 1;
 
   width: 100%;
   height: 100%;
+
+  padding: 0;
 
   border: none;
   outline: none;
@@ -365,26 +408,32 @@
 
   font-family: inherit;
   font-size: 14px;
+  line-height: 1.3;
 }
 
 .inputBox input::placeholder {
   color: #9da2af;
 }
 
-/* =========================
+/* =========================================================
    PASSWORD EYE
-========================= */
+========================================================= */
 
 .eye {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+
+  padding: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  flex-shrink: 0;
-
-  padding: 5px;
+  flex: 0 0 auto;
 
   border: none;
+  border-radius: 8px;
 
   background: transparent;
 
@@ -394,15 +443,15 @@
 
   transition:
     color 0.2s ease,
+    background 0.2s ease,
     transform 0.2s ease;
 }
 
 .eye:hover {
   color: #483df6;
+  background: rgba(72, 61, 246, 0.06);
 
-  transform: scale(1.08);
-
-  filter: drop-shadow(0 0 5px rgba(72, 61, 246, 0.25));
+  transform: scale(1.05);
 }
 
 .eye svg {
@@ -410,46 +459,59 @@
   height: 20px;
 }
 
-/* =========================
+/* =========================================================
    OPTIONS
-========================= */
+========================================================= */
 
 .options {
-  display: flex;
+  width: 100%;
+  min-width: 0;
 
+  display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 15px;
+  gap: 12px;
 
   font-size: 12px;
+  line-height: 1.4;
 }
 
 .options a {
-  color: #483df6;
+  min-width: 0;
 
-  text-decoration: none;
+  color: #483df6;
 
   font-weight: 700;
 
-  transition: 0.2s ease;
+  text-decoration: none;
+  text-align: right;
+
+  overflow-wrap: anywhere;
+
+  transition: color 0.2s ease;
 }
 
 .options a:hover {
   color: #382fd2;
 }
 
-/* =========================
+/* =========================================================
    REMEMBER
-========================= */
+========================================================= */
 
 .remember {
-  display: flex;
+  min-width: 0;
+
+  display: inline-flex;
   align-items: center;
 
-  gap: 9px;
+  gap: 8px;
 
   color: #747987;
+
+  font-size: 12px;
+  line-height: 1.35;
 
   cursor: pointer;
 
@@ -463,22 +525,34 @@
 .check {
   width: 20px;
   height: 20px;
+  min-width: 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 6px;
+  box-sizing: border-box;
 
+  border-radius: 6px;
   border: 1px solid #d3d6df;
 
-  background: #ffffff;
+  background: #fff;
 
-  transition: 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .remember:hover .check {
   border-color: #483df6;
+}
+
+.remember input:checked + .check {
+  border-color: #483df6;
+  background: #483df6;
+
+  box-shadow: 0 0 15px rgba(72, 61, 246, 0.2);
 }
 
 .check svg {
@@ -488,23 +562,18 @@
   color: #fff;
 }
 
-/* когда отмечено */
-
-.remember input:checked + .check {
-  border-color: #483df6;
-
-  background: #483df6;
-
-  box-shadow: 0 0 15px rgba(72, 61, 246, 0.2);
-}
-
-/* =========================
+/* =========================================================
    SUBMIT
-========================= */
+========================================================= */
 
 .submit {
   width: 100%;
+  min-width: 0;
   height: 58px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -522,6 +591,7 @@
   font-family: inherit;
   font-size: 14px;
   font-weight: 800;
+  line-height: 1.2;
 
   cursor: pointer;
 
@@ -538,6 +608,8 @@
 .submit svg {
   width: 19px;
   height: 19px;
+
+  flex: 0 0 auto;
 
   transition: transform 0.25s ease;
 }
@@ -569,36 +641,49 @@
 
   transform: none;
 
+  filter: none;
+
   box-shadow: none;
 }
 
-/* =========================
+/* =========================================================
    SMS
-========================= */
+========================================================= */
 
 .smsInfo {
+  width: 100%;
+  min-width: 0;
+
   margin: 0 0 5px;
 
   color: #777d8b;
 
   font-size: 13px;
+  line-height: 1.5;
 
   text-align: center;
 
-  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .codeInputs {
-  display: flex;
+  width: 100%;
+  min-width: 0;
 
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 10px;
 }
 
 .codeInputs input {
-  width: 60px;
+  width: 100%;
+  min-width: 0;
   height: 62px;
+
+  padding: 0;
+
+  box-sizing: border-box;
 
   border: 1px solid #dfe2eb;
   border-radius: 15px;
@@ -614,19 +699,21 @@
   font-family: inherit;
   font-size: 23px;
   font-weight: 800;
+  line-height: 1;
 
-  transition: 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
 .codeInputs input:hover {
   border-color: #cdd1dd;
-
   background: #fff;
 }
 
 .codeInputs input:focus {
   border-color: #483df6;
-
   background: #fff;
 
   box-shadow:
@@ -635,6 +722,12 @@
 }
 
 .resend {
+  min-height: 32px;
+
+  padding: 5px 8px;
+
+  align-self: center;
+
   border: none;
 
   background: transparent;
@@ -644,31 +737,33 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.3;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .resend:hover {
   color: #382fd2;
 }
 
-/* =========================
+/* =========================================================
    BOTTOM
-========================= */
+========================================================= */
 
 .bottom {
-  margin-top: 25px;
+  width: 100%;
 
+  margin-top: 25px;
   padding-top: 22px;
 
   border-top: 1px solid #e8e9ef;
 
   color: #777c89;
 
-  font-family: inherit;
   font-size: 15px;
+  line-height: 1.45;
 
   text-align: center;
 }
@@ -678,22 +773,25 @@
 
   color: #483df6;
 
-  text-decoration: none;
-
   font-weight: 800;
 
-  transition: 0.2s ease;
+  text-decoration: none;
+
+  transition: color 0.2s ease;
 }
 
 .bottom a:hover {
   color: #382fd2;
 }
 
-/* =========================
+/* =========================================================
    ERROR / SUCCESS
-========================= */
+========================================================= */
 
 .error {
+  width: 100%;
+  box-sizing: border-box;
+
   padding: 11px 13px;
 
   border: 1px solid rgba(239, 68, 68, 0.18);
@@ -704,9 +802,15 @@
   color: #dc2626;
 
   font-size: 12px;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .success {
+  width: 100%;
+  box-sizing: border-box;
+
   padding: 11px 13px;
 
   border: 1px solid rgba(34, 197, 94, 0.18);
@@ -717,41 +821,272 @@
   color: #16a34a;
 
   font-size: 12px;
+  line-height: 1.45;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .card {
+    max-width: 450px;
+
+    padding: 34px 25px;
+
+    border-radius: 24px;
+  }
+
+  .brand {
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 33px;
+  }
+
+  .subtitle {
+    margin-bottom: 24px;
+
+    font-size: 13px;
+  }
+
+  .accountTabs {
+    margin-bottom: 19px;
+  }
+
+  .accountTabs button {
+    height: 46px;
+    font-size: 12px;
+  }
+
+  .methods {
+    margin-bottom: 19px;
+  }
+
+  .method,
+  .activeMethod {
+    height: 43px;
+  }
+
+  .inputBox {
+    height: 57px;
+    border-radius: 14px;
+  }
+
+  .submit {
+    height: 57px;
+    border-radius: 14px;
+  }
+
+  .codeInputs {
+    gap: 8px;
+  }
+
+  .codeInputs input {
+    height: 58px;
+
+    border-radius: 13px;
+
+    font-size: 21px;
+  }
+
+  .bottom {
+    margin-top: 22px;
+    padding-top: 19px;
+
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
   .page {
     padding: 18px 12px;
   }
 
   .card {
-    padding: 30px 22px;
+    max-width: 100%;
 
-    border-radius: 25px;
+    padding: 28px 18px;
+
+    border-radius: 20px;
+  }
+
+  .brand {
+    font-size: 13px;
+    letter-spacing: 0.19em;
   }
 
   .title {
-    font-size: 34px;
+    margin-top: 1px;
+
+    font-size: 28px;
+    line-height: 1.1;
+
+    letter-spacing: -0.7px;
   }
 
   .subtitle {
-    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 
-    margin-bottom: 24px;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  .accountTabs {
+    gap: 5px;
+
+    padding: 4px;
+
+    margin-bottom: 16px;
+
+    border-radius: 14px;
   }
 
   .accountTabs button {
-    height: 46px;
+    height: 43px;
 
-    font-size: 12px;
+    padding: 0 5px;
+
+    gap: 6px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+  }
+
+  .accountTabs button svg {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+  }
+
+  .methods {
+    gap: 5px;
+
+    padding: 4px;
+
+    margin-bottom: 16px;
+
+    border-radius: 13px;
+  }
+
+  .method,
+  .activeMethod {
+    height: 40px;
+
+    padding: 0 5px;
+
+    gap: 5px;
+
+    border-radius: 9px;
+
+    font-size: 10.5px;
+  }
+
+  .method svg,
+  .activeMethod svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+
+  .form {
+    gap: 10px;
   }
 
   .inputBox {
-    height: 57px;
+    height: 52px;
+
+    padding: 0 12px;
+
+    gap: 9px;
+
+    border-radius: 11px;
+  }
+
+  .inputBox > svg {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+  }
+
+  .inputBox input {
+    font-size: 13px;
+  }
+
+  .eye {
+    width: 27px;
+    height: 27px;
+    min-width: 27px;
+
+    border-radius: 7px;
+  }
+
+  .eye svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .options {
+    gap: 8px;
+
+    font-size: 10.5px;
+  }
+
+  .remember {
+    gap: 6px;
+
+    font-size: 10.5px;
+  }
+
+  .check {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+
+    border-radius: 5px;
+  }
+
+  .check svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .options a {
+    font-size: 10.5px;
+  }
+
+  .submit {
+    height: 52px;
+
+    padding: 0 11px;
+
+    gap: 7px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+  }
+
+  .submit svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .smsInfo {
+    margin-bottom: 3px;
+
+    font-size: 11px;
   }
 
   .codeInputs {
@@ -759,18 +1094,464 @@
   }
 
   .codeInputs input {
-    width: 54px;
-    height: 58px;
+    height: 52px;
+
+    border-radius: 11px;
+
+    font-size: 19px;
+  }
+
+  .resend {
+    min-height: 30px;
+
+    font-size: 10.5px;
+  }
+
+  .bottom {
+    margin-top: 17px;
+    padding-top: 16px;
+
+    font-size: 11.5px;
+  }
+
+  .bottom a {
+    margin-left: 5px;
+  }
+
+  .error,
+  .success {
+    padding: 9px 10px;
+    font-size: 10.5px;
   }
 }
 
-@media (max-width: 380px) {
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .page {
+    padding: 15px 9px;
+  }
+
   .card {
-    padding: 25px 17px;
+    padding: 24px 14px;
+
+    border-radius: 17px;
+  }
+
+  .brand {
+    font-size: 12px;
+    letter-spacing: 0.17em;
+  }
+
+  .title {
+    margin-top: 0;
+
+    font-size: 24px;
+    line-height: 1.12;
+    letter-spacing: -0.45px;
+  }
+
+  .subtitle {
+    margin-top: 8px;
+    margin-bottom: 17px;
+
+    font-size: 11.5px;
+    line-height: 1.52;
+  }
+
+  .accountTabs {
+    gap: 4px;
+
+    padding: 4px;
+
+    margin-bottom: 14px;
+
+    border-radius: 12px;
+  }
+
+  .accountTabs button {
+    height: 40px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+  }
+
+  .accountTabs button svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .methods {
+    gap: 4px;
+
+    padding: 4px;
+
+    margin-bottom: 14px;
+
+    border-radius: 11px;
+  }
+
+  .method,
+  .activeMethod {
+    height: 38px;
+
+    gap: 4px;
+
+    border-radius: 8px;
+
+    font-size: 9.5px;
+  }
+
+  .method svg,
+  .activeMethod svg {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+
+  .form {
+    gap: 8px;
+  }
+
+  .inputBox {
+    height: 49px;
+
+    padding: 0 10px;
+
+    gap: 7px;
+
+    border-radius: 10px;
+  }
+
+  .inputBox > svg {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+  }
+
+  .inputBox input {
+    font-size: 12.5px;
+  }
+
+  .eye {
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+  }
+
+  .eye svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .options {
+    align-items: flex-start;
+    gap: 7px;
+
+    font-size: 9.5px;
+  }
+
+  .remember {
+    gap: 5px;
+    font-size: 9.5px;
+  }
+
+  .check {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+  }
+
+  .check svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .options a {
+    font-size: 9.5px;
+  }
+
+  .submit {
+    height: 49px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+  }
+
+  .smsInfo {
+    font-size: 10px;
+  }
+
+  .codeInputs {
+    gap: 6px;
   }
 
   .codeInputs input {
-    width: 49px;
-    height: 54px;
+    height: 49px;
+
+    border-radius: 9px;
+
+    font-size: 18px;
+  }
+
+  .resend {
+    font-size: 10px;
+  }
+
+  .bottom {
+    margin-top: 15px;
+    padding-top: 14px;
+
+    font-size: 10.5px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFE MODE
+========================================================= */
+
+@media (max-width: 330px) {
+  .page {
+    padding: 12px 7px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 20px 10px;
+
+    border-radius: 14px;
+  }
+
+  .brand {
+    margin-bottom: 8px;
+
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+
+  .title {
+    font-size: 20px;
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+  }
+
+  .subtitle {
+    margin-top: 7px;
+    margin-bottom: 14px;
+
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* ACCOUNT TYPE */
+
+  .accountTabs {
+    gap: 3px;
+
+    padding: 3px;
+
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+  }
+
+  .accountTabs button {
+    height: 36px;
+
+    padding: 0 3px;
+
+    gap: 4px;
+
+    border-radius: 7px;
+
+    font-size: 8.5px;
+  }
+
+  .accountTabs button svg {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+
+  /* METHODS */
+
+  .methods {
+    gap: 3px;
+
+    padding: 3px;
+
+    margin-bottom: 12px;
+
+    border-radius: 9px;
+  }
+
+  .method,
+  .activeMethod {
+    height: 34px;
+
+    padding: 0 3px;
+
+    gap: 3px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .method svg,
+  .activeMethod svg {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+  }
+
+  /* FORM */
+
+  .form {
+    gap: 7px;
+  }
+
+  .inputBox {
+    height: 45px;
+
+    padding: 0 8px;
+
+    gap: 6px;
+
+    border-radius: 8px;
+  }
+
+  .inputBox > svg {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+  }
+
+  .inputBox input {
+    font-size: 11.5px;
+  }
+
+  .eye {
+    width: 23px;
+    height: 23px;
+    min-width: 23px;
+
+    border-radius: 5px;
+  }
+
+  .eye svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* OPTIONS */
+
+  .options {
+    gap: 5px;
+
+    font-size: 8.5px;
+  }
+
+  .remember {
+    gap: 4px;
+
+    font-size: 8.5px;
+  }
+
+  .check {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+
+    border-radius: 4px;
+  }
+
+  .check svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .options a {
+    font-size: 8.5px;
+  }
+
+  /* SUBMIT */
+
+  .submit {
+    height: 45px;
+
+    padding: 0 8px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+  }
+
+  .submit svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* OTP */
+
+  .smsInfo {
+    margin-bottom: 2px;
+
+    font-size: 9px;
+    line-height: 1.4;
+  }
+
+  .codeInputs {
+    gap: 5px;
+  }
+
+  .codeInputs input {
+    width: 100%;
+    height: 45px;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+  }
+
+  .resend {
+    min-height: 26px;
+
+    padding: 4px 6px;
+
+    font-size: 9px;
+  }
+
+  /* BOTTOM */
+
+  .bottom {
+    margin-top: 13px;
+    padding-top: 12px;
+
+    font-size: 9px;
+  }
+
+  .bottom a {
+    margin-left: 4px;
+  }
+
+  .error,
+  .success {
+    padding: 7px 8px;
+
+    border-radius: 8px;
+
+    font-size: 8.5px;
   }
 }

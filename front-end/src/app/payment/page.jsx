@@ -398,18 +398,6 @@ export default function PaymentPage() {
                   )}
                 </div>
 
-                {isPending && payment.linkApp && (
-                  <a
-                    href={payment.linkApp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.actionButton}
-                  >
-                    <ExternalLink size={16} />
-                    Открыть в приложении O!
-                  </a>
-                )}
-
                 {isPending && (
                   <button
                     type="button"

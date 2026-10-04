@@ -5,14 +5,17 @@
 .page {
   width: 100%;
   min-height: 100vh;
-
-  margin: 0 auto;
-  padding: 80px;
+  min-height: 100dvh;
 
   box-sizing: border-box;
 
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 80px) clamp(14px, 5vw, 80px) 80px;
+
   background: #f7f8fc;
   color: #171923;
+
+  overflow-x: hidden;
 }
 
 /* =========================================================
@@ -21,41 +24,44 @@
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 
-  gap: 30px;
+  gap: 28px;
+
+  width: 100%;
   margin-bottom: 30px;
 }
 
 .headerMain {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 25px;
-}
 
-.headerMain button {
-  width: fit-content;
+  gap: 24px;
 }
 
 .titleRow {
   display: flex;
   align-items: center;
-  gap: 18px;
+
+  gap: 16px;
+
+  min-width: 0;
 }
 
 .titleIcon {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  flex-shrink: 0;
+  flex: 0 0 56px;
 
-  border: 1px solid rgba(72, 61, 246, 0.16);
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 17px;
 
   color: #483df6;
@@ -76,20 +82,96 @@
 
   color: #171923;
 
-  font-size: 32px;
-  line-height: 1.15;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.1;
   font-weight: 850;
 
   letter-spacing: -0.7px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
+  max-width: 720px;
+
   margin: 8px 0 0;
 
   color: #74798a;
 
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   HOME BUTTON
+========================================================= */
+
+.homeButton {
+  width: fit-content;
+
+  min-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 16px;
+
+  border: 1px solid #dfe2ec;
+  border-radius: 13px;
+
+  background: #ffffff;
+  color: #454a5a;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(30, 35, 60, 0.05);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.homeButton svg {
+  flex-shrink: 0;
+
+  color: #483df6;
+
+  transition: color 0.2s ease;
+}
+
+.homeButton:hover {
+  background: #483df6;
+  border-color: #483df6;
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 28px rgba(72, 61, 246, 0.22);
+}
+
+.homeButton:hover svg {
+  color: #ffffff;
+}
+
+.homeButton:active {
+  transform: translateY(0);
+}
+
+.homeButton:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 3px;
 }
 
 /* =========================================================
@@ -97,12 +179,16 @@
 ========================================================= */
 
 .counter {
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
 
   gap: 7px;
 
-  padding: 11px 16px;
+  min-height: 46px;
+
+  padding: 0 15px;
 
   border: 1px solid #e4e6ef;
   border-radius: 14px;
@@ -122,6 +208,8 @@
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
   color: #483df6;
 }
 
@@ -129,6 +217,7 @@
   color: #171923;
 
   font-size: 15px;
+  font-weight: 850;
 }
 
 .counter span {
@@ -136,74 +225,28 @@
 }
 
 /* =========================================================
-   HOME BUTTON
-========================================================= */
-
-.homeButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 8px;
-
-  height: 46px;
-
-  padding: 0 18px;
-
-  border: 1px solid #dfe2ec;
-  border-radius: 14px;
-
-  background: #ffffff;
-  color: #454a5a;
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 800;
-
-  cursor: pointer;
-
-  box-shadow: 0 8px 25px rgba(30, 35, 60, 0.06);
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.homeButton svg {
-  color: #483df6;
-}
-
-.homeButton:hover {
-  background: #483df6;
-
-  border-color: #483df6;
-
-  color: #fff;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 10px 28px rgba(72, 61, 246, 0.22);
-}
-
-.homeButton:hover svg {
-  color: #fff;
-}
-
-/* =========================================================
    TOOLBAR
 ========================================================= */
 
 .toolbar {
+  width: 100%;
+
   display: flex;
+  align-items: stretch;
+
   gap: 12px;
-  margin-bottom: 18px;
+
+  margin-bottom: 16px;
 }
 
+/* =========================================================
+   SEARCH
+========================================================= */
+
 .search {
-  width: 100%;
+  min-width: 0;
+  flex: 1;
+
   height: 56px;
 
   display: flex;
@@ -211,10 +254,10 @@
 
   gap: 12px;
 
-  padding: 0 18px;
+  padding: 0 17px;
 
   border: 1px solid #e1e4ed;
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: #ffffff;
 
@@ -224,14 +267,11 @@
 
   transition:
     border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    box-shadow 0.2s ease;
 }
 
 .search:focus-within {
   border-color: rgba(72, 61, 246, 0.5);
-
-  background: #ffffff;
 
   box-shadow:
     0 0 0 3px rgba(72, 61, 246, 0.08),
@@ -245,6 +285,8 @@
   flex-shrink: 0;
 
   color: #8b90a0;
+
+  transition: color 0.2s ease;
 }
 
 .search:focus-within svg {
@@ -253,6 +295,9 @@
 
 .search input {
   width: 100%;
+  min-width: 0;
+
+  padding: 10;
 
   border: none;
   outline: none;
@@ -270,627 +315,11 @@
 }
 
 /* =========================================================
-   CATEGORIES
-========================================================= */
-
-.categories {
-  display: flex;
-
-  gap: 8px;
-
-  margin-bottom: 24px;
-
-  overflow-x: auto;
-
-  scrollbar-width: none;
-}
-
-.categories::-webkit-scrollbar {
-  display: none;
-}
-
-.categories button {
-  flex-shrink: 0;
-
-  padding: 10px 16px;
-
-  border: 1px solid #dfe2eb;
-  border-radius: 999px;
-
-  background: #ffffff;
-  color: #707586;
-
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.categories button:hover {
-  border-color: rgba(72, 61, 246, 0.35);
-
-  color: #483df6;
-
-  background: #f7f6ff;
-
-  box-shadow: 0 5px 15px rgba(72, 61, 246, 0.06);
-}
-
-.categoryActive {
-  border-color: #483df6 !important;
-
-  background: #483df6 !important;
-
-  color: #fff !important;
-
-  box-shadow: 0 7px 20px rgba(72, 61, 246, 0.2);
-}
-
-.categories button:active {
-  transform: scale(0.97);
-}
-
-/* =========================================================
-   RESULT
-========================================================= */
-
-.result {
-  display: flex;
-  align-items: center;
-
-  gap: 5px;
-
-  margin-bottom: 18px;
-
-  color: #858a99;
-
-  font-size: 13px;
-}
-
-.result strong {
-  color: #272b38;
-
-  font-weight: 800;
-}
-
-/* =========================================================
-   GRID
-========================================================= */
-
-.grid {
-  display: grid;
-
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-
-  gap: 22px;
-}
-
-/* =========================================================
-   LISTING CARD
-========================================================= */
-
-.card {
-  overflow: hidden;
-
-  border: 1px solid #e2e5ee;
-  border-radius: 22px;
-
-  background: #ffffff;
-
-  cursor: pointer;
-
-  box-shadow: 0 12px 35px rgba(30, 35, 60, 0.08);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-
-  border-color: rgba(72, 61, 246, 0.28);
-
-  box-shadow:
-    0 25px 55px rgba(30, 35, 60, 0.12),
-    0 8px 25px rgba(72, 61, 246, 0.08);
-}
-
-.image {
-  position: relative;
-
-  height: 245px;
-
-  overflow: hidden;
-
-  background: #eef0f5;
-}
-
-.image img {
-  object-fit: cover;
-
-  transition: transform 0.5s ease;
-}
-
-.card:hover .image img {
-  transform: scale(1.045);
-}
-
-.imageGradient {
-  position: absolute;
-
-  inset: auto 0 0;
-
-  height: 90px;
-
-  pointer-events: none;
-
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
-}
-
-/* =========================================================
-   BADGES
-========================================================= */
-
-.badges {
-  position: absolute;
-
-  top: 14px;
-  left: 14px;
-  right: 14px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 7px;
-}
-
-.status,
-.type {
-  display: inline-flex;
-  align-items: center;
-
-  gap: 5px;
-
-  padding: 7px 10px;
-
-  border-radius: 10px;
-
-  font-size: 11px;
-  font-weight: 800;
-
-  backdrop-filter: blur(10px);
-}
-
-.status svg {
-  width: 13px;
-  height: 13px;
-}
-
-.vip {
-  background: #483df6;
-
-  color: #fff;
-
-  box-shadow: 0 5px 18px rgba(72, 61, 246, 0.3);
-}
-
-.urgent {
-  background: rgba(255, 255, 255, 0.94);
-
-  color: #272b38;
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-}
-
-.type {
-  background: rgba(255, 255, 255, 0.94);
-
-  color: #454a58;
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-}
-
-/* =========================================================
-   FAVORITE BUTTON
-========================================================= */
-
-.favorite {
-  position: absolute;
-
-  top: 13px;
-  right: 13px;
-
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.92);
-
-  color: #483df6;
-
-  box-shadow: 0 8px 22px rgba(20, 25, 45, 0.12);
-
-  backdrop-filter: blur(10px);
-
-  cursor: pointer;
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.favorite:hover {
-  transform: scale(1.08);
-
-  background: #f0efff;
-
-  border-color: rgba(72, 61, 246, 0.3);
-
-  box-shadow: 0 10px 25px rgba(72, 61, 246, 0.14);
-}
-
-.favorite svg {
-  width: 19px;
-  height: 19px;
-}
-
-/* =========================================================
-   SAVED
-========================================================= */
-
-.saved {
-  position: absolute;
-
-  left: 14px;
-  bottom: 13px;
-
-  padding: 6px 9px;
-
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  border-radius: 9px;
-
-  background: rgba(255, 255, 255, 0.9);
-
-  color: #555a69;
-
-  font-size: 10px;
-  font-weight: 700;
-
-  backdrop-filter: blur(10px);
-}
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.content {
-  padding: 18px;
-
-  background: #ffffff;
-}
-
-.content h2 {
-  min-height: 42px;
-
-  margin: 0 0 12px;
-
-  color: #20232e;
-
-  font-size: 17px;
-  line-height: 1.25;
-  font-weight: 750;
-
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-
-  overflow: hidden;
-}
-
-.location {
-  display: flex;
-  align-items: center;
-
-  gap: 6px;
-
-  color: #777c8b;
-
-  font-size: 13px;
-}
-
-.location svg {
-  width: 16px;
-  height: 16px;
-
-  flex-shrink: 0;
-
-  color: #483df6;
-}
-
-.details {
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  margin-top: 12px;
-}
-
-.details span {
-  padding: 5px 9px;
-
-  border: 1px solid #e4e6ed;
-  border-radius: 8px;
-
-  background: #f7f8fb;
-
-  color: #777c8b;
-
-  font-size: 11px;
-  font-weight: 600;
-}
-
-/* =========================================================
-   BOTTOM
-========================================================= */
-
-.bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 10px;
-
-  margin-top: 18px;
-}
-
-.bottom strong {
-  color: #20232e;
-
-  font-size: 19px;
-  font-weight: 800;
-}
-
-.more {
-  border: none;
-
-  background: transparent;
-
-  color: #483df6;
-
-  font-family: inherit;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  cursor: pointer;
-}
-
-.more:hover {
-  color: #3429d9;
-
-  text-decoration: underline;
-}
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty {
-  min-height: 430px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 50px 20px;
-
-  text-align: center;
-}
-
-.emptyIcon {
-  width: 72px;
-  height: 72px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 20px;
-
-  border: 1px solid rgba(72, 61, 246, 0.15);
-  border-radius: 24px;
-
-  background: rgba(72, 61, 246, 0.07);
-
-  color: #483df6;
-
-  box-shadow: 0 15px 35px rgba(72, 61, 246, 0.06);
-}
-
-.emptyIcon svg {
-  width: 30px;
-  height: 30px;
-}
-
-.empty h2 {
-  margin: 0;
-
-  color: #20232e;
-
-  font-size: 21px;
-  font-weight: 800;
-}
-
-.empty p {
-  max-width: 430px;
-
-  margin: 9px 0 20px;
-
-  color: #7b808f;
-
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.empty button {
-  padding: 12px 18px;
-
-  border: none;
-  border-radius: 13px;
-
-  background: #483df6;
-
-  color: #fff;
-
-  font-family: inherit;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.18);
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.empty button:hover {
-  background: #392ee0;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.25);
-}
-
-/* =========================================================
-   LOADING / ERROR
-========================================================= */
-
-.loading {
-  color: #777c8b;
-}
-
-.error {
-  color: #dc3545;
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 1100px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 700px) {
-  .page {
-    padding: 28px 16px 60px;
-  }
-
-  .header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .headerMain {
-    width: 100%;
-    align-items: flex-start;
-  }
-
-  .header h1 {
-    font-size: 27px;
-  }
-
-  .header p {
-    max-width: 500px;
-  }
-
-  .counter {
-    align-self: flex-start;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .search {
-    max-width: none;
-  }
-}
-
-@media (max-width: 450px) {
-  .titleRow {
-    align-items: flex-start;
-  }
-
-  .titleIcon {
-    width: 46px;
-    height: 46px;
-
-    border-radius: 14px;
-  }
-
-  .titleIcon svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .header h1 {
-    font-size: 24px;
-  }
-
-  .header p {
-    font-size: 13px;
-  }
-
-  .homeButton {
-    width: 46px;
-
-    padding: 0;
-
-    flex-shrink: 0;
-  }
-
-  .homeButton span {
-    display: none;
-  }
-}
-
-/* =========================================================
    COMPARE BUTTON
 ========================================================= */
 
 .compareButton {
+  min-width: 190px;
   height: 56px;
 
   flex-shrink: 0;
@@ -901,10 +330,10 @@
 
   gap: 9px;
 
-  padding: 0 20px;
+  padding: 0 19px;
 
   border: 1px solid rgba(72, 61, 246, 0.2);
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: #ffffff;
   color: #483df6;
@@ -941,11 +370,14 @@
     0 4px 12px rgba(30, 35, 60, 0.04);
 }
 
-.compareButtonActive {
-  background: #483df6;
+.compareButton:active {
+  transform: scale(0.98);
+}
 
+.compareButtonActive {
   border-color: #483df6;
 
+  background: #483df6;
   color: #ffffff;
 
   box-shadow:
@@ -954,20 +386,93 @@
 }
 
 .compareButtonActive:hover {
-  background: #392ee0;
-
   border-color: #392ee0;
 
+  background: #392ee0;
   color: #ffffff;
 }
 
-.compareButton:active {
-  transform: scale(0.98);
+.compareButton:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 3px;
 }
 
-.compareButton:focus-visible {
-  outline: 2px solid #483df6;
-  outline-offset: 3px;
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+.categories {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 22px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: 3px;
+
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+.categories button {
+  flex: 0 0 auto;
+
+  min-height: 38px;
+
+  padding: 0 15px;
+
+  border: 1px solid #dfe2eb;
+  border-radius: 999px;
+
+  background: #ffffff;
+  color: #707586;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.categories button:hover {
+  border-color: rgba(72, 61, 246, 0.35);
+
+  background: #f7f6ff;
+  color: #483df6;
+
+  box-shadow: 0 5px 15px rgba(72, 61, 246, 0.06);
+}
+
+.categories button:active {
+  transform: scale(0.97);
+}
+
+.categoryActive {
+  border-color: #483df6 !important;
+
+  background: #483df6 !important;
+  color: #ffffff !important;
+
+  box-shadow: 0 7px 20px rgba(72, 61, 246, 0.2);
 }
 
 /* =========================================================
@@ -1006,6 +511,8 @@
 }
 
 .compareHint > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -1017,6 +524,8 @@
 
   font-size: 13px;
   font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .compareHint span {
@@ -1024,11 +533,53 @@
 
   font-size: 12px;
   line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   COMPARE WRAPPER
+   RESULT
 ========================================================= */
+
+.result {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-bottom: 18px;
+
+  color: #858a99;
+
+  font-size: 13px;
+}
+
+.result strong {
+  color: #272b38;
+
+  font-weight: 850;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: clamp(16px, 2vw, 24px);
+
+  align-items: start;
+}
+
+/*
+   ListingCard находится внутри compareWrapper.
+   Эти стили не вмешиваются в его внутренний дизайн.
+*/
 
 .compareWrapper {
   position: relative;
@@ -1039,35 +590,30 @@
 
   transition:
     transform 0.2s ease,
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.compareWrapper .compareCheck {
-  z-index: 30;
+.compareWrapper:hover {
+  transform: translateY(-3px);
 }
-
-.compareWrapperSelected .compareCheck {
-  z-index: 50;
-}
-/*
- * Карточка другого типа
- */
-
-.compareWrapperDisabled {
-  opacity: 0.55;
-}
-
-/*
- * Не даём hover карточке
- * визуально "выпрыгивать" поверх compare UI
- */
 
 .gridCompareMode .compareWrapper:hover {
   transform: none;
 }
 
+.compareWrapperSelected {
+  box-shadow:
+    0 0 0 3px rgba(72, 61, 246, 0.16),
+    0 16px 40px rgba(72, 61, 246, 0.1);
+}
+
+.compareWrapperDisabled {
+  opacity: 0.5;
+}
+
 /* =========================================================
-   COMPARE CHECKBOX
+   COMPARE CHECK
 ========================================================= */
 
 .compareCheck {
@@ -1076,7 +622,7 @@
   top: 14px;
   left: 14px;
 
-  z-index: 20;
+  z-index: 50;
 
   width: 42px;
   height: 42px;
@@ -1087,7 +633,7 @@
 
   padding: 0;
 
-  border: 2px solid rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.96);
   border-radius: 12px;
 
   background: rgba(255, 255, 255, 0.96);
@@ -1101,6 +647,7 @@
     0 2px 8px rgba(20, 25, 45, 0.08);
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 
   transition:
     background 0.2s ease,
@@ -1109,10 +656,6 @@
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
-
-/*
- * Пустая галочка
- */
 
 .compareCheck::after {
   content: "";
@@ -1128,31 +671,21 @@
   pointer-events: none;
 }
 
-/*
- * Hover
- */
-
 .compareCheck:hover:not(:disabled) {
   transform: scale(1.07);
 
-  border-color: #ffffff;
-
   background: #ffffff;
+  border-color: #ffffff;
 
   box-shadow:
     0 10px 26px rgba(72, 61, 246, 0.2),
     0 3px 10px rgba(20, 25, 45, 0.08);
 }
 
-/*
- * SELECTED
- */
-
 .compareCheckSelected {
-  background: #483df6;
-
   border-color: #483df6;
 
+  background: #483df6;
   color: #ffffff;
 
   box-shadow:
@@ -1165,19 +698,15 @@
 }
 
 .compareCheckSelected:hover:not(:disabled) {
-  background: #392ee0;
-
   border-color: #392ee0;
+
+  background: #392ee0;
 }
 
-/*
- * Disabled
- */
-
 .compareCheck:disabled {
-  cursor: not-allowed;
+  opacity: 0.6;
 
-  opacity: 0.65;
+  cursor: not-allowed;
 
   background: rgba(255, 255, 255, 0.85);
 }
@@ -1188,7 +717,6 @@
 
 .compareCheck svg {
   position: relative;
-
   z-index: 2;
 
   width: 18px;
@@ -1198,7 +726,7 @@
 }
 
 .compareCheck:focus-visible {
-  outline: 3px solid rgba(72, 61, 246, 0.35);
+  outline: 3px solid rgba(72, 61, 246, 0.3);
   outline-offset: 2px;
 }
 
@@ -1208,33 +736,190 @@
 
 .compareDisabledOverlay {
   position: absolute;
-  top: -10px;
-  left: 0;
-  right: 0;
 
-  z-index: 300;
-  padding-top: 200px;
+  inset: 0;
 
-  width: 100%;
-  height: 100%;
+  z-index: 30;
 
-  border-radius: 20px;
+  border-radius: 22px;
 
-  color: #020229;
+  background: rgba(255, 255, 255, 0.03);
+
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+  min-height: clamp(360px, 50vh, 500px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 50px 20px;
+
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 72px;
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(72, 61, 246, 0.15);
+  border-radius: 23px;
+
+  background: rgba(72, 61, 246, 0.07);
+
+  color: #483df6;
+
+  box-shadow: 0 15px 35px rgba(72, 61, 246, 0.06);
+}
+
+.emptyIcon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.empty h2 {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: #20232e;
+
+  font-size: clamp(19px, 2vw, 23px);
+  line-height: 1.2;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
+}
+
+.empty p {
+  max-width: 470px;
+
+  margin: 10px 0 20px;
+
+  color: #7b808f;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+.empty button {
+  min-height: 44px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #483df6;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.empty button:hover {
+  background: #392ee0;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.25);
+}
+
+.empty button:active {
+  transform: translateY(0);
+}
+
+.empty button:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+  min-height: 360px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  color: #777c8b;
+
+  font-size: 14px;
+}
+
+.loadingSpinner {
+  width: 34px;
+  height: 34px;
+
+  border: 3px solid #e6e7f1;
+  border-top-color: #483df6;
+
+  border-radius: 50%;
+
+  animation: loadingSpin 0.8s linear infinite;
+}
+
+@keyframes loadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+  min-height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  color: #dc3545;
 
   text-align: center;
 
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
 
-  /* Белая тень для читаемости */
-  text-shadow:
-    0 0px 15px rgba(255, 255, 255, 0.975),
-    0 0 6px rgba(255, 255, 255, 0.99);
-
-  backdrop-filter: blur(3px);
-
-  pointer-events: none;
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -1245,24 +930,22 @@
   position: fixed;
 
   left: 50%;
-
-  bottom: 24px;
+  bottom: 22px;
 
   z-index: 1000;
 
   width: min(760px, calc(100% - 40px));
-
   min-height: 76px;
-
-  transform: translateX(-50%);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 18px;
 
-  padding: 12px 14px 12px 18px;
+  padding: 11px 14px 11px 18px;
+
+  box-sizing: border-box;
 
   border: 1px solid rgba(72, 61, 246, 0.18);
   border-radius: 20px;
@@ -1274,6 +957,9 @@
     0 5px 20px rgba(72, 61, 246, 0.1);
 
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  transform: translateX(-50%);
 
   animation: compareBarIn 0.25s ease;
 }
@@ -1281,7 +967,7 @@
 @keyframes compareBarIn {
   from {
     opacity: 0;
-    transform: translate(-50%, 15px);
+    transform: translate(-50%, 16px);
   }
 
   to {
@@ -1295,12 +981,12 @@
 ========================================================= */
 
 .compareBarInfo {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
   gap: 11px;
-
-  min-width: 0;
 }
 
 .compareBarInfo > svg {
@@ -1313,25 +999,33 @@
 }
 
 .compareBarInfo > div {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
   gap: 3px;
-
-  min-width: 0;
 }
 
 .compareBarInfo strong {
   color: #20232e;
 
   font-size: 13px;
+  line-height: 1.25;
   font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .compareBarInfo span {
+  display: block;
+
+  max-width: 220px;
+
   color: #7b808f;
 
   font-size: 11px;
+  line-height: 1.3;
 
   white-space: nowrap;
   overflow: hidden;
@@ -1343,36 +1037,41 @@
 ========================================================= */
 
 .compareBarActions {
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
 
   gap: 8px;
-
-  flex-shrink: 0;
 }
 
-.clearCompare {
+.clearCompare,
+.startCompare {
   height: 42px;
 
-  padding: 0 14px;
-
-  border: 1px solid #e1e4ed;
   border-radius: 11px;
-
-  background: #ffffff;
-
-  color: #727887;
 
   font-family: inherit;
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 800;
 
   cursor: pointer;
 
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.clearCompare {
+  padding: 0 14px;
+
+  border: 1px solid #e1e4ed;
+
+  background: #ffffff;
+  color: #727887;
 }
 
 .clearCompare:hover {
@@ -1384,8 +1083,6 @@
 }
 
 .startCompare {
-  height: 42px;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1395,30 +1092,17 @@
   padding: 0 16px;
 
   border: 1px solid #483df6;
-  border-radius: 11px;
 
   background: #483df6;
   color: #ffffff;
 
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 800;
-
-  cursor: pointer;
-
   box-shadow: 0 7px 20px rgba(72, 61, 246, 0.2);
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 .startCompare:hover:not(:disabled) {
-  background: #392ee0;
-
   border-color: #392ee0;
+
+  background: #392ee0;
 
   transform: translateY(-1px);
 
@@ -1430,10 +1114,9 @@
 }
 
 .startCompare:disabled {
-  background: #e4e6ed;
-
   border-color: #e4e6ed;
 
+  background: #e4e6ed;
   color: #999eaa;
 
   cursor: not-allowed;
@@ -1441,8 +1124,14 @@
   box-shadow: none;
 }
 
+.clearCompare:focus-visible,
+.startCompare:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 2px;
+}
+
 /* =========================================================
-   COMPARE MODE GRID
+   GRID IN COMPARE MODE
 ========================================================= */
 
 .gridCompareMode {
@@ -1450,10 +1139,57 @@
 }
 
 /* =========================================================
-   RESPONSIVE COMPARE
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1800px) {
+  .page {
+    padding-left: max(80px, calc((100vw - 1760px) / 2));
+    padding-right: max(80px, calc((100vw - 1760px) / 2));
+  }
+
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+  .page {
+    padding-top: 48px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+}
+
+/* =========================================================
+   TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
+  .page {
+    padding-top: 36px;
+    padding-bottom: 60px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .counter {
+    align-self: flex-start;
+  }
+
   .toolbar {
     flex-direction: column;
   }
@@ -1466,20 +1202,127 @@
     width: calc(100% - 28px);
 
     bottom: 14px;
-
-    padding: 11px 12px 11px 14px;
   }
 }
 
-@media (max-width: 600px) {
-  .compareHint {
-    align-items: flex-start;
+/* =========================================================
+   MOBILE
+========================================================= */
 
-    padding: 13px 14px;
+@media (max-width: 700px) {
+  .page {
+    padding: 26px 16px 50px;
   }
 
-  .compareHint > svg {
-    margin-top: 2px;
+  .header {
+    gap: 18px;
+
+    margin-bottom: 22px;
+  }
+
+  .headerMain {
+    width: 100%;
+
+    gap: 20px;
+  }
+
+  .titleRow {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .titleIcon {
+    width: 48px;
+    height: 48px;
+
+    flex-basis: 48px;
+
+    border-radius: 14px;
+  }
+
+  .titleIcon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .header p {
+    margin-top: 7px;
+
+    font-size: 13px;
+  }
+
+  .counter {
+    width: fit-content;
+
+    min-height: 42px;
+
+    padding: 0 13px;
+  }
+
+  .counter span {
+    font-size: 12px;
+  }
+
+  .homeButton {
+    min-height: 42px;
+
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    font-size: 13px;
+  }
+
+  .search,
+  .compareButton {
+    height: 52px;
+
+    border-radius: 14px;
+  }
+
+  .search {
+    padding: 0 15px;
+  }
+
+  .categories {
+    margin-bottom: 18px;
+  }
+
+  .categories button {
+    min-height: 36px;
+
+    padding: 0 13px;
+
+    font-size: 12px;
+  }
+
+  .compareHint {
+    margin-bottom: 16px;
+
+    padding: 12px 14px;
+
+    border-radius: 14px;
+  }
+
+  .result {
+    margin-bottom: 14px;
+
+    font-size: 12px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .compareWrapper {
+    border-radius: 18px;
   }
 
   .compareCheck {
@@ -1488,16 +1331,8 @@
 
     width: 40px;
     height: 40px;
-  }
 
-  .compareDisabledOverlay {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-
-    padding: 8px;
-
-    font-size: 10px;
+    border-radius: 11px;
   }
 
   .compareBar {
@@ -1506,11 +1341,25 @@
 
     gap: 10px;
 
+    min-height: auto;
+
+    padding: 12px;
+
     border-radius: 18px;
   }
 
   .compareBarInfo {
     justify-content: center;
+
+    width: 100%;
+  }
+
+  .compareBarInfo > div {
+    text-align: left;
+  }
+
+  .compareBarInfo span {
+    max-width: 170px;
   }
 
   .compareBarActions {
@@ -1522,14 +1371,132 @@
     flex: 1;
   }
 
+  .clearCompare,
+  .startCompare {
+    min-width: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .gridCompareMode {
     padding-bottom: 155px;
   }
+
+  .empty {
+    min-height: 340px;
+
+    padding: 40px 15px;
+  }
+
+  .emptyIcon {
+    width: 66px;
+    height: 66px;
+
+    margin-bottom: 17px;
+
+    border-radius: 21px;
+  }
+
+  .emptyIcon svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .empty h2 {
+    font-size: 19px;
+  }
+
+  .empty p {
+    font-size: 13px;
+  }
 }
 
-@media (max-width: 400px) {
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+  .page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .titleIcon {
+    width: 44px;
+    height: 44px;
+
+    flex-basis: 44px;
+
+    border-radius: 13px;
+  }
+
+  .titleIcon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .header h1 {
+    font-size: 23px;
+
+    letter-spacing: -0.45px;
+  }
+
+  .header p {
+    font-size: 12.5px;
+  }
+
+  .homeButton {
+    width: 44px;
+
+    padding: 0;
+  }
+
+  .homeButton span {
+    display: none;
+  }
+
+  .counter {
+    min-height: 40px;
+
+    padding: 0 11px;
+
+    border-radius: 12px;
+  }
+
+  .counter svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .counter strong {
+    font-size: 14px;
+  }
+
+  .counter span {
+    font-size: 11px;
+  }
+
+  .toolbar {
+    gap: 9px;
+  }
+
+  .search,
   .compareButton {
+    height: 50px;
+  }
+
+  .compareButton {
+    min-width: 0;
+
     font-size: 13px;
+  }
+
+  .compareHint {
+    align-items: flex-start;
+  }
+
+  .compareHint > svg {
+    margin-top: 2px;
   }
 
   .compareHint strong {
@@ -1542,21 +1509,197 @@
 
   .compareBar {
     width: calc(100% - 20px);
+
+    bottom: 10px;
+  }
+
+  .gridCompareMode {
+    padding-bottom: 160px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL — 320px SAFETY
+========================================================= */
+
+@media (max-width: 380px) {
+  .page {
+    padding: 20px 10px 44px;
+  }
+
+  .titleRow {
+    gap: 10px;
+  }
+
+  .titleIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-basis: 40px;
+
+    border-radius: 12px;
+  }
+
+  .titleIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .header h1 {
+    font-size: 21px;
+  }
+
+  .header p {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .homeButton {
+    width: 40px;
+    min-height: 40px;
+  }
+
+  .counter {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .search,
+  .compareButton {
+    height: 48px;
+  }
+
+  .search {
+    padding: 0 13px;
+
+    gap: 9px;
+  }
+
+  .search svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .search input {
+    font-size: 13px;
+  }
+
+  .compareButton {
+    gap: 7px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
+  }
+
+  .categories button {
+    min-height: 34px;
+
+    padding: 0 11px;
+
+    font-size: 11px;
+  }
+
+  .compareCheck {
+    top: 8px;
+    left: 8px;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+  }
+
+  .compareCheck::after {
+    width: 15px;
+    height: 15px;
+  }
+
+  .compareBar {
+    width: calc(100% - 16px);
+
+    padding: 10px;
+
+    border-radius: 16px;
+  }
+
+  .compareBarInfo {
+    gap: 8px;
+  }
+
+  .compareBarInfo > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .compareBarInfo strong {
+    font-size: 12px;
+  }
+
+  .compareBarInfo span {
+    max-width: 130px;
+
+    font-size: 10px;
   }
 
   .clearCompare,
   .startCompare {
-    padding: 0 10px;
+    height: 40px;
 
-    font-size: 11px;
+    padding: 0 8px;
+
+    font-size: 10px;
+  }
+
+  .empty {
+    min-height: 300px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .emptyIcon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .empty h2 {
+    font-size: 18px;
+  }
+
+  .empty p {
+    font-size: 12px;
+  }
+
+  .empty button {
+    min-height: 42px;
+
+    padding: 0 15px;
+
+    font-size: 12px;
   }
 }
 
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
 @media (prefers-reduced-motion: reduce) {
+  .homeButton,
+  .search,
   .compareButton,
+  .categories button,
+  .compareWrapper,
   .compareCheck,
-  .compareBar {
+  .empty button,
+  .clearCompare,
+  .startCompare {
     transition: none;
+  }
+
+  .compareBar,
+  .loadingSpinner {
     animation: none;
   }
 }

@@ -1,12 +1,12 @@
 /* =========================================================
-   PAGE
+   SEARCH MAP PAGE / APP SHELL
 ========================================================= */
 
-.page {
+:global(.search-map-page) {
   --bg: #f4f6fb;
   --bg-soft: #eef1f8;
 
-  --card: rgba(255, 255, 255, 0.94);
+  --card: rgba(255, 255, 255, 0.95);
   --card-light: rgba(255, 255, 255, 0.98);
 
   --border: rgba(15, 23, 42, 0.1);
@@ -17,18 +17,18 @@
   --muted-dark: #94a3b8;
 
   --purple: #483df6;
-  --purple-light: #483df6;
+  --purple-light: #6b63ff;
   --purple-dark: #382ed0;
-
-  position: relative;
 
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
 
-  padding: 24px;
+  padding: 16px;
+
+  box-sizing: border-box;
 
   overflow: hidden;
-  box-sizing: border-box;
 
   background:
     radial-gradient(circle at 10% 0%, rgba(72, 61, 246, 0.08), transparent 30%),
@@ -42,29 +42,27 @@
   color: var(--text);
 }
 
-.page * {
+:global(.search-map-page),
+:global(.search-map-page) * {
   box-sizing: border-box;
 }
 
-/* =========================================================
-   MAP WRAPPER
-========================================================= */
-
-.mapWrapper {
+:global(.search-map-page > section) {
   position: relative;
 
-  width: 100%;
-  max-width: 1680px;
+  width: min(100%, 1680px);
 
-  height: calc(100vh - 48px);
-  min-height: 650px;
+  height: calc(100vh - 32px);
+  height: calc(100dvh - 32px);
+
+  min-height: 620px;
 
   margin: 0 auto;
 
   overflow: hidden;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 28px;
+  border-radius: 26px;
 
   background: #eef1f5;
 
@@ -84,14 +82,16 @@
 
   z-index: 2000;
 
-  top: 18px;
-  left: 18px;
-  right: 18px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
 
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  gap: 9px;
+
+  min-width: 0;
 
   pointer-events: none;
 }
@@ -103,9 +103,9 @@
 .homeButton {
   position: relative;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
-  height: 50px;
+  height: 48px;
 
   display: inline-flex;
   align-items: center;
@@ -113,10 +113,10 @@
 
   gap: 8px;
 
-  padding: 0 16px;
+  padding: 0 15px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 14px;
+  border-radius: 13px;
 
   background: linear-gradient(
     145deg,
@@ -153,6 +153,8 @@
   width: 17px;
   height: 17px;
 
+  flex-shrink: 0;
+
   color: var(--purple);
 }
 
@@ -183,19 +185,20 @@
 ========================================================= */
 
 .heading {
-  min-width: 240px;
+  min-width: 220px;
+  max-width: 300px;
 
-  height: 50px;
+  height: 48px;
 
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 10px;
 
-  padding: 6px 14px 6px 7px;
+  padding: 5px 13px 5px 6px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 14px;
+  border-radius: 13px;
 
   background: linear-gradient(
     145deg,
@@ -212,17 +215,17 @@
 }
 
 .headingIcon {
-  width: 38px;
-  height: 38px;
+  width: 37px;
+  height: 37px;
+
+  flex: 0 0 37px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  flex-shrink: 0;
-
   border: 1px solid rgba(72, 61, 246, 0.16);
-  border-radius: 11px;
+  border-radius: 10px;
 
   background: linear-gradient(
     135deg,
@@ -253,7 +256,7 @@
 
   color: var(--purple);
 
-  font-size: 8px;
+  font-size: 7px;
   line-height: 1;
 
   font-weight: 900;
@@ -266,7 +269,7 @@
 
   color: #172033;
 
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.15;
 
   font-weight: 850;
@@ -274,21 +277,25 @@
   letter-spacing: -0.2px;
 
   white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =========================================================
    SEARCH
+   — оставлено для совместимости
 ========================================================= */
 
 .searchBox {
   position: relative;
 
-  flex: 1;
+  flex: 1 1 auto;
 
   min-width: 180px;
   max-width: 470px;
 
-  height: 50px;
+  height: 48px;
 
   display: flex;
   align-items: center;
@@ -298,7 +305,7 @@
   padding: 0 13px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 14px;
+  border-radius: 13px;
 
   background: linear-gradient(
     145deg,
@@ -337,10 +344,10 @@
 }
 
 .searchBox > svg {
-  flex-shrink: 0;
-
   width: 18px;
   height: 18px;
+
+  flex-shrink: 0;
 
   color: #94a3b8;
 }
@@ -348,11 +355,10 @@
 .searchBox input {
   width: 100%;
   min-width: 0;
-
   height: 100%;
 
-  padding: 0 !important;
   margin: 0 !important;
+  padding: 0 !important;
 
   border: 0 !important;
   outline: 0 !important;
@@ -371,10 +377,10 @@
   -webkit-appearance: none;
 }
 
-.searchBox input:hover,
 .searchBox input:focus,
-.searchBox input:focus-visible,
-.searchBox input:active {
+.searchBox input:hover,
+.searchBox input:active,
+.searchBox input:focus-visible {
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
@@ -385,19 +391,15 @@
   color: #94a3b8;
 }
 
-/* =========================================================
-   CLEAR SEARCH
-========================================================= */
-
 .clearSearch {
   width: 29px;
   height: 29px;
 
+  flex: 0 0 29px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
 
   padding: 0;
 
@@ -445,7 +447,11 @@
 ========================================================= */
 
 .filtersToggle {
-  height: 50px;
+  position: relative;
+
+  flex: 0 0 auto;
+
+  height: 48px;
 
   display: inline-flex;
   align-items: center;
@@ -453,12 +459,10 @@
 
   gap: 8px;
 
-  flex-shrink: 0;
-
-  padding: 0 15px;
+  padding: 0 14px;
 
   border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 14px;
+  border-radius: 13px;
 
   background: linear-gradient(
     145deg,
@@ -557,10 +561,10 @@
 
   z-index: 1900;
 
-  top: 78px;
-  right: 18px;
+  top: 74px;
+  right: 16px;
 
-  width: min(720px, calc(100% - 36px));
+  width: min(720px, calc(100% - 32px));
 
   padding: 16px;
 
@@ -569,7 +573,7 @@
 
   background:
     linear-gradient(145deg, rgba(72, 61, 246, 0.035), transparent 45%),
-    rgba(255, 255, 255, 0.96);
+    rgba(255, 255, 255, 0.97);
 
   box-shadow:
     0 25px 65px rgba(15, 23, 42, 0.16),
@@ -602,16 +606,12 @@
   pointer-events: auto;
 }
 
-/* =========================================================
-   FILTERS HEADER
-========================================================= */
-
 .filtersHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 18px;
+  gap: 15px;
 
   margin-bottom: 14px;
   padding: 2px 2px 13px;
@@ -674,11 +674,6 @@
     color 0.2s ease;
 }
 
-.clearFilters svg {
-  width: 13px;
-  height: 13px;
-}
-
 .clearFilters:hover {
   border-color: rgba(72, 61, 246, 0.22);
 
@@ -687,22 +682,20 @@
   color: var(--purple);
 }
 
-/* =========================================================
-   FILTER GRID
-========================================================= */
+.clearFilters svg {
+  width: 13px;
+  height: 13px;
+}
 
 .filtersGrid {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(0, 1fr)
-    minmax(0, 1fr);
-
-  gap: 10px;
-
   position: relative;
   z-index: 20;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
 }
 
 .filtersGrid > * {
@@ -722,11 +715,9 @@
   height: 100%;
 
   overflow: hidden;
-}
 
-/* =========================================================
-   MAP
-========================================================= */
+  background: #e8ebf0;
+}
 
 .map {
   position: absolute !important;
@@ -745,18 +736,18 @@
   width: 100% !important;
   height: 100% !important;
 
-  font-family: inherit;
-
   background: #e8ebf0;
+
+  font-family: inherit;
 }
 
 .map :global(.leaflet-tile) {
   display: block !important;
 
-  max-width: none !important;
-
   width: 256px;
   height: 256px;
+
+  max-width: none !important;
 }
 
 .map :global(.leaflet-pane) {
@@ -772,11 +763,11 @@
 }
 
 .map :global(.leaflet-top) {
-  top: 88px;
+  top: 78px;
 }
 
 .map :global(.leaflet-right) {
-  right: 15px;
+  right: 14px;
 }
 
 .map :global(.leaflet-bottom) {
@@ -792,9 +783,9 @@
 
   border: 1px solid rgba(15, 23, 42, 0.1) !important;
 
-  border-radius: 12px !important;
+  border-radius: 11px !important;
 
-  background: rgba(255, 255, 255, 0.94) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
 
   box-shadow:
     0 10px 25px rgba(15, 23, 42, 0.12),
@@ -853,7 +844,7 @@
 }
 
 /* =========================================================
-   MARKER
+   MARKERS
 ========================================================= */
 
 .customMarker {
@@ -904,12 +895,12 @@
 
   transform: rotate(-45deg);
 
-  border: 3px solid #fff;
+  border: 3px solid #ffffff;
   border-radius: 50% 50% 50% 8px;
 
   background: linear-gradient(135deg, #5b51ff, #483df6);
 
-  color: #fff;
+  color: #ffffff;
 
   box-shadow:
     0 7px 20px rgba(15, 23, 42, 0.22),
@@ -923,6 +914,14 @@
   transform: rotate(45deg);
 }
 
+.map :global(.leaflet-marker-icon) {
+  transition: filter 0.2s ease;
+}
+
+.map :global(.leaflet-marker-icon:hover) {
+  filter: brightness(1.04);
+}
+
 /* =========================================================
    MAP STATUS
 ========================================================= */
@@ -932,10 +931,8 @@
 
   z-index: 1200;
 
-  left: 50%;
   top: 50%;
-
-  transform: translate(-50%, -50%);
+  left: 50%;
 
   display: flex;
   align-items: center;
@@ -943,9 +940,11 @@
 
   gap: 10px;
 
-  min-width: 210px;
+  width: min(280px, calc(100% - 30px));
 
   padding: 13px 16px;
+
+  transform: translate(-50%, -50%);
 
   border: 1px solid rgba(15, 23, 42, 0.09);
   border-radius: 13px;
@@ -968,7 +967,7 @@
   width: 17px;
   height: 17px;
 
-  flex-shrink: 0;
+  flex: 0 0 17px;
 
   border: 2px solid rgba(72, 61, 246, 0.14);
   border-top-color: var(--purple);
@@ -985,50 +984,273 @@
 }
 
 /* =========================================================
-   DRAWING INDICATOR
+   RESULT COUNT
 ========================================================= */
 
+.resultCount {
+  position: absolute;
+
+  z-index: 1100;
+
+  top: 82px;
+  left: 17px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  min-height: 27px;
+
+  max-width: calc(100% - 34px);
+
+  padding: 0 10px;
+
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.86);
+
+  color: #64748b;
+
+  font-size: 9px;
+  font-weight: 750;
+
+  backdrop-filter: blur(12px);
+
+  pointer-events: none;
+}
+
+.resultDot {
+  width: 6px;
+  height: 6px;
+
+  flex: 0 0 6px;
+
+  border-radius: 50%;
+
+  background: var(--purple);
+
+  box-shadow:
+    0 0 8px rgba(72, 61, 246, 0.45),
+    0 0 15px rgba(72, 61, 246, 0.15);
+}
+
+/* =========================================================
+   AREA SELECTION CONTROL
+========================================================= */
+
+.areaSelectionControl {
+  position: absolute;
+
+  top: 75px;
+  right: 17px;
+
+  z-index: 1250;
+}
+
+.areaSelectionButton {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 14px;
+
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  color: #34303d;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.14),
+    0 2px 6px rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+.areaSelectionButton svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+}
+
+.areaSelectionButton:hover {
+  background: #ffffff;
+
+  border-color: rgba(139, 92, 246, 0.32);
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.17),
+    0 3px 8px rgba(15, 23, 42, 0.09);
+}
+
+.areaSelectionButton:active {
+  transform: scale(0.98);
+}
+
+.areaSelectionButtonActive {
+  background: #8b5cf6;
+
+  border-color: #8b5cf6;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(139, 92, 246, 0.28),
+    0 3px 8px rgba(139, 92, 246, 0.18);
+}
+
+.areaSelectionButtonActive:hover {
+  background: #7c3aed;
+
+  border-color: #7c3aed;
+}
+
+/* =========================================================
+   AREA MODE / DRAWING
+========================================================= */
+
+.mapDrawingMode {
+  cursor: crosshair !important;
+}
+
+.mapDrawingMode * {
+  cursor: crosshair !important;
+}
+
+.areaModeHint,
 .drawingIndicator {
   position: absolute;
 
-  z-index: 1300;
-
-  top: 91px;
   left: 50%;
+  bottom: 22px;
+
+  z-index: 1350;
 
   transform: translateX(-50%);
+}
 
+.areaModeHint {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  width: min(390px, calc(100% - 30px));
+
+  padding: 11px 15px;
+
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 13px;
+
+  background: rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.14),
+    0 2px 8px rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  pointer-events: none;
+}
+
+.areaModeHintIcon {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: rgba(139, 92, 246, 0.1);
+
+  color: #7c3aed;
+}
+
+.areaModeHintIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.areaModeHint div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.areaModeHint strong {
+  color: #27232f;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.areaModeHint span {
+  color: #77727f;
+
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.drawingIndicator {
   display: flex;
   align-items: center;
 
   gap: 8px;
 
-  padding: 10px 14px;
+  width: auto;
 
-  border: 1px solid rgba(72, 61, 246, 0.2);
+  padding: 10px 15px;
+
   border-radius: 11px;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: #27232f;
 
-  color: #475569;
+  color: #ffffff;
 
-  font-size: 11px;
-  font-weight: 800;
-
-  backdrop-filter: blur(15px);
-
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.13),
-    0 0 25px rgba(72, 61, 246, 0.05);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.2);
 
   pointer-events: none;
+
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .drawingIndicator svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 
-  color: var(--purple);
+  flex-shrink: 0;
 }
 
 /* =========================================================
@@ -1040,13 +1262,15 @@
 
   z-index: 1100;
 
-  left: 20px;
-  bottom: 20px;
+  left: 17px;
+  bottom: 17px;
 
   display: flex;
   align-items: center;
 
   gap: 10px;
+
+  max-width: min(360px, calc(100% - 34px));
 
   padding: 9px 13px 9px 9px;
 
@@ -1068,11 +1292,11 @@
   width: 36px;
   height: 36px;
 
+  flex: 0 0 36px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
 
   border-radius: 10px;
 
@@ -1086,7 +1310,9 @@
   height: 16px;
 }
 
-.drawHint div:last-child {
+.drawHint > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
 
@@ -1097,7 +1323,6 @@
   color: #334155;
 
   font-size: 13px;
-
   font-weight: 800;
 }
 
@@ -1105,6 +1330,7 @@
   color: #94a3b8;
 
   font-size: 11px;
+  line-height: 1.4;
 }
 
 /* =========================================================
@@ -1117,23 +1343,23 @@
   z-index: 1400;
 
   left: 50%;
-  bottom: 20px;
-
-  transform: translateX(-50%);
-
-  min-width: 295px;
+  bottom: 17px;
 
   display: flex;
   align-items: center;
 
   gap: 10px;
 
+  width: min(430px, calc(100% - 34px));
+
   padding: 9px;
+
+  transform: translateX(-50%);
 
   border: 1px solid rgba(72, 61, 246, 0.18);
   border-radius: 14px;
 
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
 
   backdrop-filter: blur(18px);
 
@@ -1146,11 +1372,11 @@
   width: 38px;
   height: 38px;
 
+  flex: 0 0 38px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
 
   border-radius: 10px;
 
@@ -1201,7 +1427,7 @@
 
   gap: 5px;
 
-  flex-shrink: 0;
+  flex: 0 0 auto;
 
   padding: 0 10px;
 
@@ -1247,9 +1473,9 @@
   z-index: 1600;
 
   top: 50%;
-  right: 20px;
+  right: 17px;
 
-  width: 310px;
+  width: min(315px, calc(100% - 34px));
 
   overflow: hidden;
 
@@ -1269,10 +1495,12 @@
 
   pointer-events: auto;
 
-  animation: previewIn 0.22s ease;
+  cursor: pointer;
+
+  animation: previewInDesktop 0.22s ease;
 }
 
-@keyframes previewIn {
+@keyframes previewInDesktop {
   from {
     opacity: 0;
 
@@ -1285,10 +1513,6 @@
     transform: translateY(-50%) translateX(0) scale(1);
   }
 }
-
-/* =========================================================
-   PREVIEW CLOSE
-========================================================= */
 
 .previewClose {
   position: absolute;
@@ -1339,13 +1563,10 @@
   height: 14px;
 }
 
-/* =========================================================
-   PREVIEW IMAGE
-========================================================= */
-
 .previewImage {
   position: relative;
 
+  width: 100%;
   height: 170px;
 
   overflow: hidden;
@@ -1367,6 +1588,8 @@
     rgba(15, 23, 42, 0.38),
     rgba(15, 23, 42, 0.02) 68%
   );
+
+  pointer-events: none;
 }
 
 .previewImage img {
@@ -1400,10 +1623,6 @@
   height: 36px;
 }
 
-/* =========================================================
-   PREVIEW TYPE
-========================================================= */
-
 .previewType {
   position: absolute;
 
@@ -1422,7 +1641,6 @@
   color: var(--purple);
 
   font-size: 8px;
-
   font-weight: 900;
 
   text-transform: uppercase;
@@ -1430,10 +1648,6 @@
 
   backdrop-filter: blur(8px);
 }
-
-/* =========================================================
-   PREVIEW CONTENT
-========================================================= */
 
 .previewContent {
   padding: 15px;
@@ -1468,11 +1682,17 @@
   line-height: 1.45;
 }
 
+.previewContent p span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
+
 .previewContent p svg {
   width: 13px;
   height: 13px;
 
-  flex-shrink: 0;
+  flex: 0 0 13px;
 
   color: var(--purple);
 }
@@ -1488,6 +1708,36 @@
   line-height: 1.2;
 
   font-weight: 900;
+}
+
+.previewLoading {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 9px;
+
+  color: #64748b;
+
+  font-size: 9px;
+}
+
+.spinnerIcon {
+  color: var(--purple);
+
+  animation: spin 0.8s linear infinite;
+}
+
+.previewError {
+  display: block;
+
+  margin-top: 9px;
+
+  color: #dc2626;
+
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 /* =========================================================
@@ -1520,7 +1770,6 @@
   font-family: inherit;
 
   font-size: 10px;
-
   font-weight: 850;
 
   cursor: pointer;
@@ -1565,68 +1814,6 @@
 }
 
 /* =========================================================
-   RESULT COUNT
-========================================================= */
-
-.resultCount {
-  position: absolute;
-
-  z-index: 1100;
-
-  top: 88px;
-  left: 20px;
-
-  display: inline-flex;
-  align-items: center;
-
-  gap: 7px;
-
-  min-height: 28px;
-
-  padding: 0 10px;
-
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 8px;
-
-  background: rgba(255, 255, 255, 0.86);
-
-  color: #64748b;
-
-  font-size: 9px;
-
-  font-weight: 750;
-
-  backdrop-filter: blur(12px);
-
-  pointer-events: none;
-}
-
-.resultDot {
-  width: 6px;
-  height: 6px;
-
-  border-radius: 50%;
-
-  background: var(--purple);
-
-  box-shadow:
-    0 0 8px rgba(72, 61, 246, 0.45),
-    0 0 15px rgba(72, 61, 246, 0.15);
-}
-
-/* =========================================================
-   LEAFLET MARKER HOVER
-========================================================= */
-
-.map :global(.leaflet-marker-icon) {
-  transition: filter 0.2s ease;
-}
-
-.map :global(.leaflet-marker-icon:hover) {
-  filter: brightness(1.04);
-}
-
-/* =========================================================
    FOCUS
 ========================================================= */
 
@@ -1636,10 +1823,47 @@
 .clearFilters:focus-visible,
 .resetButton:focus-visible,
 .previewClose:focus-visible,
-.detailsButton:focus-visible {
+.detailsButton:focus-visible,
+.areaSelectionButton:focus-visible {
   outline: 2px solid rgba(72, 61, 246, 0.5);
 
   outline-offset: 2px;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
+  :global(.search-map-page) {
+    padding: 20px;
+  }
+
+  :global(.search-map-page > section) {
+    height: calc(100dvh - 40px);
+
+    border-radius: 28px;
+  }
+
+  .topPanel {
+    top: 18px;
+    left: 18px;
+    right: 18px;
+  }
+
+  .resultCount {
+    left: 19px;
+    top: 84px;
+  }
+
+  .areaSelectionControl {
+    top: 77px;
+    right: 19px;
+  }
+
+  .objectPreview {
+    right: 19px;
+  }
 }
 
 /* =========================================================
@@ -1647,23 +1871,31 @@
 ========================================================= */
 
 @media (max-width: 1100px) {
-  .page {
-    padding: 16px;
+  :global(.search-map-page) {
+    padding: 12px;
   }
 
-  .mapWrapper {
-    height: calc(100vh - 32px);
+  :global(.search-map-page > section) {
+    height: calc(100dvh - 24px);
 
     min-height: 600px;
 
-    border-radius: 22px;
+    border-radius: 21px;
   }
 
   .topPanel {
+    top: 13px;
+    left: 13px;
+    right: 13px;
+
     flex-wrap: wrap;
   }
 
   .heading {
+    flex: 1;
+    min-width: 210px;
+    max-width: none;
+
     order: 1;
   }
 
@@ -1671,68 +1903,66 @@
     order: 0;
   }
 
-  .searchBox {
+  .filtersToggle {
     order: 2;
-
-    max-width: none;
-
-    flex: 1 1 100%;
   }
 
-  .filtersToggle {
-    order: 1;
+  .searchBox {
+    order: 3;
 
-    margin-left: auto;
+    flex: 1 1 100%;
+
+    max-width: none;
   }
 
   .filtersPanel {
-    top: 136px;
+    top: 124px;
 
-    right: 18px;
+    left: 13px;
+    right: 13px;
 
-    width: min(700px, calc(100% - 36px));
+    width: auto;
+
+    max-height: calc(100dvh - 145px);
+
+    overflow-y: auto;
   }
 
   .map :global(.leaflet-top) {
-    top: 145px;
+    top: 132px;
   }
 
   .resultCount {
-    top: 145px;
+    top: 132px;
+    left: 13px;
+  }
+
+  .areaSelectionControl {
+    top: 77px;
+    right: 13px;
+  }
+
+  .objectPreview {
+    right: 13px;
   }
 }
 
 /* =========================================================
-   TABLET SMALL
+   SMALL TABLET
 ========================================================= */
 
-@media (max-width: 760px) {
-  .page {
-    padding: 10px;
-  }
-
-  .mapWrapper {
-    height: calc(100vh - 20px);
-
+@media (max-width: 820px) {
+  :global(.search-map-page > section) {
     min-height: 580px;
-
-    border-radius: 18px;
   }
 
   .topPanel {
-    top: 12px;
-    left: 12px;
-    right: 12px;
-
-    gap: 8px;
+    gap: 7px;
   }
 
   .homeButton {
-    height: 46px;
-
-    padding: 0 13px;
-
-    border-radius: 12px;
+    width: 45px;
+    padding: 0;
   }
 
   .homeButton span {
@@ -1740,60 +1970,34 @@
   }
 
   .heading {
-    flex: 1;
-
+    height: 45px;
     min-width: 0;
-
-    height: 46px;
-
-    border-radius: 12px;
   }
 
   .headingIcon {
     width: 34px;
     height: 34px;
 
-    border-radius: 10px;
+    flex-basis: 34px;
   }
 
   .heading h1 {
-    font-size: 13px;
-  }
-
-  .heading span {
-    font-size: 7px;
+    font-size: 12px;
   }
 
   .filtersToggle {
-    height: 46px;
+    width: 45px;
+    height: 45px;
 
-    padding: 0 12px;
-
-    border-radius: 12px;
+    padding: 0;
   }
 
   .filtersToggle span {
     display: none;
   }
 
-  .searchBox {
-    flex: 1 1 100%;
-
-    height: 46px;
-
-    border-radius: 12px;
-  }
-
   .filtersPanel {
     top: 114px;
-    left: 12px;
-    right: 12px;
-
-    width: auto;
-
-    max-height: calc(100vh - 140px);
-
-    overflow-y: auto;
   }
 
   .filtersGrid {
@@ -1801,54 +2005,64 @@
   }
 
   .map :global(.leaflet-top) {
-    top: 125px;
+    top: 122px;
   }
 
   .resultCount {
-    top: 125px;
-    left: 12px;
+    top: 122px;
   }
 
-  .drawHint {
-    left: 12px;
-    bottom: 12px;
+  .areaSelectionControl {
+    top: 115px;
   }
 
-  .selectionPanel {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+  .areaSelectionButton span {
+    display: none;
+  }
 
-    min-width: 0;
+  .areaSelectionButton {
+    width: 42px;
 
-    transform: none;
+    padding: 0;
   }
 
   .objectPreview {
     top: auto;
     right: 12px;
-    left: 12px;
     bottom: 12px;
 
-    width: auto;
+    width: min(360px, calc(100% - 24px));
 
     transform: none;
+
+    animation: previewInMobile 0.22s ease;
   }
 
-  @keyframes previewIn {
+  @keyframes previewInMobile {
     from {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(12px) scale(0.98);
     }
 
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
   .previewImage {
-    height: 145px;
+    height: 150px;
+  }
+
+  .selectionPanel {
+    bottom: 12px;
+
+    width: min(430px, calc(100% - 24px));
+  }
+
+  .drawHint {
+    left: 12px;
+    bottom: 12px;
   }
 }
 
@@ -1857,32 +2071,44 @@
 ========================================================= */
 
 @media (max-width: 600px) {
-  .page {
+  :global(.search-map-page) {
+    width: 100%;
+
     padding: 0;
+
+    background: #eef1f5;
   }
 
-  .mapWrapper {
+  :global(.search-map-page > section) {
     width: 100%;
+
     height: 100vh;
+    height: 100dvh;
+
     min-height: 100vh;
+    min-height: 100dvh;
 
     border: 0;
     border-radius: 0;
+
+    box-shadow: none;
   }
 
   .topPanel {
-    top: 10px;
-    left: 10px;
-    right: 10px;
+    top: 9px;
+    left: 9px;
+    right: 9px;
+
+    gap: 7px;
   }
 
   .homeButton {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
 
     padding: 0;
 
-    border-radius: 12px;
+    border-radius: 11px;
   }
 
   .homeButton svg {
@@ -1891,33 +2117,46 @@
   }
 
   .heading {
-    height: 44px;
+    height: 42px;
 
-    padding-right: 9px;
+    padding: 4px 9px 4px 5px;
+
+    border-radius: 11px;
   }
 
   .headingIcon {
     width: 32px;
     height: 32px;
+
+    flex-basis: 32px;
+
+    border-radius: 9px;
   }
 
-  .heading h1 {
-    font-size: 12px;
+  .headingIcon svg {
+    width: 17px;
+    height: 17px;
   }
 
   .heading span {
+    margin-bottom: 2px;
+
     font-size: 6px;
 
     letter-spacing: 1px;
   }
 
+  .heading h1 {
+    font-size: 11px;
+  }
+
   .filtersToggle {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
 
     padding: 0;
 
-    border-radius: 12px;
+    border-radius: 11px;
   }
 
   .filtersToggle svg {
@@ -1940,36 +2179,29 @@
   }
 
   .searchBox {
-    height: 44px;
+    height: 42px;
 
-    border-radius: 12px;
-
-    padding: 0 12px;
-  }
-
-  .searchBox input {
-    font-size: 12px;
-  }
-
-  .clearSearch {
-    width: 27px;
-    height: 27px;
+    border-radius: 11px;
   }
 
   .filtersPanel {
-    top: 114px;
-    left: 10px;
-    right: 10px;
+    top: 61px;
+    left: 9px;
+    right: 9px;
 
     width: auto;
 
-    padding: 13px;
+    max-height: calc(100dvh - 75px);
 
-    border-radius: 16px;
+    padding: 12px;
+
+    border-radius: 15px;
   }
 
   .filtersHeader {
     align-items: flex-start;
+
+    gap: 8px;
   }
 
   .filtersHeader strong {
@@ -1981,19 +2213,35 @@
   }
 
   .clearFilters {
+    width: 34px;
     height: 32px;
 
-    padding: 0 8px;
+    padding: 0;
+  }
 
-    font-size: 9px;
+  .clearFilters svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .clearFilters {
+    font-size: 0;
+  }
+
+  .filtersGrid {
+    gap: 8px;
   }
 
   .map :global(.leaflet-top) {
-    top: 112px;
+    top: 59px;
   }
 
   .map :global(.leaflet-right) {
-    right: 10px;
+    right: 9px;
+  }
+
+  .map :global(.leaflet-control-zoom) {
+    border-radius: 10px !important;
   }
 
   .map :global(.leaflet-control-zoom a) {
@@ -2002,33 +2250,50 @@
   }
 
   .resultCount {
-    top: 111px;
-    left: 10px;
+    top: 59px;
+    left: 9px;
 
-    min-height: 26px;
+    min-height: 25px;
+
+    padding: 0 8px;
 
     font-size: 8px;
   }
 
-  .drawingIndicator {
-    top: 155px;
+  .areaSelectionControl {
+    top: 58px;
+    right: 9px;
+  }
 
-    max-width: calc(100% - 30px);
+  .areaSelectionButton {
+    width: 40px;
+    height: 40px;
 
-    text-align: center;
+    border-radius: 10px;
+  }
+
+  .areaSelectionButton svg {
+    width: 17px;
+    height: 17px;
   }
 
   .drawHint {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
 
-    padding-right: 12px;
+    max-width: none;
+
+    padding: 8px 10px 8px 8px;
+
+    border-radius: 12px;
   }
 
   .drawHintIcon {
-    width: 34px;
-    height: 34px;
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
   }
 
   .drawHint strong {
@@ -2039,21 +2304,67 @@
     font-size: 8px;
   }
 
+  .areaModeHint,
+  .drawingIndicator {
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
+
+    width: auto;
+
+    transform: none;
+  }
+
+  .areaModeHint {
+    padding: 9px 11px;
+
+    border-radius: 12px;
+  }
+
+  .areaModeHintIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .areaModeHint strong {
+    font-size: 10px;
+  }
+
+  .areaModeHint span {
+    font-size: 9px;
+  }
+
+  .drawingIndicator {
+    justify-content: center;
+
+    padding: 9px 12px;
+
+    font-size: 9px;
+  }
+
   .selectionPanel {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
+
+    width: auto;
 
     gap: 8px;
 
     padding: 8px;
 
-    border-radius: 13px;
+    transform: none;
+
+    border-radius: 12px;
   }
 
   .selectionIcon {
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
   }
 
   .selectionText strong {
@@ -2076,19 +2387,21 @@
   }
 
   .objectPreview {
-    right: 10px;
-    left: 10px;
-    bottom: 10px;
+    right: 9px;
+    left: 9px;
+    bottom: 9px;
 
-    border-radius: 16px;
+    width: auto;
+
+    border-radius: 15px;
   }
 
   .previewImage {
-    height: 135px;
+    height: 132px;
   }
 
   .previewContent {
-    padding: 13px;
+    padding: 12px;
   }
 
   .previewContent h3 {
@@ -2102,38 +2415,401 @@
   .previewContent > strong {
     font-size: 14px;
   }
+
+  .detailsButton {
+    height: 39px;
+  }
 }
 
 /* =========================================================
-   VERY SMALL MOBILE
+   400px
 ========================================================= */
 
-@media (max-width: 390px) {
+@media (max-width: 400px) {
+  .topPanel {
+    left: 7px;
+    right: 7px;
+
+    gap: 6px;
+  }
+
+  .homeButton,
+  .filtersToggle {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+  .heading {
+    height: 40px;
+
+    padding-right: 7px;
+
+    border-radius: 10px;
+  }
+
+  .headingIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .headingIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .heading h1 {
-    max-width: 125px;
+    font-size: 10px;
+  }
 
-    overflow: hidden;
+  .heading span {
+    font-size: 5px;
 
-    text-overflow: ellipsis;
+    letter-spacing: 0.8px;
+  }
+
+  .filtersToggle > b {
+    width: 16px;
+    height: 16px;
+
+    min-width: 16px;
+
+    font-size: 7px;
   }
 
   .filtersPanel {
+    top: 56px;
+    left: 7px;
+    right: 7px;
+
+    padding: 10px;
+
+    border-radius: 14px;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 54px;
+  }
+
+  .resultCount {
+    top: 54px;
+    left: 7px;
+
+    min-height: 23px;
+
+    font-size: 7px;
+  }
+
+  .areaSelectionControl {
+    top: 53px;
+    right: 7px;
+  }
+
+  .areaSelectionButton {
+    width: 38px;
+    height: 38px;
+  }
+
+  .areaSelectionButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .drawHint,
+  .areaModeHint,
+  .drawingIndicator {
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+  }
+
+  .drawHint {
+    padding: 7px 9px 7px 7px;
+  }
+
+  .drawHintIcon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+  }
+
+  .selectionPanel {
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+
+    padding: 7px;
+  }
+
+  .selectionIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .objectPreview {
+    right: 7px;
+    left: 7px;
+    bottom: 7px;
+
+    border-radius: 14px;
+  }
+
+  .previewImage {
+    height: 120px;
+  }
+
+  .previewContent {
     padding: 11px;
   }
 
-  .filtersHeader {
-    gap: 8px;
+  .previewContent h3 {
+    font-size: 13px;
   }
 
-  .clearFilters {
-    font-size: 0;
+  .previewContent p {
+    font-size: 8px;
   }
 
-  .clearFilters svg {
-    margin: 0;
+  .previewContent > strong {
+    font-size: 13px;
+  }
 
-    width: 14px;
-    height: 14px;
+  .detailsButton {
+    height: 37px;
+
+    font-size: 9px;
+  }
+}
+
+/* =========================================================
+   360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .topPanel {
+    left: 6px;
+    right: 6px;
+
+    gap: 5px;
+  }
+
+  .homeButton,
+  .filtersToggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .heading {
+    height: 38px;
+
+    padding-left: 4px;
+    padding-right: 6px;
+  }
+
+  .headingIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+  }
+
+  .heading h1 {
+    font-size: 9px;
+  }
+
+  .heading span {
+    display: none;
+  }
+
+  .filtersToggle > b {
+    top: -3px;
+    right: -3px;
+
+    width: 15px;
+    height: 15px;
+
+    min-width: 15px;
+
+    font-size: 7px;
+  }
+
+  .filtersPanel {
+    top: 53px;
+
+    left: 6px;
+    right: 6px;
+
+    padding: 9px;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 50px;
+  }
+
+  .resultCount {
+    top: 50px;
+    left: 6px;
+  }
+
+  .areaSelectionControl {
+    top: 49px;
+    right: 6px;
+  }
+
+  .areaSelectionButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .drawHint,
+  .areaModeHint,
+  .drawingIndicator {
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+  }
+
+  .drawHint {
+    gap: 7px;
+  }
+
+  .drawHintIcon {
+    width: 29px;
+    height: 29px;
+
+    flex-basis: 29px;
+  }
+
+  .drawHint strong {
+    font-size: 9px;
+  }
+
+  .drawHint span {
+    font-size: 7px;
+  }
+
+  .selectionPanel {
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+  }
+
+  .objectPreview {
+    right: 6px;
+    left: 6px;
+    bottom: 6px;
+  }
+}
+
+/* =========================================================
+   320px
+========================================================= */
+
+@media (max-width: 330px) {
+  .topPanel {
+    left: 5px;
+    right: 5px;
+
+    gap: 4px;
+  }
+
+  .homeButton,
+  .filtersToggle {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 9px;
+  }
+
+  .homeButton svg,
+  .filtersToggle svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .heading {
+    height: 36px;
+
+    padding-left: 3px;
+    padding-right: 5px;
+
+    border-radius: 9px;
+  }
+
+  .headingIcon {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+
+    border-radius: 8px;
+  }
+
+  .headingIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .heading h1 {
+    font-size: 8px;
+  }
+
+  .filtersPanel {
+    top: 49px;
+    left: 5px;
+    right: 5px;
+  }
+
+  .map :global(.leaflet-top) {
+    top: 46px;
+  }
+
+  .resultCount {
+    top: 46px;
+    left: 5px;
+
+    min-height: 21px;
+
+    padding: 0 7px;
+
+    font-size: 7px;
+  }
+
+  .areaSelectionControl {
+    top: 45px;
+    right: 5px;
+  }
+
+  .areaSelectionButton {
+    width: 34px;
+    height: 34px;
+  }
+
+  .selectionPanel {
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+
+    padding: 6px;
+  }
+
+  .selectionIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .objectPreview {
+    right: 5px;
+    left: 5px;
+    bottom: 5px;
   }
 }
 
@@ -2148,266 +2824,17 @@
   .clearSearch,
   .filtersPanel,
   .clearFilters,
+  .areaSelectionButton,
   .resetButton,
-  .detailsButton,
   .previewClose,
-  .markerPin,
+  .detailsButton,
   .previewImage img {
     transition: none !important;
+  }
+
+  .objectPreview,
+  .loadingSpinner,
+  .spinnerIcon {
     animation: none !important;
-  }
-
-  .loadingSpinner {
-    animation: none !important;
-  }
-}
-
-/* =========================================================
-   AREA SELECTION
-========================================================= */
-
-.mapDrawingMode {
-  cursor: crosshair !important;
-}
-
-.mapDrawingMode * {
-  cursor: crosshair !important;
-}
-
-.areaSelectionControl {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  z-index: 1000;
-}
-
-.areaSelectionButton {
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  padding: 0 15px;
-
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 11px;
-
-  background: rgba(255, 255, 255, 0.94);
-  color: #34303d;
-
-  box-shadow:
-    0 8px 24px rgba(15, 23, 42, 0.14),
-    0 2px 6px rgba(15, 23, 42, 0.08);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.12s ease;
-}
-
-.areaSelectionButton:hover {
-  background: #ffffff;
-
-  border-color: rgba(139, 92, 246, 0.32);
-
-  box-shadow:
-    0 10px 28px rgba(15, 23, 42, 0.17),
-    0 3px 8px rgba(15, 23, 42, 0.09);
-}
-
-.areaSelectionButton:active {
-  transform: scale(0.98);
-}
-
-.areaSelectionButton svg {
-  width: 17px;
-  height: 17px;
-
-  flex-shrink: 0;
-}
-
-.areaSelectionButtonActive {
-  background: #8b5cf6;
-  border-color: #8b5cf6;
-  color: #ffffff;
-
-  box-shadow:
-    0 8px 24px rgba(139, 92, 246, 0.28),
-    0 3px 8px rgba(139, 92, 246, 0.18);
-}
-
-.areaSelectionButtonActive:hover {
-  background: #7c3aed;
-  border-color: #7c3aed;
-}
-
-/* =========================================================
-   AREA MODE HINT
-========================================================= */
-
-.areaModeHint {
-  position: absolute;
-
-  left: 50%;
-  bottom: 24px;
-
-  z-index: 1000;
-
-  transform: translateX(-50%);
-
-  display: flex;
-  align-items: center;
-  gap: 11px;
-
-  min-width: 285px;
-
-  padding: 11px 15px;
-
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 13px;
-
-  background: rgba(255, 255, 255, 0.95);
-
-  box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.14),
-    0 2px 8px rgba(15, 23, 42, 0.08);
-
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  pointer-events: none;
-}
-
-.areaModeHintIcon {
-  width: 34px;
-  height: 34px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  background: rgba(139, 92, 246, 0.1);
-  color: #7c3aed;
-}
-
-.areaModeHintIcon svg {
-  width: 17px;
-  height: 17px;
-}
-
-.areaModeHint div:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.areaModeHint strong {
-  color: #27232f;
-
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.areaModeHint span {
-  color: #77727f;
-
-  font-size: 10px;
-  line-height: 14px;
-}
-
-/* =========================================================
-   DRAWING INDICATOR
-========================================================= */
-
-.drawingIndicator {
-  position: absolute;
-
-  left: 50%;
-  bottom: 24px;
-
-  z-index: 1000;
-
-  transform: translateX(-50%);
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 10px 15px;
-
-  border-radius: 11px;
-
-  background: #27232f;
-  color: #ffffff;
-
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.2);
-
-  pointer-events: none;
-
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.drawingIndicator svg {
-  width: 16px;
-  height: 16px;
-
-  flex-shrink: 0;
-}
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-  .areaSelectionControl {
-    top: 12px;
-    right: 12px;
-  }
-
-  .areaSelectionButton {
-    height: 40px;
-
-    padding: 0 12px;
-
-    font-size: 10px;
-  }
-
-  .areaSelectionButton span {
-    display: none;
-  }
-
-  .areaSelectionButton svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .areaModeHint,
-  .drawingIndicator {
-    left: 12px;
-    right: 12px;
-
-    bottom: 18px;
-
-    transform: none;
-
-    min-width: 0;
   }
 }

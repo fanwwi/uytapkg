@@ -1,3 +1,7 @@
+/* =========================================================
+   OVERLAY
+========================================================= */
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -7,22 +11,35 @@
   align-items: center;
   justify-content: center;
 
-  padding: 24px;
+  box-sizing: border-box;
+
+  padding: clamp(10px, 3vw, 28px);
 
   background: rgba(10, 12, 11, 0.72);
 
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  overflow: hidden;
 }
 
-.modal {
-  width: min(1100px, 100%);
+/* =========================================================
+   MODAL
+========================================================= */
 
-  max-height: calc(100vh - 48px);
+.modal {
+  width: min(1120px, 100%);
+
+  max-height: min(900px, calc(100dvh - 40px));
 
   display: flex;
   flex-direction: column;
 
+  min-width: 0;
+
   overflow: hidden;
+
+  box-sizing: border-box;
 
   border: 1px solid #dfe4e1;
   border-radius: 24px;
@@ -33,6 +50,20 @@
   box-shadow:
     0 30px 90px rgba(20, 25, 22, 0.25),
     0 10px 30px rgba(20, 25, 22, 0.12);
+
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* =========================================================
@@ -46,14 +77,18 @@
   align-items: center;
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 18px;
 
-  padding: 22px 24px;
+  padding: 20px 24px;
 
   border-bottom: 1px solid #e8ece9;
+
+  background: #ffffff;
 }
 
 .headerTitle {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -64,7 +99,7 @@
   width: 42px;
   height: 42px;
 
-  flex-shrink: 0;
+  flex: 0 0 42px;
 
   display: flex;
   align-items: center;
@@ -76,36 +111,59 @@
   color: #483df6;
 }
 
+.headerIcon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.headerTitle > div:last-child {
+  min-width: 0;
+}
+
 .header h2 {
   margin: 0;
 
   color: #1f2421;
 
   font-size: 19px;
+  line-height: 1.2;
   font-weight: 850;
+
+  letter-spacing: -0.2px;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
 
   color: #747c77;
 
   font-size: 12px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .header p strong {
   color: #483df6;
 }
 
+/* =========================================================
+   CLOSE
+========================================================= */
+
 .close {
   width: 38px;
   height: 38px;
 
-  flex-shrink: 0;
+  flex: 0 0 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 0;
 
   border: 1px solid #e1e5e2;
   border-radius: 10px;
@@ -118,14 +176,26 @@
   transition:
     background 0.2s ease,
     color 0.2s ease,
+    border-color 0.2s ease,
     transform 0.2s ease;
 }
 
 .close:hover {
+  border-color: #483df6;
+
   background: #483df6;
   color: #ffffff;
 
   transform: rotate(3deg);
+}
+
+.close:active {
+  transform: scale(0.96);
+}
+
+.close:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 2px;
 }
 
 /* =========================================================
@@ -133,23 +203,37 @@
 ========================================================= */
 
 .objects {
+  flex-shrink: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
 
   gap: 12px;
 
-  padding: 18px 24px;
+  max-height: 180px;
+
+  overflow-y: auto;
+
+  padding: 16px 24px;
 
   border-bottom: 1px solid #e8ece9;
 
   background: #fafbfa;
+
+  scrollbar-width: thin;
+  scrollbar-color: #d8dce0 transparent;
 }
+
+/* =========================================================
+   OBJECT CARD
+========================================================= */
 
 .object {
   min-width: 0;
 
   display: flex;
+  align-items: stretch;
 
   gap: 11px;
 
@@ -159,13 +243,28 @@
   border-radius: 14px;
 
   background: #ffffff;
+
+  box-shadow: 0 4px 14px rgba(20, 25, 22, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.object:hover {
+  border-color: rgba(72, 61, 246, 0.2);
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 20px rgba(20, 25, 22, 0.06);
 }
 
 .objectImage {
-  width: 82px;
+  width: 84px;
   height: 76px;
 
-  flex-shrink: 0;
+  flex: 0 0 84px;
 
   overflow: hidden;
 
@@ -186,21 +285,34 @@
 .objectContent {
   min-width: 0;
 
+  flex: 1;
+
   display: flex;
   flex-direction: column;
 }
 
 .objectType {
+  display: block;
+
+  max-width: 100%;
+
   color: #483df6;
 
   font-size: 8px;
+  line-height: 1.2;
   font-weight: 850;
 
   text-transform: uppercase;
   letter-spacing: 0.7px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .object h3 {
+  min-width: 0;
+
   margin: 3px 0 5px;
 
   overflow: hidden;
@@ -209,7 +321,6 @@
 
   font-size: 13px;
   line-height: 1.25;
-
   font-weight: 800;
 
   text-overflow: ellipsis;
@@ -217,6 +328,8 @@
 }
 
 .objectLocation {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -225,12 +338,24 @@
   color: #788079;
 
   font-size: 10px;
+  line-height: 1.3;
 }
 
 .objectLocation svg {
   flex-shrink: 0;
 
+  width: 13px;
+  height: 13px;
+
   color: #483df6;
+}
+
+.objectLocation span {
+  min-width: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .objectPrice {
@@ -239,32 +364,48 @@
   color: #1f2421;
 
   font-size: 14px;
+  line-height: 1.2;
   font-weight: 850;
 }
 
 /* =========================================================
-   COMPARISON
+   COMPARISON AREA
 ========================================================= */
 
 .comparison {
   flex: 1;
 
-  overflow-y: auto;
+  min-height: 0;
 
-  padding: 8px 24px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 6px 24px 22px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #d5d9d6 transparent;
 }
 
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
 .sectionTitle {
-  padding: 18px 0 10px;
+  padding: 17px 0 10px;
 
   color: #555e58;
 
   font-size: 10px;
+  line-height: 1.2;
   font-weight: 900;
 
   text-transform: uppercase;
   letter-spacing: 0.9px;
 }
+
+/* =========================================================
+   COMPARISON ROW
+========================================================= */
 
 .row {
   display: grid;
@@ -274,9 +415,17 @@
   min-height: 54px;
 
   border-bottom: 1px solid #edf0ee;
+
+  min-width: 0;
 }
 
+/* =========================================================
+   ROW LABEL
+========================================================= */
+
 .rowLabel {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -287,14 +436,24 @@
   color: #6d756f;
 
   font-size: 11px;
+  line-height: 1.35;
   font-weight: 700;
+
+  overflow-wrap: anywhere;
 }
 
 .rowLabel svg {
+  width: 16px;
+  height: 16px;
+
   flex-shrink: 0;
 
   color: #9a9fa0;
 }
+
+/* =========================================================
+   VALUES
+========================================================= */
 
 .rowValues {
   min-width: 0;
@@ -317,6 +476,9 @@
   color: #39403c;
 
   font-size: 12px;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
 }
 
 .value strong {
@@ -324,6 +486,8 @@
 
   font-size: 12px;
   font-weight: 750;
+
+  overflow-wrap: anywhere;
 }
 
 .valueBetter {
@@ -334,7 +498,13 @@
   color: #483df6;
 }
 
+/* =========================================================
+   BETTER LABEL
+========================================================= */
+
 .betterLabel {
+  flex-shrink: 0;
+
   margin-left: 7px;
 
   padding: 3px 6px;
@@ -345,10 +515,18 @@
   color: #483df6;
 
   font-size: 7px;
+  line-height: 1.1;
   font-weight: 900;
 
   text-transform: uppercase;
+  letter-spacing: 0.2px;
+
+  white-space: nowrap;
 }
+
+/* =========================================================
+   MISSING
+========================================================= */
 
 .missing {
   display: inline-flex;
@@ -359,20 +537,41 @@
   color: #aaaead;
 
   font-size: 10px;
+  line-height: 1.3;
 }
 
+.missing svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
 .featurePresent {
+  min-width: 0;
+
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 5px;
 
   color: #3f4742;
 
   font-size: 11px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 .featurePresent svg {
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
   color: #483df6;
 }
 
@@ -385,9 +584,12 @@
   color: #a7aaa8;
 
   font-size: 10px;
+  line-height: 1.3;
 }
 
 .featureMissing svg {
+  flex-shrink: 0;
+
   color: #b8bcba;
 }
 
@@ -413,7 +615,7 @@
   width: 32px;
   height: 32px;
 
-  flex-shrink: 0;
+  flex: 0 0 32px;
 
   display: flex;
   align-items: center;
@@ -425,12 +627,22 @@
   color: #483df6;
 }
 
+.insightIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.insight > div:last-child {
+  min-width: 0;
+}
+
 .insight strong {
   display: block;
 
   color: #35313f;
 
   font-size: 11px;
+  line-height: 1.3;
   font-weight: 850;
 }
 
@@ -441,6 +653,8 @@
 
   font-size: 10px;
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -453,7 +667,7 @@
   display: flex;
   justify-content: flex-end;
 
-  padding: 15px 24px;
+  padding: 14px 24px;
 
   border-top: 1px solid #e8ece9;
 
@@ -461,7 +675,7 @@
 }
 
 .closeButton {
-  height: 40px;
+  min-height: 40px;
 
   padding: 0 18px;
 
@@ -480,7 +694,8 @@
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .closeButton:hover {
@@ -488,79 +703,545 @@
 
   background: #483df6;
   color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+.closeButton:active {
+  transform: translateY(0);
+}
+
+.closeButton:focus-visible {
+  outline: 3px solid rgba(72, 61, 246, 0.2);
+  outline-offset: 2px;
 }
 
 /* =========================================================
-   MOBILE
+   1000px
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 1000px) {
+  .modal {
+    max-height: calc(100dvh - 30px);
+  }
+
+  .objects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    max-height: 175px;
+  }
+
+  .row {
+    grid-template-columns: 165px minmax(0, 1fr);
+  }
+
+  .rowValues {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  }
+
+  .value {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* =========================================================
+   760px
+========================================================= */
+
+@media (max-width: 760px) {
   .overlay {
     padding: 10px;
   }
 
   .modal {
-    max-height: calc(100vh - 20px);
+    width: 100%;
 
-    border-radius: 18px;
+    max-height: calc(100dvh - 20px);
+
+    border-radius: 19px;
   }
 
   .header {
     padding: 16px;
   }
 
+  .headerIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+
+    border-radius: 11px;
+  }
+
   .header h2 {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .header p {
-    font-size: 10px;
+    font-size: 11px;
   }
 
-  .headerIcon {
+  .close {
     width: 36px;
     height: 36px;
+
+    flex-basis: 36px;
   }
 
   .objects {
     display: flex;
 
+    max-height: none;
+
     overflow-x: auto;
+    overflow-y: hidden;
 
     padding: 12px 16px;
+
+    scroll-snap-type: x proximity;
+
+    scrollbar-width: none;
+  }
+
+  .objects::-webkit-scrollbar {
+    display: none;
   }
 
   .object {
-    min-width: 240px;
+    width: 250px;
+    min-width: 250px;
+
+    scroll-snap-align: start;
   }
 
   .comparison {
-    padding: 6px 16px 16px;
+    padding: 5px 16px 18px;
   }
 
+  /*
+     На мобильном label становится отдельной строкой,
+     поэтому значения не сжимаются.
+  */
+
   .row {
-    grid-template-columns: 120px minmax(0, 1fr);
+    display: block;
+
+    min-height: 0;
+
+    padding: 0 0 8px;
   }
 
   .rowLabel {
-    font-size: 9px;
+    min-height: 40px;
+
+    padding: 10px 0 7px;
+  }
+
+  .rowLabel svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .rowValues {
+    width: 100%;
+
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 
   .value {
-    padding: 9px 8px;
+    min-height: 45px;
 
+    padding: 9px 10px;
+  }
+
+  .sectionTitle {
+    padding-top: 15px;
+  }
+
+  .insight {
+    margin-top: 15px;
+
+    padding: 12px;
+  }
+
+  .footer {
+    padding: 11px 16px;
+  }
+
+  .closeButton {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   560px
+========================================================= */
+
+@media (max-width: 560px) {
+  .overlay {
+    padding: 7px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 14px);
+
+    border-radius: 17px;
+  }
+
+  .header {
+    gap: 10px;
+
+    padding: 13px;
+  }
+
+  .headerTitle {
+    gap: 10px;
+  }
+
+  .headerIcon {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+
+    border-radius: 10px;
+  }
+
+  .headerIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .header h2 {
+    font-size: 15px;
+  }
+
+  .header p {
+    margin-top: 3px;
+
+    font-size: 9px;
+  }
+
+  .close {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+  }
+
+  .objects {
+    padding: 10px 13px;
+  }
+
+  .object {
+    width: 225px;
+    min-width: 225px;
+
+    padding: 9px;
+
+    gap: 9px;
+  }
+
+  .objectImage {
+    width: 74px;
+    height: 70px;
+
+    flex-basis: 74px;
+  }
+
+  .object h3 {
+    font-size: 12px;
+  }
+
+  .objectLocation {
+    font-size: 9px;
+  }
+
+  .objectPrice {
+    font-size: 13px;
+  }
+
+  .comparison {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .rowValues {
+    grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+  }
+
+  .rowLabel {
     font-size: 10px;
+  }
+
+  .value {
+    min-height: 43px;
+
+    padding: 8px;
+  }
+
+  .value strong {
+    font-size: 11px;
+  }
+
+  .betterLabel {
+    margin-left: 5px;
+
+    padding: 2px 5px;
+
+    font-size: 6px;
+  }
+
+  .featurePresent {
+    font-size: 10px;
+  }
+
+  .featureMissing,
+  .missing {
+    font-size: 9px;
+  }
+
+  .footer {
+    padding: 10px 13px;
+  }
+}
+
+/* =========================================================
+   400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .overlay {
+    padding: 5px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 10px);
+
+    border-radius: 15px;
+  }
+
+  .header {
+    padding: 11px;
+  }
+
+  .headerIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .header h2 {
+    font-size: 14px;
+  }
+
+  .header p {
+    font-size: 8.5px;
+  }
+
+  .close {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .objects {
+    padding: 9px 11px;
+  }
+
+  .object {
+    width: 210px;
+    min-width: 210px;
+  }
+
+  .objectImage {
+    width: 68px;
+    height: 66px;
+
+    flex-basis: 68px;
+  }
+
+  .comparison {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .sectionTitle {
+    padding-top: 13px;
+    padding-bottom: 8px;
+
+    font-size: 9px;
+  }
+
+  .rowValues {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  }
+
+  .rowLabel {
+    min-height: 37px;
+
+    font-size: 9.5px;
+  }
+
+  .value {
+    min-height: 40px;
+
+    padding: 7px;
   }
 
   .value strong {
     font-size: 10px;
   }
 
+  .featurePresent {
+    font-size: 9px;
+  }
+
+  .insight {
+    gap: 8px;
+
+    padding: 10px;
+  }
+
+  .insightIcon {
+    width: 29px;
+    height: 29px;
+
+    flex-basis: 29px;
+  }
+
+  .insight strong {
+    font-size: 10px;
+  }
+
+  .insight p {
+    font-size: 9px;
+  }
+
   .footer {
-    padding: 12px 16px;
+    padding: 9px 11px;
   }
 
   .closeButton {
-    width: 100%;
+    min-height: 38px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   320px SAFETY
+========================================================= */
+
+@media (max-width: 340px) {
+  .overlay {
+    padding: 3px;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 6px);
+
+    border-radius: 13px;
+  }
+
+  .header {
+    padding: 9px;
+  }
+
+  .headerTitle {
+    gap: 8px;
+  }
+
+  .headerIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .header h2 {
+    font-size: 13px;
+  }
+
+  .header p {
+    font-size: 8px;
+  }
+
+  .close {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+  }
+
+  .objects {
+    gap: 8px;
+
+    padding: 8px 9px;
+  }
+
+  .object {
+    width: 200px;
+    min-width: 200px;
+
+    padding: 8px;
+  }
+
+  .objectImage {
+    width: 62px;
+    height: 60px;
+
+    flex-basis: 62px;
+  }
+
+  .object h3 {
+    font-size: 11px;
+  }
+
+  .objectPrice {
+    font-size: 12px;
+  }
+
+  .comparison {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .rowValues {
+    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+  }
+
+  .value {
+    padding: 6px;
+  }
+
+  .value strong {
+    font-size: 9px;
+  }
+
+  .betterLabel {
+    display: none;
+  }
+
+  .footer {
+    padding: 8px 9px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .close,
+  .object,
+  .closeButton {
+    animation: none;
+    transition: none;
   }
 }

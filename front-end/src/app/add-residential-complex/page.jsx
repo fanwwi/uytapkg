@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createComplex, uploadComplexPhoto } from "@/utils/api";
 
@@ -21,12 +21,12 @@ import {
   Blocks,
   FileCheck,
   AlignLeft,
+  Loader2,
 } from "lucide-react";
 
 import styles from "./AddResidentialComplex.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import { useLanguage } from "@/context/LanguageContext";
-import LoadingScreen from "@/components/ui/loadingScreen/LoadingScreen";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -60,7 +60,7 @@ const MAX_IMAGES = 20;
 
 export default function AddResidentialComplex() {
   const router = useRouter();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -127,6 +127,26 @@ export default function AddResidentialComplex() {
     label: getConstructionLabel(value),
   }));
 
+  const submitLabel = getTranslation(
+    "addResidentialComplex.actions.submit",
+    "Добавить ЖК",
+  );
+
+  const loadingLabel = getTranslation(
+    "addResidentialComplex.actions.loading",
+    "Сохранение...",
+  );
+
+  useEffect(() => {
+    return () => {
+      images.forEach((image) => {
+        if (image?.url) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+    };
+  }, [images]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -160,7 +180,9 @@ export default function AddResidentialComplex() {
   const handleImages = (e) => {
     const files = Array.from(e.target.files || []);
 
-    if (!files.length) return;
+    if (!files.length) {
+      return;
+    }
 
     const availableSlots = MAX_IMAGES - images.length;
 
@@ -196,7 +218,9 @@ export default function AddResidentialComplex() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -230,12 +254,6 @@ export default function AddResidentialComplex() {
         }
       }
 
-      /*
-       * =========================
-       * UPLOAD IMAGES
-       * =========================
-       */
-
       const uploadedUrls = [];
 
       for (const image of images) {
@@ -253,23 +271,12 @@ export default function AddResidentialComplex() {
         }
       }
 
-      /*
-       * =========================
-       * PAYLOAD
-       * =========================
-       */
-
       const payload = {
         name: form.name.trim(),
         city: form.city.trim(),
         address: form.address.trim(),
         description: form.description.trim(),
 
-        /*
-         * ВАЖНО:
-         * Эти значения оставляем каноническими.
-         * Переводятся только labels в UI.
-         */
         status: form.status,
         class: form.class,
         construction: form.construction,
@@ -318,15 +325,16 @@ export default function AddResidentialComplex() {
       <div className={styles.backgroundGlowTwo} />
 
       <div className={styles.container}>
-        {/* =========================
+        {/* =====================================================
             HEADER
-        ========================= */}
+        ====================================================== */}
 
         <header className={styles.header}>
           <button
             type="button"
             className={styles.back}
             onClick={() => router.push("/profile")}
+            disabled={loading}
           >
             <ArrowLeft size={18} />
             <span>{t("addResidentialComplex.backToProfile")}</span>
@@ -344,21 +352,21 @@ export default function AddResidentialComplex() {
           </div>
         </header>
 
-        {/* =========================
+        {/* =====================================================
             ERROR
-        ========================= */}
+        ====================================================== */}
 
         {error && (
-          <div className={styles.error}>
+          <div className={styles.error} role="alert">
             <span>!</span>
             <p>{error}</p>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* =========================
-              01 — ОСНОВНАЯ ИНФОРМАЦИЯ
-          ========================= */}
+          {/* =================================================
+              01 — BASIC
+          ================================================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -376,8 +384,6 @@ export default function AddResidentialComplex() {
             </div>
 
             <div className={styles.grid}>
-              {/* NAME */}
-
               <div className={`${styles.field} ${styles.full}`}>
                 <label htmlFor="complex-name">
                   {t("addResidentialComplex.fields.name")} <span>*</span>
@@ -393,12 +399,11 @@ export default function AddResidentialComplex() {
                     value={form.name}
                     onChange={handleChange}
                     placeholder={t("addResidentialComplex.placeholders.name")}
+                    autoComplete="organization"
                     required
                   />
                 </div>
               </div>
-
-              {/* CITY */}
 
               <div className={styles.field}>
                 <label htmlFor="complex-city">
@@ -415,12 +420,11 @@ export default function AddResidentialComplex() {
                     value={form.city}
                     onChange={handleChange}
                     placeholder={t("addResidentialComplex.placeholders.city")}
+                    autoComplete="address-level2"
                     required
                   />
                 </div>
               </div>
-
-              {/* ADDRESS */}
 
               <div className={styles.field}>
                 <label htmlFor="complex-address">
@@ -444,8 +448,6 @@ export default function AddResidentialComplex() {
                   />
                 </div>
               </div>
-
-              {/* DESCRIPTION */}
 
               <div className={`${styles.field} ${styles.full}`}>
                 <label htmlFor="complex-description">
@@ -475,9 +477,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =========================
-              02 — ХАРАКТЕРИСТИКИ
-          ========================= */}
+          {/* =================================================
+              02 — CHARACTERISTICS
+          ================================================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -501,8 +503,6 @@ export default function AddResidentialComplex() {
             </div>
 
             <div className={styles.grid}>
-              {/* STATUS */}
-
               <div className={styles.field}>
                 <label>{t("addResidentialComplex.fields.status")}</label>
 
@@ -514,8 +514,6 @@ export default function AddResidentialComplex() {
                   setValue={(value) => setField("status", value)}
                 />
               </div>
-
-              {/* CLASS */}
 
               <div className={styles.field}>
                 <label>{t("addResidentialComplex.fields.class")}</label>
@@ -529,8 +527,6 @@ export default function AddResidentialComplex() {
                 />
               </div>
 
-              {/* CONSTRUCTION */}
-
               <div className={styles.field}>
                 <label>{t("addResidentialComplex.fields.construction")}</label>
 
@@ -542,8 +538,6 @@ export default function AddResidentialComplex() {
                   setValue={(value) => setField("construction", value)}
                 />
               </div>
-
-              {/* COMPLETION DATE */}
 
               <div className={styles.field}>
                 <label htmlFor="completion-date">
@@ -563,8 +557,6 @@ export default function AddResidentialComplex() {
                 </div>
               </div>
 
-              {/* FLOORS */}
-
               <div className={styles.field}>
                 <label htmlFor="floors">
                   {t("addResidentialComplex.fields.floors")}
@@ -581,11 +573,10 @@ export default function AddResidentialComplex() {
                     onChange={handleChange}
                     placeholder="12"
                     min="1"
+                    inputMode="numeric"
                   />
                 </div>
               </div>
-
-              {/* BLOCKS */}
 
               <div className={styles.field}>
                 <label htmlFor="blocks">
@@ -603,11 +594,10 @@ export default function AddResidentialComplex() {
                     onChange={handleChange}
                     placeholder="4"
                     min="1"
+                    inputMode="numeric"
                   />
                 </div>
               </div>
-
-              {/* APARTMENTS */}
 
               <div className={styles.field}>
                 <label htmlFor="apartments">
@@ -625,11 +615,10 @@ export default function AddResidentialComplex() {
                     onChange={handleChange}
                     placeholder="240"
                     min="0"
+                    inputMode="numeric"
                   />
                 </div>
               </div>
-
-              {/* PARKING */}
 
               <div className={styles.field}>
                 <label htmlFor="parking">
@@ -647,11 +636,10 @@ export default function AddResidentialComplex() {
                     onChange={handleChange}
                     placeholder="120"
                     min="0"
+                    inputMode="numeric"
                   />
                 </div>
               </div>
-
-              {/* CEILING */}
 
               <div className={styles.field}>
                 <label htmlFor="ceiling-height">
@@ -670,11 +658,10 @@ export default function AddResidentialComplex() {
                     placeholder="2.8"
                     min="1"
                     step="0.1"
+                    inputMode="decimal"
                   />
                 </div>
               </div>
-
-              {/* AREA */}
 
               <div className={styles.field}>
                 <label htmlFor="area">
@@ -693,11 +680,10 @@ export default function AddResidentialComplex() {
                     placeholder="25000"
                     min="0"
                     step="0.01"
+                    inputMode="decimal"
                   />
                 </div>
               </div>
-
-              {/* AREA SOTKA */}
 
               <div className={styles.field}>
                 <label htmlFor="area-sotka">
@@ -716,15 +702,16 @@ export default function AddResidentialComplex() {
                     placeholder="250"
                     min="0"
                     step="0.01"
+                    inputMode="decimal"
                   />
                 </div>
               </div>
             </div>
           </section>
 
-          {/* =========================
-              03 — ИНФРАСТРУКТУРА
-          ========================= */}
+          {/* =================================================
+              03 — INFRASTRUCTURE
+          ================================================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -772,9 +759,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =========================
-              04 — ФОТОГРАФИИ
-          ========================= */}
+          {/* =================================================
+              04 — PHOTOS
+          ================================================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -792,7 +779,7 @@ export default function AddResidentialComplex() {
             </div>
 
             <div className={styles.uploadTop}>
-              <div>
+              <div className={styles.uploadInfo}>
                 <strong>{t("addResidentialComplex.photos.title")}</strong>
 
                 <span>{t("addResidentialComplex.photos.description")}</span>
@@ -868,9 +855,9 @@ export default function AddResidentialComplex() {
             )}
           </section>
 
-          {/* =========================
-              05 — ОФИЦИАЛЬНАЯ ИНФОРМАЦИЯ
-          ========================= */}
+          {/* =================================================
+              05 — OFFICIAL
+          ================================================= */}
 
           <section className={styles.card}>
             <div className={styles.sectionHeader}>
@@ -905,6 +892,7 @@ export default function AddResidentialComplex() {
                     value={form.documentsUrl}
                     onChange={handleChange}
                     placeholder="https://..."
+                    autoComplete="url"
                   />
                 </div>
 
@@ -915,9 +903,9 @@ export default function AddResidentialComplex() {
             </div>
           </section>
 
-          {/* =========================
+          {/* =================================================
               ACTIONS
-          ========================= */}
+          ================================================= */}
 
           <div className={styles.formActions}>
             <button
@@ -926,13 +914,23 @@ export default function AddResidentialComplex() {
               onClick={() => router.push("/profile")}
               disabled={loading}
             >
-              {t("common.cancel")}
+              <ArrowLeft size={17} />
+              <span>{t("common.cancel")}</span>
             </button>
 
             <button type="submit" className={styles.submit} disabled={loading}>
-              <Building2 size={18} />
+              {loading ? (
+                <>
+                  <Loader2 size={18} className={styles.spinner} />
 
-              {loading ? <LoadingScreen /> : <LoadingScreen />}
+                  <span>{loadingLabel}</span>
+                </>
+              ) : (
+                <>
+                  <Building2 size={18} />
+                  <span>{submitLabel}</span>
+                </>
+              )}
             </button>
           </div>
         </form>

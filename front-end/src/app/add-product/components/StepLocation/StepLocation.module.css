@@ -1,12 +1,22 @@
+/* =========================================================
+   STEP
+========================================================= */
+
 .step {
   width: 100%;
-  animation: stepEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  padding: clamp(26px, 4vw, 42px);
+
+  animation: stepEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes stepEnter {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(18px);
   }
 
   to {
@@ -15,42 +25,49 @@
   }
 }
 
-/* =========================
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .header {
-  margin-bottom: 38px;
+  margin-bottom: 34px;
 }
 
 .stepBadge {
+  width: fit-content;
+
   display: inline-flex;
   align-items: center;
+
   gap: 8px;
 
-  margin-bottom: 15px;
+  margin-bottom: 14px;
   padding: 7px 12px;
 
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  box-sizing: border-box;
+
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 999px;
 
   background: #f5f1ff;
-
   color: #483df6;
 
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 750;
 }
 
 .stepDot {
   width: 7px;
   height: 7px;
 
+  flex-shrink: 0;
+
   border-radius: 50%;
 
   background: #483df6;
 
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 0 4px rgba(72, 61, 246, 0.1);
 }
 
 .header h1 {
@@ -58,53 +75,59 @@
 
   color: #17151c;
 
-  font-size: 36px;
+  font-size: clamp(28px, 3.2vw, 36px);
   line-height: 1.12;
 
-  font-weight: 800;
+  font-weight: 850;
 
   letter-spacing: -0.035em;
+
+  overflow-wrap: anywhere;
 }
 
 .header p {
   max-width: 650px;
 
-  margin: 12px 0 0;
+  margin: 11px 0 0;
 
   color: #77727f;
 
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    SECTION
-========================= */
+========================================================= */
 
 .section {
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 .sectionTitle {
   display: flex;
   align-items: center;
+
   gap: 12px;
 
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
 
 .sectionIcon {
-  display: flex;
-
   width: 42px;
   height: 42px;
 
-  flex-shrink: 0;
+  flex: 0 0 42px;
 
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  box-sizing: border-box;
+
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 13px;
 
   background: #f5f1ff;
@@ -112,13 +135,16 @@
   color: #483df6;
 
   box-shadow:
-    0 6px 18px rgba(124, 58, 237, 0.06),
+    0 6px 18px rgba(72, 61, 246, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .sectionTitle > div:last-child {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   gap: 3px;
 }
 
@@ -128,6 +154,7 @@
   color: #201d25;
 
   font-size: 15px;
+  line-height: 1.25;
   font-weight: 750;
 }
 
@@ -135,27 +162,35 @@
   color: #99939f;
 
   font-size: 12px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    COUNTRY CARDS
-========================= */
+========================================================= */
 
 .cards {
+  width: 100%;
+
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 15px;
+  gap: 14px;
 }
 
 .choiceCard {
   position: relative;
 
+  min-width: 0;
+  min-height: 112px;
+
   display: flex;
   align-items: center;
 
-  min-height: 112px;
+  box-sizing: border-box;
 
   padding: 20px;
 
@@ -182,6 +217,8 @@
 }
 
 .choiceCard::before {
+  content: "";
+
   position: absolute;
 
   top: 0;
@@ -190,11 +227,9 @@
   width: 3px;
   height: 100%;
 
-  background: linear-gradient(180deg, #483df6, #5580f7);
+  background: linear-gradient(180deg, #483df6, #6258ff);
 
   opacity: 0;
-
-  content: "";
 
   transition: opacity 0.25s ease;
 }
@@ -202,11 +237,11 @@
 .choiceCard:hover {
   transform: translateY(-3px);
 
-  border-color: rgba(124, 58, 237, 0.3);
+  border-color: rgba(72, 61, 246, 0.3);
 
   box-shadow:
     0 15px 35px rgba(20, 16, 30, 0.07),
-    0 8px 25px rgba(124, 58, 237, 0.08);
+    0 8px 25px rgba(72, 61, 246, 0.08);
 }
 
 .choiceCard:hover::before {
@@ -217,20 +252,21 @@
   transform: translateY(-1px);
 }
 
-/* =========================
+/* =========================================================
    COUNTRY ICON
-========================= */
+========================================================= */
 
 .choiceIcon {
-  display: flex;
-
   width: 54px;
   height: 54px;
 
-  flex-shrink: 0;
+  flex: 0 0 54px;
 
+  display: flex;
   align-items: center;
   justify-content: center;
+
+  box-sizing: border-box;
 
   border: 1px solid #ebe7f0;
   border-radius: 16px;
@@ -248,7 +284,7 @@
 }
 
 .choiceIcon span {
-  font-size: 28px;
+  font-size: 27px;
   line-height: 1;
 }
 
@@ -258,29 +294,35 @@
   background: #f3efff;
 }
 
-/* =========================
-   CONTENT
-========================= */
+/* =========================================================
+   COUNTRY CONTENT
+========================================================= */
 
 .choiceContent {
-  display: flex;
-
   min-width: 0;
 
+  flex: 1;
+
+  display: flex;
   flex-direction: column;
 
   gap: 5px;
 
   margin-left: 14px;
+
+  padding-right: 30px;
 }
 
 .choiceContent strong {
   color: #1c1921;
 
   font-size: 16px;
+  line-height: 1.25;
   font-weight: 750;
 
   letter-spacing: -0.015em;
+
+  overflow-wrap: anywhere;
 }
 
 .choiceContent span {
@@ -288,17 +330,22 @@
 
   font-size: 12px;
   line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
-/* =========================
+/* =========================================================
    ARROW
-========================= */
+========================================================= */
 
 .cardArrow {
   position: absolute;
 
-  right: 17px;
-  bottom: 17px;
+  right: 16px;
+  bottom: 16px;
+
+  width: 17px;
+  height: 17px;
 
   color: #c4beca;
 
@@ -313,33 +360,31 @@
   transform: translateX(2px);
 }
 
-/* =========================
+/* =========================================================
    CHECK
-========================= */
+========================================================= */
 
 .check {
   position: absolute;
 
-  top: 14px;
-  right: 14px;
-
-  display: flex;
+  top: 13px;
+  right: 13px;
 
   width: 27px;
   height: 27px;
 
+  display: flex;
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
 
   background: #483df6;
-
-  color: #fff;
+  color: #ffffff;
 
   box-shadow:
-    0 6px 16px rgba(124, 58, 237, 0.25),
-    0 0 0 4px rgba(124, 58, 237, 0.07);
+    0 6px 16px rgba(72, 61, 246, 0.25),
+    0 0 0 4px rgba(72, 61, 246, 0.07);
 
   animation: checkPop 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -356,18 +401,18 @@
   }
 }
 
-/* =========================
+/* =========================================================
    SELECTED COUNTRY
-========================= */
+========================================================= */
 
 .choiceCard.selected {
   border-color: #483df6;
 
-  background: #faf8ff;
+  background: linear-gradient(145deg, #fcfaff, #faf8ff);
 
   box-shadow:
-    0 0 0 2px rgba(124, 58, 237, 0.06),
-    0 15px 38px rgba(124, 58, 237, 0.1);
+    0 0 0 2px rgba(72, 61, 246, 0.06),
+    0 15px 38px rgba(72, 61, 246, 0.1);
 }
 
 .choiceCard.selected::before {
@@ -377,13 +422,13 @@
 .choiceCard.selected .choiceIcon {
   transform: scale(1.04);
 
-  border-color: rgba(124, 58, 237, 0.15);
+  border-color: rgba(72, 61, 246, 0.15);
 
   background: #f2edff;
 
   box-shadow:
-    0 8px 20px rgba(124, 58, 237, 0.1),
-    0 0 0 4px rgba(124, 58, 237, 0.06);
+    0 8px 20px rgba(72, 61, 246, 0.1),
+    0 0 0 4px rgba(72, 61, 246, 0.06);
 }
 
 .choiceCard.selected .choiceContent strong {
@@ -394,34 +439,45 @@
   color: #483df6;
 }
 
-/* =========================
+/* =========================================================
    LOCATION FIELDS
-========================= */
+========================================================= */
 
 .locationFields {
   display: flex;
-
   flex-direction: column;
 
-  gap: 18px;
+  gap: 16px;
 
   margin-top: 18px;
 }
 
+/*
+   В каждом .grid сейчас только один CustomSelect,
+   поэтому он всегда занимает всю ширину.
+*/
+
 .grid {
+  width: 100%;
+  min-width: 0;
+
   display: grid;
 
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 
-  gap: 18px;
+  gap: 16px;
 }
 
-/* =========================
+/* =========================================================
    CUSTOM SELECT
-========================= */
+========================================================= */
 
 .grid :global(button.select) {
+  width: 100%;
+  min-width: 0;
   min-height: 54px;
+
+  box-sizing: border-box;
 
   border: 1px solid #e5e1e8;
   border-radius: 15px;
@@ -440,61 +496,66 @@
 }
 
 .grid :global(button.select:hover) {
-  border-color: rgba(124, 58, 237, 0.4);
+  border-color: rgba(72, 61, 246, 0.4);
 
   background: #fdfcff;
 
   box-shadow:
     0 9px 28px rgba(20, 16, 30, 0.055),
-    0 5px 20px rgba(124, 58, 237, 0.06);
+    0 5px 20px rgba(72, 61, 246, 0.06);
 
   transform: translateY(-1px);
 }
 
-/* =========================
+/* =========================================================
    LOCATION READY
-========================= */
+========================================================= */
 
 .locationReady {
+  width: 100%;
+
   display: flex;
   align-items: center;
 
   gap: 12px;
 
-  margin-top: 26px;
+  margin-top: 24px;
   padding: 14px 16px;
 
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  box-sizing: border-box;
+
+  border: 1px solid rgba(72, 61, 246, 0.14);
   border-radius: 16px;
 
-  background: #f8f5ff;
+  background: linear-gradient(135deg, #faf8ff, #f7f4ff);
+
+  box-shadow: 0 7px 22px rgba(72, 61, 246, 0.04);
 
   animation: readyEnter 0.3s ease;
 }
 
 .readyIcon {
-  display: flex;
-
   width: 38px;
   height: 38px;
 
-  flex-shrink: 0;
+  flex: 0 0 38px;
 
+  display: flex;
   align-items: center;
   justify-content: center;
 
   border-radius: 12px;
 
   background: #483df6;
+  color: #ffffff;
 
-  color: #fff;
-
-  box-shadow: 0 7px 18px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 7px 18px rgba(72, 61, 246, 0.2);
 }
 
 .locationReady > div:last-child {
-  display: flex;
+  min-width: 0;
 
+  display: flex;
   flex-direction: column;
 
   gap: 3px;
@@ -504,13 +565,19 @@
   color: #28232f;
 
   font-size: 13px;
+  line-height: 1.3;
   font-weight: 750;
+
+  overflow-wrap: anywhere;
 }
 
 .locationReady span {
   color: #756985;
 
   font-size: 12px;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
 
 @keyframes readyEnter {
@@ -525,31 +592,40 @@
   }
 }
 
-/* =========================
+/* =========================================================
+   API ERROR
+========================================================= */
+
+.step > div[style] {
+  box-sizing: border-box;
+
+  width: 100%;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
    ACTIONS
-========================= */
+========================================================= */
 
 .actions {
   display: flex;
-
   justify-content: flex-end;
+  align-items: center;
 
-  gap: 12px;
-
-  margin-top: 34px;
+  margin-top: 32px;
 }
 
 .primary {
-  display: inline-flex;
+  min-height: 52px;
 
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  min-height: 52px;
-
   gap: 8px;
 
-  padding: 0 23px;
+  padding: 0 22px;
 
   border: 0;
   border-radius: 14px;
@@ -559,14 +635,13 @@
   color: #ffffff;
 
   font-family: inherit;
-
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 750;
 
   cursor: pointer;
 
   box-shadow:
-    0 10px 25px rgba(124, 58, 237, 0.22),
+    0 10px 25px rgba(72, 61, 246, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
   transition:
@@ -576,12 +651,12 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: #483df6;
+  background: #392ee0;
 
   transform: translateY(-2px);
 
   box-shadow:
-    0 14px 32px rgba(124, 58, 237, 0.28),
+    0 14px 32px rgba(72, 61, 246, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -597,94 +672,605 @@
   box-shadow: none;
 }
 
-/* =========================
-   ACCESSIBILITY
-========================= */
+/* =========================================================
+   FOCUS
+========================================================= */
 
 .choiceCard:focus-visible,
 .primary:focus-visible {
-  outline: 3px solid rgba(124, 58, 237, 0.18);
+  outline: 3px solid rgba(72, 61, 246, 0.18);
   outline-offset: 3px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.grid :global(button.select:focus-visible) {
+  outline: 3px solid rgba(72, 61, 246, 0.16);
+  outline-offset: 2px;
+}
 
-@media (max-width: 768px) {
-  .cards,
-  .grid {
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+  .step {
+    padding: 28px;
+  }
+
+  .cards {
     grid-template-columns: 1fr;
   }
 
   .choiceCard {
-    min-height: 96px;
+    min-height: 100px;
   }
 
-  .header h1 {
-    font-size: 29px;
-  }
-}
-
-@media (max-width: 480px) {
   .header {
     margin-bottom: 30px;
   }
 
   .header h1 {
-    font-size: 26px;
+    font-size: 30px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .step {
+    padding: 23px 20px;
+  }
+
+  .header {
+    margin-bottom: 27px;
+  }
+
+  .stepBadge {
+    margin-bottom: 12px;
+
+    padding: 7px 10px;
+
+    font-size: 10px;
+  }
+
+  .header h1 {
+    font-size: 27px;
   }
 
   .header p {
+    margin-top: 9px;
+
+    font-size: 13px;
+  }
+
+  .section {
+    margin-bottom: 25px;
+  }
+
+  .sectionTitle {
+    gap: 10px;
+
+    margin-bottom: 13px;
+  }
+
+  .sectionIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+
+    border-radius: 11px;
+  }
+
+  .sectionIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .sectionTitle label {
     font-size: 14px;
   }
 
-  .choiceCard {
-    min-height: 92px;
+  .sectionTitle span {
+    font-size: 11px;
+  }
 
-    padding: 16px;
+  .cards {
+    gap: 10px;
+  }
+
+  .choiceCard {
+    min-height: 90px;
+
+    padding: 15px;
+
+    border-radius: 16px;
   }
 
   .choiceIcon {
-    width: 46px;
-    height: 46px;
+    width: 45px;
+    height: 45px;
 
-    border-radius: 14px;
+    flex-basis: 45px;
+
+    border-radius: 13px;
   }
 
   .choiceIcon span {
-    font-size: 23px;
+    font-size: 22px;
   }
 
   .choiceContent {
     margin-left: 11px;
+
+    padding-right: 27px;
   }
 
   .choiceContent strong {
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .choiceContent span {
+    font-size: 10px;
+  }
+
+  .check {
+    top: 10px;
+    right: 10px;
+
+    width: 24px;
+    height: 24px;
+  }
+
+  .check svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cardArrow {
+    right: 13px;
+    bottom: 12px;
+
+    width: 15px;
+    height: 15px;
+  }
+
+  .locationFields {
+    gap: 13px;
+
+    margin-top: 15px;
+  }
+
+  .grid :global(button.select) {
+    min-height: 50px;
+
+    border-radius: 13px;
   }
 
   .locationReady {
     align-items: flex-start;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding: 12px 13px;
+
+    border-radius: 14px;
+  }
+
+  .readyIcon {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+
+    border-radius: 10px;
+  }
+
+  .readyIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .locationReady strong {
+    font-size: 12px;
+  }
+
+  .locationReady span {
+    font-size: 10px;
   }
 
   .actions {
-    flex-direction: column;
-
-    margin-top: 28px;
+    margin-top: 25px;
   }
 
   .primary {
     width: 100%;
+
+    min-height: 50px;
+
+    padding: 0 18px;
+
+    border-radius: 13px;
+
+    font-size: 13px;
   }
 }
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 450px) {
+  .step {
+    padding: 20px 15px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .sectionTitle label {
+    font-size: 13px;
+  }
+
+  .sectionTitle span {
+    font-size: 10px;
+  }
+
+  .choiceCard {
+    min-height: 84px;
+
+    padding: 13px;
+
+    border-radius: 14px;
+  }
+
+  .choiceIcon {
+    width: 41px;
+    height: 41px;
+
+    flex-basis: 41px;
+  }
+
+  .choiceIcon span {
+    font-size: 20px;
+  }
+
+  .choiceContent {
+    margin-left: 9px;
+  }
+
+  .choiceContent strong {
+    font-size: 13px;
+  }
+
+  .choiceContent span {
+    font-size: 9px;
+  }
+
+  .check {
+    width: 22px;
+    height: 22px;
+  }
+
+  .cardArrow {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .locationReady {
+    padding: 11px 12px;
+  }
+
+  .actions {
+    margin-top: 22px;
+  }
+}
+
+/* =========================================================
+   380px
+========================================================= */
+
+@media (max-width: 380px) {
+  .step {
+    padding: 20;
+  }
+
+  .stepBadge {
+    padding: 6px 9px;
+
+    font-size: 9px;
+  }
+
+  .stepDot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .header {
+    margin-bottom: 23px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .header p {
+    margin-top: 8px;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+  }
+
+  .section {
+    margin-bottom: 22px;
+  }
+
+  .sectionTitle {
+    gap: 8px;
+  }
+
+  .sectionIcon {
+    width: 35px;
+    height: 35px;
+
+    flex-basis: 35px;
+
+    border-radius: 10px;
+  }
+
+  .sectionTitle label {
+    font-size: 12px;
+  }
+
+  .sectionTitle span {
+    font-size: 9px;
+  }
+
+  .choiceCard {
+    min-height: 78px;
+
+    padding: 11px;
+
+    border-radius: 13px;
+  }
+
+  .choiceIcon {
+    width: 37px;
+    height: 37px;
+
+    flex-basis: 37px;
+
+    border-radius: 11px;
+  }
+
+  .choiceIcon span {
+    font-size: 18px;
+  }
+
+  .choiceContent {
+    margin-left: 8px;
+
+    padding-right: 23px;
+  }
+
+  .choiceContent strong {
+    font-size: 12px;
+  }
+
+  .choiceContent span {
+    font-size: 8px;
+  }
+
+  .check {
+    top: 8px;
+    right: 8px;
+
+    width: 20px;
+    height: 20px;
+  }
+
+  .check svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .cardArrow {
+    right: 8px;
+    bottom: 8px;
+
+    width: 14px;
+    height: 14px;
+  }
+
+  .locationFields {
+    gap: 10px;
+
+    margin-top: 12px;
+  }
+
+  .grid :global(button.select) {
+    min-height: 47px;
+
+    border-radius: 12px;
+  }
+
+  .locationReady {
+    gap: 8px;
+
+    margin-top: 16px;
+
+    padding: 10px;
+
+    border-radius: 12px;
+  }
+
+  .readyIcon {
+    width: 31px;
+    height: 31px;
+
+    flex-basis: 31px;
+  }
+
+  .locationReady strong {
+    font-size: 11px;
+  }
+
+  .locationReady span {
+    font-size: 9px;
+  }
+
+  .actions {
+    margin-top: 19px;
+  }
+
+  .primary {
+    min-height: 47px;
+
+    padding: 0 14px;
+
+    font-size: 12px;
+
+    border-radius: 11px;
+  }
+
+  .primary svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   320px SAFETY
+========================================================= */
+
+@media (max-width: 330px) {
+  .step {
+    padding: 20;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .header p {
+    font-size: 10px;
+  }
+
+  .sectionIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .sectionTitle label {
+    font-size: 11px;
+  }
+
+  .sectionTitle span {
+    font-size: 8px;
+  }
+
+  .choiceCard {
+    min-height: 73px;
+
+    padding: 9px;
+  }
+
+  .choiceIcon {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+
+    border-radius: 9px;
+  }
+
+  .choiceIcon span {
+    font-size: 16px;
+  }
+
+  .choiceContent {
+    margin-left: 7px;
+
+    padding-right: 20px;
+  }
+
+  .choiceContent strong {
+    font-size: 11px;
+  }
+
+  .choiceContent span {
+    font-size: 7.5px;
+  }
+
+  .check {
+    top: 7px;
+    right: 7px;
+
+    width: 18px;
+    height: 18px;
+  }
+
+  .cardArrow {
+    right: 6px;
+    bottom: 6px;
+
+    width: 13px;
+    height: 13px;
+  }
+
+  .grid :global(button.select) {
+    min-height: 44px;
+  }
+
+  .locationReady {
+    padding: 9px;
+  }
+
+  .readyIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+  }
+
+  .locationReady strong {
+    font-size: 10px;
+  }
+
+  .locationReady span {
+    font-size: 8px;
+  }
+
+  .primary {
+    min-height: 44px;
+
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .step,
   .choiceCard,
-  .primary,
+  .choiceIcon,
+  .cardArrow,
   .check,
-  .locationReady {
+  .locationReady,
+  .primary {
     animation: none;
     transition: none;
   }
