@@ -32,6 +32,7 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 
 import { getComplexById, getComplexListings } from "@/utils/api";
+
 import { mapComplexData } from "@/utils/mapComplexData";
 import { mapListingData } from "@/utils/mapListingData";
 
@@ -42,6 +43,8 @@ const MINSTROY_URL = "https://minstroy.gov.kg/ru/map";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1800&auto=format&fit=crop";
+
+const DEVELOPER_FALLBACK = "/assets/DeveloperImage.png";
 
 const EMPTY_COMPLEX = {
   id: null,
@@ -126,6 +129,22 @@ const getLayoutValue = (layout, keys) => {
 };
 
 /* =========================================================
+   IMAGE FALLBACK
+========================================================= */
+
+const handleImageError = (event, fallback) => {
+  const image = event.currentTarget;
+
+  if (!image) return;
+
+  if (image.src.includes(fallback)) {
+    return;
+  }
+
+  image.src = fallback;
+};
+
+/* =========================================================
    NORMALIZE LISTING
 ========================================================= */
 
@@ -184,15 +203,19 @@ export default function ComplexDetails() {
   const complexId = params?.id;
 
   const [complex, setComplex] = useState(EMPTY_COMPLEX);
+
   const [apartments, setApartments] = useState([]);
 
   const [loading, setLoading] = useState(true);
+
   const [apartmentsLoading, setApartmentsLoading] = useState(true);
 
   const [error, setError] = useState("");
+
   const [apartmentsError, setApartmentsError] = useState("");
 
   const [currentImage, setCurrentImage] = useState(0);
+
   const [isFavorite, setIsFavorite] = useState(false);
 
   /* =========================================================
@@ -250,11 +273,35 @@ export default function ComplexDetails() {
           );
         }
 
-        const mappedComplex = mapComplexData(complexResponse.data);
+        const rawComplex = complexResponse.data;
+
+        const mappedComplex = mapComplexData(rawComplex);
+
+        /*
+         * Логотип разработчика:
+         *
+         * 1. avatarUrl
+         * 2. logo_url
+         * 3. logo
+         * 4. developer.avatarUrl
+         * 5. developer.logo_url
+         * 6. fallback
+         */
+
+        const developerLogo =
+          rawComplex?.avatarUrl ||
+          rawComplex?.logo_url ||
+          rawComplex?.logo ||
+          rawComplex?.developer?.avatarUrl ||
+          rawComplex?.developer?.logo_url ||
+          mappedComplex?.logo ||
+          DEVELOPER_FALLBACK;
 
         setComplex({
           ...EMPTY_COMPLEX,
           ...mappedComplex,
+
+          logo: developerLogo,
         });
 
         setCurrentImage(0);
@@ -337,6 +384,7 @@ export default function ComplexDetails() {
 
   const priceText = useMemo(() => {
     const from = formatPrice(complex.priceFrom);
+
     const to = formatPrice(complex.priceTo);
 
     if (from && to && from !== to) {
@@ -558,11 +606,12 @@ export default function ComplexDetails() {
           <div className={styles.heroGallery}>
             <div className={styles.mainImage}>
               <Image
-                src={images[currentImage]}
-                alt={complex.name}
+                src={images[currentImage] || FALLBACK_IMAGE}
+                alt={complex.name || "Жилой комплекс"}
                 fill
                 priority
                 sizes="(max-width: 1100px) 100vw, 68vw"
+                onError={(event) => handleImageError(event, FALLBACK_IMAGE)}
               />
 
               <div className={styles.imageGradient} />
@@ -635,10 +684,13 @@ export default function ComplexDetails() {
                     onClick={() => setCurrentImage(index)}
                   >
                     <Image
-                      src={image}
+                      src={image || FALLBACK_IMAGE}
                       alt={`${complex.name} ${index + 1}`}
                       fill
                       sizes="110px"
+                      onError={(event) =>
+                        handleImageError(event, FALLBACK_IMAGE)
+                      }
                     />
                   </button>
                 ))}
@@ -677,13 +729,22 @@ export default function ComplexDetails() {
               <strong>{priceText}</strong>
             </div>
 
+            {/* =================================================
+                DEVELOPER LOGO
+            ================================================= */}
+
             <div className={styles.developer}>
               <div className={styles.developerIcon}>
-                {complex.logo ? (
-                  <img src={complex.logo} alt={complex.developer} />
-                ) : (
-                  <Building2 size={18} />
-                )}
+                <Image
+                  src={complex.logo || DEVELOPER_FALLBACK}
+                  width={40}
+                  height={40}
+                  alt={complex.developer || "Developer"}
+                  unoptimized
+                  onError={(event) =>
+                    handleImageError(event, DEVELOPER_FALLBACK)
+                  }
+                />
               </div>
 
               <div>
@@ -1090,6 +1151,9 @@ export default function ComplexDetails() {
                           )} ${index + 1}`}
                           fill
                           sizes="(max-width: 700px) 100vw, 300px"
+                          onError={(event) =>
+                            handleImageError(event, FALLBACK_IMAGE)
+                          }
                         />
                       </div>
                     ) : (
