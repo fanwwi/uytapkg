@@ -110,7 +110,7 @@ export default function Agency() {
       setSuccess(true);
 
       setTimeout(() => {
-        router.push("/success-register");
+        router.push("/auth-code");
       }, 1200);
     } catch (err) {
       setError(err.message || "Ошибка при регистрации агентства");
