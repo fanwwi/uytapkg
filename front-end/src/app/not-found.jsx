@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, Search, Sparkles } from "lucide-react";
+import { Home, House, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import { useLanguage } from "@/context/LanguageContext";
@@ -31,11 +31,11 @@ export default function NotFound() {
         }}
       >
         <div className={styles.iconBox}>
-          <Home />
+          <img src="/favicon.ico" alt="UyTap" className={styles.icon} />
         </div>
 
         <div className={styles.badge}>
-          <Sparkles />
+          <House />
           {t("notFound.badge")}
         </div>
 

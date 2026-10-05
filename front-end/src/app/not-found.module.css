@@ -10,22 +10,16 @@
 
   padding: 30px;
 
-  background:
-    radial-gradient(
-      circle at 15% 10%,
-      rgba(124, 58, 237, 0.16),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 90% 85%,
-      rgba(139, 92, 246, 0.1),
-      transparent 30%
-    ),
-    #09090b;
+  background: #ffffff;
 
-  color: #f5f5f7;
+  color: #111111;
 }
 
+.icon {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
 /* =========================================================
    BACKGROUND GLOWS
 ========================================================= */
@@ -36,11 +30,13 @@
 
   border-radius: 50%;
 
-  filter: blur(140px);
+  background: #483df6;
+
+  filter: blur(110px);
 
   pointer-events: none;
 
-  opacity: 0.28;
+  opacity: 0.18;
 }
 
 .glowOne {
@@ -49,8 +45,6 @@
 
   top: -180px;
   left: -150px;
-
-  background: #7c3aed;
 }
 
 .glowTwo {
@@ -60,7 +54,7 @@
   right: -120px;
   bottom: -120px;
 
-  background: #8b5cf6;
+  opacity: 0.14;
 }
 
 /* =========================================================
@@ -78,24 +72,16 @@
 
   text-align: center;
 
-  color: #fff;
+  color: #111111;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(72, 61, 246, 0.16);
   border-radius: 28px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.015)
-    ),
-    #111114;
-
-  backdrop-filter: blur(25px);
+  background: #ffffff;
 
   box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.6),
-    0 0 70px rgba(124, 58, 237, 0.1);
+    0 35px 100px rgba(15, 23, 42, 0.12),
+    0 0 80px rgba(72, 61, 246, 0.08);
 }
 
 /* =========================================================
@@ -112,14 +98,14 @@
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  border: 1px solid #483df6;
   border-radius: 26px;
 
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #ffffff;
 
-  color: #fff;
-
-  box-shadow: 0 20px 50px rgba(124, 58, 237, 0.3);
+  box-shadow:
+    0 18px 45px rgba(72, 61, 246, 0.3),
+    0 0 35px rgba(72, 61, 246, 0.12);
 }
 
 .iconBox svg {
@@ -139,22 +125,24 @@
 
   padding: 9px 18px;
 
-  border: 1px solid rgba(139, 92, 246, 0.18);
+  border: 1px solid #483df6;
   border-radius: 50px;
 
-  background: rgba(124, 58, 237, 0.08);
+  background: #ffffff;
 
-  color: #d4d4d8;
+  color: #483df6;
 
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 800;
+
+  box-shadow: 0 8px 25px rgba(72, 61, 246, 0.08);
 }
 
 .badge svg {
   width: 16px;
   height: 16px;
 
-  color: #a78bfa;
+  color: #483df6;
 }
 
 /* =========================================================
@@ -172,12 +160,9 @@
 
   letter-spacing: -6px;
 
-  background: linear-gradient(135deg, #ffffff 20%, #c4b5fd 55%, #7c3aed 100%);
+  color: #483df6;
 
-  -webkit-background-clip: text;
-  background-clip: text;
-
-  color: transparent;
+  text-shadow: 0 12px 35px rgba(72, 61, 246, 0.18);
 }
 
 /* =========================================================
@@ -187,7 +172,7 @@
 .title {
   margin: 20px 0 0;
 
-  color: #fff;
+  color: #111111;
 
   font-size: 34px;
 
@@ -199,7 +184,7 @@
 }
 
 .title span {
-  color: #a78bfa;
+  color: #483df6;
 }
 
 /* =========================================================
@@ -211,7 +196,7 @@
 
   margin: 25px auto 0;
 
-  color: #8f8f98;
+  color: #666666;
 
   font-size: 16px;
 
@@ -257,7 +242,8 @@
   transition:
     transform 0.2s ease,
     background 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .actions a svg {
@@ -274,17 +260,23 @@
 ========================================================= */
 
 .primaryButton {
-  border: 1px solid rgba(139, 92, 246, 0.55);
+  border: 1px solid #483df6;
 
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
 
-  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+  box-shadow:
+    0 12px 30px rgba(72, 61, 246, 0.25),
+    0 0 25px rgba(72, 61, 246, 0.08);
 }
 
 .primaryButton:hover {
-  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.4);
+  background: #483df6;
+
+  box-shadow:
+    0 18px 42px rgba(72, 61, 246, 0.35),
+    0 0 35px rgba(72, 61, 246, 0.12);
 }
 
 /* =========================================================
@@ -292,19 +284,21 @@
 ========================================================= */
 
 .secondaryButton {
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid #483df6;
 
-  background: #19191e;
+  background: #ffffff;
 
-  color: #d4d4d8;
+  color: #483df6;
 }
 
 .secondaryButton:hover {
-  border-color: rgba(139, 92, 246, 0.35);
+  border-color: #483df6;
 
-  background: #1d1d24;
+  background: #483df6;
 
-  color: #fff;
+  color: #ffffff;
+
+  box-shadow: 0 12px 30px rgba(72, 61, 246, 0.2);
 }
 
 /* =========================================================
@@ -323,7 +317,7 @@
 
   background: transparent;
 
-  color: #777780;
+  color: #777777;
 
   cursor: pointer;
 
@@ -336,7 +330,7 @@
 }
 
 .backButton:hover {
-  color: #a78bfa;
+  color: #483df6;
 
   transform: translateX(-3px);
 }

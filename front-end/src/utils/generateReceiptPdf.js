@@ -1,17 +1,17 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-// Генерирует фирменный PDF-чек UyTap из готового DOM-узла (см. разметку
-// .receipt в PaymentReceiptModal.jsx) и сразу скачивает файл.
-// Используется и на странице оплаты (чек пользователю), и в админке
-// (просмотр/скачивание чека по любому платежу).
+const PRIMARY = "#483DF6";
+
+// Генерирует яркий фирменный PDF-чек UyTap
+// из готового DOM-узла .receipt.
 export async function generateReceiptPdf(receiptElement, paymentData) {
   if (!receiptElement) return;
 
   const canvas = await html2canvas(receiptElement, {
     scale: 2.5,
     useCORS: true,
-    backgroundColor: "#0b0b10",
+    backgroundColor: "#ffffff",
     logging: false,
   });
 
@@ -27,67 +27,128 @@ export async function generateReceiptPdf(receiptElement, paymentData) {
   const pageHeight = pdf.internal.pageSize.getHeight();
 
   /*
-   * Фиолетовый фон страницы.
-   *
-   * Делаем несколько полупрозрачных
-   * больших кругов, чтобы создать glow.
+   * =========================================================
+   * БЕЛЫЙ ФОН СТРАНИЦЫ
+   * =========================================================
    */
-  pdf.setFillColor(7, 7, 11);
+
+  pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-  pdf.setFillColor(91, 33, 182);
-  pdf.circle(18, 20, 38, "F");
+  /*
+   * =========================================================
+   * ЯРКИЕ ФИОЛЕТОВЫЕ КРУЖОЧКИ
+   * Только #483DF6
+   * =========================================================
+   */
 
-  pdf.setFillColor(76, 29, 149);
-  pdf.circle(pageWidth - 5, 80, 32, "F");
+  pdf.setFillColor(72, 61, 246);
 
-  pdf.setFillColor(109, 40, 217);
-  pdf.circle(pageWidth / 2, pageHeight - 5, 45, "F");
+  pdf.circle(5, 12, 27, "F");
+
+  pdf.setFillColor(72, 61, 246);
+
+  pdf.circle(pageWidth - 2, 58, 23, "F");
+
+  pdf.setFillColor(72, 61, 246);
+
+  pdf.circle(pageWidth / 2, pageHeight + 10, 32, "F");
 
   /*
-   * Сам чек.
+   * =========================================================
+   * ЧЕК
+   * =========================================================
    */
+
   const margin = 14;
 
   const availableWidth = pageWidth - margin * 2;
 
   const imageRatio = canvas.height / canvas.width;
 
-  const imageHeight = availableWidth * imageRatio;
-
-  let y = 17;
-
-  /*
-   * Белая/тёмная основа под чек.
-   */
-  pdf.setFillColor(17, 17, 22);
-
-  pdf.roundedRect(
-    margin - 2,
-    y - 2,
-    availableWidth + 4,
-    Math.min(imageHeight + 4, pageHeight - 30),
-    6,
-    6,
-    "F",
-  );
-
-  pdf.addImage(imageData, "PNG", margin, y, availableWidth, imageHeight);
+  let imageWidth = availableWidth;
+  let imageHeight = imageWidth * imageRatio;
 
   /*
-   * Дополнительная декоративная рамка.
+   * Если чек слишком высокий для A4,
+   * уменьшаем его пропорционально.
    */
-  pdf.setDrawColor(139, 92, 246);
-  pdf.setLineWidth(0.5);
 
-  pdf.roundedRect(
-    margin - 2,
-    y - 2,
-    availableWidth + 4,
-    Math.min(imageHeight + 4, pageHeight - 30),
-    6,
-    6,
-  );
+  const maxHeight = pageHeight - 30;
 
-  pdf.save(`uytap-receipt-${paymentData.paymentId}.pdf`);
+  if (imageHeight > maxHeight) {
+    imageHeight = maxHeight;
+    imageWidth = imageHeight / imageRatio;
+  }
+
+  const x = (pageWidth - imageWidth) / 2;
+  const y = 17;
+
+  /*
+   * =========================================================
+   * БЕЛАЯ ОСНОВА ЧЕКА
+   * =========================================================
+   */
+
+  pdf.setFillColor(255, 255, 255);
+
+  pdf.roundedRect(x - 2, y - 2, imageWidth + 4, imageHeight + 4, 6, 6, "F");
+
+  /*
+   * =========================================================
+   * САМ БЕЛЫЙ ЧЕК
+   * =========================================================
+   */
+
+  pdf.addImage(imageData, "PNG", x, y, imageWidth, imageHeight);
+
+  /*
+   * =========================================================
+   * НАСЫЩЕННАЯ ФИОЛЕТОВАЯ РАМКА
+   * =========================================================
+   */
+
+  pdf.setDrawColor(72, 61, 246);
+  pdf.setLineWidth(0.7);
+
+  pdf.roundedRect(x - 2, y - 2, imageWidth + 4, imageHeight + 4, 6, 6);
+
+  /*
+   * =========================================================
+   * ЯРКАЯ ВЕРХНЯЯ ПОЛОСА
+   * =========================================================
+   */
+
+  pdf.setFillColor(72, 61, 246);
+
+  pdf.roundedRect(x + 4, y + 4, imageWidth - 8, 3, 1.5, 1.5, "F");
+
+  /*
+   * =========================================================
+   * ЯРКАЯ НИЖНЯЯ ПОЛОСА
+   * =========================================================
+   */
+
+  pdf.setFillColor(72, 61, 246);
+
+  pdf.roundedRect(x + 4, y + imageHeight - 7, imageWidth - 8, 3, 1.5, 1.5, "F");
+
+  /*
+   * =========================================================
+   * ЯРКИЙ АКЦЕНТ ПОД ЧЕКОМ
+   * =========================================================
+   */
+
+  pdf.setDrawColor(72, 61, 246);
+  pdf.setLineWidth(0.8);
+
+  pdf.line(x + 7, y + imageHeight + 6, x + imageWidth - 7, y + imageHeight + 6);
+
+  /*
+   * =========================================================
+   * СОХРАНЕНИЕ
+   * =========================================================
+   */
+
+  pdf.save(`uytap-receipt-${paymentData?.paymentId || "receipt"}.pdf`);
 }
