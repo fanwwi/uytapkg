@@ -9,10 +9,15 @@ import { useLanguage } from "@/context/LanguageContext";
 
 import styles from "./Complexes.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
-import { getComplexes } from "@/utils/api";
-import { mapComplexData } from "@/utils/mapComplexData";
 import Header from "@/components/pageComponents/header/Header";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
+
+import { getComplexes } from "@/utils/api";
+import { mapComplexData } from "@/utils/mapComplexData";
+
+const DEFAULT_DEVELOPER_LOGO = "/assets/DeveloperImage.png";
+
+const DEFAULT_COMPLEX_IMAGE = "/assets/ComplexImage.png";
 
 export default function Complexes() {
   const router = useRouter();
@@ -24,6 +29,8 @@ export default function Complexes() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    let mounted = true;
+
     async function loadComplexes() {
       try {
         setLoading(true);
@@ -31,21 +38,72 @@ export default function Complexes() {
 
         const res = await getComplexes();
 
-        if (res && res.success && Array.isArray(res.data)) {
-          const mapped = res.data.map(mapComplexData);
+        console.log("========== COMPLEXES API ==========");
+        console.log("FULL RESPONSE:", res);
+        console.log("DATA:", res?.data);
+
+        if (!mounted) return;
+
+        if (res?.success && Array.isArray(res?.data)) {
+          const mapped = res.data
+            .map((item) => {
+              const complex = mapComplexData(item);
+
+              /*
+               * На случай, если mapComplexData
+               * не возвращает logo.
+               *
+               * Пробуем несколько возможных
+               * полей API.
+               */
+              const developerLogo =
+                item?.avatarUrl ||
+                item?.logo_url ||
+                item?.developer?.avatarUrl ||
+                item?.developer?.logo_url ||
+                complex?.logo ||
+                DEFAULT_DEVELOPER_LOGO;
+
+              return {
+                ...complex,
+
+                image:
+                  complex?.image ||
+                  item?.image ||
+                  item?.imageUrl ||
+                  item?.image_url ||
+                  DEFAULT_COMPLEX_IMAGE,
+
+                logo: developerLogo,
+              };
+            })
+            .filter((item) => item?.id);
+
+          console.log("========== MAPPED COMPLEXES ==========");
+          console.log(mapped);
+
           setComplexes(mapped);
         } else {
           setComplexes([]);
         }
       } catch (err) {
         console.error("Failed to load complexes:", err);
-        setError(err.message || t("complexes.errors.load"));
+
+        if (mounted) {
+          setError(err?.message || t("complexes.errors.load"));
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadComplexes();
+
+    return () => {
+      mounted = false;
+    };
   }, [t]);
 
   const filteredComplexes = useMemo(() => {
@@ -71,9 +129,27 @@ export default function Complexes() {
     );
   }, [complexes, search]);
 
+  const handleImageError = (event, fallback) => {
+    const image = event.currentTarget;
+
+    /*
+     * Если уже пытаемся загрузить fallback,
+     * ничего больше не делаем.
+     */
+    if (image.src.includes(fallback)) {
+      return;
+    }
+
+    image.src = fallback;
+  };
+
   return (
     <main className={styles.page}>
       <Header />
+
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
       <section className={styles.hero}>
         <div className={styles.heroImage} />
@@ -92,6 +168,7 @@ export default function Complexes() {
           <h1>
             {t("complexes.heroTitle")}
             <br />
+
             <span>{t("complexes.heroTitleAccent")}</span>
           </h1>
 
@@ -116,6 +193,7 @@ export default function Complexes() {
                 type="button"
                 className={styles.clear}
                 onClick={() => setSearch("")}
+                aria-label={t("complexes.reset")}
               >
                 ×
               </button>
@@ -125,11 +203,13 @@ export default function Complexes() {
           <div className={styles.heroMeta}>
             <span>
               <i />
+
               {t("complexes.meta.premium")}
             </span>
 
             <span>
               <i />
+
               {t("complexes.meta.verified")}
             </span>
           </div>
@@ -140,7 +220,9 @@ export default function Complexes() {
 
       <AdBanner />
 
-      {/* CONTENT */}
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
 
       <section className={styles.wrapper}>
         <div className={styles.sectionHeader}>
@@ -156,11 +238,14 @@ export default function Complexes() {
 
           <div className={styles.counter}>
             <strong>{filteredComplexes.length}</strong>
+
             <span>{t("complexes.projects")}</span>
           </div>
         </div>
 
-        {/* SEARCH RESULT */}
+        {/* =================================================
+            SEARCH RESULT
+        ================================================= */}
 
         {search && (
           <div className={styles.searchResult}>
@@ -176,7 +261,9 @@ export default function Complexes() {
           </div>
         )}
 
-        {/* LOADING & ERROR */}
+        {/* =================================================
+            LOADING
+        ================================================= */}
 
         {loading && (
           <div className={styles.empty}>
@@ -184,15 +271,27 @@ export default function Complexes() {
           </div>
         )}
 
+        {/* =================================================
+            ERROR
+        ================================================= */}
+
         {error && (
           <div className={styles.empty}>
-            <p style={{ color: "#e53e3e" }}>{error}</p>
+            <p
+              style={{
+                color: "#e53e3e",
+              }}
+            >
+              {error}
+            </p>
           </div>
         )}
 
-        {/* GRID */}
+        {/* =================================================
+            GRID
+        ================================================= */}
 
-        {!loading && !error && filteredComplexes.length > 0 ? (
+        {!loading && !error && filteredComplexes.length > 0 && (
           <div className={styles.grid}>
             {filteredComplexes.map((item, index) => (
               <article
@@ -200,28 +299,38 @@ export default function Complexes() {
                 key={item.id}
                 onClick={() => router.push(`/complexes/${item.id}`)}
               >
-                {/* IMAGE */}
+                {/* =====================================
+                        COMPLEX IMAGE
+                    ===================================== */}
 
                 <div className={styles.photo}>
                   <Image
-                    src={item.image}
-                    alt={item.name}
+                    src={item.image || DEFAULT_COMPLEX_IMAGE}
+                    alt={item.name || "Жилой комплекс"}
                     fill
                     priority={index === 0}
                     sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 400px"
+                    onError={(event) =>
+                      handleImageError(event, DEFAULT_COMPLEX_IMAGE)
+                    }
                   />
 
                   <div className={styles.photoOverlay} />
 
-                  <div className={styles.projectNumber}>0{index + 1}</div>
+                  <div className={styles.projectNumber}>
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
 
                   <div className={styles.premiumBadge}>
                     <span />
+
                     {item.housingClass}
                   </div>
                 </div>
 
-                {/* CONTENT */}
+                {/* =====================================
+                        CONTENT
+                    ===================================== */}
 
                 <div className={styles.content}>
                   <div className={styles.titleRow}>
@@ -246,13 +355,21 @@ export default function Complexes() {
 
                   <p className={styles.description}>{item.description}</p>
 
+                  {/* =================================
+                          DEVELOPER
+                      ================================= */}
+
                   <div className={styles.developer}>
                     <div className={styles.logo}>
                       <Image
-                        src={item.logo}
+                        src={item.logo || DEFAULT_DEVELOPER_LOGO}
                         width={52}
                         height={52}
-                        alt={item.developer}
+                        alt={item.developer || "Developer"}
+                        unoptimized
+                        onError={(event) =>
+                          handleImageError(event, DEFAULT_DEVELOPER_LOGO)
+                        }
                       />
                     </div>
 
@@ -263,7 +380,9 @@ export default function Complexes() {
                     </div>
                   </div>
 
-                  {/* BUTTON */}
+                  {/* =================================
+                          BUTTON
+                      ================================= */}
 
                   <button
                     type="button"
@@ -284,7 +403,13 @@ export default function Complexes() {
               </article>
             ))}
           </div>
-        ) : (
+        )}
+
+        {/* =================================================
+            EMPTY
+        ================================================= */}
+
+        {!loading && !error && filteredComplexes.length === 0 && (
           <div className={styles.empty}>
             <div className={styles.emptyIcon}>
               <Search />

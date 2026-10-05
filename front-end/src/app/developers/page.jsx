@@ -13,6 +13,8 @@ import Footer from "@/components/pageComponents/footer/Footer";
 import Header from "@/components/pageComponents/header/Header";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
+const DEFAULT_LOGO = "/assets/DeveloperImage.png";
+
 export default function Developers() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -43,12 +45,21 @@ export default function Developers() {
             .filter((dev) => dev?.verificationStatus === "approved")
             .map((dev) => ({
               id: dev?.user_id || dev?.id,
+
               name: dev?.company_name || "",
+
               objects: Array.isArray(dev?.residential_complexes)
                 ? dev.residential_complexes.length
                 : 0,
-              logo:
-                dev?.avatarUrl || dev?.logo_url || "/assets/DeveloperImage.png",
+
+              /*
+               * Приоритет:
+               * 1. avatarUrl
+               * 2. logo_url
+               * 3. стандартная картинка
+               */
+              logo: dev?.avatarUrl || dev?.logo_url || DEFAULT_LOGO,
+
               isVerified: true,
             }))
             .filter((dev) => dev.id);
@@ -148,6 +159,7 @@ export default function Developers() {
 
             <div className={styles.statText}>
               <span>{t("developers.developers")}</span>
+
               <small>{t("developers.onUyTap")}</small>
             </div>
           </div>
@@ -207,17 +219,25 @@ export default function Developers() {
               <article key={item.id} className={styles.card}>
                 <div className={styles.cardMain}>
                   <div className={styles.logoBox}>
-                    {item.logo ? (
-                      <Image
-                        src={item.logo}
-                        fill
-                        sizes="64px"
-                        alt={item.name || t("developers.defaultName")}
-                        className={styles.logoImage}
-                      />
-                    ) : (
-                      <Building2 />
-                    )}
+                    <Image
+                      src={item.logo || DEFAULT_LOGO}
+                      fill
+                      sizes="64px"
+                      alt={item.name || t("developers.defaultName")}
+                      className={styles.logoImage}
+                      onError={(event) => {
+                        /*
+                         * Если URL существует,
+                         * но картинка не загрузилась,
+                         * показываем стандартный логотип.
+                         */
+                        if (event.currentTarget.src.includes(DEFAULT_LOGO)) {
+                          return;
+                        }
+
+                        event.currentTarget.src = DEFAULT_LOGO;
+                      }}
+                    />
                   </div>
 
                   <div className={styles.cardTitle}>

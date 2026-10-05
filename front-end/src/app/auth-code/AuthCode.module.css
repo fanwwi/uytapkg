@@ -1,5 +1,10 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
 .page {
   min-height: 100vh;
+  min-height: 100dvh;
 
   display: flex;
   align-items: center;
@@ -7,11 +12,22 @@
 
   position: relative;
 
+  width: 100%;
+  max-width: 100%;
+
   overflow: hidden;
 
-  background: #f7f8fc;
+  padding: 0;
 
+  background: #f7f8fc;
   color: #171827;
+
+  box-sizing: border-box;
+}
+
+.page,
+.page * {
+  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -22,11 +38,16 @@
   position: fixed;
   inset: 0;
 
+  width: 100%;
+  height: 100%;
+
   pointer-events: none;
 
   opacity: 0.018;
 
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+
+  z-index: 0;
 }
 
 .glowOne {
@@ -45,6 +66,8 @@
   filter: blur(100px);
 
   pointer-events: none;
+
+  z-index: 0;
 }
 
 .glowTwo {
@@ -63,6 +86,8 @@
   filter: blur(110px);
 
   pointer-events: none;
+
+  z-index: 0;
 }
 
 /* =========================================================
@@ -72,14 +97,17 @@
 .container {
   position: relative;
 
-  width: 100%;
-  max-width: 430px;
+  z-index: 2;
+
+  width: min(100%, 430px);
 
   margin: 0 auto;
 
   padding: 45px 25px 40px;
 
-  z-index: 2;
+  min-width: 0;
+
+  overflow: visible;
 }
 
 /* =========================================================
@@ -88,7 +116,10 @@
 
 .iconWrapper {
   display: flex;
+  align-items: center;
   justify-content: center;
+
+  width: 100%;
 
   margin-bottom: 25px;
 }
@@ -101,6 +132,8 @@
   align-items: center;
   justify-content: center;
 
+  flex: 0 0 auto;
+
   border-radius: 20px;
 
   color: #ffffff;
@@ -110,14 +143,26 @@
   box-shadow: 0 12px 35px rgba(72, 61, 246, 0.2);
 }
 
+.icon svg {
+  display: block;
+
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+}
+
 /* =========================================================
    HEADER
 ========================================================= */
 
 .header {
-  text-align: center;
+  width: 100%;
+  min-width: 0;
 
   margin-bottom: 32px;
+
+  text-align: center;
 }
 
 .eyebrow {
@@ -133,6 +178,8 @@
   font-weight: 700;
 
   color: #483df6;
+
+  overflow-wrap: anywhere;
 }
 
 .header h1 {
@@ -146,6 +193,8 @@
   letter-spacing: -0.7px;
 
   color: #171827;
+
+  overflow-wrap: anywhere;
 }
 
 .header h1 span {
@@ -153,6 +202,7 @@
 }
 
 .header p {
+  width: 100%;
   max-width: 350px;
 
   margin: 0 auto;
@@ -161,10 +211,14 @@
   line-height: 20px;
 
   color: #747687;
+
+  overflow-wrap: anywhere;
 }
 
 .email {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   max-width: 100%;
 
@@ -183,7 +237,10 @@
 
   border: 1px solid rgba(72, 61, 246, 0.12);
 
-  word-break: break-all;
+  text-align: center;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* =========================================================
@@ -192,10 +249,13 @@
 
 .form {
   width: 100%;
+  min-width: 0;
 }
 
 .label {
   display: block;
+
+  width: 100%;
 
   margin-bottom: 9px;
 
@@ -207,10 +267,17 @@
   letter-spacing: 1px;
 
   color: #6f7180;
+
+  overflow-wrap: anywhere;
 }
 
 .input {
+  display: block;
+
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
   height: 62px;
 
   padding: 0 20px;
@@ -225,6 +292,8 @@
 
   color: #171827;
 
+  font-family: inherit;
+
   font-size: 25px;
   line-height: 30px;
 
@@ -235,6 +304,8 @@
   text-align: center;
 
   box-shadow: 0 3px 15px rgba(25, 27, 45, 0.035);
+
+  appearance: none;
 
   transition:
     border-color 0.2s ease,
@@ -265,6 +336,8 @@
 }
 
 .error {
+  width: 100%;
+
   margin-top: 7px;
 
   font-size: 11px;
@@ -273,6 +346,8 @@
   color: #d34848;
 
   text-align: left;
+
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -281,6 +356,9 @@
 
 .submit {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
   height: 55px;
 
   display: flex;
@@ -291,6 +369,8 @@
 
   margin-top: 15px;
 
+  padding: 0 16px;
+
   border: none;
   border-radius: 15px;
 
@@ -300,6 +380,8 @@
 
   background: #483df6;
 
+  font-family: inherit;
+
   font-size: 12px;
   line-height: 16px;
 
@@ -307,12 +389,15 @@
 
   letter-spacing: 1.1px;
 
+  white-space: nowrap;
+
   box-shadow: 0 8px 22px rgba(72, 61, 246, 0.18);
 
   transition:
     transform 0.2s ease,
     opacity 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .submit:hover:not(:disabled) {
@@ -335,6 +420,10 @@
   box-shadow: none;
 }
 
+.submit svg {
+  flex-shrink: 0;
+}
+
 /* =========================================================
    RESEND
 ========================================================= */
@@ -343,6 +432,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
 
   gap: 6px;
 
@@ -354,21 +447,32 @@
   color: #90919e;
 
   text-align: center;
+
+  overflow-wrap: anywhere;
 }
 
 .timer {
+  max-width: 100%;
+
   color: #777987;
+
+  overflow-wrap: anywhere;
 }
 
 .timer strong {
   color: #483df6;
 
   font-weight: 700;
+
+  white-space: nowrap;
 }
 
 .resendButton {
+  max-width: 100%;
+
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   gap: 7px;
 
@@ -382,10 +486,16 @@
 
   color: #483df6;
 
+  font-family: inherit;
+
   font-size: 11px;
   line-height: 16px;
 
   font-weight: 650;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
 
   transition:
     opacity 0.2s ease,
@@ -404,6 +514,10 @@
   opacity: 0.5;
 }
 
+.resendButton svg {
+  flex-shrink: 0;
+}
+
 /* =========================================================
    SECURITY
 ========================================================= */
@@ -412,6 +526,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  width: 100%;
+  min-width: 0;
 
   gap: 7px;
 
@@ -427,10 +544,15 @@
   line-height: 14px;
 
   text-align: center;
+
+  overflow-wrap: anywhere;
 }
 
 .security svg {
-  flex-shrink: 0;
+  flex: 0 0 auto;
+
+  width: 15px;
+  height: 15px;
 
   color: #483df6;
 }
@@ -440,6 +562,8 @@
 ========================================================= */
 
 .spinning {
+  flex-shrink: 0;
+
   animation: spin 0.8s linear infinite;
 }
 
@@ -454,24 +578,579 @@
 }
 
 /* =========================================================
+   TABLET / SMALL DESKTOP
+========================================================= */
+
+@media (max-width: 700px) {
+  .container {
+    padding: 40px 22px 35px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 22px;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .header h1 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .input {
+    height: 60px;
+
+    font-size: 24px;
+  }
+
+  .security {
+    margin-top: 28px;
+  }
+}
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
 @media (max-width: 480px) {
+  .page {
+    align-items: flex-start;
+
+    min-height: 100dvh;
+  }
+
   .container {
-    padding: 35px 20px 30px;
+    width: 100%;
+
+    padding: 50px;
+  }
+
+  .glowOne {
+    width: 330px;
+    height: 330px;
+
+    top: -190px;
+    right: -170px;
+
+    filter: blur(85px);
+  }
+
+  .glowTwo {
+    width: 300px;
+    height: 300px;
+
+    bottom: -190px;
+    left: -165px;
+
+    filter: blur(90px);
+  }
+
+  .icon {
+    width: 62px;
+    height: 62px;
+
+    border-radius: 18px;
+  }
+
+  .icon svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .header {
+    margin-bottom: 25px;
+  }
+
+  .eyebrow {
+    margin-bottom: 8px;
+
+    font-size: 8px;
+    line-height: 11px;
+
+    letter-spacing: 1.9px;
   }
 
   .header h1 {
     font-size: 29px;
     line-height: 35px;
+
+    letter-spacing: -0.55px;
+  }
+
+  .header p {
+    max-width: 320px;
+
+    font-size: 12.5px;
+    line-height: 19px;
+  }
+
+  .email {
+    margin-top: 12px;
+
+    padding: 7px 11px;
+
+    font-size: 11px;
+    line-height: 15px;
   }
 
   .input {
     height: 58px;
 
+    padding: 0 16px;
+
     font-size: 23px;
 
     letter-spacing: 7px;
+
+    border-radius: 14px;
+  }
+
+  .input:focus {
+    box-shadow:
+      0 0 0 3px rgba(72, 61, 246, 0.09),
+      0 5px 18px rgba(25, 27, 45, 0.04);
+  }
+
+  .submit {
+    height: 54px;
+
+    margin-top: 14px;
+
+    border-radius: 14px;
+  }
+
+  .resend {
+    margin-top: 20px;
+
+    font-size: 10.5px;
+    line-height: 15px;
+  }
+
+  .resendButton {
+    font-size: 10.5px;
+    line-height: 15px;
+  }
+
+  .security {
+    margin-top: 25px;
+
+    padding-top: 16px;
+
+    font-size: 8.5px;
+    line-height: 13px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES — 400px
+========================================================= */
+
+@media (max-width: 400px) {
+  .container {
+    padding: 30px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 20px;
+  }
+
+  .icon {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 17px;
+  }
+
+  .icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .header {
+    margin-bottom: 23px;
+  }
+
+  .header h1 {
+    font-size: 27px;
+    line-height: 33px;
+  }
+
+  .header p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .email {
+    max-width: 100%;
+
+    padding: 7px 10px;
+
+    font-size: 10.5px;
+    line-height: 14px;
+  }
+
+  .label {
+    margin-bottom: 8px;
+
+    font-size: 9.5px;
+    line-height: 13px;
+  }
+
+  .input {
+    height: 56px;
+
+    padding: 0 12px;
+
+    font-size: 21px;
+
+    letter-spacing: 6px;
+
+    border-radius: 13px;
+  }
+
+  .submit {
+    height: 52px;
+
+    padding: 0 12px;
+
+    gap: 8px;
+
+    font-size: 11.5px;
+
+    border-radius: 13px;
+  }
+
+  .resend {
+    margin-top: 18px;
+
+    gap: 5px;
+  }
+
+  .security {
+    margin-top: 23px;
+
+    padding-top: 14px;
+
+    gap: 6px;
+
+    font-size: 8px;
+    line-height: 12px;
+  }
+
+  .security svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* =========================================================
+   360px
+========================================================= */
+
+@media (max-width: 360px) {
+  .container {
+    padding: 30px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 18px;
+  }
+
+  .icon {
+    width: 55px;
+    height: 55px;
+
+    border-radius: 16px;
+  }
+
+  .icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .header {
+    margin-bottom: 21px;
+  }
+
+  .eyebrow {
+    font-size: 7.5px;
+    line-height: 10px;
+
+    letter-spacing: 1.6px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+    line-height: 30px;
+
+    letter-spacing: -0.4px;
+  }
+
+  .header p {
+    font-size: 11.5px;
+    line-height: 17px;
+  }
+
+  .email {
+    margin-top: 10px;
+
+    padding: 6px 9px;
+
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+  .input {
+    height: 54px;
+
+    padding: 0 10px;
+
+    font-size: 20px;
+
+    letter-spacing: 5px;
+
+    border-radius: 12px;
+  }
+
+  .submit {
+    height: 50px;
+
+    margin-top: 13px;
+
+    padding: 0 10px;
+
+    font-size: 11px;
+
+    letter-spacing: 0.8px;
+
+    border-radius: 12px;
+  }
+
+  .error {
+    font-size: 10px;
+    line-height: 14px;
+  }
+
+  .resend {
+    font-size: 10px;
+    line-height: 14px;
+  }
+
+  .resendButton {
+    font-size: 10px;
+    line-height: 14px;
+
+    gap: 6px;
+  }
+
+  .security {
+    margin-top: 21px;
+
+    padding-top: 13px;
+
+    font-size: 7.5px;
+    line-height: 11px;
+  }
+}
+
+/* =========================================================
+   330px
+========================================================= */
+
+@media (max-width: 330px) {
+  .container {
+    padding: 30px;
+  }
+
+  .iconWrapper {
+    margin-bottom: 16px;
+  }
+
+  .icon {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 15px;
+  }
+
+  .icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .header {
+    margin-bottom: 19px;
+  }
+
+  .header h1 {
+    font-size: 23px;
+    line-height: 28px;
+  }
+
+  .header p {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .email {
+    font-size: 9.5px;
+    line-height: 12px;
+
+    padding: 6px 8px;
+  }
+
+  .label {
+    margin-bottom: 7px;
+
+    font-size: 9px;
+    line-height: 12px;
+  }
+
+  .input {
+    height: 52px;
+
+    padding: 0 8px;
+
+    font-size: 18px;
+
+    letter-spacing: 4px;
+
+    border-radius: 11px;
+  }
+
+  .submit {
+    height: 48px;
+
+    padding: 0 9px;
+
+    gap: 7px;
+
+    font-size: 10.5px;
+
+    border-radius: 11px;
+  }
+
+  .resend {
+    margin-top: 16px;
+
+    font-size: 9.5px;
+    line-height: 13px;
+  }
+
+  .resendButton {
+    font-size: 9.5px;
+    line-height: 13px;
+  }
+
+  .security {
+    margin-top: 19px;
+
+    padding-top: 12px;
+
+    gap: 5px;
+
+    font-size: 7px;
+    line-height: 10px;
+  }
+
+  .security svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+/* =========================================================
+   320px — STRICT SAFETY
+========================================================= */
+
+@media (max-width: 320px) {
+  .container {
+    padding: 30px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    line-height: 27px;
+  }
+
+  .header p {
+    font-size: 10.5px;
+    line-height: 15px;
+  }
+
+  .input {
+    height: 50px;
+
+    padding: 0 7px;
+
+    font-size: 17px;
+
+    letter-spacing: 3px;
+  }
+
+  .submit {
+    height: 46px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.5px;
+  }
+
+  .resend {
+    font-size: 9px;
+    line-height: 12px;
+  }
+
+  .resendButton {
+    font-size: 9px;
+    line-height: 12px;
+
+    gap: 5px;
+  }
+
+  .security {
+    font-size: 6.8px;
+    line-height: 10px;
+  }
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  .submit:hover:not(:disabled),
+  .resendButton:hover:not(:disabled) {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .submit,
+  .resendButton,
+  .input {
+    transition: none;
+  }
+
+  .spinning {
+    animation: none;
+  }
+
+  .submit:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .submit:active:not(:disabled) {
+    transform: none;
   }
 }
