@@ -11,21 +11,21 @@ import {
   EyeOff,
   Eye,
   CheckCircle2,
+  ShieldCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 import styles from "./DeveloperForm.module.css";
 import { registerUser } from "@/utils/api";
 
 function formatPhone(value) {
-  // Оставляем только цифры
   let digits = value.replace(/\D/g, "");
 
-  // Если вставили 996XXXXXXXXX — убираем 996
   if (digits.startsWith("996")) {
     digits = digits.slice(3);
   }
 
-  // Максимум 9 цифр после +996
   digits = digits.slice(0, 9);
 
   let formatted = "+996";
@@ -61,34 +61,54 @@ export default function DeveloperForm() {
   const [officeAddress, setOfficeAddress] = useState("");
   const [about, setAbout] = useState("");
   const [password, setPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
+
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const handlePhoneChange = (value) => {
-    setPhone(formatPhone(value));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
 
+    /*
+    |--------------------------------------------------------------------------
+    | POLICY VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
+    if (!privacyAccepted || !termsAccepted) {
+      setError(
+        "Необходимо принять Политику конфиденциальности и Пользовательское соглашение.",
+      );
+
+      return;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PHONE VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
     const normalizedPhone = normalizePhone(phone);
     const phoneDigits = normalizedPhone.replace(/\D/g, "");
 
-    // +996 + 9 цифр = 12 цифр
     if (phoneDigits.length !== 12) {
       setError("Введите полный номер телефона в формате +996 XXX XXX XXX");
+
       return;
     }
 
     setLoading(true);
 
     try {
-      const data = await registerUser({
+      await registerUser({
         accountType: "developer",
         companyName,
         inn,
@@ -99,10 +119,7 @@ export default function DeveloperForm() {
         password,
       });
 
-      if (data.token) {
-        localStorage.setItem("uytap_token", data.token);
-        localStorage.setItem("uytap_user", JSON.stringify(data.user));
-      }
+      // token и user сохраняются внутри registerUser()
 
       setSuccess(true);
 
@@ -118,6 +135,8 @@ export default function DeveloperForm() {
 
   return (
     <form className={styles.wrapper} onSubmit={handleSubmit}>
+      {/* HEADER */}
+
       <div className={styles.header}>
         <Building />
 
@@ -127,7 +146,11 @@ export default function DeveloperForm() {
         </div>
       </div>
 
+      {/* FIELDS */}
+
       <div className={styles.grid}>
+        {/* COMPANY */}
+
         <div className={styles.inputBox}>
           <Building />
 
@@ -138,6 +161,8 @@ export default function DeveloperForm() {
             required
           />
         </div>
+
+        {/* INN */}
 
         <div className={styles.inputBox}>
           <FileCheck />
@@ -150,6 +175,8 @@ export default function DeveloperForm() {
           />
         </div>
 
+        {/* PHONE */}
+
         <div className={styles.inputBox}>
           <Phone />
 
@@ -157,11 +184,13 @@ export default function DeveloperForm() {
             type="tel"
             placeholder="+996 000 000 000"
             value={phone}
-            onChange={(e) => handlePhoneChange(e.target.value)}
+            onChange={(e) => setPhone(formatPhone(e.target.value))}
             inputMode="numeric"
             required
           />
         </div>
+
+        {/* EMAIL */}
 
         <div className={styles.inputBox}>
           <Mail />
@@ -175,6 +204,8 @@ export default function DeveloperForm() {
           />
         </div>
 
+        {/* ADDRESS */}
+
         <div className={styles.inputBox}>
           <MapPin />
 
@@ -184,6 +215,8 @@ export default function DeveloperForm() {
             onChange={(e) => setOfficeAddress(e.target.value)}
           />
         </div>
+
+        {/* PASSWORD */}
 
         <div className={styles.inputBox}>
           <Lock />
@@ -199,12 +232,15 @@ export default function DeveloperForm() {
           <button
             type="button"
             className={styles.eye}
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
         </div>
       </div>
+
+      {/* ABOUT */}
 
       <textarea
         className={styles.textarea}
@@ -212,6 +248,68 @@ export default function DeveloperForm() {
         value={about}
         onChange={(e) => setAbout(e.target.value)}
       />
+
+      {/* POLICIES */}
+
+      <div className={styles.policyBlock}>
+        <div className={styles.policyHeader}>
+          <ShieldCheck />
+
+          <span>
+            Перед созданием профиля ознакомьтесь с условиями использования UyTap
+          </span>
+        </div>
+
+        {/* PRIVACY */}
+
+        <div className={styles.checkboxRow}>
+          <input
+            id="developer-privacy"
+            type="checkbox"
+            checked={privacyAccepted}
+            onChange={(e) => setPrivacyAccepted(e.target.checked)}
+          />
+
+          <label htmlFor="developer-privacy" className={styles.checkbox}>
+            {privacyAccepted && <CheckCircle2 />}
+          </label>
+
+          <span className={styles.checkboxText}>
+            Я принимаю{" "}
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Политику конфиденциальности
+            </Link>
+          </span>
+        </div>
+
+        {/* TERMS */}
+
+        <div className={styles.checkboxRow}>
+          <input
+            id="developer-terms"
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+          />
+
+          <label htmlFor="developer-terms" className={styles.checkbox}>
+            {termsAccepted && <CheckCircle2 />}
+          </label>
+
+          <span className={styles.checkboxText}>
+            Я принимаю{" "}
+            <Link href="/terms" target="_blank" rel="noopener noreferrer">
+              Пользовательское соглашение
+            </Link>
+          </span>
+        </div>
+      </div>
+
+      {/* ERROR */}
 
       {error && (
         <div
@@ -223,6 +321,8 @@ export default function DeveloperForm() {
           ⚠️ {error}
         </div>
       )}
+
+      {/* SUCCESS */}
 
       {success && (
         <div
@@ -239,7 +339,13 @@ export default function DeveloperForm() {
         </div>
       )}
 
-      <button className={styles.submit} type="submit" disabled={loading}>
+      {/* SUBMIT */}
+
+      <button
+        className={styles.submit}
+        type="submit"
+        disabled={loading || !privacyAccepted || !termsAccepted}
+      >
         {loading ? "Создание профиля..." : "Создать профиль"}
       </button>
     </form>

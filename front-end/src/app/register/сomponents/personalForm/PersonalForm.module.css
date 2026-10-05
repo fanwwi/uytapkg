@@ -342,3 +342,136 @@
     transform: none;
   }
 }
+
+/* =========================================================
+   POLICIES
+========================================================= */
+
+.policyBlock {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 4px;
+  padding: 18px;
+
+  border: 1px solid rgba(72, 61, 246, 0.14);
+  border-radius: 16px;
+
+  background: rgba(72, 61, 246, 0.035);
+}
+
+.policyHeader {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  color: #555555;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.policyHeader svg {
+  flex-shrink: 0;
+
+  width: 18px;
+  height: 18px;
+
+  color: #483df6;
+}
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.checkboxRow {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #555555;
+}
+
+.checkboxRow input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.checkbox {
+  flex-shrink: 0;
+
+  width: 19px;
+  height: 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #cfcfcf;
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.checkbox svg {
+  width: 14px;
+  height: 14px;
+
+  color: #ffffff;
+}
+
+.checkboxRow input:checked + .checkbox {
+  border-color: #483df6;
+
+  background: #483df6;
+}
+
+.checkboxRow:hover .checkbox {
+  border-color: #483df6;
+}
+
+.checkboxRow:active .checkbox {
+  transform: scale(0.94);
+}
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.checkboxText {
+  flex: 1;
+}
+
+.checkboxText a {
+  color: #483df6;
+
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.checkboxText a:hover {
+  text-decoration: underline;
+}

@@ -12,21 +12,21 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
+  ShieldCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 import styles from "./Agency.module.css";
 import { registerUser } from "@/utils/api";
 
 function formatPhone(value) {
-  // Оставляем только цифры
   let digits = value.replace(/\D/g, "");
 
-  // Убираем +996, если пользователь вставил его сам
   if (digits.startsWith("996")) {
     digits = digits.slice(3);
   }
 
-  // Максимум 9 цифр после +996
   digits = digits.slice(0, 9);
 
   let formatted = "+996";
@@ -65,32 +65,52 @@ export default function Agency() {
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const handlePhoneChange = (value) => {
-    setPhone(formatPhone(value));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
 
+    /*
+    |--------------------------------------------------------------------------
+    | POLICY VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
+    if (!privacyAccepted || !termsAccepted) {
+      setError(
+        "Необходимо принять Политику конфиденциальности и Пользовательское соглашение.",
+      );
+
+      return;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PHONE VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
     const normalizedPhone = normalizePhone(phone);
     const phoneDigits = normalizedPhone.replace(/\D/g, "");
 
-    // +996 + 9 цифр
     if (phoneDigits.length !== 12) {
       setError("Введите полный номер телефона в формате +996 XXX XXX XXX");
+
       return;
     }
 
     setLoading(true);
 
     try {
-      const data = await registerUser({
+      await registerUser({
         accountType: "agency",
         companyName,
         directorName,
@@ -102,10 +122,7 @@ export default function Agency() {
         password,
       });
 
-      if (data.token) {
-        localStorage.setItem("uytap_token", data.token);
-        localStorage.setItem("uytap_user", JSON.stringify(data.user));
-      }
+      // token и user сохраняются внутри registerUser()
 
       setSuccess(true);
 
@@ -121,6 +138,8 @@ export default function Agency() {
 
   return (
     <div className={styles.wrapper}>
+      {/* HEADER */}
+
       <div className={styles.header}>
         <div className={styles.logo}>
           <Building2 />
@@ -132,7 +151,11 @@ export default function Agency() {
         </div>
       </div>
 
+      {/* FORM */}
+
       <form className={styles.form} onSubmit={handleSubmit}>
+        {/* COMPANY NAME */}
+
         <div className={styles.inputBox}>
           <Building2 />
 
@@ -143,6 +166,8 @@ export default function Agency() {
             required
           />
         </div>
+
+        {/* DIRECTOR */}
 
         <div className={styles.inputBox}>
           <User />
@@ -155,6 +180,8 @@ export default function Agency() {
           />
         </div>
 
+        {/* PHONE */}
+
         <div className={styles.inputBox}>
           <Phone />
 
@@ -163,10 +190,12 @@ export default function Agency() {
             type="tel"
             inputMode="numeric"
             value={phone}
-            onChange={(e) => handlePhoneChange(e.target.value)}
+            onChange={(e) => setPhone(formatPhone(e.target.value))}
             required
           />
         </div>
+
+        {/* EMAIL */}
 
         <div className={styles.inputBox}>
           <Mail />
@@ -180,6 +209,8 @@ export default function Agency() {
           />
         </div>
 
+        {/* OFFICE ADDRESS */}
+
         <div className={styles.inputBox}>
           <MapPin />
 
@@ -189,6 +220,8 @@ export default function Agency() {
             onChange={(e) => setOfficeAddress(e.target.value)}
           />
         </div>
+
+        {/* INN */}
 
         <div className={styles.inputBox}>
           <FileText />
@@ -200,6 +233,8 @@ export default function Agency() {
             required
           />
         </div>
+
+        {/* PASSWORD */}
 
         <div className={styles.inputBox}>
           <Lock />
@@ -215,11 +250,14 @@ export default function Agency() {
           <button
             type="button"
             className={styles.eye}
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
         </div>
+
+        {/* ABOUT */}
 
         <textarea
           className={styles.textarea}
@@ -227,6 +265,69 @@ export default function Agency() {
           value={about}
           onChange={(e) => setAbout(e.target.value)}
         />
+
+        {/* POLICIES */}
+
+        <div className={styles.policyBlock}>
+          <div className={styles.policyHeader}>
+            <ShieldCheck />
+
+            <span>
+              Перед созданием профиля ознакомьтесь с условиями использования
+              UyTap
+            </span>
+          </div>
+
+          {/* PRIVACY */}
+
+          <div className={styles.checkboxRow}>
+            <input
+              id="agency-privacy"
+              type="checkbox"
+              checked={privacyAccepted}
+              onChange={(e) => setPrivacyAccepted(e.target.checked)}
+            />
+
+            <label htmlFor="agency-privacy" className={styles.checkbox}>
+              {privacyAccepted && <CheckCircle2 />}
+            </label>
+
+            <span className={styles.checkboxText}>
+              Я принимаю{" "}
+              <Link
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Политику конфиденциальности
+              </Link>
+            </span>
+          </div>
+
+          {/* TERMS */}
+
+          <div className={styles.checkboxRow}>
+            <input
+              id="agency-terms"
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+            />
+
+            <label htmlFor="agency-terms" className={styles.checkbox}>
+              {termsAccepted && <CheckCircle2 />}
+            </label>
+
+            <span className={styles.checkboxText}>
+              Я принимаю{" "}
+              <Link href="/terms" target="_blank" rel="noopener noreferrer">
+                Пользовательское соглашение
+              </Link>
+            </span>
+          </div>
+        </div>
+
+        {/* ERROR */}
 
         {error && (
           <div
@@ -238,6 +339,8 @@ export default function Agency() {
             ⚠️ {error}
           </div>
         )}
+
+        {/* SUCCESS */}
 
         {success && (
           <div
@@ -254,7 +357,13 @@ export default function Agency() {
           </div>
         )}
 
-        <button className={styles.submit} type="submit" disabled={loading}>
+        {/* SUBMIT */}
+
+        <button
+          className={styles.submit}
+          type="submit"
+          disabled={loading || !privacyAccepted || !termsAccepted}
+        >
           {loading ? "Создание профиля..." : "Создать профиль"}
         </button>
       </form>

@@ -1,23 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { User, Phone, Mail, Lock, CheckCircle2 } from "lucide-react";
+import {
+  User,
+  Phone,
+  Mail,
+  Lock,
+  CheckCircle2,
+  ShieldCheck,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 import styles from "./PersonalForm.module.css";
 import InputField from "../inputField/InputField";
 import { registerUser } from "@/utils/api";
 
 function formatPhone(value) {
-  // Оставляем только цифры
   let digits = value.replace(/\D/g, "");
 
-  // Если пользователь вставил +996 — убираем код страны,
-  // потому что он добавляется автоматически
   if (digits.startsWith("996")) {
     digits = digits.slice(3);
   }
 
-  // Максимум 9 цифр после +996
   digits = digits.slice(0, 9);
 
   let formatted = "+996";
@@ -40,7 +45,6 @@ function formatPhone(value) {
 function normalizePhone(phone) {
   const digits = phone.replace(/\D/g, "");
 
-  // На backend отправляем +996XXXXXXXXX
   return `+996${digits.slice(-9)}`;
 }
 
@@ -53,33 +57,51 @@ export default function PersonalForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const handlePhoneChange = (value) => {
-    setPhone(formatPhone(value));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
 
-    const normalizedPhone = normalizePhone(phone);
+    /*
+    |--------------------------------------------------------------------------
+    | POLICY VALIDATION
+    |--------------------------------------------------------------------------
+    */
 
-    // Проверяем, что введены все 9 цифр
+    if (!privacyAccepted || !termsAccepted) {
+      setError(
+        "Необходимо принять Политику конфиденциальности и Пользовательское соглашение.",
+      );
+
+      return;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PHONE VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
+    const normalizedPhone = normalizePhone(phone);
     const phoneDigits = normalizedPhone.replace(/\D/g, "");
 
     if (phoneDigits.length !== 12) {
       setError("Введите полный номер телефона в формате +996 XXX XXX XXX");
+
       return;
     }
 
     setLoading(true);
 
     try {
-      const data = await registerUser({
+      await registerUser({
         accountType: "personal",
         firstName,
         lastName,
@@ -88,10 +110,7 @@ export default function PersonalForm() {
         password,
       });
 
-      if (data.token) {
-        localStorage.setItem("uytap_token", data.token);
-        localStorage.setItem("uytap_user", JSON.stringify(data.user));
-      }
+      // token и user сохраняются внутри registerUser()
 
       setSuccess(true);
 
@@ -107,12 +126,16 @@ export default function PersonalForm() {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      {/* FIRST NAME */}
+
       <InputField
         icon={User}
         placeholder="Имя"
         value={firstName}
         setValue={setFirstName}
       />
+
+      {/* LAST NAME */}
 
       <InputField
         icon={User}
@@ -121,13 +144,17 @@ export default function PersonalForm() {
         setValue={setLastName}
       />
 
+      {/* PHONE */}
+
       <InputField
         icon={Phone}
         placeholder="+996 000 000 000"
         value={phone}
-        setValue={handlePhoneChange}
+        setValue={(value) => setPhone(formatPhone(value))}
         type="tel"
       />
+
+      {/* EMAIL */}
 
       <InputField
         icon={Mail}
@@ -137,6 +164,8 @@ export default function PersonalForm() {
         setValue={setEmail}
       />
 
+      {/* PASSWORD */}
+
       <InputField
         icon={Lock}
         placeholder="Пароль"
@@ -144,6 +173,69 @@ export default function PersonalForm() {
         value={password}
         setValue={setPassword}
       />
+
+      {/* POLICIES */}
+
+      <div className={styles.policyBlock}>
+        <div className={styles.policyHeader}>
+          <ShieldCheck />
+
+          <span>
+            Перед созданием аккаунта ознакомьтесь с условиями использования
+            UyTap
+          </span>
+        </div>
+
+        {/* PRIVACY POLICY */}
+
+        <div className={styles.checkboxRow}>
+          <input
+            id="personal-privacy"
+            type="checkbox"
+            checked={privacyAccepted}
+            onChange={(e) => setPrivacyAccepted(e.target.checked)}
+          />
+
+          <label htmlFor="personal-privacy" className={styles.checkbox}>
+            {privacyAccepted && <CheckCircle2 />}
+          </label>
+
+          <span className={styles.checkboxText}>
+            Я принимаю{" "}
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Политику конфиденциальности
+            </Link>
+          </span>
+        </div>
+
+        {/* TERMS */}
+
+        <div className={styles.checkboxRow}>
+          <input
+            id="personal-terms"
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+          />
+
+          <label htmlFor="personal-terms" className={styles.checkbox}>
+            {termsAccepted && <CheckCircle2 />}
+          </label>
+
+          <span className={styles.checkboxText}>
+            Я принимаю{" "}
+            <Link href="/terms" target="_blank" rel="noopener noreferrer">
+              Пользовательское соглашение
+            </Link>
+          </span>
+        </div>
+      </div>
+
+      {/* ERROR */}
 
       {error && (
         <div
@@ -156,6 +248,8 @@ export default function PersonalForm() {
           ⚠️ {error}
         </div>
       )}
+
+      {/* SUCCESS */}
 
       {success && (
         <div
@@ -172,7 +266,13 @@ export default function PersonalForm() {
         </div>
       )}
 
-      <button className={styles.submit} type="submit" disabled={loading}>
+      {/* SUBMIT */}
+
+      <button
+        className={styles.submit}
+        type="submit"
+        disabled={loading || !privacyAccepted || !termsAccepted}
+      >
         {loading ? "Создание аккаунта..." : "Создать аккаунт"}
       </button>
     </form>
