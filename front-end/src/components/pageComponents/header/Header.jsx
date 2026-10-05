@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getMe } from "@/utils/api";
 
 import {
   ChevronDown,
@@ -24,6 +23,8 @@ import {
 
 import { useLanguage } from "@/context/LanguageContext";
 
+import { getToken, logout } from "@/utils/auth";
+
 import styles from "./Header.module.css";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher/LanguageSwitcher";
 
@@ -36,38 +37,50 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
+  /*
+  |--------------------------------------------------------------------------
+  | AUTH
+  |--------------------------------------------------------------------------
+  */
+
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem("uytap_token");
-        const storedUser = localStorage.getItem("uytap_user");
+    const checkAuth = () => {
+      const token = getToken();
 
-        if (!token || !storedUser) {
-          setIsAuth(false);
-          return;
-        }
-
-        try {
-          const user = await getMe(token);
-          setIsAuth(Boolean(user));
-        } catch {
-          setIsAuth(true);
-        }
-      } catch {
-        setIsAuth(false);
-      }
+      setIsAuth(Boolean(token));
     };
 
+    /*
+     * Первичная проверка.
+     * Никакого getMe() здесь нет.
+     * Поэтому Header определяется мгновенно.
+     */
     checkAuth();
 
+    /*
+     * Login / Register / Logout
+     */
+    window.addEventListener("uytap:auth-changed", checkAuth);
+
+    /*
+     * Изменение localStorage из другой вкладки
+     */
     window.addEventListener("storage", checkAuth);
 
-    const handleUserUpdated = () => {
-      checkAuth();
+    return () => {
+      window.removeEventListener("uytap:auth-changed", checkAuth);
+
+      window.removeEventListener("storage", checkAuth);
     };
+  }, []);
 
-    window.addEventListener("uytap:user-updated", handleUserUpdated);
+  /*
+  |--------------------------------------------------------------------------
+  | SCROLL
+  |--------------------------------------------------------------------------
+  */
 
+  useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       setOpenMenu(null);
@@ -77,10 +90,14 @@ export default function Header() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("storage", checkAuth);
-      window.removeEventListener("uytap:user-updated", handleUserUpdated);
     };
   }, []);
+
+  /*
+  |--------------------------------------------------------------------------
+  | MOBILE BODY LOCK
+  |--------------------------------------------------------------------------
+  */
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -96,6 +113,12 @@ export default function Header() {
     };
   }, [mobileMenuOpen]);
 
+  /*
+  |--------------------------------------------------------------------------
+  | MENU
+  |--------------------------------------------------------------------------
+  */
+
   function toggleMenu(menu) {
     setOpenMenu(openMenu === menu ? null : menu);
   }
@@ -105,10 +128,23 @@ export default function Header() {
     setOpenMenu(null);
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | PROTECTED ROUTES
+  |--------------------------------------------------------------------------
+  */
+
   function protectedRoute(path) {
     closeMobileMenu();
 
-    if (!isAuth) {
+    /*
+     * Токен — единственный источник истины.
+     */
+    const token = getToken();
+
+    if (!token) {
+      setIsAuth(false);
+
       router.push("/auth-required");
       return;
     }
@@ -116,15 +152,57 @@ export default function Header() {
     router.push(path);
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | NORMAL NAVIGATION
+  |--------------------------------------------------------------------------
+  */
+
   function handleNavClick(path) {
     closeMobileMenu();
+
     router.push(path);
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | LOGOUT
+  |--------------------------------------------------------------------------
+  */
+
+  function handleLogout() {
+    /*
+     * Удаляет:
+     * - uytap_token
+     * - uytap_user
+     * - доступные JS cookies
+     *
+     * И отправляет uytap:auth-changed.
+     */
+    logout();
+
+    /*
+     * Мгновенно меняем Header,
+     * не ожидая никаких запросов.
+     */
+    setIsAuth(false);
+
+    closeMobileMenu();
+
+    /*
+     * После выхода пользователь не должен
+     * оставаться на защищенной странице.
+     */
+    router.replace("/auth-required");
   }
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.container}>
-        {/* LOGO */}
+        {/* =====================================================
+            LOGO
+        ====================================================== */}
+
         <Link href="/" className={styles.logo} onClick={closeMobileMenu}>
           <Image
             src={scrolled ? "/assets/logo.png" : "/assets/logo2.png"}
@@ -141,6 +219,7 @@ export default function Header() {
 
         <nav className={styles.nav}>
           {/* LOCATIONS */}
+
           <div className={styles.dropdown}>
             <button
               type="button"
@@ -148,7 +227,9 @@ export default function Header() {
               aria-expanded={openMenu === "location"}
             >
               <MapPin />
+
               {t("header.locations")}
+
               <ChevronDown />
             </button>
 
@@ -166,6 +247,7 @@ export default function Header() {
           </div>
 
           {/* NEW BUILDINGS */}
+
           <div className={styles.dropdown}>
             <button
               type="button"
@@ -173,7 +255,9 @@ export default function Header() {
               aria-expanded={openMenu === "new"}
             >
               <Building2 />
+
               {t("header.newBuildings")}
+
               <ChevronDown />
             </button>
 
@@ -191,6 +275,7 @@ export default function Header() {
           </div>
 
           {/* MORE */}
+
           <div className={styles.dropdown}>
             <button
               type="button"
@@ -198,7 +283,9 @@ export default function Header() {
               aria-expanded={openMenu === "more"}
             >
               <Users />
+
               {t("header.more")}
+
               <ChevronDown />
             </button>
 
@@ -220,12 +307,14 @@ export default function Header() {
           </div>
 
           {/* FAVORITES */}
+
           <button
             type="button"
             className={styles.favorite}
             onClick={() => protectedRoute("/favorites")}
           >
             <Heart />
+
             {t("header.favorites")}
           </button>
         </nav>
@@ -245,6 +334,7 @@ export default function Header() {
             onClick={() => protectedRoute("/add-product")}
           >
             <PlusCircle />
+
             <span>{t("header.addListing")}</span>
           </button>
 
@@ -254,22 +344,26 @@ export default function Header() {
             onClick={() => protectedRoute("/add-product")}
           >
             <Flame />
+
             <span>{t("header.freeListing")}</span>
           </button>
 
           {isAuth ? (
             <Link href="/profile" className={styles.login}>
               <User />
+
               <span>{t("header.profile")}</span>
             </Link>
           ) : (
             <Link href="/login" className={styles.login}>
               <LogIn />
+
               <span>{t("header.login")}</span>
             </Link>
           )}
 
           {/* BURGER */}
+
           <button
             type="button"
             className={styles.burgerButton}
@@ -308,6 +402,7 @@ export default function Header() {
         aria-hidden={!mobileMenuOpen}
       >
         {/* SIDEBAR HEADER */}
+
         <div className={styles.sidebarHeader}>
           <Link
             href="/"
@@ -362,6 +457,7 @@ export default function Header() {
 
               <div className={styles.languageLabel}>
                 <strong>Language</strong>
+
                 <small>Выберите язык</small>
               </div>
 
@@ -380,11 +476,13 @@ export default function Header() {
 
             <button type="button" onClick={() => handleNavClick("/issyk-kul")}>
               <MapPin />
+
               <span>Иссык-Куль</span>
             </button>
 
             <button type="button" onClick={() => handleNavClick("/search-map")}>
               <MapPin />
+
               <span>{t("header.searchOnMap")}</span>
             </button>
           </div>
@@ -400,11 +498,13 @@ export default function Header() {
 
             <button type="button" onClick={() => handleNavClick("/complexes")}>
               <Building2 />
+
               <span>{t("header.residentialComplexes")}</span>
             </button>
 
             <button type="button" onClick={() => handleNavClick("/developers")}>
               <Building2 />
+
               <span>{t("header.developers")}</span>
             </button>
           </div>
@@ -421,21 +521,25 @@ export default function Header() {
               onClick={() => handleNavClick("/all-products")}
             >
               <Users />
+
               <span>{t("header.allListings")}</span>
             </button>
 
             <button type="button" onClick={() => handleNavClick("/pricing")}>
               <Users />
+
               <span>{t("header.pricing")}</span>
             </button>
 
             <button type="button" onClick={() => handleNavClick("/lawyers")}>
               <Users />
+
               <span>{t("header.lawyers")}</span>
             </button>
 
             <button type="button" onClick={() => protectedRoute("/favorites")}>
               <Heart />
+
               <span>{t("header.favorites")}</span>
             </button>
           </div>
@@ -451,6 +555,7 @@ export default function Header() {
               onClick={() => protectedRoute("/add-product")}
             >
               <PlusCircle />
+
               <span>{t("header.addListing")}</span>
             </button>
 
@@ -460,8 +565,21 @@ export default function Header() {
               onClick={() => protectedRoute("/add-product")}
             >
               <Flame />
+
               <span>{t("header.freeListing")}</span>
             </button>
+
+            {isAuth && (
+              <button
+                type="button"
+                className={styles.sidebarLogout}
+                onClick={handleLogout}
+              >
+                <LogIn />
+
+                <span>Выйти</span>
+              </button>
+            )}
           </div>
         </div>
       </aside>

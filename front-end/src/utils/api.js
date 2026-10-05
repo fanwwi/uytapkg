@@ -1,6 +1,8 @@
 const API_URL = "/api";
 
-// 1. Регистрация
+import { saveAuth } from "@/utils/auth";
+
+// 1. register
 export async function registerUser(formData) {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -11,6 +13,7 @@ export async function registerUser(formData) {
   });
 
   let data = {};
+
   try {
     data = await response.json();
   } catch {
@@ -21,13 +24,29 @@ export async function registerUser(formData) {
     const errorMsg = Array.isArray(data.errors)
       ? data.errors.join(", ")
       : data.message || "Ошибка при регистрации";
+
     throw new Error(errorMsg);
+  }
+
+  const token =
+    data.token ||
+    data.accessToken ||
+    data.data?.token ||
+    data.data?.accessToken;
+
+  const user = data.user || data.data?.user || data.data;
+
+  if (token) {
+    saveAuth({
+      token,
+      user,
+    });
   }
 
   return data;
 }
 
-// 2. Вход по Email / Телефону
+// 1. login
 export async function loginUser(credentials) {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -37,10 +56,31 @@ export async function loginUser(credentials) {
     body: JSON.stringify(credentials),
   });
 
-  const data = await response.json();
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
 
   if (!response.ok || !data.success) {
     throw new Error(data.message || "Ошибка при попытке входа");
+  }
+
+  const token =
+    data.token ||
+    data.accessToken ||
+    data.data?.token ||
+    data.data?.accessToken;
+
+  const user = data.user || data.data?.user || data.data;
+
+  if (token) {
+    saveAuth({
+      token,
+      user,
+    });
   }
 
   return data;
@@ -113,7 +153,9 @@ export async function createListing(token, payload) {
 
   if (!response.ok || !data.success) {
     if (data.errors && Array.isArray(data.errors)) {
-      throw new Error(`${data.message || "Ошибка валидации данных"}: ${data.errors.join(", ")}`);
+      throw new Error(
+        `${data.message || "Ошибка валидации данных"}: ${data.errors.join(", ")}`,
+      );
     }
     throw new Error(data.message || "Ошибка создания объявления");
   }
@@ -468,7 +510,10 @@ export async function createPayment(token, { tariffId, months }) {
   return data.data;
 }
 
-export async function createPromotionPayment(token, { listingId, serviceType, days }) {
+export async function createPromotionPayment(
+  token,
+  { listingId, serviceType, days },
+) {
   const response = await fetch(`${API_URL}/payments/promotion/create`, {
     method: "POST",
     headers: {
@@ -490,15 +535,22 @@ export async function createPromotionPayment(token, { listingId, serviceType, da
 // Бесплатное поднятие VIP/TOP за счёт лимита тарифа — пробуем ДО того,
 // как вести пользователя на оплату. { granted: false } — у пользователя
 // нет тарифа/лимит исчерпан, нужно продолжить обычной платной покупкой.
-export async function promoteListingWithTariff(token, listingId, { serviceType, days }) {
-  const response = await fetch(`${API_URL}/listings/${listingId}/promote-with-tariff`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+export async function promoteListingWithTariff(
+  token,
+  listingId,
+  { serviceType, days },
+) {
+  const response = await fetch(
+    `${API_URL}/listings/${listingId}/promote-with-tariff`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ serviceType, days }),
     },
-    body: JSON.stringify({ serviceType, days }),
-  });
+  );
 
   const data = await response.json();
 
@@ -635,15 +687,22 @@ export async function getDefaultTariffs(token) {
   return data.data;
 }
 
-export async function updateDefaultTariffPeriod(token, id, { startDate, endDate }) {
-  const response = await fetch(`${API_URL}/admin/tariffs/default/${id}/period`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+export async function updateDefaultTariffPeriod(
+  token,
+  id,
+  { startDate, endDate },
+) {
+  const response = await fetch(
+    `${API_URL}/admin/tariffs/default/${id}/period`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ startDate, endDate }),
     },
-    body: JSON.stringify({ startDate, endDate }),
-  });
+  );
 
   const data = await response.json();
 
@@ -655,12 +714,15 @@ export async function updateDefaultTariffPeriod(token, id, { startDate, endDate 
 }
 
 export async function toggleDefaultTariff(token, id) {
-  const response = await fetch(`${API_URL}/admin/tariffs/default/${id}/toggle`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await fetch(
+    `${API_URL}/admin/tariffs/default/${id}/toggle`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
 
   const data = await response.json();
 
@@ -727,12 +789,15 @@ export async function updateIndividualTariff(token, id, payload) {
 }
 
 export async function toggleIndividualTariff(token, id) {
-  const response = await fetch(`${API_URL}/admin/tariffs/individual/${id}/toggle`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await fetch(
+    `${API_URL}/admin/tariffs/individual/${id}/toggle`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
 
   const data = await response.json();
 
@@ -883,7 +948,12 @@ export async function getAdminDevelopers(token) {
   return data.data;
 }
 
-export async function verifyDeveloperAdmin(token, id, isVerified, rejectionReason = "") {
+export async function verifyDeveloperAdmin(
+  token,
+  id,
+  isVerified,
+  rejectionReason = "",
+) {
   const response = await fetch(`${API_URL}/admin/developers/${id}/verify`, {
     method: "PUT",
     headers: {
@@ -914,12 +984,15 @@ export async function getAdminInstagramRequests(token) {
 }
 
 export async function completeInstagramRequest(token, id) {
-  const response = await fetch(`${API_URL}/admin/instagram-requests/${id}/complete`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await fetch(
+    `${API_URL}/admin/instagram-requests/${id}/complete`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   const data = await response.json();
   if (!response.ok || !data.success) {
     throw new Error(data.message || "Ошибка при обновлении заявки");
