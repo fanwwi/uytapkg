@@ -2,10 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 function MapLoading() {
   const { t } = useLanguage();
 
+  useDocumentTitle("Поиск недвижимости на интерактивной карте Бишкека | UyTap");
   return (
     <div
       style={{
@@ -23,10 +25,13 @@ function MapLoading() {
   );
 }
 
-const SearchMapClient = dynamic(() => import("./searchMapClient/SearchMapClient"), {
-  ssr: false,
-  loading: () => <MapLoading />,
-});
+const SearchMapClient = dynamic(
+  () => import("./searchMapClient/SearchMapClient"),
+  {
+    ssr: false,
+    loading: () => <MapLoading />,
+  },
+);
 
 export default function SearchMapPage() {
   return <SearchMapClient />;

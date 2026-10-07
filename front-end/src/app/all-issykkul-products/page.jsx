@@ -107,6 +107,11 @@ const normalizeDeal = (value) => {
 };
 
 export default function IssykKulProducts() {
+  useEffect(() => {
+    document.title =
+      "Недвижимость на Иссык-Куле — Курортное жилье и дома | UyTap";
+  }, []);
+  
   const router = useRouter();
   const { t } = useLanguage();
 

@@ -12,10 +12,12 @@ import styles from "./Developers.module.css";
 import Footer from "@/components/pageComponents/footer/Footer";
 import Header from "@/components/pageComponents/header/Header";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const DEFAULT_LOGO = "/assets/DeveloperImage.png";
 
 export default function Developers() {
+  useDocumentTitle("Строительные компании и застройщики Бишкека | UyTap");
   const router = useRouter();
   const { t } = useLanguage();
 

@@ -4,8 +4,10 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 import styles from "./PrivacyPolicy.module.css";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function PrivacyPolicyPage() {
+  useDocumentTitle("Политика конфиденциальности и защиты данных | UyTap");
   return (
     <main className={styles.page}>
       <div className={styles.container}>

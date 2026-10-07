@@ -23,6 +23,7 @@ import styles from "./Safety.module.css";
 import Header from "@/components/pageComponents/header/Header";
 import Footer from "@/components/pageComponents/footer/Footer";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const scams = [
   {
@@ -125,6 +126,9 @@ const steps = [
 ];
 
 export default function Safety() {
+  useDocumentTitle(
+    "Безопасность сделок с недвижимостью — Защита от мошенников | UyTap",
+  );
   const router = useRouter();
   const { t } = useLanguage();
 

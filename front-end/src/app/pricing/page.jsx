@@ -27,6 +27,7 @@ import Footer from "@/components/pageComponents/footer/Footer";
 
 import { getPricing, getMe } from "../../utils/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const DEFAULT_PRICING = {
   tariffs: {
@@ -619,6 +620,7 @@ export default function Pricing() {
     router.push(`/payment?${params.toString()}`);
   };
 
+  useDocumentTitle("Тарифы и стоимость размещения объявлений | UyTap");
   /* =========================================================
      RENDER
   ========================================================= */

@@ -14,12 +14,17 @@ import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 import { getComplexes } from "@/utils/api";
 import { mapComplexData } from "@/utils/mapComplexData";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const DEFAULT_DEVELOPER_LOGO = "/assets/DeveloperImage.png";
 
 const DEFAULT_COMPLEX_IMAGE = "/assets/ComplexImage.png";
 
 export default function Complexes() {
+  useDocumentTitle(
+    "Жилые комплексы и новостройки Бишкека — Каталог ЖК | UyTap",
+  );
+
   const router = useRouter();
   const { t } = useLanguage();
 

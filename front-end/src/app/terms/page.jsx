@@ -4,8 +4,10 @@ import Link from "next/link";
 import { ArrowLeft, FileText } from "lucide-react";
 
 import styles from "./Terms.module.css";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function TermsPage() {
+  useDocumentTitle("Условия использования сервиса и правила платформы | UyTap");
   return (
     <main className={styles.page}>
       <div className={styles.container}>

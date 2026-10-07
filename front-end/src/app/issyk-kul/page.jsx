@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import AdBanner from "@/components/pageComponents/addBanner/AdBanner";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const propertyTypes = [
   {
@@ -59,6 +60,9 @@ const benefits = [
 ];
 
 export default function IssykKul() {
+  useDocumentTitle(
+    "Недвижимость на Иссык-Куле — Курортное жилье и дома | UyTap",
+  );
   const router = useRouter();
   const { t } = useLanguage();
 

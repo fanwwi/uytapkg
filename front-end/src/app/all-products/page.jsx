@@ -463,6 +463,11 @@ function matchesArrayFilter(selected, itemValue) {
 ========================================================= */
 
 export default function AllProducts() {
+  useEffect(() => {
+    document.title =
+      "Все объявления по недвижимости в Кыргызстане — Купить и снять | UyTap";
+  }, []);
+  
   const { t } = useLanguage();
 
   const router = useRouter();

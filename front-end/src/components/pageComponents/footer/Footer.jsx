@@ -14,38 +14,25 @@ import {
   Smartphone,
   Laptop,
   ShieldCheck,
+  FileText, // Заменили дублирующееся сердце для «Моих объявлений»
 } from "lucide-react";
 
 import Link from "next/link";
+import Image from "next/image"; // Импортируем оптимизированный компонент Next.js
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useLanguage } from "@/context/LanguageContext";
 import { getMe } from "@/utils/api";
+import logoImg from "../../../../public/assets/logo.png"; // Убедитесь, что путь к логотипу верный
 
 import styles from "./Footer.module.css";
 
 const categories = [
-  {
-    key: "apartments",
-    icon: Building2,
-    value: "Квартира",
-  },
-  {
-    key: "houses",
-    icon: Home,
-    value: "Дом",
-  },
-  {
-    key: "land",
-    icon: Trees,
-    value: "Участок",
-  },
-  {
-    key: "parking",
-    icon: Car,
-    value: "Паркинг/гараж",
-  },
+  { key: "apartments", icon: Building2, value: "Квартира" },
+  { key: "houses", icon: Home, value: "Дом" },
+  { key: "land", icon: Trees, value: "Участок" },
+  { key: "parking", icon: Car, value: "Паркинг/гараж" },
 ];
 
 export default function Footer() {
@@ -92,7 +79,6 @@ export default function Footer() {
       router.push("/auth-required");
       return;
     }
-
     router.push(path);
   };
 
@@ -100,48 +86,45 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         {/* БРЕНД */}
-
         <div className={styles.brand}>
           <Link href="/" className={styles.logo}>
-            <img src="/assets/logo.png" alt="UyTap" />
+            {/* Используем next/image для избежания скачков макета (CLS) и быстрой загрузки */}
+            <Image src={logoImg} alt="UyTap" width={140} height={40} priority />
           </Link>
 
           <p>{t("footer.brand.description")}</p>
 
           <div className={styles.contacts}>
             <div>
-              <Phone />
+              <Phone aria-hidden="true" />
               <span>+996 555 000 000</span>
             </div>
 
             <div>
-              <Mail />
+              <Mail aria-hidden="true" />
               <span>uytap.official@gmail.com</span>
             </div>
 
             <div>
-              <MapPin />
+              <MapPin aria-hidden="true" />
               <span>{t("footer.location")}</span>
             </div>
           </div>
         </div>
 
         {/* КАТЕГОРИИ */}
-
         <div className={styles.column}>
-          <h3>{t("footer.categories.title")}</h3>
+          {/* Исправлено с h3 на h2 (или убедитесь, что иерархия заголовков соблюдена) */}
+          <h2 className={styles.columnTitle}>{t("footer.categories.title")}</h2>
 
           {categories.map((item) => {
             const Icon = item.icon;
-
             return (
               <Link
                 key={item.value}
-                href={`/all-products?category=${encodeURIComponent(
-                  item.value,
-                )}`}
+                href={`/all-products?category=${encodeURIComponent(item.value)}`}
               >
-                <Icon />
+                <Icon aria-hidden="true" />
                 {t(`footer.categories.items.${item.key}`)}
               </Link>
             );
@@ -152,28 +135,27 @@ export default function Footer() {
             className={styles.linkButton}
             onClick={() => protectedRoute("/favorites")}
           >
-            <Heart />
+            <Heart aria-hidden="true" />
             {t("footer.categories.favorites")}
           </button>
         </div>
 
         {/* СЕРВИС */}
-
         <div className={styles.column}>
-          <h3>{t("footer.service.title")}</h3>
+          <h2 className={styles.columnTitle}>{t("footer.service.title")}</h2>
 
           <Link href="/about">
-            <Laptop />
+            <Laptop aria-hidden="true" />
             {t("footer.service.about")}
           </Link>
 
           <Link href="/safety">
-            <ShieldCheck />
+            <ShieldCheck aria-hidden="true" />
             {t("footer.service.safety")}
           </Link>
 
           <Link href="/all-products">
-            <Search />
+            <Search aria-hidden="true" />
             {t("footer.service.search")}
           </Link>
 
@@ -182,7 +164,7 @@ export default function Footer() {
             className={styles.linkButton}
             onClick={() => protectedRoute("/profile")}
           >
-            <UserRound />
+            <UserRound aria-hidden="true" />
             {t("footer.service.profile")}
           </button>
 
@@ -191,24 +173,22 @@ export default function Footer() {
             className={styles.linkButton}
             onClick={() => protectedRoute("/profile/ads")}
           >
-            <Heart />
+            {/* Заменили повторное сердце на более подходящую иконку списка */}
+            <FileText aria-hidden="true" />
             {t("footer.service.myListings")}
           </button>
         </div>
 
         {/* ПРИЛОЖЕНИЕ */}
-
         <div className={styles.column}>
-          <h3>{t("footer.app.title")}</h3>
+          <h2 className={styles.columnTitle}>{t("footer.app.title")}</h2>
 
           <div className={styles.appBox}>
-            <Smartphone />
-
+            <Smartphone aria-hidden="true" />
             <div>
               <strong>
                 <span>UyTap</span> {t("footer.app.onYourPhone")}
               </strong>
-
               <p>{t("footer.app.description")}</p>
             </div>
           </div>
@@ -217,9 +197,11 @@ export default function Footer() {
             href="#"
             className={styles.playStore}
             onClick={(e) => e.preventDefault()}
+            aria-label="Скачать приложение в Google Play"
           >
-            <div className={styles.playIcon}>▶</div>
-
+            <div className={styles.playIcon} aria-hidden="true">
+              ▶
+            </div>
             <div>
               <span>{t("footer.app.download")}</span>
               <strong>Google Play</strong>
@@ -229,7 +211,6 @@ export default function Footer() {
       </div>
 
       {/* BOTTOM */}
-
       <div className={styles.bottom}>
         © {new Date().getFullYear()} UyTap. {t("footer.copyright")}
       </div>
