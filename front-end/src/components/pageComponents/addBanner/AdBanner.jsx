@@ -19,8 +19,6 @@ export default function AdBanner({ page = null }) {
       .then((data) => {
         if (cancelled) return;
 
-        // Если page передан — показываем только баннеры этой страницы.
-        // Если page не передан — показываем все баннеры.
         const filteredBanners = page
           ? data.filter((banner) => banner.page === page)
           : data;
@@ -42,7 +40,7 @@ export default function AdBanner({ page = null }) {
   }, [page]);
 
   useEffect(() => {
-    if (banners.length < 2) return undefined;
+    if (banners.length < 2) return;
 
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % banners.length);
@@ -61,6 +59,11 @@ export default function AdBanner({ page = null }) {
       src={banner.imageUrl}
       alt={banner.title || "Реклама"}
       className={styles.image}
+      loading="lazy"
+      decoding="async"
+      fetchPriority="low"
+      width="900"
+      height="300"
       style={{
         objectPosition: `${banner.imagePositionX ?? 50}% ${
           banner.imagePositionY ?? 50
