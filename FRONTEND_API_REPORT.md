@@ -390,6 +390,3 @@ export async function deleteAvatar(token) {
 
 Если `POST /upload` возвращает 500 — проверить эти настройки у бэкенд-разработчика.
 
----
-
-*Подробная техническая история изменений: [`TECHNICAL_HISTORY.md`](./TECHNICAL_HISTORY.md)*
