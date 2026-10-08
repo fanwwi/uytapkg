@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, CheckCircle2, Mail, RefreshCw } from "lucide-react";
 
 import styles from "./AuthCode.module.css";
+import { verifyEmailOtp, resendEmailOtp } from "@/utils/api";
 
-export default function AuthCode() {
+function AuthCodeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -23,10 +25,29 @@ export default function AuthCode() {
    * Например:
    * localStorage.setItem("register_email", email)
    */
-  const email =
-    typeof window !== "undefined"
-      ? localStorage.getItem("register_email")
-      : null;
+  const [email, setEmail] = useState(null);
+  const initRef = useRef(false);
+  const reason = searchParams.get("reason");
+  const queryEmail = searchParams.get("email");
+
+  useEffect(() => {
+    const value = (queryEmail || localStorage.getItem("register_email") || "")
+      .trim()
+      .toLowerCase();
+    setEmail(value || null);
+  }, [queryEmail]);
+
+  // Вход с неподтверждённой почтой: код при логине не отправляется,
+  // поэтому запрашиваем его здесь (сервер сам применяет кулдаун/лимиты).
+  useEffect(() => {
+    if (!email || reason !== "login" || initRef.current) return;
+    initRef.current = true;
+    resendEmailOtp(email).catch((err) => {
+      const match = /(\d+)\s*секунд/.exec(err?.message || "");
+      if (match) setTimer(Number(match[1]));
+      else if (err?.status === 429) setError(err.message);
+    });
+  }, [email, reason]);
 
   /* =========================================================
      TIMER
@@ -81,55 +102,13 @@ export default function AuthCode() {
     setError("");
 
     try {
-      /*
-       * TODO:
-       * Здесь подключается твой backend.
-       *
-       * Пример:
-       *
-       * const response = await fetch(
-       *   `${API_URL}/auth/verify-email`,
-       *   {
-       *     method: "POST",
-       *     headers: {
-       *       "Content-Type": "application/json",
-       *     },
-       *     body: JSON.stringify({
-       *       email,
-       *       code,
-       *     }),
-       *   }
-       * );
-       *
-       * const data = await response.json();
-       *
-       * if (!response.ok) {
-       *   throw new Error(
-       *     data.message || "Неверный код"
-       *   );
-       * }
-       */
-
-      /*
-       * ВРЕМЕННАЯ ПРОВЕРКА.
-       *
-       * Замени на реальный ответ backend.
-       */
-      const correctCode = localStorage.getItem("register_code");
-
-      if (correctCode && code === correctCode) {
-        localStorage.removeItem("register_code");
-        localStorage.removeItem("register_email");
-
-        router.push("/success-register");
-        return;
-      }
-
-      setError("Неверный код");
+      await verifyEmailOtp(email, code);
+      localStorage.removeItem("register_email");
+      router.push("/success-register");
+      return;
     } catch (error) {
-      console.error("Ошибка проверки кода:", error);
-
       setError(error?.message || "Неверный код");
+      if (/Превышено|не найден/.test(error?.message || "")) setCode("");
     } finally {
       setIsChecking(false);
     }
@@ -153,29 +132,7 @@ export default function AuthCode() {
     setError("");
 
     try {
-      /*
-       * TODO:
-       * Подключить реальный endpoint.
-       *
-       * Например:
-       *
-       * await fetch(
-       *   `${API_URL}/auth/resend-code`,
-       *   {
-       *     method: "POST",
-       *     headers: {
-       *       "Content-Type": "application/json",
-       *     },
-       *     body: JSON.stringify({
-       *       email,
-       *     }),
-       *   }
-       * );
-       */
-
-      /*
-       * Временная логика.
-       */
+      await resendEmailOtp(email);
       setTimer(60);
       setCode("");
 
@@ -183,9 +140,9 @@ export default function AuthCode() {
         inputRef.current?.focus();
       }, 50);
     } catch (error) {
-      console.error("Ошибка повторной отправки:", error);
-
-      setError("Не удалось отправить код");
+      const match = /(\d+)\s*секунд/.exec(error?.message || "");
+      if (match) setTimer(Number(match[1]));
+      setError(error?.message || "Не удалось отправить код");
     } finally {
       setIsResending(false);
     }
@@ -230,7 +187,11 @@ export default function AuthCode() {
             <span> почту</span>
           </h1>
 
-          <p>Мы отправили код подтверждения на вашу электронную почту.</p>
+          <p>
+            {reason === "login"
+              ? "Подтвердите email, чтобы войти в аккаунт. Мы отправили вам код."
+              : "Мы отправили код подтверждения на вашу электронную почту."}
+          </p>
 
           {email && <div className={styles.email}>{email}</div>}
         </div>
@@ -326,5 +287,13 @@ export default function AuthCode() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AuthCode() {
+  return (
+    <Suspense fallback={<main className={styles.page} />}>
+      <AuthCodeContent />
+    </Suspense>
   );
 }

@@ -80,7 +80,10 @@ export const registerSchema = z.object({
   }),
   email: z.string().email("Укажите корректный Email адрес"),
   phone: z.string().min(9, "Номер телефона должен содержать минимум 9 цифр"),
-  password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
+  password: z
+    .string()
+    .min(6, "Пароль должен быть не менее 6 символов")
+    .max(72, "Пароль не должен превышать 72 символа"),
 
   // Дополнительные поля по ролям
   firstName: z.string().optional(),
@@ -100,8 +103,14 @@ export const registerSchema = z.object({
 
 // Схема авторизации
 export const loginSchema = z.object({
-  identifier: z.string().min(1, "Укажите Email или Номер телефона"),
-  password: z.string().min(1, "Введите пароль"),
+  identifier: z
+    .string()
+    .min(1, "Укажите Email или Номер телефона")
+    .max(255, "Идентификатор не должен превышать 255 символов"),
+  password: z
+    .string()
+    .min(1, "Введите пароль")
+    .max(72, "Пароль не должен превышать 72 символа"),
 });
 
 // Схема обновления профиля (PUT /api/auth/me)

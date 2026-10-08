@@ -23,6 +23,7 @@ import styles from "./RealtorProfile.module.css";
 import RealtorEditModal from "./realtorEdit/RealtorEditModal";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { logout as authLogout } from "@/utils/auth";
 
 export default function RealtorProfile({
   user,
@@ -53,10 +54,7 @@ export default function RealtorProfile({
   const whatsapp = user.phone?.replace(/\D/g, "");
 
   function logout() {
-    localStorage.removeItem("uytap_user");
-
-    document.cookie = "uytap_token=; path=/; max-age=0";
-
+    authLogout();
     window.location.href = "/login";
   }
 

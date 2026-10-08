@@ -15,6 +15,7 @@ import Link from "next/link";
 import styles from "./PersonalForm.module.css";
 import InputField from "../inputField/InputField";
 import { registerUser } from "@/utils/api";
+import { saveAuth } from "@/utils/auth";
 
 function formatPhone(value) {
   let digits = value.replace(/\D/g, "");
@@ -101,7 +102,7 @@ export default function PersonalForm() {
     setLoading(true);
 
     try {
-      await registerUser({
+      const res = await registerUser({
         accountType: "personal",
         firstName,
         lastName,
@@ -110,12 +111,21 @@ export default function PersonalForm() {
         password,
       });
 
-      // token и user сохраняются внутри registerUser()
+      if (res?.token) {
+        saveAuth({ token: res.token, user: res.user });
+      }
+
+      if (res?.needVerification) {
+        const verifyEmail = email.trim().toLowerCase();
+        localStorage.setItem("register_email", verifyEmail);
+        router.push(`/auth-code?email=${encodeURIComponent(verifyEmail)}`);
+        return;
+      }
 
       setSuccess(true);
 
       setTimeout(() => {
-        router.push("/auth-code");
+        router.push("/profile");
       }, 1200);
     } catch (err) {
       setError(err.message || "Ошибка при регистрации");

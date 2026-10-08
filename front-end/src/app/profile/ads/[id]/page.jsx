@@ -52,6 +52,7 @@ const PUBLICATION_STATUS_LABELS = {
   moderation: "На модерации",
   draft: "Черновик — ждёт оплаты",
   hidden: "Скрыто",
+  expired: "Срок истёк / В архиве",
 };
 
 import styles from "./MyAdsDetails.module.css";

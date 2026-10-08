@@ -7,6 +7,7 @@ import {
   updateListing,
   deleteListing,
   promoteListingWithTariff,
+  renewListing,
 } from "../controllers/listingsController.js";
 import { authenticateToken } from "../middleware/auth.js";
 
@@ -19,5 +20,6 @@ router.post("/", authenticateToken, createListing);
 router.put("/:id", authenticateToken, updateListing);
 router.delete("/:id", authenticateToken, deleteListing);
 router.post("/:id/promote-with-tariff", authenticateToken, promoteListingWithTariff);
+router.post("/:id/renew", authenticateToken, renewListing);
 
 export default router;

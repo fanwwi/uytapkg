@@ -3010,6 +3010,12 @@ const ru = {
 
     sendCode: "Отправить код",
     verifyCode: "Проверить код",
+    resendCode: "Отправить код повторно",
+    resendWait: "Повторная отправка через",
+    seconds: "сек",
+    sentTo: "Код отправлен на:",
+    changeEmail: "Изменить",
+    codeSentNotice: "Если аккаунт существует, код отправлен на почту",
 
     newPassword: "Новый пароль",
     confirmPassword: "Повторите пароль",
@@ -3018,11 +3024,14 @@ const ru = {
     hidePassword: "Скрыть пароль",
 
     passwordMismatch: "Пароли не совпадают",
+    passwordLengthError: "Пароль должен содержать от 6 до 72 символов",
+    passwordChanged: "Пароль успешно изменён! Выполняется вход...",
 
     savePassword: "Сохранить пароль",
 
     rememberPassword: "Вспомнили пароль?",
     login: "Войти",
+    loading: "Подождите...",
   },
 
   issykKul: {
@@ -4397,6 +4406,7 @@ const ru = {
       moderation: "На модерации",
       draft: "Черновик",
       hidden: "Скрыто",
+      expired: "Срок истёк / В архиве",
     },
 
     dealTypes: {

@@ -552,7 +552,12 @@ export const handleResultUrl = async (req, res) => {
   try {
     const orderId = req.body?.order_id;
 
-    if (!orderId) {
+    if (
+      !orderId ||
+      typeof orderId !== "string" ||
+      orderId.length > 100 ||
+      !/^[a-zA-Z0-9_\-]+$/.test(orderId)
+    ) {
       return res.status(400).json({ success: false });
     }
 

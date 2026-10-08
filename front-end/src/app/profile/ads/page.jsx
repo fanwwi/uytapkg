@@ -13,6 +13,7 @@ import {
   Layers3,
   UserRoundArrowLeft,
   Rocket,
+  RotateCw,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,9 @@ import {
   getMyListings,
   updateListing as updateListingApi,
   deleteListing as deleteListingApi,
+  renewListing as renewListingApi,
 } from "@/utils/api";
+import { formatListingLocation } from "@/utils/mapListingData";
 
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -51,6 +54,9 @@ export default function Ads() {
   // PROMOTE
   const [promotingListing, setPromotingListing] = useState(null);
 
+  // RENEW
+  const [renewingId, setRenewingId] = useState(null);
+
   const mapBackendListing = useCallback((listing) => {
     const mainPhoto =
       listing.listing_photos?.find((photo) => photo.is_main)?.url ||
@@ -71,13 +77,37 @@ export default function Ads() {
       moderation: "moderation",
       draft: "draft",
       hidden: "hidden",
+      expired: "expired",
     };
+
+    const expiresAt = listing.expires_at || null;
+    const isExpired =
+      listing.status === "expired" ||
+      (expiresAt && new Date(expiresAt).getTime() <= Date.now());
+    const daysLeft =
+      expiresAt && !isExpired
+        ? Math.max(
+            0,
+            Math.ceil(
+              (new Date(expiresAt).getTime() - Date.now()) /
+                (1000 * 60 * 60 * 24),
+            ),
+          )
+        : 0;
+
+    const computedStatus = isExpired
+      ? "expired"
+      : statusMapping[listing.status] || "active";
 
     return {
       id: listing.id,
       title: listing.title || "",
       type: propertyTypeMapping[listing.property_type] || "other",
-      location: listing.city || listing.region || "",
+      location: formatListingLocation(listing),
+      region: listing.region || "",
+      city: listing.city || "",
+      district: listing.district || "",
+      country: listing.country || "Кыргызстан",
       address: listing.address || "",
       price: `${listing.price?.toLocaleString() || 0} ${
         listing.currency === "USD" ? "$" : "сом"
@@ -85,7 +115,10 @@ export default function Ads() {
       image:
         mainPhoto ||
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=400",
-      status: statusMapping[listing.status] || "active",
+      status: computedStatus,
+      expiresAt,
+      daysLeft,
+      isExpired,
       likes: listing.favorites_count || 0,
       dealType: listing.deal_type === "sale" ? "sale" : "rent",
       area: listing.area ? `${listing.area} м²` : "",
@@ -285,11 +318,27 @@ export default function Ads() {
 
         address: updatedListing.address || "",
 
-        region: editingListing.raw?.region || "BISHKEK",
+        region:
+          updatedListing.region ||
+          editingListing.raw?.region ||
+          editingListing.region ||
+          "BISHKEK",
 
-        city: editingListing.raw?.city || null,
+        city:
+          updatedListing.city !== undefined
+            ? updatedListing.city
+            : (editingListing.raw?.city ?? editingListing.city ?? null),
 
-        country: editingListing.raw?.country || "Кыргызстан",
+        district:
+          updatedListing.district !== undefined
+            ? updatedListing.district
+            : (editingListing.raw?.district ?? editingListing.district ?? null),
+
+        country:
+          updatedListing.country ||
+          editingListing.raw?.country ||
+          editingListing.country ||
+          "Кыргызстан",
 
         features: {
           ...(editingListing.raw?.features || {}),
@@ -322,12 +371,46 @@ export default function Ads() {
 
   /*
   |--------------------------------------------------------------------------
+  | RENEW
+  |--------------------------------------------------------------------------
+  */
+
+  const handleRenew = async (id) => {
+    const token = localStorage.getItem("uytap_token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      setRenewingId(id);
+      const res = await renewListingApi(token, id);
+
+      if (res.success && res.data) {
+        const mapped = mapBackendListing(res.data);
+        setListings((prev) =>
+          prev.map((item) => (item.id === id ? mapped : item)),
+        );
+      } else {
+        alert(res.message || "Ошибка при продлении объявления");
+      }
+    } catch (err) {
+      console.error("Renew listing error:", err);
+      alert(err.message || "Ошибка при продлении объявления");
+    } finally {
+      setRenewingId(null);
+    }
+  };
+
+  /*
+  |--------------------------------------------------------------------------
   | STATISTICS
   |--------------------------------------------------------------------------
   */
 
   const activeCount = listings.filter(
-    (item) => item.status === "active",
+    (item) => item.status === "active" && !item.isExpired,
   ).length;
 
   const totalLikes = listings.reduce((total, item) => total + item.likes, 0);
@@ -455,21 +538,34 @@ export default function Ads() {
                       {translatePropertyType(item.type)}
                     </span>
 
-                    <span
-                      className={`${styles.statusBadge} ${
-                        item.status === "active"
-                          ? styles.statusActive
-                          : styles.statusPending
-                      }`}
-                    >
-                      {item.status === "active" ? (
-                        <CheckCircle2 size={13} />
-                      ) : (
+                    {item.isExpired ? (
+                      <span
+                        className={`${styles.statusBadge} ${styles.statusExpired}`}
+                      >
                         <AlertCircle size={13} />
-                      )}
-
-                      {translateStatus(item.status)}
-                    </span>
+                        {language === "ky"
+                          ? "Мөөнөтү бүттү / Архивде"
+                          : "Срок истёк / В архиве"}
+                      </span>
+                    ) : item.status === "active" ? (
+                      <span
+                        className={`${styles.statusBadge} ${styles.statusActive}`}
+                      >
+                        <CheckCircle2 size={13} />
+                        {item.daysLeft > 0
+                          ? language === "ky"
+                            ? `Активдүү (калган ${item.daysLeft} күн)`
+                            : `Активно (осталось ${item.daysLeft} дн.)`
+                          : translateStatus(item.status)}
+                      </span>
+                    ) : (
+                      <span
+                        className={`${styles.statusBadge} ${styles.statusPending}`}
+                      >
+                        <AlertCircle size={13} />
+                        {translateStatus(item.status)}
+                      </span>
+                    )}
                   </div>
 
                   <div className={styles.imageDeal}>
@@ -512,6 +608,33 @@ export default function Ads() {
                       <strong>{item.price}</strong>
                     </div>
                   </div>
+
+                  {/* RENEW BUTTON FOR EXPIRED ADS */}
+                  {item.isExpired && (
+                    <div className={styles.renewBlock}>
+                      <button
+                        type="button"
+                        className={styles.renewButton}
+                        disabled={renewingId === item.id}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleRenew(item.id);
+                        }}
+                      >
+                        <RotateCw
+                          size={15}
+                          className={renewingId === item.id ? styles.spin : ""}
+                        />
+                        {renewingId === item.id
+                          ? language === "ky"
+                            ? "Узартылууда..."
+                            : "Продление..."
+                          : language === "ky"
+                          ? "40 күнгө узартуу"
+                          : "Продлить на 40 дней"}
+                      </button>
+                    </div>
+                  )}
 
                   {/* ACTIONS */}
 

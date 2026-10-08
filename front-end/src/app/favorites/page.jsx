@@ -105,11 +105,14 @@ export default function Favorites() {
     const priority = {
       vip: 0,
       urgent: 1,
-      null: 2,
+      top: 2,
+      null: 3,
     };
 
     return [...filtered].sort(
-      (a, b) => priority[a.status] - priority[b.status],
+      (a, b) =>
+        (priority[a.promotion_type ?? a.status] ?? 3) -
+        (priority[b.promotion_type ?? b.status] ?? 3),
     );
   }, [favorites, search, activeCategory]);
 

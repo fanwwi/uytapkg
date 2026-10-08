@@ -3224,6 +3224,12 @@ const ky = {
 
     sendCode: "Кодду жөнөтүү",
     verifyCode: "Кодду текшерүү",
+    resendCode: "Кодду кайра жөнөтүү",
+    resendWait: "Кайра жөнөтүү",
+    seconds: "сек",
+    sentTo: "Код жөнөтүлдү:",
+    changeEmail: "Өзгөртүү",
+    codeSentNotice: "Эгер аккаунт бар болсо, код почтага жөнөтүлдү",
 
     newPassword: "Жаңы сырсөз",
     confirmPassword: "Сырсөздү кайталаңыз",
@@ -3232,11 +3238,14 @@ const ky = {
     hidePassword: "Сырсөздү жашыруу",
 
     passwordMismatch: "Сырсөздөр дал келбейт",
+    passwordLengthError: "Сырсөз 6дан 72ге чейинки белгиден турушу керек",
+    passwordChanged: "Сырсөз ийгиликтүү өзгөртүлдү! Кирүү аткарылууда...",
 
     savePassword: "Сырсөздү сактоо",
 
     rememberPassword: "Сырсөзүңүз эсиңиздеби?",
     login: "Кирүү",
+    loading: "Күтө туруңуз...",
   },
 
   issykKul: {
@@ -4620,6 +4629,7 @@ const ky = {
       moderation: "Текшерүүдө",
       draft: "Каралама",
       hidden: "Жашырылган",
+      expired: "Мөөнөтү бүттү / Архивде",
     },
 
     dealTypes: {

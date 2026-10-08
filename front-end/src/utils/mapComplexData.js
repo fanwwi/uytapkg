@@ -3,7 +3,12 @@ export function mapComplexData(item) {
 
   const developerName = item.developers?.company_name || "Застройщик не указан";
 
-  const developerLogo = item.developers?.logo_url || "/assets/DeveloperImage.png";
+  const developerLogo =
+    item.developers?.avatarUrl ||
+    item.developers?.avatar_url ||
+    item.developers?.logo_url ||
+    item.avatarUrl ||
+    "/assets/DeveloperImage.png";
 
   const features = item.features || {};
 

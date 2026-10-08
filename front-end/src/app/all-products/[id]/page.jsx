@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Home, ArrowLeft } from "lucide-react";
+import { Home, ArrowLeft, AlertCircle } from "lucide-react";
 
 import {
   getListingById,
@@ -25,7 +25,7 @@ export default function ProductDetails() {
   const router = useRouter();
   const { id } = useParams();
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -218,6 +218,25 @@ export default function ProductDetails() {
           <ArrowLeft size={18} />
           {t("productDetails.backToListings")}
         </button>
+
+        {/* EXPIRED BANNER */}
+        {product.isExpired && (
+          <div className={styles.expiredBanner}>
+            <AlertCircle size={22} className={styles.expiredBannerIcon} />
+            <div className={styles.expiredBannerContent}>
+              <strong className={styles.expiredBannerTitle}>
+                {language === "ky"
+                  ? "Бул кулактандыруунун жарыялоо мөөнөтү бүттү"
+                  : "Срок публикации данного объявления истёк"}
+              </strong>
+              <p className={styles.expiredBannerText}>
+                {language === "ky"
+                  ? "Ал архивде жана актуалдуу болбой калышы мүмкүн."
+                  : "Оно находится в архиве и может быть неактуально."}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* TOP */}
 

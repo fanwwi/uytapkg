@@ -980,21 +980,86 @@ function getAmenities(product) {
 */
 
 function getLocationParts(product) {
-  const values = [
-    getRawValue(product, "country"),
-    getRawValue(product, "region"),
-    getRawValue(product, "city"),
-    getRawValue(product, "settlement"),
-    getRawValue(product, "district"),
-  ]
-    .filter(hasValue)
-    .map((value) => String(value).trim())
-    .filter(Boolean);
+  const city = String(getRawValue(product, "city") || product?.city || "").trim();
+  const region = String(getRawValue(product, "region") || product?.region || "").trim();
+  const district = String(getRawValue(product, "district") || product?.district || "").trim();
+  const settlement = String(getRawValue(product, "settlement") || product?.settlement || "").trim();
 
-  return values.filter(
-    (value, index, array) =>
-      array.findIndex((item) => normalize(item) === normalize(value)) === index,
-  );
+  const parts = [];
+
+  const isBishkek =
+    city.toLowerCase() === "бишкек" ||
+    region.toLowerCase() === "бишкек" ||
+    region.toLowerCase().includes("бишкек");
+  const isOshCity =
+    (city.toLowerCase() === "ош" && !region.toLowerCase().includes("область")) ||
+    region.toLowerCase() === "ош";
+
+  if (isBishkek) {
+    parts.push("Бишкек");
+    if (district && district.toLowerCase() !== "бишкек") {
+      parts.push(district);
+    }
+  } else if (isOshCity) {
+    parts.push("Ош");
+    if (district && district.toLowerCase() !== "ош") {
+      parts.push(district);
+    }
+  } else {
+    const mainCity = city || settlement;
+    if (mainCity) parts.push(mainCity);
+    if (district && district.toLowerCase() !== mainCity.toLowerCase()) {
+      parts.push(district);
+    }
+    if (
+      region &&
+      region !== "Кыргызстан" &&
+      (!mainCity || !region.toLowerCase().includes(mainCity.toLowerCase()))
+    ) {
+      parts.push(region);
+    }
+  }
+
+  if (parts.length > 0) {
+    return parts;
+  }
+
+  if (product?.location && product.location !== "Кыргызстан") {
+    return [product.location];
+  }
+
+  if (product?.address && String(product.address).trim()) {
+    return [String(product.address).trim()];
+  }
+
+  return [];
+}
+
+function getLocationDetails(product, t) {
+  const items = [];
+  const country = getRawValue(product, "country");
+  const region = getRawValue(product, "region");
+  const city = getRawValue(product, "city");
+  const settlement = getRawValue(product, "settlement");
+  const district = getRawValue(product, "district");
+
+  if (hasValue(country)) {
+    items.push({ label: t("productInfo.location.country"), value: String(country).trim() });
+  }
+  if (hasValue(region) && region !== "Кыргызстан") {
+    items.push({ label: t("productInfo.location.region"), value: String(region).trim() });
+  }
+  if (hasValue(city)) {
+    items.push({ label: t("productInfo.location.city"), value: String(city).trim() });
+  }
+  if (hasValue(settlement)) {
+    items.push({ label: t("productInfo.location.settlement"), value: String(settlement).trim() });
+  }
+  if (hasValue(district)) {
+    items.push({ label: t("productInfo.location.district"), value: String(district).trim() });
+  }
+
+  return items;
 }
 
 /*
@@ -1011,6 +1076,7 @@ export default function ProductInfo({ product, router }) {
   const amenities = getAmenities(product);
 
   const locationParts = getLocationParts(product);
+  const locationDetails = getLocationDetails(product, t);
 
   const beachDistance = getRawValue(product, "beachDistance", "beach_distance");
 
@@ -1145,7 +1211,9 @@ export default function ProductInfo({ product, router }) {
                   : t("productInfo.locationNotSpecified")}
               </strong>
 
-              {product.address && <p>{product.address}</p>}
+              {product.address && !locationParts.includes(product.address) && (
+                <p>{product.address}</p>
+              )}
 
               {product.latitude != null && product.longitude != null && (
                 <div className={styles.coordinates}>
@@ -1221,28 +1289,17 @@ export default function ProductInfo({ product, router }) {
 
         {/* LOCATION */}
 
-        {locationParts.length > 0 && (
+        {locationDetails.length > 0 && (
           <div className={styles.sideCard}>
             <div className={styles.sideTop}>
               <MapPin />
               <span>{t("productInfo.sidebar.location")}</span>
             </div>
 
-            {locationParts.map((value, index) => (
-              <div className={styles.sideRow} key={`${value}-${index}`}>
-                <span>
-                  {index === 0
-                    ? t("productInfo.location.country")
-                    : index === 1
-                      ? t("productInfo.location.region")
-                      : index === 2
-                        ? t("productInfo.location.city")
-                        : index === 3
-                          ? t("productInfo.location.settlement")
-                          : t("productInfo.location.district")}
-                </span>
-
-                <strong>{value}</strong>
+            {locationDetails.map((item, index) => (
+              <div className={styles.sideRow} key={`${item.label}-${index}`}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
               </div>
             ))}
           </div>

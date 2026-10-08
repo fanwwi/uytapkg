@@ -102,10 +102,47 @@ function formatSeries(value, t) {
 export default function ProductSummary({ product }) {
   const { t } = useLanguage();
 
-  const locationParts = [product.country, product.city].filter(
-    (value) =>
-      value !== null && value !== undefined && String(value).trim() !== "",
-  );
+  // Формируем город и область вместе
+  const city = (product.city || "").trim();
+  const region = (product.region || "").trim();
+  const district = (product.district || "").trim();
+
+  const parts = [];
+
+  const isBishkek =
+    city.toLowerCase() === "бишкек" || region.toLowerCase().includes("бишкек");
+  const isOshCity =
+    (city.toLowerCase() === "ош" && !region.toLowerCase().includes("область")) ||
+    region.toLowerCase() === "ош";
+
+  if (isBishkek) {
+    parts.push("Бишкек");
+    if (district && district.toLowerCase() !== "бишкек") {
+      parts.push(district);
+    }
+  } else if (isOshCity) {
+    parts.push("Ош");
+    if (district && district.toLowerCase() !== "ош") {
+      parts.push(district);
+    }
+  } else {
+    if (city) parts.push(city);
+    if (district && district !== city) parts.push(district);
+    if (
+      region &&
+      region !== "Кыргызстан" &&
+      (!city || !region.toLowerCase().includes(city.toLowerCase()))
+    ) {
+      parts.push(region);
+    }
+  }
+
+  const displayLocation =
+    parts.length > 0
+      ? parts.join(", ")
+      : product.location && product.location !== "Кыргызстан"
+        ? product.location
+        : product.address || "";
 
   const area = getRawValue(product, "area");
 
@@ -205,13 +242,15 @@ export default function ProductSummary({ product }) {
         <MapPin size={20} />
 
         <div>
-          {locationParts.length > 0 ? (
-            <strong>{locationParts.join(", ")}</strong>
+          {displayLocation ? (
+            <strong>{displayLocation}</strong>
           ) : (
             <strong>{t("productSummary.locationNotSpecified")}</strong>
           )}
 
-          {product.address && <span>{product.address}</span>}
+          {product.address && displayLocation !== product.address && (
+            <span>{product.address}</span>
+          )}
         </div>
       </div>
 

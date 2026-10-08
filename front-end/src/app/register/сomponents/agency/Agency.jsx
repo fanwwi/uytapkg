@@ -110,7 +110,7 @@ export default function Agency() {
     setLoading(true);
 
     try {
-      await registerUser({
+      const res = await registerUser({
         accountType: "agency",
         companyName,
         directorName,
@@ -123,6 +123,13 @@ export default function Agency() {
       });
 
       // token и user сохраняются внутри registerUser()
+
+      if (res?.needVerification) {
+        const verifyEmail = email.trim().toLowerCase();
+        localStorage.setItem("register_email", verifyEmail);
+        router.push(`/auth-code?email=${encodeURIComponent(verifyEmail)}`);
+        return;
+      }
 
       setSuccess(true);
 

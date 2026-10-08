@@ -21,6 +21,7 @@ import styles from "./PersonalProfile.module.css";
 import ProfileEditModal from "./profileEdit/ProfileEditModal";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { logout as authLogout } from "@/utils/auth";
 
 export default function PersonalProfile({
   user,
@@ -49,10 +50,7 @@ export default function PersonalProfile({
   const whatsappNumber = user.phone?.replace(/\D/g, "") || "";
 
   function logout() {
-    localStorage.removeItem("uytap_user");
-
-    document.cookie = "uytap_token=; path=/; max-age=0";
-
+    authLogout();
     window.location.href = "/login";
   }
 

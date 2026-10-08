@@ -2,6 +2,34 @@ import { supabase } from "../config/db.js";
 import { createComplexSchema, updateComplexSchema } from "../utils/validation.js";
 import { verifyAllOwnedBy } from "../utils/uploadOwnership.js";
 
+// Если developers.logo_url пуст, подставляем user_profiles.avatar_url застройщика
+async function resolveDeveloperLogos(complexes) {
+  try {
+    const missing = (complexes || []).filter(
+      (c) => c.developers && !c.developers.logo_url && c.developers.user_id,
+    );
+    if (!missing.length) return complexes;
+
+    const userIds = [...new Set(missing.map((c) => c.developers.user_id))];
+    const { data: profiles } = await supabase
+      .from("user_profiles")
+      .select("user_id, avatar_url")
+      .in("user_id", userIds);
+
+    const avatarByUser = new Map(
+      (profiles || []).filter((p) => p.avatar_url).map((p) => [p.user_id, p.avatar_url]),
+    );
+
+    for (const c of missing) {
+      const avatar = avatarByUser.get(c.developers.user_id);
+      if (avatar) c.developers.logo_url = avatar;
+    }
+  } catch (err) {
+    console.warn("resolveDeveloperLogos warning:", err);
+  }
+  return complexes;
+}
+
 // =======================================================
 // 1. Получение списка ЖК (GET /api/complexes)
 // =======================================================
@@ -20,7 +48,7 @@ export const getComplexes = async (req, res) => {
       return res.status(500).json({ success: false, message: "Ошибка загрузки жилых комплексов" });
     }
 
-    return res.json({ success: true, data: complexes });
+    return res.json({ success: true, data: await resolveDeveloperLogos(complexes) });
   } catch (error) {
     console.error("Get Complexes Error:", error);
     return res.status(500).json({ success: false, message: "Ошибка сервера при загрузке ЖК" });
@@ -48,6 +76,7 @@ export const getComplexById = async (req, res) => {
       return res.status(404).json({ success: false, message: "Жилой комплекс не найден" });
     }
 
+    if (complex.developers) await resolveDeveloperLogos([complex]);
     return res.json({ success: true, data: complex });
   } catch (error) {
     console.error("Get Complex By ID Error:", error);
@@ -88,6 +117,7 @@ export const getComplexListings = async (req, res) => {
         listing_photos (id, url, is_main, display_order)
       `)
       .eq("status", "active")
+      .gt("expires_at", new Date().toISOString())
       .eq("features->>residentialComplexId", id)
       .order("created_at", { ascending: false });
 
@@ -150,7 +180,7 @@ export const getMyComplexes = async (req, res) => {
 
     return res.json({
       success: true,
-      data: complexes || [],
+      data: await resolveDeveloperLogos(complexes || []),
     });
   } catch (error) {
     console.error("Get My Complexes Controller Error:", error);
@@ -401,9 +431,28 @@ export const updateComplex = async (req, res) => {
       amenities,
     } = validationResult.data;
 
-    // ТЗ ТРЕБОВАНИЕ: Изображения редактировать нельзя!
-    const cover_photo = complex.cover_photo;
-    const oldImages = complex.features?.images || [];
+    const incomingImages = validationResult.data.images ?? req.body.images;
+    let finalImages = complex.features?.images || [];
+    let finalCover = complex.cover_photo;
+
+    if (Array.isArray(incomingImages) && incomingImages.length > 0) {
+      if (incomingImages.some((img) => typeof img !== "string" || img.startsWith("blob:"))) {
+        return res.status(400).json({
+          success: false,
+          message: "Некорректные ссылки на фотографии",
+        });
+      }
+      // Проверяем владение только новыми изображениями
+      const newImages = incomingImages.filter((img) => !finalImages.includes(img));
+      if (newImages.length > 0 && !(await verifyAllOwnedBy(newImages, req.user.id))) {
+        return res.status(400).json({
+          success: false,
+          message: "Все новые фото должны быть загружены через форму загрузки ЖК",
+        });
+      }
+      finalImages = incomingImages;
+      finalCover = incomingImages[0] || finalCover;
+    }
 
     let completion_status = complex.completion_status;
     if (status) {
@@ -435,8 +484,9 @@ export const updateComplex = async (req, res) => {
         areaSotka: areaSotka !== undefined ? areaSotka : complex.features?.areaSotka,
         documentsUrl: documentsUrl !== undefined ? documentsUrl : complex.features?.documentsUrl,
         amenities: amenities || complex.features?.amenities || [],
-        images: oldImages, // Неизменяемые картинки
+        images: finalImages,
       },
+      cover_photo: finalCover,
     };
 
     const { data: updatedComplex, error: updateError } = await supabase

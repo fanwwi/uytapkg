@@ -113,6 +113,12 @@ export default function Login() {
         router.push("/profile");
       }, 1000);
     } catch (err) {
+      if (err?.needVerification && err?.email) {
+        const verifyEmail = String(err.email).trim().toLowerCase();
+        localStorage.setItem("register_email", verifyEmail);
+        router.push(`/auth-code?email=${encodeURIComponent(verifyEmail)}&reason=login`);
+        return;
+      }
       setError(err.message || t("login.loginError"));
     } finally {
       setLoading(false);
@@ -130,14 +136,18 @@ export default function Login() {
 
       const result = await verifyOtpCode(phone.replace(/\D/g, ""), fullCode);
 
-      if (result.token) {
-        document.cookie = `uytap_token=${result.token}; path=/; max-age=${
-          60 * 60 * 24 * 30
-        }`;
+      const token = result?.token || result?.data?.token;
 
-        localStorage.setItem("uytap_token", result.token);
-        localStorage.setItem("uytap_user", JSON.stringify(result.user));
+      if (!token || result?.ok === false || result?.success === false) {
+        throw new Error(result?.message || result?.data?.message || t("login.invalidCode"));
       }
+
+      document.cookie = `uytap_token=${token}; path=/; max-age=${
+        60 * 60 * 24 * 30
+      }`;
+
+      localStorage.setItem("uytap_token", token);
+      localStorage.setItem("uytap_user", JSON.stringify(result.user || result?.data?.user));
 
       setSuccess(true);
 

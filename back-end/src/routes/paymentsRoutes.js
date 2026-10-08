@@ -28,6 +28,12 @@ const statusLimiter = rateLimit({
   max: 30,
 });
 
+const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  message: { success: false, message: "Слишком много запросов" },
+});
+
 router.post("/create", authenticateToken, createPaymentLimiter, createPayment);
 router.post(
   "/promotion/create",
@@ -39,6 +45,6 @@ router.get("/:orderId/status", authenticateToken, statusLimiter, getPaymentStatu
 router.post("/:orderId/cancel", authenticateToken, cancelPayment);
 
 // Публичный callback от O!Dengi (result_url) — без авторизации
-router.post("/webhook", handleResultUrl);
+router.post("/webhook", webhookLimiter, handleResultUrl);
 
 export default router;

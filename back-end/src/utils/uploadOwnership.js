@@ -49,9 +49,21 @@ async function readAll() {
       .download(OWNERSHIP_OBJECT);
 
     if (error || !data) {
-      cache = {};
-      cacheAt = Date.now();
-      return cache;
+      const isNotFound =
+        error?.statusCode === 404 ||
+        error?.statusCode === "404" ||
+        error?.message?.toLowerCase().includes("not found");
+
+      if (isNotFound) {
+        cache = {};
+        cacheAt = Date.now();
+        return cache;
+      }
+      if (cache) {
+        console.warn("Временный сбой хранилища, используем кэш реестра:", error);
+        return cache;
+      }
+      throw error || new Error("Сбой загрузки реестра владельцев файлов");
     }
 
     const text = await data.text();
@@ -60,8 +72,12 @@ async function readAll() {
     cacheAt = Date.now();
     return cache;
   } catch (err) {
-    console.error("Не удалось загрузить реестр владельцев файлов, использую пустой:", err);
-    return {};
+    if (cache) {
+      console.warn("Сбой загрузки реестра владельцев, сохранён существующий кэш:", err);
+      return cache;
+    }
+    console.error("Критический сбой загрузки реестра владельцев:", err);
+    throw err;
   }
 }
 

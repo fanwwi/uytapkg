@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS listings (
     promotion_status VARCHAR(20) DEFAULT 'regular' CHECK (promotion_status IN ('regular', 'vip', 'top')),
     is_urgent BOOLEAN DEFAULT FALSE,
     views_count INT DEFAULT 0,
+    expires_at TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP + INTERVAL '40 days'),
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -246,9 +247,54 @@ CREATE INDEX IF NOT EXISTS idx_listings_property_type ON listings(property_type)
 CREATE INDEX IF NOT EXISTS idx_listings_promotion ON listings(promotion_status);
 CREATE INDEX IF NOT EXISTS idx_listings_created_at ON listings(created_at DESC);
 
+-- Добавление колонки срока жизни объявления (40 дней)
+ALTER TABLE listings 
+ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP WITH TIME ZONE 
+DEFAULT (CURRENT_TIMESTAMP + INTERVAL '40 days');
+
+-- Заполнение для всех существующих объявлений
+UPDATE listings 
+SET expires_at = created_at + INTERVAL '40 days' 
+WHERE expires_at IS NULL;
+
+-- Составной индекс для быстрой фильтрации активных неистёкших объявлений
+CREATE INDEX IF NOT EXISTS idx_listings_active_expires 
+ON listings(status, expires_at);
+
 -- ============================================================
 -- Storage (аватарки): создать вручную в Supabase Dashboard
 -- Storage → New bucket → имя: avatars → Public bucket: ON
 -- Путь файлов: avatars/{userId}/{timestamp}.{ext}
 -- URL пишется в user_profiles.avatar_url
 -- ============================================================
+
+
+-- =======================================================
+-- Подтверждение email через OTP
+-- =======================================================
+CREATE TABLE IF NOT EXISTS email_verifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL,
+    code VARCHAR(6) NOT NULL,
+    type VARCHAR(30) NOT NULL CHECK (type IN ('registration', 'password_reset')),
+    attempts INT DEFAULT 0,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_email_verifications_lookup
+ON email_verifications(email, type, is_used, expires_at);
+
+-- Колонка подтверждения email. Если колонки ещё не было, все УЖЕ существующие
+-- пользователи считаются подтверждёнными (иначе они потеряют возможность входа).
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'users' AND column_name = 'is_email_verified'
+    ) THEN
+        ALTER TABLE users ADD COLUMN is_email_verified BOOLEAN DEFAULT FALSE;
+        UPDATE users SET is_email_verified = TRUE;
+    END IF;
+END $$;

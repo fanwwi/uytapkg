@@ -25,6 +25,7 @@ import styles from "./AgencyProfile.module.css";
 import AgencyEditModal from "./agencyEdit/AgencyEditModal";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { logout as authLogout } from "@/utils/auth";
 
 export default function AgencyProfile({
   user,
@@ -62,10 +63,7 @@ export default function AgencyProfile({
   const email = user.email || "";
 
   function logout() {
-    localStorage.removeItem("uytap_user");
-
-    document.cookie = "uytap_token=; path=/; max-age=0";
-
+    authLogout();
     window.location.href = "/login";
   }
 

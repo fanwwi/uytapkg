@@ -90,7 +90,7 @@ export default function RealtorForm() {
     setLoading(true);
 
     try {
-      await registerUser({
+      const res = await registerUser({
         accountType: "realtor",
         fullName,
         phone: normalizedPhone,
@@ -99,6 +99,13 @@ export default function RealtorForm() {
         about,
         password,
       });
+
+      if (res?.needVerification) {
+        const verifyEmail = email.trim().toLowerCase();
+        localStorage.setItem("register_email", verifyEmail);
+        router.push(`/auth-code?email=${encodeURIComponent(verifyEmail)}`);
+        return;
+      }
 
       setSuccess(true);
 

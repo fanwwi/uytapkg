@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { supabase } from "../config/db.js";
 import { registerSchema, loginSchema, updateMeSchema, normalizePhone } from "../utils/validation.js";
+import { generateSecureOtp, safeCompare } from "../utils/otp.js";
+import { sendOtpEmail } from "../services/emailService.js";
 import { generateToken } from "../middleware/auth.js";
 import {
   uploadAvatarToStorage,
@@ -68,6 +71,171 @@ async function syncDeveloperRecord(userId, accountType, profile, phone, email) {
 }
 
 // =======================================================
+// Email OTP: константы и вспомогательные функции
+// =======================================================
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const OTP_TTL_MS = 10 * 60 * 1000; // срок жизни кода — 10 минут
+const OTP_MAX_ATTEMPTS = 5; // неверных попыток на один код
+const OTP_RESEND_COOLDOWN_MS = 60 * 1000; // не чаще 1 отправки в 60 секунд
+const OTP_HOURLY_LIMIT = 5; // не более 5 кодов в час на email
+
+// Защита от параллельных запросов на один email внутри процесса
+const otpInFlight = new Set();
+
+// Проверка кулдауна и часового лимита отправки кодов для email.
+// Возвращает { message } при превышении, иначе null.
+async function checkOtpSendLimits(email, type = "registration") {
+  const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  let query = supabase
+    .from("email_verifications")
+    .select("created_at")
+    .eq("email", email)
+    .gte("created_at", hourAgo)
+    .order("created_at", { ascending: false });
+
+  if (type) {
+    query = query.eq("type", type);
+  }
+
+  const { data: recent, error } = await query;
+
+  if (error) throw error;
+  if (!recent || recent.length === 0) return null;
+
+  const sinceLast = Date.now() - new Date(recent[0].created_at).getTime();
+  if (sinceLast < OTP_RESEND_COOLDOWN_MS) {
+    const wait = Math.ceil((OTP_RESEND_COOLDOWN_MS - sinceLast) / 1000);
+    return { message: `Повторная отправка возможна через ${wait} секунд` };
+  }
+
+  if (recent.length >= OTP_HOURLY_LIMIT) {
+    return { message: "Слишком много запросов. Попробуйте позже" };
+  }
+
+  return null;
+}
+
+// Инвалидирует все прежние коды регистрации, создаёт новый и отправляет на почту.
+async function issueRegistrationOtp(email) {
+  await supabase
+    .from("email_verifications")
+    .update({ is_used: true })
+    .eq("email", email)
+    .eq("type", "registration")
+    .eq("is_used", false);
+
+  const code = generateSecureOtp();
+  const { error } = await supabase.from("email_verifications").insert([
+    {
+      email,
+      code,
+      type: "registration",
+      attempts: 0,
+      expires_at: new Date(Date.now() + OTP_TTL_MS).toISOString(),
+    },
+  ]);
+  if (error) throw error;
+
+  await sendOtpEmail(email, code, "registration");
+}
+
+// Инвалидирует все прежние коды сброса пароля, создаёт новый и отправляет на почту.
+async function issuePasswordResetOtp(email) {
+  await supabase
+    .from("email_verifications")
+    .update({ is_used: true })
+    .eq("email", email)
+    .eq("type", "password_reset")
+    .eq("is_used", false);
+
+  const code = generateSecureOtp();
+  const { error } = await supabase.from("email_verifications").insert([
+    {
+      email,
+      code,
+      type: "password_reset",
+      attempts: 0,
+      expires_at: new Date(Date.now() + OTP_TTL_MS).toISOString(),
+    },
+  ]);
+  if (error) throw error;
+
+  await sendOtpEmail(email, code, "password_reset");
+}
+
+// Лимиты + выпуск кода под блокировкой на email.
+// Возвращает { message } при превышении лимита, иначе null.
+// dryRun — только проверить лимиты, ничего не отправляя.
+async function guardedIssueOtp(email, { type = "registration", dryRun = false } = {}) {
+  const flightKey = `${type}:${email}`;
+  if (otpInFlight.has(flightKey) || otpInFlight.has(email)) {
+    return { message: "Повторная отправка возможна через 60 секунд" };
+  }
+  otpInFlight.add(flightKey);
+  try {
+    const limited = await checkOtpSendLimits(email, type);
+    if (limited) return limited;
+    if (!dryRun) {
+      if (type === "password_reset") {
+        await issuePasswordResetOtp(email);
+      } else {
+        await issueRegistrationOtp(email);
+      }
+    }
+    return null;
+  } finally {
+    otpInFlight.delete(flightKey);
+  }
+}
+
+// Данные user_profiles для регистрации по типу аккаунта.
+// avatar_url кладём для ЛЮБОГО типа аккаунта — это единое поле:
+// у personal/realtor это фото профиля, у agency/developer — логотип компании.
+function buildProfileData(userId, data) {
+  const {
+    accountType,
+    firstName,
+    lastName,
+    fullName,
+    companyName,
+    directorName,
+    inn,
+    officeAddress,
+    agencyName,
+    about,
+    avatarUrl,
+  } = data;
+
+  const profileData = {
+    user_id: userId,
+    about: about || null,
+  };
+
+  if (avatarUrl) {
+    profileData.avatar_url = avatarUrl;
+  }
+
+  if (accountType === "personal") {
+    profileData.first_name = firstName || null;
+    profileData.last_name = lastName || null;
+  } else if (accountType === "realtor") {
+    profileData.first_name = fullName || firstName || null;
+    profileData.company_name = agencyName || companyName || null;
+  } else if (accountType === "developer") {
+    profileData.company_name = companyName || null;
+    profileData.inn = inn || null;
+    profileData.office_address = officeAddress || null;
+  } else if (accountType === "agency") {
+    profileData.company_name = companyName || null;
+    profileData.first_name = directorName || null;
+    profileData.inn = inn || null;
+    profileData.office_address = officeAddress || null;
+  }
+
+  return profileData;
+}
+
+// =======================================================
 // 1. Регистрация нового пользователя
 // =======================================================
 export const register = async (req, res) => {
@@ -111,7 +279,7 @@ export const register = async (req, res) => {
     // в дополнительное условие фильтра (PostgREST filter injection).
     const { data: existingByEmail, error: emailCheckError } = await supabase
       .from("users")
-      .select("id")
+      .select("id, is_email_verified, created_at")
       .eq("email", normalizedEmail)
       .maybeSingle();
 
@@ -119,7 +287,8 @@ export const register = async (req, res) => {
       console.error("Supabase error during email check:", emailCheckError);
     }
 
-    if (existingByEmail) {
+    // Подтверждённый аккаунт — настоящий конфликт.
+    if (existingByEmail && existingByEmail.is_email_verified !== false) {
       return res.status(409).json({
         success: false,
         message: "Пользователь с таким Email уже зарегистрирован",
@@ -136,7 +305,7 @@ export const register = async (req, res) => {
       console.error("Supabase error during phone check:", phoneCheckError);
     }
 
-    if (existingByPhone) {
+    if (existingByPhone && existingByPhone.id !== existingByEmail?.id) {
       return res.status(409).json({
         success: false,
         message: "Пользователь с таким номером телефона уже существует",
@@ -147,7 +316,83 @@ export const register = async (req, res) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    // 3. Создание записи в таблице `users`
+    // Защита от блокировки чужого email (griefing): email занят, но
+    // НЕ подтверждён — это либо брошенная регистрация, либо попытка
+    // занять чужую почту. Вместо вечного 409 перезаписываем пароль и
+    // данные профиля на новые (независимо от возраста: кто бы ни
+    // зарегистрировал аккаунт ранее, управлять им сможет только тот,
+    // кто получит код на почту) и отправляем новый код.
+    if (existingByEmail) {
+      const limit = await guardedIssueOtp(normalizedEmail, { dryRun: true });
+      if (limit) {
+        return res.status(429).json({ success: false, message: limit.message });
+      }
+
+      const { data: takenOver, error: takeoverError } = await supabase
+        .from("users")
+        .update({
+          account_type: accountType,
+          phone: formattedPhone,
+          password_hash: passwordHash,
+          is_email_verified: false,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existingByEmail.id)
+        .eq("is_email_verified", false)
+        .select("id, account_type, email, phone")
+        .maybeSingle();
+
+      if (takeoverError || !takenOver) {
+        console.error("Error updating unverified user:", takeoverError);
+        return res.status(500).json({
+          success: false,
+          message: "Не удалось обновить регистрацию. Попробуйте позже.",
+        });
+      }
+
+      const profileUpdate = buildProfileData(takenOver.id, validationResult.data);
+      const { data: existingProfileRow } = await supabase
+        .from("user_profiles")
+        .select("id")
+        .eq("user_id", takenOver.id)
+        .maybeSingle();
+
+      if (existingProfileRow) {
+        // Обнуляем поля прежней регистрации, чтобы не осталось чужих данных
+        const { error } = await supabase
+          .from("user_profiles")
+          .update({
+            first_name: null,
+            last_name: null,
+            company_name: null,
+            inn: null,
+            office_address: null,
+            avatar_url: null,
+            ...profileUpdate,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", takenOver.id);
+        if (error) console.warn("Warning: Could not update user profile details:", error);
+      } else {
+        const { error } = await supabase.from("user_profiles").insert([profileUpdate]);
+        if (error) console.warn("Warning: Could not create user profile details:", error);
+      }
+
+      await syncDeveloperRecord(takenOver.id, takenOver.account_type, profileUpdate, takenOver.phone, takenOver.email);
+
+      const limited = await guardedIssueOtp(normalizedEmail);
+      if (limited) {
+        return res.status(429).json({ success: false, message: limited.message });
+      }
+
+      return res.status(200).json({
+        success: true,
+        needVerification: true,
+        email: normalizedEmail,
+      });
+    }
+
+    // 3. Создание записи в таблице `users` (email пока НЕ подтверждён)
     const { data: newUser, error: createError } = await supabase
       .from("users")
       .insert([
@@ -157,6 +402,7 @@ export const register = async (req, res) => {
           phone: formattedPhone,
           password_hash: passwordHash,
           is_verified: false,
+          is_email_verified: false,
         },
       ])
       .select("id, account_type, email, phone, is_verified, created_at")
@@ -172,44 +418,16 @@ export const register = async (req, res) => {
     }
 
     // 4. Подготовка данных профиля
-    // avatar_url кладём для ЛЮБОГО типа аккаунта — это единое поле:
-    // у personal/realtor это фото профиля, у agency/developer — логотип компании.
-    let profileData = {
-      user_id: newUser.id,
-      about: about || null,
-    };
-
-    if (avatarUrl) {
-      profileData.avatar_url = avatarUrl;
-    }
-
-    if (accountType === "personal") {
-      profileData.first_name = firstName || null;
-      profileData.last_name = lastName || null;
-    } else if (accountType === "realtor") {
-      profileData.first_name = fullName || firstName || null;
-      profileData.company_name = agencyName || companyName || null;
-    } else if (accountType === "developer") {
-      profileData.company_name = companyName || null;
-      profileData.inn = inn || null;
-      profileData.office_address = officeAddress || null;
-    } else if (accountType === "agency") {
-      profileData.company_name = companyName || null;
-      profileData.first_name = directorName || null;
-      profileData.inn = inn || null;
-      profileData.office_address = officeAddress || null;
-    }
+    const profileData = buildProfileData(newUser.id, validationResult.data);
 
     // 5. Сохранение профиля в `user_profiles`
-    let userProfile = null;
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("user_profiles")
         .insert([profileData])
         .select()
         .single();
 
-      userProfile = data;
       if (error) {
         console.warn("Warning: Could not create user profile details:", error);
       }
@@ -218,27 +436,18 @@ export const register = async (req, res) => {
     }
 
     // Синхронизируем запись в таблице застройщиков
-    await syncDeveloperRecord(newUser.id, newUser.account_type, userProfile || profileData, newUser.phone, newUser.email);
+    await syncDeveloperRecord(newUser.id, newUser.account_type, profileData, newUser.phone, newUser.email);
 
-    // 6. Генерация JWT токена
-    const token = generateToken({
-      id: newUser.id,
-      accountType: newUser.account_type,
-      email: newUser.email,
-    });
+    // 6. Генерация и отправка OTP. JWT НЕ выдаётся до подтверждения email.
+    const limited = await guardedIssueOtp(normalizedEmail);
+    if (limited) {
+      return res.status(429).json({ success: false, message: limited.message });
+    }
 
     return res.status(201).json({
       success: true,
-      message: "Регистрация прошла успешно",
-      token,
-      user: {
-        id: newUser.id,
-        accountType: newUser.account_type,
-        email: newUser.email,
-        phone: newUser.phone,
-        isVerified: newUser.is_verified,
-        profile: userProfile || profileData,
-      },
+      needVerification: true,
+      email: normalizedEmail,
     });
   } catch (error) {
     console.error("Register Error:", error);
@@ -317,6 +526,17 @@ export const login = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Неверный Email/телефон или пароль",
+      });
+    }
+
+    // Блокировка входа без подтверждённого email. Проверяем ПОСЛЕ пароля,
+    // чтобы не раскрывать статус аккаунта тому, кто пароля не знает.
+    if (user.is_email_verified === false) {
+      return res.status(403).json({
+        success: false,
+        needVerification: true,
+        email: user.email,
+        message: "Подтвердите email перед входом в аккаунт",
       });
     }
 
@@ -774,6 +994,18 @@ export const uploadUserAvatar = async (req, res) => {
 
     const profile = data;
 
+    // Синхронизируем логотип в таблице developers, если аккаунт - застройщик
+    if (req.user.account_type === "developer") {
+      const { error: devLogoError } = await supabase
+        .from("developers")
+        .update({ logo_url: publicUrl })
+        .eq("user_id", userId);
+
+      if (devLogoError) {
+        console.warn("Не удалось обновить logo_url в developers:", devLogoError);
+      }
+    }
+
     if (existingProfile?.avatar_url && existingProfile.avatar_url !== publicUrl) {
       await removeImageFromStorage(existingProfile.avatar_url);
     }
@@ -830,6 +1062,13 @@ export const deleteUserAvatar = async (req, res) => {
       });
     }
 
+    if (req.user.account_type === "developer") {
+      await supabase
+        .from("developers")
+        .update({ logo_url: null })
+        .eq("user_id", userId);
+    }
+
     await removeImageFromStorage(oldUrl);
 
     return res.json({
@@ -847,39 +1086,522 @@ export const deleteUserAvatar = async (req, res) => {
 };
 
 // =======================================================
-// 6. Отправка и проверка WhatsApp / SMS OTP кодов — ЗАГЛУШКА.
+// 6. Email OTP: повторная отправка (sendOtp) и проверка (verifyOtp)
 //
-// Реальная отправка (WhatsApp/SMS-провайдер) и генерация/хранение кода
-// ещё не реализованы — эти два эндпоинта сейчас ничего никуда не
-// отправляют и ничего не проверяют. Раньше verifyOtp пропускал
-// фиксированные коды "1111"/"1234" — это был живой бэкдор: если бы
-// verify-otp позже подключили к чему-то чувствительному (смена
-// телефона/сброс пароля) без ревью этого места, любой мог бы подтвердить
-// чужой номер этими кодами. Сейчас оба эндпоинта явно отвечают "не
-// реализовано", пока не подключён реальный провайдер.
+// Раньше здесь была заглушка для телефона (с бэкдором "1111"/"1234").
+// Теперь — подтверждение email при регистрации.
 // =======================================================
 export const sendOtp = async (req, res) => {
-  const { phone } = req.body;
-  if (!phone) {
-    return res.status(400).json({ success: false, message: "Укажите номер телефона" });
-  }
+  try {
+    const email = typeof req.body?.email === "string" ? req.body.email.toLowerCase().trim() : "";
+    if (!email || !EMAIL_REGEX.test(email) || email.length > 255) {
+      return res.status(400).json({ success: false, message: "Укажите корректный email" });
+    }
 
-  return res.status(501).json({
-    success: false,
-    message: "Отправка кода подтверждения пока не реализована",
-  });
+    // Отправляем только неподтверждённым аккаунтам. Для остальных отвечаем
+    // так же, как при успехе, — чтобы эндпоинт не выдавал, какие email
+    // зарегистрированы, и не использовался для спама чужих ящиков.
+    const { data: user } = await supabase
+      .from("users")
+      .select("id, is_email_verified")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (!user || user.is_email_verified !== false) {
+      return res.json({ success: true, message: "Если аккаунт существует, код отправлен" });
+    }
+
+    const limit = await guardedIssueOtp(email);
+    if (limit) {
+      return res.status(429).json({ success: false, message: limit.message });
+    }
+
+    return res.json({ success: true, message: "Код подтверждения отправлен", email });
+  } catch (error) {
+    console.error("Send OTP Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Не удалось отправить код подтверждения",
+    });
+  }
 };
 
 export const verifyOtp = async (req, res) => {
-  const { phone, code } = req.body;
-  if (!phone || !code) {
-    return res.status(400).json({ success: false, message: "Укажите телефон и код" });
-  }
+  try {
+    const email = typeof req.body?.email === "string" ? req.body.email.toLowerCase().trim() : "";
+    const code = typeof req.body?.code === "string" || typeof req.body?.code === "number"
+      ? String(req.body.code).trim()
+      : "";
 
-  return res.status(501).json({
-    success: false,
-    message: "Проверка кода подтверждения пока не реализована",
-  });
+    if (!email || !code) {
+      return res.status(400).json({ success: false, message: "Укажите email и код" });
+    }
+
+    // Последний активный код: только он может быть валидным
+    const { data: record, error: findError } = await supabase
+      .from("email_verifications")
+      .select("*")
+      .eq("email", email)
+      .eq("type", "registration")
+      .eq("is_used", false)
+      .gt("expires_at", new Date().toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (findError) {
+      console.error("Verify OTP lookup error:", findError);
+    }
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "Код не найден или срок его действия истек",
+      });
+    }
+
+    // Защита от брутфорса
+    if (record.attempts >= OTP_MAX_ATTEMPTS) {
+      await supabase.from("email_verifications").update({ is_used: true }).eq("id", record.id);
+      return res.status(400).json({
+        success: false,
+        message: "Превышено количество попыток. Запросите новый код",
+      });
+    }
+
+    if (!safeCompare(code, record.code)) {
+      // Атомарный инкремент (compare-and-swap по значению attempts):
+      // параллельные запросы не смогут «растянуть» лимит попыток.
+      let newAttempts = record.attempts + 1;
+      const { data: updated } = await supabase
+        .from("email_verifications")
+        .update({ attempts: newAttempts, ...(newAttempts >= OTP_MAX_ATTEMPTS ? { is_used: true } : {}) })
+        .eq("id", record.id)
+        .eq("attempts", record.attempts)
+        .eq("is_used", false)
+        .select("attempts")
+        .maybeSingle();
+
+      if (!updated) {
+        // Гонка: другой параллельный запрос уже изменил счётчик. Перечитываем
+        // актуальное значение и засчитываем свою попытку поверх него.
+        const { data: fresh } = await supabase
+          .from("email_verifications")
+          .select("attempts")
+          .eq("id", record.id)
+          .maybeSingle();
+        newAttempts = Math.max(newAttempts, (fresh?.attempts ?? 0) + 1);
+        await supabase
+          .from("email_verifications")
+          .update({ attempts: newAttempts, ...(newAttempts >= OTP_MAX_ATTEMPTS ? { is_used: true } : {}) })
+          .eq("id", record.id);
+      }
+
+      if (newAttempts >= OTP_MAX_ATTEMPTS) {
+        return res.status(400).json({
+          success: false,
+          message: "Превышено количество попыток. Запросите новый код",
+        });
+      }
+
+      const attemptsLeft = OTP_MAX_ATTEMPTS - newAttempts;
+      return res.status(400).json({
+        success: false,
+        message: `Неверный код. Осталось попыток: ${attemptsLeft}`,
+        attemptsLeft,
+      });
+    }
+
+    // Код верный: «сжигаем» его атомарно (защита от двойного использования
+    // при гонке — выиграет только один запрос).
+    const { data: consumed } = await supabase
+      .from("email_verifications")
+      .update({ is_used: true })
+      .eq("id", record.id)
+      .eq("is_used", false)
+      .select("id")
+      .maybeSingle();
+
+    if (!consumed) {
+      return res.status(400).json({
+        success: false,
+        message: "Код не найден или срок его действия истек",
+      });
+    }
+
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .update({ is_email_verified: true, updated_at: new Date().toISOString() })
+      .eq("email", email)
+      .select("id, account_type, email, phone, is_verified")
+      .maybeSingle();
+
+    if (userError || !user) {
+      console.error("Verify OTP user update error:", userError);
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось подтвердить email",
+      });
+    }
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const token = generateToken({
+      id: user.id,
+      accountType: user.account_type,
+      email: user.email,
+    });
+
+    return res.json({
+      success: true,
+      message: "Email подтвержден",
+      token,
+      user: {
+        id: user.id,
+        accountType: user.account_type,
+        email: user.email,
+        phone: user.phone,
+        isVerified: user.is_verified,
+        profile: profile || {},
+      },
+    });
+  } catch (error) {
+    console.error("Verify OTP Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при проверке кода",
+    });
+  }
+};
+
+// =======================================================
+// 6a. Восстановление пароля через Email OTP
+// =======================================================
+
+/**
+ * Шаг 1: Запрос кода сброса пароля (POST /api/auth/forgot-password)
+ *
+ * Требования безопасности:
+ * 1. User Enumeration: если email не найден, возвращаем 200 с нейтральным сообщением,
+ *    не раскрывая наличие аккаунта в системе.
+ * 2. Email-бомбинг: кулдаун 60 секунд между запросами и лимит не более 5 кодов в час на один email.
+ */
+export const forgotPassword = async (req, res) => {
+  try {
+    const email = typeof req.body?.email === "string" ? req.body.email.toLowerCase().trim() : "";
+    if (!email || !EMAIL_REGEX.test(email) || email.length > 255) {
+      return res.status(400).json({ success: false, message: "Укажите корректный email" });
+    }
+
+    // Ищем пользователя в базе данных
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("id, is_email_verified")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (userError) {
+      console.error("Forgot password user lookup error:", userError);
+    }
+
+    // Защита от User Enumeration:
+    // Если аккаунт не найден — не возвращаем 404, а возвращаем 200 с одинаковым ответом.
+    if (!user) {
+      return res.json({
+        success: true,
+        message: "Если аккаунт существует, код отправлен на почту",
+      });
+    }
+
+    // Проверяем лимиты и отправляем код сброса пароля (type = 'password_reset')
+    const limit = await guardedIssueOtp(email, { type: "password_reset" });
+    if (limit) {
+      return res.status(429).json({ success: false, message: limit.message });
+    }
+
+    return res.json({
+      success: true,
+      message: "Если аккаунт существует, код отправлен на почту",
+    });
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при запросе сброса пароля",
+    });
+  }
+};
+
+/**
+ * Шаг 2: Проверка 6-значного кода сброса пароля (POST /api/auth/verify-reset-code)
+ *
+ * Требования безопасности:
+ * 1. Защита от брутфорса: attempts <= 5, safeCompare (timingSafeEqual). На 5-й попытке код аннулируется.
+ * 2. Выдача одноразового signed JWT resetToken со сроком жизни 10 минут,
+ *    содержащего { email, codeId, purpose: 'password_reset' }.
+ */
+export const verifyResetCode = async (req, res) => {
+  try {
+    const email = typeof req.body?.email === "string" ? req.body.email.toLowerCase().trim() : "";
+    const code = typeof req.body?.code === "string" || typeof req.body?.code === "number"
+      ? String(req.body.code).trim()
+      : "";
+
+    if (!email || !code) {
+      return res.status(400).json({ success: false, message: "Укажите email и код" });
+    }
+
+    // Ищем последний активный код типа 'password_reset'
+    const { data: record, error: findError } = await supabase
+      .from("email_verifications")
+      .select("*")
+      .eq("email", email)
+      .eq("type", "password_reset")
+      .eq("is_used", false)
+      .gt("expires_at", new Date().toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (findError) {
+      console.error("Verify reset code lookup error:", findError);
+    }
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "Код не найден или срок его действия истек",
+      });
+    }
+
+    // Защита от брутфорса
+    if (record.attempts >= OTP_MAX_ATTEMPTS) {
+      await supabase.from("email_verifications").update({ is_used: true }).eq("id", record.id);
+      return res.status(400).json({
+        success: false,
+        message: "Превышено количество попыток. Запросите новый код",
+      });
+    }
+
+    if (!safeCompare(code, record.code)) {
+      // Атомарный инкремент счётчика попыток
+      let newAttempts = record.attempts + 1;
+      const { data: updated } = await supabase
+        .from("email_verifications")
+        .update({
+          attempts: newAttempts,
+          ...(newAttempts >= OTP_MAX_ATTEMPTS ? { is_used: true } : {}),
+        })
+        .eq("id", record.id)
+        .eq("attempts", record.attempts)
+        .eq("is_used", false)
+        .select("attempts")
+        .maybeSingle();
+
+      if (!updated) {
+        const { data: fresh } = await supabase
+          .from("email_verifications")
+          .select("attempts")
+          .eq("id", record.id)
+          .maybeSingle();
+        newAttempts = Math.max(newAttempts, (fresh?.attempts ?? 0) + 1);
+        await supabase
+          .from("email_verifications")
+          .update({
+            attempts: newAttempts,
+            ...(newAttempts >= OTP_MAX_ATTEMPTS ? { is_used: true } : {}),
+          })
+          .eq("id", record.id);
+      }
+
+      if (newAttempts >= OTP_MAX_ATTEMPTS) {
+        return res.status(400).json({
+          success: false,
+          message: "Превышено количество попыток. Запросите новый код",
+        });
+      }
+
+      const attemptsLeft = OTP_MAX_ATTEMPTS - newAttempts;
+      return res.status(400).json({
+        success: false,
+        message: `Неверный код. Осталось попыток: ${attemptsLeft}`,
+        attemptsLeft,
+      });
+    }
+
+    // Код верный! Генерируем подписанный JWT resetToken со сроком жизни 10 минут
+    const resetToken = jwt.sign(
+      {
+        email,
+        codeId: record.id,
+        purpose: "password_reset",
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "10m", algorithm: "HS256" }
+    );
+
+    return res.json({
+      success: true,
+      message: "Код подтвержден",
+      resetToken,
+    });
+  } catch (error) {
+    console.error("Verify Reset Code Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при проверке кода",
+    });
+  }
+};
+
+/**
+ * Шаг 3: Установка нового пароля (POST /api/auth/reset-password)
+ *
+ * Требования безопасности:
+ * 1. Защита от подмены email (Account Takeover): принимается только при наличии валидного resetToken,
+ *    подписанного JWT_SECRET и содержащего { email, codeId, purpose: 'password_reset' }.
+ * 2. Защита от повторного использования (Replay Attack): код в email_verifications помечается is_used = true.
+ *    Нельзя использовать один и тот же resetToken повторно.
+ * 3. Валидация пароля: 6–72 символа, хэширование через bcryptjs (10 раундов).
+ */
+export const resetPassword = async (req, res) => {
+  try {
+    const resetToken =
+      req.body?.resetToken ||
+      (req.headers["authorization"]?.startsWith("Bearer ")
+        ? req.headers["authorization"].slice(7)
+        : null);
+
+    const newPassword =
+      typeof req.body?.newPassword === "string"
+        ? req.body.newPassword
+        : typeof req.body?.password === "string"
+        ? req.body.password
+        : "";
+
+    if (!resetToken || typeof resetToken !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Токен сброса пароля не передан",
+      });
+    }
+
+    // 1. Проверяем подпись и срок действия JWT resetToken
+    let decoded;
+    try {
+      decoded = jwt.verify(resetToken, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+    } catch (jwtErr) {
+      return res.status(400).json({
+        success: false,
+        message: "Недействительный или истекший токен сброса пароля",
+      });
+    }
+
+    if (
+      !decoded ||
+      decoded.purpose !== "password_reset" ||
+      !decoded.email ||
+      !decoded.codeId
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Некорректный токен сброса пароля",
+      });
+    }
+
+    // 2. Валидация пароля (6–72 символа)
+    if (!newPassword || newPassword.length < 6 || newPassword.length > 72) {
+      return res.status(400).json({
+        success: false,
+        message: "Пароль должен содержать от 6 до 72 символов",
+      });
+    }
+
+    // 3. Защита от Replay Attack: проверяем код в email_verifications по codeId
+    const { data: codeRecord, error: codeErr } = await supabase
+      .from("email_verifications")
+      .select("*")
+      .eq("id", decoded.codeId)
+      .eq("email", decoded.email)
+      .eq("type", "password_reset")
+      .maybeSingle();
+
+    if (codeErr || !codeRecord) {
+      return res.status(400).json({
+        success: false,
+        message: "Запись сброса пароля не найдена",
+      });
+    }
+
+    if (codeRecord.is_used) {
+      return res.status(400).json({
+        success: false,
+        message: "Этот токен сброса пароля уже был использован",
+      });
+    }
+
+    if (new Date(codeRecord.expires_at).getTime() < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "Срок действия кода сброса пароля истек",
+      });
+    }
+
+    // Атомарно «сжигаем» код в email_verifications (защита от гонки и повторного использования)
+    const { data: consumedCode, error: consumeError } = await supabase
+      .from("email_verifications")
+      .update({ is_used: true })
+      .eq("id", decoded.codeId)
+      .eq("is_used", false)
+      .select("id")
+      .maybeSingle();
+
+    if (consumeError || !consumedCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Этот токен сброса пароля уже был использован",
+      });
+    }
+
+    // 4. Хэширование нового пароля (bcryptjs, 10 раундов)
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(newPassword, saltRounds);
+
+    // 5. Обновляем password_hash и помечаем email как подтверждённый
+    const { data: updatedUser, error: updateError } = await supabase
+      .from("users")
+      .update({
+        password_hash: passwordHash,
+        is_email_verified: true,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("email", decoded.email)
+      .select("id, email")
+      .maybeSingle();
+
+    if (updateError || !updatedUser) {
+      console.error("Reset password user update error:", updateError);
+      return res.status(500).json({
+        success: false,
+        message: "Не удалось обновить пароль пользователя",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Пароль успешно изменен",
+    });
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при смене пароля",
+    });
+  }
 };
 
 // =======================================================
@@ -938,6 +1660,7 @@ export const getUserPublicProfile = async (req, res) => {
       `)
       .eq("user_id", user.id)
       .eq("status", "active")
+      .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false });
 
     // If developer, fetch complexes!
@@ -959,13 +1682,15 @@ export const getUserPublicProfile = async (req, res) => {
       }
     }
 
+    const isBusinessAccount = ["agency", "developer", "realtor"].includes(user.account_type);
+
     return res.json({
       success: true,
       user: {
         id: user.id,
         type: user.account_type,
-        email: user.email,
-        phone: user.phone,
+        email: isBusinessAccount ? user.email : null,
+        phone: isBusinessAccount ? user.phone : null,
         isVerified: user.is_verified,
         createdAt: user.created_at,
         profile: formatProfileWithMetadata(profile),

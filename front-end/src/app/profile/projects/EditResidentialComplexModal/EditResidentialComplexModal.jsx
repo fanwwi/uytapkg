@@ -22,6 +22,7 @@ import {
 import styles from "./EditResidentialComplexModal.module.css";
 import CustomSelect from "@/components/ui/customSelect/CustomSelect";
 import { useLanguage } from "@/context/LanguageContext";
+import { uploadComplexPhoto } from "@/utils/api";
 
 const statuses = ["Проект", "Строительство", "Сдан"];
 
@@ -81,6 +82,7 @@ export default function EditResidentialComplexModal({
   const [form, setForm] = useState(initialForm);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   const translateStatus = (value) => {
     const map = {
@@ -288,8 +290,10 @@ export default function EditResidentialComplexModal({
     });
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+
+    if (uploading) return;
 
     const parseNum = (val) => {
       if (val === undefined || val === null || val === "") {
@@ -300,6 +304,27 @@ export default function EditResidentialComplexModal({
 
       return isNaN(num) ? val : num;
     };
+
+    const token = localStorage.getItem("uytap_token");
+    const finalUrls = [];
+
+    setUploading(true);
+    try {
+      for (const img of images) {
+        if (img.file instanceof File) {
+          try {
+            const uploadedUrl = await uploadComplexPhoto(token, img.file);
+            if (uploadedUrl) finalUrls.push(uploadedUrl);
+          } catch (err) {
+            console.error("Ошибка загрузки фото ЖК:", err);
+          }
+        } else if (img.url && !img.url.startsWith("blob:")) {
+          finalUrls.push(img.url);
+        }
+      }
+    } finally {
+      setUploading(false);
+    }
 
     const updatedComplex = {
       ...complex,
@@ -315,10 +340,10 @@ export default function EditResidentialComplexModal({
 
       amenities: selectedAmenities,
 
-      images: images.map((image) => image.url),
+      images: finalUrls,
     };
 
-    onSave(updatedComplex);
+    onSave(updatedComplex, token);
   }
 
   function handleOverlayMouseDown(event) {

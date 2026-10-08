@@ -45,11 +45,13 @@ async function checkActiveListingsLimit(userId, accountType, { countIncludesNewR
 
   const limit = await getActiveListingsLimit(userId, accountType);
 
+  const nowIso = new Date().toISOString();
   const { count, error } = await supabase
     .from("listings")
     .select("id", { count: "exact", head: true })
     .eq("user_id", userId)
-    .eq("status", "active");
+    .eq("status", "active")
+    .or(`expires_at.is.null,expires_at.gt.${nowIso}`);
 
   if (error) {
     console.error("Active Listings Limit Count Error:", error);
@@ -93,6 +95,29 @@ function maskExpiredPromotion(listing) {
   };
 }
 
+// Автомаскирование статуса в read-путях:
+// Если у объявления status === 'active' и expires_at <= NOW(),
+// выставлять в ответе status: 'expired', чтобы клиент сразу видел статус «Срок истёк».
+function maskExpiredListing(listing) {
+  if (!listing) return listing;
+
+  const masked = maskExpiredPromotion(listing);
+
+  const isExpired =
+    masked.status === "active" &&
+    masked.expires_at &&
+    new Date(masked.expires_at).getTime() <= Date.now();
+
+  if (isExpired) {
+    return {
+      ...masked,
+      status: "expired",
+    };
+  }
+
+  return masked;
+}
+
 // =======================================================
 // 1. Получение списка объявлений с фильтрами
 // =======================================================
@@ -122,7 +147,8 @@ export const getListings = async (req, res) => {
         listing_photos (id, url, is_main, display_order),
         users!inner (id, is_verified, account_type)
       `, { count: "exact" })
-      .eq("status", "active");
+      .eq("status", "active")
+      .gt("expires_at", new Date().toISOString());
 
     // Фильтрация по региону / городу / району / стране
     if (country) {
@@ -156,10 +182,14 @@ export const getListings = async (req, res) => {
     if (isResort !== undefined) query = query.eq("is_resort", isResort === "true");
 
     // Пагинация и сортировка
-    const from = (Number(page) - 1) * Number(limit);
-    const to = from + Number(limit) - 1;
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+    const from = (pageNum - 1) * limitNum;
+    const to = from + limitNum - 1;
 
-    query = query.order("created_at", { ascending: false });
+    query = query
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
     const { data: listings, count, error } = await query;
 
@@ -176,10 +206,8 @@ export const getListings = async (req, res) => {
       return 3;
     };
 
-    // Маскируем истёкшее продвижение ДО сортировки по приоритету — иначе
-    // объявление с уже закончившимся сроком VIP всё ещё показывалось бы
-    // первым.
-    const maskedListings = (listings || []).map(maskExpiredPromotion);
+    // Маскируем истёкший срок и истёкшее продвижение ДО сортировки по приоритету
+    const maskedListings = (listings || []).map(maskExpiredListing);
 
     // Точная сортировка объявлений по требуемому приоритету
     let filteredListings = maskedListings.sort((a, b) => {
@@ -196,16 +224,15 @@ export const getListings = async (req, res) => {
       );
     }
 
-    // Применение пагинации после точной сортировки
-    const paginatedListings = filteredListings.slice(from, to + 1);
+    const paginatedListings = filteredListings;
 
     return res.json({
       success: true,
       data: paginatedListings,
       pagination: {
-        total: count || filteredListings.length,
-        page: Number(page),
-        limit: Number(limit),
+        total: count ?? filteredListings.length,
+        page: pageNum,
+        limit: limitNum,
       },
     });
   } catch (error) {
@@ -241,7 +268,7 @@ export const getListingById = async (req, res) => {
       .update({ views_count: (listing.views_count || 0) + 1 })
       .eq("id", id);
 
-    return res.json({ success: true, data: maskExpiredPromotion(listing) });
+    return res.json({ success: true, data: maskExpiredListing(listing) });
   } catch (error) {
     console.error("Get Listing By ID Error:", error);
     return res.status(500).json({ success: false, message: "Ошибка сервера при получении объявления" });
@@ -428,6 +455,7 @@ export const createListing = async (req, res) => {
           status: initialStatus,
           promotion_status,
           is_urgent,
+          expires_at: new Date(Date.now() + 40 * 24 * 60 * 60 * 1000).toISOString(),
         },
       ])
       .select()
@@ -622,8 +650,10 @@ export const getMyListings = async (req, res) => {
     // maskExpiredPromotion выше).
     const expiredIds = [];
     const maskedListings = (listings || []).map((l) => {
-      const masked = maskExpiredPromotion(l);
-      if (masked !== l) expiredIds.push(l.id);
+      const masked = maskExpiredListing(l);
+      if (masked.promotion_status !== l.promotion_status || masked.is_urgent !== l.is_urgent) {
+        expiredIds.push(l.id);
+      }
       return masked;
     });
 
@@ -1022,6 +1052,74 @@ export const promoteListingWithTariff = async (req, res) => {
       success: false,
       message: "Ошибка сервера при применении тарифа",
     });
+  }
+};
+
+// =======================================================
+// 8. Продление объявления на 40 дней (POST /api/listings/:id/renew)
+// =======================================================
+export const renewListing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    // 1. Поиск объявления
+    const { data: listing, error } = await supabase
+      .from("listings")
+      .select("id, user_id, status, expires_at")
+      .eq("id", id)
+      .single();
+
+    if (error || !listing) {
+      return res.status(404).json({ success: false, message: "Объявление не найдено" });
+    }
+
+    // 2. Защита от IDOR
+    if (listing.user_id !== userId && req.user.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Вы не являетесь владельцем этого объявления" });
+    }
+
+    // 3. Проверка лимитов тарифа (если объявление сейчас не активно)
+    const isCurrentlyActive =
+      listing.status === "active" &&
+      listing.expires_at &&
+      new Date(listing.expires_at) > new Date();
+
+    if (!isCurrentlyActive) {
+      const limitError = await checkActiveListingsLimit(userId, req.user.account_type);
+      if (limitError) {
+        return res.status(limitError.status).json(limitError.body);
+      }
+    }
+
+    // 4. Продление на 40 дней (дата считается исключительно на сервере)
+    const newExpiresAt = new Date(Date.now() + 40 * 24 * 60 * 60 * 1000).toISOString();
+    const { data: updated, error: updateError } = await supabase
+      .from("listings")
+      .update({
+        status: "active",
+        expires_at: newExpiresAt,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select(`
+        *,
+        listing_photos (id, url, is_main, display_order)
+      `)
+      .single();
+
+    if (updateError) {
+      return res.status(500).json({ success: false, message: "Не удалось продлить объявление" });
+    }
+
+    return res.json({
+      success: true,
+      message: "Объявление успешно продлено на 40 дней",
+      data: updated,
+    });
+  } catch (err) {
+    console.error("Renew listing error:", err);
+    return res.status(500).json({ success: false, message: "Ошибка сервера при продлении объявления" });
   }
 };
 

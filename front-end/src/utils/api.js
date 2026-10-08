@@ -28,6 +28,11 @@ export async function registerUser(formData) {
     throw new Error(errorMsg);
   }
 
+  // Email ещё не подтверждён: токен не выдаётся, saveAuth не вызываем.
+  if (data.needVerification === true) {
+    return data;
+  }
+
   const token =
     data.token ||
     data.accessToken ||
@@ -62,6 +67,14 @@ export async function loginUser(credentials) {
     data = await response.json();
   } catch {
     data = {};
+  }
+
+  // Бэкенд отказал во входе: email не подтверждён (403 + needVerification)
+  if (data.needVerification === true) {
+    const err = new Error(data.message || "Подтвердите email перед входом в аккаунт");
+    err.needVerification = true;
+    err.email = data.email;
+    throw err;
   }
 
   if (!response.ok || !data.success) {
@@ -105,7 +118,129 @@ export async function verifyOtpCode(phone, code) {
   return response.json();
 }
 
-// 4. Поиск и получение объявлений
+// 4. Подтверждение email через OTP
+export async function verifyEmailOtp(email, code) {
+  const response = await fetch(`${API_URL}/auth/verify-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code }),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    const err = new Error(data.message || "Неверный код");
+    err.attemptsLeft = data.attemptsLeft;
+    throw err;
+  }
+
+  if (data.token) {
+    saveAuth({ token: data.token, user: data.user });
+  }
+
+  return data;
+}
+
+export async function resendEmailOtp(email) {
+  const response = await fetch(`${API_URL}/auth/send-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    const err = new Error(data.message || "Не удалось отправить код");
+    err.status = response.status;
+    throw err;
+  }
+
+  return data;
+}
+
+// 5. Восстановление пароля через Email OTP
+export async function requestPasswordReset(email) {
+  const response = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    const err = new Error(data.message || "Не удалось отправить код восстановления");
+    err.status = response.status;
+    throw err;
+  }
+
+  return data;
+}
+
+export async function verifyPasswordResetCode(email, code) {
+  const response = await fetch(`${API_URL}/auth/verify-reset-code`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code }),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    const err = new Error(data.message || "Неверный код восстановления");
+    err.status = response.status;
+    err.attemptsLeft = data.attemptsLeft;
+    throw err;
+  }
+
+  return data;
+}
+
+export async function completePasswordReset(resetToken, newPassword) {
+  const response = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ resetToken, newPassword }),
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || !data.success) {
+    const err = new Error(data.message || "Не удалось обновить пароль");
+    err.status = response.status;
+    throw err;
+  }
+
+  return data;
+}
+
+// 6. Поиск и получение объявлений
 export async function getListings(params = {}) {
   const mappedParams = { ...params };
   if (params.category) {
@@ -171,7 +306,7 @@ export async function getComplexes() {
 
 // 6. Умный AI поиск
 export async function aiSearchQuery(prompt) {
-  const response = await fetch(`${API_URL}/smart-search`, {
+  const response = await fetch(`${API_URL}/ai/search`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
@@ -488,6 +623,21 @@ export async function deleteListing(token, id) {
     },
   });
   return response.json();
+}
+
+export async function renewListing(token, id) {
+  const res = await fetch(`${API_URL}/listings/${id}/renew`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || "Ошибка продления объявления");
+  }
+  return data;
 }
 
 // 10. Оплата тарифов (O!Dengi)

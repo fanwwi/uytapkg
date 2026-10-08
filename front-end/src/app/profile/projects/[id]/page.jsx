@@ -573,6 +573,12 @@ export default function MyComplexDetail() {
         amenities: Array.isArray(updatedComplex.amenities)
           ? updatedComplex.amenities
           : [],
+
+        images: Array.isArray(updatedComplex.images)
+          ? updatedComplex.images.filter(
+              (url) => typeof url === "string" && !url.startsWith("blob:"),
+            )
+          : undefined,
       };
 
       const response = await updateComplexApi(

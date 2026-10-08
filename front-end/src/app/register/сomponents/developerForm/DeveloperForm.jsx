@@ -18,6 +18,7 @@ import Link from "next/link";
 
 import styles from "./DeveloperForm.module.css";
 import { registerUser } from "@/utils/api";
+import { saveAuth } from "@/utils/auth";
 
 function formatPhone(value) {
   let digits = value.replace(/\D/g, "");
@@ -108,7 +109,7 @@ export default function DeveloperForm() {
     setLoading(true);
 
     try {
-      await registerUser({
+      const res = await registerUser({
         accountType: "developer",
         companyName,
         inn,
@@ -119,12 +120,21 @@ export default function DeveloperForm() {
         password,
       });
 
-      // token и user сохраняются внутри registerUser()
+      if (res?.token) {
+        saveAuth({ token: res.token, user: res.user });
+      }
+
+      if (res?.needVerification) {
+        const verifyEmail = email.trim().toLowerCase();
+        localStorage.setItem("register_email", verifyEmail);
+        router.push(`/auth-code?email=${encodeURIComponent(verifyEmail)}`);
+        return;
+      }
 
       setSuccess(true);
 
       setTimeout(() => {
-        router.push("/auth-code");
+        router.push("/profile");
       }, 1200);
     } catch (err) {
       setError(err.message || "Ошибка при регистрации застройщика");
