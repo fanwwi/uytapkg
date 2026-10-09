@@ -41,6 +41,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "https://uytapkg-kui5.vercel.app",
   "https://uytapkgdep.vercel.app",
+  "https://www.uytap.kg",
 ];
 
 app.use(
