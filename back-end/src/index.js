@@ -40,6 +40,7 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:3001",
   "https://uytapkg-kui5.vercel.app",
+  "https://uytapkgdep.vercel.app",
 ];
 
 app.use(
